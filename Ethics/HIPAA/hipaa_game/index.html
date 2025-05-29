@@ -51,7 +51,7 @@
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
             }
-            #printableBadge h4, #printableBadge .awardee-name, #printableBadge .badge-logo-print, #printableBadge .badge-score-print {
+            #printableBadge h4, #printableBadge .awardee-name, #printableBadge .badge-logo-print, #printableBadge .badge-score-print, #printableBadge .completion-date-print { /* Added completion-date-print */
                 color: #1E40AF !important; /* Tailwind blue-800 */
             }
             #printableBadge .awardee-name {
@@ -168,7 +168,8 @@
                         <h4 class="text-blue-700 text-2xl sm:text-3xl font-bold mb-2 sm:mb-4">HIPAA Awareness Award</h4>
                         <p class="awardee-name text-blue-600 text-xl sm:text-2xl font-semibold my-3 sm:my-5 border-b-2 border-dashed border-blue-600 pb-1 sm:pb-2" id="badgeNameDisplay"></p>
                         <p class="reason-text text-slate-700 text-md sm:text-lg my-2 sm:my-3">For demonstrating proficiency in identifying potential HIPAA violations.</p>
-                        <p class="badge-score-print text-slate-600 text-sm my-2 sm:my-3" id="badgeScoreDisplay"></p>
+                        <p class="badge-score-print text-slate-600 text-sm my-1" id="badgeScoreDisplay"></p>
+                        <p class="completion-date-print text-slate-600 text-xs my-1" id="badgeDateDisplay"></p> {/* New element for date */}
                         <p class="badge-logo-print text-blue-700 text-sm font-bold mt-3 sm:mt-4">RTApps Learning</p>
                     </div>
                     <button id="printBadgeButtonTrigger" onclick="window.print()" style="display:none;" class="mt-4 bg-sky-500 hover:bg-sky-600 text-white font-medium py-2 px-4 rounded-lg text-sm transition-colors">Print Badge</button>
@@ -217,6 +218,7 @@
         const postActivityNavigation = document.getElementById('post-activity-navigation');
         const badgeSection = document.getElementById('badge-section');
         const printErrorMessage = document.getElementById('print-error-message');
+        let finalScoreValue = 0; // Ensure finalScoreValue is accessible in generateBadge
 
 
         function startGame() {
@@ -224,9 +226,8 @@
             gameAreaContainer.style.display = 'block';
             resultsAreaContainer.style.display = 'none';
             postActivityNavigation.style.display = 'none';
-            badgeSection.style.display = 'none'; // Ensure badge section is hidden at start
+            badgeSection.style.display = 'none'; 
             currentScenarioIndex = -1;
-            score = 0; // This variable seems unused, consider removing if not part of a different scoring logic.
             totalPossibleClicks = 0;
             correctViolationsFound = 0;
             updateScoreDisplay();
@@ -273,7 +274,6 @@
                     }
                 });
             }
-            // If all actual violations are identified (or if there were none to begin with for this scenario), enable next.
             if (allActualViolationsIdentified) { 
                 nextButton.disabled = false;
                 nextButton.classList.remove('disabled:bg-slate-300', 'disabled:cursor-not-allowed');
@@ -306,7 +306,6 @@
                     });
                 });
 
-                // Check if the current scenario has any true violations. If not, enable the next button.
                 const currentScenarioHasViolations = scenarios[currentScenarioIndex].content.includes('data-violation="true"');
                 if (!currentScenarioHasViolations) {
                     nextButton.disabled = false;
@@ -361,8 +360,14 @@
             nameInput.classList.remove('border-red-500');
             printErrorMessage.style.display = 'none';
 
+            // Get and format the current date
+            const today = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const formattedDate = today.toLocaleDateString(undefined, options);
+
             document.getElementById('badgeNameDisplay').textContent = name;
             document.getElementById('badgeScoreDisplay').textContent = `Achieved with a score of ${finalScoreValue}%`;
+            document.getElementById('badgeDateDisplay').textContent = "Completed on: " + formattedDate; // Set the date
             document.getElementById('printableBadge').style.display = 'flex';
             document.getElementById('printBadgeButtonTrigger').style.display = 'inline-block';
         }
