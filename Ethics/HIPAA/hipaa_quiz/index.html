@@ -5,99 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Activity: Comprehensive HIPAA Quiz</title>
     <style>
-           body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        line-height: 1.6;
-        margin: 0; padding: 0;
-        background-color: #f4f4f4;
-        color: #333;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        min-height: 100vh;
-        position: relative;
-        padding-bottom: 80px; /* Increased space for footer + nav */
-    }
-    .container {
-        background-color: #fff;
-        padding: 25px 35px;
-        border-radius: 8px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        width: 90%;
-        max-width: 800px;
-        margin: 20px auto;
-    }
-    h1, h2, h3 { color: #0056b3; }
-    h1 { text-align: center; border-bottom: 2px solid #0056b3; padding-bottom: 10px; }
-    h2 { margin-top: 30px; color: #003d7a; }
-    h3 { color: #004085; }
-    p, li { margin-bottom: 12px; font-size: 1.05em; }
-    ul { margin-bottom: 15px; padding-left: 25px; }
-    button {
-        background-color: #007bff; color: white; padding: 10px 20px;
-        border: none; border-radius: 5px; cursor: pointer;
-        font-size: 1em; margin: 5px; transition: background-color 0.2s;
-    }
-    button:hover { background-color: #0056b3; }
-    button:disabled { background-color: #ccc; cursor: not-allowed; }
-
-    /* TILT Framework */
-    .tilt-framework {
-        background-color: #e7f3ff; border: 1px solid #b3d7ff;
-        padding: 15px 25px; border-radius: 8px; margin-bottom: 30px;
-    }
-    .tilt-framework h3 { margin-top: 15px; border-bottom: 1px solid #b3d7ff; padding-bottom: 5px; }
-
-    /* Footer */
-    footer {
-        position: absolute; bottom: 0; left: 0; width: 100%;
-        text-align: center; padding: 15px 0; background-color: #e9ecef;
-        color: #6c757d; font-size: 0.9em; border-top: 1px solid #dee2e6;
-    }
-
-    /* Post-Activity Navigation */
-    .post-activity-nav {
-        text-align: center; margin-top: 40px; padding: 20px;
-        background-color: #f8f9fa; border-top: 1px solid #e9ecef; border-radius: 0 0 8px 8px;
-    }
-    .post-activity-nav button { margin: 5px 15px; }
-    .post-activity-nav button.repeat { background-color: #28a745; }
-    .post-activity-nav button.repeat:hover { background-color: #218838; }
-    .post-activity-nav button.menu { background-color: #6c757d; }
-    .post-activity-nav button.menu:hover { background-color: #5a6268; }
-
-    /* Badge Area */
-    #badge-section { margin-top: 30px; padding: 20px; background-color: #fff; border: 1px solid #ccc; text-align: center; display: none; }
-    #badge-input input { padding: 8px; margin-right: 10px; border: 1px solid #ccc; border-radius: 4px; }
-    .badge {
-        width: 350px; height: 250px; border: 10px solid #0056b3;
-        background-color: #e7f3ff; margin: 20px auto; padding: 30px;
-        display: flex; flex-direction: column; justify-content: center;
-        align-items: center; box-shadow: 3px 3px 8px rgba(0,0,0,0.2);
-        font-family: 'Georgia', serif; text-align: center;
-    }
-    .badge h4 { color: #003d7a; font-size: 1.5em; margin: 0; }
-    .badge .awardee { font-size: 1.3em; font-weight: bold; color: #17a2b8; margin: 15px 0; border-bottom: 1px dashed #17a2b8; padding-bottom: 5px; }
-    .badge .reason { font-size: 1.1em; margin: 10px 0; }
-    .badge .score { font-size: 1em; font-style: italic; color: #555; }
-    .badge .logo { font-size: 0.8em; margin-top: 15px; font-weight: bold; color: #0056b3; }
-
-    /* Print Styles */
-    @media print {
-        body * { visibility: hidden; }
-        #badge-section, #badge-section * { visibility: visible; }
-        .badge {
-           visibility: visible; position: absolute; left: 0; top: 0;
-           width: 90%; height: auto; margin: 5%; padding: 20px;
-           box-shadow: none; border: 5px solid #000;
-           color: #000;
-        }
-        .badge h4, .badge .awardee, .badge .logo { color: #000; }
-        .badge .awardee { border-bottom: 1px dashed #000; }
-        #badge-input, .post-activity-nav, h1, h2, h3, .container > p, button:not(#printBadgeButton) { display: none; }
-        footer { display: none; }
-    }  
-      /* Shared CSS (from above) goes here */
+        /* Shared CSS (from above) */
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; margin: 0; padding: 0; background-color: #f4f4f4; color: #333; display: flex; flex-direction: column; align-items: center; min-height: 100vh; position: relative; padding-bottom: 80px; }
         .container { background-color: #fff; padding: 25px 35px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 90%; max-width: 800px; margin: 20px auto; }
         h1, h2, h3 { color: #0056b3; }
@@ -105,12 +13,10 @@
         h2 { margin-top: 30px; color: #003d7a; }
         h3 { color: #004085; }
         p, li { margin-bottom: 12px; font-size: 1.05em; }
-        ul { margin-bottom: 15px; padding-left: 25px; }
+        ul { margin-bottom: 15px; padding-left: 25px; list-style: disc;}
         button { background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 1em; margin: 5px; transition: background-color 0.2s; }
         button:hover { background-color: #0056b3; }
         button:disabled { background-color: #ccc; cursor: not-allowed; }
-        .tilt-framework { background-color: #e7f3ff; border: 1px solid #b3d7ff; padding: 15px 25px; border-radius: 8px; margin-bottom: 30px; }
-        .tilt-framework h3 { margin-top: 15px; border-bottom: 1px solid #b3d7ff; padding-bottom: 5px; }
         footer { position: absolute; bottom: 0; left: 0; width: 100%; text-align: center; padding: 15px 0; background-color: #e9ecef; color: #6c757d; font-size: 0.9em; border-top: 1px solid #dee2e6; }
         .post-activity-nav { text-align: center; margin-top: 40px; padding: 20px; background-color: #f8f9fa; border-top: 1px solid #e9ecef; border-radius: 0 0 8px 8px; }
         .post-activity-nav button { margin: 5px 15px; }
@@ -118,15 +24,29 @@
         .post-activity-nav button.repeat:hover { background-color: #218838; }
         .post-activity-nav button.menu { background-color: #6c757d; }
         .post-activity-nav button.menu:hover { background-color: #5a6268; }
+
+        /* Badge Area - Blue/Teal Theme for Awards */
         #badge-section { margin-top: 30px; padding: 20px; background-color: #fff; border: 1px solid #ccc; text-align: center; display: none; }
         #badge-input input { padding: 8px; margin-right: 10px; border: 1px solid #ccc; border-radius: 4px; }
-        .badge { width: 350px; height: 250px; border: 10px solid #0056b3; background-color: #e7f3ff; margin: 20px auto; padding: 30px; display: flex; flex-direction: column; justify-content: center; align-items: center; box-shadow: 3px 3px 8px rgba(0,0,0,0.2); font-family: 'Georgia', serif; text-align: center; }
-        .badge h4 { color: #003d7a; font-size: 1.5em; margin: 0; }
-        .badge .awardee { font-size: 1.3em; font-weight: bold; color: #17a2b8; margin: 15px 0; border-bottom: 1px dashed #17a2b8; padding-bottom: 5px; }
+        .badge {
+            width: 350px; height: 250px; border: 10px solid #0056b3; /* Blue border */
+            background-color: #e7f3ff; /* Light Blue background */
+            margin: 20px auto; padding: 30px; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; box-shadow: 3px 3px 8px rgba(0,0,0,0.2);
+            font-family: 'Georgia', serif; text-align: center;
+        }
+        .badge h4 { color: #003d7a; font-size: 1.5em; margin: 0; } /* Darker Blue title */
+        .badge .awardee { font-size: 1.3em; font-weight: bold; color: #17a2b8; /* Teal name */
+            margin: 15px 0; border-bottom: 1px dashed #17a2b8; padding-bottom: 5px; }
         .badge .reason { font-size: 1.1em; margin: 10px 0; }
         .badge .score { font-size: 1em; font-style: italic; color: #555; }
-        .badge .logo { font-size: 0.8em; margin-top: 15px; font-weight: bold; color: #0056b3; }
-        @media print { body * { visibility: hidden; } #badge-section, #badge-section * { visibility: visible; } .badge { visibility: visible; position: absolute; left: 0; top: 0; width: 90%; height: auto; margin: 5%; padding: 20px; box-shadow: none; border: 5px solid #000; color: #000; } .badge h4, .badge .awardee, .badge .logo { color: #000; } .badge .awardee { border-bottom: 1px dashed #000; } #badge-input, .post-activity-nav, h1, h2, h3, .container > p, button:not(#printBadgeButton), footer, #quiz-form { display: none; } }
+        .badge .logo { font-size: 0.8em; margin-top: 15px; font-weight: bold; color: #0056b3; } /* Blue logo */
+
+        /* Start Screen */
+        #start-screen { background-color: #e7f3ff; border: 1px solid #b3d7ff; padding: 15px 25px; border-radius: 8px; margin-bottom: 30px; }
+        #start-screen h3 { margin-top: 15px; border-bottom: 1px solid #b3d7ff; padding-bottom: 5px; }
+        #start-quiz-button { background-color: #28a745; font-size: 1.2em; padding: 12px 25px; display: block; margin: 25px auto 10px auto; }
+        #start-quiz-button:hover { background-color: #218838; }
 
         /* Quiz Styles */
         #quiz-form { background-color: #fff; padding: 20px; border-radius: 8px; }
@@ -137,18 +57,27 @@
         #submit-quiz { background-color: #28a745; display: block; width: 200px; margin: 30px auto; font-size: 1.2em; padding: 15px;}
         #submit-quiz:hover { background-color: #218838; }
         #quiz-results { text-align: center; font-size: 1.3em; font-weight: bold; color: #0056b3; display: none; }
+
+        /* Print Styles */
+         @media print { body * { visibility: hidden; } #badge-section, #badge-section * { visibility: visible; } .badge { visibility: visible; position: absolute; left: 0; top: 0; width: 90%; height: auto; margin: 5%; padding: 20px; box-shadow: none; border: 5px solid #000; color: #000; } .badge h4, .badge .awardee, .badge .logo { color: #000; } .badge .awardee { border-bottom: 1px dashed #000; } #badge-input, .post-activity-nav, h1, h2, h3, .container > p, button:not(#printBadgeButton), footer, #start-screen, #quiz-form, #quiz-results { display: none; } }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Activity: Comprehensive HIPAA Quiz</h1>
-         <div class="tilt-framework">
-            <h3>Purpose</h3><p>To assess your comprehensive knowledge of the key rules, rights, and responsibilities covered in the HIPAA Essentials lesson.</p>
-            <h3>Task</h3><p>Answer the following 10 questions to the best of your ability. Select the single best answer for each question. Once finished, click the "Submit Quiz" button at the bottom to see your score.</p>
-            <h3>Criteria for Success</h3><p>Your score will reflect the number of correct answers. A score of 80% or higher demonstrates a strong grasp of HIPAA fundamentals and is required to earn a printable badge.</p>
+
+        <div id="start-screen">
+            <h2>Before You Begin...</h2>
+            <h3>Purpose</h3>
+            <p>This quiz will assess your overall understanding of the key concepts, rules, and responsibilities related to HIPAA as presented in the lesson.</p>
+            <h3>Task</h3>
+            <p>You will answer 10 multiple-choice and true/false questions. Read each question carefully and select the best possible answer. After answering all questions, click the "Submit Quiz" button to view your score.</p>
+            <h3>Criteria for Success</h3>
+            <p>Your score reflects your knowledge of HIPAA fundamentals. A score of <span style="font-weight:bold;">80% or higher</span> demonstrates a strong understanding and will earn you a printable "HIPAA Proficiency Award" badge.</p>
+            <button id="start-quiz-button" onclick="startQuiz()">Start the Quiz!</button>
         </div>
 
-        <form id="quiz-form" onsubmit="return submitQuiz(event)">
+        <form id="quiz-form" onsubmit="return submitQuiz(event)" style="display: none;">
             <div class="question-block">
                 <p>1. What does PHI stand for?</p>
                 <label><input type="radio" name="q1" value="a"> Patient Health Information</label>
@@ -211,14 +140,14 @@
         <div id="quiz-results"></div>
 
         <div id="badge-section">
-            <h3>Congratulations! You've Earned a Badge!</h3>
+            <h3>Congratulations! You've Earned an Award!</h3>
             <div id="badge-input">
                 <label for="userNameForBadge">Enter Your Name:</label>
                 <input type="text" id="userNameForBadge" placeholder="Your Name Here">
                 <button onclick="generateBadge()">Generate Badge</button>
             </div>
             <div class="badge" id="printableBadge" style="display:none;">
-                <h4>HIPAA Competency Award</h4>
+                <h4>HIPAA Proficiency Award</h4>
                 <p class="awardee" id="badgeName"></p>
                 <p class="reason">For demonstrating strong knowledge of HIPAA principles.</p>
                 <p class="score" id="badgeScore"></p>
@@ -240,8 +169,13 @@
         const correctAnswers = { q1: 'b', q2: 'b', q3: 'c', q4: 'b', q5: 'b', q6: 'c', q7: 'a', q8: 'b', q9: 'a', q10: 'c' };
         const totalQuestions = 10;
 
+        function startQuiz() {
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('quiz-form').style.display = 'block';
+        }
+
         function submitQuiz(event) {
-            event.preventDefault(); // Prevent actual form submission
+            event.preventDefault();
             const form = document.getElementById('quiz-form');
             const resultsDiv = document.getElementById('quiz-results');
             const badgeSection = document.getElementById('badge-section');
@@ -251,37 +185,26 @@
             for (let i = 1; i <= totalQuestions; i++) {
                 const qName = 'q' + i;
                 const selected = form.elements[qName];
+                let userAnswer = '';
                 if (selected) {
-                    let userAnswer = '';
-                    // Handle radio buttons
-                    if (selected.length) {
-                       for(let j = 0; j < selected.length; j++) {
-                           if (selected[j].checked) {
-                               userAnswer = selected[j].value;
-                               break;
-                           }
-                       }
-                    } else { // Handle single radio (though we use groups)
-                        if(selected.checked) userAnswer = selected.value;
-                    }
-
-                    if (userAnswer === correctAnswers[qName]) {
-                        score++;
-                    }
+                   for(let j = 0; j < selected.length; j++) {
+                       if (selected[j].checked) { userAnswer = selected[j].value; break; }
+                   }
+                   if (userAnswer === correctAnswers[qName]) score++;
                 }
             }
 
             const percentage = Math.round((score / totalQuestions) * 100);
             resultsDiv.textContent = `Your Score: ${score} out of ${totalQuestions} (${percentage}%)`;
             resultsDiv.style.display = 'block';
-            form.style.display = 'none'; // Hide form after submission
+            form.style.display = 'none';
             endNav.style.display = 'block';
 
             if (percentage >= 80) {
                 badgeSection.style.display = 'block';
-                window.finalScoreValue = percentage; // Store for badge
+                window.finalScoreValue = percentage;
             }
-            return false; // Prevent submission
+            return false;
         }
 
          function generateBadge() {
