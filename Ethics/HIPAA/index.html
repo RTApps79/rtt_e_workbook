@@ -3,17 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HIPAA Essentials for RTTs</title>
+    <title>HIPAA Essentials for RTTs (Enhanced)</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.7;
-            margin: 20px;
+            margin: 0; /* Changed margin to 0 for full-width potential */
+            padding: 0;
             background-color: #f4f4f4;
             color: #333;
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-height: 100vh; /* Ensure body takes full viewport height */
+            position: relative; /* Needed for footer positioning */
+            padding-bottom: 60px; /* Space for the footer */
         }
         .container {
             background-color: #fff;
@@ -22,7 +26,7 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             width: 90%;
             max-width: 900px;
-            margin-bottom: 30px;
+            margin: 20px auto; /* Re-added margin for container */
         }
         h1, h2, h3, h4 {
             color: #0056b3; /* Theme Blue */
@@ -76,6 +80,16 @@
             color: #007bff;
             font-weight: bold;
         }
+        .note {
+            font-size: 0.9em;
+            font-style: italic;
+            color: #555;
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-left: 3px solid #6c757d;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
 
         /* --- Flip Page Lesson Styles --- */
         .flip-lesson-container {
@@ -118,6 +132,13 @@
             background-color: #ccc;
             cursor: not-allowed;
         }
+        #backToMenuButton {
+             background-color: #6c757d; /* Gray color */
+        }
+        #backToMenuButton:hover {
+            background-color: #5a6268;
+        }
+
         .page-indicator { font-style: italic; color: #555; margin: 10px 0; }
 
         /* Interactive Questions within Lesson */
@@ -138,198 +159,205 @@
         .feedback-incorrect label.selected-incorrect { color: #A93226; }
         .explanation { font-size: 0.9em; color: #444; margin-top: 5px; padding-left: 20px;}
 
+        /* Footer Styles */
+        footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            padding: 15px 0;
+            background-color: #e9ecef;
+            color: #6c757d;
+            font-size: 0.9em;
+            border-top: 1px solid #dee2e6;
+        }
+
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>HIPAA Essentials for Radiation Therapists</h1>
+        <h1>HIPAA Essentials for RTTs (Enhanced QM Version)</h1>
 
         <div class="flip-lesson-container">
             <h2>Interactive Lesson: Understanding HIPAA</h2>
 
             <div id="lesson-page-1" class="lesson-page active">
-                <h3>Page 1: What is HIPAA?</h3>
-                <p>HIPAA stands for the <span class="highlight">Health Insurance Portability and Accountability Act of 1996</span>. It's a US federal law designed to achieve several goals, but for healthcare professionals like RTTs, the most crucial aspects involve:</p>
-                <ul>
-                    <li>Establishing national standards to protect sensitive patient health information from being disclosed without the patient's consent or knowledge.</li>
-                    <li>Safeguarding patient privacy and ensuring the security of health information.</li>
-                    <li>Allowing the necessary flow of health information needed to provide high-quality healthcare while protecting privacy.</li>
-                </ul>
-                <h4>Key Terms:</h4>
-                <ul>
-                    <li><strong>Protected Health Information (PHI):</strong> Any health information that can be linked to a specific individual. This includes common identifiers like name, address, birth date, and Social Security number, as well as information about health status, treatment, or payment. PHI can be in any form: electronic, paper, or oral.</li>
-                    <li><strong>Covered Entities:</strong> These are the individuals and organizations required to follow HIPAA rules. This primarily includes healthcare providers (like RTTs and their employers), health plans (insurance companies), and healthcare clearinghouses.</li>
-                    <li><strong>Business Associates:</strong> These are external persons or companies that help covered entities and have access to PHI (like billing services or some IT support).</li>
-                </ul>
-                <p>The primary goal of HIPAA is to protect the privacy of PHI, fostering trust in the healthcare system.</p>
+                <h3>Page 1: Welcome & Getting Started</h3>
+                <p>Welcome to this interactive lesson on the Health Insurance Portability and Accountability Act (HIPAA) and its importance for Radiation Therapists.</p>
+                <h4>How to Get Started (1.1)</h4>
+                <p>This lesson is designed as a series of 'flip pages'. Simply use the <span class="highlight">"Previous Page"</span> and <span class="highlight">"Next Page"</span> buttons at the bottom to move through the content. You'll encounter information, key terms, and short 'Quick Check' quizzes to test your understanding.</p>
+                <h4>Technology & Skills (1.5, 1.6)</h4>
+                <p>You will need a standard web browser to use this lesson. Basic computer and web navigation skills are sufficient. No special software is required.</p>
+                <h4>Prerequisites (1.7)</h4>
+                <p>A basic understanding of the role and responsibilities of a Radiation Therapist is assumed.</p>
+                <h4>Policies & Communication (1.3, 1.4)</h4>
+                <p class="note">If you are taking this lesson as part of a formal course, please refer to your main course syllabus or Learning Management System (LMS) for specific details on communication guidelines (how to contact your instructor, expected response times) and all institutional policies (academic integrity, code of conduct, etc.).</p>
+                 <h4>Data & Privacy (6.4)</h4>
+                <p class="note">This standalone lesson does not collect personal data. If accessed via an LMS, the LMS's privacy policy applies. Always be mindful of protecting your data online.</p>
             </div>
 
             <div id="lesson-page-2" class="lesson-page">
-                <h3>Page 2: The HIPAA Privacy Rule</h3>
-                <p>The Privacy Rule sets the standards for <span class="highlight">who can use and share PHI</span>. It aims to balance the need for information flow with the need to protect patient privacy.</p>
-                <h4>Key Patient Rights under the Privacy Rule:</h4>
+                <h3>Page 2: Learning Objectives & Structure (2.1, 2.3, 2.5)</h3>
+                <p>This lesson is designed to help you, the learner, achieve the following:</p>
                 <ul>
-                    <li><strong>Right to Access:</strong> Patients generally have the right to inspect and get a copy of their PHI.</li>
-                    <li><strong>Right to Amend:</strong> Patients can request corrections to their PHI if they believe it's inaccurate or incomplete.</li>
-                    <li><strong>Right to Request Restrictions:</strong> Patients can ask for limits on how their PHI is used or shared.</li>
-                    <li><strong>Right to an Accounting of Disclosures:</strong> Patients can ask for a list of certain times their PHI was shared.</li>
-                    <li><strong>Right to Confidential Communications:</strong> Patients can request to be contacted in a specific way (e.g., cell phone only).</li>
+                    <li><strong>Define</strong> HIPAA and identify its core purpose in healthcare.</li>
+                    <li><strong>Recognize</strong> what constitutes Protected Health Information (PHI).</li>
+                    <li><strong>Summarize</strong> key patient rights under the HIPAA Privacy Rule.</li>
+                    <li><strong>Describe</strong> the main components and goals of the HIPAA Security Rule.</li>
+                    <li><strong>Identify</strong> the requirements of the HIPAA Breach Notification Rule.</li>
+                    <li><strong>Apply</strong> HIPAA principles to common ethical dilemmas faced by RTTs.</li>
                 </ul>
-                <h4>Permitted Uses & Disclosures:</h4>
-                <p>PHI can generally be used/disclosed *without* specific authorization for:</p>
-                <ul>
-                    <li><strong>TPO:</strong> Treatment, Payment, and Healthcare Operations. (e.g., sharing info with other providers for treatment, billing insurance).</li>
-                    <li><strong>To the Individual:</strong> When the patient requests their own info.</li>
-                    <li><strong>Incidental Disclosures:</strong> Unavoidable disclosures (like being overheard) *if* reasonable safeguards are in place.</li>
-                    <li><strong>When Required by Law:</strong> Such as reporting abuse or complying with court orders.</li>
-                </ul>
-                <p>The <span class="highlight">Minimum Necessary Standard</span> is a core concept: When using or sharing PHI, you must make reasonable efforts to limit it to the minimum information needed for the purpose.</p>
+                <h4>Lesson Structure & Activities (1.2, 2.4)</h4>
+                <p>This lesson introduces HIPAA through a series of informational pages. Each section builds upon the last. The <span class="highlight">"Quick Check"</span> questions (Assessments) are directly linked to the content on the preceding pages (Learning Activities/Instructional Materials) to help you measure your understanding of these learning objectives as you progress.</p>
             </div>
 
             <div id="lesson-page-3" class="lesson-page">
-                <h3>Page 3: The HIPAA Security Rule</h3>
-                <p>While the Privacy Rule covers PHI in all forms, the Security Rule specifically focuses on <span class="highlight">Protecting Electronic PHI (ePHI)</span>. It requires covered entities to ensure the <span class="highlight">Confidentiality, Integrity, and Availability</span> of all ePHI they create, receive, maintain, or transmit.</p>
-                <p>This involves implementing three types of safeguards:</p>
+                <h3>Page 3: What is HIPAA?</h3>
+                <p>HIPAA stands for the <span class="highlight">Health Insurance Portability and Accountability Act of 1996</span>. It's a US federal law designed to establish national standards to protect sensitive patient health information, safeguard privacy, and allow the necessary flow of health information for quality care. </p>
+                <h4>Key Terms:</h4>
                 <ul>
-                    <li><strong>Administrative Safeguards:</strong> These are the policies, procedures, and actions to manage security. Examples include:
-                        <ul>
-                            <li>Conducting Risk Analyses.</li>
-                            <li>Implementing a Sanctions Policy for violations.</li>
-                            <li>Providing Security Awareness Training for all staff.</li>
-                            <li>Assigning a HIPAA Security Officer.</li>
-                        </ul>
-                    </li>
-                    <li><strong>Physical Safeguards:</strong> These protect physical access to ePHI. Examples for RTTs include:
-                        <ul>
-                            <li>Positioning treatment console monitors away from public view.</li>
-                            <li>Securing workstations and treatment rooms.</li>
-                            <li>Policies for using and securing mobile devices if they handle ePHI.</li>
-                        </ul>
-                    </li>
-                    <li><strong>Technical Safeguards:</strong> These involve technology and related policies. Examples include:
-                        <ul>
-                            <li><strong>Access Controls:</strong> Unique user IDs/passwords, limiting access to only what's needed for a job role.</li>
-                            <li><strong>Audit Controls:</strong> Recording and examining activity in systems containing ePHI.</li>
-                            <li><strong>Integrity Controls:</strong> Ensuring ePHI isn't altered or destroyed improperly.</li>
-                            <li><strong>Transmission Security:</strong> Encrypting ePHI when it's sent electronically.</li>
-                        </ul>
-                    </li>
+                    <li><strong>Protected Health Information (PHI):</strong> Any health information that can be linked to a specific individual (name, address, health status, etc.) in any form (electronic, paper, oral).</li>
+                    <li><strong>Covered Entities:</strong> Healthcare providers (like RTTs), health plans, and healthcare clearinghouses.</li>
+                    <li><strong>Business Associates:</strong> External persons or companies helping covered entities with access to PHI.</li>
                 </ul>
-                <p>Regularly reviewing these safeguards and updating them is essential.</p>
+                <p>The primary goal is to protect PHI privacy, fostering trust in the healthcare system. </p>
             </div>
 
-             <div id="lesson-page-4" class="lesson-page">
-                <h3>Page 4: Breach Notification Rule</h3>
-                <p>A "breach" is generally defined as an <span class="highlight">impermissible use or disclosure</span> under the Privacy Rule that compromises the security or privacy of PHI.</p>
-                <p>When a breach occurs, the <span class="highlight">Breach Notification Rule</span> sets out the procedures for notifying affected individuals, the Department of Health and Human Services (HHS), and, in some cases, the media.</p>
-                <h4>Key Notification Requirements:</h4>
+            <div id="lesson-page-4" class="lesson-page">
+                <h3>Page 4: The HIPAA Privacy Rule</h3>
+                <p>The Privacy Rule sets the standards for <span class="highlight">who can use and share PHI</span>.</p>
+                <h4>Key Patient Rights:</h4>
                 <ul>
-                    <li><strong>Individual Notice:</strong> Covered entities must notify affected individuals without unreasonable delay (and within 60 days) following the discovery of a breach.</li>
-                    <li><strong>Media Notice:</strong> If a breach affects more than 500 residents of a state or jurisdiction, media outlets serving that area must generally be notified.</li>
-                    <li><strong>Notice to HHS:</strong> Breaches affecting 500 or more individuals must be reported to HHS within 60 days. Breaches affecting fewer than 500 individuals can be logged and reported annually.</li>
+                    <li><strong>Right to Access:</strong> Inspect and get a copy of their PHI.</li>
+                    <li><strong>Right to Amend:</strong> Request corrections to inaccurate PHI.</li>
+                    <li><strong>Right to Request Restrictions:</strong> Ask for limits on PHI use/sharing.</li>
+                    <li><strong>Right to an Accounting of Disclosures:</strong> Ask for a list of certain PHI shares.</li>
+                    <li><strong>Right to Confidential Communications:</strong> Request specific contact methods.</li>
                 </ul>
-                <p>It's crucial for RTTs to understand what constitutes a breach and <span class="highlight">know their facility's procedure</span> for reporting potential breaches internally to the Privacy or Security Officer. Prompt internal reporting allows the organization to investigate and meet its notification obligations.</p>
-                <h4>Quick Check!</h4>
-                <div class="interactive-question-block" id="lq_page4_1_block">
-                    <p class="question-text">If a stolen, unencrypted laptop contains the ePHI of 600 patients, who must be notified?</p>
-                    <label><input type="radio" name="lq_page4_1" value="A"> Only the 600 patients.</label>
-                    <label><input type="radio" name="lq_page4_1" value="B"> The patients and HHS.</label>
-                    <label><input type="radio" name="lq_page4_1" value="C"> The patients, HHS, and the media.</label>
-                    <div class="explanation" style="display:none;">Correct! Since more than 500 individuals are affected, individuals, HHS, and likely the media must be notified.</div>
-                </div>
-                <button class="check-page-answers" onclick="checkPageAnswers(4)">Check Answer</button>
+                <h4>Permitted Uses & Disclosures:</h4>
+                <p>PHI can be used/disclosed *without* specific authorization for: TPO (Treatment, Payment, Operations), To the Individual, Incidental Disclosures (with safeguards), and When Required by Law.</p>
+                <p>The <span class="highlight">Minimum Necessary Standard</span> requires limiting PHI use/sharing to the minimum needed.</p>
             </div>
 
             <div id="lesson-page-5" class="lesson-page">
-                <h3>Page 5: Common Dilemmas & Scenarios (Part 1)</h3>
-                <p>Applying HIPAA in daily practice often involves navigating tricky situations. Let's look at some common dilemmas:</p>
-
-                <h4>Dilemma 1: "Elevator Talk"</h4>
-                <p>You get on the elevator after a challenging treatment session. Your colleague asks, "How did Mrs. Johnson's boost go? Did she tolerate it better today?"</p>
-                <p><strong>The Risk:</strong> Discussing patients, even using names, in public areas (elevators, hallways, cafeterias) where others can overhear is a potential violation. While some "incidental disclosures" might be unavoidable if safeguards are in place, this isn't incidental – it's an initiated conversation.</p>
-                <p><strong>Best Practice:</strong> Wait until you are in a private, secure area to discuss specific patient details.</p>
-
-                <h4>Dilemma 2: Social Media Sharing</h4>
-                <p>You capture a great photo of your team celebrating a clinic milestone in the treatment area. A Linac machine is visible in the background, but no patients are present.</p>
-                <p><strong>The Risk:</strong> While seemingly harmless, photos taken in clinical areas can inadvertently capture PHI (e.g., a chart left open, a schedule on a whiteboard, sometimes even unique room details). Even without PHI, it can appear unprofessional.</p>
-                <p><strong>Best Practice:</strong> Have a strict policy against taking photos/videos in patient care areas. If allowed, ensure *no* PHI (visible or audible) is captured, and *never* post patient images without explicit, written authorization.</p>
-
-                <h4>Quick Check!</h4>
-                <div class="interactive-question-block" id="lq_page5_1_block">
-                    <p class="question-text">A nurse asks you in the busy waiting room if "John Smith" has finished his treatment yet. Is it okay to answer "Yes, he's just getting down"?</p>
-                    <label><input type="radio" name="lq_page5_1" value="Yes"> Yes, it's a quick answer for a colleague.</label>
-                    <label><input type="radio" name="lq_page5_1" value="No"> No, this confirms John Smith is a patient and his status in a public area.</label>
-                    <label><input type="radio" name="lq_page5_1" value="Maybe"> Maybe, if you say it quietly.</label>
-                    <div class="explanation" style="display:none;">Correct! No, confirming someone is a patient and their status in a public area is a potential violation. Suggest moving to a private space.</div>
-                </div>
-                <button class="check-page-answers" onclick="checkPageAnswers(5)">Check Answer</button>
+                <h3>Page 5: The HIPAA Security Rule</h3>
+                <p>The Security Rule focuses on <span class="highlight">Protecting Electronic PHI (ePHI)</span>, ensuring its Confidentiality, Integrity, and Availability.</p>
+                <p>This involves three types of safeguards:</p>
+                <ul>
+                    <li><strong>Administrative Safeguards:</strong> Policies, procedures, risk analyses, training, sanctions.</li>
+                    <li><strong>Physical Safeguards:</strong> Protecting physical access, securing workstations, monitor positioning.</li>
+                    <li><strong>Technical Safeguards:</strong> Access controls (passwords), audit controls, integrity controls, transmission security (encryption).</li>
+                </ul>
+                <p>Regular review and updating of these safeguards is essential.</p>
             </div>
 
             <div id="lesson-page-6" class="lesson-page">
-                <h3>Page 6: Common Dilemmas & Scenarios (Part 2)</h3>
-                <h4>Dilemma 3: Family/Friend Inquiries</h4>
-                <p>Your friend's father is a patient at your clinic. Your friend calls you, worried, asking for an update on his treatment progress because "Dad never tells me anything."</p>
-                <p><strong>The Risk:</strong> You cannot disclose PHI to family or friends unless the patient has explicitly authorized it or has had the opportunity to agree or object (and hasn't objected). Doing so is a violation, even with good intentions.</p>
-                <p><strong>Best Practice:</strong> Politely explain that you cannot share information due to privacy laws. Encourage your friend to speak directly with their father or suggest they discuss formal authorization with the patient and the care team.</p>
-
-                <h4>Dilemma 4: "Just Looking" in the EMR</h4>
-                <p>You hear that a celebrity (or a colleague, or an old friend) is being treated at your facility. You're curious and decide to look up their electronic medical record (EMR).</p>
-                <p><strong>The Risk:</strong> Accessing PHI for any reason other than TPO (Treatment, Payment, Operations) or other legally permitted purposes is a serious HIPAA violation. This includes accessing records out of curiosity. EMR systems have audit trails that record all access. Such actions often lead to termination and fines.</p>
-                <p><strong>Best Practice:</strong> <span class="highlight">Never</span> access a patient's record unless you have a direct, professional, job-related reason to do so.</p>
-
+                <h3>Page 6: Breach Notification Rule</h3>
+                <p>A "breach" is an <span class="highlight">impermissible use or disclosure</span> that compromises PHI privacy or security.</p>
+                <p>The rule dictates procedures for notifying: Affected Individuals (within 60 days), HHS, and (if >500) the Media.</p>
+                <p>It's crucial to know your facility's procedure for <span class="highlight">reporting potential breaches internally</span>.</p>
                 <h4>Quick Check!</h4>
                 <div class="interactive-question-block" id="lq_page6_1_block">
-                    <p class="question-text">You leave a patient's EMR open on the console screen while you step out briefly to grab a supply. Is this acceptable?</p>
-                    <label><input type="radio" name="lq_page6_1" value="Yes"> Yes, if it's only for a moment.</label>
-                    <label><input type="radio" name="lq_page6_1" value="No"> No, unattended screens with PHI are a security risk.</label>
-                    <div class="explanation" style="display:none;">Correct! No. Unattended screens must be locked or logged off to comply with physical and technical safeguards.</div>
+                    <p class="question-text">If a stolen, unencrypted laptop contains the ePHI of 600 patients, who must be notified?</p>
+                    <label><input type="radio" name="lq_page6_1" value="A"> Only the 600 patients.</label>
+                    <label><input type="radio" name="lq_page6_1" value="B"> The patients and HHS.</label>
+                    <label><input type="radio" name="lq_page6_1" value="C"> The patients, HHS, and the media.</label>
+                    <div class="explanation" style="display:none;">Correct! Since more than 500 individuals are affected, individuals, HHS, and likely the media must be notified.</div>
                 </div>
                 <button class="check-page-answers" onclick="checkPageAnswers(6)">Check Answer</button>
             </div>
 
             <div id="lesson-page-7" class="lesson-page">
-                <h3>Page 7: HIPAA, Ethics, and Your Responsibility</h3>
-                <p>HIPAA isn't just a set of rules; it's deeply intertwined with professional ethics. Protecting patient privacy is a cornerstone of the trust patients place in healthcare professionals.</p>
-                <h4>Connecting HIPAA and ARRT Ethics:</h4>
-                <ul>
-                    <li><strong>ARRT Code of Ethics, Principle 9:</strong> States that RTTs must "respect confidences entrusted in the course of professional practice... [and] protect the patient’s right to privacy." This directly aligns with HIPAA's core mission.</li>
-                    <li><strong>ARRT Rules of Ethics, Rule 18:</strong> Explicitly states that violating federal rules (like HIPAA) regarding patient information can lead to sanctions.</li>
-                </ul>
+                <h3>Page 7: Common Dilemmas & Scenarios (Part 1)</h3>
+                <h4>Dilemma 1: "Elevator Talk"</h4>
+                <p>Discussing patients in public areas is a potential violation. <strong>Best Practice:</strong> Wait until you are in a private, secure area.</p>
+                <h4>Dilemma 2: Social Media Sharing</h4>
+                <p>Photos in clinical areas can inadvertently capture PHI. <strong>Best Practice:</strong> Avoid taking photos/videos in patient care areas. Never post patient images without authorization.</p>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block" id="lq_page7_1_block">
+                    <p class="question-text">A nurse asks you in the busy waiting room if "John Smith" has finished his treatment yet. Is it okay to answer "Yes, he's just getting down"?</p>
+                    <label><input type="radio" name="lq_page7_1" value="Yes"> Yes, it's a quick answer for a colleague.</label>
+                    <label><input type="radio" name="lq_page7_1" value="No"> No, this confirms John Smith is a patient and his status in a public area.</label>
+                    <label><input type="radio" name="lq_page7_1" value="Maybe"> Maybe, if you say it quietly.</label>
+                    <div class="explanation" style="display:none;">Correct! No, confirming someone is a patient and their status in a public area is a potential violation. Suggest moving to a private space.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(7)">Check Answer</button>
+            </div>
+
+             <div id="lesson-page-8" class="lesson-page">
+                <h3>Page 8: Common Dilemmas & Scenarios (Part 2)</h3>
+                <h4>Dilemma 3: Family/Friend Inquiries</h4>
+                <p>You cannot disclose PHI unless authorized. <strong>Best Practice:</strong> Politely decline, citing privacy laws.</p>
+                <h4>Dilemma 4: "Just Looking" in the EMR</h4>
+                <p>Accessing PHI out of curiosity is a serious violation. <strong>Best Practice:</strong> <span class="highlight">Never</span> access a record without a job-related reason.</p>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block" id="lq_page8_1_block">
+                    <p class="question-text">You leave a patient's EMR open on the console screen while you step out briefly to grab a supply. Is this acceptable?</p>
+                    <label><input type="radio" name="lq_page8_1" value="Yes"> Yes, if it's only for a moment.</label>
+                    <label><input type="radio" name="lq_page8_1" value="No"> No, unattended screens with PHI are a security risk.</label>
+                    <div class="explanation" style="display:none;">Correct! No. Unattended screens must be locked or logged off.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(8)">Check Answer</button>
+            </div>
+
+            <div id="lesson-page-9" class="lesson-page">
+                <h3>Page 9: HIPAA, Ethics, and Your Responsibility</h3>
+                <p>HIPAA aligns with ARRT Code Principle 9 (Privacy) and Rule 18 (Violating Federal Rules).</p>
                 <h4>Your Role as an RTT:</h4>
                 <ul>
-                    <li><strong>Be Vigilant:</strong> Always be mindful of PHI in your surroundings, conversations, and actions.</li>
-                    <li><strong>Know Your Policies:</strong> Understand and follow your facility's specific HIPAA policies and procedures.</li>
-                    <li><strong>Ask Questions:</strong> If you're unsure about a situation, ask your supervisor or your facility's Privacy/Security Officer before acting.</li>
-                    <li><strong>Report Concerns:</strong> If you witness a potential violation, follow your facility's procedure for reporting it.</li>
-                    <li><strong>Continuous Learning:</strong> Stay updated on HIPAA, as guidelines and technologies change.</li>
+                    <li>Be Vigilant.</li>
+                    <li>Know Your Policies.</li>
+                    <li>Ask Questions.</li>
+                    <li>Report Concerns.</li>
+                    <li>Continuous Learning.</li>
                 </ul>
-                <p>By upholding HIPAA standards, you not only comply with the law but also demonstrate respect for your patients, build trust, and maintain the integrity of the radiation therapy profession.</p>
-                <p>This concludes the HIPAA Essentials lesson. Consider playing the "Spot the Violation" game next to test your knowledge!</p>
+                <p>Upholding HIPAA builds trust and maintains professional integrity.</p>
             </div>
+
+
+            <div id="lesson-page-10" class="lesson-page">
+                <h3>Page 10: Resources, Policies & Support</h3>
+                <h4>References</h4>
+                <p>This lesson draws information from official U.S. Department of Health and Human Services (HHS) resources and the Centers for Disease Control and Prevention (CDC) regarding HIPAA.</p>
+                <h4>Additional Resources</h4>
+                <p>For more detailed information directly from the source, please visit:</p>
+                <ul>
+                    <li><a href="https://www.hhs.gov/hipaa/for-professionals/index.html" target="_blank" rel="noopener noreferrer">HHS.gov - HIPAA for Professionals</a></li>
+                    <li><a href="https://www.cdc.gov/phlp/php/resources/health-insurance-portability-and-accountability-act-of-1996-hipaa.html" target="_blank" rel="noopener noreferrer">CDC.gov - HIPAA Overview</a></li>
+                </ul>
+                <h4>Academic Integrity</h4>
+                <p>Upholding academic integrity means completing this work honestly.</p>
+                <h4>Support & Accessibility</h4>
+                <p class="note">If part of a course, refer to your institutional resources for Technical Support, Accessibility Services, Academic Support, and Student Services.</p>
+            </div>
+
 
             <div class="lesson-navigation">
                 <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled>Previous Page</button>
-                <span class="page-indicator" id="lessonPageIndicator">Page 1 of 7</span>
+                <button id="backToMenuButton" onclick="goBackToMenu()" style="display:none;">Back to Ethics Menu</button>
+                <span class="page-indicator" id="lessonPageIndicator">Page 1 of 10</span>
                 <button id="nextLessonPage" onclick="changeLessonPage(1)">Next Page</button>
-                </div>
+            </div>
         </div>
 
-    </div>
-
+    </div> <footer>
+        <p>&copy; 2025 RTApps. All rights reserved.</p>
+    </footer>
     <script>
         let currentLessonPage = 1;
-        const totalLessonPages = 7; // Updated total pages
+        const totalLessonPages = 10; // Total pages remains 10
         const lessonPages = document.querySelectorAll('.lesson-page');
         const prevLessonButton = document.getElementById('prevLessonPage');
         const nextLessonButton = document.getElementById('nextLessonPage');
+        const backToMenuButton = document.getElementById('backToMenuButton');
         const lessonPageIndicator = document.getElementById('lessonPageIndicator');
-        // Removed Start Activity Button elements
 
         const lessonCorrectAnswers = {
-            lq_page4_1: "C",
-            lq_page5_1: "No",
-            lq_page6_1: "No"
+            lq_page6_1: "C",
+            lq_page7_1: "No",
+            lq_page8_1: "No"
         };
 
         function displayLessonPage() {
@@ -338,7 +366,7 @@
             });
             prevLessonButton.disabled = currentLessonPage === 1;
             nextLessonButton.style.display = currentLessonPage === totalLessonPages ? 'none' : 'inline-block';
-            // Start Activity Button logic removed
+            backToMenuButton.style.display = currentLessonPage === totalLessonPages ? 'inline-block' : 'none';
             lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
         }
 
@@ -349,9 +377,11 @@
             displayLessonPage();
         }
 
-        // Start Activity function removed
+        function goBackToMenu() {
+            window.location.href = 'https://rtapps79.github.io/rtt_e_workbook/Ethics/';
+        }
 
-        function checkPageAnswers(pageNumber) {
+       function checkPageAnswers(pageNumber) {
             const questionsOnPage = document.querySelectorAll(`#lesson-page-${pageNumber} .interactive-question-block`);
             questionsOnPage.forEach(block => {
                 const questionName = block.querySelector('input[type="radio"]').name;
@@ -388,7 +418,7 @@
                         correctRadio.parentElement.classList.add('correct-option');
                     }
                 }
-                if(explanationDiv) explanationDiv.style.display = 'block'; // Show explanation
+                if(explanationDiv) explanationDiv.style.display = 'block';
             });
         }
 
