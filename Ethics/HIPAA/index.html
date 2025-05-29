@@ -176,158 +176,257 @@
 </head>
 <body>
 
-     <div class="container">
-        <h1>Activity: Comprehensive HIPAA Quiz</h1>
+    <div class="container">
+        <h1>HIPAA Essentials for RTTs (Enhanced QM Version)</h1>
 
-        <div id="start-screen">
-            <h2>Before You Begin...</h2>
-            <h3>Purpose</h3>
-            <p>This quiz will assess your overall understanding of the key concepts, rules, and responsibilities related to HIPAA as presented in the lesson.</p>
-            <h3>Task</h3>
-            <p>You will answer 10 multiple-choice and true/false questions. Read each question carefully and select the best possible answer. After answering all questions, click the "Submit Quiz" button to view your score.</p>
-            <h3>Criteria for Success</h3>
-            <p>Your score reflects your knowledge of HIPAA fundamentals. A score of <span style="font-weight:bold;">80% or higher</span> demonstrates a strong understanding and will earn you a printable "HIPAA Competency Award" badge.</p>
-            <button id="start-quiz-button" onclick="startQuiz()">Start the Quiz!</button>
+        <div class="flip-lesson-container">
+            <h2>Interactive Lesson: Understanding HIPAA</h2>
+
+             <div id="lesson-page-1" class="lesson-page active">
+                <h3>Page 1: Welcome & Getting Started</h3>
+                <p>Welcome to this interactive lesson on the Health Insurance Portability and Accountability Act (HIPAA) and its importance for Radiation Therapists.</p>
+                <h4>How to Get Started (1.1)</h4>
+                <p>This lesson is designed as a series of 'flip pages'. Simply use the <span class="highlight">"Previous Page"</span> and <span class="highlight">"Next Page"</span> buttons at the bottom to move through the content. You'll encounter information, key terms, and short 'Quick Check' quizzes to test your understanding.</p>
+                <h4>Technology & Skills (1.5, 1.6)</h4>
+                <p>You will need a standard web browser to use this lesson. Basic computer and web navigation skills are sufficient. No special software is required.</p>
+                <h4>Prerequisites (1.7)</h4>
+                <p>A basic understanding of the role and responsibilities of a Radiation Therapist is assumed.</p>
+                <h4>Policies & Communication (1.3, 1.4)</h4>
+                <p class="note">If you are taking this lesson as part of a formal course, please refer to your main course syllabus or Learning Management System (LMS) for specific details on communication guidelines and all institutional policies.</p>
+                 <h4>Data & Privacy (6.4)</h4>
+                <p class="note">This standalone lesson does not collect personal data. If accessed via an LMS, the LMS's privacy policy applies.</p>
+            </div>
+
+            <div id="lesson-page-2" class="lesson-page">
+                <h3>Page 2: Learning Objectives & Structure (2.1, 2.3, 2.5)</h3>
+                <p>This lesson is designed to help you, the learner, achieve the following:</p>
+                <ul>
+                    <li><strong>Define</strong> HIPAA and identify its core purpose in healthcare.</li>
+                    <li><strong>Recognize</strong> what constitutes Protected Health Information (PHI).</li>
+                    <li><strong>Summarize</strong> key patient rights under the HIPAA Privacy Rule.</li>
+                    <li><strong>Describe</strong> the main components and goals of the HIPAA Security Rule.</li>
+                    <li><strong>Identify</strong> the requirements of the HIPAA Breach Notification Rule.</li>
+                    <li><strong>Apply</strong> HIPAA principles to common ethical dilemmas faced by RTTs.</li>
+                </ul>
+                <h4>Lesson Structure & Activities (1.2, 2.4)</h4>
+                <p>This lesson uses informational pages and <span class="highlight">"Quick Check"</span> questions (Assessments) directly linked to the content (Learning Activities/Instructional Materials) to help you measure your understanding of these learning objectives.</p>
+            </div>
+
+            <div id="lesson-page-3" class="lesson-page">
+                <h3>Page 3: What is HIPAA?</h3>
+                <p>HIPAA stands for the <span class="highlight">Health Insurance Portability and Accountability Act of 1996</span>. It establishes national standards to protect sensitive patient health information, safeguard privacy, and allow necessary information flow.</p>
+                <h4>Key Terms:</h4>
+                <ul>
+                    <li><strong>Protected Health Information (PHI):</strong> Identifiable health information in any form.</li>
+                    <li><strong>Covered Entities:</strong> Providers, plans, clearinghouses.</li>
+                    <li><strong>Business Associates:</strong> External partners with PHI access.</li>
+                </ul>
+                <p>Its goal is to foster trust by protecting PHI privacy.</p>
+            </div>
+
+            <div id="lesson-page-4" class="lesson-page">
+                <h3>Page 4: The HIPAA Privacy Rule</h3>
+                <p>The Privacy Rule sets standards for <span class="highlight">using and sharing PHI</span>.</p>
+                <h4>Key Patient Rights:</h4>
+                <ul>
+                    <li>Access, Amend, Request Restrictions, Accounting of Disclosures, Confidential Communications.</li>
+                </ul>
+                <h4>Permitted Uses & Disclosures:</h4>
+                <p>Allowed for TPO, To the Individual, Incidental (with safeguards), and Required by Law.</p>
+                <p>The <span class="highlight">Minimum Necessary Standard</span> applies.</p>
+            </div>
+
+            <div id="lesson-page-5" class="lesson-page">
+                <h3>Page 5: The HIPAA Security Rule</h3>
+                <p>The Security Rule protects <span class="highlight">Electronic PHI (ePHI)</span> - its Confidentiality, Integrity, and Availability.</p>
+                <p>Requires three types of safeguards:</p>
+                <ul>
+                    <li><strong>Administrative:</strong> Policies, training, risk analysis.</li>
+                    <li><strong>Physical:</strong> Workstation security, access control.</li>
+                    <li><strong>Technical:</strong> Passwords, audits, encryption.</li>
+                </ul>
+            </div>
+
+            <div id="lesson-page-6" class="lesson-page">
+                <h3>Page 6: Breach Notification Rule</h3>
+                <p>A "breach" is an <span class="highlight">impermissible use or disclosure</span>.</p>
+                <p>The rule requires notifying: Affected Individuals, HHS, and sometimes the Media.</p>
+                <p>Know your facility's internal reporting procedure.</p>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block" id="lq_page6_1_block">
+                    <p class="question-text">If a stolen, unencrypted laptop contains the ePHI of 600 patients, who must be notified?</p>
+                    <label><input type="radio" name="lq_page6_1" value="A"> Only the 600 patients.</label>
+                    <label><input type="radio" name="lq_page6_1" value="B"> The patients and HHS.</label>
+                    <label><input type="radio" name="lq_page6_1" value="C"> The patients, HHS, and the media.</label>
+                    <div class="explanation" style="display:none;">Correct! Since more than 500 individuals are affected, individuals, HHS, and likely the media must be notified.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(6)">Check Answer</button>
+            </div>
+
+            <div id="lesson-page-7" class="lesson-page">
+                <h3>Page 7: Common Dilemmas & Scenarios (Part 1)</h3>
+                <h4>Dilemma 1: "Elevator Talk"</h4>
+                <p>Don't discuss patients in public areas. <strong>Best Practice:</strong> Wait for a private area.</p>
+                <h4>Dilemma 2: Social Media Sharing</h4>
+                <p>Avoid photos in clinical areas. <strong>Best Practice:</strong> Never post PHI or patient images without explicit consent.</p>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block" id="lq_page7_1_block">
+                    <p class="question-text">Is confirming a patient's presence in a busy waiting room a violation?</p>
+                    <label><input type="radio" name="lq_page7_1" value="Yes"> Yes, it's a colleague.</label>
+                    <label><input type="radio" name="lq_page7_1" value="No"> No, it confirms status in public.</label>
+                    <label><input type="radio" name="lq_page7_1" value="Maybe"> Maybe, if quiet.</label>
+                    <div class="explanation" style="display:none;">Correct! No (meaning, it *is* a violation). Confirming status in public breaches privacy.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(7)">Check Answer</button>
+            </div>
+
+             <div id="lesson-page-8" class="lesson-page">
+                <h3>Page 8: Common Dilemmas & Scenarios (Part 2)</h3>
+                <h4>Dilemma 3: Family/Friend Inquiries</h4>
+                <p>Don't disclose without authorization. <strong>Best Practice:</strong> Politely decline, cite privacy.</p>
+                <h4>Dilemma 4: "Just Looking" in the EMR</h4>
+                <p>Accessing records out of curiosity is a violation. <strong>Best Practice:</strong> Never access without a job reason.</p>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block" id="lq_page8_1_block">
+                    <p class="question-text">Is leaving an EMR open unattended briefly acceptable?</p>
+                    <label><input type="radio" name="lq_page8_1" value="Yes"> Yes, if quick.</label>
+                    <label><input type="radio" name="lq_page8_1" value="No"> No, it's a security risk.</label>
+                    <div class="explanation" style="display:none;">Correct! No. Always lock or log off.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(8)">Check Answer</button>
+            </div>
+
+            <div id="lesson-page-9" class="lesson-page">
+                <h3>Page 9: HIPAA, Ethics, and Your Responsibility</h3>
+                <p>HIPAA aligns with ARRT ethics (Principle 9, Rule 18).</p>
+                <h4>Your Role:</h4>
+                <p>Be Vigilant, Know Policies, Ask Questions, Report Concerns, Keep Learning.</p>
+                <p>Upholding HIPAA builds trust.</p>
+            </div>
+
+            <div id="lesson-page-10" class="lesson-page">
+                <h3>Page 10: Next Steps & Resources</h3>
+                <p>You have now completed the core content for the HIPAA Essentials lesson. To further test your knowledge and apply these principles, choose one or more of the following activities:</p>
+
+                <div class="activity-list">
+                    <h4>Optional Activities & Assessments</h4>
+                    <ul>
+                        <li>
+                            <a href="hipaa_game">Activity: Spot the Violation (Interactive Game)</a>
+                            <p>Test your ability to identify HIPAA issues in digital scenarios like social media posts and text messages.</p>
+                        </li>
+                        <li>
+                            <a href="hipaa_cases">Activity: Case Study Analysis (Worksheet)</a>
+                            <p>Analyze detailed scenarios involving multiple HIPAA challenges and document your findings.</p>
+                        </li>
+                         <li>
+                            <a href="hipaa_quiz">Activity: Comprehensive HIPAA Quiz</a>
+                            <p>Take a multiple-choice quiz covering all key areas of this HIPAA lesson.</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <h4>Additional Resources</h4>
+                <p>For more detailed information, please visit:</p>
+                <ul>
+                    <li><a href="https://www.hhs.gov/hipaa/for-professionals/index.html" target="_blank" rel="noopener noreferrer">HHS.gov - HIPAA for Professionals</a></li>
+                    <li><a href="https://www.cdc.gov/phlp/php/resources/health-insurance-portability-and-accountability-act-of-1996-hipaa.html" target="_blank" rel="noopener noreferrer">CDC.gov - HIPAA Overview</a></li>
+                </ul>
+
+                <p class="note">Remember to consult your institution's specific policies and procedures for guidance on HIPAA compliance in your workplace.</p>
+            </div>
+
+
+            <div class="lesson-navigation">
+                <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled>Previous Page</button>
+                <button id="backToMenuButton" onclick="goBackToMenu()" style="display:none;">Back to Ethics Menu</button>
+                <span class="page-indicator" id="lessonPageIndicator">Page 1 of 10</span>
+                <button id="nextLessonPage" onclick="changeLessonPage(1)">Next Page</button>
+            </div>
         </div>
 
-        <form id="quiz-form" onsubmit="return submitQuiz(event)" style="display: none;">
-            <div class="question-block">
-                <p>1. What does PHI stand for?</p>
-                <label><input type="radio" name="q1" value="a"> Patient Health Information</label>
-                <label><input type="radio" name="q1" value="b"> Protected Health Information</label>
-                <label><input type="radio" name="q1" value="c"> Private Health Identification</label>
-            </div>
-            <div class="question-block">
-                <p>2. The HIPAA Security Rule applies only to paper records. (True/False)</p>
-                <label><input type="radio" name="q2" value="a"> True</label>
-                <label><input type="radio" name="q2" value="b"> False</label>
-            </div>
-            <div class="question-block">
-                <p>3. Which is NOT a primary 'Covered Entity' under HIPAA?</p>
-                <label><input type="radio" name="q3" value="a"> Healthcare Provider</label>
-                <label><input type="radio" name="q3" value="b"> Health Insurance Company</label>
-                <label><input type="radio" name="q3" value="c"> A Patient's Employer (in most cases)</label>
-            </div>
-            <div class="question-block">
-                <p>4. The 'Minimum Necessary' standard means:</p>
-                <label><input type="radio" name="q4" value="a"> You should only access the absolute fewest records possible.</label>
-                <label><input type="radio" name="q4" value="b"> You should only use/disclose the least amount of PHI needed for a task.</label>
-                <label><input type="radio" name="q4" value="c"> You only need to protect the most sensitive PHI.</label>
-            </div>
-             <div class="question-block">
-                <p>5. If a breach affects 300 people, HHS must be notified within 60 days. (True/False)</p>
-                <label><input type="radio" name="q5" value="a"> True</label>
-                <label><input type="radio" name="q5" value="b"> False</label>
-            </div>
-             <div class="question-block">
-                <p>6. Which of these is a Technical Safeguard under the Security Rule?</p>
-                <label><input type="radio" name="q6" value="a"> Locking office doors.</label>
-                <label><input type="radio" name="q6" value="b"> Conducting a risk analysis.</label>
-                <label><input type="radio" name="q6" value="c"> Using unique user IDs and passwords.</label>
-            </div>
-             <div class="question-block">
-                <p>7. Patients have the right to access and amend their PHI. (True/False)</p>
-                <label><input type="radio" name="q7" value="a"> True</label>
-                <label><input type="radio" name="q7" value="b"> False</label>
-            </div>
-             <div class="question-block">
-                <p>8. Discussing a patient by name in the cafeteria is generally acceptable if you speak quietly. (True/False)</p>
-                <label><input type="radio" name="q8" value="a"> True</label>
-                <label><input type="radio" name="q8" value="b"> False</label>
-            </div>
-             <div class="question-block">
-                <p>9. TPO stands for:</p>
-                <label><input type="radio" name="q9" value="a"> Treatment, Payment, and Operations</label>
-                <label><input type="radio" name="q9" value="b"> Testing, Procedures, and Orders</label>
-                <label><input type="radio" name="q9" value="c"> Therapy, Privacy, and Oversight</label>
-            </div>
-            <div class="question-block">
-                <p>10. Logging into an EMR as a colleague using their password is:</p>
-                <label><input type="radio" name="q10" value="a"> Okay if you have a valid reason.</label>
-                <label><input type="radio" name="q10" value="b"> A security violation but not a privacy violation.</label>
-                <label><input type="radio" name="q10" value="c"> A serious HIPAA Security (and likely Privacy) violation.</label>
-            </div>
-            <button id="submit-quiz" type="submit">Submit Quiz</button>
-        </form>
-
-        <div id="quiz-results"></div>
-
-        <div id="badge-section">
-            <h3>Congratulations! You've Earned a Badge!</h3>
-            <div id="badge-input">
-                <label for="userNameForBadge">Enter Your Name:</label>
-                <input type="text" id="userNameForBadge" placeholder="Your Name Here">
-                <button onclick="generateBadge()">Generate Badge</button>
-            </div>
-            <div class="badge" id="printableBadge" style="display:none;">
-                <h4>HIPAA Competency Award</h4>
-                <p class="awardee" id="badgeName"></p>
-                <p class="reason">For demonstrating strong knowledge of HIPAA principles.</p>
-                <p class="score" id="badgeScore"></p>
-                <p class="logo">RTApps Learning</p>
-            </div>
-            <button id="printBadgeButton" onclick="window.print()" style="display:none;">Print Badge</button>
-        </div>
-
-        <div class="post-activity-nav" id="end-nav" style="display: none;">
-            <h3>What's Next?</h3>
-            <button class="menu" onclick="window.location.href='https://rtapps79.github.io/rtt_e_workbook/Ethics/'">Back to Ethics Menu</button>
-            <button class="repeat" onclick="window.location.reload()">Try Quiz Again</button>
-            <button onclick="window.location.href='hipaa.html#lesson-page-10'">Other HIPAA Activities</button>
-        </div>
-    </div>
-    <footer> <p>&copy; 2025 RTApps. All rights reserved.</p> </footer>
+    </div> <footer>
+        <p>&copy; 2025 RTApps. All rights reserved.</p>
+    </footer>
 
     <script>
-        const correctAnswers = { q1: 'b', q2: 'b', q3: 'c', q4: 'b', q5: 'b', q6: 'c', q7: 'a', q8: 'b', q9: 'a', q10: 'c' };
-        const totalQuestions = 10;
+        let currentLessonPage = 1;
+        const totalLessonPages = 10;
+        const lessonPages = document.querySelectorAll('.lesson-page');
+        const prevLessonButton = document.getElementById('prevLessonPage');
+        const nextLessonButton = document.getElementById('nextLessonPage');
+        const backToMenuButton = document.getElementById('backToMenuButton');
+        const lessonPageIndicator = document.getElementById('lessonPageIndicator');
 
-        function startQuiz() {
-            document.getElementById('start-screen').style.display = 'none';
-            document.getElementById('quiz-form').style.display = 'block';
+        const lessonCorrectAnswers = {
+            lq_page6_1: "C",
+            lq_page7_1: "No",
+            lq_page8_1: "No"
+        };
+
+        function displayLessonPage() {
+            lessonPages.forEach((page, index) => {
+                page.classList.toggle('active', index === currentLessonPage - 1);
+            });
+            prevLessonButton.disabled = currentLessonPage === 1;
+            nextLessonButton.style.display = currentLessonPage === totalLessonPages ? 'none' : 'inline-block';
+            backToMenuButton.style.display = currentLessonPage === totalLessonPages ? 'inline-block' : 'none';
+            lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
         }
 
-        function submitQuiz(event) {
-            event.preventDefault();
-            const form = document.getElementById('quiz-form');
-            const resultsDiv = document.getElementById('quiz-results');
-            const badgeSection = document.getElementById('badge-section');
-            const endNav = document.getElementById('end-nav');
-            let score = 0;
+        function changeLessonPage(direction) {
+            currentLessonPage += direction;
+            if (currentLessonPage < 1) currentLessonPage = 1;
+            if (currentLessonPage > totalLessonPages) currentLessonPage = totalLessonPages;
+            displayLessonPage();
+        }
 
-            for (let i = 1; i <= totalQuestions; i++) {
-                const qName = 'q' + i;
-                const selected = form.elements[qName];
-                let userAnswer = '';
-                if (selected) {
-                   for(let j = 0; j < selected.length; j++) {
-                       if (selected[j].checked) { userAnswer = selected[j].value; break; }
-                   }
-                   if (userAnswer === correctAnswers[qName]) score++;
+        function goBackToMenu() {
+            window.location.href = 'https://rtapps79.github.io/rtt_e_workbook/Ethics/';
+        }
+
+       function checkPageAnswers(pageNumber) {
+            const questionsOnPage = document.querySelectorAll(`#lesson-page-${pageNumber} .interactive-question-block`);
+            questionsOnPage.forEach(block => {
+                const questionName = block.querySelector('input[type="radio"]').name;
+                if (!lessonCorrectAnswers.hasOwnProperty(questionName)) return;
+
+                const correctAnswerValue = lessonCorrectAnswers[questionName];
+                const selectedRadio = block.querySelector(`input[name="${questionName}"]:checked`);
+                const explanationDiv = block.querySelector('.explanation');
+
+                block.classList.remove('feedback-correct', 'feedback-incorrect');
+                block.querySelectorAll('label').forEach(label => {
+                    label.classList.remove('correct-option', 'selected-incorrect');
+                });
+                 if(explanationDiv) explanationDiv.style.display = 'none';
+
+                if (selectedRadio) {
+                    const userAnswer = selectedRadio.value;
+                    const userSelectedLabel = selectedRadio.parentElement;
+                    if (userAnswer === correctAnswerValue) {
+                        block.classList.add('feedback-correct');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('correct-option');
+                    } else {
+                        block.classList.add('feedback-incorrect');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('selected-incorrect');
+                        const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                        if (correctRadio && correctRadio.parentElement) {
+                            correctRadio.parentElement.classList.add('correct-option');
+                        }
+                    }
+                } else {
+                    block.classList.add('feedback-incorrect');
+                    const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                    if (correctRadio && correctRadio.parentElement) {
+                        correctRadio.parentElement.classList.add('correct-option');
+                    }
                 }
-            }
-
-            const percentage = Math.round((score / totalQuestions) * 100);
-            resultsDiv.textContent = `Your Score: ${score} out of ${totalQuestions} (${percentage}%)`;
-            resultsDiv.style.display = 'block';
-            form.style.display = 'none';
-            endNav.style.display = 'block';
-
-            if (percentage >= 80) {
-                badgeSection.style.display = 'block';
-                window.finalScoreValue = percentage;
-            }
-            return false;
+                if(explanationDiv) explanationDiv.style.display = 'block';
+            });
         }
 
-         function generateBadge() {
-            const name = document.getElementById('userNameForBadge').value;
-            if (name.trim() === "") { alert("Please enter your name."); return; }
-            document.getElementById('badgeName').textContent = name;
-            document.getElementById('badgeScore').textContent = `Achieved with a score of ${window.finalScoreValue}%`;
-            document.getElementById('printableBadge').style.display = 'flex';
-            document.getElementById('printBadgeButton').style.display = 'inline-block';
-        }
+        displayLessonPage();
     </script>
 
 </body>
