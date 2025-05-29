@@ -158,12 +158,39 @@
 <body>
     <div class="container">
         <h1>Activity: Spot the Violation</h1>
-        <div id="game-area">
-            <div id="score-board">Score: 0 / 0 | Violations: 0</div>
+
+        <div id="start-screen">
+            <h2>Before You Begin...</h2>
+            <h3>Purpose</h3>
+            <p>This game will help you practice identifying potential HIPAA violations and unprofessional conduct in digital communications. It's designed to make you think critically about how you share information and interact online as a healthcare professional.</p>
+
+            <h3>How to Play (Task)</h3>
+            <ul>
+                <li>You will see five different scenarios (social media posts, texts, etc.).</li>
+                <li>In each scenario, some parts of the text are <span class="clickable">highlighted like this</span>.</li>
+                <li>Click ONLY on the highlighted parts you believe are violations.</li>
+                <li>You'll get instant feedback explaining if your choice was correct or incorrect.</li>
+                <li>Once you've found all the violations in a scenario, the "Next Scenario" button will become active.</li>
+                <li>Click "Next Scenario" to continue until all five are complete.</li>
+            </ul>
+
+            <h3>Scoring & Badge (Criteria)</h3>
+            <ul>
+                <li>You score points for correctly identifying violations.</li>
+                <li>You lose a small number of points for incorrectly clicking on non-violations.</li>
+                <li>Your final score will be shown as a percentage.</li>
+                <li>Achieve a score of <span style="font-weight:bold;">75% or higher</span> to earn a printable "HIPAA Awareness Award" badge!</li>
+            </ul>
+            <button id="start-game-button" onclick="startGame()">Start the Game!</button>
+        </div>
+
+        <div id="game-area" style="display: none;">
+            <div id="score-board">Score: 0 / 0 | Violations: 0 / 0</div>
             <div id="scenario-container"></div>
             <div id="feedback-box"></div>
-            <button id="next-button" onclick="loadNextScenario()" disabled>Start Game</button>
+            <button id="next-button" onclick="loadNextScenario()" disabled>Next Scenario</button>
         </div>
+
         <div id="results-area" style="display: none;">
              <h2>Activity Results</h2>
              <p id="final-score"></p>
@@ -194,6 +221,7 @@
                 <button id="printBadgeButton" onclick="window.print()" style="display:none;">Print Badge</button>
              </div>
         </div>
+
         <div class="post-activity-nav" id="end-nav" style="display: none;">
             <h3>What's Next?</h3>
             <button class="menu" onclick="window.location.href='https://rtapps79.github.io/rtt_e_workbook/Ethics/'">Back to Ethics Menu</button>
@@ -204,8 +232,7 @@
     <footer> <p>&copy; 2025 RTApps. All rights reserved.</p> </footer>
 
     <script>
-        // Game JS (as before, but adapted)
-        const scenarios = [ /* Add game scenarios here as in previous examples */
+        const scenarios = [
             { title: "Scenario 1: Facebook Post", content: `Rough day! Treated <span class="clickable" data-violation="true" data-feedback="PHI! Name/Initials.">Mr. S</span> with <span class="clickable" data-violation="true" data-feedback="PHI! Condition.">rare lung cancer</span> on <span class="clickable" data-violation="true" data-feedback="PHI! Location detail.">Linac 2</span>. <span class="clickable" data-violation="false" data-feedback="General, not PHI.">#RTTLife</span>`},
             { title: "Scenario 2: Text Message", content: `RTT1: <span class="clickable" data-violation="true" data-feedback="PHI! Identifiable person.">News anchor</span> in today! RTT2: <span class="clickable" data-violation="true" data-feedback="PHI! Asking condition.">For a brain?</span>`},
             { title: "Scenario 3: Internal Email", content: `<span class="clickable" data-violation="false" data-feedback="OK for TPO.">Move John P. (10/15/65)?</span> He needs <span class="clickable" data-violation="false" data-feedback="OK for TPO.">transport.</span>`},
@@ -217,12 +244,21 @@
         const scoreBoard = document.getElementById('score-board'), nextButton = document.getElementById('next-button');
         const gameArea = document.getElementById('game-area'), resultsArea = document.getElementById('results-area');
         const endNav = document.getElementById('end-nav'), badgeSection = document.getElementById('badge-section');
+        const startScreen = document.getElementById('start-screen');
 
         scenarios.forEach(s => { totalViolations += (s.content.match(/data-violation="true"/g) || []).length; });
 
+        function startGame() {
+            startScreen.style.display = 'none';
+            gameArea.style.display = 'block';
+            loadNextScenario(); // Load the first scenario
+        }
+
         function updateScore(isCorrectViolation) {
-            totalPossible++;
-            if (isCorrectViolation) score++;
+            totalPossible++; // Count every click
+            if (isCorrectViolation) {
+                score++; // Only increment score if it was a violation *and* they clicked it.
+            }
             scoreBoard.textContent = `Score: ${score} / ${totalPossible} | Violations Found: ${score} / ${totalViolations}`;
         }
 
@@ -232,7 +268,7 @@
             const isViolation = span.dataset.violation === "true";
             span.classList.add('disabled');
             span.classList.add(isViolation ? 'correct' : 'incorrect');
-            updateScore(isViolation);
+            updateScore(isViolation); // Update based on whether it *was* a violation
             feedbackBox.textContent = span.dataset.feedback;
             feedbackBox.className = isViolation ? 'feedback-correct-msg' : 'feedback-incorrect-msg';
             checkScenarioComplete();
@@ -241,17 +277,16 @@
         function checkScenarioComplete() {
             const currentDiv = document.querySelector('.scenario');
             if(!currentDiv) return;
-            const allClickables = currentDiv.querySelectorAll('.clickable');
-            let allViolationsFound = true;
-            allClickables.forEach(s => { if (s.dataset.violation === "true" && !s.classList.contains('correct')) allViolationsFound = false; });
-            if (allViolationsFound) nextButton.disabled = false;
+            const allViolations = currentDiv.querySelectorAll('.clickable[data-violation="true"]');
+            let allFound = true;
+            allViolations.forEach(v => { if (!v.classList.contains('correct')) allFound = false; });
+            if (allFound) nextButton.disabled = false; // Only enable when all *actual* violations are found
         }
 
         function loadNextScenario() {
             currentScenarioIndex++;
             feedbackBox.textContent = ""; feedbackBox.className = ""; nextButton.disabled = true;
             if (currentScenarioIndex < scenarios.length) {
-                nextButton.textContent = "Next Scenario";
                 const scenario = scenarios[currentScenarioIndex];
                 scenarioContainer.innerHTML = `<div class="scenario"><div class="scenario-title">${scenario.title}</div><div class="content">${scenario.content}</div></div>`;
                 document.querySelectorAll('.clickable').forEach(span => {
@@ -259,6 +294,7 @@
                     span.addEventListener('click', handleSpanClick);
                     span.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { handleSpanClick(e); e.preventDefault(); } });
                 });
+                scoreBoard.textContent = `Score: ${score} / ${totalPossible} | Violations Found: ${score} / ${totalViolations}`; // Update score display
             } else { endGame(); }
         }
 
@@ -266,15 +302,15 @@
             gameArea.style.display = 'none'; resultsArea.style.display = 'block'; endNav.style.display = 'block';
             let incorrectClicks = totalPossible - score;
             let finalScore = (totalViolations > 0) ? Math.round((score / totalViolations) * 100) : 100;
-            finalScore = Math.max(0, finalScore - (incorrectClicks * 5));
+            finalScore = Math.max(0, finalScore - (incorrectClicks * 5)); // Penalty
             document.getElementById('final-score').textContent = `Your Final Score: ${finalScore}%`;
             document.querySelectorAll('.rubric-table tr').forEach(row => row.classList.remove('highlight-score'));
             if (finalScore >= 90) document.getElementById('rubric-expert').classList.add('highlight-score');
             else if (finalScore >= 75) document.getElementById('rubric-proficient').classList.add('highlight-score');
             else if (finalScore >= 60) document.getElementById('rubric-developing').classList.add('highlight-score');
             else document.getElementById('rubric-novice').classList.add('highlight-score');
-            if (finalScore >= 75) badgeSection.style.display = 'block'; // Show badge option if proficient or expert
-            window.finalScoreValue = finalScore; // Store for badge
+            if (finalScore >= 75) badgeSection.style.display = 'block';
+            window.finalScoreValue = finalScore;
         }
 
         function generateBadge() {
@@ -285,7 +321,6 @@
             document.getElementById('printableBadge').style.display = 'flex';
             document.getElementById('printBadgeButton').style.display = 'inline-block';
         }
-        nextButton.disabled = false; // Enable Start button initially
     </script>
 </body>
 </html>
