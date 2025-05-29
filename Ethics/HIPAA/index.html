@@ -3,33 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HIPAA Essentials for RTTs</title>
+    <title>Activity: Comprehensive HIPAA Quiz</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
         }
-        /* Custom styles for print */
+        .question-option:hover {
+            background-color: #f0f9ff; /* Tailwind sky-50 */
+        }
+        .selected-option {
+            background-color: #e0f2fe; /* Tailwind sky-100 */
+            border-color: #38bdf8; /* Tailwind sky-400 */
+        }
+        .correct-answer {
+            background-color: #dcfce7; /* Tailwind green-100 */
+            border-left-color: #22c55e !important; /* Tailwind green-500 */
+        }
+        .incorrect-answer {
+            background-color: #fee2e2; /* Tailwind red-100 */
+            border-left-color: #ef4444 !important; /* Tailwind red-500 */
+        }
+        .correct-indicator::after {
+            content: '✔ Correct';
+            color: #16a34a; /* Tailwind green-600 */
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .incorrect-indicator::after {
+            content: '✖ Incorrect';
+            color: #dc2626; /* Tailwind red-600 */
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .correct-option-text {
+            font-weight: bold;
+            color: #15803d; /* Tailwind green-700 */
+        }
+
+        /* Print Styles for Badge */
         @media print {
-            body { background-color: #fff; margin: 10px; padding: 0; font-size: 10pt; }
-            .container-lesson, .flip-lesson-container { box-shadow: none; border: none; width: 100%; max-width: 100%; padding: 5px; margin-bottom: 15px;}
-            .lesson-navigation-bar, .check-page-answers, .nav-links-header, .activity-list-container a::after { display: none !important; }
-            .lesson-page, .activity-list-container li { page-break-inside: avoid; border: 1px solid #eee !important; }
-            .interactive-question-block {background: #fff !important; border: 1px solid #ccc !important; }
-            h1, h2, h3, h4 { color: #000 !important; border-color: #000 !important; margin-bottom: 10px; padding-bottom: 3px;}
-            .explanation { display: none !important; }
-            .bg-purple-600, .bg-purple-700, .bg-green-500, .bg-green-600, .bg-purple-500 { color: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            .activity-list-container a { text-decoration: none; color: #0056b3 !important; }
+            body { margin: 0; padding: 0; }
+            body * { visibility: hidden; }
+            #printableBadge, #printableBadge * { visibility: visible; }
+            #printableBadge {
+                position: absolute; left: 50%; top: 50%;
+                transform: translate(-50%, -50%);
+                width: 90vw; height: auto; margin: 0; padding: 20px;
+                box-shadow: none;
+                border: 10px solid #FACC15 !important; /* Tailwind yellow-400 */
+                color: #000 !important;
+                background-color: #FEF9C3 !important; /* Tailwind yellow-100 */
+                -webkit-print-color-adjust: exact; print-color-adjust: exact;
+            }
+            #printableBadge h4, #printableBadge .awardee-name, #printableBadge .badge-logo-print, 
+            #printableBadge .badge-score-print, #printableBadge .completion-date-print {
+                color: #A16207 !important; /* Tailwind yellow-700 */
+            }
+            #printableBadge .awardee-name {
+                border-bottom: 1px dashed #CA8A04 !important; /* Tailwind yellow-600 */
+            }
+            .nav-links-header, #start-screen-container, #quiz-area-container, #results-area-container > h2,
+            #badge-input-section, #post-activity-navigation, footer, #printBadgeButtonTrigger, #quiz-submit-button, #quiz-questions-container label {
+                display: none !important;
+            }
         }
     </style>
 </head>
-<body class="bg-slate-100 text-slate-800">
+<body class="bg-slate-100 text-slate-800 flex flex-col min-h-screen">
 
     <header class="bg-white shadow-md sticky top-0 z-50 nav-links-header">
         <div class="container mx-auto px-6 py-3 flex flex-col sm:flex-row justify-between items-center">
-            <h1 class="text-xl font-bold text-purple-700 mb-2 sm:mb-0">HIPAA Essentials Lesson</h1>
+            <h1 class="text-xl font-bold text-purple-700 mb-2 sm:mb-0">Activity: Comprehensive HIPAA Quiz</h1>
             <div class="flex flex-wrap justify-center sm:justify-end space-x-2">
+                <a href="./index.html#lesson-page-10" class="text-xs sm:text-sm bg-purple-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-purple-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to HIPAA Lesson
+                </a>
                 <a href="../index.html" class="text-xs sm:text-sm bg-purple-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-purple-600 transition-colors duration-300 mb-1 sm:mb-0">
                     &larr; Back to Ethics Module
                 </a>
@@ -40,269 +90,277 @@
         </div>
     </header>
 
-    <div class="container-lesson mx-auto max-w-4xl px-4 sm:px-6 py-8">
+    <main class="container mx-auto max-w-3xl px-4 sm:px-6 py-8 flex-grow">
         <div class="bg-white p-6 sm:p-8 rounded-xl shadow-xl">
-            <h1 class="text-3xl font-bold text-purple-700 mb-6 text-center border-b-2 border-purple-300 pb-4">HIPAA Essentials for RTTs</h1>
+            <h1 class="text-3xl font-bold text-purple-700 mb-8 text-center border-b-2 border-purple-300 pb-4">Activity: Comprehensive HIPAA Quiz</h1>
 
-            <div class="flip-lesson-container bg-purple-50 p-4 sm:p-6 rounded-lg shadow-md mb-8">
-                <h2 class="text-2xl font-semibold text-purple-600 mb-4">Interactive Lesson: Understanding HIPAA</h2>
+            <div id="start-screen-container" class="bg-purple-50 p-6 rounded-lg shadow-md mb-8 border border-purple-200">
+                <h2 class="text-2xl font-semibold text-purple-600 mb-4">Before You Begin...</h2>
+                <h3 class="text-xl font-medium text-purple-700 mb-2">Purpose</h3>
+                <p class="text-slate-700 mb-4 text-sm">This quiz will test your understanding of the key concepts covered in the HIPAA Essentials lesson, including the Privacy Rule, Security Rule, Breach Notification Rule, and common applications in a healthcare setting.</p>
+                <h3 class="text-xl font-medium text-purple-700 mb-2">Task</h3>
+                <p class="text-slate-700 mb-4 text-sm">Answer all multiple-choice questions to the best of your ability. After submitting, you will receive your score and feedback on your answers.</p>
+                <h3 class="text-xl font-medium text-purple-700 mb-2">Criteria for Success</h3>
+                <p class="text-slate-700 mb-4 text-sm">A successful completion involves answering the questions thoughtfully. A score of <span class="font-bold text-green-600">80% or higher</span> will earn you a printable "HIPAA Proficiency Certificate".</p>
+                <button id="start-quiz-button" onclick="startQuiz()" class="w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-lg text-lg transition-colors duration-300 block mx-auto">Start Quiz</button>
+            </div>
 
-                <div id="lesson-page-1" class="lesson-page active bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
-                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 1: Welcome & Getting Started</h3>
-                    <p class="mb-3 text-slate-700">Welcome to this interactive lesson on the Health Insurance Portability and Accountability Act (HIPAA) and its importance for Radiation Therapists.</p>
-                    <h4 class="text-lg font-medium text-purple-600 mb-2">How to Get Started (1.1)</h4>
-                    <p class="mb-3 text-slate-700">This lesson is a series of 'flip pages'. Use the <span class="font-semibold text-purple-700">"Previous Page"</span> and <span class="font-semibold text-purple-700">"Next Page"</span> buttons to move through content, key terms, and 'Quick Check' quizzes.</p>
-                    <h4 class="text-lg font-medium text-purple-600 mb-2">Technology & Skills (1.5, 1.6)</h4>
-                    <p class="mb-3 text-slate-700">A standard web browser and basic navigation skills are sufficient. No special software needed.</p>
-                    <h4 class="text-lg font-medium text-purple-600 mb-2">Prerequisites (1.7)</h4>
-                    <p class="mb-3 text-slate-700">Basic understanding of an RTT's role is assumed.</p>
-                    <h4 class="text-lg font-medium text-purple-600 mb-2">Policies & Communication (1.3, 1.4)</h4>
-                    <div class="note-box bg-slate-50 border-l-4 border-slate-400 p-3 my-3 rounded text-sm text-slate-600">If part of a formal course, refer to your syllabus or LMS for communication guidelines and institutional policies.</div>
-                    <h4 class="text-lg font-medium text-purple-600 mb-2">Data & Privacy (6.4)</h4>
-                    <div class="note-box bg-slate-50 border-l-4 border-slate-400 p-3 my-3 rounded text-sm text-slate-600">This standalone lesson does not collect personal data. If accessed via an LMS, its privacy policy applies.</div>
+            <div id="quiz-area-container" style="display: none;" class="bg-purple-50 p-6 rounded-lg shadow-md mb-8 border border-purple-200">
+                <div id="quiz-questions-container" class="space-y-6">
+                    {/* Questions will be injected here by JavaScript */}
                 </div>
+                <button id="quiz-submit-button" onclick="submitQuiz()" class="mt-8 w-full sm:w-auto bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg text-lg transition-colors duration-300 block mx-auto">Submit Answers</button>
+            </div>
 
-                <div id="lesson-page-2" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
-                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 2: Learning Objectives & Structure (2.1, 2.3, 2.5)</h3>
-                    <p class="mb-3 text-slate-700">This lesson will help you:</p>
-                    <ul class="list-disc list-inside text-slate-700 space-y-1">
-                        <li><strong>Define</strong> HIPAA and its core purpose.</li>
-                        <li><strong>Recognize</strong> Protected Health Information (PHI).</li>
-                        <li><strong>Summarize</strong> key patient rights under the HIPAA Privacy Rule.</li>
-                        <li><strong>Describe</strong> goals of the HIPAA Security Rule.</li>
-                        <li><strong>Identify</strong> requirements of the HIPAA Breach Notification Rule.</li>
-                        <li><strong>Apply</strong> HIPAA principles to RTT ethical dilemmas.</li>
-                    </ul>
-                    <h4 class="text-lg font-medium text-purple-600 mt-4 mb-2">Lesson Structure & Activities (1.2, 2.4)</h4>
-                    <p class="text-slate-700">This lesson uses informational pages and <span class="font-semibold text-purple-700">"Quick Check"</span> questions (Assessments) linked to content (Learning Activities/Instructional Materials) to measure understanding.</p>
-                </div>
-
-                <div id="lesson-page-3" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
-                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 3: What is HIPAA?</h3>
-                    <p class="mb-3 text-slate-700">HIPAA stands for the <span class="font-semibold text-purple-700">Health Insurance Portability and Accountability Act of 1996</span>. It establishes national standards to protect sensitive patient health information, safeguard privacy, and allow necessary information flow.</p>
-                    <h4 class="text-lg font-medium text-purple-600 mb-2">Key Terms:</h4>
-                    <ul class="list-disc list-inside text-slate-700 space-y-1">
-                        <li><strong>Protected Health Information (PHI):</strong> Identifiable health information in any form.</li>
-                        <li><strong>Covered Entities:</strong> Providers, plans, clearinghouses.</li>
-                        <li><strong>Business Associates:</strong> External partners with PHI access.</li>
-                    </ul>
-                    <p class="mt-3 text-slate-700">Its goal is to foster trust by protecting PHI privacy.</p>
-                </div>
-
-                <div id="lesson-page-4" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
-                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 4: The HIPAA Privacy Rule</h3>
-                    <p class="mb-3 text-slate-700">The Privacy Rule sets standards for <span class="font-semibold text-purple-700">using and sharing PHI</span>.</p>
-                    <h4 class="text-lg font-medium text-purple-600 mb-2">Key Patient Rights:</h4>
-                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm">
-                        <li>Access their PHI.</li>
-                        <li>Amend their PHI.</li>
-                        <li>Request Restrictions on uses/disclosures.</li>
-                        <li>Receive an Accounting of Disclosures.</li>
-                        <li>Request Confidential Communications.</li>
-                    </ul>
-                    <h4 class="text-lg font-medium text-purple-600 mt-4 mb-2">Permitted Uses & Disclosures:</h4>
-                    <p class="text-slate-700 text-sm">Allowed for Treatment, Payment, Operations (TPO); To the Individual; Incidental (with safeguards); and Required by Law.</p>
-                    <p class="mt-2 text-slate-700">The <span class="font-semibold text-purple-700">Minimum Necessary Standard</span> applies: use/disclose only the minimum PHI needed.</p>
-                </div>
-
-                <div id="lesson-page-5" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
-                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 5: The HIPAA Security Rule</h3>
-                    <p class="mb-3 text-slate-700">The Security Rule protects <span class="font-semibold text-purple-700">Electronic PHI (ePHI)</span> - its Confidentiality, Integrity, and Availability.</p>
-                    <p class="mb-2 text-slate-700">Requires three types of safeguards:</p>
-                    <ul class="list-disc list-inside text-slate-700 space-y-1">
-                        <li><strong>Administrative:</strong> Policies, training, risk analysis, workforce clearance.</li>
-                        <li><strong>Physical:</strong> Workstation security, facility access controls, device/media controls.</li>
-                        <li><strong>Technical:</strong> Access controls (passwords), audit controls, integrity controls, transmission security (encryption).</li>
-                    </ul>
-                </div>
-
-                <div id="lesson-page-6" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
-                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 6: Breach Notification Rule</h3>
-                    <p class="mb-3 text-slate-700">A "breach" is an <span class="font-semibold text-red-600">impermissible use or disclosure of PHI</span> that compromises its security or privacy, unless there's a low probability PHI was compromised (based on risk assessment).</p>
-                    <p class="mb-3 text-slate-700">The rule requires notifying: Affected Individuals, HHS (Dept. of Health & Human Services), and sometimes the Media (if >500 individuals affected).</p>
-                    <p class="text-slate-700">Know your facility's internal breach reporting procedure.</p>
-                    <h4 class="text-lg font-medium text-purple-600 mt-4 mb-2">Quick Check!</h4>
-                    <div class="interactive-question-block bg-purple-100 p-3 rounded-md border border-purple-300" id="lq_page6_1_block" role="region" aria-labelledby="q6_text">
-                        <p class="question-text font-semibold text-slate-700 mb-2" id="q6_text">If a stolen, unencrypted laptop contains the ePHI of 600 patients, who must be notified?</p>
-                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="lq_page6_1" value="A" class="mr-2 accent-purple-600"> Only the 600 patients.</label>
-                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="lq_page6_1" value="B" class="mr-2 accent-purple-600"> The patients and HHS.</label>
-                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="lq_page6_1" value="C" class="mr-2 accent-purple-600"> The patients, HHS, and the media.</label>
-                        <div class="explanation text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">Correct! Since more than 500 individuals are affected, individuals, HHS, and prominent media outlets in the jurisdiction must be notified.</div>
-                    </div>
-                    <button class="check-page-answers mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswers(6)" aria-label="Check Answer for Page 6 Question">Check Answer</button>
-                </div>
+            <div id="results-area-container" style="display: none;" class="text-center">
+                <h2 class="text-2xl font-semibold text-purple-600 mb-4">Quiz Results</h2>
+                <p id="final-score-display" class="text-3xl font-bold text-purple-700 mb-2"></p>
+                <p id="score-percentage-display" class="text-xl text-slate-600 mb-6"></p>
                 
-                <div id="lesson-page-7" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
-                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 7: Common Dilemmas & Scenarios (Part 1)</h3>
-                    <h4 class="text-lg font-medium text-purple-600 mb-1">Dilemma 1: "Elevator Talk"</h4>
-                    <p class="mb-3 text-slate-700 text-sm">Don't discuss patients in public areas. <strong>Best Practice:</strong> Wait for a private, secure area.</p>
-                    <h4 class="text-lg font-medium text-purple-600 mb-1">Dilemma 2: Social Media Sharing</h4>
-                    <p class="mb-3 text-slate-700 text-sm">Avoid photos in clinical areas. <strong>Best Practice:</strong> Never post PHI or patient images/details (even de-identified if potentially re-identifiable) without explicit, written patient consent for that specific purpose.</p>
-                    <h4 class="text-lg font-medium text-purple-600 mt-4 mb-2">Quick Check!</h4>
-                     <div class="interactive-question-block bg-purple-100 p-3 rounded-md border border-purple-300" id="lq_page7_1_block" role="region" aria-labelledby="q7_text">
-                        <p class="question-text font-semibold text-slate-700 mb-2" id="q7_text">Is confirming a patient's presence by name to someone asking in a busy waiting room a HIPAA violation?</p>
-                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="lq_page7_1" value="Yes" class="mr-2 accent-purple-600"> Yes, it likely is a violation.</label>
-                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="lq_page7_1" value="No" class="mr-2 accent-purple-600"> No, it's acceptable customer service.</label>
-                        <div class="explanation text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">Correct! Yes, it likely is. Disclosing even a patient's presence without authorization can be a violation. Follow facility policy for directory information.</div>
-                    </div>
-                    <button class="check-page-answers mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswers(7)" aria-label="Check Answer for Page 7 Question">Check Answer</button>
+                <div id="feedback-summary-container" class="mt-4 mb-6 text-left space-y-3">
+                    {/* Detailed feedback will be injected here */}
                 </div>
 
-                <div id="lesson-page-8" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
-                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 8: Common Dilemmas & Scenarios (Part 2)</h3>
-                    <h4 class="text-lg font-medium text-purple-600 mb-1">Dilemma 3: Family/Friend Inquiries</h4>
-                    <p class="mb-3 text-slate-700 text-sm">Don't disclose PHI without patient authorization or if not permitted by HIPAA (e.g., patient incapacitated and disclosure is in their best interest and they haven't objected). <strong>Best Practice:</strong> Politely decline, cite privacy, direct to facility's patient information process.</p>
-                    <h4 class="text-lg font-medium text-purple-600 mb-1">Dilemma 4: "Just Looking" in the EMR</h4>
-                    <p class="mb-3 text-slate-700 text-sm">Accessing records out of curiosity is a violation. <strong>Best Practice:</strong> Only access PHI for legitimate job-related reasons (role-based access).</p>
-                     <h4 class="text-lg font-medium text-purple-600 mt-4 mb-2">Quick Check!</h4>
-                    <div class="interactive-question-block bg-purple-100 p-3 rounded-md border border-purple-300" id="lq_page8_1_block" role="region" aria-labelledby="q8_text">
-                        <p class="question-text font-semibold text-slate-700 mb-2" id="q8_text">Is leaving an Electronic Medical Record (EMR) screen open and unattended briefly acceptable if you're nearby?</p>
-                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="lq_page8_1" value="Yes" class="mr-2 accent-purple-600"> Yes, if you are only gone for a moment.</label>
-                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="lq_page8_1" value="No" class="mr-2 accent-purple-600"> No, it's a security risk and potential violation.</label>
-                        <div class="explanation text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">Correct! No. Always lock or log off your workstation when leaving it unattended, even briefly, to prevent unauthorized access.</div>
+                <div id="badge-section" style="display: none;" class="mt-10 p-6 bg-yellow-50 rounded-lg shadow-md text-center border border-yellow-300">
+                    <h3 class="text-xl font-semibold text-yellow-700 mb-4">Congratulations! You've Earned a Certificate!</h3>
+                    <div id="badge-input-section" class="mb-4">
+                        <label for="userNameForBadge" class="block text-sm font-medium text-slate-700 mb-1">Enter Your Name for Certificate:</label>
+                        <input type="text" id="userNameForBadge" placeholder="Your Name Here" class="mt-1 block w-full sm:w-auto sm:inline-block max-w-xs px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm">
+                        <button onclick="generateBadge()" class="mt-2 sm:mt-0 sm:ml-2 bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg text-sm transition-colors">Generate Certificate</button>
                     </div>
-                    <button class="check-page-answers mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswers(8)" aria-label="Check Answer for Page 8 Question">Check Answer</button>
-                </div>
-                
-                <div id="lesson-page-9" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
-                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 9: HIPAA, Ethics, and Your Responsibility</h3>
-                    <p class="mb-3 text-slate-700">HIPAA compliance is not just a legal requirement; it's an ethical obligation. It aligns closely with professional codes of conduct, such as the ARRT Code of Ethics (specifically Principle 9 regarding confidentiality) and Rules of Ethics (Rule 18 regarding improper management of patient records).</p>
-                    <h4 class="text-lg font-medium text-purple-600 mb-2">Your Role as an RTT:</h4>
-                    <ul class="list-disc list-inside text-slate-700 space-y-1">
-                        <li><strong>Be Vigilant:</strong> Always be mindful of patient privacy and PHI security.</li>
-                        <li><strong>Know Policies:</strong> Understand and follow your facility's HIPAA policies and procedures.</li>
-                        <li><strong>Ask Questions:</strong> If unsure about a HIPAA-related issue, seek clarification from your supervisor or compliance officer.</li>
-                        <li><strong>Report Concerns:</strong> Promptly report potential violations or breaches according to facility protocol.</li>
-                        <li><strong>Keep Learning:</strong> Stay updated on HIPAA regulations and best practices.</li>
-                    </ul>
-                    <p class="mt-3 text-slate-700">Upholding HIPAA builds patient trust and maintains the integrity of the healthcare profession.</p>
-                </div>
-
-                <div id="lesson-page-10" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
-                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 10: Next Steps & Further Learning</h3>
-                    <p class="mb-4 text-slate-700">You have completed the core content for the HIPAA Essentials lesson. To further test your knowledge and apply these principles, explore the following optional activities:</p>
-
-                    <div class="activity-list-container mt-6">
-                        <h4 class="text-lg font-semibold text-purple-600 mb-3">Optional Activities & Assessments:</h4>
-                        <ul class="space-y-4">
-                            <li class="bg-purple-50 p-4 rounded-lg border border-purple-200 hover:shadow-lg transition-shadow duration-200">
-                                <a href="hipaa_game" class="font-semibold text-purple-700 hover:text-purple-800 text-md block mb-1">Activity: Spot the Violation (Interactive Game)</a>
-                                <p class="text-sm text-slate-600">Test your ability to identify HIPAA issues in digital scenarios like social media posts and text messages.</p>
-                            </li>
-                            <li class="bg-purple-50 p-4 rounded-lg border border-purple-200 hover:shadow-lg transition-shadow duration-200">
-                                <a href="hipaa_cases" class="font-semibold text-purple-700 hover:text-purple-800 text-md block mb-1">Activity: Case Study Analysis (Worksheet)</a>
-                                <p class="text-sm text-slate-600">Analyze detailed scenarios involving multiple HIPAA challenges and document your findings.</p>
-                            </li>
-                             <li class="bg-purple-50 p-4 rounded-lg border border-purple-200 hover:shadow-lg transition-shadow duration-200">
-                                <a href="hipaa_quiz" class="font-semibold text-purple-700 hover:text-purple-800 text-md block mb-1">Assessment: Comprehensive HIPAA Quiz</a>
-                                <p class="text-sm text-slate-600">Take a multiple-choice quiz covering all key areas of this HIPAA lesson.</p>
-                            </li>
-                        </ul>
+                    <div id="printableBadge" style="display:none;" class="w-full max-w-md h-auto border-8 border-yellow-400 bg-yellow-100 mx-auto p-6 sm:p-8 flex flex-col justify-center items-center shadow-lg font-serif text-center rounded-lg">
+                        <h4 class="text-yellow-700 text-2xl sm:text-3xl font-bold mb-2 sm:mb-4">HIPAA Proficiency Certificate</h4>
+                        <p class="awardee-name text-yellow-600 text-xl sm:text-2xl font-semibold my-3 sm:my-5 border-b-2 border-dashed border-yellow-600 pb-1 sm:pb-2" id="badgeNameDisplay"></p>
+                        <p class="reason-text text-slate-700 text-md sm:text-lg my-2 sm:my-3">For demonstrating proficiency in the HIPAA Essentials Quiz.</p>
+                        <p class="badge-score-print text-slate-600 text-sm my-1" id="badgeScoreDisplay"></p>
+                        <p class="completion-date-print text-slate-600 text-xs my-1" id="badgeDateDisplay"></p>
+                        <p class="badge-logo-print text-yellow-700 text-sm font-bold mt-3 sm:mt-4">RTApps Learning</p>
                     </div>
-
-                    <h4 class="text-lg font-semibold text-purple-600 mt-6 mb-3">Additional Official Resources:</h4>
-                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm">
-                        <li><a href="https://www.hhs.gov/hipaa/for-professionals/index.html" target="_blank" rel="noopener noreferrer" class="text-purple-600 hover:underline">HHS.gov - HIPAA for Professionals</a></li>
-                        <li><a href="https://www.cdc.gov/phlp/publications/topic/hipaa.html" target="_blank" rel="noopener noreferrer" class="text-purple-600 hover:underline">CDC.gov - HIPAA Overview</a></li>
-                    </ul>
-                    <div class="note-box bg-slate-50 border-l-4 border-slate-400 p-3 my-4 rounded text-sm text-slate-600">Always consult your institution's specific policies and procedures for guidance on HIPAA compliance in your workplace.</div>
+                    <button id="printBadgeButtonTrigger" onclick="window.print()" style="display:none;" class="mt-4 bg-sky-500 hover:bg-sky-600 text-white font-medium py-2 px-4 rounded-lg text-sm transition-colors">Print Certificate</button>
+                    <div id="print-error-message" class="text-red-500 text-xs mt-2" style="display:none;">Please enter your name to generate the certificate.</div>
                 </div>
+            </div>
 
-                <div class="lesson-navigation-bar text-center mt-6">
-                    <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled aria-label="Go to Previous Lesson Page" class="bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors disabled:bg-slate-300 text-sm">Previous Page</button>
-                    <span class="page-indicator mx-2 sm:mx-4 text-sm text-slate-600" id="lessonPageIndicator">Page 1 of 10</span>
-                    <button id="nextLessonPage" onclick="changeLessonPage(1)" aria-label="Go to Next Lesson Page" class="bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors text-sm">Next Page</button>
-                    </div>
+            <div id="post-activity-navigation" style="display: none;" class="text-center mt-10 pt-6 border-t border-slate-200">
+                <h3 class="text-xl font-semibold text-slate-700 mb-4">What's Next?</h3>
+                <div class="flex flex-col sm:flex-row justify-center items-center space-y-3 sm:space-y-0 sm:space-x-4">
+                    <button onclick="window.location.href='../index.html'" class="w-full sm:w-auto bg-slate-500 hover:bg-slate-600 text-white font-medium py-2 px-4 rounded-lg text-sm transition-colors">Back to Ethics Menu</button>
+                    <button onclick="startQuiz()" class="w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg text-sm transition-colors">Retake Quiz</button>
+                    <button onclick="window.location.href='index.html#lesson-page-10'" class="w-full sm:w-auto bg-purple-500 hover:bg-purple-600 text-white font-medium py-2 px-4 rounded-lg text-sm transition-colors">Other HIPAA Activities</button>
+                </div>
             </div>
         </div>
-    </div>
+    </main>
 
-    <footer class="bg-slate-800 text-slate-300 py-6 mt-12 text-center">
+    <footer class="bg-slate-800 text-slate-300 py-6 mt-auto text-center">
         <div class="container mx-auto px-6">
             <p class="text-sm">&copy; <span id="currentYear"></span> Radiation Therapy E-Workbook. RTApps All Rights Reserved.</p>
-            <p class="text-xs mt-1">HIPAA Essentials Lesson</p>
+            <p class="text-xs mt-1">HIPAA Comprehensive Quiz</p>
         </div>
     </footer>
 
     <script>
-        let currentLessonPage = 1;
-        const totalLessonPages = 10; 
-        const lessonPages = document.querySelectorAll('.lesson-page');
-        const prevLessonButton = document.getElementById('prevLessonPage');
-        const nextLessonButton = document.getElementById('nextLessonPage');
-        const lessonPageIndicator = document.getElementById('lessonPageIndicator');
-        
-        const lessonCorrectAnswers = {
-            lq_page6_1: "C",
-            lq_page7_1: "Yes", // Based on "Yes, it likely is a violation."
-            lq_page8_1: "No"
-        };
+        const quizQuestions = [
+            {
+                question: "What does HIPAA primarily stand for?",
+                options: [
+                    "Health Information Privacy and Accessibility Act",
+                    "Health Insurance Portability and Accountability Act",
+                    "Healthcare Information Protection and Administration Act",
+                    "Health Insurance Privacy and Administration Act"
+                ],
+                answer: "Health Insurance Portability and Accountability Act",
+                explanation: "HIPAA stands for the Health Insurance Portability and Accountability Act of 1996."
+            },
+            {
+                question: "Which of the following is considered Protected Health Information (PHI) under HIPAA?",
+                options: [
+                    "A patient's favorite color",
+                    "A patient's name and diagnosis",
+                    "General hospital statistics not linked to individuals",
+                    "A de-identified research dataset"
+                ],
+                answer: "A patient's name and diagnosis",
+                explanation: "PHI includes individually identifiable health information, such as name, address, dates, and medical records."
+            },
+            {
+                question: "The HIPAA Security Rule applies specifically to:",
+                options: [
+                    "All paper-based patient records",
+                    "Verbal communications between doctors",
+                    "Electronic Protected Health Information (ePHI)",
+                    "Patient billing information only"
+                ],
+                answer: "Electronic Protected Health Information (ePHI)",
+                explanation: "The Security Rule establishes national standards for protecting ePHI created, received, used, or maintained by a covered entity."
+            },
+            {
+                question: "Under the HIPAA Privacy Rule, when is it generally permissible to disclose PHI without patient authorization?",
+                options: [
+                    "For marketing purposes to a third party",
+                    "To a patient's employer for a job evaluation",
+                    "For Treatment, Payment, or Healthcare Operations (TPO)",
+                    "To a news reporter asking about a public figure"
+                ],
+                answer: "For Treatment, Payment, or Healthcare Operations (TPO)",
+                explanation: "HIPAA allows covered entities to use and disclose PHI for TPO without patient authorization, subject to certain conditions."
+            },
+            {
+                question: "If a breach of unsecured PHI affects 600 individuals, who must be notified?",
+                options: [
+                    "Only the affected individuals",
+                    "The affected individuals and the HHS Secretary",
+                    "The affected individuals, the HHS Secretary, and prominent media outlets",
+                    "Only the HHS Secretary"
+                ],
+                answer: "The affected individuals, the HHS Secretary, and prominent media outlets",
+                explanation: "For breaches affecting more than 500 residents of a state or jurisdiction, covered entities must notify affected individuals, the HHS Secretary, and prominent media outlets serving the State or jurisdiction."
+            }
+        ];
 
-        function displayLessonPage() {
-            lessonPages.forEach((page, index) => {
-                page.classList.toggle('active', index === currentLessonPage - 1);
-                page.style.display = (index === currentLessonPage - 1) ? 'block' : 'none';
-            });
-            prevLessonButton.disabled = currentLessonPage === 1;
-            nextLessonButton.style.display = currentLessonPage === totalLessonPages ? 'none' : 'inline-block';
-            lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
+        const startScreenContainer = document.getElementById('start-screen-container');
+        const quizAreaContainer = document.getElementById('quiz-area-container');
+        const resultsAreaContainer = document.getElementById('results-area-container');
+        const postActivityNavigation = document.getElementById('post-activity-navigation');
+        const quizQuestionsContainer = document.getElementById('quiz-questions-container');
+        const badgeSection = document.getElementById('badge-section');
+        const printErrorMessage = document.getElementById('print-error-message');
+        let userAnswers = [];
+        let finalQuizScore = 0;
+
+        function startQuiz() {
+            startScreenContainer.style.display = 'none';
+            resultsAreaContainer.style.display = 'none';
+            postActivityNavigation.style.display = 'none';
+            badgeSection.style.display = 'none';
+            quizAreaContainer.style.display = 'block';
+            userAnswers = new Array(quizQuestions.length).fill(null);
+            renderQuestions();
         }
 
-        function changeLessonPage(direction) {
-            currentLessonPage += direction;
-            if (currentLessonPage < 1) currentLessonPage = 1;
-            if (currentLessonPage > totalLessonPages) currentLessonPage = totalLessonPages;
-            displayLessonPage();
-        }
-
-        function checkPageAnswers(pageNumber) {
-            const questionsOnPage = document.querySelectorAll(`#lesson-page-${pageNumber} .interactive-question-block`);
-            questionsOnPage.forEach(block => {
-                const questionName = block.querySelector('input[type="radio"]').name;
-                if (!lessonCorrectAnswers.hasOwnProperty(questionName)) return;
-
-                const correctAnswerValue = lessonCorrectAnswers[questionName];
-                const selectedRadio = block.querySelector(`input[name="${questionName}"]:checked`);
-                const explanationDiv = block.querySelector('.explanation');
-
-                // Reset styles
-                block.classList.remove('border-green-500', 'border-red-500', 'bg-green-50', 'bg-red-50');
-                block.querySelectorAll('label').forEach(label => {
-                    label.classList.remove('text-green-700', 'font-semibold', 'text-red-700');
+        function renderQuestions() {
+            quizQuestionsContainer.innerHTML = '';
+            quizQuestions.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question-block bg-white p-4 rounded-lg shadow border border-slate-200';
+                questionDiv.innerHTML = `<p class="text-md font-semibold text-purple-700 mb-3">${index + 1}. ${q.question}</p>`;
+                
+                const optionsDiv = document.createElement('div');
+                optionsDiv.className = 'space-y-2';
+                q.options.forEach((option, i) => {
+                    optionsDiv.innerHTML += `
+                        <label class="block p-3 rounded-md border border-slate-300 cursor-pointer question-option transition-colors duration-150">
+                            <input type="radio" name="question${index}" value="${option}" class="mr-2 accent-purple-600">
+                            ${option}
+                        </label>
+                    `;
                 });
-                if(explanationDiv) explanationDiv.style.display = 'none';
+                questionDiv.appendChild(optionsDiv);
+                quizQuestionsContainer.appendChild(questionDiv);
 
-                if (selectedRadio) {
-                    const userAnswer = selectedRadio.value;
-                    const userSelectedLabel = selectedRadio.parentElement;
-                    if (userAnswer === correctAnswerValue) {
-                        block.classList.add('border-green-500', 'bg-green-50');
-                        if (userSelectedLabel) userSelectedLabel.classList.add('text-green-700', 'font-semibold');
-                    } else {
-                        block.classList.add('border-red-500', 'bg-red-50');
-                        if (userSelectedLabel) userSelectedLabel.classList.add('text-red-700', 'font-semibold');
-                        const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
-                        if (correctRadio && correctRadio.parentElement) {
-                            correctRadio.parentElement.classList.add('text-green-700', 'font-semibold');
+                // Add event listeners to options for visual feedback on selection
+                questionDiv.querySelectorAll(`input[name="question${index}"]`).forEach(radio => {
+                    radio.addEventListener('change', (event) => {
+                        // Remove 'selected-option' from all labels for this question
+                        questionDiv.querySelectorAll('label').forEach(label => label.classList.remove('selected-option', 'border-l-4'));
+                        // Add 'selected-option' to the parent label of the checked radio
+                        if(event.target.checked) {
+                            event.target.parentElement.classList.add('selected-option', 'border-l-4');
                         }
-                    }
-                } else { // No answer selected
-                    block.classList.add('border-red-500', 'bg-red-50');
-                    const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
-                    if (correctRadio && correctRadio.parentElement) {
-                       correctRadio.parentElement.classList.add('text-green-700', 'font-semibold');
-                    }
-                }
-                if(explanationDiv) explanationDiv.style.display = 'block';
+                    });
+                });
             });
         }
+
+        function submitQuiz() {
+            quizQuestions.forEach((q, index) => {
+                const selectedOption = document.querySelector(`input[name="question${index}"]:checked`);
+                if (selectedOption) {
+                    userAnswers[index] = selectedOption.value;
+                }
+            });
+            showResults();
+        }
+
+        function showResults() {
+            quizAreaContainer.style.display = 'none';
+            resultsAreaContainer.style.display = 'block';
+            postActivityNavigation.style.display = 'block';
+
+            let score = 0;
+            quizQuestions.forEach((q, index) => {
+                if (userAnswers[index] === q.answer) {
+                    score++;
+                }
+            });
+
+            finalQuizScore = score;
+            const percentage = Math.round((score / quizQuestions.length) * 100);
+            document.getElementById('final-score-display').textContent = `Your Score: ${score} out of ${quizQuestions.length}`;
+            document.getElementById('score-percentage-display').textContent = `(${percentage}%)`;
+
+            renderFeedbackSummary();
+
+            if (percentage >= 80) {
+                badgeSection.style.display = 'block';
+            } else {
+                badgeSection.style.display = 'none';
+            }
+        }
         
-        // Set current year in footer
+        function renderFeedbackSummary() {
+            const feedbackContainer = document.getElementById('feedback-summary-container');
+            feedbackContainer.innerHTML = '<h3 class="text-lg font-semibold text-purple-700 mb-3">Answer Review:</h3>';
+            quizQuestions.forEach((q, index) => {
+                const userAnswer = userAnswers[index];
+                const isCorrect = userAnswer === q.answer;
+                const feedbackDiv = document.createElement('div');
+                feedbackDiv.className = `p-3 mb-3 rounded-md border-l-4 ${isCorrect ? 'correct-answer' : 'incorrect-answer'}`;
+                
+                let feedbackHTML = `<p class="text-sm font-medium">${index + 1}. ${q.question}</p>`;
+                if (userAnswer) {
+                    feedbackHTML += `<p class="text-xs mt-1">Your answer: <span class="${isCorrect ? '' : 'text-red-700'}">${userAnswer}</span> <span class="${isCorrect ? 'correct-indicator' : 'incorrect-indicator'}"></span></p>`;
+                } else {
+                    feedbackHTML += `<p class="text-xs mt-1 text-red-700">You did not answer this question. <span class="incorrect-indicator"></span></p>`;
+                }
+                if (!isCorrect) {
+                    feedbackHTML += `<p class="text-xs mt-1">Correct answer: <span class="correct-option-text">${q.answer}</span></p>`;
+                }
+                feedbackHTML += `<p class="text-xs mt-1 text-slate-600"><em>Explanation: ${q.explanation}</em></p>`;
+                
+                feedbackDiv.innerHTML = feedbackHTML;
+                feedbackContainer.appendChild(feedbackDiv);
+            });
+        }
+
+
+        function generateBadge() {
+            const nameInput = document.getElementById('userNameForBadge');
+            const name = nameInput.value.trim();
+            
+            if (name === "") {
+                nameInput.classList.add('border-red-500');
+                printErrorMessage.textContent = "Please enter your name to generate the certificate.";
+                printErrorMessage.style.display = 'block';
+                return;
+            }
+            nameInput.classList.remove('border-red-500');
+            printErrorMessage.style.display = 'none';
+
+            const today = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const formattedDate = today.toLocaleDateString(undefined, options);
+            const percentage = Math.round((finalQuizScore / quizQuestions.length) * 100);
+
+
+            document.getElementById('badgeNameDisplay').textContent = name;
+            document.getElementById('badgeScoreDisplay').textContent = `Achieved with a score of ${percentage}%`;
+            document.getElementById('badgeDateDisplay').textContent = "Completed on: " + formattedDate;
+            document.getElementById('printableBadge').style.display = 'flex';
+            document.getElementById('printBadgeButtonTrigger').style.display = 'inline-block';
+        }
+        
         document.getElementById('currentYear').textContent = new Date().getFullYear();
-
-        // Initialize first lesson page
-        displayLessonPage();
     </script>
-
 </body>
 </html>
