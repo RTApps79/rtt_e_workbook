@@ -138,60 +138,79 @@
 <body>
     <div class="container">
         <h1>Activity: HIPAA Case Study Analysis</h1>
-        <div class="tilt-framework">
-            <h3>Purpose</h3><p>To apply your understanding of HIPAA's Privacy, Security, and Breach Notification rules to complex, realistic scenarios in radiation therapy.</p>
-            <h3>Task</h3><p>Read each case study below. For each case, use the provided text areas to identify potential HIPAA issues, cite relevant rules/principles, and describe the most appropriate, compliant course of action.</p>
-            <h3>Criteria for Success</h3><p>A successful analysis will accurately identify all relevant PHI and potential violations, correctly link them to specific HIPAA rules, and propose actions that are both ethical and legally compliant. This activity is primarily for self-assessment and reflection.</p>
+
+        <div id="start-screen">
+            <h2>Before You Begin...</h2>
+            <h3>Purpose</h3>
+            <p>This activity challenges you to apply your knowledge of HIPAA's Privacy, Security, and Breach Notification rules by analyzing complex, realistic scenarios. It aims to strengthen your critical thinking and decision-making skills in real-world situations.</p>
+            <h3>Task</h3>
+            <p>You will read two detailed case studies relevant to radiation therapy. For each case, reflect on the situation and use the provided text areas to type your answers to the prompt questions. There is no automatic scoring; this is an exercise in thoughtful analysis and application.</p>
+            <h3>Criteria for Success</h3>
+            <p>A successful completion involves providing thorough, well-reasoned answers that:
+                <ul>
+                    <li>Accurately identify potential HIPAA issues.</li>
+                    <li>Reference specific HIPAA rules where applicable.</li>
+                    <li>Propose ethically and legally sound courses of action.</li>
+                </ul>
+            You can earn a printable "Certificate of Completion" after engaging with the cases.
+            </p>
+            <button id="start-activity-button" onclick="startActivity()">Start Case Study Analysis</button>
         </div>
 
-        <div class="case-study">
-            <h2>Case Study 1: The 'Helpful' Colleague</h2>
-            <p class="case-summary">An RTT, Tom, is covering a shift and needs to access patient setup notes. His own EMR login isn't working. His colleague, Sarah, is busy but quickly tells Tom her password so he can log in as her to get the information and keep the schedule moving. Later, Tom uses Sarah's login to quickly check the appointment time for his uncle, who is being treated in another department.</p>
-            <div class="prompt-question">1. Identify all potential HIPAA violations in this scenario.</div>
-            <textarea placeholder="List violations related to passwords, access, etc."></textarea>
-            <div class="prompt-question">2. Which specific HIPAA Rules (Privacy/Security) and Safeguards (Admin, Physical, Tech) are relevant?</div>
-            <textarea placeholder="Think about access control, sanctions, audit trails..."></textarea>
-            <div class="prompt-question">3. What should Tom and Sarah have done differently? What actions should be taken now?</div>
-            <textarea placeholder="Describe correct procedure and reporting..."></textarea>
-        </div>
-
-        <div class="case-study">
-            <h2>Case Study 2: The Lost USB Drive</h2>
-            <p class="case-summary">An RTT, Lisa, is working on a presentation about a new treatment technique. To work on it at home, she downloads several patient treatment plans (including names, IDs, and plan details) onto a personal, unencrypted USB drive. The next day, she realizes the USB drive is missing. She thinks she might have left it at a coffee shop.</p>
-            <div class="prompt-question">1. Does this situation constitute a HIPAA breach? Why or why not?</div>
-            <textarea placeholder="Consider the definition of a breach and encryption..."></textarea>
-            <div class="prompt-question">2. What are Lisa's immediate responsibilities? What are the facility's responsibilities under the Breach Notification Rule?</div>
-            <textarea placeholder="Think about reporting (internal & external)..."></textarea>
-            <div class="prompt-question">3. What Security Rule safeguards could have prevented this situation?</div>
-            <textarea placeholder="Think about policies on devices, PHI transport, encryption..."></textarea>
-        </div>
-
-        <div id="badge-section">
-            <h3>Activity Completion Certificate</h3>
-            <div id="badge-input">
-                <label for="userNameForBadge">Enter Your Name:</label>
-                <input type="text" id="userNameForBadge" placeholder="Your Name Here">
-                <button onclick="generateBadge()">Generate Certificate</button>
+        <div id="activity-area" style="display: none;">
+            <div class="case-study">
+                <h2>Case Study 1: The 'Helpful' Colleague</h2>
+                <p class="case-summary">An RTT, Tom, is covering a shift and needs to access patient setup notes. His own EMR login isn't working. His colleague, Sarah, is busy but quickly tells Tom her password so he can log in as her to get the information and keep the schedule moving. Later, Tom uses Sarah's login to quickly check the appointment time for his uncle, who is being treated in another department.</p>
+                <div class="prompt-question">1. Identify all potential HIPAA violations in this scenario.</div>
+                <textarea placeholder="List violations related to passwords, access, etc."></textarea>
+                <div class="prompt-question">2. Which specific HIPAA Rules (Privacy/Security) and Safeguards (Admin, Physical, Tech) are relevant?</div>
+                <textarea placeholder="Think about access control, sanctions, audit trails..."></textarea>
+                <div class="prompt-question">3. What should Tom and Sarah have done differently? What actions should be taken now?</div>
+                <textarea placeholder="Describe correct procedure and reporting..."></textarea>
             </div>
-            <div class="badge" id="printableBadge" style="display:none;">
-                <h4>Certificate of Completion</h4>
-                <p class="awardee" id="badgeName"></p>
-                <p class="reason">Has successfully completed the HIPAA Case Study Analysis Activity.</p>
-                <p class="logo">RTApps Learning</p>
-            </div>
-            <button id="printBadgeButton" onclick="window.print()" style="display:none;">Print Certificate</button>
-        </div>
 
-        <div class="post-activity-nav" id="end-nav">
-            <h3>What's Next?</h3>
-            <button class="menu" onclick="window.location.href='https://rtapps79.github.io/rtt_e_workbook/Ethics/'">Back to Ethics Menu</button>
-            <button class="repeat" onclick="window.location.reload()">Review Cases Again</button>
-            <button onclick="window.location.href='hipaa_lesson.html#lesson-page-10'">Other HIPAA Activities</button>
-        </div>
-    </div>
+            <div class="case-study">
+                <h2>Case Study 2: The Lost USB Drive</h2>
+                <p class="case-summary">An RTT, Lisa, is working on a presentation about a new treatment technique. To work on it at home, she downloads several patient treatment plans (including names, IDs, and plan details) onto a personal, unencrypted USB drive. The next day, she realizes the USB drive is missing. She thinks she might have left it at a coffee shop.</p>
+                <div class="prompt-question">1. Does this situation constitute a HIPAA breach? Why or why not?</div>
+                <textarea placeholder="Consider the definition of a breach and encryption..."></textarea>
+                <div class="prompt-question">2. What are Lisa's immediate responsibilities? What are the facility's responsibilities under the Breach Notification Rule?</div>
+                <textarea placeholder="Think about reporting (internal & external)..."></textarea>
+                <div class="prompt-question">3. What Security Rule safeguards could have prevented this situation?</div>
+                <textarea placeholder="Think about policies on devices, PHI transport, encryption..."></textarea>
+            </div>
+
+            <div id="badge-section">
+                <h3>Activity Completion Certificate</h3>
+                <div id="badge-input">
+                    <label for="userNameForBadge">Enter Your Name:</label>
+                    <input type="text" id="userNameForBadge" placeholder="Your Name Here">
+                    <button onclick="generateBadge()">Generate Certificate</button>
+                </div>
+                <div class="badge" id="printableBadge" style="display:none;">
+                    <h4>Certificate of Completion</h4>
+                    <p class="awardee" id="badgeName"></p>
+                    <p class="reason">Has successfully completed the HIPAA Case Study Analysis Activity.</p>
+                    <p class="logo">RTApps Learning</p>
+                </div>
+                <button id="printBadgeButton" onclick="window.print()" style="display:none;">Print Certificate</button>
+            </div>
+
+            <div class="post-activity-nav" id="end-nav">
+                <h3>What's Next?</h3>
+                <button class="menu" onclick="window.location.href='https://rtapps79.github.io/rtt_e_workbook/Ethics/'">Back to Ethics Menu</button>
+                <button class="repeat" onclick="window.location.reload()">Review Cases Again</button>
+                <button onclick="window.location.href='hipaa_lesson.html#lesson-page-10'">Other HIPAA Activities</button>
+            </div>
+        </div> </div>
     <footer> <p>&copy; 2025 RTApps. All rights reserved.</p> </footer>
 
     <script>
+        function startActivity() {
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('activity-area').style.display = 'block';
+        }
+
         function generateBadge() {
             const name = document.getElementById('userNameForBadge').value;
             if (name.trim() === "") { alert("Please enter your name."); return; }
