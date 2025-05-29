@@ -4,513 +4,385 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RTT Ethics: ARRT Standards & Dilemmas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.7;
-            margin: 20px;
-            background-color: #f4f4f4;
-            color: #333;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            font-family: 'Inter', sans-serif;
         }
-        .container {
-            background-color: #fff;
-            padding: 25px 35px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            width: 90%;
-            max-width: 900px;
-            margin-bottom: 30px;
-        }
-        h1, h2, h3, h4 {
-            color: #0056b3;
-        }
-        h1 {
-            text-align: center;
-            border-bottom: 2px solid #0056b3;
-            padding-bottom: 15px;
-            margin-bottom: 30px;
-            font-size: 2em;
-        }
-        h2 {
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
-            margin-top: 30px;
-            margin-bottom: 20px;
-            color: #003d7a;
-            font-size: 1.6em;
-        }
-        h3 {
-            color: #004085;
-            margin-top: 25px;
-            margin-bottom: 15px;
-            font-size: 1.3em;
-        }
-         h4 {
-            color: #17a2b8; /* Teal for sub-points */
-            margin-top: 20px;
-            margin-bottom: 10px;
-            font-size: 1.1em;
-        }
-        p, li {
-            margin-bottom: 12px;
-            font-size: 1.05em;
-        }
-        ul, ol {
-            margin-bottom: 15px;
-            padding-left: 25px;
-        }
-        strong {
-            font-weight: 600;
-        }
-        .highlight {
-            background-color: #e6f7ff;
-            padding: 2px 5px;
-            border-radius: 3px;
-            font-weight: 600;
-        }
-        /* Removed .citation style as it's no longer used */
-
-        /* --- Flip Page Lesson Styles --- */
-        .flip-lesson-container {
-            border: 1px solid #b3d7ff;
-            padding: 20px;
-            border-radius: 8px;
-            background-color: #f0f8ff;
-            margin-bottom: 30px;
-        }
-        .lesson-page {
-            display: none; /* Hidden by default */
-            padding: 15px;
-            border: 1px solid #ddeeff;
-            background-color: #fff;
-            border-radius: 5px;
-            min-height: 400px; /* Ensure consistent page height */
-        }
-        .lesson-page.active {
-            display: block;
-        }
-        .lesson-navigation {
-            text-align: center;
-            margin-top: 20px;
-        }
-        .lesson-navigation button, .lesson-page .check-page-answers {
-            background-color: #007bff;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1em;
-            margin: 5px 10px;
-            transition: background-color 0.2s;
-        }
-        .lesson-navigation button:hover, .lesson-page .check-page-answers:hover {
-            background-color: #0056b3;
-        }
-        .lesson-navigation button:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
-        .page-indicator { font-style: italic; color: #555; margin: 10px 0;
-        }
-        .key-principle { background-color: #e7f3ff; padding: 10px; margin-bottom:10px; border-left: 3px solid #007bff;
-            border-radius: 3px;}
-
-        /* Interactive Questions within Lesson */
-        .interactive-question-block {
-            background: #f9f9f9;
-            padding: 15px; margin: 20px 0;
-            border: 1px solid #e0e0e0; border-radius: 8px;
-        }
-        .interactive-question-block .question-text { font-weight: bold; margin-bottom: 8px; font-size: 1em; color: #555;
-        }
-        .interactive-question-block label { display: block; margin-left: 0; padding: 8px 12px; border-radius: 5px;
-            cursor: pointer; border: 1px solid transparent; margin-bottom: 5px; }
-        .interactive-question-block input[type="radio"] { margin-right: 10px;
-            vertical-align: middle; }
-        .interactive-question-block label:hover { background-color: #f0f8ff;
-        }
-        .feedback-correct { background-color: #e8f8f0 !important; border-left: 4px solid #2ecc71 !important;
-        }
-        .feedback-incorrect { background-color: #fdedec !important; border-left: 4px solid #e74c3c !important;
-        }
-        .feedback-correct label.correct-option,
-        .feedback-incorrect label.correct-option { font-weight: bold;
-            color: #1E8449; }
-        .feedback-incorrect label.selected-incorrect { color: #A93226;
-        }
-        .explanation { font-size: 0.9em; color: #444; margin-top: 5px;
-            padding-left: 20px;}
-
-
-        /* --- Case Study and Worksheet Styles --- */
-        .section { margin-bottom: 30px;
-            padding: 15px; border-left: 4px solid #0056b3; background-color: #f0f8ff; border-radius: 0 5px 5px 0;
-        }
-        .case-study { margin-bottom: 35px; padding: 20px; border: 1px solid #b3d7ff; border-radius: 5px;
-            background-color: #fff; }
-        .case-summary { margin: 5px 0 15px 0; background-color: #e7f3ff;
-            padding: 15px; border-radius: 4px; }
-        .case-summary p { margin-bottom: 5px;}
-        .prompt-question { background-color: #fff3cd;
-            border: 1px solid #ffeeba; padding: 10px 15px; margin-bottom: 15px; border-radius: 4px; font-weight: 500;
-        }
-        .prompt-question strong { color: #856404;
-        }
-        textarea#worksheet-textarea { /* Differentiate worksheet textareas */
-            width: 98%;
-            padding: 10px; margin-top: 5px; margin-bottom: 15px;
-            border: 1px solid #ccc; border-radius: 4px; font-family: inherit;
-            font-size: 1em; min-height: 70px; resize: vertical;
-        }
-        .button-container { text-align: center; margin-top: 30px;
-        }
-        .button-container button { background-color: #28a745; border-color: #28a745; padding: 12px 25px;
-        }
-        .button-container button:hover { background-color: #218838;
-        }
-        .print-instructions { text-align: center; font-style: italic; color: #555; margin-top: 10px;
-        }
-         hr { border: 0; border-top: 2px solid #0056b3; margin: 40px 0;
-         }
-
-        /* Print Styles */
+        /* Custom styles for print can remain, or be adapted if Tailwind print utilities are preferred */
         @media print {
-            body { background-color: #fff;
-                margin: 10px; padding: 0; font-size: 10pt; }
-            .container, .flip-lesson-container { box-shadow: none;
-                border: none; width: 100%; max-width: 100%; padding: 5px; margin-bottom: 15px;}
-            .lesson-navigation, .button-container, .check-page-answers { display: none;
-            }
-            .lesson-page, .section, .case-study { page-break-inside: avoid;
-                border: 1px solid #eee; }
-            .interactive-question-block {background: #fff !important;
-                border: 1px solid #ccc !important; }
-             #case-study-activity-section { margin-top: 30px;
-             }
-             h1, h2, h3, h4 { color: #000;
-                border-color: #000; margin-bottom: 10px; padding-bottom: 3px;}
-            textarea#worksheet-textarea { background-color: #f0f0f0;
-                border: 1px solid #999; }
-            .explanation { display: none;
-            } /* Hide explanations in print to save space */
+            body { background-color: #fff; margin: 10px; padding: 0; font-size: 10pt; }
+            .container-lesson, .flip-lesson-container { box-shadow: none; border: none; width: 100%; max-width: 100%; padding: 5px; margin-bottom: 15px;}
+            .lesson-navigation-bar, .button-container-activity, .check-page-answers, .nav-links-header { display: none !important; } /* Hide nav in print */
+            .lesson-page, .section-activity, .case-study-activity { page-break-inside: avoid; border: 1px solid #eee; }
+            .interactive-question-block {background: #fff !important; border: 1px solid #ccc !important; }
+            #case-study-activity-section { margin-top: 30px; }
+            h1, h2, h3, h4 { color: #000 !important; border-color: #000 !important; margin-bottom: 10px; padding-bottom: 3px;} /* Ensure heading colors are black for print */
+            textarea { background-color: #f0f0f0 !important; border: 1px solid #999 !important; }
+            .explanation { display: none !important; }
+            .bg-purple-600, .bg-purple-700, .bg-green-500, .bg-green-600 { color: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; } /* Ensure button backgrounds print */
         }
     </style>
 </head>
-<body>
+<body class="bg-slate-100 text-slate-800">
 
-    <div class="container">
-        <h1>Foundations of Professionalism: Understanding ARRT Standards of Ethics</h1>
-
-        <div class="flip-lesson-container">
-            <h2>Interactive Lesson: The ARRT Standards of Ethics</h2>
-
-            <div id="lesson-page-1" class="lesson-page active">
-                <h3>Page 1: Introduction & How to Use This Lesson</h3>
-                <p>The Standards of Ethics of The American Registry of Radiologic Technologists (ARRT) apply to all currently or formerly certified/registered individuals, and to applicants. Radiologic Technology encompasses disciplines like radiography, radiation therapy, nuclear medicine, and more.</p>
-                <p><strong>Statement of Purpose:</strong> The primary purpose of these ethics requirements is to identify individuals who have internalized professional values that lead them to act in the best interests of patients. These standards provide proactive guidance, promote ethical behavior, and support ARRT's mission of high standards in patient care by restricting those who exhibit inconsistent behavior.</p>
-                <p>The Standards consist of two main parts: the Code of Ethics and the Rules of Ethics.</p>
-                <h4>How to Use This Lesson:</h4>
-                <ul>
-                    <li>Use the <span class="highlight">"Previous Page"</span> and <span class="highlight">"Next Page"</span> buttons below to navigate through the core content.</li>
-                    <li>Read the information on each page carefully.</li>
-                    <li>Engage with the <span class="highlight">"Quick Check!"</span> questions. Select an answer and click "Check Answer" to get immediate feedback.</li>
-                    <li>Once you reach the final page, click <span class="highlight">"Start Activity"</span> to apply your knowledge in the Case Study section.</li>
-                    <li>This lesson is self-paced. Take your time to understand each concept.</li>
-                </ul>
-            </div>
-
-            <div id="lesson-page-2" class="lesson-page">
-                <h3>Page 2: Learning Objectives</h3>
-                <p>By the end of this lesson and activity, you will be able to:</p>
-                <ul>
-                    <li><strong>Identify</strong> the two primary components of the ARRT Standards of Ethics: the Code of Ethics and the Rules of Ethics.</li>
-                    <li><strong>Describe</strong> the purpose and aspirational nature of the ARRT Code of Ethics and recognize key principles.</li>
-                    <li><strong>Explain</strong> the mandatory and enforceable nature of the ARRT Rules of Ethics and identify key violation categories.</li>
-                    <li><strong>Recognize</strong> the RTT's and candidate's "Duty to Report" ethical violations and errors.</li>
-                    <li><strong>Apply</strong> the ARRT Standards of Ethics to analyze real-world ethical dilemmas presented in case studies.</li>
-                    <li><strong>Formulate</strong> appropriate and professional courses of action when faced with ethical challenges in clinical practice.</li>
-                </ul>
-                 <p>Understanding these objectives will help guide your learning as you proceed through the lesson materials and activities.</p>
-            </div>
-
-            <div id="lesson-page-3" class="lesson-page">
-                <h3>Page 3: Introduction to ARRT Standards of Ethics</h3>
-                <p>The Standards of Ethics of The American Registry of Radiologic Technologists (ARRT) apply to all currently or formerly certified/registered individuals, and to applicants. Radiologic Technology encompasses disciplines like radiography, radiation therapy, nuclear medicine, and more.</p>
-                <p><strong>Statement of Purpose:</strong> The primary purpose of these ethics requirements is to identify individuals who have internalized professional values that lead them to act in the best interests of patients. These standards provide proactive guidance, promote ethical behavior, and support ARRT's mission of high standards in patient care by restricting those who exhibit inconsistent behavior.</p>
-                <p>The Standards consist of two main parts: the Code of Ethics and the Rules of Ethics.</p>
-            </div>
-
-            <div id="lesson-page-4" class="lesson-page">
-                <h3>Page 4: The ARRT Code of Ethics - Guiding Principles (Part 1)</h3>
-                <p>The <span class="highlight">Code of Ethics</span> is an aspirational guide for professional conduct related to patients, employers, colleagues, and other healthcare team members. It aims to maintain high ethical conduct and ensure patient protection, safety, and comfort.</p>
-                <p><strong>Key Principles Include:</strong></p>
-                <ul>
-                    <li><strong>Principle 1:</strong> Act professionally, respond to patient needs, and support colleagues in providing quality care.</li>
-                    <li><strong>Principle 2:</strong> Advance the profession's objective to serve humanity with full respect for dignity.</li>
-                    <li><strong>Principle 3:</strong> Deliver care unrestricted by personal attributes or illness nature, and without discrimination.</li>
-                    <li><strong>Principle 4:</strong> Practice based on theoretical knowledge, use equipment appropriately, and employ proper procedures.</li>
-                    <li><strong>Principle 5:</strong> Assess situations, exercise care and judgment, assume responsibility, and act in the patient's best interest.</li>
-                </ul>
-                <h4>Quick Check!</h4>
-                <div class="interactive-question-block" id="lq_page2_1_block" role="region" aria-labelledby="q4_text">
-                    <p class="question-text" id="q4_text">A technologist refuses to provide care to a patient based on their national origin. This directly violates which principle of the Code of Ethics?</p>
-                    <label><input type="radio" name="lq_page2_1" value="P1"> Principle 1</label>
-                    <label><input type="radio" name="lq_page2_1" value="P3"> Principle 3</label>
-                    <label><input type="radio" name="lq_page2_1" value="P5"> Principle 5</label>
-                    <div class="explanation" style="display:none;">Principle 3 states: "The Registered Technologist delivers patient care and service... without discrimination on the basis of race, color, creed, religion, national origin...".</div>
-                </div>
-                <button class="check-page-answers" onclick="checkPageAnswers(4)" aria-label="Check Answer for Page 4 Question">Check Answer</button>
-            </div>
-
-            <div id="lesson-page-5" class="lesson-page">
-                <h3>Page 5: The ARRT Code of Ethics - Guiding Principles (Part 2)</h3>
-                <p>Continuing with the aspirational Code of Ethics:</p>
-                <ul>
-                    <li><strong>Principle 6:</strong> Act as an agent by observation and communication to obtain pertinent information for diagnosis/treatment, recognizing interpretation and diagnosis are outside the RTT scope.</li>
-                    <li><strong>Principle 7:</strong> Use equipment and procedures according to accepted standards, minimizing radiation exposure to all.</li>
-                    <li><strong>Principle 8:</strong> Practice ethically and protect the patient's right to quality care.</li>
-                    <li><strong>Principle 9:</strong> Respect patient confidences and privacy, revealing information only as required by law or to protect welfare.</li>
-                    <li><strong>Principle 10:</strong> Continually strive to improve knowledge and skills through CE, sharing knowledge, and investigating new practices.</li>
-                    <li><strong>Principle 11:</strong> Refrain from using illegal drugs or controlled substances that impair professional judgment or ability to practice safely.</li>
-                </ul>
-                <h4>Quick Check!</h4>
-                <div class="interactive-question-block" id="lq_page3_1_block" role="region" aria-labelledby="q5_text">
-                    <p class="question-text" id="q5_text">An RTT discussing a patient's identifiable medical information with a friend outside of work, without any legal requirement or welfare concern, would violate Principle 9 of the Code of Ethics.</p>
-                    <label><input type="radio" name="lq_page3_1" value="Yes"> Yes</label>
-                    <label><input type="radio" name="lq_page3_1" value="No"> No</label>
-                    <div class="explanation" style="display:none;">Yes, Principle 9 emphasizes respecting patient confidences and privacy.</div>
-                </div>
-                 <button class="check-page-answers" onclick="checkPageAnswers(5)" aria-label="Check Answer for Page 5 Question">Check Answer</button>
-            </div>
-
-            <div id="lesson-page-6" class="lesson-page">
-                <h3>Page 6: Introduction to the ARRT Rules of Ethics</h3>
-                <p>The <span class="highlight">Rules of Ethics</span> are the second part of the Standards. Unlike the Code, these are <span class="highlight">mandatory and enforceable</span> standards of minimally acceptable professional conduct for all RTTs and Candidates. They are intended to promote the protection, safety, and comfort of patients.</p>
-                <p><strong>Key Points:</strong></p>
-                <ul>
-                    <li><strong>Enforceable:</strong> Violations are subject to sanctions.</li>
-                    <li><strong>Duty to Report:</strong> Registered Technologists must notify ARRT of any ethics violations (their own or others'), including state licensing issues and criminal charges/convictions, within 30 days or at annual renewal, whichever is first. Applicants must report within 30 days of occurrence.</li>
-                </ul>
-                <h4>Quick Check!</h4>
-                <div class="interactive-question-block" id="lq_page4_1_block" role="region" aria-labelledby="q6_text">
-                    <p class="question-text" id="q6_text">Are the ARRT Rules of Ethics merely suggestions for best practice?</p>
-                    <label><input type="radio" name="lq_page4_1" value="Yes"> Yes</label>
-                    <label><input type="radio" name="lq_page4_1" value="No"> No</label>
-                    <div class="explanation" style="display:none;">No, the Rules of Ethics are mandatory and enforceable standards of minimally acceptable professional conduct.</div>
-                </div>
-                <button class="check-page-answers" onclick="checkPageAnswers(6)" aria-label="Check Answer for Page 6 Question">Check Answer</button>
-            </div>
-
-            <div id="lesson-page-7" class="lesson-page">
-                <h3>Page 7: Highlights from the Rules of Ethics - Part 1</h3>
-                <p>Violations subject RTTs/Candidates to sanctions. Categories include:</p>
-                <div class="key-principle"><strong>1. Fraud or Deceptive Practices:</strong>
-                    <ul>
-                        <li>In procuring/maintaining certification, employment, or state licenses (e.g., altering documents, falsely claiming ARRT registration).</li>
-                        <li>False/misleading communications about education, credentials, or experience.</li>
-                        <li>Fraudulent billing practices (e.g., Medicare/Medicaid fraud).</li>
-                    </ul>
-                </div>
-                <div class="key-principle"><strong>2. Subversion:</strong>
-                    <ul>
-                        <li>Subverting ARRT exams, CQR (including SSAs), or Education Requirements. This includes disclosing exam/SSA info, soliciting/receiving exam/SSA info, copying/transmitting materials, or providing false CE/clinical info.</li>
-                         <li>Failure to cooperate with ARRT investigations, including making false statements.</li>
-                    </ul>
-                </div>
-                 <h4>Quick Check!</h4>
-                 <div class="interactive-question-block" id="lq_page5_1_block" role="region" aria-labelledby="q7_text">
-                    <p class="question-text" id="q7_text">Sharing specific questions remembered from an ARRT certification exam with students preparing for the exam is acceptable professional behavior.</p>
-                    <label><input type="radio" name="lq_page5_1" value="Yes"> Yes</label>
-                    <label><input type="radio" name="lq_page5_1" value="No"> No</label>
-                    <div class="explanation" style="display:none;">No, this is a form of examination subversion.</div>
-                </div>
-                <button class="check-page-answers" onclick="checkPageAnswers(7)" aria-label="Check Answer for Page 7 Question">Check Answer</button>
-            </div>
-
-            <div id="lesson-page-8" class="lesson-page">
-                 <h3>Page 8: Highlights from the Rules of Ethics - Part 2</h3>
-                <div class="key-principle"><strong>3. Unprofessional Conduct:</strong>
-                    <ul>
-                        <li>Failure to conform to minimal acceptable standards or governmental rules regarding practice; or practice that may create unnecessary danger.</li>
-                        <li>Sexual misconduct with a patient or sexually demeaning behavior.</li>
-                        <li>Unethical conduct likely to deceive, defraud, or harm the public or patient.</li>
-                    </ul>
-                </div>
-                 <div class="key-principle"><strong>4. Scope of Practice Violations:</strong>
-                    <ul>
-                        <li>Performing procedures one is not competent to perform.</li>
-                        <li>Improper delegation or acceptance of functions that could endanger a patient.</li>
-                    </ul>
-                </div>
-                 <div class="key-principle"><strong>5. Fitness to Practice:</strong> Inability to practice with reasonable skill/safety due to illness, alcohol/drugs, or mental/physical condition.</div>
-                 <div class="key-principle"><strong>6. Improper Management of Patient Records:</strong> False entries or failing to protect confidential patient information.</div>
-                <h4>Quick Check!</h4>
-                <div class="interactive-question-block" id="lq_page6_1_block" role="region" aria-labelledby="q8_text">
-                    <p class="question-text" id="q8_text">An RTT documents that a complex procedure was performed when, in fact, a simpler version was done. Is this an ethical violation?</p>
-                    <label><input type="radio" name="lq_page6_1" value="Yes"> Yes</label>
-                    <label><input type="radio" name="lq_page6_1" value="No"> No</label>
-                    <div class="explanation" style="display:none;">Yes, this would be improper management of patient records by making a false entry, and potentially fraudulent billing.</div>
-                </div>
-                <button class="check-page-answers" onclick="checkPageAnswers(8)" aria-label="Check Answer for Page 8 Question">Check Answer</button>
-            </div>
-
-            <div id="lesson-page-9" class="lesson-page">
-                <h3>Page 9: Highlights from the Rules of Ethics - Part 3 & Duty to Report</h3>
-                 <div class="key-principle"><strong>7. Violation of State/Federal Law or Regulatory Rule:</strong>
-                    <ul>
-                        <li>Violating narcotics or controlled substance laws.</li>
-                        <li>Violating a rule from a state/federal authority or certification board leading to licensure/certification action, or failing to report such actions to ARRT.</li>
-                        <li>Criminal proceedings (convictions, guilt findings even if adjudication withheld, certain pleas, sex offender registration).</li>
-                    </ul>
-                </div>
-                 <div class="key-principle"><strong>8. Duty to Report:</strong>
-                    <ul>
-                        <li>Knowing of a violation by any RTT or Candidate and failing to promptly report it in writing to ARRT.</li>
-                        <li>Failing to <span class="highlight">immediately report to one's supervisor</span> an error made in connection with patient care (imaging, treating, or caring) that could be potentially harmful, unethical, or improper. This duty exists whether or not actual injury occurred.</li>
-                    </ul>
-                </div>
-                <p>Understanding these Standards is the first step. You have now reviewed the introduction, learning objectives, and the core components of the ARRT Standards of Ethics.</p>
-                <p>Click "Start Activity" below to proceed to the Case Study Activity and apply what you have learned.</p>
-            </div>
-
-            <div id="lesson-page-10" class="lesson-page">
-                 <h3>Page 10: References & Accessibility</h3>
-                 <h4>Primary Reference</h4>
-                 <p>The information presented in this lesson regarding the Code of Ethics, Rules of Ethics, and professional conduct is based on the official:</p>
-                 <p><strong><span class="highlight">ARRT Standards of Ethics</span></strong></p>
-                 <p>For complete and current official guidance, all RTTs and candidates should consult the latest version of this document, available directly from The American Registry of Radiologic Technologists (ARRT) website (www.arrt.org).</p>
-
-                 <h4>Accessibility Statement</h4>
-                 <p>We strive to make this learning module accessible to all users. Key features include:</p>
-                 <ul>
-                    <li>The use of clear headings and structured text.</li>
-                    <li>CSS designed for readability.</li>
-                    <li>Basic ARIA (Accessible Rich Internet Applications) roles added to interactive question blocks for screen reader users.</li>
-                    <li>Standard browser controls for zooming and navigation.</li>
-                 </ul>
-                 <p>If you encounter any accessibility barriers or require content in an alternative format, please contact the course administrator or content creator.</p>
-                 <p>You have now completed the core lesson content. Click "Start Activity" to begin the case studies.</p>
-            </div>
-
-
-            <div class="lesson-navigation">
-                <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled aria-label="Go to Previous Lesson Page">Previous Page</button>
-                <span class="page-indicator" id="lessonPageIndicator">Page 1 of 10</span>
-                <button id="nextLessonPage" onclick="changeLessonPage(1)" aria-label="Go to Next Lesson Page">Next Page</button>
-                <button id="startActivityButton" onclick="startCaseActivity()" style="display:none; background-color: #28a745;" aria-label="Start Case Study Activity">Start Activity</button>
+    <header class="bg-white shadow-md sticky top-0 z-50 nav-links-header">
+        <div class="container mx-auto px-6 py-3 flex flex-col sm:flex-row justify-between items-center">
+            <h1 class="text-xl font-bold text-purple-700 mb-2 sm:mb-0">ARRT Standards of Ethics Lesson</h1>
+            <div class="flex flex-wrap justify-center sm:justify-end space-x-2">
+                <a href="../index.html" class="text-xs sm:text-sm bg-purple-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-purple-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to Ethics Module
+                </a>
+                <a href="../../index.html" class="text-xs sm:text-sm bg-slate-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-slate-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to Main Workbook
+                </a>
             </div>
         </div>
+    </header>
 
-        <div id="case-study-activity-section" style="display:none;">
-             <hr>
-            <h2>Ethical Crossroads: Case Study Activity</h2>
-            <div class="section">
-                <h3>Instructions</h3>
-                <p>Read each scenario. Consider the ARRT Code of Ethics and Rules of Ethics discussed in the lesson. Using the text areas, respond to the prompts. Focus on identifying the ethical principles/rules at play, potential consequences, and the most appropriate course of action for an RTT or student.</p>
-                <p><span class="highlight">Interaction Note:</span> If this lesson is part of a course, consider discussing your responses with peers or your instructor to gain different perspectives.</p>
-            </div>
+    <div class="container-lesson mx-auto max-w-4xl px-4 sm:px-6 py-8">
+        <div class="bg-white p-6 sm:p-8 rounded-xl shadow-xl">
+            <h1 class="text-3xl font-bold text-purple-700 mb-6 text-center border-b-2 border-purple-300 pb-4">Foundations of Professionalism: Understanding ARRT Standards of Ethics</h1>
 
-            <h3>Scenario 1: Confidentiality and Social Media</h3>
-            <div class="case-study">
-                <div class="case-summary">
-                    <p>You are a radiation therapy student. On your lunch break, you see a social media post from a fellow student in your program. The post doesn't name patients but describes a challenging case treated that day, including some details about the patient's condition and treatment plan. The post ends with, "#radiationtherapy #savinglives".</p>
+            <div class="flip-lesson-container bg-purple-50 p-4 sm:p-6 rounded-lg shadow-md mb-8">
+                <h2 class="text-2xl font-semibold text-purple-600 mb-4">Interactive Lesson: The ARRT Standards of Ethics</h2>
+
+                <div id="lesson-page-1" class="lesson-page active bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[300px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 1: Introduction & How to Use This Lesson</h3>
+                    <p class="mb-3 text-slate-700">The Standards of Ethics of The American Registry of Radiologic Technologists (ARRT) apply to all currently or formerly certified/registered individuals, and to applicants. Radiologic Technology encompasses disciplines like radiography, radiation therapy, nuclear medicine, and more.</p>
+                    <p class="mb-3 text-slate-700"><strong>Statement of Purpose:</strong> The primary purpose of these ethics requirements is to identify individuals who have internalized professional values that lead them to act in the best interests of patients. These standards provide proactive guidance, promote ethical behavior, and support ARRT's mission of high standards in patient care by restricting those who exhibit inconsistent behavior.</p>
+                    <p class="mb-3 text-slate-700">The Standards consist of two main parts: the Code of Ethics and the Rules of Ethics.</p>
+                    <h4 class="text-lg font-medium text-purple-600 mb-2">How to Use This Lesson:</h4>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1">
+                        <li>Use the <span class="font-semibold text-purple-700">"Previous Page"</span> and <span class="font-semibold text-purple-700">"Next Page"</span> buttons below to navigate.</li>
+                        <li>Read the information on each page carefully.</li>
+                        <li>Engage with the <span class="font-semibold text-purple-700">"Quick Check!"</span> questions. Select an answer and click "Check Answer".</li>
+                        <li>Once you reach the final page, click <span class="font-semibold text-green-600">"Start Activity"</span>.</li>
+                        <li>This lesson is self-paced.</li>
+                    </ul>
                 </div>
-                <h4>Ethical Analysis Prompts:</h4>
-                <div class="prompt-question"><strong>1. ARRT Standards:</strong> Which principles from the ARRT Code of Ethics (e.g., patient privacy, professionalism) and which specific ARRT Rules of Ethics (e.g., relating to patient information) are potentially being violated by your classmate's post? Explain why.</div>
-                <textarea id="worksheet-textarea" placeholder="Reference specific Code Principles and Rules..." aria-label="Response to Scenario 1, Question 1"></textarea>
-                <div class="prompt-question"><strong>2. Your Responsibility:</strong> According to the ARRT Rules of Ethics (Rule 21), what is your ethical obligation if you believe a violation has occurred? What are the potential consequences if you ignore the post?</div>
-                <textarea id="worksheet-textarea" placeholder="Your thoughts..." aria-label="Response to Scenario 1, Question 2"></textarea>
-                <div class="prompt-question"><strong>3. Course of Action:</strong> Describe the steps you would take, considering both direct communication with your classmate and your reporting responsibilities. How would you apply principles of effective interprofessional communication and emotional intelligence in this situation?</div>
-                <textarea id="worksheet-textarea" placeholder="Your thoughts..." aria-label="Response to Scenario 1, Question 3"></textarea>
-            </div>
 
-            <h3>Scenario 2: Resource Allocation and Patient Advocacy</h3>
-            <div class="case-study">
-                <div class="case-summary">
-                    <p>You are an RTT student working with a patient experiencing significant side effects. The patient expresses concern about affording medications and transportation. Your RTT preceptor seems dismissive, saying, "Everyone struggles, they just need to figure it out." You know there are resources available.</p>
+                <div id="lesson-page-2" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[300px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 2: Learning Objectives</h3>
+                    <p class="mb-3 text-slate-700">By the end of this lesson and activity, you will be able to:</p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1">
+                        <li><strong>Identify</strong> the two primary components of the ARRT Standards of Ethics.</li>
+                        <li><strong>Describe</strong> the purpose of the ARRT Code of Ethics.</li>
+                        <li><strong>Explain</strong> the nature of the ARRT Rules of Ethics.</li>
+                        <li><strong>Recognize</strong> the RTT's "Duty to Report".</li>
+                        <li><strong>Apply</strong> ARRT Standards to analyze ethical dilemmas.</li>
+                        <li><strong>Formulate</strong> appropriate professional courses of action.</li>
+                    </ul>
+                    <p class="mt-3 text-slate-700">Understanding these objectives will help guide your learning.</p>
                 </div>
-                 <h4>Ethical Analysis Prompts:</h4>
-                <div class="prompt-question"><strong>1. Ethical Principles:</strong> Which ARRT Code of Ethics principles (e.g., responding to patient needs, acting in patient's best interest, quality patient care) are relevant here? Does the preceptor's response align with these principles?</div>
-                <textarea id="worksheet-textarea" placeholder="Your thoughts..." aria-label="Response to Scenario 2, Question 1"></textarea>
-                <div class="prompt-question"><strong>2. Student's Role & Responsibility:</strong> As a student, what is your ethical responsibility towards the patient in this situation? How does this relate to patient advocacy?</div>
-                <textarea id="worksheet-textarea" placeholder="Your thoughts..." aria-label="Response to Scenario 2, Question 2"></textarea>
-                <div class="prompt-question"><strong>3. Navigating Hierarchy & Action:</strong> Considering your student status and the preceptor's comment, what are ethical and professional ways to ensure the patient's concerns are addressed? What specific ARRT Rules could be violated if the patient's needs are ignored, potentially leading to treatment interruption? (e.g., Rule 7, Unprofessional Conduct).</div>
-                <textarea id="worksheet-textarea" placeholder="Your thoughts..." aria-label="Response to Scenario 2, Question 3"></textarea>
-            </div>
 
-            <h3>Scenario 3: Observing a Potential Error</h3>
-             <div class="case-study">
-                <div class="case-summary">
-                    <p>During a treatment setup, you (student or RTT) notice your preceptor (or peer RTT) seems rushed and makes a small adjustment to the treatment machine that you believe might be incorrect based on the plan. You have a nagging feeling something isn't right.</p>
+                <div id="lesson-page-3" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[300px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 3: Introduction to ARRT Standards of Ethics</h3>
+                    <p class="mb-3 text-slate-700">The Standards of Ethics of The American Registry of Radiologic Technologists (ARRT) apply to all currently or formerly certified/registered individuals, and to applicants. Radiologic Technology encompasses disciplines like radiography, radiation therapy, nuclear medicine, and more.</p>
+                    <p class="mb-3 text-slate-700"><strong>Statement of Purpose:</strong> The primary purpose of these ethics requirements is to identify individuals who have internalized professional values that lead them to act in the best interests of patients. These standards provide proactive guidance, promote ethical behavior, and support ARRT's mission of high standards in patient care by restricting those who exhibit inconsistent behavior.</p>
+                    <p class="text-slate-700">The Standards consist of two main parts: the Code of Ethics and the Rules of Ethics.</p>
                 </div>
-                <h4>Ethical Analysis Prompts:</h4>
-                <div class="prompt-question"><strong>1. Immediate Ethical Concern:</strong> Which ARRT Code of Ethics principles (e.g., patient safety, professional judgment, acting in patient's best interest) and Rules of Ethics (e.g., Rule 7, unprofessional conduct; Rule 22, duty to report error) are paramount here?</div>
-                <textarea id="worksheet-textarea" placeholder="Your thoughts..." aria-label="Response to Scenario 3, Question 1"></textarea>
-                <div class="prompt-question"><strong>2. Communication Strategy (Assertiveness & EI):</strong> How would you voice your concern respectfully but assertively, especially if the person is more experienced or seems rushed? How can Emotional Intelligence help you here?</div>
-                <textarea id="worksheet-textarea" placeholder="Your thoughts..." aria-label="Response to Scenario 3, Question 2"></textarea>
-                <div class="prompt-question"><strong>3. Consequences of Inaction vs. Action:</strong> What are the potential ethical and practical consequences if you say nothing and an error occurs? What if you speak up and are mistaken? How does the ARRT "Duty to Report Error" (Rule 22) apply even if no actual harm occurred?</div>
-                <textarea id="worksheet-textarea" placeholder="Your thoughts..." aria-label="Response to Scenario 3, Question 3"></textarea>
-            </div>
 
-            <h3>Scenario 4: Impaired Colleague</h3>
-            <div class="case-study">
-                <div class="case-summary">
-                    <p>An RTT, Sarah, notices her long-time colleague and friend, RTT John, has been frequently arriving late, seems disheveled, and she thought she smelled alcohol on his breath one morning. Today, during a complex setup, John seems uncharacteristically clumsy and irritable. Sarah is worried about patient safety and John's well-being.</p>
+                <div id="lesson-page-4" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[300px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 4: The ARRT Code of Ethics - Guiding Principles (Part 1)</h3>
+                    <p class="mb-3 text-slate-700">The <span class="font-semibold text-purple-700">Code of Ethics</span> is an aspirational guide for professional conduct related to patients, employers, colleagues, and other healthcare team members.</p>
+                    <p class="mb-2 text-slate-700"><strong>Key Principles Include:</strong></p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm">
+                        <li><strong>Principle 1:</strong> Act professionally, respond to patient needs, and support colleagues.</li>
+                        <li><strong>Principle 2:</strong> Advance the profession's objective to serve humanity with dignity.</li>
+                        <li><strong>Principle 3:</strong> Deliver care unrestricted by personal attributes or illness, without discrimination.</li>
+                        <li><strong>Principle 4:</strong> Practice based on theory, use equipment appropriately, employ proper procedures.</li>
+                        <li><strong>Principle 5:</strong> Assess situations, exercise care and judgment, assume responsibility, act in patient's best interest.</li>
+                    </ul>
+                    <h4 class="text-lg font-medium text-purple-600 mt-4 mb-2">Quick Check!</h4>
+                    <div class="interactive-question-block bg-purple-100 p-3 rounded-md border border-purple-300" id="lq_page2_1_block" role="region" aria-labelledby="q4_text">
+                        <p class="question-text font-semibold text-slate-700 mb-2" id="q4_text">A technologist refuses to provide care to a patient based on their national origin. This directly violates which principle of the Code of Ethics?</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="lq_page2_1" value="P1" class="mr-2 accent-purple-600"> Principle 1</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="lq_page2_1" value="P3" class="mr-2 accent-purple-600"> Principle 3</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="lq_page2_1" value="P5" class="mr-2 accent-purple-600"> Principle 5</label>
+                        <div class="explanation text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">Principle 3 states: "The Registered Technologist delivers patient care and service... without discrimination on the basis of race, color, creed, religion, national origin...".</div>
+                    </div>
+                    <button class="check-page-answers mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswers(4)" aria-label="Check Answer for Page 4 Question">Check Answer</button>
                 </div>
-                <h4>Ethical Analysis Prompts:</h4>
-                <div class="prompt-question"><strong>1. ARRT Standards:</strong> Which ARRT Code of Ethics principles (e.g., supporting colleagues in quality care, patient safety) and Rules of Ethics (e.g., Rule 13, Fitness to Practice; Rule 21, Duty to Report Violation) are relevant to Sarah's observations?</div>
-                <textarea id="worksheet-textarea" placeholder="Your thoughts..." aria-label="Response to Scenario 4, Question 1"></textarea>
-                <div class="prompt-question"><strong>2. Dilemma and Action:</strong> What is the ethical dilemma Sarah faces (loyalty to friend vs. patient safety/professional responsibility)? What immediate actions should Sarah consider taking to ensure patient safety for the current treatment?</div>
-                <textarea id="worksheet-textarea" placeholder="Your thoughts..." aria-label="Response to Scenario 4, Question 2"></textarea>
-                <div class="prompt-question"><strong>3. Reporting Responsibilities:</strong> What are Sarah's responsibilities regarding reporting her concerns about John to her supervisor and potentially to ARRT, according to the Rules of Ethics? How can she do this professionally and ethically?</div>
-                <textarea id="worksheet-textarea" placeholder="Your thoughts..." aria-label="Response to Scenario 4, Question 3"></textarea>
+
+                <div id="lesson-page-5" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[300px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 5: The ARRT Code of Ethics - Guiding Principles (Part 2)</h3>
+                     <p class="mb-2 text-slate-700">Continuing with the aspirational Code of Ethics:</p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm">
+                        <li><strong>Principle 6:</strong> Act as an agent by observation and communication for diagnosis/treatment.</li>
+                        <li><strong>Principle 7:</strong> Use equipment and procedures to minimize radiation exposure.</li>
+                        <li><strong>Principle 8:</strong> Practice ethically and protect patient's right to quality care.</li>
+                        <li><strong>Principle 9:</strong> Respect patient confidences and privacy.</li>
+                        <li><strong>Principle 10:</strong> Continually strive to improve knowledge and skills.</li>
+                        <li><strong>Principle 11:</strong> Refrain from using illegal drugs or substances impairing judgment.</li>
+                    </ul>
+                    <h4 class="text-lg font-medium text-purple-600 mt-4 mb-2">Quick Check!</h4>
+                    <div class="interactive-question-block bg-purple-100 p-3 rounded-md border border-purple-300" id="lq_page3_1_block" role="region" aria-labelledby="q5_text">
+                        <p class="question-text font-semibold text-slate-700 mb-2" id="q5_text">An RTT discussing a patient's identifiable medical information with a friend outside of work, without any legal requirement or welfare concern, would violate Principle 9 of the Code of Ethics.</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="lq_page3_1" value="Yes" class="mr-2 accent-purple-600"> Yes</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="lq_page3_1" value="No" class="mr-2 accent-purple-600"> No</label>
+                        <div class="explanation text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">Yes, Principle 9 emphasizes respecting patient confidences and privacy.</div>
+                    </div>
+                    <button class="check-page-answers mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswers(5)" aria-label="Check Answer for Page 5 Question">Check Answer</button>
+                </div>
+
+                <div id="lesson-page-6" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[300px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 6: Introduction to the ARRT Rules of Ethics</h3>
+                    <p class="mb-3 text-slate-700">The <span class="font-semibold text-purple-700">Rules of Ethics</span> are <span class="font-semibold text-red-600">mandatory and enforceable</span> standards of minimally acceptable professional conduct.</p>
+                    <p class="mb-2 text-slate-700"><strong>Key Points:</strong></p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1">
+                        <li><strong>Enforceable:</strong> Violations are subject to sanctions.</li>
+                        <li><strong>Duty to Report:</strong> RTTs must notify ARRT of ethics violations (own or others') within 30 days or at annual renewal. Applicants must report within 30 days of occurrence.</li>
+                    </ul>
+                    <h4 class="text-lg font-medium text-purple-600 mt-4 mb-2">Quick Check!</h4>
+                    <div class="interactive-question-block bg-purple-100 p-3 rounded-md border border-purple-300" id="lq_page4_1_block" role="region" aria-labelledby="q6_text">
+                        <p class="question-text font-semibold text-slate-700 mb-2" id="q6_text">Are the ARRT Rules of Ethics merely suggestions for best practice?</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="lq_page4_1" value="Yes" class="mr-2 accent-purple-600"> Yes</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="lq_page4_1" value="No" class="mr-2 accent-purple-600"> No</label>
+                        <div class="explanation text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">No, the Rules of Ethics are mandatory and enforceable.</div>
+                    </div>
+                     <button class="check-page-answers mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswers(6)" aria-label="Check Answer for Page 6 Question">Check Answer</button>
+                </div>
+
+                <div id="lesson-page-7" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[300px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 7: Highlights from the Rules of Ethics - Part 1</h3>
+                    <p class="mb-3 text-slate-700">Violations subject RTTs/Candidates to sanctions. Categories include:</p>
+                    <div class="key-principle-box bg-purple-50 border-l-4 border-purple-500 p-3 mb-3 rounded">
+                        <strong class="text-purple-700">1. Fraud or Deceptive Practices:</strong>
+                        <ul class="list-disc list-inside text-slate-600 text-sm mt-1 space-y-1">
+                            <li>In procuring/maintaining certification, employment, or licenses.</li>
+                            <li>False/misleading communications about credentials.</li>
+                            <li>Fraudulent billing.</li>
+                        </ul>
+                    </div>
+                    <div class="key-principle-box bg-purple-50 border-l-4 border-purple-500 p-3 rounded">
+                        <strong class="text-purple-700">2. Subversion:</strong>
+                        <ul class="list-disc list-inside text-slate-600 text-sm mt-1 space-y-1">
+                            <li>Subverting ARRT exams, CQR, or Education Requirements.</li>
+                            <li>Failure to cooperate with ARRT investigations.</li>
+                        </ul>
+                    </div>
+                    <h4 class="text-lg font-medium text-purple-600 mt-4 mb-2">Quick Check!</h4>
+                    <div class="interactive-question-block bg-purple-100 p-3 rounded-md border border-purple-300" id="lq_page5_1_block" role="region" aria-labelledby="q7_text">
+                        <p class="question-text font-semibold text-slate-700 mb-2" id="q7_text">Sharing specific questions remembered from an ARRT certification exam with students preparing for the exam is acceptable professional behavior.</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="lq_page5_1" value="Yes" class="mr-2 accent-purple-600"> Yes</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="lq_page5_1" value="No" class="mr-2 accent-purple-600"> No</label>
+                        <div class="explanation text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">No, this is a form of examination subversion.</div>
+                    </div>
+                    <button class="check-page-answers mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswers(7)" aria-label="Check Answer for Page 7 Question">Check Answer</button>
+                </div>
+
+                <div id="lesson-page-8" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[300px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 8: Highlights from the Rules of Ethics - Part 2</h3>
+                    <div class="key-principle-box bg-purple-50 border-l-4 border-purple-500 p-3 mb-3 rounded">
+                        <strong class="text-purple-700">3. Unprofessional Conduct:</strong> Incl. failure to conform to standards, sexual misconduct, conduct likely to deceive/harm.
+                    </div>
+                    <div class="key-principle-box bg-purple-50 border-l-4 border-purple-500 p-3 mb-3 rounded">
+                        <strong class="text-purple-700">4. Scope of Practice Violations:</strong> Performing procedures not competent to do, improper delegation.
+                    </div>
+                    <div class="key-principle-box bg-purple-50 border-l-4 border-purple-500 p-3 mb-3 rounded">
+                        <strong class="text-purple-700">5. Fitness to Practice:</strong> Inability to practice safely due to illness, alcohol/drugs, mental/physical condition.
+                    </div>
+                     <div class="key-principle-box bg-purple-50 border-l-4 border-purple-500 p-3 rounded">
+                        <strong class="text-purple-700">6. Improper Management of Patient Records:</strong> False entries, failing to protect confidential info.
+                    </div>
+                    <h4 class="text-lg font-medium text-purple-600 mt-4 mb-2">Quick Check!</h4>
+                    <div class="interactive-question-block bg-purple-100 p-3 rounded-md border border-purple-300" id="lq_page6_1_block" role="region" aria-labelledby="q8_text">
+                        <p class="question-text font-semibold text-slate-700 mb-2" id="q8_text">An RTT documents that a complex procedure was performed when, in fact, a simpler version was done. Is this an ethical violation?</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="lq_page6_1" value="Yes" class="mr-2 accent-purple-600"> Yes</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="lq_page6_1" value="No" class="mr-2 accent-purple-600"> No</label>
+                        <div class="explanation text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">Yes, this would be improper management of patient records and potentially fraudulent.</div>
+                    </div>
+                     <button class="check-page-answers mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswers(8)" aria-label="Check Answer for Page 8 Question">Check Answer</button>
+                </div>
+
+                <div id="lesson-page-9" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[300px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 9: Highlights from the Rules of Ethics - Part 3 & Duty to Report</h3>
+                    <div class="key-principle-box bg-purple-50 border-l-4 border-purple-500 p-3 mb-3 rounded">
+                        <strong class="text-purple-700">7. Violation of State/Federal Law or Regulatory Rule:</strong> Incl. narcotics laws, licensure actions, criminal proceedings.
+                    </div>
+                    <div class="key-principle-box bg-red-50 border-l-4 border-red-500 p-3 rounded">
+                        <strong class="text-red-700">8. Duty to Report:</strong>
+                         <ul class="list-disc list-inside text-slate-600 text-sm mt-1 space-y-1">
+                            <li>Knowing of a violation by any RTT/Candidate and failing to promptly report to ARRT.</li>
+                            <li>Failing to <span class="font-semibold">immediately report to one's supervisor</span> an error made in patient care that could be harmful, unethical, or improper.</li>
+                        </ul>
+                    </div>
+                    <p class="mt-4 text-slate-700">You have reviewed the core components of the ARRT Standards of Ethics.</p>
+                    <p class="mt-2 text-slate-700">Click "Start Activity" below to proceed to the Case Study Activity.</p>
+                </div>
+
+                <div id="lesson-page-10" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[300px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 10: References & Accessibility</h3>
+                    <h4 class="text-lg font-medium text-purple-600 mb-2">Primary Reference</h4>
+                    <p class="mb-3 text-slate-700">The information in this lesson is based on the official <strong class="text-purple-700">ARRT Standards of Ethics</strong>. Consult the latest version on www.arrt.org.</p>
+                    <h4 class="text-lg font-medium text-purple-600 mb-2">Accessibility Statement</h4>
+                    <p class="mb-3 text-slate-700">We strive for accessibility. Features include clear headings, readable CSS, ARIA roles, and browser zoom/navigation.</p>
+                    <p class="text-slate-700">If you encounter barriers, contact the course administrator.</p>
+                    <p class="mt-3 text-slate-700">You have completed the core lesson. Click "Start Activity".</p>
+                </div>
+
+                <div class="lesson-navigation-bar text-center mt-6">
+                    <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled aria-label="Go to Previous Lesson Page" class="bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors disabled:bg-slate-300 text-sm">Previous Page</button>
+                    <span class="page-indicator mx-2 sm:mx-4 text-sm text-slate-600" id="lessonPageIndicator">Page 1 of 10</span>
+                    <button id="nextLessonPage" onclick="changeLessonPage(1)" aria-label="Go to Next Lesson Page" class="bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors text-sm">Next Page</button>
+                    <button id="startActivityButton" onclick="startCaseActivity()" style="display:none;" aria-label="Start Case Study Activity" class="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors ml-2 text-sm">Start Activity</button>
+                </div>
             </div>
 
-            <div class="section">
-                <h3>General Reflection on ARRT Standards of Ethics</h3>
-                <div class="prompt-question">1. Why is it important for the ARRT to have both an aspirational Code of Ethics and mandatory Rules of Ethics? How do they complement each other?</div>
-                <textarea id="worksheet-textarea" placeholder="Your thoughts..." aria-label="Response to General Reflection 1"></textarea>
-                <div class="prompt-question">2. The "Duty to Report" (Rules 21 & 22) can be challenging. What factors might make it difficult for an RTT to report a colleague's ethical violation or an error, and how can these barriers be overcome?</div>
-                <textarea id="worksheet-textarea" placeholder="Your thoughts..." aria-label="Response to General Reflection 2"></textarea>
-                <div class="prompt-question">3. How does adherence to the ARRT Standards of Ethics contribute to the overall quality and safety of patient care in radiation oncology and the trustworthiness of the profession?</div>
-                <textarea id="worksheet-textarea" placeholder="Your thoughts..." aria-label="Response to General Reflection 3"></textarea>
-            </div>
+            <div id="case-study-activity-section" style="display:none;">
+                <hr class="my-8 border-t-2 border-purple-300">
+                <h2 class="text-2xl font-semibold text-purple-700 mb-6 text-center">Ethical Crossroads: Case Study Activity</h2>
+                
+                <div class="section-activity bg-purple-50 p-4 rounded-lg mb-6 border border-purple-200">
+                    <h3 class="text-xl font-semibold text-purple-600 mb-2">Instructions</h3>
+                    <p class="text-slate-700 text-sm">Read each scenario. Consider the ARRT Code of Ethics and Rules of Ethics. Respond to the prompts in the text areas. Focus on identifying ethical principles/rules, potential consequences, and appropriate actions.</p>
+                </div>
 
-            <div class="button-container">
-                <button onclick="window.print()" aria-label="Print Lesson and Your Responses">Print Lesson & Responses</button>
-                <p class="print-instructions">(Enable "Background graphics" in print settings for best results.)</p>
+                <div class="case-study-activity mb-8 p-4 bg-white rounded-lg shadow-md border border-slate-200">
+                    <h3 class="text-xl font-semibold text-purple-600 mb-3">Scenario 1: Confidentiality and Social Media</h3>
+                    <div class="case-summary bg-purple-50 p-3 rounded-md text-sm text-slate-700 mb-3">
+                        <p>You are a radiation therapy student. On your lunch break, you see a social media post from a fellow student. The post doesn't name patients but describes a challenging case treated that day, including some details about the patient's condition and treatment plan. The post ends with, "#radiationtherapy #savinglives".</p>
+                    </div>
+                    <h4 class="text-lg font-medium text-purple-600 mb-2">Ethical Analysis Prompts:</h4>
+                    <div class="prompt-question bg-yellow-50 border border-yellow-300 p-3 rounded-md mb-3">
+                        <strong class="text-yellow-700">1. ARRT Standards:</strong> Which Code of Ethics principles and Rules of Ethics are potentially violated? Explain.
+                    </div>
+                    <textarea class="w-full p-2 border border-slate-300 rounded-md text-sm focus:ring-purple-500 focus:border-purple-500" rows="3" placeholder="Reference specific Code Principles and Rules..." aria-label="Response to Scenario 1, Question 1"></textarea>
+                    
+                    <div class="prompt-question bg-yellow-50 border border-yellow-300 p-3 rounded-md mb-3 mt-3">
+                        <strong class="text-yellow-700">2. Your Responsibility:</strong> According to ARRT Rules (Rule 21), what is your obligation? Consequences if ignored?
+                    </div>
+                    <textarea class="w-full p-2 border border-slate-300 rounded-md text-sm focus:ring-purple-500 focus:border-purple-500" rows="3" placeholder="Your thoughts..." aria-label="Response to Scenario 1, Question 2"></textarea>
+
+                    <div class="prompt-question bg-yellow-50 border border-yellow-300 p-3 rounded-md mb-3 mt-3">
+                        <strong class="text-yellow-700">3. Course of Action:</strong> Describe steps you would take (communication, reporting). Apply EI.
+                    </div>
+                    <textarea class="w-full p-2 border border-slate-300 rounded-md text-sm focus:ring-purple-500 focus:border-purple-500" rows="3" placeholder="Your thoughts..." aria-label="Response to Scenario 1, Question 3"></textarea>
+                </div>
+
+                <div class="case-study-activity mb-8 p-4 bg-white rounded-lg shadow-md border border-slate-200">
+                    <h3 class="text-xl font-semibold text-purple-600 mb-3">Scenario 2: Resource Allocation and Patient Advocacy</h3>
+                    <div class="case-summary bg-purple-50 p-3 rounded-md text-sm text-slate-700 mb-3">
+                        <p>You are an RTT student working with a patient experiencing significant side effects. The patient expresses concern about affording medications and transportation. Your RTT preceptor seems dismissive, saying, "Everyone struggles, they just need to figure it out." You know there are resources available.</p>
+                    </div>
+                    <h4 class="text-lg font-medium text-purple-600 mb-2">Ethical Analysis Prompts:</h4>
+                    <div class="prompt-question bg-yellow-50 border border-yellow-300 p-3 rounded-md mb-3">
+                        <strong class="text-yellow-700">1. Ethical Principles:</strong> Which ARRT Code of Ethics principles are relevant? Does the preceptor's response align?
+                    </div>
+                    <textarea class="w-full p-2 border border-slate-300 rounded-md text-sm focus:ring-purple-500 focus:border-purple-500" rows="3" placeholder="Your thoughts..." aria-label="Response to Scenario 2, Question 1"></textarea>
+                    
+                    <div class="prompt-question bg-yellow-50 border border-yellow-300 p-3 rounded-md mb-3 mt-3">
+                        <strong class="text-yellow-700">2. Student's Role & Responsibility:</strong> What is your ethical responsibility towards the patient? How does this relate to patient advocacy?
+                    </div>
+                    <textarea class="w-full p-2 border border-slate-300 rounded-md text-sm focus:ring-purple-500 focus:border-purple-500" rows="3" placeholder="Your thoughts..." aria-label="Response to Scenario 2, Question 2"></textarea>
+
+                    <div class="prompt-question bg-yellow-50 border border-yellow-300 p-3 rounded-md mb-3 mt-3">
+                        <strong class="text-yellow-700">3. Navigating Hierarchy & Action:</strong> What are ethical ways to ensure patient's concerns are addressed? Which ARRT Rules could be violated if needs are ignored?
+                    </div>
+                    <textarea class="w-full p-2 border border-slate-300 rounded-md text-sm focus:ring-purple-500 focus:border-purple-500" rows="3" placeholder="Your thoughts..." aria-label="Response to Scenario 2, Question 3"></textarea>
+                </div>
+
+                <div class="case-study-activity mb-8 p-4 bg-white rounded-lg shadow-md border border-slate-200">
+                    <h3 class="text-xl font-semibold text-purple-600 mb-3">Scenario 3: Observing a Potential Error</h3>
+                    <div class="case-summary bg-purple-50 p-3 rounded-md text-sm text-slate-700 mb-3">
+                         <p>During a treatment setup, you (student or RTT) notice your preceptor (or peer RTT) seems rushed and makes a small adjustment to the treatment machine that you believe might be incorrect based on the plan. You have a nagging feeling something isn't right.</p>
+                    </div>
+                    <h4 class="text-lg font-medium text-purple-600 mb-2">Ethical Analysis Prompts:</h4>
+                    <div class="prompt-question bg-yellow-50 border border-yellow-300 p-3 rounded-md mb-3">
+                        <strong class="text-yellow-700">1. Immediate Ethical Concern:</strong> Which ARRT Code of Ethics principles and Rules of Ethics are paramount here?
+                    </div>
+                    <textarea class="w-full p-2 border border-slate-300 rounded-md text-sm focus:ring-purple-500 focus:border-purple-500" rows="3" placeholder="Your thoughts..." aria-label="Response to Scenario 3, Question 1"></textarea>
+                    
+                    <div class="prompt-question bg-yellow-50 border border-yellow-300 p-3 rounded-md mb-3 mt-3">
+                        <strong class="text-yellow-700">2. Communication Strategy (Assertiveness & EI):</strong> How would you voice your concern respectfully but assertively? How can EI help?
+                    </div>
+                    <textarea class="w-full p-2 border border-slate-300 rounded-md text-sm focus:ring-purple-500 focus:border-purple-500" rows="3" placeholder="Your thoughts..." aria-label="Response to Scenario 3, Question 2"></textarea>
+
+                    <div class="prompt-question bg-yellow-50 border border-yellow-300 p-3 rounded-md mb-3 mt-3">
+                        <strong class="text-yellow-700">3. Consequences of Inaction vs. Action:</strong> Potential consequences if you say nothing and an error occurs? What if you speak up and are mistaken? How does ARRT "Duty to Report Error" apply?
+                    </div>
+                    <textarea class="w-full p-2 border border-slate-300 rounded-md text-sm focus:ring-purple-500 focus:border-purple-500" rows="3" placeholder="Your thoughts..." aria-label="Response to Scenario 3, Question 3"></textarea>
+                </div>
+
+                <div class="case-study-activity mb-8 p-4 bg-white rounded-lg shadow-md border border-slate-200">
+                    <h3 class="text-xl font-semibold text-purple-600 mb-3">Scenario 4: Impaired Colleague</h3>
+                    <div class="case-summary bg-purple-50 p-3 rounded-md text-sm text-slate-700 mb-3">
+                        <p>An RTT, Sarah, notices her long-time colleague and friend, RTT John, has been frequently arriving late, seems disheveled, and she thought she smelled alcohol on his breath one morning. Today, during a complex setup, John seems uncharacteristically clumsy and irritable. Sarah is worried about patient safety and John's well-being.</p>
+                    </div>
+                    <h4 class="text-lg font-medium text-purple-600 mb-2">Ethical Analysis Prompts:</h4>
+                    <div class="prompt-question bg-yellow-50 border border-yellow-300 p-3 rounded-md mb-3">
+                        <strong class="text-yellow-700">1. ARRT Standards:</strong> Which ARRT Code of Ethics principles and Rules of Ethics are relevant to Sarah's observations?
+                    </div>
+                    <textarea class="w-full p-2 border border-slate-300 rounded-md text-sm focus:ring-purple-500 focus:border-purple-500" rows="3" placeholder="Your thoughts..." aria-label="Response to Scenario 4, Question 1"></textarea>
+                    
+                    <div class="prompt-question bg-yellow-50 border border-yellow-300 p-3 rounded-md mb-3 mt-3">
+                        <strong class="text-yellow-700">2. Dilemma and Action:</strong> What is the ethical dilemma Sarah faces? What immediate actions should Sarah consider for patient safety?
+                    </div>
+                    <textarea class="w-full p-2 border border-slate-300 rounded-md text-sm focus:ring-purple-500 focus:border-purple-500" rows="3" placeholder="Your thoughts..." aria-label="Response to Scenario 4, Question 2"></textarea>
+
+                    <div class="prompt-question bg-yellow-50 border border-yellow-300 p-3 rounded-md mb-3 mt-3">
+                        <strong class="text-yellow-700">3. Reporting Responsibilities:</strong> What are Sarah's responsibilities regarding reporting concerns about John to her supervisor and potentially ARRT?
+                    </div>
+                    <textarea class="w-full p-2 border border-slate-300 rounded-md text-sm focus:ring-purple-500 focus:border-purple-500" rows="3" placeholder="Your thoughts..." aria-label="Response to Scenario 4, Question 3"></textarea>
+                </div>
+                
+                <div class="section-activity bg-purple-50 p-4 rounded-lg mt-8 border border-purple-200">
+                    <h3 class="text-xl font-semibold text-purple-600 mb-3">General Reflection on ARRT Standards of Ethics</h3>
+                    <div class="prompt-question bg-yellow-50 border border-yellow-300 p-3 rounded-md mb-3">1. Why is it important for ARRT to have both an aspirational Code and mandatory Rules? How do they complement each other?</div>
+                    <textarea class="w-full p-2 border border-slate-300 rounded-md text-sm focus:ring-purple-500 focus:border-purple-500" rows="3" placeholder="Your thoughts..." aria-label="Response to General Reflection 1"></textarea>
+                    
+                    <div class="prompt-question bg-yellow-50 border border-yellow-300 p-3 rounded-md mb-3 mt-3">2. The "Duty to Report" can be challenging. What factors might make it difficult, and how can barriers be overcome?</div>
+                    <textarea class="w-full p-2 border border-slate-300 rounded-md text-sm focus:ring-purple-500 focus:border-purple-500" rows="3" placeholder="Your thoughts..." aria-label="Response to General Reflection 2"></textarea>
+
+                    <div class="prompt-question bg-yellow-50 border border-yellow-300 p-3 rounded-md mb-3 mt-3">3. How does adherence to ARRT Standards contribute to quality/safety in radiation oncology and profession trustworthiness?</div>
+                    <textarea class="w-full p-2 border border-slate-300 rounded-md text-sm focus:ring-purple-500 focus:border-purple-500" rows="3" placeholder="Your thoughts..." aria-label="Response to General Reflection 3"></textarea>
+                </div>
+
+                <div class="button-container-activity text-center mt-8">
+                    <button onclick="window.print()" aria-label="Print Lesson and Your Responses" class="bg-green-500 text-white py-2 px-6 rounded-lg hover:bg-green-600 transition-colors text-base">Print Lesson & Responses</button>
+                    <p class="print-instructions text-xs text-slate-500 mt-2">(Enable "Background graphics" in print settings for best results.)</p>
+                </div>
             </div>
         </div>
     </div>
 
+    <footer class="bg-slate-800 text-slate-300 py-6 mt-12 text-center">
+        <div class="container mx-auto px-6">
+            <p class="text-sm">&copy; <span id="currentYear"></span> Radiation Therapy E-Workbook. RTApps All Rights Reserved.</p>
+            <p class="text-xs mt-1">ARRT Ethics Lesson</p>
+        </div>
+    </footer>
+
     <script>
         let currentLessonPage = 1;
-        const totalLessonPages = 10; // Total pages remains 10
+        const totalLessonPages = 10; 
         const lessonPages = document.querySelectorAll('.lesson-page');
         const prevLessonButton = document.getElementById('prevLessonPage');
         const nextLessonButton = document.getElementById('nextLessonPage');
         const lessonPageIndicator = document.getElementById('lessonPageIndicator');
         const startActivityButton = document.getElementById('startActivityButton');
         const caseStudyActivitySection = document.getElementById('case-study-activity-section');
+        
+        // Simplified correct answers for demonstration
         const lessonCorrectAnswers = {
-            lq_page2_1: "P3",
-            lq_page3_1: "Yes",
-            lq_page4_1: "No",
-            lq_page5_1: "No",
-            lq_page6_1: "Yes"
+            lq_page2_1: "P3", // Corresponds to name attribute of radio buttons on page 4
+            lq_page3_1: "Yes",// Corresponds to name attribute of radio buttons on page 5
+            lq_page4_1: "No", // Corresponds to name attribute of radio buttons on page 6
+            lq_page5_1: "No", // Corresponds to name attribute of radio buttons on page 7
+            lq_page6_1: "Yes" // Corresponds to name attribute of radio buttons on page 8
         };
 
         function displayLessonPage() {
             lessonPages.forEach((page, index) => {
                 page.classList.toggle('active', index === currentLessonPage - 1);
+                page.style.display = (index === currentLessonPage - 1) ? 'block' : 'none';
             });
             prevLessonButton.disabled = currentLessonPage === 1;
             nextLessonButton.style.display = currentLessonPage === totalLessonPages ? 'none' : 'inline-block';
-            startActivityButton.style.display = (currentLessonPage >= totalLessonPages -1) ? 'inline-block' : 'none';
+            // Show start activity button on the last two pages (9 and 10)
+            startActivityButton.style.display = (currentLessonPage >= totalLessonPages - 1) ? 'inline-block' : 'none'; 
             lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
         }
 
@@ -527,7 +399,7 @@
             caseStudyActivitySection.scrollIntoView({ behavior: 'smooth' });
         }
 
-       function checkPageAnswers(pageNumber) {
+        function checkPageAnswers(pageNumber) {
             const questionsOnPage = document.querySelectorAll(`#lesson-page-${pageNumber} .interactive-question-block`);
             questionsOnPage.forEach(block => {
                 const questionName = block.querySelector('input[type="radio"]').name;
@@ -537,36 +409,40 @@
                 const selectedRadio = block.querySelector(`input[name="${questionName}"]:checked`);
                 const explanationDiv = block.querySelector('.explanation');
 
-                block.classList.remove('feedback-correct', 'feedback-incorrect');
+                // Reset styles
+                block.classList.remove('border-green-500', 'border-red-500', 'bg-green-50', 'bg-red-50');
                 block.querySelectorAll('label').forEach(label => {
-                    label.classList.remove('correct-option', 'selected-incorrect');
+                    label.classList.remove('text-green-700', 'font-semibold', 'text-red-700');
                 });
-                 if(explanationDiv) explanationDiv.style.display = 'none';
+                if(explanationDiv) explanationDiv.style.display = 'none';
 
                 if (selectedRadio) {
                     const userAnswer = selectedRadio.value;
                     const userSelectedLabel = selectedRadio.parentElement;
                     if (userAnswer === correctAnswerValue) {
-                        block.classList.add('feedback-correct');
-                        if (userSelectedLabel) userSelectedLabel.classList.add('correct-option');
+                        block.classList.add('border-green-500', 'bg-green-50');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('text-green-700', 'font-semibold');
                     } else {
-                        block.classList.add('feedback-incorrect');
-                        if (userSelectedLabel) userSelectedLabel.classList.add('selected-incorrect');
+                        block.classList.add('border-red-500', 'bg-red-50');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('text-red-700', 'font-semibold');
                         const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
                         if (correctRadio && correctRadio.parentElement) {
-                            correctRadio.parentElement.classList.add('correct-option');
+                            correctRadio.parentElement.classList.add('text-green-700', 'font-semibold');
                         }
                     }
                 } else { // No answer selected
-                    block.classList.add('feedback-incorrect');
+                    block.classList.add('border-red-500', 'bg-red-50');
                     const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
                     if (correctRadio && correctRadio.parentElement) {
-                        correctRadio.parentElement.classList.add('correct-option');
+                       correctRadio.parentElement.classList.add('text-green-700', 'font-semibold');
                     }
                 }
                 if(explanationDiv) explanationDiv.style.display = 'block';
             });
         }
+        
+        // Set current year in footer
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
 
         // Initialize first lesson page
         displayLessonPage();
