@@ -38,7 +38,7 @@
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
             }
-            #printableBadge h4, #printableBadge .awardee-name, #printableBadge .badge-logo-print {
+            #printableBadge h4, #printableBadge .awardee-name, #printableBadge .badge-logo-print, #printableBadge .completion-date-print {
                 color: #047857 !important; /* Tailwind green-700 */
             }
              #printableBadge .awardee-name {
@@ -139,6 +139,7 @@
                         <h4 class="text-green-700 text-2xl sm:text-3xl font-bold mb-2 sm:mb-4">Certificate of Completion</h4>
                         <p class="awardee-name text-green-600 text-xl sm:text-2xl font-semibold my-3 sm:my-5 border-b-2 border-dashed border-green-600 pb-1 sm:pb-2" id="badgeNameDisplay"></p>
                         <p class="reason-text text-slate-700 text-md sm:text-lg my-2 sm:my-3">Has successfully completed the HIPAA Case Study Analysis Activity.</p>
+                        <p class="completion-date-print text-slate-600 text-sm my-2 sm:my-3" id="badgeDateDisplay"></p> {/* New element for date */}
                         <p class="badge-logo-print text-green-700 text-sm font-bold mt-3 sm:mt-4">RTApps Learning</p>
                     </div>
                     <button id="printBadgeButtonTrigger" onclick="window.print()" style="display:none;" class="mt-4 bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg text-sm transition-colors">Print Certificate</button>
@@ -176,7 +177,6 @@
             const printErrorMessage = document.getElementById('print-error-message');
 
             if (name === "") {
-                // Instead of alert, show a message
                 nameInput.classList.add('border-red-500'); // Highlight input
                 printErrorMessage.textContent = "Please enter your name to generate the certificate.";
                 printErrorMessage.style.display = 'block';
@@ -185,7 +185,14 @@
             nameInput.classList.remove('border-red-500');
             printErrorMessage.style.display = 'none';
 
+            // Get and format the current date
+            const today = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            // Using undefined for locale will use the browser's default locale for formatting
+            const formattedDate = today.toLocaleDateString(undefined, options); 
+
             document.getElementById('badgeNameDisplay').textContent = name;
+            document.getElementById('badgeDateDisplay').textContent = "Completed on: " + formattedDate; // Set the date
             document.getElementById('printableBadge').style.display = 'flex'; // Use flex for centering
             document.getElementById('printBadgeButtonTrigger').style.display = 'inline-block';
         }
