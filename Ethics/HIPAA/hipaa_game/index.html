@@ -97,7 +97,7 @@
                     <li>In each scenario, some parts of the text are <span class="font-semibold text-yellow-600 bg-yellow-100 px-1 rounded border border-yellow-300">highlighted like this</span>.</li>
                     <li>Click ONLY on the highlighted parts you believe are violations.</li>
                     <li>You'll get instant feedback explaining if your choice was correct or incorrect.</li>
-                    <li>Once you've found all the violations in a scenario, the "Next Scenario" button will become active.</li>
+                    <li>Once you've found all the violations in a scenario, the "Next Scenario" button will become active. If a scenario has no violations, the button will be active immediately.</li>
                     <li>Click "Next Scenario" to continue until all five are complete.</li>
                 </ul>
                 <h3 class="text-xl font-medium text-purple-700 mb-2">Scoring & Badge (Criteria)</h3>
@@ -226,7 +226,7 @@
             postActivityNavigation.style.display = 'none';
             badgeSection.style.display = 'none'; // Ensure badge section is hidden at start
             currentScenarioIndex = -1;
-            score = 0;
+            score = 0; // This variable seems unused, consider removing if not part of a different scoring logic.
             totalPossibleClicks = 0;
             correctViolationsFound = 0;
             updateScoreDisplay();
@@ -246,13 +246,13 @@
             span.classList.add('disabled');
 
             if (isViolation) {
-                span.classList.remove('bg-yellow-100', 'border-yellow-300', 'hover:bg-yellow-200');
+                span.classList.remove('bg-yellow-100', 'border-yellow-300', 'hover:bg-yellow-200', 'text-yellow-800');
                 span.classList.add('bg-green-200', 'border-green-400', 'text-green-800', 'font-semibold');
                 feedbackBox.textContent = span.dataset.feedback + " (Correct!)";
                 feedbackBox.className = 'p-3 rounded-md font-semibold text-center min-h-[3em] mb-4 bg-green-100 text-green-700 border border-green-300';
                 correctViolationsFound++;
             } else {
-                span.classList.remove('bg-yellow-100', 'border-yellow-300', 'hover:bg-yellow-200');
+                span.classList.remove('bg-yellow-100', 'border-yellow-300', 'hover:bg-yellow-200', 'text-yellow-800');
                 span.classList.add('bg-red-200', 'border-red-400', 'text-red-800', 'line-through');
                 feedbackBox.textContent = span.dataset.feedback + " (Incorrect - Not a violation)";
                 feedbackBox.className = 'p-3 rounded-md font-semibold text-center min-h-[3em] mb-4 bg-red-100 text-red-700 border border-red-300';
@@ -264,14 +264,17 @@
         function checkScenarioComplete() {
             const currentScenarioDiv = scenarioContainer.querySelector('.scenario-content-wrapper');
             if (!currentScenarioDiv) return;
-            const allViolationSpans = currentScenarioDiv.querySelectorAll('.clickable[data-violation="true"]');
-            let allFound = true;
-            allViolationSpans.forEach(vSpan => {
-                if (!vSpan.classList.contains('disabled') || !vSpan.classList.contains('bg-green-200')) { // Check if correctly identified
-                    allFound = false;
-                }
-            });
-            if (allFound) {
+            const allViolationSpansInScenario = currentScenarioDiv.querySelectorAll('.clickable[data-violation="true"]');
+            let allActualViolationsIdentified = true;
+            if (allViolationSpansInScenario.length > 0) {
+                allViolationSpansInScenario.forEach(vSpan => {
+                    if (!vSpan.classList.contains('disabled') || !vSpan.classList.contains('bg-green-200')) { 
+                        allActualViolationsIdentified = false;
+                    }
+                });
+            }
+            // If all actual violations are identified (or if there were none to begin with for this scenario), enable next.
+            if (allActualViolationsIdentified) { 
                 nextButton.disabled = false;
                 nextButton.classList.remove('disabled:bg-slate-300', 'disabled:cursor-not-allowed');
             }
@@ -280,10 +283,8 @@
         function loadNextScenario() {
             currentScenarioIndex++;
             feedbackBox.textContent = "";
-            feedbackBox.className = 'p-3 rounded-md font-semibold text-center min-h-[3em] mb-4'; // Reset feedback box
-            nextButton.disabled = true;
-            nextButton.classList.add('disabled:bg-slate-300', 'disabled:cursor-not-allowed');
-
+            feedbackBox.className = 'p-3 rounded-md font-semibold text-center min-h-[3em] mb-4'; 
+            
             if (currentScenarioIndex < scenarios.length) {
                 const scenario = scenarios[currentScenarioIndex];
                 scenarioContainer.innerHTML = `
@@ -295,7 +296,6 @@
                 clickableSpans.forEach(span => {
                     span.setAttribute('role', 'button');
                     span.setAttribute('tabindex', '0');
-                    // Add Tailwind classes for initial clickable appearance
                     span.classList.add('bg-yellow-100', 'border-yellow-300', 'text-yellow-800', 'px-1', 'py-0.5', 'rounded', 'cursor-pointer', 'transition-all', 'duration-150', 'hover:bg-yellow-200', 'focus:outline-none', 'focus:ring-2', 'focus:ring-yellow-400');
                     span.addEventListener('click', handleSpanClick);
                     span.addEventListener('keydown', (e) => { 
@@ -305,6 +305,16 @@
                         } 
                     });
                 });
+
+                // Check if the current scenario has any true violations. If not, enable the next button.
+                const currentScenarioHasViolations = scenarios[currentScenarioIndex].content.includes('data-violation="true"');
+                if (!currentScenarioHasViolations) {
+                    nextButton.disabled = false;
+                    nextButton.classList.remove('disabled:bg-slate-300', 'disabled:cursor-not-allowed');
+                } else {
+                    nextButton.disabled = true;
+                    nextButton.classList.add('disabled:bg-slate-300', 'disabled:cursor-not-allowed');
+                }
                 updateScoreDisplay();
             } else {
                 endGame();
@@ -316,15 +326,14 @@
             resultsAreaContainer.style.display = 'block';
             postActivityNavigation.style.display = 'block';
 
-            let incorrectSelections = totalPossibleClicks - correctViolationsFound; // Clicks on non-violations
+            let incorrectSelections = totalPossibleClicks - correctViolationsFound; 
             let missedViolations = totalActualViolationsInGame - correctViolationsFound;
 
-            // Calculate score: Start with 100, subtract for missed violations and incorrect clicks
             let calculatedScore = 100;
-            calculatedScore -= (missedViolations * 15); // Heavier penalty for missing actual violations
-            calculatedScore -= (incorrectSelections * 5); // Lighter penalty for clicking non-violations
+            calculatedScore -= (missedViolations * 15); 
+            calculatedScore -= (incorrectSelections * 5); 
             
-            finalScoreValue = Math.max(0, Math.round(calculatedScore)); // Ensure score is not negative
+            finalScoreValue = Math.max(0, Math.round(calculatedScore));
 
             document.getElementById('final-score').textContent = `Your Final Score: ${finalScoreValue}%`;
             
