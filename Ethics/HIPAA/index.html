@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HIPAA Essentials for RTTs</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.7;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+            padding-bottom: 60px; /* Space for the footer */
+        }
+        .container {
+            background-color: #fff;
+            padding: 25px 35px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 900px;
+            margin: 20px auto;
+        }
+        h1, h2, h3, h4 {
+            color: #0056b3;
+        }
+        h1 {
+            text-align: center;
+            border-bottom: 2px solid #0056b3;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+        h2 {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            margin-top: 30px;
+            margin-bottom: 20px;
+            color: #003d7a;
+            font-size: 1.6em;
+        }
+        h3 {
+            color: #004085;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+         h4 {
+            color: #17a2b8;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        p, li {
+            margin-bottom: 12px;
+            font-size: 1.05em;
+        }
+        ul, ol {
+            margin-bottom: 15px;
+            padding-left: 25px;
+        }
+        strong {
+            font-weight: 600;
+        }
+        .highlight {
+            background-color: #e6f7ff;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+        .note {
+            font-size: 0.9em;
+            font-style: italic;
+            color: #555;
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-left: 3px solid #6c757d;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        .activity-list ul { list-style: none; padding-left: 0; }
+        .activity-list li { background-color: #f8f9fa; margin-bottom: 10px; padding: 15px; border-radius: 5px; border-left: 4px solid #17a2b8;}
+        .activity-list a { font-weight: bold; font-size: 1.1em; color: #0056b3; text-decoration: none; }
+        .activity-list a:hover { text-decoration: underline; }
+        .activity-list p { font-size: 0.95em; margin-top: 5px; margin-bottom: 0; }
+
+
+        /* --- Flip Page Lesson Styles --- */
+        .flip-lesson-container {
+            border: 1px solid #b3d7ff;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f0f8ff;
+            margin-bottom: 30px;
+        }
+        .lesson-page {
+            display: none;
+            padding: 15px;
+            border: 1px solid #ddeeff;
+            background-color: #fff;
+            border-radius: 5px;
+            min-height: 450px;
+        }
+        .lesson-page.active {
+            display: block;
+        }
+        .lesson-navigation {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .lesson-navigation button, .lesson-page .check-page-answers {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin: 5px 10px;
+            transition: background-color 0.2s;
+        }
+        .lesson-navigation button:hover, .lesson-page .check-page-answers:hover {
+            background-color: #0056b3;
+        }
+        .lesson-navigation button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        #backToMenuButton {
+             background-color: #6c757d;
+        }
+        #backToMenuButton:hover {
+            background-color: #5a6268;
+        }
+        .page-indicator { font-style: italic; color: #555; margin: 10px 0; }
+
+        /* Interactive Questions within Lesson */
+        .interactive-question-block {
+            background: #f9f9f9;
+            padding: 15px; margin: 20px 0;
+            border: 1px solid #e0e0e0; border-radius: 8px;
+        }
+        .interactive-question-block .question-text { font-weight: bold; margin-bottom: 8px; font-size: 1em; color: #555; }
+        .interactive-question-block label { display: block; margin-left: 0; padding: 8px 12px; border-radius: 5px;
+            cursor: pointer; border: 1px solid transparent; margin-bottom: 5px; }
+        .interactive-question-block input[type="radio"] { margin-right: 10px; vertical-align: middle; }
+        .interactive-question-block label:hover { background-color: #f0f8ff; }
+        .feedback-correct { background-color: #e8f8f0 !important; border-left: 4px solid #2ecc71 !important; }
+        .feedback-incorrect { background-color: #fdedec !important; border-left: 4px solid #e74c3c !important; }
+        .feedback-correct label.correct-option,
+        .feedback-incorrect label.correct-option { font-weight: bold; color: #1E8449; }
+        .feedback-incorrect label.selected-incorrect { color: #A93226; }
+        .explanation { font-size: 0.9em; color: #444; margin-top: 5px; padding-left: 20px;}
+
+        /* Footer Styles */
+        footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            padding: 15px 0;
+            background-color: #e9ecef;
+            color: #6c757d;
+            font-size: 0.9em;
+            border-top: 1px solid #dee2e6;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>HIPAA Essentials for RTTs</h1>
+
+        <div class="flip-lesson-container">
+            <h2>Interactive Lesson: Understanding HIPAA</h2>
+
+             <div id="lesson-page-1" class="lesson-page active">
+                <h3>Page 1: Welcome & Getting Started</h3>
+                <p>Welcome to this interactive lesson on the Health Insurance Portability and Accountability Act (HIPAA) and its importance for Radiation Therapists.</p>
+                <h4>How to Get Started (1.1)</h4>
+                <p>This lesson is designed as a series of 'flip pages'. Simply use the <span class="highlight">"Previous Page"</span> and <span class="highlight">"Next Page"</span> buttons at the bottom to move through the content. You'll encounter information, key terms, and short 'Quick Check' quizzes to test your understanding.</p>
+                <h4>Technology & Skills (1.5, 1.6)</h4>
+                <p>You will need a standard web browser to use this lesson. Basic computer and web navigation skills are sufficient. No special software is required.</p>
+                <h4>Prerequisites (1.7)</h4>
+                <p>A basic understanding of the role and responsibilities of a Radiation Therapist is assumed.</p>
+                <h4>Policies & Communication (1.3, 1.4)</h4>
+                <p class="note">If you are taking this lesson as part of a formal course, please refer to your main course syllabus or Learning Management System (LMS) for specific details on communication guidelines and all institutional policies.</p>
+                 <h4>Data & Privacy (6.4)</h4>
+                <p class="note">This standalone lesson does not collect personal data. If accessed via an LMS, the LMS's privacy policy applies.</p>
+            </div>
+
+            <div id="lesson-page-2" class="lesson-page">
+                <h3>Page 2: Learning Objectives & Structure (2.1, 2.3, 2.5)</h3>
+                <p>This lesson is designed to help you, the learner, achieve the following:</p>
+                <ul>
+                    <li><strong>Define</strong> HIPAA and identify its core purpose in healthcare.</li>
+                    <li><strong>Recognize</strong> what constitutes Protected Health Information (PHI).</li>
+                    <li><strong>Summarize</strong> key patient rights under the HIPAA Privacy Rule.</li>
+                    <li><strong>Describe</strong> the main components and goals of the HIPAA Security Rule.</li>
+                    <li><strong>Identify</strong> the requirements of the HIPAA Breach Notification Rule.</li>
+                    <li><strong>Apply</strong> HIPAA principles to common ethical dilemmas faced by RTTs.</li>
+                </ul>
+                <h4>Lesson Structure & Activities (1.2, 2.4)</h4>
+                <p>This lesson uses informational pages and <span class="highlight">"Quick Check"</span> questions (Assessments) directly linked to the content (Learning Activities/Instructional Materials) to help you measure your understanding of these learning objectives.</p>
+            </div>
+
+            <div id="lesson-page-3" class="lesson-page">
+                <h3>Page 3: What is HIPAA?</h3>
+                <p>HIPAA stands for the <span class="highlight">Health Insurance Portability and Accountability Act of 1996</span>. It establishes national standards to protect sensitive patient health information, safeguard privacy, and allow necessary information flow.</p>
+                <h4>Key Terms:</h4>
+                <ul>
+                    <li><strong>Protected Health Information (PHI):</strong> Identifiable health information in any form.</li>
+                    <li><strong>Covered Entities:</strong> Providers, plans, clearinghouses.</li>
+                    <li><strong>Business Associates:</strong> External partners with PHI access.</li>
+                </ul>
+                <p>Its goal is to foster trust by protecting PHI privacy.</p>
+            </div>
+
+            <div id="lesson-page-4" class="lesson-page">
+                <h3>Page 4: The HIPAA Privacy Rule</h3>
+                <p>The Privacy Rule sets standards for <span class="highlight">using and sharing PHI</span>.</p>
+                <h4>Key Patient Rights:</h4>
+                <ul>
+                    <li>Access, Amend, Request Restrictions, Accounting of Disclosures, Confidential Communications.</li>
+                </ul>
+                <h4>Permitted Uses & Disclosures:</h4>
+                <p>Allowed for TPO, To the Individual, Incidental (with safeguards), and Required by Law.</p>
+                <p>The <span class="highlight">Minimum Necessary Standard</span> applies.</p>
+            </div>
+
+            <div id="lesson-page-5" class="lesson-page">
+                <h3>Page 5: The HIPAA Security Rule</h3>
+                <p>The Security Rule protects <span class="highlight">Electronic PHI (ePHI)</span> - its Confidentiality, Integrity, and Availability.</p>
+                <p>Requires three types of safeguards:</p>
+                <ul>
+                    <li><strong>Administrative:</strong> Policies, training, risk analysis.</li>
+                    <li><strong>Physical:</strong> Workstation security, access control.</li>
+                    <li><strong>Technical:</strong> Passwords, audits, encryption.</li>
+                </ul>
+            </div>
+
+            <div id="lesson-page-6" class="lesson-page">
+                <h3>Page 6: Breach Notification Rule</h3>
+                <p>A "breach" is an <span class="highlight">impermissible use or disclosure</span>.</p>
+                <p>The rule requires notifying: Affected Individuals, HHS, and sometimes the Media.</p>
+                <p>Know your facility's internal reporting procedure.</p>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block" id="lq_page6_1_block">
+                    <p class="question-text">If a stolen, unencrypted laptop contains the ePHI of 600 patients, who must be notified?</p>
+                    <label><input type="radio" name="lq_page6_1" value="A"> Only the 600 patients.</label>
+                    <label><input type="radio" name="lq_page6_1" value="B"> The patients and HHS.</label>
+                    <label><input type="radio" name="lq_page6_1" value="C"> The patients, HHS, and the media.</label>
+                    <div class="explanation" style="display:none;">Correct! Since more than 500 individuals are affected, individuals, HHS, and likely the media must be notified.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(6)">Check Answer</button>
+            </div>
+
+            <div id="lesson-page-7" class="lesson-page">
+                <h3>Page 7: Common Dilemmas & Scenarios (Part 1)</h3>
+                <h4>Dilemma 1: "Elevator Talk"</h4>
+                <p>Don't discuss patients in public areas. <strong>Best Practice:</strong> Wait for a private area.</p>
+                <h4>Dilemma 2: Social Media Sharing</h4>
+                <p>Avoid photos in clinical areas. <strong>Best Practice:</strong> Never post PHI or patient images without explicit consent.</p>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block" id="lq_page7_1_block">
+                    <p class="question-text">Is confirming a patient's presence in a busy waiting room a violation?</p>
+                    <label><input type="radio" name="lq_page7_1" value="Yes"> Yes, it's a colleague.</label>
+                    <label><input type="radio" name="lq_page7_1" value="No"> No, it confirms status in public.</label>
+                    <label><input type="radio" name="lq_page7_1" value="Maybe"> Maybe, if quiet.</label>
+                    <div class="explanation" style="display:none;">Correct! No (meaning, it *is* a violation). Confirming status in public breaches privacy.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(7)">Check Answer</button>
+            </div>
+
+             <div id="lesson-page-8" class="lesson-page">
+                <h3>Page 8: Common Dilemmas & Scenarios (Part 2)</h3>
+                <h4>Dilemma 3: Family/Friend Inquiries</h4>
+                <p>Don't disclose without authorization. <strong>Best Practice:</strong> Politely decline, cite privacy.</p>
+                <h4>Dilemma 4: "Just Looking" in the EMR</h4>
+                <p>Accessing records out of curiosity is a violation. <strong>Best Practice:</strong> Never access without a job reason.</p>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block" id="lq_page8_1_block">
+                    <p class="question-text">Is leaving an EMR open unattended briefly acceptable?</p>
+                    <label><input type="radio" name="lq_page8_1" value="Yes"> Yes, if quick.</label>
+                    <label><input type="radio" name="lq_page8_1" value="No"> No, it's a security risk.</label>
+                    <div class="explanation" style="display:none;">Correct! No. Always lock or log off.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(8)">Check Answer</button>
+            </div>
+
+            <div id="lesson-page-9" class="lesson-page">
+                <h3>Page 9: HIPAA, Ethics, and Your Responsibility</h3>
+                <p>HIPAA aligns with ARRT ethics (Principle 9, Rule 18).</p>
+                <h4>Your Role:</h4>
+                <p>Be Vigilant, Know Policies, Ask Questions, Report Concerns, Keep Learning.</p>
+                <p>Upholding HIPAA builds trust.</p>
+            </div>
+
+            <div id="lesson-page-10" class="lesson-page">
+                <h3>Page 10: Next Steps & Resources</h3>
+                <p>You have now completed the core content for the HIPAA Essentials lesson. To further test your knowledge and apply these principles, choose one or more of the following activities:</p>
+
+                <div class="activity-list">
+                    <h4>Optional Activities & Assessments</h4>
+                    <ul>
+                        <li>
+                            <a href="hipaa_game">Activity: Spot the Violation (Interactive Game)</a>
+                            <p>Test your ability to identify HIPAA issues in digital scenarios like social media posts and text messages.</p>
+                        </li>
+                        <li>
+                            <a href="hipaa_cases">Activity: Case Study Analysis (Worksheet)</a>
+                            <p>Analyze detailed scenarios involving multiple HIPAA challenges and document your findings.</p>
+                        </li>
+                         <li>
+                            <a href="hipaa_quiz">Activity: Comprehensive HIPAA Quiz</a>
+                            <p>Take a multiple-choice quiz covering all key areas of this HIPAA lesson.</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <h4>Additional Resources</h4>
+                <p>For more detailed information, please visit:</p>
+                <ul>
+                    <li><a href="https://www.hhs.gov/hipaa/for-professionals/index.html" target="_blank" rel="noopener noreferrer">HHS.gov - HIPAA for Professionals</a></li>
+                    <li><a href="https://www.cdc.gov/phlp/php/resources/health-insurance-portability-and-accountability-act-of-1996-hipaa.html" target="_blank" rel="noopener noreferrer">CDC.gov - HIPAA Overview</a></li>
+                </ul>
+
+                <p class="note">Remember to consult your institution's specific policies and procedures for guidance on HIPAA compliance in your workplace.</p>
+            </div>
+
+
+            <div class="lesson-navigation">
+                <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled>Previous Page</button>
+                <button id="backToMenuButton" onclick="goBackToMenu()" style="display:none;">Back to Ethics Menu</button>
+                <span class="page-indicator" id="lessonPageIndicator">Page 1 of 10</span>
+                <button id="nextLessonPage" onclick="changeLessonPage(1)">Next Page</button>
+            </div>
+        </div>
+
+    </div> <footer>
+        <p>&copy; 2025 RTApps. All rights reserved.</p>
+    </footer>
+
+    <script>
+        let currentLessonPage = 1;
+        const totalLessonPages = 10;
+        const lessonPages = document.querySelectorAll('.lesson-page');
+        const prevLessonButton = document.getElementById('prevLessonPage');
+        const nextLessonButton = document.getElementById('nextLessonPage');
+        const backToMenuButton = document.getElementById('backToMenuButton');
+        const lessonPageIndicator = document.getElementById('lessonPageIndicator');
+
+        const lessonCorrectAnswers = {
+            lq_page6_1: "C",
+            lq_page7_1: "No",
+            lq_page8_1: "No"
+        };
+
+        function displayLessonPage() {
+            lessonPages.forEach((page, index) => {
+                page.classList.toggle('active', index === currentLessonPage - 1);
+            });
+            prevLessonButton.disabled = currentLessonPage === 1;
+            nextLessonButton.style.display = currentLessonPage === totalLessonPages ? 'none' : 'inline-block';
+            backToMenuButton.style.display = currentLessonPage === totalLessonPages ? 'inline-block' : 'none';
+            lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
+        }
+
+        function changeLessonPage(direction) {
+            currentLessonPage += direction;
+            if (currentLessonPage < 1) currentLessonPage = 1;
+            if (currentLessonPage > totalLessonPages) currentLessonPage = totalLessonPages;
+            displayLessonPage();
+        }
+
+        function goBackToMenu() {
+            window.location.href = 'https://rtapps79.github.io/rtt_e_workbook/Ethics/';
+        }
+
+       function checkPageAnswers(pageNumber) {
+            const questionsOnPage = document.querySelectorAll(`#lesson-page-${pageNumber} .interactive-question-block`);
+            questionsOnPage.forEach(block => {
+                const questionName = block.querySelector('input[type="radio"]').name;
+                if (!lessonCorrectAnswers.hasOwnProperty(questionName)) return;
+
+                const correctAnswerValue = lessonCorrectAnswers[questionName];
+                const selectedRadio = block.querySelector(`input[name="${questionName}"]:checked`);
+                const explanationDiv = block.querySelector('.explanation');
+
+                block.classList.remove('feedback-correct', 'feedback-incorrect');
+                block.querySelectorAll('label').forEach(label => {
+                    label.classList.remove('correct-option', 'selected-incorrect');
+                });
+                 if(explanationDiv) explanationDiv.style.display = 'none';
+
+                if (selectedRadio) {
+                    const userAnswer = selectedRadio.value;
+                    const userSelectedLabel = selectedRadio.parentElement;
+                    if (userAnswer === correctAnswerValue) {
+                        block.classList.add('feedback-correct');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('correct-option');
+                    } else {
+                        block.classList.add('feedback-incorrect');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('selected-incorrect');
+                        const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                        if (correctRadio && correctRadio.parentElement) {
+                            correctRadio.parentElement.classList.add('correct-option');
+                        }
+                    }
+                } else {
+                    block.classList.add('feedback-incorrect');
+                    const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                    if (correctRadio && correctRadio.parentElement) {
+                        correctRadio.parentElement.classList.add('correct-option');
+                    }
+                }
+                if(explanationDiv) explanationDiv.style.display = 'block';
+            });
+        }
+
+        displayLessonPage();
+    </script>
+
+</body>
+</html>
