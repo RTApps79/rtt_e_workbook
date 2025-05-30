@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Linac Diagram</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .image-wrapper {
+            position: relative;
+            max-width: 800px; /* Adjust as needed, or use Tailwind max-w classes */
+            margin: auto;
+            border: 1px solid #e5e7eb; /* Tailwind gray-200 */
+            border-radius: 0.5rem; /* Tailwind rounded-lg */
+            overflow: hidden; /* Ensures hotspots don't overflow rounded corners of wrapper */
+        }
+        .image-wrapper img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+        .hotspot {
+            position: absolute;
+            width: 28px; /* Slightly smaller */
+            height: 28px;
+            background-color: rgba(239, 68, 68, 0.6); /* Tailwind red-500 with opacity */
+            border: 2px solid rgba(220, 38, 38, 0.8); /* Tailwind red-600 with opacity */
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .hotspot:hover {
+            transform: scale(1.2);
+            background-color: rgba(220, 38, 38, 0.8); /* Darker red on hover */
+        }
+        .hotspot::after { /* Optional: for a plus icon or inner dot */
+            content: '+';
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            line-height: 1;
+        }
+        .tooltip-custom { /* Renamed to avoid conflict if Tailwind has a .tooltip */
+            position: fixed; /* Fixed to viewport for better positioning near cursor */
+            background-color: rgba(17, 24, 39, 0.85); /* Tailwind gray-900 with opacity */
+            color: #f9fafb; /* Tailwind gray-50 */
+            padding: 0.5rem 0.75rem; /* Tailwind p-2 px-3 */
+            border-radius: 0.375rem; /* Tailwind rounded-md */
+            font-size: 0.875rem; /* Tailwind text-sm */
+            opacity: 0;
+            transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+            pointer-events: none; /* Critical so it doesn't interfere with mouse events on hotspots */
+            z-index: 100;
+            max-width: 250px;
+            transform: translate(10px, 10px); /* Initial offset */
+        }
+        .image-citation {
+            display: block !important; 
+            color: #4b5563 !important; /* Tailwind gray-600 */
+        }
+
+        /* Print Styles */
+        @media print {
+            body { background-color: #fff; margin: 10px; padding: 0; font-size: 10pt; }
+            .main-content-wrapper { box-shadow: none !important; border: none !important; width: 100%; max-width: 100%; padding: 5px; margin-bottom: 15px;}
+            .nav-links-header, #start-screen-container, #post-activity-navigation, footer, .hotspot, .tooltip-custom { display: none !important; }
+            h1, h2, h3, h4 { color: #000 !important; border-color: #000 !important; margin-bottom: 10px; padding-bottom: 3px;}
+            .image-wrapper img { border: none !important; }
+            .image-citation { display: block !important; color: #555 !important; }
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 flex flex-col min-h-screen">
+
+    <header class="bg-white shadow-md sticky top-0 z-50 nav-links-header">
+        <div class="container mx-auto px-6 py-3 flex flex-col sm:flex-row justify-between items-center">
+            <h1 class="text-xl font-bold text-purple-700 mb-2 sm:mb-0">Interactive Linac Diagram</h1>
+            <div class="flex flex-wrap justify-center sm:justify-end space-x-2">
+                <a href="./index.html#lesson-page-14" class="text-xs sm:text-sm bg-purple-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-purple-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to Modalities Lesson
+                </a>
+                <a href="../index.html" class="text-xs sm:text-sm bg-purple-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-purple-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to Clinical Practice
+                </a>
+                <a href="../../index.html" class="text-xs sm:text-sm bg-slate-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-slate-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to Main Workbook
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto max-w-4xl px-4 sm:px-6 py-8 flex-grow main-content-wrapper">
+        <div class="bg-white p-6 sm:p-8 rounded-xl shadow-xl">
+            <h1 class="text-3xl font-bold text-purple-700 mb-8 text-center border-b-2 border-purple-300 pb-4">Activity: Interactive Linac Diagram</h1>
+
+            <div id="start-screen-container" class="bg-purple-50 p-6 rounded-lg shadow-md mb-8 border border-purple-200">
+                <h2 class="text-2xl font-semibold text-purple-600 mb-4">Before You Begin...</h2>
+                <h3 class="text-xl font-medium text-purple-700 mb-2">Purpose</h3>
+                <p class="text-slate-700 mb-4 text-sm">This interactive diagram helps you visualize and learn the names and functions of the key external components of a clinical Linear Accelerator (Linac) gantry head and its imaging systems.</p>
+                <h3 class="text-xl font-medium text-purple-700 mb-2">Task</h3>
+                <p class="text-slate-700 mb-4 text-sm">Hover your mouse cursor over the red circular hotspots on the Linac image. A tooltip will appear describing the component indicated by the hotspot.</p>
+                <h3 class="text-xl font-medium text-purple-700 mb-2">Criteria for Success</h3>
+                <p class="text-slate-700 mb-4 text-sm">Successfully explore all hotspots to familiarize yourself with each labeled component and its primary function. Try to recall the names and functions from the main lesson.</p>
+            </div>
+
+            <div class="image-wrapper">
+                <img src="https://oncologymedicalphysics.com/wp-content/uploads/2021/04/Linac-Components-OMP.png" alt="Linear Accelerator Components" class="image"
+                     onerror="this.onerror=null; this.src='https://placehold.co/800x600/E9D5FF/4C1D95?text=Linac+Image+Not+Found'; this.alt='Linac Image Placeholder';">
+                
+                {/* Hotspots from user's HTML, positions might need review based on final image rendering and container size */}
+                <div class="hotspot" style="top: 175px; left: 653px;" data-tooltip="Gantry: The large, rotating structure that houses the treatment head and can rotate around the patient to deliver radiation from various angles."></div>
+                <div class="hotspot" style="top: 250px; left: 782px;" data-tooltip="Gantry (Rear): Part of the main rotating assembly."></div>
+                <div class="hotspot" style="top: 267px; left: 532px;" data-tooltip="Treatment Head: Contains components like collimators (jaws and MLCs) to shape the radiation beam. It's where the radiation exits towards the patient."></div>
+                <div class="hotspot" style="top: 364px; left: 557px;" data-tooltip="On-Board Imager (OBI) - kV X-ray Source Arm: One arm of the OBI system, typically housing the X-ray tube used for generating kilovoltage (kV) images for patient positioning."></div>
+                <div class="hotspot" style="top: 370px; left: 806px;" data-tooltip="On-Board Imager (OBI) - kV Imaging Detector Arm: The other arm of the OBI system, containing the flat-panel detector that captures the kV X-ray images."></div>
+                <div class="hotspot" style="top: 478px; left: 95px;" data-tooltip="Treatment Couch (Table/Bed): Supports the patient and allows for precise multi-directional positioning to align the target with the Linac's isocenter."></div>
+                <div class="hotspot" style="top: 481px; left: 255px;" data-tooltip="Treatment Couch (Table/Bed): Supports the patient and allows for precise multi-directional positioning."></div>
+                <div class="hotspot" style="top: 549px; left: 284px;" data-tooltip="Treatment Couch (Table/Bed): Supports the patient and allows for precise multi-directional positioning."></div>
+                <div class="hotspot" style="top: 212px; left: 915px;" data-tooltip="Drivestand/Support Stand: The stationary part of the Linac that supports the gantry and often houses key components like the power supply, cooling systems, and microwave generation systems (klystron/magnetron)."></div>
+                <div class="hotspot" style="top: 299px; left: 923px;" data-tooltip="Drivestand/Support Stand: Houses internal components and supports the gantry."></div>
+                <div class="hotspot" style="top: 508px; left: 907px;" data-tooltip="Drivestand/Support Stand: Base of the Linac structure."></div>
+                <div class="hotspot" style="top: 477px; left: 654px;" data-tooltip="Electronic Portal Imaging Device (EPID) / MV Imager: A flat-panel detector that captures images using the high-energy (MV) treatment beam, used for verifying beam placement and patient position."></div>
+                <div class="hotspot" style="top: 539px; left: 648px;" data-tooltip="Electronic Portal Imaging Device (EPID) / MV Imager: Captures megavoltage portal images."></div>
+                
+                <div class="tooltip-custom" id="tooltip-display"></div>
+            </div>
+             <p class="text-xs text-center text-slate-500 mt-3 image-citation">
+                Image Source: 
+                <a href="https://oncologymedicalphysics.com/introduction-to-clinical-linear-accelerators/" target="_blank" rel="noopener noreferrer" class="text-purple-600 hover:underline">
+                    Oncology Medical Physics - Introduction to Clinical Linear Accelerators
+                </a>
+            </p>
+
+            <div id="post-activity-navigation" class="text-center mt-10 pt-6 border-t border-slate-200">
+                <h3 class="text-xl font-semibold text-slate-700 mb-4">Exploration Complete?</h3>
+                <div class="flex flex-col sm:flex-row justify-center items-center space-y-3 sm:space-y-0 sm:space-x-4">
+                     <a href="./index.html#lesson-page-14" class="w-full sm:w-auto bg-purple-500 hover:bg-purple-600 text-white font-medium py-2 px-4 rounded-lg text-sm transition-colors text-center inline-block">Back to Modalities Lesson</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-slate-800 text-slate-300 py-6 mt-auto text-center">
+        <div class="container mx-auto px-6">
+            <p class="text-sm">&copy; <span id="currentYear"></span> Radiation Therapy E-Workbook. RTApps All Rights Reserved.</p>
+            <p class="text-xs mt-1">Interactive Linac Diagram</p>
+        </div>
+    </footer>
+
+    <script>
+        const hotspots = document.querySelectorAll('.hotspot');
+        const tooltipDisplay = document.getElementById('tooltip-display'); // Changed ID
+
+        hotspots.forEach(hotspot => {
+            hotspot.addEventListener('mouseover', (e) => {
+                const description = hotspot.getAttribute('data-tooltip');
+                tooltipDisplay.innerHTML = description;
+                // Position tooltip relative to the mouse cursor
+                // The fixed positioning helps if the page scrolls
+                tooltipDisplay.style.top = `${e.clientY + 15}px`; 
+                tooltipDisplay.style.left = `${e.clientX + 15}px`;
+                tooltipDisplay.style.opacity = 1;
+                tooltipDisplay.style.transform = 'translate(10px, 10px) scale(1)'; // Ensure it's visible
+            });
+
+            hotspot.addEventListener('mousemove', (e) => {
+                tooltipDisplay.style.top = `${e.clientY + 15}px`;
+                tooltipDisplay.style.left = `${e.clientX + 15}px`;
+            });
+
+            hotspot.addEventListener('mouseout', () => {
+                tooltipDisplay.style.opacity = 0;
+                tooltipDisplay.style.transform = 'translate(10px, 10px) scale(0.95)'; // Slight shrink effect on hide
+            });
+        });
+        
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>
