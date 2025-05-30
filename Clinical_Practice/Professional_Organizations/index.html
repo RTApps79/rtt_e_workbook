@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Organizations in Radiation Oncology</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .selected-option {
+            background-color: #e0f2fe; /* Tailwind sky-100 */
+            border-color: #38bdf8; /* Tailwind sky-400 */
+        }
+        .correct-answer-feedback {
+            background-color: #dcfce7 !important; /* Tailwind green-100 */
+            border-left-color: #22c55e !important; /* Tailwind green-500 */
+        }
+        .incorrect-answer-feedback {
+            background-color: #fee2e2 !important; /* Tailwind red-100 */
+            border-left-color: #ef4444 !important; /* Tailwind red-500 */
+        }
+        .correct-indicator::after {
+            content: '✔ Correct';
+            color: #16a34a; /* Tailwind green-600 */
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .incorrect-indicator::after {
+            content: '✖ Incorrect';
+            color: #dc2626; /* Tailwind red-600 */
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .correct-option-text {
+            font-weight: bold;
+            color: #15803d; /* Tailwind green-700 */
+        }
+        .external-link-icon::after {
+            content: ' ↗'; /* Unicode for an arrow pointing out */
+            font-size: 0.8em;
+        }
+
+        /* Print Styles */
+        @media print {
+            body { background-color: #fff; margin: 10px; padding: 0; font-size: 10pt; }
+            .main-content-wrapper, .flip-lesson-container { box-shadow: none !important; border: none !important; width: 100%; max-width: 100%; padding: 5px; margin-bottom: 15px;}
+            .lesson-navigation-bar, .check-page-answers-button, .nav-links-header, .print-button-container { display: none !important; }
+            .lesson-page { page-break-inside: avoid; border: 1px solid #eee !important; }
+            .interactive-question-block {background: #fff !important; border: 1px solid #ccc !important; }
+            h1, h2, h3, h4 { color: #000 !important; border-color: #000 !important; margin-bottom: 10px; padding-bottom: 3px;}
+            .explanation-text { display: none !important; }
+            .external-link-icon::after { content: '';} /* Hide icon in print */
+            a {text-decoration: none; color: #000 !important;}
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 flex flex-col min-h-screen">
+
+    <header class="bg-white shadow-md sticky top-0 z-50 nav-links-header">
+        <div class="container mx-auto px-6 py-3 flex flex-col sm:flex-row justify-between items-center">
+            <h1 class="text-xl font-bold text-purple-700 mb-2 sm:mb-0">Professional Organizations Lesson</h1>
+            <div class="flex flex-wrap justify-center sm:justify-end space-x-2">
+                {/* Assuming this lesson is in Clinical_Practice/Professional_Organizations/index.html */}
+                <a href="../index.html" class="text-xs sm:text-sm bg-purple-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-purple-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to Clinical Practice
+                </a>
+                <a href="../../index.html" class="text-xs sm:text-sm bg-slate-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-slate-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to Main Workbook
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto max-w-4xl px-4 sm:px-6 py-8 flex-grow main-content-wrapper">
+        <div class="bg-white p-6 sm:p-8 rounded-xl shadow-xl">
+            <h1 class="text-3xl font-bold text-purple-700 mb-6 text-center border-b-2 border-purple-300 pb-4">Key Professional Organizations in Radiation Oncology</h1>
+
+            <div class="flip-lesson-container bg-purple-50 p-4 sm:p-6 rounded-lg shadow-md mb-8 border border-purple-200">
+                <h2 class="text-2xl font-semibold text-purple-600 mb-4">Interactive Lesson Overview</h2>
+
+                <div id="lesson-page-1" class="lesson-page active bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[450px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 1: Purpose, Task & Criteria</h3>
+                    <p class="mb-3 text-slate-700">Welcome! This lesson explores the key professional organizations relevant to the radiation oncology team.</p>
+                    
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Purpose: Why This Matters</h4>
+                        <p class="text-sm text-slate-600">Understanding these organizations is crucial for every member of the radiation oncology team. You will learn about their roles in advancing patient care, providing professional development, setting standards (including ethical codes and practice guidelines), advocating for the profession, and credentialing professionals. This knowledge helps you appreciate the broader context of your practice, access valuable resources, and understand how quality and safety are maintained in the field.</p>
+                    </div>
+
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Task: What You Will Do</h4>
+                        <p class="text-sm text-slate-600">In this lesson, you will:</p>
+                        <ul class="list-disc list-inside text-slate-600 space-y-1 text-sm ml-4">
+                            <li>Read information about key organizations for different roles within radiation oncology.</li>
+                            <li>Identify the primary functions of each organization (e.g., guideline development, credentialing, professional society).</li>
+                            <li>Answer "Quick Check" multiple-choice questions to test your understanding of each section.</li>
+                            <li>Explore links to the official websites of these organizations for further information.</li>
+                        </ul>
+                    </div>
+
+                    <div class="p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Criteria for Success: How You'll Know You've Learned</h4>
+                        <p class="text-sm text-slate-600">You will be successful in this lesson if you can:</p>
+                        <ul class="list-disc list-inside text-slate-600 space-y-1 text-sm ml-4">
+                            <li>Name the primary professional and/or credentialing bodies for Radiation Oncologists, Oncology Nurses, Medical Physicists, Medical Dosimetrists, and Radiation Therapists.</li>
+                            <li>Describe the main purpose (e.g., advocacy, guidelines, certification, accreditation) of each highlighted organization.</li>
+                            <li>Correctly answer the "Quick Check" questions embedded in the lesson.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="lesson-page-2" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 2: For Radiation Oncologists</h3>
+                    <p class="mb-3 text-slate-700">Radiation Oncologists are physicians specializing in treating cancer with radiation. Key organizations include:</p>
+                    
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">ASTRO (American Society for Radiation Oncology)</h4>
+                        <p class="text-sm text-slate-600 mb-2">ASTRO is the premier radiation oncology society, encompassing physicians, nurses, biologists, physicists, radiation therapists, and dosimetrists. Its mission is to advance radiation oncology through excellence in patient care, professional development, and research promotion.</p>
+                        <a href="https://www.astro.org/" target="_blank" rel="noopener noreferrer" class="text-purple-700 hover:text-purple-800 hover:underline text-sm external-link-icon">Visit ASTRO</a>
+                    </div>
+
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">NCCN (National Comprehensive Cancer Network)</h4>
+                        <p class="text-sm text-slate-600 mb-2">An alliance of leading cancer centers, the NCCN focuses on patient care, research, and education. It develops and publishes widely recognized, evidence-based clinical practice guidelines in oncology, aiming to improve the quality, effectiveness, and accessibility of cancer care.</p>
+                        <a href="https://www.nccn.org/" target="_blank" rel="noopener noreferrer" class="text-purple-700 hover:text-purple-800 hover:underline text-sm external-link-icon">Visit NCCN</a>
+                    </div>
+
+                    <div class="interactive-question-block mt-6 bg-white p-3 rounded-md border border-slate-300" id="q_page2_1">
+                        <p class="question-text font-semibold text-slate-700 mb-2">Quick Check: Which organization is primarily known for developing comprehensive, evidence-based clinical practice guidelines used widely in oncology treatment planning?</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page2_1_ans" value="A" class="mr-2 accent-purple-600"> ASTRO</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page2_1_ans" value="B" class="mr-2 accent-purple-600"> NCCN</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page2_1_ans" value="C" class="mr-2 accent-purple-600"> AAPM</label>
+                        <div class="explanation-text text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">The correct answer is B. The NCCN is renowned for its comprehensive clinical practice guidelines.</div>
+                    </div>
+                    <button class="check-page-answers-button mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswer('q_page2_1', 'B')">Check Answer</button>
+                </div>
+
+                <div id="lesson-page-3" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 3: For Oncology Nurses</h3>
+                    <p class="mb-3 text-slate-700">Oncology Nurses are vital for patient care, education, and support throughout cancer treatment. Their primary professional organization is:</p>
+                    
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">ONS (Oncology Nursing Society)</h4>
+                        <p class="text-sm text-slate-600 mb-2">ONS is a professional association for over 35,000 members, dedicated to promoting excellence in oncology nursing and quality cancer care. It offers education, resources, networking, and advocates for policies benefiting cancer patients and their families. Certification is provided via the Oncology Nursing Certification Corporation (ONCC).</p>
+                        <a href="https://www.ons.org/" target="_blank" rel="noopener noreferrer" class="text-purple-700 hover:text-purple-800 hover:underline text-sm external-link-icon">Visit ONS</a>
+                    </div>
+                    <div class="interactive-question-block mt-6 bg-white p-3 rounded-md border border-slate-300" id="q_page3_1">
+                        <p class="question-text font-semibold text-slate-700 mb-2">Quick Check: What is the primary professional association for nurses specializing in cancer care?</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page3_1_ans" value="A" class="mr-2 accent-purple-600"> NCCN</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page3_1_ans" value="B" class="mr-2 accent-purple-600"> ONS</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page3_1_ans" value="C" class="mr-2 accent-purple-600"> ASRT</label>
+                        <div class="explanation-text text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">The correct answer is B. The Oncology Nursing Society (ONS) is the main professional organization for oncology nurses.</div>
+                    </div>
+                    <button class="check-page-answers-button mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswer('q_page3_1', 'B')">Check Answer</button>
+                </div>
+                
+                <div id="lesson-page-4" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 4: For Medical Physicists</h3>
+                    <p class="mb-3 text-slate-700">Medical Physicists ensure the safe and effective delivery of radiation as prescribed in patient care. Their primary organization is:</p>
+                    
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">AAPM (American Association of Physicists in Medicine)</h4>
+                        <p class="text-sm text-slate-600 mb-2">The AAPM is a scientific, educational, and professional organization for medical physicists. It aims to advance medical physics' science, education, and professional practice. This includes publishing task group reports and guidelines vital for quality assurance, equipment calibration, and safe clinical practice in radiation oncology physics.</p>
+                        <a href="https://www.aapm.org/" target="_blank" rel="noopener noreferrer" class="text-purple-700 hover:text-purple-800 hover:underline text-sm external-link-icon">Visit AAPM</a>
+                    </div>
+
+                    <div class="interactive-question-block mt-6 bg-white p-3 rounded-md border border-slate-300" id="q_page4_1">
+                        <p class="question-text font-semibold text-slate-700 mb-2">Quick Check: The AAPM primarily serves which group of professionals in the radiation oncology team?</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page4_1_ans" value="A" class="mr-2 accent-purple-600"> Radiation Therapists</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page4_1_ans" value="B" class="mr-2 accent-purple-600"> Medical Dosimetrists</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page4_1_ans" value="C" class="mr-2 accent-purple-600"> Medical Physicists</label>
+                        <div class="explanation-text text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">The correct answer is C. The AAPM is the main professional organization for Medical Physicists.</div>
+                    </div>
+                    <button class="check-page-answers-button mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswer('q_page4_1', 'C')">Check Answer</button>
+                </div>
+
+                <div id="lesson-page-5" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 5: For Medical Dosimetrists</h3>
+                    <p class="mb-3 text-slate-700">Medical Dosimetrists design and calculate radiation treatment plans. Their key organization is:</p>
+                    
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">AAMD (American Association of Medical Dosimetrists)</h4>
+                        <p class="text-sm text-slate-600 mb-2">The AAMD is the primary resource for medical dosimetrists, offering education, professional development, and advocacy. It promotes the dosimetrist's role and supports practice standards for treatment planning and patient safety.</p>
+                        <a href="https://www.medicaldosimetry.org/" target="_blank" rel="noopener noreferrer" class="text-purple-700 hover:text-purple-800 hover:underline text-sm external-link-icon">Visit AAMD</a>
+                    </div>
+                     <div class="interactive-question-block mt-6 bg-white p-3 rounded-md border border-slate-300" id="q_page5_1">
+                        <p class="question-text font-semibold text-slate-700 mb-2">Quick Check: Which organization is dedicated to the professional development and advocacy for Medical Dosimetrists?</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page5_1_ans" value="A" class="mr-2 accent-purple-600"> ASRT</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page5_1_ans" value="B" class="mr-2 accent-purple-600"> AAMD</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page5_1_ans" value="C" class="mr-2 accent-purple-600"> ARRT</label>
+                        <div class="explanation-text text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">The correct answer is B. The AAMD is the professional association for Medical Dosimetrists.</div>
+                    </div>
+                    <button class="check-page-answers-button mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswer('q_page5_1', 'B')">Check Answer</button>
+                </div>
+                
+                <div id="lesson-page-6" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 6: For Radiation Therapists (Part 1 - Professional & Credentialing)</h3>
+                    <p class="mb-3 text-slate-700">Radiation Therapists (RTTs) are at the forefront of patient care, administering daily radiation treatments, ensuring accuracy, and providing essential support. Several key organizations guide their practice:</p>
+                    
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">ASRT (American Society of Radiologic Technologists)</h4>
+                        <p class="text-sm text-slate-600 mb-2">The ASRT is the largest and oldest professional association for medical imaging and radiation therapy professionals. For RTTs, the ASRT provides:
+                            <ul class="list-disc list-inside text-slate-600 space-y-1 text-xs ml-4 my-1">
+                                <li>Continuing education resources and opportunities.</li>
+                                <li>Practice standards and professional guidelines.</li>
+                                <li>Advocacy on legislative and regulatory issues affecting the profession.</li>
+                                <li>Career resources and networking opportunities.</li>
+                            </ul>
+                        It plays a crucial role in advancing the profession and ensuring RTTs have the tools for high-quality patient care.
+                        </p>
+                        <a href="https://www.asrt.org/" target="_blank" rel="noopener noreferrer" class="text-purple-700 hover:text-purple-800 hover:underline text-sm external-link-icon">Visit ASRT</a>
+                    </div>
+
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">ARRT (American Registry of Radiologic Technologists)</h4>
+                        <p class="text-sm text-slate-600 mb-2">The ARRT is the primary credentialing organization for Radiation Therapists in the United States. Its key functions include:
+                            <ul class="list-disc list-inside text-slate-600 space-y-1 text-xs ml-4 my-1">
+                                <li>Developing and administering the certification examination for RTTs.</li>
+                                <li>Establishing educational, ethical, and examination requirements for certification and registration.</li>
+                                <li>Requiring continuing education and adherence to ethical standards for maintaining credentials.</li>
+                            </ul>
+                        ARRT certification, denoted by R.T.(T)(ARRT), is a recognized standard demonstrating competence and qualification.
+                        </p>
+                        <a href="https://www.arrt.org/" target="_blank" rel="noopener noreferrer" class="text-purple-700 hover:text-purple-800 hover:underline text-sm external-link-icon">Visit ARRT</a>
+                    </div>
+                     <div class="interactive-question-block mt-6 bg-white p-3 rounded-md border border-slate-300" id="q_page6_1">
+                        <p class="question-text font-semibold text-slate-700 mb-2">Quick Check: Which organization provides the primary certification and registration for Radiation Therapists, signifying their professional competence?</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page6_1_ans" value="A" class="mr-2 accent-purple-600"> ASRT</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page6_1_ans" value="B" class="mr-2 accent-purple-600"> JRCERT</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page6_1_ans" value="C" class="mr-2 accent-purple-600"> ARRT</label>
+                        <div class="explanation-text text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">The correct answer is C. The ARRT is the credentialing body that administers the certification exam for Radiation Therapists.</div>
+                    </div>
+                    <button class="check-page-answers-button mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswer('q_page6_1', 'C')">Check Answer</button>
+                </div>
+
+                <div id="lesson-page-7" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 7: For Radiation Therapists (Part 2 - Educational Accreditation)</h3>
+                    <p class="mb-3 text-slate-700">Ensuring high-quality education for aspiring Radiation Therapists is paramount. The key organization responsible for the accreditation of educational programs in radiation therapy is:</p>
+                    
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">JRCERT (Joint Review Committee on Education in Radiologic Technology)</h4>
+                        <p class="text-sm text-slate-600 mb-2">The JRCERT is the only agency recognized by the U.S. Department of Education and the Council for Higher Education Accreditation (CHEA) for the accreditation of educational programs in radiography, radiation therapy, magnetic resonance, and medical dosimetry. For radiation therapy programs, JRCERT accreditation signifies:
+                            <ul class="list-disc list-inside text-slate-600 space-y-1 text-xs ml-4 my-1">
+                                <li>The program meets nationally established standards of educational quality.</li>
+                                <li>Graduates are prepared with the knowledge, skills, and professional behaviors required for practice.</li>
+                                <li>The program undergoes regular review and evaluation to maintain these standards.</li>
+                            </ul>
+                        Graduation from a JRCERT-accredited program is typically a prerequisite for eligibility to take the ARRT certification examination in radiation therapy.
+                        </p>
+                        <a href="https://www.jrcert.org/" target="_blank" rel="noopener noreferrer" class="text-purple-700 hover:text-purple-800 hover:underline text-sm external-link-icon">Visit JRCERT</a>
+                    </div>
+                     <div class="interactive-question-block mt-6 bg-white p-3 rounded-md border border-slate-300" id="q_page7_1">
+                        <p class="question-text font-semibold text-slate-700 mb-2">Quick Check: What is the primary role of the JRCERT in the field of radiation therapy?</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page7_1_ans" value="A" class="mr-2 accent-purple-600"> To provide continuing education courses for certified RTTs.</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page7_1_ans" value="B" class="mr-2 accent-purple-600"> To accredit educational programs in radiation therapy, ensuring they meet quality standards.</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page7_1_ans" value="C" class="mr-2 accent-purple-600"> To develop clinical treatment guidelines for specific cancers.</label>
+                        <div class="explanation-text text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">The correct answer is B. The JRCERT is the accrediting body for educational programs in radiation therapy.</div>
+                    </div>
+                    <button class="check-page-answers-button mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswer('q_page7_1', 'B')">Check Answer</button>
+                </div>
+
+                <div id="lesson-page-8" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 8: Conclusion - A Collaborative Effort</h3>
+                    <p class="mb-3 text-slate-700">The radiation oncology team is a multidisciplinary group, and the professional organizations supporting each role work towards common goals: enhancing the quality and safety of patient care, fostering research and innovation, and ensuring professionals are well-educated and practice ethically.</p>
+                    <p class="mb-3 text-slate-700">While each organization focuses on its specific discipline, there is often collaboration and overlap in areas like patient safety initiatives, technological advancements, and educational conferences. Engagement with these organizations is a hallmark of a dedicated professional committed to lifelong learning and excellence in their field.</p>
+                    <p class="mb-3 text-slate-700">By understanding the landscape of these professional bodies, members of the radiation oncology team can better access resources, contribute to their profession, and ultimately, improve outcomes for patients with cancer.</p>
+                    <div class="mt-6 p-4 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-2">Final Thought:</h4>
+                        <p class="text-sm text-slate-700">Active participation in one's professional organization(s) not only benefits the individual through learning and networking but also strengthens the profession as a whole, contributing to a higher standard of care for all patients.</p>
+                    </div>
+                </div>
+
+                <div class="lesson-navigation-bar text-center mt-6">
+                    <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled aria-label="Go to Previous Lesson Page" class="bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors disabled:bg-slate-300 text-sm">Previous Page</button>
+                    <span class="page-indicator mx-2 sm:mx-4 text-sm text-slate-600" id="lessonPageIndicator">Page 1 of 8</span>
+                    <button id="nextLessonPage" onclick="changeLessonPage(1)" aria-label="Go to Next Lesson Page" class="bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors text-sm">Next Page</button>
+                </div>
+            </div>
+
+            <div class="print-button-container text-center mt-8">
+                <button onclick="window.print()" class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-6 rounded-lg text-sm transition-colors">Print Lesson</button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-slate-800 text-slate-300 py-6 mt-auto text-center">
+        <div class="container mx-auto px-6">
+            <p class="text-sm">&copy; <span id="currentYear"></span> Radiation Therapy E-Workbook. RTApps All Rights Reserved.</p>
+            <p class="text-xs mt-1">Professional Organizations Lesson</p>
+        </div>
+    </footer>
+
+    <script>
+        let currentLessonPage = 1;
+        const totalLessonPages = 8; // Updated total pages
+        const lessonPages = document.querySelectorAll('.lesson-page');
+        const prevLessonButton = document.getElementById('prevLessonPage');
+        const nextLessonButton = document.getElementById('nextLessonPage');
+        const lessonPageIndicator = document.getElementById('lessonPageIndicator');
+
+        const correctAnswers = {
+            'q_page2_1': 'B', // NCCN for guidelines
+            'q_page3_1': 'B', // ONS for oncology nurses
+            'q_page4_1': 'C', // AAPM for physicists
+            'q_page5_1': 'B', // AAMD for dosimetrists
+            'q_page6_1': 'C', // ARRT for RTT credentialing
+            'q_page7_1': 'B'  // JRCERT for RTT program accreditation
+        };
+
+        function displayLessonPage() {
+            lessonPages.forEach((page, index) => {
+                page.style.display = (index === currentLessonPage - 1) ? 'block' : 'none';
+            });
+            prevLessonButton.disabled = currentLessonPage === 1;
+            nextLessonButton.disabled = currentLessonPage === totalLessonPages;
+            lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
+        }
+
+        function changeLessonPage(direction) {
+            currentLessonPage += direction;
+            displayLessonPage();
+        }
+
+        function checkPageAnswer(questionBlockId, correctAnswerValue) {
+            const questionBlock = document.getElementById(questionBlockId);
+            if (!questionBlock) return;
+
+            const selectedRadio = questionBlock.querySelector(`input[name="${questionBlockId}_ans"]:checked`);
+            const explanationDiv = questionBlock.querySelector('.explanation-text');
+            
+            questionBlock.classList.remove('correct-answer-feedback', 'incorrect-answer-feedback');
+            questionBlock.querySelectorAll('label').forEach(label => {
+                label.classList.remove('font-semibold', 'text-green-700', 'text-red-700');
+                const indicator = label.querySelector('.correct-indicator, .incorrect-indicator');
+                if(indicator) indicator.remove();
+            });
+            if (explanationDiv) explanationDiv.style.display = 'none';
+
+            if (selectedRadio) {
+                const userAnswer = selectedRadio.value;
+                const userSelectedLabel = selectedRadio.parentElement;
+
+                if (userAnswer === correctAnswerValue) {
+                    questionBlock.classList.add('correct-answer-feedback');
+                    userSelectedLabel.classList.add('font-semibold', 'text-green-700');
+                    const indicator = document.createElement('span');
+                    indicator.className = 'correct-indicator';
+                    userSelectedLabel.appendChild(indicator);
+                } else {
+                    questionBlock.classList.add('incorrect-answer-feedback');
+                    userSelectedLabel.classList.add('font-semibold', 'text-red-700');
+                    const indicator = document.createElement('span');
+                    indicator.className = 'incorrect-indicator';
+                    userSelectedLabel.appendChild(indicator);
+                    
+                    const correctRadio = questionBlock.querySelector(`input[name="${questionBlockId}_ans"][value="${correctAnswerValue}"]`);
+                    if (correctRadio && correctRadio.parentElement) {
+                        correctRadio.parentElement.classList.add('font-semibold', 'text-green-700');
+                         const correctIndicator = document.createElement('span');
+                         correctIndicator.className = 'correct-indicator';
+                         correctRadio.parentElement.appendChild(correctIndicator);
+                    }
+                }
+            } else { 
+                questionBlock.classList.add('incorrect-answer-feedback');
+                const correctRadio = questionBlock.querySelector(`input[name="${questionBlockId}_ans"][value="${correctAnswerValue}"]`);
+                if (correctRadio && correctRadio.parentElement) {
+                    correctRadio.parentElement.classList.add('font-semibold', 'text-green-700');
+                    const correctIndicator = document.createElement('span');
+                    correctIndicator.className = 'correct-indicator';
+                    correctRadio.parentElement.appendChild(correctIndicator);
+                }
+            }
+            if (explanationDiv) explanationDiv.style.display = 'block';
+        }
+        
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        displayLessonPage();
+    </script>
+
+</body>
+</html>
