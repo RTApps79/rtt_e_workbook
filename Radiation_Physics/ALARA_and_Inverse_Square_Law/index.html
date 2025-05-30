@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALARA & Inverse Square Law</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .selected-option {
+            background-color: #e0f2fe; /* Tailwind sky-100 */
+            border-color: #38bdf8; /* Tailwind sky-400 */
+        }
+        .correct-answer-feedback {
+            background-color: #dcfce7 !important; /* Tailwind green-100 */
+            border-left-color: #22c55e !important; /* Tailwind green-500 */
+        }
+        .incorrect-answer-feedback {
+            background-color: #fee2e2 !important; /* Tailwind red-100 */
+            border-left-color: #ef4444 !important; /* Tailwind red-500 */
+        }
+        .correct-indicator::after {
+            content: '✔ Correct';
+            color: #16a34a; /* Tailwind green-600 */
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .incorrect-indicator::after {
+            content: '✖ Incorrect';
+            color: #dc2626; /* Tailwind red-600 */
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .correct-option-text {
+            font-weight: bold;
+            color: #15803d; /* Tailwind green-700 */
+        }
+        .external-link-icon::after {
+            content: ' ↗';
+            font-size: 0.8em;
+        }
+
+        /* ISL Simulator Specific Visuals */
+        #visualization-area { 
+            position: relative; 
+            height: 150px; /* Increased height for better viz */
+            background-color: #f3f4f6; /* Tailwind gray-100 */ 
+            border-radius: 0.5rem; 
+            overflow: hidden; 
+            margin-top: 1rem; 
+            margin-bottom: 1rem; 
+            border: 1px solid #d1d5db; 
+        }
+        #source { 
+            position: absolute; 
+            left: 20px; /* Adjusted for new viz */
+            top: 50%; 
+            transform: translateY(-50%); 
+            font-size: 30px; 
+            z-index: 10;
+        }
+        /* Pulsing animation for the source */
+        @keyframes pulse {
+            0% { transform: translateY(-50%) scale(1); opacity: 1; }
+            50% { transform: translateY(-50%) scale(1.15); opacity: 0.7; }
+            100% { transform: translateY(-50%) scale(1); opacity: 1; }
+        }
+        #source img {
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        #detector { 
+            position: absolute; 
+            top: 50%; 
+            transform: translateY(-50%); 
+            width: 30px; /* Slightly larger */
+            height: 45px; 
+            background-color: #60a5fa; /* Tailwind blue-400 */ 
+            border: 2px solid #3b82f6; /* Tailwind blue-500 */ 
+            border-radius: 0.375rem; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            color: white; 
+            font-size: 10px; /* Slightly larger text */
+            font-weight: bold;
+            text-align: center; 
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); 
+            transition: left 0.1s linear, background-color 0.2s; 
+            z-index: 10;
+        }
+        /* Radiation field visualization */
+        #radiation-field {
+            position: absolute;
+            top: 50%;
+            left: 45px; /* Start after the source icon */
+            height: 80px; /* Height of the field spread */
+            transform: translateY(-50%);
+            background: linear-gradient(to right, rgba(255, 237, 113, 0.4), rgba(255, 237, 113, 0.05)); /* Yellowish, fading */
+            clip-path: polygon(0 0, 100% 20%, 100% 80%, 0 100%); /* Trapezoid shape */
+            transition: width 0.1s linear;
+            z-index: 5;
+        }
+
+        #distance-label-vis { 
+            position: absolute; 
+            bottom: 5px; /* Moved to bottom for clarity */
+            left: 50%; 
+            transform: translateX(-50%); 
+            font-size: 0.75rem; 
+            color: #4b5563; /* Tailwind gray-600 */ 
+            background-color: rgba(243, 244, 246, 0.9); 
+            padding: 2px 6px; 
+            border-radius: 0.25rem; 
+            z-index: 15;
+        }
+        #graph-area { 
+            height: 100px; /* Increased height */
+            border: 1px solid #d1d5db; /* Tailwind gray-300 */ 
+            border-radius: 0.5rem; 
+            display: flex; 
+            align-items: flex-end; 
+            justify-content: center; 
+            padding: 5px; 
+            background-color: #f9fafb; /* Tailwind gray-50 */ 
+        }
+        #dose-bar { 
+            width: 50px; /* Wider bar */
+            background-color: #ef4444; /* Tailwind red-500 */ 
+            border-radius: 0.25rem 0.25rem 0 0; 
+            transition: height 0.2s ease-out, background-color 0.2s ease-out; 
+            position: relative; 
+        }
+        #dose-bar-label { 
+            position: absolute; 
+            bottom: -20px; /* Adjusted position */
+            left: 50%; 
+            transform: translateX(-50%); 
+            font-size: 0.75rem; /* Slightly larger */
+            color: #1f2937; /* Tailwind gray-800 */
+            font-weight: 500;
+        }
+
+        /* Print Styles */
+        @media print {
+            body { background-color: #fff; margin: 10px; padding: 0; font-size: 10pt; }
+            .main-content-wrapper, .flip-lesson-container { box-shadow: none !important; border: none !important; width: 100%; max-width: 100%; padding: 5px; margin-bottom: 15px;}
+            .lesson-navigation-bar, .check-page-answers-button, .nav-links-header, .print-button-container, .isl-simulator-container, .submit-button-ws, #certificate-input-section, #printCertificateButtonTrigger { display: none !important; }
+            .lesson-page { page-break-inside: avoid; border: 1px solid #eee !important; }
+            .interactive-question-block {background: #fff !important; border: 1px solid #ccc !important; }
+            h1, h2, h3, h4 { color: #000 !important; border-color: #000 !important; margin-bottom: 10px; padding-bottom: 3px;}
+            .explanation-text, .feedback-ws, .score-container, .submission-note { display: none !important; }
+            textarea.worksheet-answer, input.worksheet-answer { background-color: #f0f0f0 !important; border: 1px solid #999 !important; }
+            
+            #printableCertificate, #printableCertificate * { visibility: visible; }
+            #printableCertificate {
+                position: absolute; left: 50%; top: 50%;
+                transform: translate(-50%, -50%);
+                width: 90vw; height: auto; margin: 0; padding: 20px;
+                box-shadow: none;
+                border: 10px solid #2563EB !important; /* Tailwind blue-600 */
+                color: #000 !important;
+                background-color: #EFF6FF !important; /* Tailwind blue-50 */
+                -webkit-print-color-adjust: exact; print-color-adjust: exact;
+            }
+            #printableCertificate h4, 
+            #printableCertificate .awardee-name-cert, 
+            #printableCertificate .certificate-logo-print, 
+            #printableCertificate .certificate-date-print {
+                color: #1E40AF !important; /* Tailwind blue-800 */
+            }
+            #printableCertificate .awardee-name-cert {
+                border-bottom: 1px dashed #1D4ED8 !important; /* Tailwind blue-700 */
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 flex flex-col min-h-screen">
+
+    <header class="bg-white shadow-md sticky top-0 z-50 nav-links-header">
+        <div class="container mx-auto px-6 py-3 flex flex-col sm:flex-row justify-between items-center">
+            <h1 class="text-xl font-bold text-purple-700 mb-2 sm:mb-0">Radiation Safety: ALARA & ISL</h1>
+            <div class="flex flex-wrap justify-center sm:justify-end space-x-2">
+                <a href="../index.html" class="text-xs sm:text-sm bg-purple-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-purple-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to Radiation Physics
+                </a>
+                <a href="../../index.html" class="text-xs sm:text-sm bg-slate-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-slate-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to Main Workbook
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto max-w-4xl px-4 sm:px-6 py-8 flex-grow main-content-wrapper">
+        <div class="bg-white p-6 sm:p-8 rounded-xl shadow-xl">
+            <h1 class="text-3xl font-bold text-purple-700 mb-6 text-center border-b-2 border-purple-300 pb-4">Radiation Safety Principles: ALARA & Inverse Square Law</h1>
+
+            <div class="flip-lesson-container bg-purple-50 p-4 sm:p-6 rounded-lg shadow-md mb-8 border border-purple-200">
+                <h2 class="text-2xl font-semibold text-purple-600 mb-4">Interactive Lesson & Activity</h2>
+
+                {/* Lesson Pages 1-7 remain the same as previous version - content omitted for brevity but should be included */}
+                <div id="lesson-page-1" class="lesson-page active bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[420px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 1: Purpose, Task & Criteria (TILT) & Intro to ALARA</h3>
+                     <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Purpose: Why This Matters</h4>
+                        <p class="text-sm text-slate-600">This lesson focuses on fundamental radiation safety principles: ALARA (As Low As Reasonably Achievable) and the Inverse Square Law (ISL). Understanding and applying these concepts is paramount for Radiation Therapists to protect patients, themselves, and the public from unnecessary radiation exposure while delivering effective treatments.</p>
+                    </div>
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Task: What You Will Do</h4>
+                        <p class="text-sm text-slate-600">You will:
+                            <ul class="list-disc list-inside text-slate-600 space-y-1 text-xs ml-4 my-1">
+                                <li>Learn the definition and components of the ALARA principle (Time, Distance, Shielding).</li>
+                                <li>Understand the Inverse Square Law and its mathematical application.</li>
+                                <li>Engage with "Quick Check" questions to test comprehension.</li>
+                                <li>Utilize an interactive simulator to visualize the Inverse Square Law.</li>
+                                <li>Complete a worksheet applying ALARA and ISL concepts to practical scenarios.</li>
+                            </ul>
+                        </p>
+                    </div>
+                    <div class="p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Criteria for Success: How You'll Know You've Learned</h4>
+                        <p class="text-sm text-slate-600">By the end, you should be able to:
+                            <ul class="list-disc list-inside text-slate-600 space-y-1 text-xs ml-4 my-1">
+                                <li>Define ALARA and its three cardinal principles.</li>
+                                <li>Explain the Inverse Square Law and calculate changes in dose rate with distance.</li>
+                                <li>Apply ALARA and ISL to common situations in radiation therapy.</li>
+                                <li>Successfully answer worksheet questions based on the lesson and simulator.</li>
+                            </ul>
+                        </p>
+                    </div>
+                    <hr class="my-4 border-purple-200">
+                    <p class="mb-3 text-slate-700">The <span class="font-semibold text-purple-700">ALARA</span> principle is a cornerstone of radiation protection. It stands for "<strong>A</strong>s <strong>L</strong>ow <strong>A</strong>s <strong>R</strong>easonably <strong>A</strong>chievable." This means making every reasonable effort to maintain exposures to ionizing radiation as far below the dose limits as practical, while still achieving the intended purpose (e.g., effective patient treatment).</p>
+                </div>
+
+                <div id="lesson-page-2" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[420px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 2: Cardinal Principle 1 - TIME</h3>
+                    <p class="mb-3 text-slate-700">One of the three cardinal principles of radiation protection is minimizing <span class="font-semibold text-purple-700">TIME</span> spent in a radiation field or near a radiation source.</p>
+                    <div class="key-principle-box bg-purple-100 border-l-4 border-purple-500 p-3 mb-3 rounded">
+                        <p class="text-sm text-slate-700"><strong>Concept:</strong> The total radiation dose received is directly proportional to the duration of exposure. Less time = Less dose.</p>
+                        <p class="text-sm text-slate-700 mt-1"><code>Total Dose = Dose Rate × Time</code></p>
+                    </div>
+                    <p class="mb-3 text-slate-700"><strong>Examples in Radiation Therapy for RTTs:</strong></p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm">
+                        <li>Working efficiently during patient setup to minimize time in the room once imaging systems (e.g., CBCT) are active and emitting radiation.</li>
+                        <li>Spending minimal necessary time near patients who have received brachytherapy implants that are still radioactive.</li>
+                        <li>Quickly exiting the treatment room once the patient is appropriately set up and before the primary beam is activated.</li>
+                        <li>Planning tasks to reduce presence in radiation areas.</li>
+                    </ul>
+                    <div class="interactive-question-block mt-6 bg-white p-3 rounded-md border border-slate-300" id="q_page2_1">
+                        <p class="question-text font-semibold text-slate-700 mb-2">Quick Check: If an RTT reduces the time they spend in an area with a constant radiation dose rate by half, their received dose will:</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page2_1_ans" value="A" class="mr-2 accent-purple-600"> Also be reduced by half.</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page2_1_ans" value="B" class="mr-2 accent-purple-600"> Be reduced by a quarter.</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page2_1_ans" value="C" class="mr-2 accent-purple-600"> Remain the same.</label>
+                        <div class="explanation-text text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">The correct answer is A. Dose is directly proportional to time if the dose rate is constant.</div>
+                    </div>
+                    <button class="check-page-answers-button mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswer('q_page2_1', 'A')">Check Answer</button>
+                </div>
+
+                <div id="lesson-page-3" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[420px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 3: Cardinal Principle 2 - DISTANCE & Inverse Square Law</h3>
+                    <p class="mb-3 text-slate-700">The second cardinal principle is maximizing <span class="font-semibold text-purple-700">DISTANCE</span> from a radiation source.</p>
+                    <div class="key-principle-box bg-purple-100 border-l-4 border-purple-500 p-3 mb-3 rounded">
+                        <p class="text-sm text-slate-700"><strong>Concept:</strong> The intensity of radiation (and thus the dose rate) from a point source decreases rapidly as the distance from the source increases. This relationship is described by the <span class="font-semibold text-purple-700">Inverse Square Law (ISL)</span>.</p>
+                        <p class="text-sm text-slate-700 mt-1"><strong>Inverse Square Law Formula:</strong></p>
+                        <p class="text-sm text-center text-slate-700 font-mono my-2 p-2 bg-slate-100 rounded">I₁ / I₂ = (d₂)² / (d₁)² &nbsp;&nbsp; or &nbsp;&nbsp; I₂ = I₁ × (d₁ / d₂)²</p>
+                        <p class="text-xs text-slate-600">Where: I₁ is the intensity at distance d₁, and I₂ is the intensity at distance d₂.</p>
+                        <p class="text-sm text-slate-700 mt-1">This means if you double the distance (d₂ = 2d₁), the dose rate drops to one-quarter (I₂ = I₁/4). If you triple the distance, it drops to one-ninth (I₂ = I₁/9).</p>
+                    </div>
+                    <p class="mb-3 text-slate-700"><strong>Examples in Radiation Therapy for RTTs:</strong></p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm">
+                        <li>Standing as far back as practicable from the patient/source during imaging procedures (e.g., during fluoroscopy if present, or from a brachytherapy patient).</li>
+                        <li>Using remote controls for equipment when possible, allowing operation from a greater distance.</li>
+                        <li>The design of treatment rooms, with control consoles located outside the heavily shielded room, utilizes distance.</li>
+                    </ul>
+                </div>
+
+                <div id="lesson-page-4" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[420px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 4: Applying the Inverse Square Law</h3>
+                    <p class="mb-3 text-slate-700">Let's consider the Inverse Square Law (ISL) practically. The formula is: <strong>I₂ = I₁ × (d₁ / d₂)²</strong></p>
+                    <p class="mb-3 text-slate-700">If a point source emits a dose rate (<span class="font-semibold">I₁</span>) of <span class="font-semibold text-purple-700">100 mSv/hr</span> at a distance (<span class="font-semibold">d₁</span>) of <span class="font-semibold text-purple-700">1 meter</span>:</p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-2 text-sm">
+                        <li>
+                            At <strong>2 meters</strong> (d₂ = 2m):<br>
+                            I₂ = 100 mSv/hr × (1m / 2m)² = 100 × (0.5)² = 100 × 0.25 = <span class="font-semibold text-red-600">25 mSv/hr</span>.
+                            (Distance doubled, intensity is 1/4)
+                        </li>
+                        <li>
+                            At <strong>0.5 meters</strong> (d₂ = 0.5m):<br>
+                            I₂ = 100 mSv/hr × (1m / 0.5m)² = 100 × (2)² = 100 × 4 = <span class="font-semibold text-red-600">400 mSv/hr</span>.
+                            (Distance halved, intensity is 4x)
+                        </li>
+                    </ul>
+                    <p class="mt-3 text-slate-700">This demonstrates the powerful effect of distance. Small changes in distance, especially when close to the source, can lead to very large changes in dose rate.</p>
+                    <div class="interactive-question-block mt-6 bg-white p-3 rounded-md border border-slate-300" id="q_page4_1">
+                        <p class="question-text font-semibold text-slate-700 mb-2">Quick Check: If the dose rate from a point source is 36 mSv/hr at 1 meter, what would the dose rate be at 3 meters?</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page4_1_ans" value="A" class="mr-2 accent-purple-600"> 12 mSv/hr</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page4_1_ans" value="B" class="mr-2 accent-purple-600"> 6 mSv/hr</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page4_1_ans" value="C" class="mr-2 accent-purple-600"> 4 mSv/hr</label>
+                        <div class="explanation-text text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">The correct answer is C. Distance increases 3x (from 1m to 3m), so dose rate decreases by 3² = 9. So, 36 mSv/hr / 9 = 4 mSv/hr.</div>
+                    </div>
+                    <button class="check-page-answers-button mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswer('q_page4_1', 'C')">Check Answer</button>
+                </div>
+
+                <div id="lesson-page-5" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[420px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 5: Cardinal Principle 3 - SHIELDING</h3>
+                    <p class="mb-3 text-slate-700">The third cardinal principle is using <span class="font-semibold text-purple-700">SHIELDING</span> between the radiation source and individuals.</p>
+                    <div class="key-principle-box bg-purple-100 border-l-4 border-purple-500 p-3 mb-3 rounded">
+                        <p class="text-sm text-slate-700"><strong>Concept:</strong> Shielding involves placing absorbent materials in the path of radiation to reduce its intensity. The effectiveness depends on:</p>
+                        <ul class="list-disc list-inside text-slate-600 space-y-1 text-xs ml-4 my-1">
+                            <li>The <span class="font-semibold">type and energy</span> of the radiation (alpha, beta, gamma, X-rays, neutrons require different shielding).</li>
+                            <li>The <span class="font-semibold">material</span> of the shield (e.g., lead, concrete, water, plastic). High-Z materials for photons.</li>
+                            <li>The <span class="font-semibold">thickness</span> of the shield. More thickness = more attenuation.</li>
+                        </ul>
+                        <p class="text-sm text-slate-700 mt-1">The <span class="font-semibold">Half-Value Layer (HVL)</span> is the thickness of a material required to reduce the radiation intensity by 50%.</p>
+                    </div>
+                    <p class="mb-3 text-slate-700"><strong>Examples in Radiation Therapy for RTTs:</strong></p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm">
+                        <li>Thick concrete or lead-lined walls, doors, and control windows of treatment rooms.</li>
+                        <li>Lead aprons, thyroid shields, and leaded glasses for staff during certain procedures (e.g., fluoroscopy, some brachytherapy source handling).</li>
+                        <li>Custom blocks or Multi-Leaf Collimators (MLCs) on the Linac to shape the beam and shield normal tissues in the patient.</li>
+                        <li>Shielding within the Linac head itself to reduce leakage radiation.</li>
+                    </ul>
+                    <div class="interactive-question-block mt-6 bg-white p-3 rounded-md border border-slate-300" id="q_page5_1">
+                        <p class="question-text font-semibold text-slate-700 mb-2">Quick Check: For shielding high-energy X-rays used in radiation therapy, which material is commonly used for treatment room walls due to its effectiveness and structural properties?</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page5_1_ans" value="A" class="mr-2 accent-purple-600"> Thin aluminum foil</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page5_1_ans" value="B" class="mr-2 accent-purple-600"> Thick concrete or lead</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page5_1_ans" value="C" class="mr-2 accent-purple-600"> Plexiglass</label>
+                        <div class="explanation-text text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">The correct answer is B. Thick concrete and lead are effective shielding materials for the high-energy photons used in radiation therapy.</div>
+                    </div>
+                    <button class="check-page-answers-button mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswer('q_page5_1', 'B')">Check Answer</button>
+                </div>
+
+                <div id="lesson-page-6" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[420px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 6: "Reasonably Achievable" - The "RA" in ALARA</h3>
+                    <p class="mb-3 text-slate-700">The "RA" in ALARA – <strong>Reasonably Achievable</strong> – is crucial. It means balancing the goal of minimizing dose with practical, social, and economic factors.</p>
+                    <p class="mb-3 text-slate-700"><strong>Considerations for "Reasonably Achievable":</strong></p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm">
+                        <li><strong>Benefit vs. Risk:</strong> The primary objective in therapy is effective treatment. Dose reduction efforts should not compromise this. For diagnostic imaging, image quality must be sufficient.</li>
+                        <li><strong>Practicality & Feasibility:</strong> Is the cost or complexity of an additional safety measure justified by the amount of dose reduction achieved?</li>
+                        <li><strong>Technological Limits:</strong> Current technology may have inherent limitations in dose reduction.</li>
+                        <li><strong>Patient Condition:</strong> Patient comfort, cooperation, and overall medical status can influence what is "reasonable."</li>
+                    </ul>
+                    <p class="mt-3 text-slate-700">ALARA is not about achieving zero exposure, but about an ongoing process of optimization and responsible radiation use. It requires professional judgment and continuous evaluation of practices.</p>
+                </div>
+
+                <div id="lesson-page-7" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[420px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 7: RTT's Role & Responsibility in ALARA</h3>
+                    <p class="mb-3 text-slate-700">Radiation Therapists are key in implementing ALARA daily.</p>
+                    <p class="mb-3 text-slate-700"><strong>Key Responsibilities:</strong></p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm">
+                        <li><strong>Accurate Treatment Delivery:</strong> Precise setup, IGRT, and strict adherence to the treatment plan are paramount for ALARA to the patient's healthy tissues.</li>
+                        <li><strong>Applying Cardinal Principles:</strong> Consciously using Time, Distance, and Shielding for self-protection and the protection of colleagues and the public.</li>
+                        <li><strong>Equipment QA:</strong> Diligently performing and documenting daily QA checks.</li>
+                        <li><strong>Patient Communication:</strong> Clear instructions to patients can improve cooperation, reduce movement, and minimize the need for repeat imaging or adjustments.</li>
+                        <li><strong>Vigilance:</strong> Being alert for potential radiation hazards or deviations from safety protocols. Using "Stop the Beam" authority if concerned.</li>
+                        <li><strong>Following Protocols:</strong> Adherence to all departmental and institutional radiation safety policies.</li>
+                        <li><strong>Personal Dosimetry:</strong> Correctly wearing and handling personal dosimeters.</li>
+                    </ul>
+                    <p class="mt-3 text-slate-700">A proactive approach to ALARA demonstrates professionalism and commitment to safety.</p>
+                </div>
+
+                <div id="lesson-page-8" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[420px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 8: Activity - ISL Simulator, Worksheet & Certificate</h3>
+                    <p class="mb-3 text-slate-700">You've reviewed the ALARA principle and its components. Now it's time to apply this knowledge.</p>
+                    
+                    <hr class="my-6 border-purple-200">
+                    
+                    <h4 id="interactive-simulator-header" class="text-2xl font-semibold text-purple-600 mb-3 text-center">Part 1: Inverse Square Law Simulator</h4>
+                    <div class="isl-simulator-container bg-slate-50 p-4 rounded-lg shadow border border-slate-200">
+                        <div class="text-xs text-center text-slate-500 mb-3 p-2 bg-yellow-100 border border-yellow-300 rounded-md">
+                            Reference: Source emits <strong id="ref-dose-sim" class="font-bold">100.0</strong> mSv/hr at <strong id="ref-dist-sim" class="font-bold">1.0</strong> meter.
+                        </div>
+                        <div id="visualization-area">
+                            <div id="source" title="Radiation Source" class="w-9 h-9 flex items-center justify-center">
+                                <img src="https://placehold.co/36x36/FBBF24/78350F?text=S" alt="Radiation Source Icon" class="max-w-full max-h-full rounded-full">
+                            </div> 
+                            <div id="radiation-field"></div>   
+                            <div id="detector" title="Detector">Meter</div>
+                            <div id="distance-label-vis"><span id="current-distance-vis">1.0</span> m</div>
+                        </div>
+                        <div class="mt-4 mb-4">
+                            <label for="distance-slider" class="block text-md font-medium text-slate-700 mb-1">Adjust Distance (meters):</label>
+                            <input type="range" id="distance-slider" name="distance" min="0.5" max="5" step="0.1" value="1.0"
+                                   class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-purple-500">
+                            <div class="text-center text-lg font-semibold text-purple-600 mt-1">
+                                Current Distance: <span id="current-distance-sim" class="font-bold">1.0</span> m
+                            </div>
+                        </div>
+                        <div class="text-center p-3 bg-purple-100 border border-purple-300 rounded-lg mb-4">
+                            <p class="text-md font-medium text-slate-700">Simulated Dose Rate:</p>
+                            <p class="text-2xl font-bold text-red-600">
+                                <span id="dose-rate-sim">100.0</span> mSv/hr
+                            </p>
+                        </div>
+                        <div class="mb-2">
+                            <p class="text-md font-medium text-slate-700 text-center mb-1">Relative Dose Rate to Reference (100 mSv/hr at 1m)</p>
+                            <div id="graph-area">
+                                <div id="dose-bar" style="height: 100%;"> <span id="dose-bar-label">100%</span></div>
+                            </div>
+                        </div>
+                        <div class="text-xs text-center text-slate-500 mt-2 p-1 bg-slate-100 rounded">
+                            Formula: I₂ = I₁ × (d₁ / d₂)²
+                        </div>
+                    </div>
+
+                    <div id="worksheet-questions-section" class="mt-8">
+                        <h4 class="text-2xl font-semibold text-purple-600 mb-4 text-center border-t border-purple-200 pt-6">Part 2: ALARA Worksheet</h4>
+                        <form id="alara-worksheet-form" class="space-y-6">
+                            {/* Worksheet questions q1-q13 from previous version - content omitted for brevity but should be included here */}
+                                <div>
+                                <h3 class="text-lg font-semibold text-purple-700 mb-2">Worksheet Part A: Inverse Square Law & Simulator</h3>
+                                <p class="text-xs text-slate-500 mb-3"><em>Use the simulator above. Reference: Source emits 100.0 mSv/hr at 1.0 meter.</em></p>
+                                <div class="prompt-question-block bg-slate-50 p-3 rounded-md border border-slate-200 mb-3">
+                                    <label for="q1a" class="block text-sm font-medium text-slate-700"><strong>1. Initial Setup:</strong> What is the simulated dose rate at 1.0m? How does the "dose bar" height correspond?</label>
+                                    <input type="text" id="q1a" name="q1a" class="worksheet-answer mt-1 block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm" placeholder="Dose rate at 1.0m...">
+                                    <textarea id="q1b" name="q1b" class="worksheet-answer mt-1 block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm" placeholder="Describe dose bar height..." rows="2"></textarea>
+                                </div>
+                                <div class="prompt-question-block bg-slate-50 p-3 rounded-md border border-slate-200 mb-3">
+                                    <label class="block text-sm font-medium text-slate-700"><strong>2. Increasing Distance:</strong> Move slider to 2.0m.</label>
+                                    <label for="q2a" class="block text-xs text-slate-600 mt-1">a) Simulated dose rate?</label>
+                                    <input type="text" id="q2a" name="q2a" class="worksheet-answer mt-1 block w-full" placeholder="Simulated dose rate at 2.0m...">
+                                    <label for="q2b" class="block text-xs text-slate-600 mt-1">b) Calculate expected using ISL (Show work).</label>
+                                    <textarea id="q2b" name="q2b" class="worksheet-answer mt-1 block w-full" placeholder="Show ISL calculation for 2.0m..." rows="2"></textarea>
+                                    <label for="q2c" class="block text-xs text-slate-600 mt-1">c) Comparison (simulated vs. calculated)?</label>
+                                    <textarea id="q2c" name="q2c" class="worksheet-answer mt-1 block w-full" placeholder="Comparison..." rows="2"></textarea>
+                                    <label for="q2d" class="block text-xs text-slate-600 mt-1">d) Describe visual changes.</label>
+                                    <textarea id="q2d" name="q2d" class="worksheet-answer mt-1 block w-full" placeholder="Describe visual changes..." rows="2"></textarea>
+                                </div>
+                                 <div class="prompt-question-block bg-slate-50 p-3 rounded-md border border-slate-200 mb-3">
+                                    <label class="block text-sm font-medium text-slate-700"><strong>3. Further Distance:</strong> Set distance to 4.0m.</label>
+                                    <label for="q3a" class="block text-xs text-slate-600 mt-1">a) Simulated dose rate?</label>
+                                    <input type="text" id="q3a" name="q3a" class="worksheet-answer mt-1 block w-full" placeholder="Simulated dose rate at 4.0m...">
+                                    <label for="q3b" class="block text-xs text-slate-600 mt-1">b) Calculate expected using ISL (Show work).</label>
+                                    <textarea id="q3b" name="q3b" class="worksheet-answer mt-1 block w-full" placeholder="Show ISL calculation for 4.0m..." rows="2"></textarea>
+                                    <label for="q3c" class="block text-xs text-slate-600 mt-1">c) Relationship when doubling distance (2m to 4m)?</label>
+                                    <textarea id="q3c" name="q3c" class="worksheet-answer mt-1 block w-full" placeholder="Relationship..." rows="2"></textarea>
+                                </div>
+                                 <div class="prompt-question-block bg-slate-50 p-3 rounded-md border border-slate-200 mb-3">
+                                    <label class="block text-sm font-medium text-slate-700"><strong>4. Decreasing Distance:</strong> Return to 1.0m, then decrease to 0.5m.</label>
+                                    <label for="q4a" class="block text-xs text-slate-600 mt-1">a) Simulated dose rate at 0.5m?</label>
+                                    <input type="text" id="q4a" name="q4a" class="worksheet-answer mt-1 block w-full" placeholder="Simulated dose rate at 0.5m...">
+                                    <label for="q4b" class="block text-xs text-slate-600 mt-1">b) Calculate expected using ISL (Show work).</label>
+                                    <textarea id="q4b" name="q4b" class="worksheet-answer mt-1 block w-full" placeholder="Show ISL calculation for 0.5m..." rows="2"></textarea>
+                                    <label for="q4c" class="block text-xs text-slate-600 mt-1">c) Effect of halving distance?</label>
+                                    <textarea id="q4c" name="q4c" class="worksheet-answer mt-1 block w-full" placeholder="Effect of halving distance..." rows="2"></textarea>
+                                </div>
+                                <div class="prompt-question-block bg-slate-50 p-3 rounded-md border border-slate-200 mb-3">
+                                    <label class="block text-sm font-medium text-slate-700"><strong>5. Applying the Simulator:</strong></label>
+                                    <label for="q5a" class="block text-xs text-slate-600 mt-1">a) An RTT is 1.5 meters from a source. Approx. dose rate?</label>
+                                    <input type="text" id="q5a" name="q5a" class="worksheet-answer mt-1 block w-full" placeholder="Dose rate at 1.5m...">
+                                     <label for="q5b" class="block text-xs text-slate-600 mt-1">b) RTT needs dose rate ≤ 25 mSv/hr. Min. distance?</label>
+                                    <input type="text" id="q5b" name="q5b" class="worksheet-answer mt-1 block w-full" placeholder="Min. distance for ≤ 25 mSv/hr...">
+                                </div>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-purple-700 mb-2 mt-6">Worksheet Part B: Conceptual ALARA</h3>
+                                <div class="prompt-question-block bg-slate-50 p-3 rounded-md border border-slate-200 mb-3">
+                                    <label for="q6" class="block text-sm font-medium text-slate-700"><strong>6. Define ALARA:</strong> Explain in your own words. What does it stand for, and what is its goal?</label>
+                                    <textarea id="q6" name="q6" class="worksheet-answer mt-1 block w-full" rows="3"></textarea>
+                                </div>
+                                <div class="prompt-question-block bg-slate-50 p-3 rounded-md border border-slate-200 mb-3">
+                                    <label for="q7" class="block text-sm font-medium text-slate-700"><strong>7. Time Limitation:</strong> How does ALARA relate to time? Provide an RT example.</label>
+                                    <textarea id="q7" name="q7" class="worksheet-answer mt-1 block w-full" rows="3"></textarea>
+                                </div>
+                                 <div class="prompt-question-block bg-slate-50 p-3 rounded-md border border-slate-200 mb-3">
+                                    <label for="q8" class="block text-sm font-medium text-slate-700"><strong>8. Distance Maximization:</strong> Explain ISL's relation to ALARA's "Distance". Describe a practical RT example.</label>
+                                    <textarea id="q8" name="q8" class="worksheet-answer mt-1 block w-full" rows="3"></textarea>
+                                </div>
+                                <div class="prompt-question-block bg-slate-50 p-3 rounded-md border border-slate-200 mb-3">
+                                    <label for="q9" class="block text-sm font-medium text-slate-700"><strong>9. Shielding Utilization:</strong> How does shielding reduce exposure? Example in RT.</label>
+                                    <textarea id="q9" name="q9" class="worksheet-answer mt-1 block w-full" rows="3"></textarea>
+                                </div>
+                                <div class="prompt-question-block bg-slate-50 p-3 rounded-md border border-slate-200 mb-3">
+                                    <label for="q10" class="block text-sm font-medium text-slate-700"><strong>10. Practical ALARA Strategies:</strong> List 3+ other strategies RTTs use for ALARA.</label>
+                                    <textarea id="q10" name="q10" class="worksheet-answer mt-1 block w-full" rows="3"></textarea>
+                                </div>
+                                <div class="prompt-question-block bg-slate-50 p-3 rounded-md border border-slate-200 mb-3">
+                                    <label for="q11" class="block text-sm font-medium text-slate-700"><strong>11. "Reasonably Achievable":</strong> What does "RA" in ALARA imply? Is it always absolute minimization?</label>
+                                    <textarea id="q11" name="q11" class="worksheet-answer mt-1 block w-full" rows="3"></textarea>
+                                </div>
+                            </div>
+                             <div>
+                                <h3 class="text-lg font-semibold text-purple-700 mb-2 mt-6">Reflection</h3>
+                                <div class="prompt-question-block bg-slate-50 p-3 rounded-md border border-slate-200 mb-3">
+                                    <label for="reflection1" class="block text-sm font-medium text-slate-700"><strong>12. How did using the simulator help you understand the ISL?</strong></label>
+                                    <textarea id="reflection1" name="reflection1" class="worksheet-answer mt-1 block w-full" rows="3"></textarea>
+                                </div>
+                                <div class="prompt-question-block bg-slate-50 p-3 rounded-md border border-slate-200 mb-3">
+                                    <label for="reflection2" class="block text-sm font-medium text-slate-700"><strong>13. What is your most important takeaway regarding ALARA in RT?</strong></label>
+                                    <textarea id="reflection2" name="reflection2" class="worksheet-answer mt-1 block w-full" rows="3"></textarea>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    {/* Certificate Section Added Here */}
+                    <div id="certificate-section" class="mt-10 p-6 bg-blue-50 rounded-lg shadow-md text-center border border-blue-300">
+                        <h3 class="text-xl font-semibold text-blue-700 mb-4">Activity Completion Certificate</h3>
+                        <div id="certificate-input-section" class="mb-4">
+                            <label for="userNameForCertificate" class="block text-sm font-medium text-slate-700 mb-1">Enter Your Name for Certificate:</label>
+                            <input type="text" id="userNameForCertificate" placeholder="Your Name Here" class="mt-1 block w-full sm:w-auto sm:inline-block max-w-xs px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                            <button onclick="generateCertificate()" class="mt-2 sm:mt-0 sm:ml-2 bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg text-sm transition-colors">Generate Certificate</button>
+                        </div>
+                        <div id="printableCertificate" style="display:none;" class="w-full max-w-md h-auto border-8 border-blue-600 bg-blue-50 mx-auto p-6 sm:p-8 flex flex-col justify-center items-center shadow-lg font-serif text-center rounded-lg">
+                            <h4 class="text-blue-800 text-2xl sm:text-3xl font-bold mb-2 sm:mb-4">Certificate of Completion</h4>
+                            <p class="awardee-name-cert text-blue-700 text-xl sm:text-2xl font-semibold my-3 sm:my-5 border-b-2 border-dashed border-blue-700 pb-1 sm:pb-2" id="certificateNameDisplay"></p>
+                            <p class="reason-text-cert text-slate-700 text-md sm:text-lg my-2 sm:my-3">Has successfully completed the ALARA & Inverse Square Law Activity.</p>
+                            <p class="certificate-date-print text-slate-600 text-xs my-1" id="certificateDateDisplay"></p>
+                            <p class="certificate-logo-print text-blue-800 text-sm font-bold mt-3 sm:mt-4">RTApps Learning</p>
+                        </div>
+                        <button id="printCertificateButtonTrigger" onclick="window.print()" style="display:none;" class="mt-4 bg-sky-500 hover:bg-sky-600 text-white font-medium py-2 px-4 rounded-lg text-sm transition-colors">Print Certificate</button>
+                        <div id="certificate-error-message" class="text-red-500 text-xs mt-2" style="display:none;">Please enter your name to generate the certificate.</div>
+                    </div>
+                </div>
+
+
+                <div class="lesson-navigation-bar text-center mt-6">
+                    <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled aria-label="Go to Previous Lesson Page" class="bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors disabled:bg-slate-300 text-sm">Previous Page</button>
+                    <span class="page-indicator mx-2 sm:mx-4 text-sm text-slate-600" id="lessonPageIndicator">Page 1 of 8</span>
+                    <button id="nextLessonPage" onclick="changeLessonPage(1)" aria-label="Go to Next Lesson Page" class="bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors text-sm">Next Page</button>
+                </div>
+            </div>
+
+            <div class="print-button-container text-center mt-8">
+                <button onclick="window.print()" class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-6 rounded-lg text-sm transition-colors">Print Lesson & Responses</button>
+                <p class="text-xs text-slate-500 mt-1">(Enable "Background graphics" in print settings for best results if printing responses from textareas.)</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-slate-800 text-slate-300 py-6 mt-auto text-center">
+        <div class="container mx-auto px-6">
+            <p class="text-sm">&copy; <span id="currentYear"></span> Radiation Therapy E-Workbook. RTApps All Rights Reserved.</p>
+            <p class="text-xs mt-1">ALARA & Inverse Square Law Lesson</p>
+        </div>
+    </footer>
+
+    <script>
+        let currentLessonPage = 1;
+        const totalLessonPages = 8; 
+        const lessonPages = []; 
+        for (let i = 1; i <= totalLessonPages; i++) {
+            lessonPages.push(document.getElementById(`lesson-page-${i}`));
+        }
+
+        const prevLessonButton = document.getElementById('prevLessonPage');
+        const nextLessonButton = document.getElementById('nextLessonPage');
+        const lessonPageIndicator = document.getElementById('lessonPageIndicator');
+        const certificateErrorMessage = document.getElementById('certificate-error-message');
+        
+        const correctAnswers = { 
+            'q_page2_1': 'A', 
+            'q_page4_1': 'C', 
+            'q_page5_1': 'B'  
+        };
+
+        function displayLessonPage() {
+            lessonPages.forEach((page, index) => {
+                if(page) page.style.display = (index === currentLessonPage - 1) ? 'block' : 'none';
+            });
+            prevLessonButton.disabled = currentLessonPage === 1;
+            nextLessonButton.disabled = currentLessonPage === totalLessonPages;
+            lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
+            
+            if (currentLessonPage === totalLessonPages) { // Page 8 is the activity page
+                initializeISLSimulator();
+            }
+        }
+
+        function changeLessonPage(direction) {
+            currentLessonPage += direction;
+            displayLessonPage();
+        }
+        
+        function checkPageAnswer(questionBlockId, correctAnswerValue) {
+            const questionBlock = document.getElementById(questionBlockId);
+            if (!questionBlock) return;
+
+            const selectedRadio = questionBlock.querySelector(`input[name="${questionBlockId}_ans"]:checked`);
+            const explanationDiv = questionBlock.querySelector('.explanation-text');
+            
+            questionBlock.classList.remove('correct-answer-feedback', 'incorrect-answer-feedback');
+            questionBlock.querySelectorAll('label').forEach(label => {
+                label.classList.remove('font-semibold', 'text-green-700', 'text-red-700');
+                const indicator = label.querySelector('.correct-indicator, .incorrect-indicator');
+                if(indicator) indicator.remove();
+            });
+            if (explanationDiv) explanationDiv.style.display = 'none';
+
+            if (selectedRadio) {
+                const userAnswer = selectedRadio.value;
+                const userSelectedLabel = selectedRadio.parentElement;
+
+                if (userAnswer === correctAnswerValue) {
+                    questionBlock.classList.add('correct-answer-feedback');
+                    userSelectedLabel.classList.add('font-semibold', 'text-green-700');
+                    const indicator = document.createElement('span');
+                    indicator.className = 'correct-indicator';
+                    userSelectedLabel.appendChild(indicator);
+                } else {
+                    questionBlock.classList.add('incorrect-answer-feedback');
+                    userSelectedLabel.classList.add('font-semibold', 'text-red-700');
+                    const indicator = document.createElement('span');
+                    indicator.className = 'incorrect-indicator';
+                    userSelectedLabel.appendChild(indicator);
+                    
+                    const correctRadio = questionBlock.querySelector(`input[name="${questionBlockId}_ans"][value="${correctAnswerValue}"]`);
+                    if (correctRadio && correctRadio.parentElement) {
+                        correctRadio.parentElement.classList.add('font-semibold', 'text-green-700');
+                         const correctIndicator = document.createElement('span');
+                         correctIndicator.className = 'correct-indicator';
+                         correctRadio.parentElement.appendChild(correctIndicator);
+                    }
+                }
+            } else { 
+                questionBlock.classList.add('incorrect-answer-feedback');
+                const correctRadio = questionBlock.querySelector(`input[name="${questionBlockId}_ans"][value="${correctAnswerValue}"]`);
+                if (correctRadio && correctRadio.parentElement) {
+                    correctRadio.parentElement.classList.add('font-semibold', 'text-green-700');
+                    const correctIndicator = document.createElement('span');
+                    correctIndicator.className = 'correct-indicator';
+                    correctRadio.parentElement.appendChild(correctIndicator);
+                }
+            }
+            if (explanationDiv) explanationDiv.style.display = 'block';
+        }
+
+        // --- Inverse Square Law Simulator Logic ---
+        let distanceSliderISL, currentDistanceDisplayISL, currentDistanceVisISL, doseRateDisplayISL;
+        let detectorElementISL, sourceElementISL, visualizationAreaISL, radiationFieldISL, distanceLabelVis; // Added radiationFieldISL
+        let doseBarISL, doseBarLabelISL, refDoseDisplayISL, refDistDisplayISL;
+
+        const I1_SIM = 100.0; 
+        const d1_SIM = 1.0;   
+
+        function calculateISLDoseRate(d2_val) {
+            if (d2_val <= 0) return Infinity; 
+            return I1_SIM * Math.pow(d1_SIM / d2_val, 2);
+        }
+
+        function updateISLSimulatorVisuals() {
+            if (!distanceSliderISL || !visualizationAreaISL || !sourceElementISL || !detectorElementISL || !radiationFieldISL) return; 
+
+            const d2 = parseFloat(distanceSliderISL.value);
+            const I2 = calculateISLDoseRate(d2);
+
+            currentDistanceDisplayISL.textContent = d2.toFixed(1);
+            if(currentDistanceVisISL) currentDistanceVisISL.textContent = d2.toFixed(1);
+            doseRateDisplayISL.textContent = I2.toFixed(1);
+
+            const areaWidth = visualizationAreaISL.offsetWidth;
+            const sourceIconWidth = sourceElementISL.offsetWidth;
+            const detectorWidth = detectorElementISL.offsetWidth;
+            const sourceLeftOffset = sourceElementISL.offsetLeft;
+            
+            const minSliderVal = parseFloat(distanceSliderISL.min);
+            const maxSliderVal = parseFloat(distanceSliderISL.max);
+            
+            const padding = 20; 
+            const movableWidth = areaWidth - sourceIconWidth - detectorWidth - padding - sourceLeftOffset; // Adjusted movableWidth
+            
+            const relativePosition = (d2 - minSliderVal) / (maxSliderVal - minSliderVal); 
+            let detectorLeftPos = sourceLeftOffset + sourceIconWidth + (relativePosition * movableWidth);
+            
+            detectorElementISL.style.left = `${detectorLeftPos}px`;
+            
+            // Update radiation field visualization
+            const fieldStart = sourceLeftOffset + sourceIconWidth;
+            const fieldWidth = Math.max(0, detectorLeftPos - fieldStart + (detectorWidth / 2)); // Extend to center of detector
+            radiationFieldISL.style.left = `${fieldStart}px`;
+            radiationFieldISL.style.width = `${fieldWidth}px`;
+            // Adjust clip-path for divergence: make the end wider relative to the start
+            const divergenceFactor = 1 + (d2 / maxSliderVal) * 0.8; // Max divergence makes end 80% wider than base
+            radiationFieldISL.style.clipPath = `polygon(0 20%, ${fieldWidth}px ${20 - (divergenceFactor-1)*10}%, ${fieldWidth}px ${80 + (divergenceFactor-1)*10}%, 0 80%)`;
+
+
+            if(distanceLabelVis) { // Update distance label position
+                 distanceLabelVis.style.left = `${fieldStart + fieldWidth / 2}px`;
+                 distanceLabelVis.textContent = `${d2.toFixed(1)} m`;
+            }
+
+
+            // Update dose bar color and detector color based on intensity
+            const maxDoseForColor = calculateISLDoseRate(minSliderVal); // Dose at closest distance
+            const doseRatio = I2 / maxDoseForColor;
+
+            if (doseRatio > 0.66) { // High intensity
+                doseBarISL.style.backgroundColor = '#ef4444'; // red-500
+                detectorElementISL.style.backgroundColor = '#f87171'; // red-400 (lighter red)
+            } else if (doseRatio > 0.33) { // Medium intensity
+                doseBarISL.style.backgroundColor = '#f59e0b'; // amber-500
+                detectorElementISL.style.backgroundColor = '#fbbf24'; // amber-400
+            } else { // Low intensity
+                doseBarISL.style.backgroundColor = '#22c55e'; // green-500
+                detectorElementISL.style.backgroundColor = '#4ade80'; // green-400
+            }
+            
+            let relativeDosePercent = (I2 / maxDoseForColor) * 100;
+            relativeDosePercent = Math.min(100, Math.max(0, relativeDosePercent)); 
+            doseBarISL.style.height = `${relativeDosePercent}%`;
+
+            const percentOfReferenceI1 = (I2 / I1_SIM) * 100;
+            doseBarLabelISL.textContent = `${percentOfReferenceI1.toFixed(0)}%`;
+        }
+
+        function initializeISLSimulator() {
+            distanceSliderISL = document.getElementById('distance-slider');
+            currentDistanceDisplayISL = document.getElementById('current-distance-sim');
+            currentDistanceVisISL = document.getElementById('current-distance-vis');
+            doseRateDisplayISL = document.getElementById('dose-rate-sim');
+            detectorElementISL = document.getElementById('detector');
+            sourceElementISL = document.getElementById('source');
+            visualizationAreaISL = document.getElementById('visualization-area');
+            radiationFieldISL = document.getElementById('radiation-field'); // Get the new field element
+            distanceLabelVis = document.getElementById('distance-label-vis'); 
+            doseBarISL = document.getElementById('dose-bar');
+            doseBarLabelISL = document.getElementById('dose-bar-label');
+            refDoseDisplayISL = document.getElementById('ref-dose-sim');
+            refDistDisplayISL = document.getElementById('ref-dist-sim');
+
+            if (!distanceSliderISL) {
+                console.error("ISL Simulator elements not found on Page 8.");
+                return;
+            }
+
+            if (refDoseDisplayISL) refDoseDisplayISL.textContent = I1_SIM.toFixed(1);
+            if (refDistDisplayISL) refDistDisplayISL.textContent = d1_SIM.toFixed(1);
+
+            distanceSliderISL.addEventListener('input', updateISLSimulatorVisuals);
+            
+            setTimeout(updateISLSimulatorVisuals, 150); 
+            window.addEventListener('resize', updateISLSimulatorVisuals); 
+        }
+
+        function generateCertificate() {
+            const nameInput = document.getElementById('userNameForCertificate');
+            const name = nameInput.value.trim();
+            
+            if (name === "") {
+                nameInput.classList.add('border-red-500');
+                certificateErrorMessage.textContent = "Please enter your name to generate the certificate.";
+                certificateErrorMessage.style.display = 'block';
+                return;
+            }
+            nameInput.classList.remove('border-red-500');
+            certificateErrorMessage.style.display = 'none';
+
+            const today = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const formattedDate = today.toLocaleDateString(undefined, options);
+
+            document.getElementById('certificateNameDisplay').textContent = name;
+            // For this activity, there's no explicit "score", so we'll omit it from the certificate.
+            // If you add scoring to the worksheet later, this can be updated.
+            // document.getElementById('certificateScoreDisplay').textContent = `Completed Activity`; 
+            document.getElementById('certificateDateDisplay').textContent = "Completed on: " + formattedDate;
+            document.getElementById('printableCertificate').style.display = 'flex';
+            document.getElementById('printCertificateButtonTrigger').style.display = 'inline-block';
+        }
+        
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        displayLessonPage(); 
+    </script>
+</body>
+</html>
