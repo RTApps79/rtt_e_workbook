@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QA: CT Simulator & Linac</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .selected-option {
+            background-color: #e0f2fe; /* Tailwind sky-100 */
+            border-color: #38bdf8; /* Tailwind sky-400 */
+        }
+        .correct-answer-feedback {
+            background-color: #dcfce7 !important; /* Tailwind green-100 */
+            border-left-color: #22c55e !important; /* Tailwind green-500 */
+        }
+        .incorrect-answer-feedback {
+            background-color: #fee2e2 !important; /* Tailwind red-100 */
+            border-left-color: #ef4444 !important; /* Tailwind red-500 */
+        }
+        .correct-indicator::after {
+            content: '✔ Correct';
+            color: #16a34a; /* Tailwind green-600 */
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .incorrect-indicator::after {
+            content: '✖ Incorrect';
+            color: #dc2626; /* Tailwind red-600 */
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .correct-option-text {
+            font-weight: bold;
+            color: #15803d; /* Tailwind green-700 */
+        }
+        .external-link-icon::after {
+            content: ' ↗';
+            font-size: 0.8em;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+        }
+        th, td {
+            border: 1px solid #e5e7eb; /* Tailwind gray-200 */
+            padding: 0.5rem 0.75rem;
+            text-align: left;
+            font-size: 0.875rem; /* Tailwind text-sm */
+        }
+        th {
+            background-color: #f3f4f6; /* Tailwind gray-100 */
+            font-weight: 600; /* Tailwind font-semibold */
+        }
+
+        /* Print Styles */
+        @media print {
+            body { background-color: #fff; margin: 10px; padding: 0; font-size: 10pt; }
+            .main-content-wrapper, .flip-lesson-container { box-shadow: none !important; border: none !important; width: 100%; max-width: 100%; padding: 5px; margin-bottom: 15px;}
+            .lesson-navigation-bar, .check-page-answers-button, .nav-links-header, .print-button-container, .activity-links-container { display: none !important; }
+            .lesson-page { page-break-inside: avoid; border: 1px solid #eee !important; }
+            .interactive-question-block {background: #fff !important; border: 1px solid #ccc !important; }
+            h1, h2, h3, h4 { color: #000 !important; border-color: #000 !important; margin-bottom: 10px; padding-bottom: 3px;}
+            .explanation-text { display: none !important; }
+            .external-link-icon::after { content: '';} 
+            a {text-decoration: none; color: #000 !important;}
+            table, th, td { border: 1px solid #ccc !important; color: #000 !important;}
+            th { background-color: #eee !important;}
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 flex flex-col min-h-screen">
+
+    <header class="bg-white shadow-md sticky top-0 z-50 nav-links-header">
+        <div class="container mx-auto px-6 py-3 flex flex-col sm:flex-row justify-between items-center">
+            <h1 class="text-xl font-bold text-purple-700 mb-2 sm:mb-0">Quality Assurance: CT & Linac</h1>
+            <div class="flex flex-wrap justify-center sm:justify-end space-x-2">
+                {/* Updated link to point to Quality Management and Safety module index */}
+                <a href="../index.html" class="text-xs sm:text-sm bg-purple-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-purple-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to Quality Management & Safety
+                </a>
+                <a href="../../index.html" class="text-xs sm:text-sm bg-slate-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-slate-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to Main Workbook
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto max-w-4xl px-4 sm:px-6 py-8 flex-grow main-content-wrapper">
+        <div class="bg-white p-6 sm:p-8 rounded-xl shadow-xl">
+            <h1 class="text-3xl font-bold text-purple-700 mb-6 text-center border-b-2 border-purple-300 pb-4">Quality Assurance in Radiation Therapy: CT Simulator & Linear Accelerator</h1>
+
+            <div class="flip-lesson-container bg-purple-50 p-4 sm:p-6 rounded-lg shadow-md mb-8 border border-purple-200">
+                <h2 class="text-2xl font-semibold text-purple-600 mb-4">Interactive Lesson Overview</h2>
+
+                <div id="lesson-page-1" class="lesson-page active bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[450px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 1: Purpose, Task & Criteria (TILT Framework)</h3>
+                    <p class="mb-3 text-slate-700">Welcome, Radiation Therapist! This lesson focuses on the critical daily Quality Assurance (QA) procedures for CT Simulators and Linear Accelerators (Linacs) that you will be responsible for performing. Ensuring equipment functions correctly and accurately is paramount for patient safety and effective treatment.</p>
+                    
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Purpose: Why This Matters</h4>
+                        <p class="text-sm text-slate-600">You will learn the "what, why, and how" of daily QA tests. This knowledge is essential to:
+                            <ul class="list-disc list-inside text-slate-600 space-y-1 text-xs ml-4 my-1">
+                                <li>Guarantee the safety of patients and staff.</li>
+                                <li>Ensure accurate and precise delivery of radiation treatments as planned.</li>
+                                <li>Comply with regulatory requirements and professional standards.</li>
+                                <li>Identify potential equipment malfunctions early to prevent errors.</li>
+                                <li>Understand your role within the larger QA program managed by medical physicists.</li>
+                            </ul>
+                        </p>
+                    </div>
+
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Task: What You Will Do</h4>
+                        <p class="text-sm text-slate-600">In this lesson, you will:</p>
+                        <ul class="list-disc list-inside text-slate-600 space-y-1 text-sm ml-4">
+                            <li>Review the principles of QA in radiation therapy.</li>
+                            <li>Learn the specific daily QA tests for CT Simulators and Linacs.</li>
+                            <li>Understand the acceptable tolerances for these tests.</li>
+                            <li>Identify common troubleshooting steps for out-of-tolerance results.</li>
+                            <li>Recognize when to escalate issues to a medical physicist.</li>
+                            <li>Answer "Quick Check" questions to assess your understanding.</li>
+                        </ul>
+                    </div>
+
+                    <div class="p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Criteria for Success: How You'll Know You've Learned</h4>
+                        <p class="text-sm text-slate-600">By the end of this lesson, you should be able to:</p>
+                        <ul class="list-disc list-inside text-slate-600 space-y-1 text-sm ml-4">
+                            <li>List the key daily QA checks for CT Simulators and Linacs performed by RTTs.</li>
+                            <li>State the typical tolerances for these daily checks.</li>
+                            <li>Describe appropriate actions to take if a QA test is out of tolerance.</li>
+                            <li>Explain the importance of accurate QA documentation.</li>
+                            <li>Differentiate between RTT daily QA responsibilities and physicist monthly/annual QA.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="lesson-page-2" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 2: Introduction to Quality Assurance (QA) Principles</h3>
+                    <p class="mb-3 text-slate-700"><strong>Quality Assurance (QA)</strong> in radiation therapy encompasses all planned and systematic actions necessary to provide adequate confidence that a facility, system, or component will perform satisfactorily and safely, meeting specified quality standards. It's a comprehensive program designed to ensure consistency in equipment performance and treatment delivery.</p>
+                    <p class="mb-3 text-slate-700"><strong>Why is QA Critical in Radiation Therapy?</strong></p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li><strong>Patient Safety:</strong> The primary goal. Errors in radiation delivery can have severe consequences.</li>
+                        <li><strong>Treatment Accuracy:</strong> Ensures the prescribed dose is delivered to the correct location.</li>
+                        <li><strong>Consistency:</strong> Maintains consistent performance of equipment over time.</li>
+                        <li><strong>Regulatory Compliance:</strong> Meets requirements set by bodies like the NRC, state agencies, and accrediting organizations (e.g., ACR, ASTRO).</li>
+                        <li><strong>Professional Standards:</strong> Adheres to guidelines from organizations like the American Association of Physicists in Medicine (AAPM), such as Task Group reports (e.g., TG-40, TG-142 for Linac QA).</li>
+                    </ul>
+                    <p class="mb-3 text-slate-700"><strong>Tolerances and Action Levels:</strong></p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li><strong>Tolerance:</strong> The acceptable range of deviation for a specific QA test. If a measurement falls outside this range, action is required.</li>
+                        <li><strong>Action Level:</strong> A predefined value or set of conditions that, if exceeded, requires specific corrective actions, potentially including halting treatments until the issue is resolved.</li>
+                    </ul>
+                    <p class="mb-3 text-slate-700"><strong>Team Roles in QA:</strong></p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm">
+                        <li><strong>Radiation Therapists (RTTs):</strong> Perform daily QA checks on treatment and simulation equipment. They are the first line of defense in detecting issues.</li>
+                        <li><strong>Medical Physicists:</strong> Oversee the entire QA program, perform more extensive monthly and annual QA, calibrate equipment, troubleshoot complex issues, and ensure regulatory compliance.</li>
+                        <li><strong>Radiation Oncologists:</strong> Ultimately responsible for the safe and effective treatment of patients, relying on the QA program to ensure this.</li>
+                    </ul>
+                </div>
+
+                <div id="lesson-page-3" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 3: Daily QA for the CT Simulator (RTT Responsibilities)</h3>
+                    <p class="mb-3 text-slate-700">The CT Simulator is crucial for accurate treatment planning. Daily QA ensures its readiness and accuracy.</p>
+                    <h4 class="text-lg font-medium text-purple-600 mb-2">Key Daily CT Simulator QA Tests:</h4>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Test</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Purpose</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Typical Tolerance</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Basic Troubleshooting/Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">Warm-up X-ray Tube</td>
+                                    <td class="px-6 py-4">Ensures stable tube output and prolongs tube life.</td>
+                                    <td class="px-6 py-4">Follow manufacturer's procedure.</td>
+                                    <td class="px-6 py-4">If errors occur, note them and inform physicist.</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">Laser Alignment</td>
+                                    <td class="px-6 py-4">Verify wall, ceiling, and sagittal lasers align with imaging isocenter.</td>
+                                    <td class="px-6 py-4">± 2 mm</td>
+                                    <td class="px-6 py-4">Re-check. If still out, notify physicist. Do not use for patient setup if out of tolerance.</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">Image Quality (Water Phantom) - CT Number of Water</td>
+                                    <td class="px-6 py-4">Verify CT number accuracy.</td>
+                                    <td class="px-6 py-4">0 HU ± 3 HU (or facility specific, e.g. ±5 HU)</td>
+                                    <td class="px-6 py-4">Ensure phantom is correctly positioned. Re-scan. If still out, notify physicist.</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">Image Quality (Water Phantom) - Image Noise</td>
+                                    <td class="px-6 py-4">Assess consistency of image quality.</td>
+                                    <td class="px-6 py-4">Within baseline ± specified HU (facility specific, e.g., < 10 HU or % change)</td>
+                                    <td class="px-6 py-4">Ensure phantom is stable. Re-scan. If still out, notify physicist.</td>
+                                </tr>
+                                 <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">Image Quality (Water Phantom) - Field Uniformity</td>
+                                    <td class="px-6 py-4">Check for consistency across the image.</td>
+                                    <td class="px-6 py-4">Within ± 5 HU from center to periphery (facility specific)</td>
+                                    <td class="px-6 py-4">Re-scan. If artifacts or non-uniformity present, notify physicist.</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">Spatial Integrity / Localization Accuracy</td>
+                                    <td class="px-6 py-4">Verify accuracy of distance measurements on images (using phantom with known dimensions).</td>
+                                    <td class="px-6 py-4">± 1 mm (or facility specific)</td>
+                                    <td class="px-6 py-4">Re-measure carefully. If still out, notify physicist.</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">Safety Interlocks (e.g., Door)</td>
+                                    <td class="px-6 py-4">Ensure safety mechanisms are functional.</td>
+                                    <td class="px-6 py-4">Functional (Pass/Fail)</td>
+                                    <td class="px-6 py-4">If fails, do not operate. Notify physicist/engineer immediately.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-1">Note: Specific tests and tolerances may vary based on institutional protocols, equipment manufacturer recommendations, and regulatory requirements (e.g., AAPM TG-66 for CT simulator QA).</p>
+                    <div class="interactive-question-block mt-6 bg-purple-100 p-3 rounded-md border border-purple-300" id="q_page3_1">
+                        <p class="question-text font-semibold text-slate-700 mb-2">Quick Check: What is a typical daily tolerance for CT laser alignment?</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page3_1_ans" value="A" class="mr-2 accent-purple-600"> ± 5 mm</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page3_1_ans" value="B" class="mr-2 accent-purple-600"> ± 2 mm</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page3_1_ans" value="C" class="mr-2 accent-purple-600"> ± 0.5 mm</label>
+                        <div class="explanation-text text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">The correct answer is B. Laser alignment for CT simulators is typically checked daily with a tolerance of ± 2 mm.</div>
+                    </div>
+                    <button class="check-page-answers-button mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswer('q_page3_1', 'B')">Check Answer</button>
+                </div>
+
+                <div id="lesson-page-4" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 4: Daily QA for the Linac - Safety Checks (RTT)</h3>
+                    <p class="mb-3 text-slate-700">Safety is paramount. RTTs perform several daily checks to ensure the Linac's safety features are operational.</p>
+                    <h4 class="text-lg font-medium text-purple-600 mb-2">Key Daily Linac Safety QA Tests:</h4>
+                     <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Test</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Purpose</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tolerance</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action if Out of Tolerance</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">Door Interlock</td>
+                                    <td class="px-6 py-4">Ensures beam cannot be activated if door is open, and beam terminates if door opens during treatment.</td>
+                                    <td class="px-6 py-4">Functional (Pass/Fail)</td>
+                                    <td class="px-6 py-4">Do not treat. Notify physicist/engineer immediately.</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">Audiovisual Monitors</td>
+                                    <td class="px-6 py-4">Allows RTT to see and hear the patient during treatment.</td>
+                                    <td class="px-6 py-4">Functional (Pass/Fail)</td>
+                                    <td class="px-6 py-4">Do not treat if either system is non-functional. Notify physicist/engineer.</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">Warning Lights</td>
+                                    <td class="px-6 py-4">Indicate when radiation is being produced ("Beam On" lights).</td>
+                                    <td class="px-6 py-4">Functional (Pass/Fail)</td>
+                                    <td class="px-6 py-4">Notify physicist. Use caution; treatment may proceed if other safety measures are confirmed and policy allows.</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">Emergency Off Switches</td>
+                                    <td class="px-6 py-4">Allow immediate termination of radiation and machine power in an emergency.</td>
+                                    <td class="px-6 py-4">Functional (Pass/Fail - typically checked less frequently than daily by RTT, but RTTs must know locations & function)</td>
+                                    <td class="px-6 py-4">If known to be non-functional, do not treat. Notify physicist/engineer immediately.</td>
+                                </tr>
+                                 <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">Collision Avoidance System (Interlocks/Touch Guards)</td>
+                                    <td class="px-6 py-4">Prevents gantry/couch/imaging arms from colliding with patient or each other.</td>
+                                    <td class="px-6 py-4">Functional (Pass/Fail)</td>
+                                    <td class="px-6 py-4">Do not treat. Notify physicist/engineer immediately.</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">Room Lasers (Alignment with Isocenter)</td>
+                                    <td class="px-6 py-4">Ensure accurate patient positioning relative to the machine isocenter.</td>
+                                    <td class="px-6 py-4">± 2 mm (or facility specific)</td>
+                                    <td class="px-6 py-4">Re-check. If still out, notify physicist. Do not use for patient setup if out of tolerance.</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">Optical Distance Indicator (ODI) / Rangefinder</td>
+                                    <td class="px-6 py-4">Measures distance from source to patient surface or isocenter.</td>
+                                    <td class="px-6 py-4">± 2 mm (or facility specific)</td>
+                                    <td class="px-6 py-4">Re-check. If still out, notify physicist.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                     <div class="interactive-question-block mt-6 bg-purple-100 p-3 rounded-md border border-purple-300" id="q_page4_1">
+                        <p class="question-text font-semibold text-slate-700 mb-2">Quick Check: If the treatment room door interlock fails its daily check, what is the immediate action for the RTT?</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page4_1_ans" value="A" class="mr-2 accent-purple-600"> Proceed with treatments but be extra cautious.</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page4_1_ans" value="B" class="mr-2 accent-purple-600"> Try to fix the interlock themselves.</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page4_1_ans" value="C" class="mr-2 accent-purple-600"> Do not treat patients and notify the physicist/engineer immediately.</label>
+                        <div class="explanation-text text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">The correct answer is C. A failed door interlock is a critical safety issue. Treatments must not proceed until it is fixed by qualified personnel.</div>
+                    </div>
+                    <button class="check-page-answers-button mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswer('q_page4_1', 'C')">Check Answer</button>
+                </div>
+
+                <div id="lesson-page-5" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 5: Daily QA for the Linac - Dosimetry Checks (RTT)</h3>
+                    <p class="mb-3 text-slate-700">Verifying the Linac's radiation output is a critical daily task for RTTs to ensure patients receive the prescribed dose.</p>
+                    <h4 class="text-lg font-medium text-purple-600 mb-2">Key Daily Linac Dosimetry QA Tests:</h4>
+                     <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Test</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Purpose</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Typical Tolerance</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action if Out of Tolerance</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">X-ray (Photon) Output Constancy</td>
+                                    <td class="px-6 py-4">Verify consistency of radiation output for each photon energy.</td>
+                                    <td class="px-6 py-4">± 3% from baseline</td>
+                                    <td class="px-6 py-4">Repeat measurement. If still out, notify physicist. Do not treat with affected energy.</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">Electron Output Constancy</td>
+                                    <td class="px-6 py-4">Verify consistency of radiation output for each electron energy.</td>
+                                    <td class="px-6 py-4">± 3% from baseline</td>
+                                    <td class="px-6 py-4">Repeat measurement. If still out, notify physicist. Do not treat with affected energy.</td>
+                                </tr>
+                                 <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">Backup Monitor Chamber Constancy</td>
+                                    <td class="px-6 py-4">Ensures the secondary dose monitoring system is functioning correctly relative to the primary.</td>
+                                    <td class="px-6 py-4">± 3-5% agreement or within facility limits</td>
+                                    <td class="px-6 py-4">Notify physicist for investigation.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="mb-3 text-slate-700 mt-4"><strong>Daily QA Devices:</strong> RTTs use specialized phantoms and detector arrays (e.g., Sun Nuclear Daily QA3, PTW DAVID) that can quickly measure output, flatness, symmetry, and sometimes field center for multiple energies.</p>
+                    <p class="mb-3 text-slate-700"><strong>Temperature and Pressure Corrections:</strong> If the daily QA device's ion chambers are not sealed, readings must be corrected for ambient temperature and pressure to ensure accurate dose measurement. The formula is: $C_{TP} = \frac{(T_{room} + 273.15)}{(22 + 273.15)} \times \frac{101.33}{P_{room}}$, where $T_{room}$ is in Celsius and $P_{room}$ is in kPa (or equivalent for mmHg). Many modern devices perform these corrections automatically or guide the user.</p>
+                    <p class="mb-3 text-slate-700"><strong>Troubleshooting Output Issues:</strong></p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm">
+                        <li>Ensure QA device is set up correctly and consistently each day.</li>
+                        <li>Verify correct energy and settings selected on Linac and QA device.</li>
+                        <li>Check for any obstructions in the beam path.</li>
+                        <li>If issues persist after re-measurement, do not proceed with treatment and immediately notify the medical physicist.</li>
+                    </ul>
+                     <div class="interactive-question-block mt-6 bg-purple-100 p-3 rounded-md border border-purple-300" id="q_page5_1">
+                        <p class="question-text font-semibold text-slate-700 mb-2">Quick Check: What is the typical daily tolerance for X-ray and electron output constancy on a Linac?</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page5_1_ans" value="A" class="mr-2 accent-purple-600"> ± 1%</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page5_1_ans" value="B" class="mr-2 accent-purple-600"> ± 3%</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page5_1_ans" value="C" class="mr-2 accent-purple-600"> ± 5%</label>
+                        <div class="explanation-text text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">The correct answer is B. A common tolerance for daily output constancy for both photons and electrons is ± 3%.</div>
+                    </div>
+                    <button class="check-page-answers-button mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswer('q_page5_1', 'B')">Check Answer</button>
+                </div>
+
+                <div id="lesson-page-6" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 6: Daily QA for the Linac - Mechanical & Imaging Checks (RTT)</h3>
+                    <p class="mb-3 text-slate-700">Ensuring the mechanical accuracy of the Linac and basic functionality of its imaging systems is also part of the RTT's daily routine.</p>
+                    <h4 class="text-lg font-medium text-purple-600 mb-2">Key Daily Linac Mechanical & Imaging QA Tests:</h4>
+                     <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Test</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Purpose</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Typical Tolerance</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action if Out of Tolerance</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">Light Field / Radiation Field Coincidence</td>
+                                    <td class="px-6 py-4">Ensures the light field accurately represents the radiation field. (Often a qualitative daily check by RTT, quantitative by physicist monthly).</td>
+                                    <td class="px-6 py-4">Visual check for gross misalignment; Quantitative: ± 2 mm or 1% per side</td>
+                                    <td class="px-6 py-4">Notify physicist if any obvious discrepancy.</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">Collimator Size Indicator</td>
+                                    <td class="px-6 py-4">Verifies digital readouts match the projected light field size.</td>
+                                    <td class="px-6 py-4">± 2 mm per jaw (or facility specific)</td>
+                                    <td class="px-6 py-4">Re-check. Notify physicist.</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">Gantry & Collimator Angle Indicators</td>
+                                    <td class="px-6 py-4">Ensures displayed angles match actual gantry/collimator positions.</td>
+                                    <td class="px-6 py-4">± 1 degree</td>
+                                    <td class="px-6 py-4">Check with a spirit level at cardinal angles. Notify physicist.</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">Treatment Couch Position Indicators & Locks</td>
+                                    <td class="px-6 py-4">Verify accuracy of couch position readouts and functionality of locks.</td>
+                                    <td class="px-6 py-4">Position: ± 2 mm (or facility specific); Locks: Functional</td>
+                                    <td class="px-6 py-4">Notify physicist/engineer.</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">Imaging System Functionality (OBI/EPID)</td>
+                                    <td class="px-6 py-4">Basic check that imaging arms deploy/retract, images can be acquired.</td>
+                                    <td class="px-6 py-4">Functional (Pass/Fail)</td>
+                                    <td class="px-6 py-4">Notify physicist/engineer.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="mb-3 text-slate-700 mt-4"><strong>Troubleshooting Mechanical/Imaging Issues:</strong></p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm">
+                        <li>Simple issues like a loose connection might be identifiable, but RTTs should not attempt repairs beyond their training.</li>
+                        <li>Always verify readings with a secondary method if possible (e.g., spirit level for angles, ruler for field size).</li>
+                        <li>Clearly document the issue and report to the physicist or service engineer promptly.</li>
+                    </ul>
+                     <div class="interactive-question-block mt-6 bg-purple-100 p-3 rounded-md border border-purple-300" id="q_page6_1">
+                        <p class="question-text font-semibold text-slate-700 mb-2">Quick Check: What is a typical daily tolerance for the gantry and collimator angle indicators on a Linac?</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page6_1_ans" value="A" class="mr-2 accent-purple-600"> ± 0.5 degrees</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page6_1_ans" value="B" class="mr-2 accent-purple-600"> ± 1 degree</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page6_1_ans" value="C" class="mr-2 accent-purple-600"> ± 2 degrees</label>
+                        <div class="explanation-text text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">The correct answer is B. The gantry and collimator angle indicators are typically checked against a spirit level with a tolerance of ± 1 degree.</div>
+                    </div>
+                    <button class="check-page-answers-button mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswer('q_page6_1', 'B')">Check Answer</button>
+                </div>
+
+                <div id="lesson-page-7" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 7: Documentation & Action for Daily QA</h3>
+                    <p class="mb-3 text-slate-700">Performing daily QA tests is only part of the responsibility; accurate and diligent documentation is equally crucial.</p>
+                    <h4 class="text-lg font-medium text-purple-600 mb-2">Importance of QA Documentation:</h4>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li><strong>Record of Performance:</strong> Provides a historical record of equipment performance, allowing for trend analysis to predict potential issues.</li>
+                        <li><strong>Legal Record:</strong> Serves as legal documentation that QA was performed and the machine was operating within acceptable limits.</li>
+                        <li><strong>Compliance:</strong> Required by regulatory and accrediting bodies.</li>
+                        <li><strong>Communication:</strong> Informs physicists and engineers of machine status and any actions taken.</li>
+                    </ul>
+                    <h4 class="text-lg font-medium text-purple-600 mb-2">What to Document:</h4>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li>Date and time of QA.</li>
+                        <li>Initials/name of the RTT performing the QA.</li>
+                        <li>Specific tests performed.</li>
+                        <li>Measured values for each test.</li>
+                        <li>Whether each test is within tolerance (Pass/Fail).</li>
+                        <li>Any corrective actions taken if a test was initially out of tolerance but resolved.</li>
+                        <li>Notification to physicist if a test remains out of tolerance.</li>
+                        <li>Ambient conditions (temperature, pressure) if manual corrections are applied.</li>
+                    </ul>
+                    <p class="mb-3 text-slate-700">Departments will have specific QA forms or electronic systems for recording this data. It's vital to fill these out completely and legibly every day before patient treatments begin.</p>
+                    <h4 class="text-lg font-medium text-purple-600 mb-2">Procedures for Out-of-Tolerance Results:</h4>
+                    <ol class="list-decimal list-inside text-slate-700 space-y-1 text-sm">
+                        <li><strong>Repeat the Measurement:</strong> The first step is always to carefully repeat the test to rule out user error or a transient issue. Ensure the setup is correct.</li>
+                        <li><strong>Verify with a Secondary Method (if possible):</strong> For example, if a digital angle readout is suspect, check with a spirit level.</li>
+                        <li><strong>Notify the Medical Physicist Immediately:</strong> If the test remains out of tolerance after re-measurement, the physicist must be informed.</li>
+                        <li><strong>Do NOT Treat Patients:</strong> If a critical QA parameter (especially safety or dosimetry related) is out of tolerance and cannot be immediately rectified and verified by a physicist, patient treatments on that machine or with that energy/modality must be held.</li>
+                        <li><strong>Document Everything:</strong> Record the out-of-tolerance readings, the re-measurements, who was notified, and what actions were taken.</li>
+                    </ol>
+                </div>
+
+                <div id="lesson-page-8" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 8: Overview of Monthly & Annual QA (Physicist's Role)</h3>
+                    <p class="mb-3 text-slate-700">While Radiation Therapists are responsible for daily QA, a comprehensive QA program involves more extensive testing performed by qualified Medical Physicists at less frequent intervals (typically monthly and annually).</p>
+                    <p class="mb-3 text-slate-700">The RTT's daily checks act as a crucial first alert, but the physicist's tests delve deeper into the machine's performance and calibration.</p>
+                    <h4 class="text-lg font-medium text-purple-600 mb-2">Monthly QA by Medical Physicist (Examples):</h4>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li>More comprehensive dosimetry checks: Output calibration for all energies, flatness, symmetry, energy verification.</li>
+                        <li>Mechanical checks: Isocenter stability with gantry/collimator/couch rotation, coincidence of light/radiation fields, jaw position indicators, MLC accuracy (e.g., picket fence test for IMRT).</li>
+                        <li>Safety interlocks: Thorough testing of all safety systems.</li>
+                        <li>Imaging systems (OBI/EPID): Geometric accuracy, image quality parameters (spatial resolution, contrast, noise).</li>
+                    </ul>
+                    <h4 class="text-lg font-medium text-purple-600 mb-2">Annual QA by Medical Physicist (Examples):</h4>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li>Full recalibration of dosimetry systems if needed.</li>
+                        <li>Detailed characterization of all radiation beams.</li>
+                        <li>Comprehensive mechanical alignment and stability checks.</li>
+                        <li>In-depth testing of all imaging systems and their integration with the treatment machine.</li>
+                        <li>Verification of emergency procedures and safety systems.</li>
+                        <li>Review of the entire QA program and records.</li>
+                    </ul>
+                    <p class="text-slate-700 text-sm">The Medical Physicist uses specialized equipment and procedures for these tests, adhering to guidelines from bodies like the AAPM (e.g., TG-142 report for Linac QA, TG-66 for CT Simulator QA). RTTs may assist physicists during these procedures, providing an excellent learning opportunity.</p>
+                    <p class="text-slate-700 text-sm mt-2">Understanding that daily QA is part of a larger, robust program helps RTTs appreciate the significance of their daily diligence in maintaining a safe and effective treatment environment.</p>
+                </div>
+
+                <div id="lesson-page-9" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 9: Conclusion & Further Learning</h3>
+                    <p class="mb-3 text-slate-700">Performing daily Quality Assurance on the CT Simulator and Linear Accelerator is a cornerstone of the Radiation Therapist's professional responsibilities. These routine checks are vital for ensuring that every patient receives their radiation treatment safely, accurately, and consistently as prescribed.</p>
+                    <p class="mb-3 text-slate-700"><strong>Key Takeaways for RTTs:</strong></p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li><strong>Consistency is Key:</strong> Perform QA procedures in the exact same manner every day.</li>
+                        <li><strong>Attention to Detail:</strong> Small deviations can indicate larger problems. Be meticulous.</li>
+                        <li><strong>Know Your Tolerances:</strong> Understand what is acceptable and what requires action.</li>
+                        <li><strong>Document Accurately:</strong> Your records are critical legal and clinical documents.</li>
+                        <li><strong>Communicate Effectively:</strong> Promptly report any out-of-tolerance conditions or concerns to the medical physicist.</li>
+                        <li><strong>Patient Safety First:</strong> Never proceed with patient treatment if critical QA parameters are not met.</li>
+                    </ul>
+                    <p class="mb-3 text-slate-700">By diligently performing daily QA, RTTs play an indispensable role in the overall quality management program of a radiation oncology department, directly contributing to the safety and efficacy of cancer treatments.</p>
+                    
+                    <h4 class="text-lg font-medium text-purple-600 mt-6 mb-2">Further Learning & Resources:</h4>
+                     <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm">
+                        <li>AAPM Task Group Reports (e.g., TG-142 for Linac QA, TG-66 for CT Simulator QA) - often available via AAPM website or institutional access.</li>
+                        <li>Your specific department's QA policy and procedure manual.</li>
+                        <li>Equipment manufacturer's documentation and training materials.</li>
+                        <li>Continuing education courses offered by organizations like ASRT.</li>
+                    </ul>
+                     <p class="mt-4 text-slate-700 text-sm">This lesson provides a foundation. Continuous learning and adherence to established protocols are essential throughout your career.</p>
+                </div>
+
+
+                <div class="lesson-navigation-bar text-center mt-6">
+                    <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled aria-label="Go to Previous Lesson Page" class="bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors disabled:bg-slate-300 text-sm">Previous Page</button>
+                    <span class="page-indicator mx-2 sm:mx-4 text-sm text-slate-600" id="lessonPageIndicator">Page 1 of 9</span>
+                    <button id="nextLessonPage" onclick="changeLessonPage(1)" aria-label="Go to Next Lesson Page" class="bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors text-sm">Next Page</button>
+                </div>
+            </div>
+
+            <div class="print-button-container text-center mt-8">
+                <button onclick="window.print()" class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-6 rounded-lg text-sm transition-colors">Print Lesson</button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-slate-800 text-slate-300 py-6 mt-auto text-center">
+        <div class="container mx-auto px-6">
+            <p class="text-sm">&copy; <span id="currentYear"></span> Radiation Therapy E-Workbook. RTApps All Rights Reserved.</p>
+            <p class="text-xs mt-1">Quality Assurance Lesson</p>
+        </div>
+    </footer>
+
+    <script>
+        let currentLessonPage = 1;
+        const totalLessonPages = 9; 
+        const lessonPages = document.querySelectorAll('.lesson-page');
+        const prevLessonButton = document.getElementById('prevLessonPage');
+        const nextLessonButton = document.getElementById('nextLessonPage');
+        const lessonPageIndicator = document.getElementById('lessonPageIndicator');
+
+        const correctAnswers = {
+            'q_page3_1': 'B', // CT Laser
+            'q_page4_1': 'C', // Linac Door Interlock
+            'q_page5_1': 'B', // Linac Output
+            'q_page6_1': 'B'  // Linac Gantry/Coll Angle
+        };
+
+        function displayLessonPage() {
+            lessonPages.forEach((page, index) => {
+                page.style.display = (index === currentLessonPage - 1) ? 'block' : 'none';
+            });
+            prevLessonButton.disabled = currentLessonPage === 1;
+            nextLessonButton.disabled = currentLessonPage === totalLessonPages;
+            lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
+        }
+
+        function changeLessonPage(direction) {
+            currentLessonPage += direction;
+            displayLessonPage();
+        }
+
+        function checkPageAnswer(questionBlockId, correctAnswerValue) {
+            const questionBlock = document.getElementById(questionBlockId);
+            if (!questionBlock) return;
+
+            const selectedRadio = questionBlock.querySelector(`input[name="${questionBlockId}_ans"]:checked`);
+            const explanationDiv = questionBlock.querySelector('.explanation-text');
+            
+            questionBlock.classList.remove('correct-answer-feedback', 'incorrect-answer-feedback');
+            questionBlock.querySelectorAll('label').forEach(label => {
+                label.classList.remove('font-semibold', 'text-green-700', 'text-red-700');
+                const indicator = label.querySelector('.correct-indicator, .incorrect-indicator');
+                if(indicator) indicator.remove();
+            });
+            if (explanationDiv) explanationDiv.style.display = 'none';
+
+            if (selectedRadio) {
+                const userAnswer = selectedRadio.value;
+                const userSelectedLabel = selectedRadio.parentElement;
+
+                if (userAnswer === correctAnswerValue) {
+                    questionBlock.classList.add('correct-answer-feedback');
+                    userSelectedLabel.classList.add('font-semibold', 'text-green-700');
+                    const indicator = document.createElement('span');
+                    indicator.className = 'correct-indicator';
+                    userSelectedLabel.appendChild(indicator);
+                } else {
+                    questionBlock.classList.add('incorrect-answer-feedback');
+                    userSelectedLabel.classList.add('font-semibold', 'text-red-700');
+                    const indicator = document.createElement('span');
+                    indicator.className = 'incorrect-indicator';
+                    userSelectedLabel.appendChild(indicator);
+                    
+                    const correctRadio = questionBlock.querySelector(`input[name="${questionBlockId}_ans"][value="${correctAnswerValue}"]`);
+                    if (correctRadio && correctRadio.parentElement) {
+                        correctRadio.parentElement.classList.add('font-semibold', 'text-green-700');
+                         const correctIndicator = document.createElement('span');
+                         correctIndicator.className = 'correct-indicator';
+                         correctRadio.parentElement.appendChild(correctIndicator);
+                    }
+                }
+            } else { 
+                questionBlock.classList.add('incorrect-answer-feedback');
+                const correctRadio = questionBlock.querySelector(`input[name="${questionBlockId}_ans"][value="${correctAnswerValue}"]`);
+                if (correctRadio && correctRadio.parentElement) {
+                    correctRadio.parentElement.classList.add('font-semibold', 'text-green-700');
+                    const correctIndicator = document.createElement('span');
+                    correctIndicator.className = 'correct-indicator';
+                    correctRadio.parentElement.appendChild(correctIndicator);
+                }
+            }
+            if (explanationDiv) explanationDiv.style.display = 'block';
+        }
+        
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        displayLessonPage();
+    </script>
+
+</body>
+</html>
