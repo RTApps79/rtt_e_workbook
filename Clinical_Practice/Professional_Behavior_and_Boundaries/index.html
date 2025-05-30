@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Boundaries and Dual Relationships</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .selected-option {
+            background-color: #e0f2fe; /* Tailwind sky-100 */
+            border-color: #38bdf8; /* Tailwind sky-400 */
+        }
+        .correct-answer-feedback { /* Renamed from .correct-answer to avoid conflict if used elsewhere */
+            background-color: #dcfce7 !important; /* Tailwind green-100 */
+            border-left-color: #22c55e !important; /* Tailwind green-500 */
+        }
+        .incorrect-answer-feedback { /* Renamed from .incorrect-answer */
+            background-color: #fee2e2 !important; /* Tailwind red-100 */
+            border-left-color: #ef4444 !important; /* Tailwind red-500 */
+        }
+        .correct-indicator::after {
+            content: '✔ Correct';
+            color: #16a34a; /* Tailwind green-600 */
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .incorrect-indicator::after {
+            content: '✖ Incorrect';
+            color: #dc2626; /* Tailwind red-600 */
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .correct-option-text { /* For highlighting the correct option text during feedback */
+            font-weight: bold;
+            color: #15803d; /* Tailwind green-700 */
+        }
+
+        /* Print Styles */
+        @media print {
+            body { background-color: #fff; margin: 10px; padding: 0; font-size: 10pt; }
+            .main-content-wrapper, .flip-lesson-container { box-shadow: none !important; border: none !important; width: 100%; max-width: 100%; padding: 5px; margin-bottom: 15px;}
+            .lesson-navigation-bar, .check-page-answers-button, .nav-links-header, .print-button-container { display: none !important; }
+            .lesson-page { page-break-inside: avoid; border: 1px solid #eee !important; }
+            .interactive-question-block {background: #fff !important; border: 1px solid #ccc !important; }
+            h1, h2, h3, h4 { color: #000 !important; border-color: #000 !important; margin-bottom: 10px; padding-bottom: 3px;}
+            .explanation-text { display: none !important; } /* Hide explanations in print */
+            textarea { background-color: #f0f0f0 !important; border: 1px solid #999 !important; }
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 flex flex-col min-h-screen">
+
+    <header class="bg-white shadow-md sticky top-0 z-50 nav-links-header">
+        <div class="container mx-auto px-6 py-3 flex flex-col sm:flex-row justify-between items-center">
+            <h1 class="text-xl font-bold text-purple-700 mb-2 sm:mb-0">Professional Boundaries Lesson</h1>
+            <div class="flex flex-wrap justify-center sm:justify-end space-x-2">
+                {/* Updated link to point to Clinical Practice module index */}
+                <a href="../index.html" class="text-xs sm:text-sm bg-purple-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-purple-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to Clinical Practice
+                </a>
+                <a href="../../index.html" class="text-xs sm:text-sm bg-slate-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-slate-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to Main Workbook
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto max-w-4xl px-4 sm:px-6 py-8 flex-grow main-content-wrapper">
+        <div class="bg-white p-6 sm:p-8 rounded-xl shadow-xl">
+            <h1 class="text-3xl font-bold text-purple-700 mb-6 text-center border-b-2 border-purple-300 pb-4">Professional Boundaries and Dual Relationships</h1>
+
+            <div class="flip-lesson-container bg-purple-50 p-4 sm:p-6 rounded-lg shadow-md mb-8 border border-purple-200">
+                <h2 class="text-2xl font-semibold text-purple-600 mb-4">Interactive Lesson Overview</h2>
+
+                <div id="lesson-page-1" class="lesson-page active bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 1: Introduction to Professional Boundaries</h3>
+                    <p class="mb-3 text-slate-700">Welcome! This lesson explores the critical concepts of professional boundaries and dual relationships in the context of radiation therapy. Maintaining these boundaries is essential for ethical practice, patient safety, and preserving the trust inherent in the therapist-patient relationship.</p>
+                    <p class="mb-3 text-slate-700"><strong>What are Professional Boundaries?</strong><br>Professional boundaries are the limits that define a safe, therapeutic, and professional relationship between a healthcare provider (like an RTT) and a patient. These boundaries are based on trust, respect, and the professional's duty of care. They distinguish the professional relationship from social, romantic, or business relationships.</p>
+                    <p class="mb-3 text-slate-700"><strong>Why are they important in Radiation Therapy?</strong></p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li>Patients undergoing radiation therapy are often vulnerable due to their illness, treatment side effects, and emotional distress.</li>
+                        <li>A clear power imbalance exists; the RTT has specialized knowledge and authority.</li>
+                        <li>Maintaining boundaries protects patients from potential harm or exploitation.</li>
+                        <li>It ensures the RTT's objectivity and ability to provide the best possible care.</li>
+                        <li>It upholds the integrity and trustworthiness of the radiation therapy profession.</li>
+                    </ul>
+                    <p class="text-slate-700 text-sm">The ARRT Code of Ethics, particularly <span class="font-semibold">Principle 1</span> ("The radiologic technologist acts in a professional manner...") and <span class="font-semibold">Principle 9</span> ("The radiologic technologist respects confidences... and reveals confidential information only as required by law or to protect the welfare of the individual or the community."), underpin the need for strong professional boundaries.</p>
+                    
+                    <div class="interactive-question-block mt-6 bg-purple-100 p-3 rounded-md border border-purple-300" id="q_page1_1">
+                        <p class="question-text font-semibold text-slate-700 mb-2">Quick Check: Which of the following best defines a professional boundary in healthcare?</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page1_1_ans" value="A" class="mr-2 accent-purple-600"> A flexible guideline that can often be ignored.</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page1_1_ans" value="B" class="mr-2 accent-purple-600"> The physical distance maintained between a therapist and patient.</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page1_1_ans" value="C" class="mr-2 accent-purple-600"> Limits defining a safe, therapeutic, and professional relationship, based on trust and duty of care.</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page1_1_ans" value="D" class="mr-2 accent-purple-600"> Rules that only apply outside of the treatment room.</label>
+                        <div class="explanation-text text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">The correct answer is C. Professional boundaries are essential limits ensuring the relationship remains therapeutic and safe.</div>
+                    </div>
+                    <button class="check-page-answers-button mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswer('q_page1_1', 'C')">Check Answer</button>
+                </div>
+
+                <div id="lesson-page-2" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 2: Understanding Dual Relationships</h3>
+                    <p class="mb-3 text-slate-700">A <span class="font-semibold">dual relationship</span> (or multiple relationship) occurs when a professional (e.g., an RTT) has another, significantly different relationship with a patient in addition to the therapeutic one. This second relationship could be social, familial, romantic, or financial.</p>
+                    <p class="mb-3 text-slate-700"><strong>Why are Dual Relationships Problematic?</strong></p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li><strong>Power Imbalance:</strong> The inherent power differential in the therapist-patient relationship can make the secondary relationship exploitative or coercive, even unintentionally.</li>
+                        <li><strong>Loss of Objectivity:</strong> Personal involvement can cloud professional judgment, potentially leading to biased treatment decisions or compromised care.</li>
+                        <li><strong>Potential for Harm:</strong> Patients can be harmed emotionally or financially if the dual relationship sours or if their needs are not prioritized.</li>
+                        <li><strong>Compromised Therapeutic Relationship:</strong> The trust and focus of the therapeutic relationship can be diluted or damaged.</li>
+                        <li><strong>Ethical Violations:</strong> Dual relationships often violate professional codes of ethics and can lead to disciplinary action.</li>
+                    </ul>
+                    <p class="mb-3 text-slate-700"><strong>Examples of Dual Relationships to Avoid:</strong></p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm">
+                        <li>Entering into a romantic or sexual relationship with a current patient (universally unethical).</li>
+                        <li>Going into business with a patient.</li>
+                        <li>Treating close friends or family members (can be problematic; often requires careful consideration and adherence to policy).</li>
+                        <li>Developing close personal friendships with current patients outside of the clinical setting.</li>
+                    </ul>
+                     <div class="interactive-question-block mt-6 bg-purple-100 p-3 rounded-md border border-purple-300" id="q_page2_1">
+                        <p class="question-text font-semibold text-slate-700 mb-2">Quick Check: Which scenario most clearly describes a problematic dual relationship for an RTT?</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page2_1_ans" value="A" class="mr-2 accent-purple-600"> An RTT providing care to a patient they met for the first time that day.</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page2_1_ans" value="B" class="mr-2 accent-purple-600"> An RTT accepting a small, sealed box of chocolates from a patient on their last day of treatment, as per hospital policy.</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page2_1_ans" value="C" class="mr-2 accent-purple-600"> An RTT starting a romantic relationship with a current patient they are actively treating.</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page2_1_ans" value="D" class="mr-2 accent-purple-600"> An RTT attending a hospital-organized cancer survivor event where former patients are present.</label>
+                        <div class="explanation-text text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">The correct answer is C. Romantic relationships with current patients are a clear and serious ethical violation due to the power imbalance and potential for exploitation.</div>
+                    </div>
+                    <button class="check-page-answers-button mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswer('q_page2_1', 'C')">Check Answer</button>
+                </div>
+                
+                <div id="lesson-page-3" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 3: Boundary Crossings vs. Violations</h3>
+                    <p class="mb-3 text-slate-700">It's important to distinguish between boundary <span class="font-semibold">crossings</span> and boundary <span class="font-semibold">violations</span>.</p>
+                    <p class="mb-3 text-slate-700"><strong>Boundary Crossing:</strong></p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li>A deviation from standard therapeutic activity that is brief, non-exploitative, and may not necessarily be harmful.</li>
+                        <li>Sometimes, a crossing might even be therapeutic if handled thoughtfully and in the patient's best interest (e.g., briefly attending a patient's wedding or funeral if the relationship was long-standing and it aligns with institutional policy and professional judgment).</li>
+                        <li>Crossings require careful consideration and should be rare. They always carry a risk of blurring lines.</li>
+                        <li>Example: An RTT briefly shares a general, positive personal experience to build rapport, without oversharing or shifting focus from the patient.</li>
+                    </ul>
+                    <p class="mb-3 text-slate-700"><strong>Boundary Violation:</strong></p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li>A more serious breach that is typically harmful, exploitative, or significantly blurs the professional lines.</li>
+                        <li>Violations can cause distress to the patient, compromise their care, and damage the therapeutic relationship.</li>
+                        <li>They often involve a misuse of the therapist's power.</li>
+                        <li>Examples: Engaging in a sexual relationship with a patient, borrowing money from a patient, sharing inappropriate confidential information about other patients or staff.</li>
+                    </ul>
+                    <p class="mb-3 text-slate-700"><span class="font-semibold">The "Slippery Slope":</span> Minor boundary crossings, if not managed carefully, can sometimes lead to more significant boundary violations over time. It's crucial to be vigilant and address even small deviations.</p>
+
+                    <div class="interactive-question-block mt-6 bg-purple-100 p-3 rounded-md border border-purple-300" id="q_page3_1">
+                        <p class="question-text font-semibold text-slate-700 mb-2">Quick Check: An RTT accepts a patient's friend request on Facebook while the patient is still undergoing treatment. This is most likely a:</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page3_1_ans" value="A" class="mr-2 accent-purple-600"> Boundary Violation, as it creates a dual relationship and privacy risks.</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page3_1_ans" value="B" class="mr-2 accent-purple-600"> Boundary Crossing, but acceptable if the RTT's profile is private.</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page3_1_ans" value="C" class="mr-2 accent-purple-600"> Neither, as social media is separate from professional life.</label>
+                        <div class="explanation-text text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">The correct answer is A. Friending a current patient on social media is generally considered a boundary violation (or at least a very risky crossing) as it blurs professional lines, can lead to inappropriate disclosures, and creates a dual relationship. Most ethical guidelines advise against this.</div>
+                    </div>
+                    <button class="check-page-answers-button mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswer('q_page3_1', 'A')">Check Answer</button>
+                </div>
+
+                <div id="lesson-page-4" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 4: Key Areas for Boundary Management</h3>
+                    <p class="mb-3 text-slate-700">RTTs must be mindful of boundaries in several key areas:</p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-2 text-sm mb-4">
+                        <li><strong>Self-Disclosure:</strong> Sharing personal information should be rare, brief, and for the patient's benefit (e.g., to normalize an experience), not to meet the RTT's own needs. Avoid oversharing or discussing personal problems.</li>
+                        <li><strong>Gifts:</strong> Policies on accepting gifts vary. Generally, decline expensive gifts. Small tokens of appreciation at the end of treatment might be acceptable if policy allows, but this can still be a gray area. Always prioritize patient well-being over any gift.</li>
+                        <li><strong>Social Media:</strong> Maintain separate professional and personal online presences. Avoid friending current patients. Be cautious about what you post publicly, as it can impact your professional image.</li>
+                        <li><strong>Physical Touch:</strong> Touch should be therapeutic, professional, and explained to the patient (e.g., positioning for treatment). Avoid touch that could be misinterpreted as personal or intimate. Always be sensitive to patient comfort and cultural differences. Obtain consent.</li>
+                        <li><strong>Language and Communication:</strong> Use professional language. Avoid overly casual slang, offensive jokes, or terms of endearment that might blur lines.</li>
+                        <li><strong>Post-Treatment Contact:</strong> While some contact with former patients may occur (e.g., at hospital events), avoid seeking out or developing personal relationships that could be seen as an extension of the therapeutic one, especially if vulnerability persists.</li>
+                    </ul>
+                     <div class="interactive-question-block mt-6 bg-purple-100 p-3 rounded-md border border-purple-300" id="q_page4_1">
+                        <p class="question-text font-semibold text-slate-700 mb-2">Quick Check: When is it generally considered most appropriate for an RTT to accept a gift from a patient?</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page4_1_ans" value="A" class="mr-2 accent-purple-600"> Any time a patient offers one, to be polite.</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page4_1_ans" value="B" class="mr-2 accent-purple-600"> Only if the gift is very expensive and valuable.</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page4_1_ans" value="C" class="mr-2 accent-purple-600"> A small, inexpensive token of appreciation at the very end of a long course of treatment, if institutional policy permits and it doesn't create discomfort or expectation.</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page4_1_ans" value="D" class="mr-2 accent-purple-600"> If the RTT is having financial difficulties.</label>
+                        <div class="explanation-text text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">The correct answer is C. Gift-giving is complex. The most acceptable scenario is a small token at the end of treatment, strictly adhering to institutional policy, and ensuring it doesn't create an obligation or blur boundaries. Options A, B, and D are inappropriate.</div>
+                    </div>
+                    <button class="check-page-answers-button mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswer('q_page4_1', 'C')">Check Answer</button>
+                </div>
+
+                <div id="lesson-page-5" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 5: Strategies for Maintaining Boundaries & Seeking Help</h3>
+                    <p class="mb-3 text-slate-700">Proactively managing boundaries is a key professional skill. Consider these strategies:</p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-2 text-sm mb-4">
+                        <li><strong>Self-Awareness:</strong> Regularly reflect on your interactions. Be aware of your own feelings, vulnerabilities, and potential biases that might lead to boundary issues.</li>
+                        <li><strong>Know and Adhere to Policies:</strong> Familiarize yourself with your institution's policies on professional conduct, gifts, social media, etc.</li>
+                        <li><strong>Clear Communication:</strong> Communicate your role and the nature of the therapeutic relationship clearly to patients from the outset.</li>
+                        <li><strong>Set Limits Respectfully:</strong> If a patient's behavior or request starts to cross a boundary, address it early, politely, and firmly. Explain the professional nature of the relationship.</li>
+                        <li><strong>Consultation:</strong> If you are unsure about a boundary issue, or if a situation feels uncomfortable, seek guidance from a trusted supervisor, experienced colleague, or ethics committee. Don't try to navigate complex situations alone.</li>
+                        <li><strong>Documentation:</strong> Document any significant boundary concerns or incidents according to institutional policy, especially if they involve patient safety or potential ethical breaches.</li>
+                        <li><strong>Continuing Education:</strong> Stay informed about ethical standards and best practices related to professional boundaries.</li>
+                    </ul>
+                     <div class="interactive-question-block mt-6 bg-purple-100 p-3 rounded-md border border-purple-300" id="q_page5_1">
+                        <p class="question-text font-semibold text-slate-700 mb-2">Quick Check: An RTT feels a patient is becoming overly friendly and asking very personal questions. What is the most appropriate initial step?</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page5_1_ans" value="A" class="mr-2 accent-purple-600"> Ignore the behavior and hope it stops.</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page5_1_ans" value="B" class="mr-2 accent-purple-600"> Immediately report the patient to hospital security.</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page5_1_ans" value="C" class="mr-2 accent-purple-600"> Politely and respectfully re-establish professional limits and, if unsure or the behavior persists, consult with a supervisor.</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page5_1_ans" value="D" class="mr-2 accent-purple-600"> Share equally personal information to make the patient feel comfortable.</label>
+                        <div class="explanation-text text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">The correct answer is C. The first step is usually to gently and professionally reassert boundaries. If the RTT is uncomfortable or the behavior continues, seeking consultation is crucial. Ignoring it or overreacting is generally not appropriate.</div>
+                    </div>
+                    <button class="check-page-answers-button mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswer('q_page5_1', 'C')">Check Answer</button>
+                </div>
+
+                <div id="lesson-page-6" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 6: Case Study Application</h3>
+                    <p class="text-slate-700 mb-4 text-sm">Apply your understanding of professional boundaries and dual relationships to the following scenarios. Consider the ethical principles involved, potential risks, and the most appropriate professional response based on ARRT Standards and best practices.</p>
+                    
+                    <div class="case-study-container mt-4 space-y-6">
+                        <div class="case-study bg-purple-100 p-4 rounded-lg border border-purple-200">
+                            <p class="font-semibold text-purple-700 mb-2">Scenario 1: The Birthday Invitation</p>
+                            <p class="text-slate-600 text-sm mb-2">A patient you have been treating for several weeks is very appreciative of your care and invites you to their upcoming 70th birthday party, which will be held after their treatment course is complete. How do you respond, and what ethical considerations should guide your decision?</p>
+                            <textarea class="w-full p-2 border border-slate-300 rounded-md text-sm focus:ring-purple-500 focus:border-purple-500 mt-1" rows="4" placeholder="Your analysis and response..."></textarea>
+                        </div>
+
+                        <div class="case-study bg-purple-100 p-4 rounded-lg border border-purple-200">
+                            <p class="font-semibold text-purple-700 mb-2">Scenario 2: The Oversharing Colleague</p>
+                            <p class="text-slate-600 text-sm mb-2">You notice that a colleague frequently shares extensive personal details about their financial struggles and relationship problems with patients during treatment sessions. Patients sometimes appear uncomfortable. How might this behavior impact professional boundaries, and what, if anything, should you do?</p>
+                            <textarea class="w-full p-2 border border-slate-300 rounded-md text-sm focus:ring-purple-500 focus:border-purple-500 mt-1" rows="4" placeholder="Your analysis and response..."></textarea>
+                        </div>
+
+                        <div class="case-study bg-purple-100 p-4 rounded-lg border border-purple-200">
+                            <p class="font-semibold text-purple-700 mb-2">Scenario 3: The Social Media Request</p>
+                            <p class="text-slate-600 text-sm mb-2">A few months after a younger patient completes their radiation therapy, they find you on a public social media platform and send a friend request along with a message asking for general advice about long-term side effects they are experiencing. How do you handle this situation while maintaining professional boundaries and ensuring the former patient gets appropriate care?</p>
+                            <textarea class="w-full p-2 border border-slate-300 rounded-md text-sm focus:ring-purple-500 focus:border-purple-500 mt-1" rows="4" placeholder="Your analysis and response..."></textarea>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="lesson-page-7" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 7: Conclusion & Further Resources</h3>
+                    <p class="mb-3 text-slate-700">Maintaining professional boundaries and avoiding problematic dual relationships are fundamental to ethical practice in radiation therapy. It requires ongoing self-reflection, adherence to professional codes (like the ARRT Standards of Ethics), knowledge of institutional policies, and a commitment to prioritizing patient welfare and trust above all else.</p>
+                    <p class="mb-3 text-slate-700">Key Takeaways:</p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li>Boundaries protect both the patient and the RTT.</li>
+                        <li>Dual relationships carry significant risks and are generally to be avoided.</li>
+                        <li>Be mindful of the "slippery slope" from minor crossings to more serious violations.</li>
+                        <li>Use strategies like clear communication, self-awareness, and adherence to policy.</li>
+                        <li>When in doubt, always consult with supervisors or trusted colleagues.</li>
+                    </ul>
+                    <p class="mb-3 text-slate-700">Your commitment to these principles ensures you provide the highest standard of care and uphold the integrity of your profession.</p>
+                    
+                    <h4 class="text-lg font-medium text-purple-600 mt-6 mb-2">Further Resources:</h4>
+                     <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm">
+                        <li><a href="https://www.arrt.org/ethics" target="_blank" rel="noopener noreferrer" class="text-purple-600 hover:underline">ARRT Standards of Ethics</a></li>
+                        <li><a href="https://www.asrt.org/main/standards-regulations/practice-standards" target="_blank" rel="noopener noreferrer" class="text-purple-600 hover:underline">ASRT Practice Standards for Medical Imaging and Radiation Therapy</a></li>
+                        {/* Add more relevant links if available */}
+                        <li>Your institutional policy manual on professional conduct and ethics.</li>
+                    </ul>
+                </div>
+
+                <div class="lesson-navigation-bar text-center mt-6">
+                    <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled aria-label="Go to Previous Lesson Page" class="bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors disabled:bg-slate-300 text-sm">Previous Page</button>
+                    <span class="page-indicator mx-2 sm:mx-4 text-sm text-slate-600" id="lessonPageIndicator">Page 1 of 7</span>
+                    <button id="nextLessonPage" onclick="changeLessonPage(1)" aria-label="Go to Next Lesson Page" class="bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors text-sm">Next Page</button>
+                </div>
+            </div>
+
+            <div class="print-button-container text-center mt-8">
+                <button onclick="window.print()" class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-6 rounded-lg text-sm transition-colors">Print Lesson & Responses</button>
+                <p class="text-xs text-slate-500 mt-1">(Enable "Background graphics" in print settings for best results if printing responses from textareas.)</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-slate-800 text-slate-300 py-6 mt-auto text-center">
+        <div class="container mx-auto px-6">
+            <p class="text-sm">&copy; <span id="currentYear"></span> Radiation Therapy E-Workbook. RTApps All Rights Reserved.</p>
+            <p class="text-xs mt-1">Professional Boundaries Lesson</p>
+        </div>
+    </footer>
+
+    <script>
+        let currentLessonPage = 1;
+        const totalLessonPages = 7; // Updated total pages
+        const lessonPages = document.querySelectorAll('.lesson-page');
+        const prevLessonButton = document.getElementById('prevLessonPage');
+        const nextLessonButton = document.getElementById('nextLessonPage');
+        const lessonPageIndicator = document.getElementById('lessonPageIndicator');
+
+        // Store correct answers for each question block ID
+        const correctAnswers = {
+            'q_page1_1': 'C',
+            'q_page2_1': 'C',
+            'q_page3_1': 'A',
+            'q_page4_1': 'C',
+            'q_page5_1': 'C'
+        };
+
+        function displayLessonPage() {
+            lessonPages.forEach((page, index) => {
+                page.style.display = (index === currentLessonPage - 1) ? 'block' : 'none';
+            });
+            prevLessonButton.disabled = currentLessonPage === 1;
+            nextLessonButton.disabled = currentLessonPage === totalLessonPages;
+            lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
+        }
+
+        function changeLessonPage(direction) {
+            currentLessonPage += direction;
+            displayLessonPage();
+        }
+
+        function checkPageAnswer(questionBlockId, correctAnswerValue) {
+            const questionBlock = document.getElementById(questionBlockId);
+            if (!questionBlock) return;
+
+            const selectedRadio = questionBlock.querySelector(`input[name="${questionBlockId}_ans"]:checked`);
+            const explanationDiv = questionBlock.querySelector('.explanation-text');
+            
+            // Reset previous feedback styles
+            questionBlock.classList.remove('correct-answer-feedback', 'incorrect-answer-feedback');
+            questionBlock.querySelectorAll('label').forEach(label => {
+                label.classList.remove('font-semibold', 'text-green-700', 'text-red-700');
+                const indicator = label.querySelector('.correct-indicator, .incorrect-indicator');
+                if(indicator) indicator.remove();
+            });
+            if (explanationDiv) explanationDiv.style.display = 'none';
+
+
+            if (selectedRadio) {
+                const userAnswer = selectedRadio.value;
+                const userSelectedLabel = selectedRadio.parentElement;
+
+                if (userAnswer === correctAnswerValue) {
+                    questionBlock.classList.add('correct-answer-feedback');
+                    userSelectedLabel.classList.add('font-semibold', 'text-green-700');
+                    const indicator = document.createElement('span');
+                    indicator.className = 'correct-indicator';
+                    userSelectedLabel.appendChild(indicator);
+                } else {
+                    questionBlock.classList.add('incorrect-answer-feedback');
+                    userSelectedLabel.classList.add('font-semibold', 'text-red-700');
+                    const indicator = document.createElement('span');
+                    indicator.className = 'incorrect-indicator';
+                    userSelectedLabel.appendChild(indicator);
+                    
+                    // Highlight the correct option
+                    const correctRadio = questionBlock.querySelector(`input[name="${questionBlockId}_ans"][value="${correctAnswerValue}"]`);
+                    if (correctRadio && correctRadio.parentElement) {
+                        correctRadio.parentElement.classList.add('font-semibold', 'text-green-700');
+                         const correctIndicator = document.createElement('span');
+                         correctIndicator.className = 'correct-indicator';
+                         correctRadio.parentElement.appendChild(correctIndicator);
+                    }
+                }
+            } else { // No answer selected
+                questionBlock.classList.add('incorrect-answer-feedback');
+                 // Highlight the correct option if nothing was selected
+                const correctRadio = questionBlock.querySelector(`input[name="${questionBlockId}_ans"][value="${correctAnswerValue}"]`);
+                if (correctRadio && correctRadio.parentElement) {
+                    correctRadio.parentElement.classList.add('font-semibold', 'text-green-700');
+                    const correctIndicator = document.createElement('span');
+                    correctIndicator.className = 'correct-indicator';
+                    correctRadio.parentElement.appendChild(correctIndicator);
+                }
+            }
+            if (explanationDiv) explanationDiv.style.display = 'block';
+        }
+        
+        // Initialize
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        displayLessonPage();
+    </script>
+
+</body>
+</html>
