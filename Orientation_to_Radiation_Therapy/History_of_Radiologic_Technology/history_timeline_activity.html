@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity: Radiologic History Timeline Challenge</title>
+    <style>
+        /* Shared CSS (as used before) */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; margin: 0; padding: 0; background-color: #f4f4f4; color: #333; display: flex; flex-direction: column; align-items: center; min-height: 100vh; position: relative; padding-bottom: 80px; }
+        .container { background-color: #fff; padding: 25px 35px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 90%; max-width: 800px; margin: 20px auto; }
+        h1, h2, h3 { color: #0056b3; }
+        h1 { text-align: center; border-bottom: 2px solid #0056b3; padding-bottom: 10px; }
+        h2 { margin-top: 30px; color: #003d7a; }
+        h3 { color: #004085; }
+        p, li { margin-bottom: 12px; font-size: 1.05em; }
+        ul { margin-bottom: 15px; padding-left: 25px; list-style: disc; }
+        button { background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 1em; margin: 5px; transition: background-color 0.2s; }
+        button:hover { background-color: #0056b3; }
+        button:disabled { background-color: #ccc; cursor: not-allowed; }
+        footer { position: absolute; bottom: 0; left: 0; width: 100%; text-align: center; padding: 15px 0; background-color: #e9ecef; color: #6c757d; font-size: 0.9em; border-top: 1px solid #dee2e6; }
+        .post-activity-nav { text-align: center; margin-top: 40px; padding: 20px; background-color: #f8f9fa; border-top: 1px solid #e9ecef; border-radius: 0 0 8px 8px; }
+        .post-activity-nav button { margin: 5px 15px; }
+        .post-activity-nav button.repeat { background-color: #28a745; }
+        .post-activity-nav button.repeat:hover { background-color: #218838; }
+        .post-activity-nav button.menu { background-color: #6c757d; }
+        .post-activity-nav button.menu:hover { background-color: #5a6268; }
+        #badge-section { margin-top: 30px; padding: 20px; background-color: #fff; border: 1px solid #ccc; text-align: center; display: none; }
+        #badge-input input { padding: 8px; margin-right: 10px; border: 1px solid #ccc; border-radius: 4px; }
+        .badge { width: 350px; height: 250px; border: 10px solid #0056b3; background-color: #e7f3ff; margin: 20px auto; padding: 30px; display: flex; flex-direction: column; justify-content: center; align-items: center; box-shadow: 3px 3px 8px rgba(0,0,0,0.2); font-family: 'Georgia', serif; text-align: center; }
+        .badge h4 { color: #003d7a; font-size: 1.5em; margin: 0; }
+        .badge .awardee { font-size: 1.3em; font-weight: bold; color: #17a2b8; margin: 15px 0; border-bottom: 1px dashed #17a2b8; padding-bottom: 5px; }
+        .badge .reason { font-size: 1.1em; margin: 10px 0; }
+        .badge .score { font-size: 1em; font-style: italic; color: #555; }
+        .badge .logo { font-size: 0.8em; margin-top: 15px; font-weight: bold; color: #0056b3; }
+        
+        /* Activity Specific Styles */
+        #start-screen-activity { background-color: #e7f3ff; border: 1px solid #b3d7ff; padding: 15px 25px; border-radius: 8px; margin-bottom: 30px; }
+        #start-screen-activity h3 { margin-top: 15px; border-bottom: 1px solid #b3d7ff; padding-bottom: 5px; }
+        #start-activity-btn { background-color: #28a745; font-size: 1.2em; padding: 12px 25px; display: block; margin: 25px auto 10px auto; }
+        #start-activity-btn:hover { background-color: #218838; }
+        
+        .question-item { margin-bottom: 20px; padding: 10px; background-color: #f9f9f9; border-radius: 5px; border: 1px solid #eee;}
+        .question-item p { font-weight: 500; }
+        .question-item select { padding: 8px; margin-top: 5px; width: 100%; max-width: 300px; border: 1px solid #ccc; border-radius: 4px; }
+        .feedback { margin-top: 5px; font-size: 0.9em; font-weight: bold; }
+        .correct { color: green; }
+        .incorrect { color: red; }
+        #activity-results { text-align: center; margin-top: 20px; display: none; }
+        #activity-results p {font-size: 1.2em; font-weight:bold;}
+
+        @media print {
+            body * { visibility: hidden; }
+            #badge-section, #badge-section * { visibility: visible; }
+            .badge { visibility: visible; position: absolute; left: 0; top: 0; width: 90%; height: auto; margin: 5%; padding: 20px; box-shadow: none; border: 5px solid #000; color: #000; }
+            .badge h4, .badge .awardee, .badge .logo { color: #000; }
+            .badge .awardee { border-bottom: 1px dashed #000; }
+            #badge-input, .post-activity-nav, h1, h2, h3, .container > p, button:not(#printBadgeButton), footer, #start-screen-activity, #timeline-activity-area form { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Activity: Radiologic History Timeline Challenge ⏳</h1>
+
+        <div id="start-screen-activity">
+            <h2>Match the Milestone!</h2>
+            <h3>Purpose</h3>
+            <p>This activity will help you solidify your understanding of the key discoveries and advancements in the early history of radiologic technology.</p>
+            <h3>Task</h3>
+            <p>For each historical event or discovery listed, select the correct corresponding pioneer or approximate time period from the dropdown menu. After making all your selections, click "Check Answers" to see your score.</p>
+            <h3>Criteria for Success</h3>
+            <p>Accuracy in matching the events to their correct associations is key. A score of <span style="font-weight:bold;">80% or higher</span> will earn you a "History Buff Award" badge!</p>
+            <button id="start-activity-btn" onclick="startActivity()">Start Timeline Challenge</button>
+        </div>
+
+        <div id="timeline-activity-area" style="display: none;">
+            <form id="timeline-quiz-form">
+                </form>
+            <button type="button" onclick="checkTimelineAnswers()" style="display: block; margin: 20px auto;">Check Answers</button>
+            <div id="activity-results"><p id="activity-score"></p></div>
+        </div>
+
+        <div id="badge-section">
+            <h3>Congratulations! You've Earned an Award!</h3>
+            <div id="badge-input">
+                <label for="userNameForBadge">Enter Your Name:</label>
+                <input type="text" id="userNameForBadge" placeholder="Your Name Here">
+                <button onclick="generateBadge()">Generate Badge</button>
+            </div>
+            <div class="badge" id="printableBadge" style="display:none;">
+                <h4>History Buff Award</h4>
+                <p class="awardee" id="badgeName"></p>
+                <p class="reason">For excellent knowledge of key milestones in Radiologic History.</p>
+                <p class="score" id="badgeScore"></p>
+                <p class="logo">RTApps Learning</p>
+            </div>
+            <button id="printBadgeButton" onclick="window.print()" style="display:none;">Print Badge</button>
+        </div>
+
+        <div class="post-activity-nav" id="end-nav" style="display: none;">
+            <h3>What's Next?</h3>
+            <button class="menu" onclick="window.location.href='index.html'">Back to Orientation Menu</button> <button class="repeat" onclick="window.location.reload()">Try Again</button>
+            <button onclick="window.location.href='history_of_rad_tech_lesson.html#lesson-page-6'">Back to History Lesson</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; <span id="currentYear"></span> RTApps. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        const timelineEvents = [
+            { event: "Discovery of X-rays", answer: "Wilhelm Roentgen (1895)", options: ["Wilhelm Roentgen (1895)", "Marie Curie (1898)", "Henri Becquerel (1896)", "Early 1900s"] },
+            { event: "Discovery of natural radioactivity", answer: "Henri Becquerel (1896)", options: ["Wilhelm Roentgen (1895)", "Marie Curie (1898)", "Henri Becquerel (1896)", "1922"] },
+            { event: "Isolation of Radium and Polonium", answer: "Marie & Pierre Curie (c. 1898)", options: ["Wilhelm Roentgen (1895)", "Marie & Pierre Curie (c. 1898)", "Early Radiologists", "1950s"] },
+            { event: "First medical uses of X-rays for imaging bones", answer: "Late 1890s - Early 1900s", options: ["1895 only", "Late 1890s - Early 1900s", "1920s", "1940s"] },
+            { event: "Formation of the American Registry of X-Ray Technicians (ARRT precursor)", answer: "1922", options: ["1896", "1901", "1922", "1935"] },
+            { event: "Growing awareness of radiation hazards & 'martyrs of radiology'", answer: "Early 1900s", options: ["1895", "Early 1900s", "Mid 1900s", "Late 1900s"] }
+        ];
+
+        function shuffleArray(array) { // Fisher-Yates shuffle
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function startActivity() {
+            document.getElementById('start-screen-activity').style.display = 'none';
+            document.getElementById('timeline-activity-area').style.display = 'block';
+            populateTimelineQuiz();
+        }
+
+        function populateTimelineQuiz() {
+            const form = document.getElementById('timeline-quiz-form');
+            form.innerHTML = ''; // Clear previous questions
+            shuffleArray(timelineEvents); // Shuffle questions each time
+
+            timelineEvents.forEach((item, index) => {
+                const questionId = `event_${index}`;
+                let optionsHtml = `<option value="">Select correct match...</option>`;
+                // Shuffle options for each question
+                const shuffledOptions = [...item.options].sort(() => 0.5 - Math.random());
+                shuffledOptions.forEach(opt => {
+                    optionsHtml += `<option value="${opt}">${opt}</option>`;
+                });
+
+                form.innerHTML += `
+                    <div class="question-item" id="q-item-${index}">
+                        <p>${index + 1}. ${item.event}</p>
+                        <select id="${questionId}" name="${questionId}">
+                            ${optionsHtml}
+                        </select>
+                        <div class="feedback" id="feedback-${index}"></div>
+                    </div>
+                `;
+            });
+        }
+
+        function checkTimelineAnswers() {
+            let score = 0;
+            timelineEvents.forEach((item, index) => {
+                const selectElement = document.getElementById(`event_${index}`);
+                const feedbackElement = document.getElementById(`feedback-${index}`);
+                const questionItemElement = document.getElementById(`q-item-${index}`);
+
+                if (selectElement.value === item.answer) {
+                    score++;
+                    feedbackElement.textContent = "Correct!";
+                    feedbackElement.className = "feedback correct";
+                    questionItemElement.style.borderColor = "green";
+                } else {
+                    feedbackElement.textContent = `Incorrect. Correct was: ${item.answer}`;
+                    feedbackElement.className = "feedback incorrect";
+                    questionItemElement.style.borderColor = "red";
+                }
+            });
+
+            const percentage = Math.round((score / timelineEvents.length) * 100);
+            document.getElementById('activity-score').textContent = `Your Score: ${score} out of ${timelineEvents.length} (${percentage}%)`;
+            document.getElementById('activity-results').style.display = 'block';
+            document.getElementById('end-nav').style.display = 'block';
+
+            if (percentage >= 80) {
+                document.getElementById('badge-section').style.display = 'block';
+                window.finalScoreValue = percentage;
+            } else {
+                document.getElementById('badge-section').style.display = 'none';
+            }
+        }
+
+        function generateBadge() {
+            const name = document.getElementById('userNameForBadge').value;
+            if (name.trim() === "") { alert("Please enter your name for the badge."); return; }
+            document.getElementById('badgeName').textContent = name;
+            document.getElementById('badgeScore').textContent = `Achieved with a score of ${window.finalScoreValue}%`;
+            document.getElementById('printableBadge').style.display = 'flex';
+            document.getElementById('printBadgeButton').style.display = 'inline-block';
+        }
+
+        // Initial call if needed or for testing structure
+        // populateTimelineQuiz(); // Call it on start if not using a start button
+    </script>
+</body>
+</html>
