@@ -4,241 +4,219 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Study, Time & Stress Management for RTT Students</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Using the same base CSS as previous lessons for consistency */
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; margin: 0; padding: 0; background-color: #f4f4f4; color: #333; display: flex; flex-direction: column; align-items: center; min-height: 100vh; position: relative; padding-bottom: 60px; }
-        .container { background-color: #fff; padding: 25px 35px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 90%; max-width: 900px; margin: 20px auto; }
-        h1, h2, h3, h4 { color: #0056b3; }
-        h1 { text-align: center; border-bottom: 2px solid #0056b3; padding-bottom: 15px; margin-bottom: 30px; font-size: 2em; }
-        h2 { border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 30px; margin-bottom: 20px; color: #003d7a; font-size: 1.6em; }
-        h3 { color: #004085; margin-top: 25px; margin-bottom: 15px; font-size: 1.3em; }
-        h4 { color: #17a2b8; margin-top: 20px; margin-bottom: 10px; font-size: 1.1em; }
-        p, li { margin-bottom: 12px; font-size: 1.05em; }
-        ul, ol { margin-bottom: 15px; padding-left: 25px; list-style: disc; }
-        strong { font-weight: 600; }
-        .highlight { background-color: #e6f7ff; padding: 2px 5px; border-radius: 3px; font-weight: 600; }
-        .note { font-size: 0.9em; font-style: italic; color: #555; background-color: #f8f9fa; padding: 10px; border-left: 3px solid #6c757d; margin: 15px 0; border-radius: 4px; }
-        .activity-link-button { display: inline-block; background-color: #28a745; color: white; padding: 12px 25px; text-align: center; text-decoration: none; border-radius: 5px; font-size: 1.1em; margin-top: 15px; transition: background-color 0.2s; }
-        .activity-link-button:hover { background-color: #218838; }
-        .flip-lesson-container { border: 1px solid #b3d7ff; padding: 20px; border-radius: 8px; background-color: #f0f8ff; margin-bottom: 30px; }
-        .lesson-page { display: none; padding: 15px; border: 1px solid #ddeeff; background-color: #fff; border-radius: 5px; min-height: 480px; } /* Increased min-height */
-        .lesson-page.active { display: block; }
-        .lesson-navigation { text-align: center; margin-top: 20px; }
-        .lesson-navigation button { background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 1em; margin: 5px 10px; transition: background-color 0.2s; }
-        .lesson-navigation button:hover { background-color: #0056b3; }
-        .lesson-navigation button:disabled { background-color: #ccc; cursor: not-allowed; }
-        #backToMenuButton { background-color: #6c757d; }
-        #backToMenuButton:hover { background-color: #5a6268; }
-        .page-indicator { font-style: italic; color: #555; margin: 10px 0; }
-        .interactive-question-block { background: #f9f9f9; padding: 15px; margin: 20px 0; border: 1px solid #e0e0e0; border-radius: 8px; }
-        .interactive-question-block .question-text { font-weight: bold; margin-bottom: 8px; font-size: 1em; color: #555; }
-        .interactive-question-block label { display: block; margin-left: 0; padding: 8px 12px; border-radius: 5px; cursor: pointer; border: 1px solid transparent; margin-bottom: 5px; }
-        .interactive-question-block input[type="radio"] { margin-right: 10px; vertical-align: middle; }
-        .interactive-question-block label:hover { background-color: #f0f8ff; }
-        .feedback-correct { background-color: #e8f8f0 !important; border-left: 4px solid #2ecc71 !important; }
-        .feedback-incorrect { background-color: #fdedec !important; border-left: 4px solid #e74c3c !important; }
-        .feedback-correct label.correct-option, .feedback-incorrect label.correct-option { font-weight: bold; color: #1E8449; }
-        .feedback-incorrect label.selected-incorrect { color: #A93226; }
-        .explanation { font-size: 0.9em; color: #444; margin-top: 5px; padding-left: 20px;}
-        footer { position: absolute; bottom: 0; left: 0; width: 100%; text-align: center; padding: 15px 0; background-color: #e9ecef; color: #6c757d; font-size: 0.9em; border-top: 1px solid #dee2e6; }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Feedback styles from Modalities lesson */
+        .selected-option { background-color: #e0f2fe; border-color: #38bdf8; }
+        .correct-answer-feedback { background-color: #dcfce7 !important; border-left: 4px solid #22c55e !important;}
+        .incorrect-answer-feedback { background-color: #fee2e2 !important; border-left: 4px solid #ef4444 !important;}
+        .correct-indicator::after { content: '✔ Correct'; color: #16a34a; font-weight: bold; margin-left: 10px; }
+        .incorrect-indicator::after { content: '✖ Incorrect'; color: #dc2626; font-weight: bold; margin-left: 10px; }
+        .correct-option-text { font-weight: bold; color: #15803d; }
+
+        .highlight { /* Tailwind purple theme for highlight */
+            background-color: #ede9fe; /* purple-100 */
+            color: #5b21b6; /* purple-700 */
+            padding: 0.1em 0.3em;
+            border-radius: 0.25rem;
+            font-weight: 500;
+        }
+        .note { /* Tailwind slate theme for note */
+            font-size: 0.9em; font-style: italic; color: #4b5563; /* slate-600 */
+            background-color: #f3f4f6; /* slate-100 */
+            padding: 10px; border-left: 3px solid #6b7280; /* slate-500 */
+            margin: 15px 0; border-radius: 4px;
+        }
+        .activity-link-button { /* Green button for activities */
+            display: inline-block; background-color: #22c55e; /* green-500 */
+            color: white; padding: 12px 25px; text-align: center;
+            text-decoration: none; border-radius: 0.375rem; /* rounded-lg */
+            font-size: 1.1em; font-weight: 500; /* medium */
+            margin-top: 15px; transition: background-color 0.2s;
+        }
+        .activity-link-button:hover { background-color: #16a34a; /* green-600 */ }
+
+
+        /* Print Styles */
+        @media print {
+            body { background-color: #fff; margin: 10px; padding: 0; font-size: 10pt; }
+            .main-content-wrapper, .flip-lesson-container { box-shadow: none !important; border: none !important; width: 100%; max-width: 100%; padding: 5px; margin-bottom: 15px;}
+            .lesson-navigation-bar, .check-page-answers-button, .nav-links-header, .print-button-container { display: none !important; }
+            .lesson-page { page-break-inside: avoid; border: 1px solid #eee !important; }
+            .interactive-question-block {background: #fff !important; border: 1px solid #ccc !important; }
+            h1, h2, h3, h4 { color: #000 !important; border-color: #000 !important; margin-bottom: 10px; padding-bottom: 3px;}
+            .explanation-text { display: none !important; }
+            a {text-decoration: none; color: #000 !important;}
+        }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1>Navigating Success: Study, Time & Stress Management</h1>
+<body class="bg-slate-100 text-slate-800 flex flex-col min-h-screen">
 
-        <div class="flip-lesson-container">
-            <h2>Interactive Lesson for RTT Students</h2>
-
-            <div id="lesson-page-1" class="lesson-page active">
-                <h3>Page 1: Thriving in the Professional Phase</h3>
-                <h4>Purpose of This Lesson</h4>
-                <p>Welcome! This lesson is designed to equip you with effective study, time management, and stress management strategies. Our goal is to help you succeed in the demanding professional phase of your Radiation Therapy program, where you'll balance rigorous academics, essential clinical rotations, and your personal well-being.</p>
-                <h4>The Unique Challenge Ahead</h4>
-                <p>The professional phase of your education is a significant step up from typical undergraduate experiences. You're now expected to: </p>
-                <ul>
-                    <li>Engage in deeper, more applied learning beyond just class notes.</li>
-                    <li>Master complex clinical concepts and prepare for board exams.</li>
-                    <li>Demonstrate punctuality, professionalism, and active participation in clinical settings.</li>
-                    <li>Manage the emotional aspects of direct patient care, including working with individuals and families coping with cancer and the stages of grief.</li>
-                </ul>
-                <h4>Task: What You Will Do</h4>
-                <p>You will navigate through these pages to explore various techniques. Reflect on your current habits and identify strategies you can implement. At the end, you'll be guided to an activity to create a personalized success plan.</p>
-                <h4>Criteria for Success</h4>
-                <p>By the end of this lesson and the accompanying activity, you should be able to:
-                    <ul>
-                        <li>Identify at least 2-3 new study or time management strategies.</li>
-                        <li>Understand the importance of proactive planning for academic and clinical demands.</li>
-                        <li>Recognize key stress management techniques and resources.</li>
-                    </ul>
-                </p>
-            </div>
-
-            <div id="lesson-page-2" class="lesson-page">
-                <h3>Page 2: The Professional Phase Shift</h3>
-                <p>Entering the professional phase of your Radiation Therapy program marks a significant transition. It's more than just harder courses; it's a shift in expectation and responsibility.</p>
-                <h4>Beyond Undergraduate Studies:</h4>
-                <ul>
-                    <li><strong>Depth of Knowledge:</strong> You'll move from general concepts to specialized, in-depth knowledge critical for safe and effective patient care.</li>
-                    <li><strong>Application, Not Just Memorization:</strong> Success now hinges on your ability to apply learned concepts in real-world clinical scenarios, requiring critical thinking and problem-solving.</li>
-                    <li><strong>Professional Accountability:</strong> Your actions directly impact patient well-being. Punctuality, preparedness, ethical conduct, and a commitment to continuous learning are no longer optional – they are professional imperatives.</li>
-                </ul>
-                <h4>Why This Matters:</h4>
-                <p>Effective study skills, time management, and stress resilience are not just about getting good grades. They are foundational to: </p>
-                <ul>
-                    <li><span class="highlight">Patient Safety:</span> Ensuring you have the knowledge to make correct decisions and perform procedures accurately.</li>
-                    <li><span class="highlight">Quality of Care:</span> Being prepared and focused allows you to provide better support and care.</li>
-                    <li><span class="highlight">Your Well-being:</span> Preventing burnout and maintaining your own health so you can be an effective caregiver.</li>
-                </ul>
-                <p class="note">This phase demands a proactive and disciplined approach to your learning and personal management.</p>
-            </div>
-
-            <div id="lesson-page-3" class="lesson-page">
-                <h3>Page 3: Effective Study Strategies for RTTs</h3>
-                <p>The volume and complexity of information in radiation therapy require more than just re-reading notes. Adopt active learning techniques:</p>
-                <ul>
-                    <li><strong>Active Recall:</strong> Regularly test yourself. Don't just passively review.
-                        <ul>
-                            <li>Use flashcards (physical or digital like Anki/Quizlet).</li>
-                            <li>Try to explain concepts aloud to yourself or a study partner without looking at your notes.</li>
-                            <li>Work through practice questions from textbooks or review materials.</li>
-                        </ul>
-                    </li>
-                    <li><strong>Spaced Repetition:</strong> Review material at increasing intervals over time (e.g., after a day, then a few days, then a week). This dramatically improves long-term retention.</li>
-                    <li><strong>Interleaving:</strong> Mix up different topics or types of problems during a single study session, rather than blocking all of one topic together. This helps your brain differentiate concepts.</li>
-                    <li><strong>Concept Mapping/Mind Mapping:</strong> Visually connect ideas. Draw diagrams showing relationships between anatomical structures, treatment techniques, and side effects.</li>
-                    <li><strong>Deep Dive into Resources:</strong> Go beyond lecture slides. Engage with your textbooks, read assigned articles, and familiarize yourself with ARRT content specifications and professional guidelines.</li>
-                    <li><strong>Clinical Prep:</strong> Before clinical days, review relevant patient anatomy, common procedures for that rotation, and specific instructions or notes if available (always maintaining HIPAA compliance).</li>
-                </ul>
-                <h4>Quick Check!</h4>
-                <div class="interactive-question-block" id="lq_page3_1_block">
-                    <p class="question-text">Which study strategy involves reviewing material at progressively longer intervals to improve memory?</p>
-                    <label><input type="radio" name="lq_page3_1" value="A"> Active Recall</label>
-                    <label><input type="radio" name="lq_page3_1" value="B"> Spaced Repetition</label>
-                    <label><input type="radio" name="lq_page3_1" value="C"> Interleaving</label>
-                    <div class="explanation" style="display:none;">Correct! Spaced Repetition helps combat the "forgetting curve" by revisiting information strategically over time.</div>
-                </div>
-                <button class="check-page-answers" onclick="checkPageAnswers(3)">Check Answer</button>
-            </div>
-
-            <div id="lesson-page-4" class="lesson-page">
-                <h3>Page 4: Mastering Your Time</h3>
-                <p>With classes, labs, clinical hours, and study, time becomes your most precious resource. Proactive planning is essential.</p>
-                <ul>
-                    <li><strong>Use Planning Tools:</strong>
-                        <ul>
-                            <li>Digital calendars (Google Calendar, Outlook Calendar) for scheduling classes, clinicals, appointments, and study blocks. Set reminders!</li>
-                            <li>Physical planners or journals if you prefer a tactile approach.</li>
-                            <li>To-do list apps (Todoist, Microsoft To Do, Notion) or a simple notebook to track tasks.</li>
-                        </ul>
-                    </li>
-                    <li><strong>Weekly & Daily Planning:</strong>
-                        <ul>
-                            <li>At the start of each week, map out major commitments and deadlines. Allocate specific blocks for studying each subject and for clinical preparation.</li>
-                            <li>Each evening, plan your next day in more detail. This reduces morning stress and indecision.</li>
-                        </ul>
-                    </li>
-                    <li><strong>Prioritize Ruthlessly:</strong>
-                        <ul>
-                            <li>Use a system like the <span class="highlight">Eisenhower Matrix</span> (Urgent/Important) to decide what to tackle first.</li>
-                            <li>Not all tasks are created equal. Focus on high-impact activities.</li>
-                        </ul>
-                    </li>
-                    <li><strong>Break Down Large Tasks:</strong> Studying for a final exam or completing a large project can feel overwhelming. Break it into smaller, manageable steps and schedule time for each.</li>
-                    <li><strong>Batch Similar Tasks:</strong> Group similar activities together (e.g., running errands, answering emails) to improve efficiency.</li>
-                    <li><strong>Combat Procrastination:</strong>
-                        <ul>
-                            <li>Try the <span class="highlight">Pomodoro Technique</span>: Work in focused 25-minute intervals with short breaks.</li>
-                            <li>Identify *why* you're procrastinating and address the root cause.</li>
-                            <li>Start with the hardest task first (sometimes called "eating the frog").</li>
-                        </ul>
-                    </li>
-                    <li><strong>Schedule Breaks & Downtime:</strong> Constant work leads to burnout. Plan short breaks during study sessions and ensure you have some time each week for relaxation and activities you enjoy.</li>
-                </ul>
-            </div>
-
-            <div id="lesson-page-5" class="lesson-page">
-                <h3>Page 5: Managing Stress & Emotional Well-being</h3>
-                <p>The Radiation Therapy program is rewarding but also inherently stressful. You'll face academic pressures, the demands of clinical performance, and the emotional weight of caring for patients with serious illnesses.</p>
-                <h4>Acknowledge Your Stressors:</h4>
-                <ul>
-                    <li>Fear of failure (exams, clinical competencies).</li>
-                    <li>Time pressure and heavy workload.</li>
-                    <li>Witnessing patient suffering, anxiety, and grief.</li>
-                    <li>Interpersonal dynamics within the healthcare team.</li>
-                    <li>Balancing program demands with personal life.</li>
-                </ul>
-                <h4>Proactive Stress Management & Self-Care:</h4>
-                <ul>
-                    <li><strong>Prioritize Sleep:</strong> Aim for 7-9 hours. Sleep deprivation severely impacts learning, mood, and performance.</li>
-                    <li><strong>Nutrition & Hydration:</strong> Fuel your body and brain properly. Avoid excessive caffeine or sugar.</li>
-                    <li><strong>Physical Activity:</strong> Regular exercise is a powerful stress reliever. Even short walks can help.</li>
-                    <li><strong>Mindfulness & Relaxation:</strong>
-                        <ul>
-                            <li>Deep breathing exercises (e.g., box breathing).</li>
-                            <li>Short meditation sessions (apps like Headspace, Calm, or simple guided practices).</li>
-                            <li>Journaling to process thoughts and emotions.</li>
-                        </ul>
-                    </li>
-                    <li><strong>Maintain Hobbies & Social Connections:</strong> Make time, even if brief, for activities and people that bring you joy and support.</li>
-                    <li><strong>Build Your Support System:</strong> Connect with classmates, identify supportive faculty or clinical mentors, and lean on friends and family. Sharing your experiences can be very helpful.</li>
-                    <li><strong>Recognize Your Limits:</strong> It's okay to not be okay. Understand the signs of burnout (e.g., exhaustion, cynicism, reduced efficacy) or overwhelming stress.</li>
-                    <li><span class="highlight">Seek Help When Needed:</span> Know the resources available to you, such as university counseling services, student health, or program faculty who can offer guidance. There's strength in asking for support.</li>
-                </ul>
-            </div>
-
-            <div id="lesson-page-6" class="lesson-page">
-                <h3>Page 6: Practical Integration & Final Tips</h3>
-                <p>Here are some practical tips for weaving these strategies into your daily RTT student life:</p>
-                <h4>Integrating Study, Clinicals, and Life:</h4>
-                <ul>
-                    <li><strong>Smart Commuting:</strong> If you have a commute, consider using it for learning (e.g., listening to recorded lectures, reviewing flashcards if you're not driving).</li>
-                    <li><strong>Focused Blocks:</strong> When you study, minimize distractions. Find a quiet place, turn off notifications, and focus for set periods (e.g., Pomodoro).</li>
-                    <li><strong>Night-Before Prep:</strong> Lay out your uniform/scrubs, pack your lunch/snacks, and review your schedule for the next day. This reduces morning rush and anxiety.</li>
-                    <li><strong>Clinical "Down Time":</strong> Sometimes there are brief lulls in the clinical day. Use these moments to review patient charts (if appropriate and permitted), ask questions, or quickly review a concept.</li>
-                    <li><strong>Protect Your Downtime:</strong> When you schedule time off, truly disconnect. This is vital for recharging.</li>
-                    <li><strong>Learn to Say "No":</strong> You can't do everything. Politely decline extra commitments that will overextend you.</li>
-                    <li><strong>Know Your Productive Times:</strong> Are you a morning person or a night owl? Schedule your most demanding study tasks for when you're typically at your peak.</li>
-                </ul>
-                <h4>The Patient Care Aspect:</h4>
-                <p>Working with patients experiencing cancer and its associated emotions is a unique aspect of your journey. </p>
-                <ul>
-                    <li><strong>Practice Empathy & Active Listening:</strong> Truly hearing your patients can be supportive for them and help you understand their needs.</li>
-                    <li><strong>Maintain Professional Boundaries:</strong> It's important to be compassionate yet maintain professional distance to avoid emotional exhaustion.</li>
-                    <li><strong>Debrief When Needed:</strong> If you have a particularly challenging patient interaction, talk it through with a trusted colleague, instructor, or mentor (while maintaining patient confidentiality).</li>
-                    <li><strong>Remember Your "Why":</strong> Connecting back to your motivation for entering the field can be a powerful anchor during stressful times.</li>
-                </ul>
-                <p class="note">Developing these skills is an ongoing process. Be patient with yourself, celebrate small victories, and don't hesitate to adjust your strategies as you learn what works best for you.</p>
-            </div>
-
-            <div id="lesson-page-7" class="lesson-page">
-                <h3>Page 7: Summary & Your Personal Success Plan</h3>
-                <p>Successfully navigating your Radiation Therapy program involves more than just academic knowledge. It requires a proactive approach to:</p>
-                <ul>
-                    <li><span class="highlight">Effective Study Strategies:</span> Moving beyond passive review to active learning techniques.</li>
-                    <li><span class="highlight">Strategic Time Management:</span> Planning, prioritizing, and protecting your time.</li>
-                    <li><span class="highlight">Proactive Stress Management:</span> Caring for your own well-being so you can care for others.</li>
-                </ul>
-                <p>The challenges are real, but by implementing these strategies, you can build resilience, enhance your learning, and thrive both academically and clinically.</p>
-                <h4>Activity: Create Your Personal Success Plan</h4>
-                <p>Now it's time to put these ideas into practice. The following activity is a worksheet designed to help you reflect on your current habits and create a personalized plan for improvement. There are no right or wrong answers – the goal is honest self-assessment and actionable planning.</p>
-                <div style="text-align: center; margin-top: 30px;">
-                    <a href="personal_success_plan_activity.html" class="activity-link-button">Go to Personal Success Plan Activity</a>
-                </div>
-                <p class="mt-6">This activity will open in a new file. Make sure to save or print your plan once you've completed it!</p>
-            </div>
-
-            <div class="lesson-navigation">
-                <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled>Previous Page</button>
-                <button id="backToMenuButton" onclick="goBackToOrientationMenu()" style="display:none;">Back to Orientation Menu</button>
-                <span class="page-indicator" id="lessonPageIndicator">Page 1 of 7</span>
-                <button id="nextLessonPage" onclick="changeLessonPage(1)">Next Page</button>
+    <header class="bg-white shadow-md sticky top-0 z-50 nav-links-header">
+        <div class="container mx-auto px-6 py-3 flex flex-col sm:flex-row justify-between items-center">
+            <h1 class="text-xl font-bold text-purple-700 mb-2 sm:mb-0">Navigating Success: Study, Time & Stress Management</h1>
+            <div class="flex flex-wrap justify-center sm:justify-end space-x-2">
+                <a href="index.html" class="text-xs sm:text-sm bg-purple-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-purple-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to Orientation Menu
+                </a>
+                <a href="../index.html" class="text-xs sm:text-sm bg-slate-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-slate-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to Main Workbook
+                </a>
             </div>
         </div>
-    </div>
+    </header>
 
-    <footer>
-        <p>&copy; <span id="currentYear"></span> RTApps. All rights reserved.</p>
+    <main class="container mx-auto max-w-4xl px-4 sm:px-6 py-8 flex-grow main-content-wrapper">
+        <div class="bg-white p-6 sm:p-8 rounded-xl shadow-xl">
+            <h1 class="text-3xl font-bold text-purple-700 mb-6 text-center border-b-2 border-purple-300 pb-4">Navigating Success: Study, Time & Stress Management</h1>
+
+            <div class="flip-lesson-container bg-purple-50 p-4 sm:p-6 rounded-lg shadow-md mb-8 border border-purple-200">
+                <h2 class="text-2xl font-semibold text-purple-600 mb-4">Interactive Lesson for RTT Students</h2>
+
+                <div id="lesson-page-1" class="lesson-page active bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[480px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 1: Thriving in the Professional Phase</h3>
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Purpose: Why This Matters</h4>
+                        <p class="text-sm text-slate-600">This lesson equips you with strategies for study, time, and stress management crucial for succeeding in the demanding professional phase of your Radiation Therapy program, helping you balance academics, clinicals, and well-being.</p>
+                    </div>
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">The Unique Challenge Ahead</h4>
+                        <p class="text-sm text-slate-600">You're now expected to engage in deeper learning, master complex concepts for board exams, demonstrate high professionalism in clinical settings, and manage the emotional aspects of patient care, including grief.</p>
+                    </div>
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Task: What You Will Do</h4>
+                        <p class="text-sm text-slate-600">Explore techniques, reflect on habits, and create a personalized success plan via a linked activity.</p>
+                    </div>
+                    <div class="p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Criteria for Success: How You'll Know You've Learned</h4>
+                        <p class="text-sm text-slate-600">You'll be able to identify new strategies, understand proactive planning, and recognize stress management resources.</p>
+                    </div>
+                </div>
+
+                <div id="lesson-page-2" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[480px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 2: The Professional Phase Shift</h3>
+                    <p class="text-slate-700">This phase is a significant step up, demanding more than just memorization.</p>
+                    <h4 class="text-lg font-medium text-purple-600 my-2">Beyond Undergraduate Studies:</h4>
+                    <ul class="list-disc list-inside text-slate-600 space-y-1 text-sm mb-4">
+                        <li><strong>Depth of Knowledge:</strong> Specialized, in-depth clinical knowledge.</li>
+                        <li><strong>Application:</strong> Focus on applying concepts in real-world scenarios.</li>
+                        <li><strong>Professional Accountability:</strong> Punctuality, preparedness, ethics are paramount.</li>
+                    </ul>
+                    <h4 class="text-lg font-medium text-purple-600 my-2">Why This Matters:</h4>
+                    <p class="text-slate-700 text-sm">Effective skills here are foundational to:</p>
+                    <ul class="list-disc list-inside text-slate-600 space-y-1 text-sm">
+                        <li><span class="highlight">Patient Safety</span></li>
+                        <li><span class="highlight">Quality of Care</span></li>
+                        <li><span class="highlight">Your Well-being</span> & Preventing Burnout</li>
+                    </ul>
+                    <p class="note">A proactive, disciplined approach is key.</p>
+                </div>
+
+                <div id="lesson-page-3" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[480px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 3: Effective Study Strategies for RTTs</h3>
+                    <p class="text-slate-700">Adopt active learning techniques:</p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li><strong>Active Recall:</strong> Test yourself (flashcards, explain concepts aloud).</li>
+                        <li><strong>Spaced Repetition:</strong> Review material at increasing intervals.</li>
+                        <li><strong>Interleaving:</strong> Mix topics during study sessions.</li>
+                        <li><strong>Concept Mapping:</strong> Visually connect ideas.</li>
+                        <li><strong>Deep Dive into Resources:</strong> Textbooks, articles, ARRT specs.</li>
+                        <li><strong>Clinical Prep:</strong> Review relevant cases, procedures, anatomy.</li>
+                    </ul>
+                    <div class="interactive-question-block mt-6 bg-purple-50 p-3 rounded-md border border-purple-200" id="q_page3_1">
+                        <p class="question-text font-semibold text-slate-700 mb-2">Quick Check: Which study strategy involves reviewing material at progressively longer intervals to improve memory?</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-100 cursor-pointer"><input type="radio" name="q_page3_1_ans" value="A" class="mr-2 accent-purple-600"> Active Recall</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-100 cursor-pointer"><input type="radio" name="q_page3_1_ans" value="B" class="mr-2 accent-purple-600"> Spaced Repetition</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-100 cursor-pointer"><input type="radio" name="q_page3_1_ans" value="C" class="mr-2 accent-purple-600"> Interleaving</label>
+                        <div class="explanation-text text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">Correct! Spaced Repetition helps combat the "forgetting curve."</div>
+                    </div>
+                    <button class="check-page-answers-button mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswer('q_page3_1', 'B')">Check Answer</button>
+                </div>
+
+                <div id="lesson-page-4" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[480px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 4: Mastering Your Time</h3>
+                    <p class="text-slate-700">Proactive planning is essential for managing your packed schedule.</p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li><strong>Planning Tools:</strong> Digital calendars, planners, to-do apps.</li>
+                        <li><strong>Weekly & Daily Planning:</strong> Map commitments, allocate study blocks.</li>
+                        <li><strong>Prioritize:</strong> Use methods like the Eisenhower Matrix (Urgent/Important).</li>
+                        <li><strong>Break Down Tasks:</strong> Make large projects manageable.</li>
+                        <li><strong>Batch Similar Tasks:</strong> Improve efficiency.</li>
+                        <li><strong>Combat Procrastination:</strong> Try the Pomodoro Technique; address root causes.</li>
+                        <li><strong>Schedule Breaks:</strong> Essential for preventing burnout.</li>
+                    </ul>
+                    </div>
+
+                <div id="lesson-page-5" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[480px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 5: Managing Stress & Emotional Well-being</h3>
+                    <p class="text-slate-700">Acknowledge stressors: academic pressure, clinical demands, patient suffering.</p>
+                    <h4 class="text-lg font-medium text-purple-600 my-2">Proactive Stress Management & Self-Care:</h4>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li><strong>Sleep, Nutrition, Exercise:</strong> Prioritize these fundamentals.</li>
+                        <li><strong>Mindfulness & Relaxation:</strong> Deep breathing, meditation, journaling.</li>
+                        <li><strong>Hobbies & Social Connections:</strong> Make time for joy and support.</li>
+                        <li><strong>Build Your Support System:</strong> Peers, mentors, faculty, family.</li>
+                        <li><strong>Recognize Limits & Seek Help:</strong> Know signs of burnout and use available resources (counseling, etc.).</li>
+                    </ul>
+                    </div>
+
+                <div id="lesson-page-6" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[480px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 6: Practical Integration & Final Tips</h3>
+                    <h4 class="text-lg font-medium text-purple-600 my-2">Integrating Study, Clinicals, and Life:</h4>
+                     <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li>Use travel time wisely.</li>
+                        <li>Study in focused blocks, minimizing distractions.</li>
+                        <li>Prepare for the next day the night before.</li>
+                        <li>Utilize clinical "down time" for quick reviews or questions.</li>
+                        <li>Protect your downtime and learn to say "no" when overextended.</li>
+                        <li>Schedule tasks according to your peak productivity times.</li>
+                    </ul>
+                    <h4 class="text-lg font-medium text-purple-600 my-2">The Patient Care Aspect:</h4>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li>Practice empathy and active listening.</li>
+                        <li>Maintain professional boundaries to avoid emotional exhaustion.</li>
+                        <li>Debrief challenging experiences with trusted colleagues or mentors.</li>
+                        <li>Reconnect with your motivation for entering the field.</li>
+                    </ul>
+                    <p class="note">Developing these skills is an ongoing process. Be patient with yourself.</p>
+                </div>
+
+                <div id="lesson-page-7" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[480px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 7: Summary & Your Personal Success Plan</h3>
+                    <p class="text-slate-700">Success requires a proactive approach to study, time, and stress management.</p>
+                    <h4 class="text-lg font-medium text-purple-600 my-2">Activity: Create Your Personal Success Plan</h4>
+                    <p class="text-slate-700">This worksheet will help you reflect and create an actionable plan.</p>
+                    <div class="mt-6 text-center">
+                        <a href="personal_success_plan_activity.html" class="activity-link-button">
+                            Go to Personal Success Plan Activity
+                        </a>
+                    </div>
+                    <p class="mt-4 text-sm text-slate-500">Make sure to save or print your plan once completed!</p>
+                </div>
+
+                <div class="lesson-navigation-bar text-center mt-6">
+                    <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled class="bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors disabled:bg-slate-300 text-sm">Previous Page</button>
+                    <button id="backToMenuButton" onclick="goBackToOrientationMenu()" style="display:none;" class="bg-slate-500 text-white py-2 px-4 rounded-lg hover:bg-slate-600 transition-colors text-sm">Back to Orientation Menu</button>
+                    <span class="page-indicator mx-2 sm:mx-4 text-sm text-slate-600" id="lessonPageIndicator">Page 1 of 7</span>
+                    <button id="nextLessonPage" onclick="changeLessonPage(1)" class="bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors text-sm">Next Page</button>
+                </div>
+            </div>
+
+            <div class="print-button-container text-center mt-8">
+                <button onclick="window.print()" class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-6 rounded-lg text-sm transition-colors">Print Lesson</button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-slate-800 text-slate-300 py-6 mt-auto text-center">
+        <div class="container mx-auto px-6">
+            <p class="text-sm">&copy; <span id="currentYear"></span> RTApps. All Rights Reserved.</p>
+            <p class="text-xs mt-1">Study, Time & Stress Management Lesson</p>
+        </div>
     </footer>
 
     <script>
@@ -252,7 +230,7 @@
         document.getElementById('currentYear').textContent = new Date().getFullYear();
 
         const lessonCorrectAnswers = {
-            lq_page3_1: "B"
+            'q_page3_1': 'B' // Key for the Quick Check on Page 3
         };
 
         function displayLessonPage() {
@@ -260,55 +238,83 @@
                 page.style.display = (index === currentLessonPage - 1) ? 'block' : 'none';
             });
             prevLessonButton.disabled = currentLessonPage === 1;
-            nextLessonButton.style.display = currentLessonPage === totalLessonPages ? 'none' : 'inline-block';
-            backToMenuButton.style.display = currentLessonPage === totalLessonPages ? 'inline-block' : 'none';
+            // Logic for Next and BackToMenu buttons
+            if (currentLessonPage === totalLessonPages) {
+                nextLessonButton.style.display = 'none';
+                if (backToMenuButton) backToMenuButton.style.display = 'inline-block';
+            } else {
+                nextLessonButton.style.display = 'inline-block';
+                if (backToMenuButton) backToMenuButton.style.display = 'none';
+            }
             lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
         }
 
         function changeLessonPage(direction) {
             currentLessonPage += direction;
-            if (currentLessonPage < 1) currentLessonPage = 1;
-            if (currentLessonPage > totalLessonPages) currentLessonPage = totalLessonPages;
             displayLessonPage();
         }
 
         function goBackToOrientationMenu() {
-            // Assumes your Orientation main menu is 'index.html' in the current folder
-            window.location.href = 'index.html';
+            window.location.href = 'index.html'; // Assumes Orientation menu is index.html in current folder
         }
 
-        function checkPageAnswers(pageNumber) {
-            const questionsOnPage = document.querySelectorAll(`#lesson-page-${pageNumber} .interactive-question-block`);
-            questionsOnPage.forEach(block => {
-                const questionName = block.querySelector('input[type="radio"]').name;
-                if (!lessonCorrectAnswers.hasOwnProperty(questionName)) return;
-                const correctAnswerValue = lessonCorrectAnswers[questionName];
-                const selectedRadio = block.querySelector(`input[name="${questionName}"]:checked`);
-                const explanationDiv = block.querySelector('.explanation');
-                block.classList.remove('feedback-correct', 'feedback-incorrect');
-                block.querySelectorAll('label').forEach(label => {
-                    label.classList.remove('font-semibold', 'text-green-700', 'text-red-700');
-                });
-                if(explanationDiv) explanationDiv.style.display = 'none';
-                if (selectedRadio) {
-                    const userAnswer = selectedRadio.value;
-                    if (userAnswer === correctAnswerValue) {
-                        block.classList.add('feedback-correct');
-                        selectedRadio.parentElement.classList.add('font-semibold', 'text-green-700');
-                    } else {
-                        block.classList.add('feedback-incorrect');
-                        selectedRadio.parentElement.classList.add('font-semibold', 'text-red-700');
-                        const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
-                        if (correctRadio) correctRadio.parentElement.classList.add('font-semibold', 'text-green-700');
-                    }
-                } else {
-                    block.classList.add('feedback-incorrect');
-                     const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
-                    if (correctRadio) correctRadio.parentElement.classList.add('font-semibold', 'text-green-700');
-                }
-                if(explanationDiv) explanationDiv.style.display = 'block';
+        // Updated checkPageAnswer function (singular)
+        function checkPageAnswer(questionBlockId, correctAnswerValue) {
+            const questionBlock = document.getElementById(questionBlockId);
+            if (!questionBlock) return;
+
+            const selectedRadio = questionBlock.querySelector(`input[name="${questionBlockId}_ans"]:checked`);
+            const explanationDiv = questionBlock.querySelector('.explanation-text'); // Ensure class matches
+            
+            // Clear previous feedback
+            questionBlock.classList.remove('correct-answer-feedback', 'incorrect-answer-feedback');
+            questionBlock.querySelectorAll('label').forEach(label => {
+                label.classList.remove('font-semibold', 'text-green-700', 'text-red-700');
+                const indicator = label.querySelector('.correct-indicator, .incorrect-indicator');
+                if(indicator) indicator.remove();
             });
+            if (explanationDiv) explanationDiv.style.display = 'none';
+
+            if (selectedRadio) {
+                const userAnswer = selectedRadio.value;
+                const userSelectedLabel = selectedRadio.parentElement;
+
+                if (userAnswer === correctAnswerValue) {
+                    questionBlock.classList.add('correct-answer-feedback');
+                    userSelectedLabel.classList.add('font-semibold', 'text-green-700');
+                    const indicator = document.createElement('span');
+                    indicator.className = 'correct-indicator';
+                    userSelectedLabel.appendChild(indicator);
+                } else {
+                    questionBlock.classList.add('incorrect-answer-feedback');
+                    userSelectedLabel.classList.add('font-semibold', 'text-red-700');
+                    const indicator = document.createElement('span');
+                    indicator.className = 'incorrect-indicator';
+                    userSelectedLabel.appendChild(indicator);
+                    
+                    const correctRadio = questionBlock.querySelector(`input[name="${questionBlockId}_ans"][value="${correctAnswerValue}"]`);
+                    if (correctRadio && correctRadio.parentElement) {
+                        correctRadio.parentElement.classList.add('font-semibold', 'text-green-700'); // Highlight correct option text
+                        const correctIndicator = document.createElement('span');
+                        correctIndicator.className = 'correct-indicator'; // Show correct check by the right answer
+                        correctRadio.parentElement.appendChild(correctIndicator);
+                    }
+                }
+            } else { // No answer selected
+                questionBlock.classList.add('incorrect-answer-feedback');
+                // Optionally highlight the correct answer even if none selected
+                const correctRadio = questionBlock.querySelector(`input[name="${questionBlockId}_ans"][value="${correctAnswerValue}"]`);
+                if (correctRadio && correctRadio.parentElement) {
+                    correctRadio.parentElement.classList.add('font-semibold', 'text-green-700');
+                     const correctIndicator = document.createElement('span');
+                     correctIndicator.className = 'correct-indicator';
+                     correctRadio.parentElement.appendChild(correctIndicator);
+                }
+            }
+            if (explanationDiv) explanationDiv.style.display = 'block';
         }
+        
+        // Initial display
         displayLessonPage();
     </script>
 </body>
