@@ -4,221 +4,221 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Evolution of Radiation Therapy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Using the same base CSS as previous lessons for consistency */
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; margin: 0; padding: 0; background-color: #f4f4f4; color: #333; display: flex; flex-direction: column; align-items: center; min-height: 100vh; position: relative; padding-bottom: 60px; }
-        .container { background-color: #fff; padding: 25px 35px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 90%; max-width: 900px; margin: 20px auto; }
-        h1, h2, h3, h4 { color: #0056b3; }
-        h1 { text-align: center; border-bottom: 2px solid #0056b3; padding-bottom: 15px; margin-bottom: 30px; font-size: 2em; }
-        h2 { border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 30px; margin-bottom: 20px; color: #003d7a; font-size: 1.6em; }
-        h3 { color: #004085; margin-top: 25px; margin-bottom: 15px; font-size: 1.3em; }
-        h4 { color: #17a2b8; margin-top: 20px; margin-bottom: 10px; font-size: 1.1em; }
-        p, li { margin-bottom: 12px; font-size: 1.05em; }
-        ul { margin-bottom: 15px; padding-left: 25px; list-style: disc; }
-        strong { font-weight: 600; }
-        .highlight { background-color: #e6f7ff; padding: 2px 5px; border-radius: 3px; font-weight: 600; }
-        .note { font-size: 0.9em; font-style: italic; color: #555; background-color: #f8f9fa; padding: 10px; border-left: 3px solid #6c757d; margin: 15px 0; border-radius: 4px; }
-        .activity-link-button { display: inline-block; background-color: #28a745; color: white; padding: 12px 25px; text-align: center; text-decoration: none; border-radius: 5px; font-size: 1.1em; margin-top: 15px; transition: background-color 0.2s; }
-        .activity-link-button:hover { background-color: #218838; }
-        .flip-lesson-container { border: 1px solid #b3d7ff; padding: 20px; border-radius: 8px; background-color: #f0f8ff; margin-bottom: 30px; }
-        .lesson-page { display: none; padding: 15px; border: 1px solid #ddeeff; background-color: #fff; border-radius: 5px; min-height: 480px; }
-        .lesson-page.active { display: block; }
-        .lesson-navigation { text-align: center; margin-top: 20px; }
-        .lesson-navigation button { background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 1em; margin: 5px 10px; transition: background-color 0.2s; }
-        .lesson-navigation button:hover { background-color: #0056b3; }
-        .lesson-navigation button:disabled { background-color: #ccc; cursor: not-allowed; }
-        #backToMenuButton { background-color: #6c757d; }
-        #backToMenuButton:hover { background-color: #5a6268; }
-        .page-indicator { font-style: italic; color: #555; margin: 10px 0; }
-        .interactive-question-block { background: #f9f9f9; padding: 15px; margin: 20px 0; border: 1px solid #e0e0e0; border-radius: 8px; }
-        .interactive-question-block .question-text { font-weight: bold; margin-bottom: 8px; font-size: 1em; color: #555; }
-        .interactive-question-block label { display: block; margin-left: 0; padding: 8px 12px; border-radius: 5px; cursor: pointer; border: 1px solid transparent; margin-bottom: 5px; }
-        .interactive-question-block input[type="radio"] { margin-right: 10px; vertical-align: middle; }
-        .interactive-question-block label:hover { background-color: #f0f8ff; }
-        .feedback-correct { background-color: #e8f8f0 !important; border-left: 4px solid #2ecc71 !important; }
-        .feedback-incorrect { background-color: #fdedec !important; border-left: 4px solid #e74c3c !important; }
-        .feedback-correct label.correct-option, .feedback-incorrect label.correct-option { font-weight: bold; color: #1E8449; }
-        .feedback-incorrect label.selected-incorrect { color: #A93226; }
-        .explanation { font-size: 0.9em; color: #444; margin-top: 5px; padding-left: 20px;}
-        footer { position: absolute; bottom: 0; left: 0; width: 100%; text-align: center; padding: 15px 0; background-color: #e9ecef; color: #6c757d; font-size: 0.9em; border-top: 1px solid #dee2e6; }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Feedback styles consistent with other updated lessons */
+        .selected-option { background-color: #e0f2fe; border-color: #38bdf8; }
+        .correct-answer-feedback { background-color: #dcfce7 !important; border-left: 4px solid #22c55e !important; }
+        .incorrect-answer-feedback { background-color: #fee2e2 !important; border-left: 4px solid #ef4444 !important; }
+        .correct-indicator::after { content: '✔ Correct'; color: #16a34a; font-weight: bold; margin-left: 10px; }
+        .incorrect-indicator::after { content: '✖ Incorrect'; color: #dc2626; font-weight: bold; margin-left: 10px; }
+        .correct-option-text { font-weight: bold; color: #15803d; }
+
+        .highlight { /* Tailwind purple theme for highlight */
+            background-color: #ede9fe; /* purple-100 */
+            color: #5b21b6; /* purple-700 */
+            padding: 0.1em 0.3em;
+            border-radius: 0.25rem;
+            font-weight: 500;
+        }
+        .note { /* Tailwind slate theme for note */
+            font-size: 0.9em; font-style: italic; color: #4b5563; /* slate-600 */
+            background-color: #f3f4f6; /* slate-100 */
+            padding: 10px; border-left: 3px solid #6b7280; /* slate-500 */
+            margin: 15px 0; border-radius: 4px;
+        }
+        .activity-link-button { /* Green button for activities */
+            display: inline-block; background-color: #22c55e; /* green-500 */
+            color: white; padding: 12px 25px; text-align: center;
+            text-decoration: none; border-radius: 0.375rem; /* rounded-lg */
+            font-size: 1.1em; font-weight: 500; /* medium */
+            margin-top: 15px; transition: background-color 0.2s;
+        }
+        .activity-link-button:hover { background-color: #16a34a; /* green-600 */ }
+
+        /* Print Styles */
+        @media print {
+            body { background-color: #fff; margin: 10px; padding: 0; font-size: 10pt; }
+            .main-content-wrapper, .flip-lesson-container { box-shadow: none !important; border: none !important; width: 100%; max-width: 100%; padding: 5px; margin-bottom: 15px;}
+            .lesson-navigation-bar, .check-page-answers-button, .nav-links-header, .print-button-container { display: none !important; }
+            .lesson-page { page-break-inside: avoid; border: 1px solid #eee !important; }
+            .interactive-question-block {background: #fff !important; border: 1px solid #ccc !important; }
+            h1, h2, h3, h4 { color: #000 !important; border-color: #000 !important; margin-bottom: 10px; padding-bottom: 3px;}
+            .explanation-text { display: none !important; } /* Ensure this matches JS */
+            a {text-decoration: none; color: #000 !important;}
+        }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1>Targeting Disease: The Evolution of Radiation Therapy 🎯</h1>
+<body class="bg-slate-100 text-slate-800 flex flex-col min-h-screen">
 
-        <div class="flip-lesson-container">
-            <h2>Interactive Lesson</h2>
-
-            <div id="lesson-page-1" class="lesson-page active">
-                <h3>Page 1: From Discovery to Precision Treatment</h3>
-                <h4>Purpose of This Lesson</h4>
-                <p>This lesson traces the fascinating development of radiation therapy as a specialized cancer treatment modality. We'll follow the journey from early experimental uses to today's highly precise and effective techniques.</p>
-                <h4>Task Overview</h4>
-                <p>You will explore:
-                    <ul>
-                        <li>How the initial discoveries of X-rays and radioactivity were first applied therapeutically.</li>
-                        <li>Key technological advancements, such as Cobalt-60 units and linear accelerators.</li>
-                        <li>The impact of computers and advanced imaging on treatment planning and delivery.</li>
-                        <li>Modern precision techniques and the evolving role of the Radiation Therapist.</li>
-                    </ul>
-                </p>
-                <h4>Criteria for Success</h4>
-                <p>By the end of this lesson, you should be able to:
-                    <ul>
-                        <li>Describe the major eras in the evolution of radiation therapy.</li>
-                        <li>Identify key technological innovations and their impact on treatment.</li>
-                        <li>Appreciate how the field has advanced towards greater precision and safety.</li>
-                    </ul>
-                </p>
-                <p class="note">Building on the foundational discoveries covered in "Rays of Discovery," this lesson focuses specifically on the <span class="highlight">therapeutic application</span> of radiation.</p>
-            </div>
-
-            <div id="lesson-page-2" class="lesson-page">
-                <h3>Page 2: Early Therapeutic Attempts (Early 1900s - 1930s) 🌱</h3>
-                <p>Once X-rays and radium were discovered, it didn't take long for physicians to explore their potential for treating diseases, especially cancer. However, these early years were marked by both promise and significant challenges.</p>
-                <h4>Initial Applications:</h4>
-                <ul>
-                    <li>Physicians began using X-rays to treat skin cancers and other superficial conditions.</li>
-                    <li>Radium, being a potent source of radiation, was used in various forms:
-                        <ul>
-                            <li><span class="highlight">Brachytherapy (early forms):</span> Radium needles or tubes were inserted directly into or near tumors.</li>
-                            <li>"Radium bombs" or telecurietherapy involved using larger quantities of radium at a short distance from the patient.</li>
-                        </ul>
-                    </li>
-                </ul>
-                <h4>Challenges of the Era:</h4>
-                <ul>
-                    <li><strong>Limited Penetration:</strong> The low-energy X-rays (orthovoltage) available couldn't effectively treat deep-seated tumors without causing severe skin reactions.</li>
-                    <li><strong>Crude Dosimetry:</strong> Measuring and controlling the radiation dose was very difficult. The "skin erythema dose" (the amount of radiation that caused skin reddening) was an early, imprecise unit of measurement.</li>
-                    <li><strong>Radiation Protection:</strong> Understanding of long-term radiation hazards was minimal, leading to significant risks for both patients and operators.</li>
-                </ul>
-                <p>Despite these hurdles, the early successes in shrinking tumors fueled further research and development.</p>
-            </div>
-
-            <div id="lesson-page-3" class="lesson-page">
-                <h3>Page 3: The Megavoltage Era (1940s - 1960s) ⚡</h3>
-                <p>The mid-20th century saw a major leap forward with the development of machines capable of producing higher-energy radiation (megavoltage beams).</p>
-                <h4>Key Developments:</h4>
-                <ul>
-                    <li><strong>Cobalt-60 Units (1950s):</strong> These machines used a radioactive cobalt source to produce gamma rays in the megavoltage range.
-                        <ul>
-                            <li><span class="highlight">Advantages:</span> Greater penetration for treating deeper tumors, and better skin-sparing (D<sub>max</sub> occurred below the skin surface) compared to orthovoltage X-rays. Cobalt-60 units became widely adopted globally.</li>
-                        </ul>
-                    </li>
-                    <li><strong>Medical Linear Accelerators (Linacs) (1950s onwards):</strong>
-                        <ul>
-                            <li>Linacs accelerate electrons to high energies, which can then be used directly for electron therapy or made to strike a target to produce high-energy X-rays (photons).</li>
-                            <li><span class="highlight">Advantages:</span> Offered even higher energies than Cobalt-60, more defined beam edges, and did not require a decaying radioactive source. Early linacs were large and complex, but their capabilities spurred continuous development.</li>
-                        </ul>
-                    </li>
-                    <li><strong>Improved Radiobiology & Fractionation:</strong> A deeper understanding of how radiation affects cells and tissues, and the benefits of delivering radiation in multiple small doses (fractions) over time, became established.</li>
-                    <li><strong>ARRT's Role:</strong> In <span class="highlight">1962</span>, the ARRT recognized Radiation Therapy as a primary discipline and offered the first R.T.(T) certification examination in 1964, marking a significant step in professionalizing the field.</li>
-                </ul>
-                 <h4>Quick Check!</h4>
-                <div class="interactive-question-block" id="lq_page3_1_block">
-                    <p class="question-text">A major advantage of megavoltage beams (like those from Cobalt-60 or Linacs) over orthovoltage X-rays was:</p>
-                    <label><input type="radio" name="lq_page3_1" value="A"> They were less expensive to produce.</label>
-                    <label><input type="radio" name="lq_page3_1" value="B"> They offered better skin sparing and deeper penetration.</label>
-                    <label><input type="radio" name="lq_page3_1" value="C"> They did not require electricity to operate.</label>
-                    <div class="explanation" style="display:none;">Correct! Megavoltage beams deposit their maximum dose beneath the skin surface, sparing the skin, and can penetrate deeper to treat tumors within the body.</div>
-                </div>
-                <button class="check-page-answers" onclick="checkPageAnswers(3)">Check Answer</button>
-            </div>
-
-            <div id="lesson-page-4" class="lesson-page">
-                <h3>Page 4: The Computer & Imaging Revolution (1970s - 1990s) 💻</h3>
-                <p>This era witnessed the transformative impact of computers and new imaging technologies on radiation therapy.</p>
-                <h4>Key Innovations:</h4>
-                <ul>
-                    <li><strong>Computed Tomography (CT Scanners) (1970s):</strong> The invention of CT allowed for detailed 3D anatomical information of the patient. This revolutionized treatment planning by enabling accurate localization of tumors and critical normal structures.</li>
-                    <li><strong>Treatment Planning Systems (TPS):</strong> Computers became essential for dose calculations and creating complex treatment plans. Dosimetrists and physicists could now design plans with multiple beams, optimizing dose to the target while minimizing dose to surrounding tissues.</li>
-                    <li><strong>Magnetic Resonance Imaging (MRI):</strong> While not used for planning initially as much as CT, MRI provided superior soft-tissue contrast, aiding in the delineation of tumors in certain anatomical sites.</li>
-                    <li><strong>Multi-Leaf Collimators (MLCs):</strong> Integrated into Linac heads, MLCs consist of many individual "leaves" that can move independently to shape the radiation beam precisely to the contour of the target volume, replacing the need for manually created cerrobend blocks for many treatments.</li>
-                    <li><strong>3D Conformal Radiation Therapy (3D-CRT):</strong> Leveraging CT imaging and computerized TPS, 3D-CRT allowed for the shaping of radiation beams to conform closely to the 3D shape of the tumor, improving target coverage and normal tissue sparing.</li>
-                </ul>
-                <p>These advancements significantly improved the accuracy and effectiveness of radiation therapy.</p>
-            </div>
-
-            <div id="lesson-page-5" class="lesson-page">
-                <h3>Page 5: The Era of Precision & IGRT (2000s - Present) 🌟</h3>
-                <p>The 21st century has been characterized by a drive towards even greater precision, conformality, and adaptation in radiation therapy.</p>
-                <h4>Key Advancements:</h4>
-                <ul>
-                    <li><strong>Intensity-Modulated Radiation Therapy (IMRT):</strong> An advanced form of 3D-CRT where the intensity of the radiation beam is varied (modulated) across different segments of the field. This allows for highly conformal dose distributions, "sculpting" the dose around complex tumor shapes and further sparing adjacent normal tissues.</li>
-                    <li><strong>Volumetric Modulated Arc Therapy (VMAT):</strong> A refined form of IMRT where the Linac rotates around the patient while continuously modulating the beam shape (MLCs), dose rate, and gantry speed. This can deliver complex IMRT plans more efficiently.</li>
-                    <li><strong>Image-Guided Radiation Therapy (IGRT):</strong> The use of imaging (X-ray, CT, Cone-Beam CT, MRI, Ultrasound) in the treatment room <span class="highlight">just before or during</span> treatment to verify patient positioning and target location. This allows for corrections for setup errors or internal organ motion, ensuring the radiation is delivered to the intended target with high precision daily.</li>
-                    <li><strong>Stereotactic Radiosurgery (SRS) & Stereotactic Body Radiation Therapy (SBRT):</strong> Techniques that deliver very high doses of radiation to small, well-defined targets in one or a few treatment fractions, using highly precise localization and delivery systems.</li>
-                    <li><strong>Proton Therapy & Other Particle Therapies:</strong> Use of protons or other heavy particles that have unique dose deposition characteristics (Bragg Peak), allowing for minimal exit dose beyond the target.</li>
-                    <li><strong>Adaptive Radiotherapy (ART):</strong> The concept of modifying a patient's treatment plan during the course of therapy in response to anatomical or biological changes observed via imaging.</li>
-                </ul>
-                 <h4>Quick Check!</h4>
-                <div class="interactive-question-block" id="lq_page5_1_block">
-                    <p class="question-text">Which technology allows for the intensity of the radiation beam to be varied across the field, creating highly conformal dose distributions?</p>
-                    <label><input type="radio" name="lq_page5_1" value="A"> 3D-CRT</label>
-                    <label><input type="radio" name="lq_page5_1" value="B"> IMRT</label>
-                    <label><input type="radio" name="lq_page5_1" value="C"> Cobalt-60</label>
-                    <div class="explanation" style="display:none;">Correct! Intensity-Modulated Radiation Therapy (IMRT) allows for varying the intensity of radiation across the beam.</div>
-                </div>
-                <button class="check-page-answers" onclick="checkPageAnswers(5)">Check Answer</button>
-            </div>
-
-            <div id="lesson-page-6" class="lesson-page">
-                <h3>Page 6: The Profession Today & Future Outlook 🚀</h3>
-                <p>The evolution of radiation therapy has been remarkable, transforming it from an experimental treatment into a cornerstone of modern cancer care. This progress has also shaped the role of the Radiation Therapist.</p>
-                <h4>The Modern Radiation Therapist:</h4>
-                <ul>
-                    <li>Operates increasingly complex and sophisticated equipment.</li>
-                    <li>Plays a crucial role in implementing advanced techniques like IMRT, VMAT, and IGRT.</li>
-                    <li>Requires a strong understanding of physics, anatomy, radiobiology, and patient care.</li>
-                    <li>Emphasizes precision, safety, and quality assurance.</li>
-                </ul>
-                <h4>Importance of Credentialing & Continuing Education:</h4>
-                <p>Organizations like the <span class="highlight">ARRT</span> ensure that therapists meet rigorous standards through initial certification and maintain their competence through continuing education and qualifications requirements. The <span class="highlight">ASRT</span> provides extensive educational resources and advocates for the profession.</p>
-                <h4>Future Directions:</h4>
-                <p>The field continues to evolve rapidly. Some exciting areas of research and development include:</p>
-                <ul>
-                    <li><span class="highlight">Artificial Intelligence (AI) & Machine Learning:</span> Assisting in treatment planning, image analysis, and quality assurance.</li>
-                    <li><strong>Personalized Medicine:</strong> Tailoring treatments based on individual patient and tumor biology.</li>
-                    <li><strong>Radiomics and Radiogenomics:</strong> Using quantitative features from medical images and genetic information to predict treatment response.</li>
-                    <li><strong>FLASH Radiotherapy:</strong> Investigational technique delivering radiation at ultra-high dose rates, potentially offering better normal tissue sparing.</li>
-                </ul>
-                <p>As a future Radiation Therapist, you will be part of this dynamic and innovative field, contributing to the ongoing fight against cancer.</p>
-            </div>
-
-            <div id="lesson-page-7" class="lesson-page">
-                <h3>Page 7: Summary & Next Steps</h3>
-                <p>We've journeyed through the major eras of radiation therapy's evolution:</p>
-                <ul>
-                    <li><strong>Early Days:</strong> Initial therapeutic uses of X-rays and radium.</li>
-                    <li><strong>Megavoltage Era:</strong> Cobalt-60 and the first Linacs enabling deeper treatments.</li>
-                    <li><strong>Computer & Imaging Revolution:</strong> CT, TPS, and MLCs leading to 3D-CRT.</li>
-                    <li><strong>Precision Era:</strong> IMRT, VMAT, IGRT, SRS/SBRT, and particle therapies.</li>
-                </ul>
-                <p>Each step has brought us closer to the goal of delivering more effective and safer radiation treatments to patients. The field continues to advance, driven by research, technology, and the dedication of professionals like you.</p>
-                <h4>Ready to Test Your Knowledge?</h4>
-                <p>To reinforce what you've learned about the history of both general radiologic technology and the specific evolution of radiation therapy, proceed to the "Historical Timeline Challenge" activity.</p>
-                <div style="text-align: center; margin-top: 30px;">
-                    <a href="history_timeline_activity.html" class="activity-link-button">Go to Historical Timeline Challenge!</a>
-                </div>
-            </div>
-
-            <div class="lesson-navigation">
-                <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled>Previous Page</button>
-                <button id="backToMenuButton" onclick="goBackToOrientationMenu()" style="display:none;">Back to Orientation Menu</button>
-                <span class="page-indicator" id="lessonPageIndicator">Page 1 of 7</span>
-                <button id="nextLessonPage" onclick="changeLessonPage(1)">Next Page</button>
+    <header class="bg-white shadow-md sticky top-0 z-50 nav-links-header">
+        <div class="container mx-auto px-6 py-3 flex flex-col sm:flex-row justify-between items-center">
+            <h1 class="text-xl font-bold text-purple-700 mb-2 sm:mb-0">Evolution of Radiation Therapy</h1>
+            <div class="flex flex-wrap justify-center sm:justify-end space-x-2">
+                <a href="index.html" class="text-xs sm:text-sm bg-purple-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-purple-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to Orientation Menu
+                </a>
+                <a href="../index.html" class="text-xs sm:text-sm bg-slate-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-slate-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to Main Workbook
+                </a>
             </div>
         </div>
-    </div>
+    </header>
 
-    <footer>
-        <p>&copy; <span id="currentYear"></span> RTApps. All rights reserved.</p>
+    <main class="container mx-auto max-w-4xl px-4 sm:px-6 py-8 flex-grow main-content-wrapper">
+        <div class="bg-white p-6 sm:p-8 rounded-xl shadow-xl">
+            <h1 class="text-3xl font-bold text-purple-700 mb-6 text-center border-b-2 border-purple-300 pb-4">Targeting Disease: The Evolution of Radiation Therapy 🎯</h1>
+
+            <div class="flip-lesson-container bg-purple-50 p-4 sm:p-6 rounded-lg shadow-md mb-8 border border-purple-200">
+                <h2 class="text-2xl font-semibold text-purple-600 mb-4">Interactive Lesson</h2>
+
+                <div id="lesson-page-1" class="lesson-page active bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[480px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 1: From Discovery to Precision Treatment</h3>
+                     <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Purpose: Why This Matters</h4>
+                        <p class="text-sm text-slate-600">This lesson traces the development of radiation therapy, from early experiments to today's precise techniques, highlighting its journey as a specialized cancer treatment.</p>
+                    </div>
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Task: What You Will Do</h4>
+                        <p class="text-sm text-slate-600">Explore initial therapeutic applications, key technological advancements (Cobalt-60, Linacs), the impact of computers/imaging, and modern precision techniques.</p>
+                    </div>
+                    <div class="p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Criteria for Success: How You'll Know You've Learned</h4>
+                        <p class="text-sm text-slate-600">You'll be able to describe major eras in RT evolution, identify key innovations, and appreciate the field's advancement in precision and safety.</p>
+                    </div>
+                    <p class="note">This lesson builds on "Rays of Discovery," focusing on the <span class="highlight">therapeutic application</span> of radiation.</p>
+                </div>
+
+                <div id="lesson-page-2" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[480px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 2: Early Therapeutic Attempts (Early 1900s - 1930s) 🌱</h3>
+                    <p class="text-slate-700">Early physicians explored X-rays and radium for treating diseases, facing promise and challenges.</p>
+                    <h4 class="text-lg font-medium text-purple-600 my-2">Initial Applications:</h4>
+                    <ul class="list-disc list-inside text-slate-600 space-y-1 text-sm mb-4">
+                        <li>X-rays for skin cancers and superficial conditions.</li>
+                        <li>Radium for <span class="highlight">brachytherapy</span> (needles/tubes) and "radium bombs" (telecurietherapy).</li>
+                    </ul>
+                    <h4 class="text-lg font-medium text-purple-600 my-2">Challenges:</h4>
+                    <ul class="list-disc list-inside text-slate-600 space-y-1 text-sm">
+                        <li>Low-energy X-rays (orthovoltage) caused skin reactions with limited deep penetration.</li>
+                        <li>Crude dosimetry (e.g., "skin erythema dose").</li>
+                        <li>Minimal understanding of long-term radiation hazards.</li>
+                    </ul>
+                </div>
+
+                <div id="lesson-page-3" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[480px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 3: The Megavoltage Era (1940s - 1960s) ⚡</h3>
+                    <p class="text-slate-700">This era saw the development of machines producing higher-energy radiation.</p>
+                    <h4 class="text-lg font-medium text-purple-600 my-2">Key Developments:</h4>
+                    <ul class="list-disc list-inside text-slate-600 space-y-1 text-sm mb-4">
+                        <li><strong>Cobalt-60 Units (1950s):</strong> Offered greater penetration and skin-sparing.</li>
+                        <li><strong>Medical Linear Accelerators (Linacs) (1950s+):</strong> Provided higher energies, defined beams, and no decaying source.</li>
+                        <li>Improved understanding of radiobiology and fractionation.</li>
+                        <li>ARRT recognized Radiation Therapy as a primary discipline (1962), first exam in 1964.</li>
+                    </ul>
+                    <div class="interactive-question-block mt-6 bg-purple-50 p-3 rounded-md border border-purple-200" id="q_page3_1">
+                        <p class="question-text font-semibold text-slate-700 mb-2">Quick Check: A major advantage of megavoltage beams over orthovoltage X-rays was:</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-100 cursor-pointer"><input type="radio" name="q_page3_1_ans" value="A" class="mr-2 accent-purple-600"> They were less expensive.</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-100 cursor-pointer"><input type="radio" name="q_page3_1_ans" value="B" class="mr-2 accent-purple-600"> Better skin sparing and deeper penetration.</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-100 cursor-pointer"><input type="radio" name="q_page3_1_ans" value="C" class="mr-2 accent-purple-600"> No electricity needed.</label>
+                        <div class="explanation-text text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">Correct! Megavoltage beams deposit maximum dose beneath the skin, sparing it, and penetrate deeper.</div>
+                    </div>
+                    <button class="check-page-answers-button mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswer('q_page3_1', 'B')">Check Answer</button>
+                </div>
+
+                <div id="lesson-page-4" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[480px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 4: The Computer & Imaging Revolution (1970s - 1990s) 💻</h3>
+                    <p class="text-slate-700">Computers and new imaging transformed radiation therapy.</p>
+                    <h4 class="text-lg font-medium text-purple-600 my-2">Key Innovations:</h4>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li><strong>CT Scanners (1970s):</strong> Revolutionized 3D anatomical localization for planning.</li>
+                        <li><strong>Treatment Planning Systems (TPS):</strong> Essential for complex dose calculations.</li>
+                        <li><strong>MRI:</strong> Superior soft-tissue contrast for tumor delineation.</li>
+                        <li><strong>Multi-Leaf Collimators (MLCs):</strong> Precise beam shaping, replacing many manual blocks.</li>
+                        <li><strong>3D Conformal Radiation Therapy (3D-CRT):</strong> Shaping beams to the 3D tumor shape.</li>
+                    </ul>
+                </div>
+
+                <div id="lesson-page-5" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[480px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 5: The Era of Precision & IGRT (2000s - Present) 🌟</h3>
+                    <p class="text-slate-700">The 21st century focuses on greater precision, conformality, and adaptation.</p>
+                    <h4 class="text-lg font-medium text-purple-600 my-2">Key Advancements:</h4>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li><strong>IMRT:</strong> Varying beam intensity for highly conformal doses.</li>
+                        <li><strong>VMAT:</strong> IMRT delivered efficiently via rotating gantry arcs.</li>
+                        <li><strong>IGRT:</strong> Imaging before/during treatment to verify and correct positioning.</li>
+                        <li><strong>SRS & SBRT:</strong> High-dose, precise treatments in few fractions.</li>
+                        <li><strong>Proton Therapy & Particle Therapies:</strong> Minimal exit dose.</li>
+                        <li><strong>Adaptive Radiotherapy (ART):</strong> Modifying plans during treatment course.</li>
+                    </ul>
+                    <div class="interactive-question-block mt-6 bg-purple-50 p-3 rounded-md border border-purple-200" id="q_page5_1">
+                        <p class="question-text font-semibold text-slate-700 mb-2">Quick Check: Which technology allows for varying the intensity of the radiation beam across the field?</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-100 cursor-pointer"><input type="radio" name="q_page5_1_ans" value="A" class="mr-2 accent-purple-600"> 3D-CRT</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-100 cursor-pointer"><input type="radio" name="q_page5_1_ans" value="B" class="mr-2 accent-purple-600"> IMRT</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-100 cursor-pointer"><input type="radio" name="q_page5_1_ans" value="C" class="mr-2 accent-purple-600"> Cobalt-60</label>
+                        <div class="explanation-text text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">Correct! IMRT (Intensity-Modulated Radiation Therapy) allows for varying beam intensity.</div>
+                    </div>
+                    <button class="check-page-answers-button mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswer('q_page5_1', 'B')">Check Answer</button>
+                </div>
+
+                <div id="lesson-page-6" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[480px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 6: The Profession Today & Future Outlook 🚀</h3>
+                    <p class="text-slate-700">Radiation therapy's evolution has shaped the modern RTT's role.</p>
+                    <h4 class="text-lg font-medium text-purple-600 my-2">The Modern RTT:</h4>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li>Operates complex equipment and implements advanced techniques.</li>
+                        <li>Requires strong understanding of physics, anatomy, radiobiology, and patient care.</li>
+                        <li>Emphasizes precision, safety, and QA.</li>
+                    </ul>
+                    <p class="text-slate-700 text-sm">Credentialing (ARRT) and continuing education (ASRT) are vital.</p>
+                    <h4 class="text-lg font-medium text-purple-600 my-2">Future Directions:</h4>
+                     <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm">
+                        <li>AI & Machine Learning in planning/QA.</li>
+                        <li>Personalized Medicine & Radiomics.</li>
+                        <li>FLASH Radiotherapy (investigational).</li>
+                    </ul>
+                </div>
+
+                <div id="lesson-page-7" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[480px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 7: Summary & Next Steps</h3>
+                    <p class="text-slate-700">Recap of RT evolution: Early Days -> Megavoltage -> Computer/Imaging -> Precision Era.</p>
+                    <p class="text-slate-700">Each step improved effectiveness and safety. The field continues to advance.</p>
+                    <h4 class="text-lg font-medium text-purple-600 mt-6 mb-2">Test Your Knowledge:</h4>
+                    <p class="text-slate-700">Proceed to the "Historical Timeline Challenge" activity.</p>
+                    <div class="mt-6 text-center">
+                        <a href="history_timeline_activity.html" class="activity-link-button">
+                            Go to Historical Timeline Challenge!
+                        </a>
+                    </div>
+                </div>
+
+                <div class="lesson-navigation-bar text-center mt-6">
+                    <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled class="bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors disabled:bg-slate-300 text-sm">Previous Page</button>
+                    <button id="backToMenuButton" onclick="goBackToOrientationMenu()" style="display:none;" class="bg-slate-500 text-white py-2 px-4 rounded-lg hover:bg-slate-600 transition-colors text-sm">Back to Orientation Menu</button>
+                    <span class="page-indicator mx-2 sm:mx-4 text-sm text-slate-600" id="lessonPageIndicator">Page 1 of 7</span>
+                    <button id="nextLessonPage" onclick="changeLessonPage(1)" class="bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors text-sm">Next Page</button>
+                </div>
+            </div>
+
+             <div class="print-button-container text-center mt-8">
+                <button onclick="window.print()" class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-6 rounded-lg text-sm transition-colors">Print Lesson</button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-slate-800 text-slate-300 py-6 mt-auto text-center">
+        <div class="container mx-auto px-6">
+            <p class="text-sm">&copy; <span id="currentYear"></span> RTApps. All Rights Reserved.</p>
+            <p class="text-xs mt-1">Evolution of Radiation Therapy Lesson</p>
+        </div>
     </footer>
 
     <script>
         let currentLessonPage = 1;
-        const totalLessonPages = 7; // Updated
+        const totalLessonPages = 7;
         const lessonPages = document.querySelectorAll('.lesson-page');
         const prevLessonButton = document.getElementById('prevLessonPage');
         const nextLessonButton = document.getElementById('nextLessonPage');
@@ -227,8 +227,8 @@
         document.getElementById('currentYear').textContent = new Date().getFullYear();
 
         const lessonCorrectAnswers = {
-            lq_page3_1: "B",
-            lq_page5_1: "B"
+            'q_page3_1': 'B',
+            'q_page5_1': 'B'
         };
 
         function displayLessonPage() {
@@ -236,15 +236,18 @@
                 page.style.display = (index === currentLessonPage - 1) ? 'block' : 'none';
             });
             prevLessonButton.disabled = currentLessonPage === 1;
-            nextLessonButton.style.display = currentLessonPage === totalLessonPages ? 'none' : 'inline-block';
-            backToMenuButton.style.display = currentLessonPage === totalLessonPages ? 'inline-block' : 'none';
+             if (currentLessonPage === totalLessonPages) {
+                nextLessonButton.style.display = 'none';
+                if (backToMenuButton) backToMenuButton.style.display = 'inline-block';
+            } else {
+                nextLessonButton.style.display = 'inline-block';
+                if (backToMenuButton) backToMenuButton.style.display = 'none';
+            }
             lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
         }
 
         function changeLessonPage(direction) {
             currentLessonPage += direction;
-            if (currentLessonPage < 1) currentLessonPage = 1;
-            if (currentLessonPage > totalLessonPages) currentLessonPage = totalLessonPages;
             displayLessonPage();
         }
 
@@ -252,39 +255,60 @@
             window.location.href = 'index.html'; // Assumes Orientation menu is index.html in current folder
         }
 
-        function checkPageAnswers(pageNumber) {
-            const questionsOnPage = document.querySelectorAll(`#lesson-page-${pageNumber} .interactive-question-block`);
-            questionsOnPage.forEach(block => {
-                const questionName = block.querySelector('input[type="radio"]').name;
-                if (!lessonCorrectAnswers.hasOwnProperty(questionName)) return;
-                const correctAnswerValue = lessonCorrectAnswers[questionName];
-                const selectedRadio = block.querySelector(`input[name="${questionName}"]:checked`);
-                const explanationDiv = block.querySelector('.explanation');
-                block.classList.remove('feedback-correct', 'feedback-incorrect');
-                block.querySelectorAll('label').forEach(label => {
-                    label.classList.remove('font-semibold', 'text-green-700', 'text-red-700');
-                });
-                if(explanationDiv) explanationDiv.style.display = 'none';
-                if (selectedRadio) {
-                    const userAnswer = selectedRadio.value;
-                    if (userAnswer === correctAnswerValue) {
-                        block.classList.add('feedback-correct');
-                        selectedRadio.parentElement.classList.add('font-semibold', 'text-green-700');
-                    } else {
-                        block.classList.add('feedback-incorrect');
-                        selectedRadio.parentElement.classList.add('font-semibold', 'text-red-700');
-                        const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
-                        if (correctRadio) correctRadio.parentElement.classList.add('font-semibold', 'text-green-700');
-                    }
-                } else {
-                    block.classList.add('feedback-incorrect');
-                     const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
-                    if (correctRadio) correctRadio.parentElement.classList.add('font-semibold', 'text-green-700');
-                }
-                if(explanationDiv) explanationDiv.style.display = 'block';
+        function checkPageAnswer(questionBlockId, correctAnswerValue) {
+            const questionBlock = document.getElementById(questionBlockId);
+            if (!questionBlock) return;
+
+            const selectedRadio = questionBlock.querySelector(`input[name="${questionBlockId}_ans"]:checked`);
+            const explanationDiv = questionBlock.querySelector('.explanation-text'); // Ensure this class exists in HTML
+            
+            questionBlock.classList.remove('correct-answer-feedback', 'incorrect-answer-feedback');
+            questionBlock.querySelectorAll('label').forEach(label => {
+                label.classList.remove('font-semibold', 'text-green-700', 'text-red-700');
+                const indicator = label.querySelector('.correct-indicator, .incorrect-indicator');
+                if(indicator) indicator.remove();
             });
+            if (explanationDiv) explanationDiv.style.display = 'none';
+
+            if (selectedRadio) {
+                const userAnswer = selectedRadio.value;
+                const userSelectedLabel = selectedRadio.parentElement;
+
+                if (userAnswer === correctAnswerValue) {
+                    questionBlock.classList.add('correct-answer-feedback');
+                    userSelectedLabel.classList.add('font-semibold', 'text-green-700');
+                    const indicator = document.createElement('span');
+                    indicator.className = 'correct-indicator';
+                    userSelectedLabel.appendChild(indicator);
+                } else {
+                    questionBlock.classList.add('incorrect-answer-feedback');
+                    userSelectedLabel.classList.add('font-semibold', 'text-red-700');
+                    const indicator = document.createElement('span');
+                    indicator.className = 'incorrect-indicator';
+                    userSelectedLabel.appendChild(indicator);
+                    
+                    const correctRadio = questionBlock.querySelector(`input[name="${questionBlockId}_ans"][value="${correctAnswerValue}"]`);
+                    if (correctRadio && correctRadio.parentElement) {
+                        correctRadio.parentElement.classList.add('font-semibold', 'text-green-700');
+                        const correctIndicator = document.createElement('span');
+                        correctIndicator.className = 'correct-indicator';
+                        correctRadio.parentElement.appendChild(correctIndicator);
+                    }
+                }
+            } else { 
+                questionBlock.classList.add('incorrect-answer-feedback');
+                const correctRadio = questionBlock.querySelector(`input[name="${questionBlockId}_ans"][value="${correctAnswerValue}"]`);
+                if (correctRadio && correctRadio.parentElement) {
+                    correctRadio.parentElement.classList.add('font-semibold', 'text-green-700');
+                     const correctIndicator = document.createElement('span');
+                     correctIndicator.className = 'correct-indicator';
+                     correctRadio.parentElement.appendChild(correctIndicator);
+                }
+            }
+            if (explanationDiv) explanationDiv.style.display = 'block';
         }
-        displayLessonPage();
+        
+        displayLessonPage(); // Initial call
     </script>
 </body>
 </html>
