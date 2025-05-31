@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Console Ops: Setting Field Size</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Feedback styles consistent with other updated lessons */
+        .selected-option { background-color: #e0f2fe; border-color: #38bdf8; }
+        .correct-answer-feedback { background-color: #dcfce7 !important; border-left: 4px solid #22c55e !important; }
+        .incorrect-answer-feedback { background-color: #fee2e2 !important; border-left: 4px solid #ef4444 !important; }
+        .correct-indicator::after { content: '✔ Correct'; color: #16a34a; font-weight: bold; margin-left: 10px; }
+        .incorrect-indicator::after { content: '✖ Incorrect'; color: #dc2626; font-weight: bold; margin-left: 10px; }
+        .correct-option-text { font-weight: bold; color: #15803d; }
+
+        .highlight { background-color: #ede9fe; color: #5b21b6; padding: 0.1em 0.3em; border-radius: 0.25rem; font-weight: 500; }
+        .note { font-size: 0.9em; font-style: italic; color: #4b5563; background-color: #f3f4f6; padding: 10px; border-left: 3px solid #6b7280; margin: 15px 0; border-radius: 4px; }
+        .activity-link-button { display: inline-block; background-color: #22c55e; color: white; padding: 12px 25px; text-align: center; text-decoration: none; border-radius: 0.375rem; font-size: 1.1em; font-weight: 500; margin-top: 15px; transition: background-color 0.2s; }
+        .activity-link-button:hover { background-color: #16a34a; }
+
+        /* Print Styles */
+        @media print {
+            body { background-color: #fff; margin: 10px; padding: 0; font-size: 10pt; }
+            .main-content-wrapper, .flip-lesson-container { box-shadow: none !important; border: none !important; width: 100%; max-width: 100%; padding: 5px; margin-bottom: 15px;}
+            .lesson-navigation-bar, .check-page-answers-button, .nav-links-header, .print-button-container, .activity-link-button { display: none !important; }
+            .lesson-page { page-break-inside: avoid; border: 1px solid #eee !important; }
+            .interactive-question-block {background: #fff !important; border: 1px solid #ccc !important; }
+            h1, h2, h3, h4 { color: #000 !important; border-color: #000 !important; margin-bottom: 10px; padding-bottom: 3px;}
+            .explanation-text { display: none !important; } 
+            a {text-decoration: none; color: #000 !important;}
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 flex flex-col min-h-screen">
+
+    <header class="bg-white shadow-md sticky top-0 z-50 nav-links-header">
+        <div class="container mx-auto px-6 py-3 flex flex-col sm:flex-row justify-between items-center">
+            <h1 class="text-xl font-bold text-purple-700 mb-2 sm:mb-0">Console Operations: Field Size</h1>
+            <div class="flex flex-wrap justify-center sm:justify-end space-x-2">
+                <a href="../Modalities_Equipment_Terminology/index.html" class="text-xs sm:text-sm bg-purple-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-purple-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to Modalities Menu 
+                </a>
+                <a href="../../index.html" class="text-xs sm:text-sm bg-slate-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-slate-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to Main Workbook
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto max-w-4xl px-4 sm:px-6 py-8 flex-grow main-content-wrapper">
+        <div class="bg-white p-6 sm:p-8 rounded-xl shadow-xl">
+            <h1 class="text-3xl font-bold text-purple-700 mb-6 text-center border-b-2 border-purple-300 pb-4">Console Operations: Understanding & Setting Field Size</h1>
+
+            <div class="flip-lesson-container bg-purple-50 p-4 sm:p-6 rounded-lg shadow-md mb-8 border border-purple-200">
+                <h2 class="text-2xl font-semibold text-purple-600 mb-4">Interactive Lesson</h2>
+
+                <div id="lesson-page-1" class="lesson-page active bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[480px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 1: Introduction to Field Size</h3>
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Purpose: Why This Matters</h4>
+                        <p class="text-sm text-slate-600">This lesson introduces how treatment field sizes are defined and set using the Linac's secondary collimators (jaws). Accurate field size definition is fundamental to ensuring the radiation beam covers the intended target volume while sparing surrounding healthy tissue.</p>
+                    </div>
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Task: What You Will Do</h4>
+                        <p class="text-sm text-slate-600">You will learn about:
+                            <ul class="list-disc list-inside text-slate-600 space-y-1 text-xs ml-4">
+                                <li>The concept of field size in radiation therapy.</li>
+                                <li>The role of X and Y collimator jaws.</li>
+                                <li>Symmetric vs. Asymmetric field settings.</li>
+                                <li>How these parameters are typically displayed and controlled.</li>
+                            </ul>
+                        </p>
+                    </div>
+                    <div class="p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Criteria for Success</h4>
+                        <p class="text-sm text-slate-600">By the end, you should be able to:
+                            <ul class="list-disc list-inside text-slate-600 space-y-1 text-xs ml-4">
+                                <li>Define field size and identify the collimator jaws that create it.</li>
+                                <li>Differentiate between symmetric and asymmetric fields.</li>
+                                <li>Understand how individual jaw positions (X1, X2, Y1, Y2) determine the overall field dimensions.</li>
+                            </ul>
+                        </p>
+                    </div>
+                    <p class="mt-4 text-slate-700 text-sm">The field size is typically defined at the machine's <span class="highlight">isocenter</span>.</p>
+                </div>
+
+                <div id="lesson-page-2" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[480px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 2: Collimator Jaws - Defining the Field</h3>
+                    <p class="text-slate-700">Linear accelerators are equipped with <span class="highlight">secondary collimators</span>, often called "jaws," located in the treatment head. These are heavy metal (usually tungsten) blocks that can be moved to define the radiation field's rectangular shape and size.</p>
+                    <h4 class="text-lg font-medium text-purple-600 my-2">X and Y Jaws:</h4>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li><strong>Y Jaws (Y1 and Y2):</strong> These two opposing jaws define the field length, typically in the superior-inferior direction relative to the patient.
+                            <ul>
+                                <li>Y1 often defines one edge (e.g., inferior).</li>
+                                <li>Y2 often defines the opposite edge (e.g., superior).</li>
+                            </ul>
+                        </li>
+                        <li><strong>X Jaws (X1 and X2):</strong> These two opposing jaws define the field width, typically in the left-right direction relative to the patient.
+                            <ul>
+                                <li>X1 often defines one edge (e.g., patient's right or anatomical left if gantry is 0).</li>
+                                <li>X2 often defines the opposite edge.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <p class="text-slate-700 text-sm">The field size is conventionally written as <span class="font-semibold">Width (X) x Length (Y)</span>, for example, 10 cm x 15 cm.</p>
+                    <p class="note">The positions of X1, X2, Y1, and Y2 are defined relative to the central axis (isocenter) of the beam. A value of 0 for a jaw means it is at the central axis.</p>
+                </div>
+                
+                <div id="lesson-page-3" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[480px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 3: Symmetric vs. Asymmetric Fields</h3>
+                    <p class="text-slate-700">Collimator jaws can be set either symmetrically or asymmetrically around the isocenter.</p>
+                    <h4 class="text-lg font-medium text-purple-600 my-2">Symmetric Fields:</h4>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li>The isocenter is at the geometric center of the radiation field.</li>
+                        <li>The opposing jaws are equidistant from the central axis.
+                            <ul>
+                                <li>For X-jaws: If X1 is at -5 cm, then X2 is at +5 cm. The total width is 10 cm.</li>
+                                <li>For Y-jaws: If Y1 is at -7.5 cm, then Y2 is at +7.5 cm. The total length is 15 cm.</li>
+                            </ul>
+                        </li>
+                        <li>Many simpler treatments use symmetric fields.</li>
+                    </ul>
+                    <h4 class="text-lg font-medium text-purple-600 my-2">Asymmetric Fields (Independent Jaws):</h4>
+                     <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li>The isocenter is <span class="highlight">not</span> at the geometric center of the field.</li>
+                        <li>The jaws (X1, X2, Y1, Y2) can be moved independently of each other.</li>
+                        <li>This allows for "off-axis" fields, useful for techniques like half-beam blocks or matching fields without needing to move the patient or gantry excessively.
+                            <ul>
+                                <li>Example: X1 could be at 0 cm (central axis) and X2 at +10 cm, creating a 10cm wide field that starts at the isocenter and extends to one side.</li>
+                                <li>Example: Y1 at -3cm and Y2 at +12cm, creating a 15cm long field that is shifted superiorly.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                     <div class="interactive-question-block mt-6 bg-purple-50 p-3 rounded-md border border-purple-200" id="q_page3_1">
+                        <p class="question-text font-semibold text-slate-700 mb-2">Quick Check: If X1 = -7 cm and X2 = +7 cm, and Y1 = -10 cm and Y2 = +10 cm, what is the total field size?</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-100 cursor-pointer"><input type="radio" name="q_page3_1_ans" value="A" class="mr-2 accent-purple-600"> 7cm x 10cm</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-100 cursor-pointer"><input type="radio" name="q_page3_1_ans" value="B" class="mr-2 accent-purple-600"> 14cm x 20cm</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-100 cursor-pointer"><input type="radio" name="q_page3_1_ans" value="C" class="mr-2 accent-purple-600"> 3.5cm x 5cm</label>
+                        <div class="explanation-text text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">Correct! B. Width (X) = X2 - X1 = 7 - (-7) = 14 cm. Length (Y) = Y2 - Y1 = 10 - (-10) = 20 cm.</div>
+                    </div>
+                    <button class="check-page-answers-button mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswer('q_page3_1', 'B')">Check Answer</button>
+                </div>
+
+                <div id="lesson-page-4" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[480px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 4: Console Display & Field Visualization</h3>
+                    <p class="text-slate-700">On the Linac control console, RTTs will typically see and set these jaw positions.</p>
+                    <h4 class="text-lg font-medium text-purple-600 my-2">Typical Console Readouts:</h4>
+                     <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li>Individual jaw positions (X1, X2, Y1, Y2) are displayed, often in centimeters or millimeters from the isocenter.</li>
+                        <li>The total field width (X2 - X1) and length (Y2 - Y1) are usually calculated and displayed automatically.</li>
+                    </ul>
+                    <h4 class="text-lg font-medium text-purple-600 my-2">Field Light Visualizer:</h4>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm">
+                        <li>The Linac's <span class="highlight">field light</span> projects onto the patient or a phantom, visually representing the area defined by the X and Y jaws.</li>
+                        <li>This light field also typically includes <span class="highlight">crosshairs</span> or markings indicating the position of the central axis (isocenter).</li>
+                        <li>RTTs use this visual guide to align the radiation field with the patient's skin marks or anatomical landmarks.</li>
+                    </ul>
+                    <p class="note">It's crucial that the light field accurately corresponds to the radiation field. This is a key daily QA check.</p>
+                </div>
+
+                <div id="lesson-page-5" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[480px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 5: Summary & Activity Link</h3>
+                    <p class="text-slate-700">Understanding how to set and verify field sizes is fundamental to radiation therapy.</p>
+                    <h4 class="text-lg font-medium text-purple-600 my-2">Key Recap:</h4>
+                     <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li>Field size is defined by two pairs of secondary collimator jaws: <span class="highlight">X-jaws (X1, X2)</span> for width and <span class="highlight">Y-jaws (Y1, Y2)</span> for length.</li>
+                        <li>Fields can be <span class="highlight">symmetric</span> (centered on isocenter) or <span class="highlight">asymmetric</span> (offset from isocenter) by moving jaws independently.</li>
+                        <li>The Linac console displays these settings, and the field light provides a visual representation.</li>
+                        <li>Accuracy is paramount and verified through daily QA.</li>
+                    </ul>
+                    <h4 class="text-lg font-medium text-purple-600 mt-6 mb-2">Practice Setting Field Sizes:</h4>
+                    <p class="text-slate-700">Now, let's use the "Field Size Simulator Activity" to get hands-on experience with adjusting jaw positions and observing the resulting field size.</p>
+                     <div class="mt-6 text-center">
+                        <a href="field_size_simulator_activity.html" class="activity-link-button">
+                            Go to Field Size Simulator
+                        </a>
+                    </div>
+                </div>
+
+                <div class="lesson-navigation-bar text-center mt-6">
+                    <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled class="bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors disabled:bg-slate-300 text-sm">Previous Page</button>
+                    <button id="backToMenuButton" onclick="goBackToModalitiesMenu()" style="display:none;" class="bg-slate-500 text-white py-2 px-4 rounded-lg hover:bg-slate-600 transition-colors text-sm">Back to Modalities Menu</button>
+                    <span class="page-indicator mx-2 sm:mx-4 text-sm text-slate-600" id="lessonPageIndicator">Page 1 of 5</span>
+                    <button id="nextLessonPage" onclick="changeLessonPage(1)" class="bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors text-sm">Next Page</button>
+                </div>
+            </div>
+
+            <div class="print-button-container text-center mt-8">
+                <button onclick="window.print()" class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-6 rounded-lg text-sm transition-colors">Print Lesson</button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-slate-800 text-slate-300 py-6 mt-auto text-center">
+        <div class="container mx-auto px-6">
+            <p class="text-sm">&copy; <span id="currentYear"></span> RTApps. All Rights Reserved.</p>
+            <p class="text-xs mt-1">Console Operations: Field Size Lesson</p>
+        </div>
+    </footer>
+
+    <script>
+        let currentLessonPage = 1;
+        const totalLessonPages = 5; 
+        const lessonPages = document.querySelectorAll('.lesson-page');
+        const prevLessonButton = document.getElementById('prevLessonPage');
+        const nextLessonButton = document.getElementById('nextLessonPage');
+        const backToMenuButton = document.getElementById('backToMenuButton');
+        const lessonPageIndicator = document.getElementById('lessonPageIndicator');
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        const lessonCorrectAnswers = {
+            'q_page3_1': 'B'
+        };
+
+        function displayLessonPage() {
+            lessonPages.forEach((page, index) => {
+                page.style.display = (index === currentLessonPage - 1) ? 'block' : 'none';
+            });
+            prevLessonButton.disabled = currentLessonPage === 1;
+            if (currentLessonPage === totalLessonPages) {
+                nextLessonButton.style.display = 'none';
+                if (backToMenuButton) backToMenuButton.style.display = 'inline-block';
+            } else {
+                nextLessonButton.style.display = 'inline-block';
+                if (backToMenuButton) backToMenuButton.style.display = 'none';
+            }
+            lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
+        }
+
+        function changeLessonPage(direction) {
+            currentLessonPage += direction;
+            displayLessonPage();
+        }
+
+        function goBackToModalitiesMenu() {
+            // Assumes Modalities menu is index.html in the current folder (if this lesson is in a subfolder of Modalities)
+            // Or one level up to the Modalities folder if this lesson is directly within it.
+            // Adjust if your Modalities menu structure is different, e.g., '../Modalities_Equipment_Terminology/index.html'
+            window.location.href = 'index.html'; 
+        }
+
+        function checkPageAnswer(questionBlockId, correctAnswerValue) {
+            const questionBlock = document.getElementById(questionBlockId);
+            if (!questionBlock) return;
+            const selectedRadio = questionBlock.querySelector(`input[name="${questionBlockId}_ans"]:checked`);
+            const explanationDiv = questionBlock.querySelector('.explanation-text');
+            
+            questionBlock.classList.remove('correct-answer-feedback', 'incorrect-answer-feedback');
+            questionBlock.querySelectorAll('label').forEach(label => {
+                label.classList.remove('font-semibold', 'text-green-700', 'text-red-700');
+                const indicator = label.querySelector('.correct-indicator, .incorrect-indicator');
+                if(indicator) indicator.remove();
+            });
+            if (explanationDiv) explanationDiv.style.display = 'none';
+
+            if (selectedRadio) {
+                const userAnswer = selectedRadio.value;
+                const userSelectedLabel = selectedRadio.parentElement;
+                if (userAnswer === correctAnswerValue) {
+                    questionBlock.classList.add('correct-answer-feedback');
+                    userSelectedLabel.classList.add('font-semibold', 'text-green-700');
+                    const indicator = document.createElement('span');
+                    indicator.className = 'correct-indicator';
+                    userSelectedLabel.appendChild(indicator);
+                } else {
+                    questionBlock.classList.add('incorrect-answer-feedback');
+                    userSelectedLabel.classList.add('font-semibold', 'text-red-700');
+                    const indicator = document.createElement('span');
+                    indicator.className = 'incorrect-indicator';
+                    userSelectedLabel.appendChild(indicator);
+                    const correctRadio = questionBlock.querySelector(`input[name="${questionBlockId}_ans"][value="${correctAnswerValue}"]`);
+                    if (correctRadio && correctRadio.parentElement) {
+                        correctRadio.parentElement.classList.add('font-semibold', 'text-green-700');
+                        const correctIndicator = document.createElement('span');
+                        correctIndicator.className = 'correct-indicator';
+                        correctRadio.parentElement.appendChild(correctIndicator);
+                    }
+                }
+            } else { 
+                questionBlock.classList.add('incorrect-answer-feedback');
+                const correctRadio = questionBlock.querySelector(`input[name="${questionBlockId}_ans"][value="${correctAnswerValue}"]`);
+                if (correctRadio && correctRadio.parentElement) {
+                    correctRadio.parentElement.classList.add('font-semibold', 'text-green-700');
+                     const correctIndicator = document.createElement('span');
+                     correctIndicator.className = 'correct-indicator';
+                     correctRadio.parentElement.appendChild(correctIndicator);
+                }
+            }
+            if (explanationDiv) explanationDiv.style.display = 'block';
+        }
+        
+        displayLessonPage();
+    </script>
+</body>
+</html>
