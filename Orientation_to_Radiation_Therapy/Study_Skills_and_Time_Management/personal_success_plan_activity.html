@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Personal Success Plan</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; margin: 0; padding: 0; background-color: #f4f4f4; color: #333; display: flex; flex-direction: column; align-items: center; min-height: 100vh; position: relative; padding-bottom: 60px; }
+        .container { background-color: #fff; padding: 25px 35px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 90%; max-width: 900px; margin: 20px auto; }
+        h1, h2, h3 { color: #0056b3; }
+        h1 { text-align: center; border-bottom: 2px solid #0056b3; padding-bottom: 15px; margin-bottom: 20px; font-size: 2em; }
+        h2 { color: #003d7a; font-size: 1.5em; margin-top: 30px; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        h3 { color: #004085; font-size: 1.2em; margin-top: 20px; margin-bottom: 10px; }
+        p { margin-bottom: 12px; font-size: 1.05em; }
+        label { display: block; font-weight: 600; margin-bottom: 5px; color: #004085; }
+        textarea { width: 100%; padding: 10px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit; font-size: 1em; min-height: 100px; box-sizing: border-box; resize: vertical; }
+        .worksheet-section { margin-bottom: 30px; padding: 20px; background-color: #f9f9f9; border-radius: 5px; border-left: 4px solid #0056b3; }
+        .button-container { text-align: center; margin-top: 30px; padding-bottom: 20px; }
+        .button-container button, .nav-button { background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 1em; margin: 5px; transition: background-color 0.2s; text-decoration: none; display: inline-block;}
+        .button-container button:hover, .nav-button:hover { background-color: #0056b3; }
+        .nav-button.secondary { background-color: #6c757d; }
+        .nav-button.secondary:hover { background-color: #5a6268; }
+        footer { position: absolute; bottom: 0; left: 0; width: 100%; text-align: center; padding: 15px 0; background-color: #e9ecef; color: #6c757d; font-size: 0.9em; border-top: 1px solid #dee2e6; }
+        
+        @media print {
+            body { background-color: #fff; color: #000; padding-bottom: 0; }
+            .container { box-shadow: none; border: none; width: 100%; max-width: 100%; padding: 10px; margin:0;}
+            h1, h2, h3 { color: #000; }
+            textarea { border: 1px solid #999; background-color: #f0f0f0; min-height: 80px; }
+            .button-container, footer, .nav-button { display: none; }
+            .worksheet-section { border-left: none; background-color: transparent; padding: 10px 0;}
+            page { page-break-after: always; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>My Personal Success Plan</h1>
+        <p style="text-align:center; font-style: italic;">A reflective worksheet for Radiation Therapy Students</p>
+
+        <div class="worksheet-intro" style="padding:15px; background-color:#e7f3ff; border-radius:5px; margin-bottom:20px;">
+            <h3>Purpose of This Activity</h3>
+            <p>This worksheet is designed to help you reflect on your current study habits, time management skills, and stress coping mechanisms. By identifying areas for growth and creating a concrete plan, you can better navigate the demands of the Radiation Therapy program.</p>
+            <h3>Task</h3>
+            <p>Thoughtfully answer the questions in each section below. Be honest with yourself. There are no right or wrong answers. Once completed, you can print this plan for your reference.</p>
+            <h3>Criteria for Success</h3>
+            <p>Successful completion means you have engaged in genuine self-reflection and formulated specific, actionable steps you can take to improve your strategies for academic, clinical, and personal well-being.</p>
+        </div>
+
+        <form id="successPlanForm">
+            <div class="worksheet-section">
+                <h2>Section 1: My Current Habits (Self-Reflection)</h2>
+                
+                <label for="currentStudyHabits">How do I currently study? What works well, and what doesn't?</label>
+                <textarea id="currentStudyHabits" name="currentStudyHabits" rows="4"></textarea>
+
+                <label for="currentTimeManagement">How do I manage my time? What are my biggest time-wasters or challenges?</label>
+                <textarea id="currentTimeManagement" name="currentTimeManagement" rows="4"></textarea>
+
+                <label for="currentStressRelief">What are my current go-to stress relievers? Are they healthy and effective?</label>
+                <textarea id="currentStressRelief" name="currentStressRelief" rows="4"></textarea>
+            </div>
+
+            <div class="worksheet-section">
+                <h2>Section 2: Study Skills I Will Implement</h2>
+                
+                <label for="newStudyStrategies">Which 2-3 new study strategies from the lesson will I try first, and how?</label>
+                <textarea id="newStudyStrategies" name="newStudyStrategies" rows="4" placeholder="e.g., 'Active recall by making flashcards for anatomy'; 'Spaced repetition for pharmacology terms'"></textarea>
+
+                <label for="utilizeResources">My plan for utilizing textbooks and other resources more effectively:</label>
+                <textarea id="utilizeResources" name="utilizeResources" rows="3" placeholder="e.g., 'Read textbook chapter before lecture'; 'Review ARRT content specs monthly'"></textarea>
+            </div>
+
+            <div class="worksheet-section">
+                <h2>Section 3: My Time Management Plan</h2>
+
+                <label for="planningTool">Preferred tool for scheduling (e.g., digital calendar, planner app, paper planner):</label>
+                <textarea id="planningTool" name="planningTool" rows="1"></textarea>
+
+                <label for="weeklyPriorities">My top 3 general priorities for a typical week (academic, clinical, personal):</label>
+                <textarea id="weeklyPriorities" name="weeklyPriorities" rows="3" placeholder="1. \n2. \n3. "></textarea>
+
+                <label for="procrastinationStrategy">One strategy to combat procrastination I will use:</label>
+                <textarea id="procrastinationStrategy" name="procrastinationStrategy" rows="2" placeholder="e.g., 'Pomodoro Technique for difficult subjects'; 'Start tasks within 24hrs of assignment'"></textarea>
+            </div>
+
+            <div class="worksheet-section">
+                <h2>Section 4: My Stress Management & Well-being Plan</h2>
+                
+                <label for="mainStressors">What are my main anticipated stressors related to this program?</label>
+                <textarea id="mainStressors" name="mainStressors" rows="3"></textarea>
+
+                <label for="selfCareActivities">Two self-care activities I will prioritize each week:</label>
+                <textarea id="selfCareActivities" name="selfCareActivities" rows="2" placeholder="1. \n2. "></textarea>
+
+                <label for="mindfulnessTechnique">One mindfulness or relaxation technique I will practice:</label>
+                <textarea id="mindfulnessTechnique" name="mindfulnessTechnique" rows="2" placeholder="e.g., '5 minutes of deep breathing daily'; 'Guided meditation before bed'"></textarea>
+                 <label for="supportSystem">My support system (people I can talk to if stressed):</label>
+                <textarea id="supportSystem" name="supportSystem" rows="2"></textarea>
+            </div>
+
+            <div class="worksheet-section">
+                <h2>Section 5: My Commitment</h2>
+                <label for="oneChange">One small, actionable change I will make this week to improve my study, time, or stress management:</label>
+                <textarea id="oneChange" name="oneChange" rows="2"></textarea>
+            </div>
+
+            <div class="button-container">
+                <button type="button" onclick="window.print()">Print My Success Plan</button>
+            </div>
+        </form>
+
+        <div class="button-container" style="border-top: 1px solid #eee; padding-top: 20px;">
+             <a href="study_skills_time_management_lesson.html" class="nav-button secondary">Back to Study Skills Lesson</a>
+             <a href="index.html" class="nav-button secondary">Back to Orientation Menu</a>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; <span id="currentYear"></span> RTApps. All rights reserved.</p>
+    </footer>
+    <script>
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>
