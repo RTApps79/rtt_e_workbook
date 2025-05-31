@@ -4,187 +4,214 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Radiation Therapy Profession: Path & Practice</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Using the same base CSS as previous lessons for consistency */
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; margin: 0; padding: 0; background-color: #f4f4f4; color: #333; display: flex; flex-direction: column; align-items: center; min-height: 100vh; position: relative; padding-bottom: 60px; }
-        .container { background-color: #fff; padding: 25px 35px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 90%; max-width: 900px; margin: 20px auto; }
-        h1, h2, h3, h4 { color: #0056b3; }
-        h1 { text-align: center; border-bottom: 2px solid #0056b3; padding-bottom: 15px; margin-bottom: 30px; font-size: 2em; }
-        h2 { border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 30px; margin-bottom: 20px; color: #003d7a; font-size: 1.6em; }
-        h3 { color: #004085; margin-top: 25px; margin-bottom: 15px; font-size: 1.3em; }
-        h4 { color: #17a2b8; margin-top: 20px; margin-bottom: 10px; font-size: 1.1em; }
-        p, li { margin-bottom: 12px; font-size: 1.05em; }
-        ul, ol { margin-bottom: 15px; padding-left: 25px; list-style: disc; }
-        strong { font-weight: 600; }
-        .highlight { background-color: #e6f7ff; padding: 2px 5px; border-radius: 3px; font-weight: 600; }
-        .note { font-size: 0.9em; font-style: italic; color: #555; background-color: #f8f9fa; padding: 10px; border-left: 3px solid #6c757d; margin: 15px 0; border-radius: 4px; }
-        .emphasis-box { background-color: #fff3cd; border-left: 4px solid #ffeeba; padding: 15px; margin: 20px 0; border-radius: 4px; color: #856404; }
-        .flip-lesson-container { border: 1px solid #b3d7ff; padding: 20px; border-radius: 8px; background-color: #f0f8ff; margin-bottom: 30px; }
-        .lesson-page { display: none; padding: 15px; border: 1px solid #ddeeff; background-color: #fff; border-radius: 5px; min-height: 480px; }
-        .lesson-page.active { display: block; }
-        .lesson-navigation { text-align: center; margin-top: 20px; }
-        .lesson-navigation button { background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 1em; margin: 5px 10px; transition: background-color 0.2s; }
-        .lesson-navigation button:hover { background-color: #0056b3; }
-        .lesson-navigation button:disabled { background-color: #ccc; cursor: not-allowed; }
-        #backToMenuButton { background-color: #6c757d; }
-        #backToMenuButton:hover { background-color: #5a6268; }
-        .page-indicator { font-style: italic; color: #555; margin: 10px 0; }
-        .interactive-question-block { background: #f9f9f9; padding: 15px; margin: 20px 0; border: 1px solid #e0e0e0; border-radius: 8px; }
-        .interactive-question-block .question-text { font-weight: bold; margin-bottom: 8px; font-size: 1em; color: #555; }
-        .interactive-question-block label { display: block; margin-left: 0; padding: 8px 12px; border-radius: 5px; cursor: pointer; border: 1px solid transparent; margin-bottom: 5px; }
-        .interactive-question-block input[type="radio"] { margin-right: 10px; vertical-align: middle; }
-        .interactive-question-block label:hover { background-color: #f0f8ff; }
-        .feedback-correct { background-color: #e8f8f0 !important; border-left: 4px solid #2ecc71 !important; }
-        .feedback-incorrect { background-color: #fdedec !important; border-left: 4px solid #e74c3c !important; }
-        .feedback-correct label.correct-option, .feedback-incorrect label.correct-option { font-weight: bold; color: #1E8449; }
-        .feedback-incorrect label.selected-incorrect { color: #A93226; }
-        .explanation { font-size: 0.9em; color: #444; margin-top: 5px; padding-left: 20px;}
-        footer { position: absolute; bottom: 0; left: 0; width: 100%; text-align: center; padding: 15px 0; background-color: #e9ecef; color: #6c757d; font-size: 0.9em; border-top: 1px solid #dee2e6; }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Feedback styles consistent with other updated lessons */
+        .selected-option { background-color: #e0f2fe; border-color: #38bdf8; }
+        .correct-answer-feedback { background-color: #dcfce7 !important; border-left: 4px solid #22c55e !important; }
+        .incorrect-answer-feedback { background-color: #fee2e2 !important; border-left: 4px solid #ef4444 !important; }
+        .correct-indicator::after { content: '✔ Correct'; color: #16a34a; font-weight: bold; margin-left: 10px; }
+        .incorrect-indicator::after { content: '✖ Incorrect'; color: #dc2626; font-weight: bold; margin-left: 10px; }
+        .correct-option-text { font-weight: bold; color: #15803d; }
+
+        .highlight { /* Tailwind purple theme for highlight */
+            background-color: #ede9fe; /* purple-100 */
+            color: #5b21b6; /* purple-700 */
+            padding: 0.1em 0.3em;
+            border-radius: 0.25rem;
+            font-weight: 500;
+        }
+        .note { /* Tailwind slate theme for note */
+            font-size: 0.9em; font-style: italic; color: #4b5563; /* slate-600 */
+            background-color: #f3f4f6; /* slate-100 */
+            padding: 10px; border-left: 3px solid #6b7280; /* slate-500 */
+            margin: 15px 0; border-radius: 4px;
+        }
+        .emphasis-box { /* Consistent with previous use */
+            background-color: #fffbeb; /* yellow-50 */
+            border-left: 4px solid #facc15; /* yellow-400 */
+            padding: 1rem; margin: 1.25rem 0; border-radius: 0.25rem;
+            color: #713f12; /* yellow-800 */
+        }
+        .emphasis-box h4 { color: #854d0e; /* yellow-700 */ margin-bottom: 0.5rem; }
+
+
+        /* Print Styles */
+        @media print {
+            body { background-color: #fff; margin: 10px; padding: 0; font-size: 10pt; }
+            .main-content-wrapper, .flip-lesson-container { box-shadow: none !important; border: none !important; width: 100%; max-width: 100%; padding: 5px; margin-bottom: 15px;}
+            .lesson-navigation-bar, .check-page-answers-button, .nav-links-header, .print-button-container { display: none !important; }
+            .lesson-page { page-break-inside: avoid; border: 1px solid #eee !important; }
+            .interactive-question-block {background: #fff !important; border: 1px solid #ccc !important; }
+            h1, h2, h3, h4 { color: #000 !important; border-color: #000 !important; margin-bottom: 10px; padding-bottom: 3px;}
+            .explanation-text { display: none !important; } /* Renamed from .explanation */
+            a {text-decoration: none; color: #000 !important;}
+            .emphasis-box { background-color: #fef9c3 !important; border-left-color: #eab308 !important; color: #713f12 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;}
+        }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1>The Radiation Therapy Profession: Path & Practice</h1>
+<body class="bg-slate-100 text-slate-800 flex flex-col min-h-screen">
 
-        <div class="flip-lesson-container">
-            <h2>Interactive Lesson</h2>
-
-            <div id="lesson-page-1" class="lesson-page active">
-                <h3>Page 1: The Vital Role of a Radiation Therapist</h3>
-                <h4>Purpose of This Lesson</h4>
-                <p>This lesson provides a comprehensive overview of the radiation therapy profession. You'll learn about its critical function in cancer care, the typical responsibilities involved, and the journey to becoming a qualified professional in the United States.</p>
-                <h4>What is a Radiation Therapist?</h4>
-                <p>Radiation Therapists are highly skilled healthcare professionals who administer radiation treatments to patients, primarily those diagnosed with cancer. They operate sophisticated linear accelerator machines, ensure treatment accuracy, and provide essential patient care and support throughout a challenging time. This is a <span class="highlight">specialized and focused modality</span> within the broader field of healthcare and radiologic sciences.</p>
-                <h4>Task & Criteria</h4>
-                <p>As you navigate this lesson, you will explore the scope of practice and the educational/credentialing pathways. By the end, you should be able to describe an RTT's main duties, outline the steps for ARRT certification, and understand the importance of state licensure and ongoing professional development.</p>
-                <p>Essential skills for a Radiation Therapist include technical proficiency, meticulous attention to detail, critical thinking, excellent communication abilities, empathy, and compassion.</p>
-            </div>
-
-            <div id="lesson-page-2" class="lesson-page">
-                <h3>Page 2: Educational Pathways in the U.S.</h3>
-                <p>To become a Radiation Therapist in the United States, specific educational requirements must be met.</p>
-                <ul>
-                    <li><strong>Degree Programs:</strong> Most aspiring radiation therapists complete an <span class="highlight">associate's degree or a bachelor's degree</span> in radiation therapy.</li>
-                    <li><strong>Program Accreditation:</strong> It's crucial to attend a program accredited by an organization recognized by the ARRT, such as the Joint Review Committee on Education in Radiologic Technology (JRCERT). Accreditation ensures the program meets national standards for curriculum and quality.</li>
-                    <li><strong>Curriculum:</strong> Coursework typically covers anatomy, physiology, radiation physics, oncologic pathology, patient care, medical ethics, treatment planning principles, simulation procedures, and radiation safety.</li>
-                    <li><strong>Clinical Education:</strong> A significant component of any accredited program is hands-on clinical experience in hospitals or cancer centers, where students apply their knowledge under the supervision of qualified professionals.</li>
-                </ul>
-                <h4>Quick Check!</h4>
-                <div class="interactive-question-block" id="lq_page2_1_block">
-                    <p class="question-text">What is the primary reason for choosing an accredited radiation therapy program?</p>
-                    <label><input type="radio" name="lq_page2_1" value="A"> They are usually shorter in duration.</label>
-                    <label><input type="radio" name="lq_page2_1" value="B"> They guarantee employment after graduation.</label>
-                    <label><input type="radio" name="lq_page2_1" value="C"> They meet national standards required for certification eligibility.</label>
-                    <div class="explanation" style="display:none;">Correct! Accreditation (e.g., by JRCERT) ensures the program meets educational standards necessary to be eligible for ARRT certification.</div>
-                </div>
-                <button class="check-page-answers" onclick="checkPageAnswers(2)">Check Answer</button>
-            </div>
-
-            <div id="lesson-page-3" class="lesson-page">
-                <h3>Page 3: ARRT Certification & Registration</h3>
-                <p>The <span class="highlight">American Registry of Radiologic Technologists (ARRT)</span> is the primary credentialing organization for radiation therapists in the U.S.. Earning and maintaining ARRT certification is a key professional milestone.</p>
-                <h4>ARRT Certification Requirements:</h4>
-                <ul>
-                    <li><strong>Education:</strong> Graduation from an ARRT-approved educational program in radiation therapy.</li>
-                    <li><strong>Ethics:</strong> Adherence to the ARRT Standards of Ethics.</li>
-                    <li><strong>Examination:</strong> Passing the ARRT certification examination specific to Radiation Therapy.</li>
-                </ul>
-                <p>Upon successful completion, individuals earn the R.T.(T)(ARRT) credential, signifying they are a Registered Technologist in Radiation Therapy.</p>
-                <h4>Maintaining Your Credentials:</h4>
-                <ul>
-                    <li><strong>Biennial Renewal:</strong> Certification must be renewed every two years.</li>
-                    <li><strong>Continuing Education (CE):</strong> Therapists must complete and report CE activities to stay current with advancements in the field.</li>
-                    <li><strong>Continuing Qualifications Requirements (CQR):</strong> Periodically, therapists must also meet CQR requirements, which may involve a self-assessment and targeted learning.</li>
-                </ul>
-            </div>
-
-            <div id="lesson-page-4" class="lesson-page">
-                <h3>Page 4: State Licensure</h3>
-                <p>In addition to ARRT certification, <span class="highlight">most states require radiation therapists to obtain a state license</span> to practice legally.</p>
-                <h4>Key Points about State Licensure:</h4>
-                <ul>
-                    <li><strong>Purpose:</strong> State licensure aims to protect the public by ensuring practitioners meet specific standards and by defining the legal scope of practice within that state.</li>
-                    <li><strong>Variability:</strong> Requirements for licensure, including whether ARRT certification is a prerequisite, can <span class="highlight">vary significantly from state to state</span>. Some states may have additional educational or examination requirements.</li>
-                    <li><strong>Responsibility:</strong> It is the therapist's responsibility to research and comply with the licensure requirements of any state in which they intend to work.</li>
-                    <li><strong>Renewal:</strong> State licenses also typically require periodic renewal, which may involve separate fees and continuing education mandates specific to that state.</li>
-                </ul>
-                <p class="note">Always check with the specific state's health department or licensing board for the most current and accurate information.</p>
-                <h4>Quick Check!</h4>
-                <div class="interactive-question-block" id="lq_page4_1_block">
-                    <p class="question-text">True or False: Holding an ARRT certification in Radiation Therapy automatically allows you to practice in any U.S. state.</p>
-                    <label><input type="radio" name="lq_page4_1" value="A"> True</label>
-                    <label><input type="radio" name="lq_page4_1" value="B"> False</label>
-                    <div class="explanation" style="display:none;">Correct! False. Most states require separate state licensure in addition to ARRT certification, and requirements vary.</div>
-                </div>
-                <button class="check-page-answers" onclick="checkPageAnswers(4)">Check Answer</button>
-            </div>
-
-            <div id="lesson-page-5" class="lesson-page">
-                <h3>Page 5: The Radiation Therapy Workforce in the U.S.</h3>
-                <p>Understanding the size and scope of the profession provides valuable context.</p>
-                <ul>
-                    <li><strong>Number of Professionals:</strong> According to the ARRT credential statistics, as of their latest census, there are approximately [<em>Insert latest number from ARRT source here</em>] registered radiation therapists in the U.S..</li>
-                    <li><strong>A Specialized Field:</strong> Compared to some other broader healthcare professions or larger imaging modalities within radiologic technology (like radiography, which has significantly more credentialed individuals), radiation therapy is a <span class="highlight">more specialized and niche field</span>.</li>
-                    <li><strong>Work Environments:</strong> Radiation therapists primarily work in hospitals, outpatient cancer treatment centers, and private physician offices that offer radiation oncology services.</li>
-                    <li><strong>Job Outlook:</strong> The U.S. Bureau of Labor Statistics (BLS) provides projections for employment growth. As of their latest outlook, the field is projected to [<em>Insert BLS projection, e.g., "grow about as fast as average"</em>].</li>
-                </ul>
-                <div class="emphasis-box">
-                    <h4>The Importance of Reputation in a Specialized Field</h4>
-                    <p>Because radiation therapy is a relatively smaller and more interconnected professional community, your actions, work ethic, and overall professionalism can have a significant and often lasting impact. Word travels, and your reputation will precede you.</p>
-                    <p>Building and maintaining a positive reputation through consistent ethical behavior, strong clinical skills, a collaborative attitude, and a commitment to patient care is therefore <span class="highlight">paramount for long-term career success</span> and positive working relationships with colleagues across different institutions.</p>
-                </div>
-            </div>
-
-            <div id="lesson-page-6" class="lesson-page">
-                <h3>Page 6: A Brief International Perspective</h3>
-                <p>While this lesson focuses on the U.S. pathway, it's useful to know that the structure of the radiation therapy profession varies globally.</p>
-                <ul>
-                    <li><strong>Titles and Roles:</strong> The title "Radiation Therapist" is common in the U.S. In other countries, similar roles might be known as "Therapeutic Radiographers" (common in the UK and other Commonwealth countries), "Radiation Technologists (Therapy)," or other titles. The specific scope of practice can also differ.</li>
-                    <li><strong>Education and Training:</strong>
-                        <ul>
-                            <li>Educational pathways vary widely. Some countries have degree-based university programs similar to the U.S.</li>
-                            <li>Others may have training programs more directly integrated into national health services or hospital-based schools.</li>
-                            <li>The length and specific content of educational programs can differ.</li>
-                        </ul>
-                    </li>
-                    <li><strong>Credentialing and Regulation:</strong>
-                        <ul>
-                            <li>There is no single global credentialing body equivalent to the ARRT for all countries.</li>
-                            <li>Each country or region typically has its own professional organizations, regulatory bodies, and requirements for registration or licensure to practice.</li>
-                            <li>International agreements for reciprocity of credentials are limited and often require additional steps or examinations.</li>
-                        </ul>
-                    </li>
-                </ul>
-                <p class="note">Individuals educated in the U.S. who are interested in practicing internationally must thoroughly research the specific requirements of their target country. Similarly, those educated abroad wishing to practice in the U.S. usually need to have their credentials evaluated and often must meet ARRT certification and state licensure requirements.</p>
-                <p>This diversity highlights the importance of understanding the specific professional landscape wherever one intends to practice.</p>
-            </div>
-
-            <div id="lesson-page-7" class="lesson-page">
-                <h3>Page 7: Summary & Your Professional Journey</h3>
-                <p>Becoming a Radiation Therapist is a commitment to a challenging yet deeply rewarding profession. It involves a dedicated path of education, rigorous certification, and often state licensure.</p>
-                <h4>Key Takeaways:</h4>
-                <ul>
-                    <li>Radiation Therapy is a vital, specialized field focused on delivering precise radiation treatments.</li>
-                    <li>In the U.S., the pathway typically involves an accredited degree program followed by ARRT certification and state licensure where required.</li>
-                    <li>Maintaining credentials requires ongoing professional development and adherence to ethical standards.</li>
-                    <li>Being part of a <span class="highlight">niche professional community</span> means your conduct and reputation are especially important.</li>
-                    <li>The profession is dynamic, with continuous advancements requiring a commitment to lifelong learning.</li>
-                </ul>
-                <p>As you embark on or continue your journey in radiation therapy, remember the profound impact you will have on patients' lives. Upholding the highest standards of practice, professionalism, and compassion will define your career.</p>
-                <p class="note">Consider creating a "Personal Success Plan" using the activity linked from the "Study, Time & Stress Management" lesson to help you navigate the demands of your program.</p>
-            </div>
-
-            <div class="lesson-navigation">
-                <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled>Previous Page</button>
-                <button id="backToMenuButton" onclick="goBackToOrientationMenu()" style="display:none;">Back to Orientation Menu</button>
-                <span class="page-indicator" id="lessonPageIndicator">Page 1 of 7</span>
-                <button id="nextLessonPage" onclick="changeLessonPage(1)">Next Page</button>
+    <header class="bg-white shadow-md sticky top-0 z-50 nav-links-header">
+        <div class="container mx-auto px-6 py-3 flex flex-col sm:flex-row justify-between items-center">
+            <h1 class="text-xl font-bold text-purple-700 mb-2 sm:mb-0">The Radiation Therapy Profession</h1>
+            <div class="flex flex-wrap justify-center sm:justify-end space-x-2">
+                <a href="index.html" class="text-xs sm:text-sm bg-purple-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-purple-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to Orientation Menu
+                </a>
+                <a href="../index.html" class="text-xs sm:text-sm bg-slate-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-slate-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to Main Workbook
+                </a>
             </div>
         </div>
-    </div>
+    </header>
 
-    <footer>
-        <p>&copy; <span id="currentYear"></span> RTApps. All rights reserved.</p>
+    <main class="container mx-auto max-w-4xl px-4 sm:px-6 py-8 flex-grow main-content-wrapper">
+        <div class="bg-white p-6 sm:p-8 rounded-xl shadow-xl">
+            <h1 class="text-3xl font-bold text-purple-700 mb-6 text-center border-b-2 border-purple-300 pb-4">The Radiation Therapy Profession: Path & Practice</h1>
+
+            <div class="flip-lesson-container bg-purple-50 p-4 sm:p-6 rounded-lg shadow-md mb-8 border border-purple-200">
+                <h2 class="text-2xl font-semibold text-purple-600 mb-4">Interactive Lesson</h2>
+
+                <div id="lesson-page-1" class="lesson-page active bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[480px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 1: The Vital Role of a Radiation Therapist</h3>
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Purpose: Why This Matters</h4>
+                        <p class="text-sm text-slate-600">This lesson provides a comprehensive overview of the radiation therapy profession: its critical function in cancer care, typical responsibilities, and the journey to becoming a qualified professional in the United States.</p>
+                    </div>
+                     <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Task: What You Will Do</h4>
+                        <p class="text-sm text-slate-600">Explore the RTT's scope of practice, educational/credentialing pathways, and understand the importance of state licensure and ongoing professional development.</p>
+                    </div>
+                     <div class="p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Criteria for Success: How You'll Know You've Learned</h4>
+                        <p class="text-sm text-slate-600">By the end, you should be able to describe an RTT's main duties, outline steps for ARRT certification, and understand state licensure and CE importance.</p>
+                    </div>
+                    <p class="mt-4 text-slate-700">Radiation Therapists are highly skilled healthcare professionals administering radiation treatments, operating sophisticated machinery, ensuring accuracy, and providing essential patient care. This is a <span class="highlight">specialized and focused modality</span> within healthcare.</p>
+                    <p class="text-slate-700 text-sm">Essential skills include technical proficiency, attention to detail, critical thinking, communication, empathy, and compassion.</p>
+                </div>
+
+                <div id="lesson-page-2" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[480px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 2: Educational Pathways in the U.S.</h3>
+                    <p class="text-slate-700">Specific educational requirements must be met to become a Radiation Therapist in the U.S.</p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li><strong>Degree Programs:</strong> Typically an <span class="highlight">associate's or bachelor's degree</span> in radiation therapy.</li>
+                        <li><strong>Program Accreditation:</strong> Crucial to attend a JRCERT (or other ARRT-recognized) accredited program.</li>
+                        <li><strong>Curriculum:</strong> Covers anatomy, physics, oncology, patient care, ethics, planning, simulation, and safety.</li>
+                        <li><strong>Clinical Education:</strong> Significant hands-on experience in clinical settings.</li>
+                    </ul>
+                    <div class="interactive-question-block mt-6 bg-purple-50 p-3 rounded-md border border-purple-200" id="q_page2_1">
+                        <p class="question-text font-semibold text-slate-700 mb-2">Quick Check: What is the primary reason for choosing an accredited radiation therapy program?</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-100 cursor-pointer"><input type="radio" name="q_page2_1_ans" value="A" class="mr-2 accent-purple-600"> They are usually shorter.</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-100 cursor-pointer"><input type="radio" name="q_page2_1_ans" value="B" class="mr-2 accent-purple-600"> They guarantee employment.</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-100 cursor-pointer"><input type="radio" name="q_page2_1_ans" value="C" class="mr-2 accent-purple-600"> They meet standards for certification eligibility.</label>
+                        <div class="explanation-text text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">Correct! Accreditation ensures programs meet standards for ARRT certification eligibility.</div>
+                    </div>
+                    <button class="check-page-answers-button mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswer('q_page2_1', 'C')">Check Answer</button>
+                </div>
+
+                <div id="lesson-page-3" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[480px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 3: ARRT Certification & Registration</h3>
+                    <p class="text-slate-700">The <span class="highlight">American Registry of Radiologic Technologists (ARRT)</span> is the primary U.S. credentialing body.</p>
+                    <h4 class="text-lg font-medium text-purple-600 my-2">ARRT Certification Requirements:</h4>
+                     <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li>Education: Graduation from an ARRT-approved program.</li>
+                        <li>Ethics: Adherence to ARRT Standards of Ethics.</li>
+                        <li>Examination: Passing the ARRT certification exam for Radiation Therapy.</li>
+                    </ul>
+                    <p class="text-slate-700 text-sm">Successful individuals earn the R.T.(T)(ARRT) credential.</p>
+                    <h4 class="text-lg font-medium text-purple-600 my-2">Maintaining Credentials:</h4>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm">
+                        <li>Biennial Renewal.</li>
+                        <li>Continuing Education (CE).</li>
+                        <li>Continuing Qualifications Requirements (CQR).</li>
+                    </ul>
+                </div>
+
+                <div id="lesson-page-4" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[480px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 4: State Licensure</h3>
+                    <p class="text-slate-700">Most states require RTTs to obtain a <span class="highlight">state license</span> in addition to ARRT certification.</p>
+                     <h4 class="text-lg font-medium text-purple-600 my-2">Key Points:</h4>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li>Purpose: Public protection and defining legal scope of practice.</li>
+                        <li>Variability: Requirements differ significantly by state.</li>
+                        <li>Responsibility: Therapists must research and comply with specific state rules.</li>
+                        <li>Renewal: State licenses also require periodic renewal.</li>
+                    </ul>
+                    <p class="note">Always check with the specific state's licensing board for current information.</p>
+                    <div class="interactive-question-block mt-6 bg-purple-50 p-3 rounded-md border border-purple-200" id="q_page4_1">
+                        <p class="question-text font-semibold text-slate-700 mb-2">Quick Check: True or False: ARRT certification automatically allows practice in any U.S. state.</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-100 cursor-pointer"><input type="radio" name="q_page4_1_ans" value="A" class="mr-2 accent-purple-600"> True</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-100 cursor-pointer"><input type="radio" name="q_page4_1_ans" value="B" class="mr-2 accent-purple-600"> False</label>
+                        <div class="explanation-text text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">Correct! False. Most states require separate state licensure.</div>
+                    </div>
+                    <button class="check-page-answers-button mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswer('q_page4_1', 'B')">Check Answer</button>
+                </div>
+
+                <div id="lesson-page-5" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[480px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 5: The RTT Workforce & Professional Reputation</h3>
+                     <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li><strong>Number of Professionals:</strong> Per the ARRT, there are approximately [<em>Insert current ARRT number here, e.g., "over 60,000" or be specific if you have it</em>] registered radiation therapists.</li>
+                        <li><strong>A Specialized Field:</strong> Radiation therapy is a more <span class="highlight">specialized and niche field</span> compared to larger radiologic disciplines like radiography.</li>
+                        <li><strong>Work Environments:</strong> Hospitals, outpatient cancer centers, physician offices.</li>
+                        <li><strong>Job Outlook:</strong> Refer to the U.S. Bureau of Labor Statistics (BLS) for current projections.</li>
+                    </ul>
+                    <div class="emphasis-box p-4 my-6 rounded-md shadow">
+                        <h4 class="text-lg font-semibold text-yellow-700 mb-2">The Importance of Reputation in a Specialized Field</h4>
+                        <p class="text-sm text-yellow-800">Because radiation therapy is a relatively smaller and more interconnected professional community, your actions, work ethic, and overall professionalism can have a significant and often lasting impact. Word travels, and your reputation will precede you.</p>
+                        <p class="text-sm text-yellow-800 mt-2">Building and maintaining a positive reputation through consistent ethical behavior, strong clinical skills, a collaborative attitude, and a commitment to patient care is therefore <span class="font-semibold">paramount for long-term career success</span> and positive working relationships.</p>
+                    </div>
+                </div>
+
+                <div id="lesson-page-6" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[480px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 6: A Brief International Perspective</h3>
+                    <p class="text-slate-700">The structure of the radiation therapy profession varies globally.</p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li><strong>Titles & Roles:</strong> May be "Therapeutic Radiographers" or other titles, with varying scopes of practice.</li>
+                        <li><strong>Education & Training:</strong> Ranges from national health service programs to university degrees.</li>
+                        <li><strong>Credentialing:</strong> Each country/region has its own bodies and requirements. ARRT certification is not universally reciprocal.</li>
+                    </ul>
+                    <p class="note">Research specific country requirements if interested in international practice.</p>
+                </div>
+
+                <div id="lesson-page-7" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[480px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 7: Summary & Your Professional Journey</h3>
+                    <p class="text-slate-700">This lesson covered the path to becoming an RTT and the nature of the profession.</p>
+                    <h4 class="text-lg font-medium text-purple-600 my-2">Key Takeaways:</h4>
+                     <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li>Radiation Therapy: A vital, specialized field.</li>
+                        <li>U.S. Pathway: Accredited degree, ARRT certification, state licensure.</li>
+                        <li>Maintenance: CE and ethical standards are crucial.</li>
+                        <li><span class="highlight">Reputation Matters:</span> Especially in this niche community.</li>
+                        <li>Lifelong Learning: Essential in this dynamic field.</li>
+                    </ul>
+                    <p class="text-slate-700">Remember the impact you'll have. Uphold high standards.</p>
+                    <p class="note">Consider your "Personal Success Plan" to navigate program demands.</p>
+                </div>
+
+                <div class="lesson-navigation-bar text-center mt-6">
+                    <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled class="bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors disabled:bg-slate-300 text-sm">Previous Page</button>
+                    <button id="backToMenuButton" onclick="goBackToOrientationMenu()" style="display:none;" class="bg-slate-500 text-white py-2 px-4 rounded-lg hover:bg-slate-600 transition-colors text-sm">Back to Orientation Menu</button>
+                    <span class="page-indicator mx-2 sm:mx-4 text-sm text-slate-600" id="lessonPageIndicator">Page 1 of 7</span>
+                    <button id="nextLessonPage" onclick="changeLessonPage(1)" class="bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors text-sm">Next Page</button>
+                </div>
+            </div>
+
+            <div class="print-button-container text-center mt-8">
+                <button onclick="window.print()" class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-6 rounded-lg text-sm transition-colors">Print Lesson</button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-slate-800 text-slate-300 py-6 mt-auto text-center">
+        <div class="container mx-auto px-6">
+            <p class="text-sm">&copy; <span id="currentYear"></span> RTApps. All Rights Reserved.</p>
+            <p class="text-xs mt-1">The Radiation Therapy Profession Lesson</p>
+        </div>
     </footer>
 
     <script>
@@ -198,9 +225,8 @@
         document.getElementById('currentYear').textContent = new Date().getFullYear();
 
         const lessonCorrectAnswers = {
-            lq_page2_1: "C",
-            lq_page4_1: "B"
-            // Add lq_page5_1 if you insert a question there.
+            'q_page2_1': 'C',
+            'q_page4_1': 'B'
         };
 
         function displayLessonPage() {
@@ -208,57 +234,75 @@
                 page.style.display = (index === currentLessonPage - 1) ? 'block' : 'none';
             });
             prevLessonButton.disabled = currentLessonPage === 1;
-            nextLessonButton.style.display = currentLessonPage === totalLessonPages ? 'none' : 'inline-block';
-            backToMenuButton.style.display = currentLessonPage === totalLessonPages ? 'inline-block' : 'none';
+            if (currentLessonPage === totalLessonPages) {
+                nextLessonButton.style.display = 'none';
+                if (backToMenuButton) backToMenuButton.style.display = 'inline-block';
+            } else {
+                nextLessonButton.style.display = 'inline-block';
+                if (backToMenuButton) backToMenuButton.style.display = 'none';
+            }
             lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
         }
 
         function changeLessonPage(direction) {
             currentLessonPage += direction;
-            if (currentLessonPage < 1) currentLessonPage = 1;
-            if (currentLessonPage > totalLessonPages) currentLessonPage = totalLessonPages;
             displayLessonPage();
         }
 
         function goBackToOrientationMenu() {
-            // Assumes your Orientation main menu is 'index.html' in the current folder's parent
-            // Or, if this lesson is directly in the 'Orientation_to_Radiation_Therapy' folder
-            // and 'index.html' is the menu for that folder.
-            window.location.href = 'index.html'; // Adjust if your menu structure is different
+            window.location.href = 'index.html';
         }
 
-        function checkPageAnswers(pageNumber) {
-            const questionsOnPage = document.querySelectorAll(`#lesson-page-${pageNumber} .interactive-question-block`);
-            questionsOnPage.forEach(block => {
-                const questionName = block.querySelector('input[type="radio"]').name;
-                if (!lessonCorrectAnswers.hasOwnProperty(questionName)) return;
-                const correctAnswerValue = lessonCorrectAnswers[questionName];
-                const selectedRadio = block.querySelector(`input[name="${questionName}"]:checked`);
-                const explanationDiv = block.querySelector('.explanation');
-                block.classList.remove('feedback-correct', 'feedback-incorrect');
-                block.querySelectorAll('label').forEach(label => {
-                    label.classList.remove('font-semibold', 'text-green-700', 'text-red-700');
-                });
-                if(explanationDiv) explanationDiv.style.display = 'none';
-                if (selectedRadio) {
-                    const userAnswer = selectedRadio.value;
-                    if (userAnswer === correctAnswerValue) {
-                        block.classList.add('feedback-correct');
-                        selectedRadio.parentElement.classList.add('font-semibold', 'text-green-700');
-                    } else {
-                        block.classList.add('feedback-incorrect');
-                        selectedRadio.parentElement.classList.add('font-semibold', 'text-red-700');
-                        const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
-                        if (correctRadio) correctRadio.parentElement.classList.add('font-semibold', 'text-green-700');
-                    }
-                } else {
-                    block.classList.add('feedback-incorrect');
-                     const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
-                    if (correctRadio) correctRadio.parentElement.classList.add('font-semibold', 'text-green-700');
-                }
-                if(explanationDiv) explanationDiv.style.display = 'block';
+        function checkPageAnswer(questionBlockId, correctAnswerValue) {
+            const questionBlock = document.getElementById(questionBlockId);
+            if (!questionBlock) return;
+            const selectedRadio = questionBlock.querySelector(`input[name="${questionBlockId}_ans"]:checked`);
+            const explanationDiv = questionBlock.querySelector('.explanation-text');
+            
+            questionBlock.classList.remove('correct-answer-feedback', 'incorrect-answer-feedback');
+            questionBlock.querySelectorAll('label').forEach(label => {
+                label.classList.remove('font-semibold', 'text-green-700', 'text-red-700');
+                const indicator = label.querySelector('.correct-indicator, .incorrect-indicator');
+                if(indicator) indicator.remove();
             });
+            if (explanationDiv) explanationDiv.style.display = 'none';
+
+            if (selectedRadio) {
+                const userAnswer = selectedRadio.value;
+                const userSelectedLabel = selectedRadio.parentElement;
+                if (userAnswer === correctAnswerValue) {
+                    questionBlock.classList.add('correct-answer-feedback');
+                    userSelectedLabel.classList.add('font-semibold', 'text-green-700');
+                    const indicator = document.createElement('span');
+                    indicator.className = 'correct-indicator';
+                    userSelectedLabel.appendChild(indicator);
+                } else {
+                    questionBlock.classList.add('incorrect-answer-feedback');
+                    userSelectedLabel.classList.add('font-semibold', 'text-red-700');
+                    const indicator = document.createElement('span');
+                    indicator.className = 'incorrect-indicator';
+                    userSelectedLabel.appendChild(indicator);
+                    const correctRadio = questionBlock.querySelector(`input[name="${questionBlockId}_ans"][value="${correctAnswerValue}"]`);
+                    if (correctRadio && correctRadio.parentElement) {
+                        correctRadio.parentElement.classList.add('font-semibold', 'text-green-700');
+                        const correctIndicator = document.createElement('span');
+                        correctIndicator.className = 'correct-indicator';
+                        correctRadio.parentElement.appendChild(correctIndicator);
+                    }
+                }
+            } else { 
+                questionBlock.classList.add('incorrect-answer-feedback');
+                const correctRadio = questionBlock.querySelector(`input[name="${questionBlockId}_ans"][value="${correctAnswerValue}"]`);
+                if (correctRadio && correctRadio.parentElement) {
+                    correctRadio.parentElement.classList.add('font-semibold', 'text-green-700');
+                     const correctIndicator = document.createElement('span');
+                     correctIndicator.className = 'correct-indicator';
+                     correctRadio.parentElement.appendChild(correctIndicator);
+                }
+            }
+            if (explanationDiv) explanationDiv.style.display = 'block';
         }
+        
         displayLessonPage();
     </script>
 </body>
