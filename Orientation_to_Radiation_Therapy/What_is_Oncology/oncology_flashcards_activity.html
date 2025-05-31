@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oncology Vocabulary Flashcard Challenge</title>
+    <style>
+        /* Shared CSS (as used before, with additions for tiered badges) */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; margin: 0; padding: 0; background-color: #f4f4f4; color: #333; display: flex; flex-direction: column; align-items: center; min-height: 100vh; position: relative; padding-bottom: 80px; }
+        .container { background-color: #fff; padding: 25px 35px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 90%; max-width: 800px; margin: 20px auto; }
+        h1, h2, h3 { color: #0056b3; }
+        h1 { text-align: center; border-bottom: 2px solid #0056b3; padding-bottom: 10px; }
+        h2 { margin-top: 30px; color: #003d7a; }
+        h3 { color: #004085; }
+        p, li { margin-bottom: 12px; font-size: 1.05em; }
+        ul { margin-bottom: 15px; padding-left: 25px; list-style: disc;}
+        button { background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 1em; margin: 5px; transition: background-color 0.2s; }
+        button:hover { background-color: #0056b3; }
+        button:disabled { background-color: #ccc; cursor: not-allowed; }
+        footer { position: absolute; bottom: 0; left: 0; width: 100%; text-align: center; padding: 15px 0; background-color: #e9ecef; color: #6c757d; font-size: 0.9em; border-top: 1px solid #dee2e6; }
+        .post-activity-nav { text-align: center; margin-top: 40px; padding: 20px; background-color: #f8f9fa; border-top: 1px solid #e9ecef; border-radius: 0 0 8px 8px; }
+        .post-activity-nav button { margin: 5px 15px; }
+        .post-activity-nav button.repeat { background-color: #28a745; }
+        .post-activity-nav button.repeat:hover { background-color: #218838; }
+        .post-activity-nav button.menu { background-color: #6c757d; }
+        .post-activity-nav button.menu:hover { background-color: #5a6268; }
+
+        /* Start Screen & Activity Area */
+        #start-screen-activity, #flashcard-activity-area, #activity-results {
+            background-color: #e7f3ff; border: 1px solid #b3d7ff;
+            padding: 20px 25px; border-radius: 8px; margin-bottom: 30px;
+        }
+        #start-screen-activity h3, #flashcard-activity-area h3, #activity-results h3 {
+            margin-top: 0; border-bottom: 1px solid #b3d7ff; padding-bottom: 10px;
+        }
+        #start-activity-btn { background-color: #28a745; font-size: 1.2em; padding: 12px 25px; display: block; margin: 25px auto 10px auto; }
+        #start-activity-btn:hover { background-color: #218838; }
+
+        /* Flashcard Styles */
+        #flashcard-container { min-height: 200px; background-color: #fff; border: 2px solid #0056b3; border-radius: 8px; padding: 20px; text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; margin-bottom: 15px; position: relative; }
+        #flashcard-term { font-size: 1.8em; font-weight: bold; color: #003d7a; }
+        #flashcard-definition { font-size: 1.1em; color: #333; display: none; margin-top:10px; }
+        #pronounce-button { background-color: #17a2b8; font-size: 0.8em; padding: 5px 10px; display: none; margin-top: 10px;}
+        #pronounce-button:hover { background-color: #107580; }
+        .card-flipped #flashcard-term { display: none; }
+        .card-flipped #flashcard-definition { display: block; }
+        .card-flipped #pronounce-button { display: inline-block; }
+
+        #card-controls button { margin: 0 10px; }
+        #assessment-buttons button { margin: 10px 5px; padding: 8px 15px; font-size: 0.9em; }
+        #knew-it-btn { background-color: #28a745; } #knew-it-btn:hover { background-color: #218838; }
+        #review-it-btn { background-color: #ffc107; color: #333; } #review-it-btn:hover { background-color: #e0a800; }
+        #timer-display, #card-counter { font-size: 0.9em; color: #555; text-align: right; margin-bottom: 10px;}
+
+        /* Badge Area */
+        #badge-section { margin-top: 20px; padding: 20px; background-color: #fff; border: 1px solid #ccc; text-align: center; display: none; }
+        #badge-input input { padding: 8px; margin-right: 10px; border: 1px solid #ccc; border-radius: 4px; }
+        .badge-container { margin: 20px auto; }
+        .badge {
+            width: 380px; height: 280px; /* Slightly larger */
+            margin: 0 auto; padding: 25px; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; box-shadow: 3px 3px 8px rgba(0,0,0,0.2);
+            font-family: 'Georgia', serif; text-align: center; border-radius: 10px; color: #fff;
+        }
+        .badge h4 { font-size: 1.6em; margin: 0 0 10px 0; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
+        .badge .awardee { font-size: 1.4em; font-weight: bold; margin: 15px 0; border-bottom: 1px dashed #fff; padding-bottom: 8px; }
+        .badge .reason { font-size: 1.1em; margin: 10px 0; }
+        .badge .details { font-size: 0.9em; font-style: italic; margin-top: 10px; }
+        .badge .logo { font-size: 0.9em; margin-top: 15px; font-weight: bold; }
+
+        .gold { border: 10px solid #FFD700; background: linear-gradient(135deg, #fceabb 0%, #f8b500 100%); }
+        .gold h4, .gold .awardee, .gold .logo { color: #A0522D; /* SaddleBrown */ }
+        .gold .awardee {border-bottom-color: #DAA520;}
+
+        .silver { border: 10px solid #C0C0C0; background: linear-gradient(135deg, #e9e9e9 0%, #b8b8b8 100%); }
+        .silver h4, .silver .awardee, .silver .logo { color: #4F4F4F; }
+        .silver .awardee {border-bottom-color: #A9A9A9;}
+
+        .bronze { border: 10px solid #CD7F32; background: linear-gradient(135deg, #d29961 0%, #a05d2c 100%); }
+        .bronze h4, .bronze .awardee, .bronze .logo { color: #5C3317; /* Darker brown */ }
+        .bronze .awardee {border-bottom-color: #8C5A2D;}
+
+        #no-badge-message { font-size: 1.1em; color: #dc3545; font-weight: bold; }
+
+        @media print {
+            body * { visibility: hidden; }
+            #badge-section, #badge-section * { visibility: visible; }
+            .badge { visibility: visible; position: absolute; left: 0; top: 0; width: 90%; height: auto; margin: 5%; padding: 20px; box-shadow: none; border-width: 5px !important; color: #000 !important; background: #fff !important; }
+            .badge h4, .badge .awardee, .badge .logo, .badge .reason, .badge .details { color: #000 !important; text-shadow: none;}
+            .badge .awardee { border-bottom: 1px dashed #000 !important; }
+            .gold {border-color: #B8860B !important;} /* DarkGoldenRod for print */
+            .silver {border-color: #A9A9A9 !important;} /* DarkGray for print */
+            .bronze {border-color: #8B4513 !important;} /* SaddleBrown for print */
+            #badge-input, .post-activity-nav, h1, h2, h3, .container > p, button:not(#printBadgeButton), footer, #start-screen-activity, #flashcard-activity-area, #activity-results { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Oncology Vocabulary Flashcard Challenge 🧠</h1>
+
+        <div id="start-screen-activity">
+            <h2>Test Your Terminology!</h2>
+            <h3>Purpose</h3>
+            <p>This activity is designed to help you master key terms and definitions from the "What is Oncology?" lesson. Practicing recall and pronunciation will build your confidence with essential vocabulary.</p>
+            <h3>Task</h3>
+            <ul>
+                <li>Click "Start Challenge" to begin. A timer will start.</li>
+                <li>A term will appear on the flashcard. Try to recall its definition.</li>
+                <li>Click the card to flip it and see the definition. Click the "Pronounce" button to hear the term.</li>
+                <li>Use the "I Knew This!" or "Needs Review" buttons to assess your understanding. This contributes to your score.</li>
+                <li>Use "Next Card" or "Previous Card" to navigate. "Shuffle Cards" will randomize the order.</li>
+                <li>Complete all cards to see your score, time taken, and earn a badge!</li>
+            </ul>
+            <h3>Criteria for Success & Badges</h3>
+            <p>Your goal is to accurately recall the definitions. Your score will be based on your self-assessments. Time is also tracked. Badges are awarded as follows:</p>
+            <ul>
+                <li><strong style="color:#b8860b;">Gold Badge:</strong> 96-100% Correct</li>
+                <li><strong style="color:#708090;">Silver Badge:</strong> 90-95% Correct</li>
+                <li><strong style="color:#8B4513;">Bronze Badge:</strong> 80-89% Correct</li>
+            </ul>
+            <button id="start-activity-btn" onclick="startFlashcardActivity()">Start Flashcard Challenge</button>
+        </div>
+
+        <div id="flashcard-activity-area" style="display: none;">
+            <h3>Oncology Flashcards</h3>
+            <div id="timer-display">Time: 00:00</div>
+            <div id="card-counter">Card: 0 / 0</div>
+            <div id="flashcard-container" onclick="flipCard()">
+                <div id="flashcard-term">Term will appear here</div>
+                <div id="flashcard-definition">Definition will appear here</div>
+                <button id="pronounce-button" onclick="pronounceTerm(event)">🔊 Pronounce Term</button>
+            </div>
+            <div id="assessment-buttons" style="text-align: center; display: none;">
+                <button id="knew-it-btn" onclick="markCard(true)">I Knew This! 👍</button>
+                <button id="review-it-btn" onclick="markCard(false)">Needs Review 🤔</button>
+            </div>
+            <div id="card-controls" style="text-align: center; margin-top: 15px;">
+                <button onclick="prevCard()">Previous</button>
+                <button onclick="shuffleCards()">Shuffle Cards</button>
+                <button onclick="nextCard()">Next</button>
+            </div>
+        </div>
+
+        <div id="activity-results" style="display: none;">
+            <h3>Challenge Complete!</h3>
+            <p id="final-score-display"></p>
+            <p id="final-time-display"></p>
+            <div id="badge-section">
+                <h3 id="badge-title-text">Congratulations!</h3>
+                <div id="badge-input">
+                    <label for="userNameForBadge">Enter Your Name for the Badge:</label>
+                    <input type="text" id="userNameForBadge" placeholder="Your Name Here">
+                    <button onclick="generateBadge()">Generate Badge</button>
+                </div>
+                <div id="badge-container-render">
+                    </div>
+                <button id="printBadgeButton" onclick="window.print()" style="display:none;">Print Badge</button>
+            </div>
+            <div id="no-badge-message" style="display:none;">Keep practicing to earn a badge next time!</div>
+        </div>
+
+        <div class="post-activity-nav" id="end-nav" style="display: none;">
+            <h3>What's Next?</h3>
+            <button class="menu" onclick="window.location.href='index.html'">Back to Orientation Menu</button>
+            <button class="repeat" onclick="startFlashcardActivity()">Try Challenge Again</button>
+            <button onclick="window.location.href='what_is_oncology_lesson.html#lesson-page-6'">Back to Oncology Lesson</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; <span id="currentYear"></span> RTApps. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        const flashcardData = [
+            { term: "Oncology", definition: "The branch of medicine that deals with the prevention, diagnosis, and treatment of tumors and cancer." },
+            { term: "Cancer", definition: "A disease characterized by the uncontrolled growth and spread of abnormal cells." },
+            { term: "Benign Tumor", definition: "A non-cancerous growth that does not spread to other parts of the body and is usually not life-threatening." },
+            { term: "Malignant Tumor", definition: "A cancerous growth that can invade nearby tissues and spread (metastasize) to other parts of the body." },
+            { term: "Metastasis", definition: "The spread of cancer cells from the primary tumor to distant parts of the body." },
+            { term: "Biopsy", definition: "The removal of a small sample of cells or tissue for examination under a microscope to diagnose disease." },
+            { term: "Diagnostic Workup", definition: "A series of tests (lab, imaging, etc.) to detect cancer and assess its extent." },
+            { term: "Curative Intent", definition: "Treatment aimed at completely eradicating cancer and achieving a long-term cure. Also known as Definitive Treatment." },
+            { term: "Palliative Intent", definition: "Treatment focused on relieving symptoms and improving quality of life when a cure is not possible." },
+            { term: "Primary Treatment", definition: "The main treatment administered for the best chance of curing the cancer or controlling its growth." },
+            { term: "Concurrent Treatment", definition: "Administering two or more types of treatment at the same time (e.g., radiation and chemotherapy)." },
+            { term: "Adjuvant Treatment", definition: "Additional treatment given *after* the primary treatment to eliminate any remaining cancer cells and reduce recurrence risk." },
+            { term: "Neoadjuvant Treatment", definition: "Treatment given *before* the primary treatment, often to shrink a tumor." },
+            { term: "Surgery (Oncology)", definition: "A treatment modality involving the physical removal of tumors or cancerous tissue." },
+            { term: "Chemotherapy", definition: "Treatment using drugs to kill cancer cells; typically a systemic treatment." },
+            { term: "Radiation Therapy", definition: "Treatment using high-energy radiation to shrink tumors and kill cancer cells; typically a localized treatment." }
+        ];
+
+        let currentCardIndex = 0;
+        let cards = [...flashcardData];
+        let cardIsFlipped = false;
+        let knownCards = 0;
+        let timerInterval;
+        let secondsElapsed = 0;
+        let activityStarted = false;
+
+        const startScreen = document.getElementById('start-screen-activity');
+        const activityArea = document.getElementById('flashcard-activity-area');
+        const resultsArea = document.getElementById('activity-results');
+        const termDisplay = document.getElementById('flashcard-term');
+        const definitionDisplay = document.getElementById('flashcard-definition');
+        const flashcardContainer = document.getElementById('flashcard-container');
+        const pronounceButton = document.getElementById('pronounce-button');
+        const assessmentButtons = document.getElementById('assessment-buttons');
+        const cardCounterDisplay = document.getElementById('card-counter');
+        const timerDisplay = document.getElementById('timer-display');
+        const endNav = document.getElementById('end-nav');
+        const badgeSection = document.getElementById('badge-section');
+        const noBadgeMessage = document.getElementById('no-badge-message');
+
+
+        function startFlashcardActivity() {
+            startScreen.style.display = 'none';
+            resultsArea.style.display = 'none';
+            badgeSection.style.display = 'none';
+            noBadgeMessage.style.display = 'none';
+            endNav.style.display = 'none';
+            activityArea.style.display = 'block';
+
+            currentCardIndex = 0;
+            knownCards = 0;
+            secondsElapsed = 0;
+            activityStarted = true;
+            shuffleCards(false); // Shuffle initially but don't redraw yet
+            displayCard();
+            startTimer();
+            assessmentButtons.style.display = 'none'; // Hide until card is flipped
+        }
+
+        function displayCard() {
+            if (currentCardIndex < cards.length) {
+                const card = cards[currentCardIndex];
+                termDisplay.textContent = card.term;
+                definitionDisplay.textContent = card.definition;
+                flashcardContainer.classList.remove('card-flipped');
+                pronounceButton.style.display = 'none';
+                assessmentButtons.style.display = 'none';
+                cardIsFlipped = false;
+                cardCounterDisplay.textContent = `Card: ${currentCardIndex + 1} / ${cards.length}`;
+            } else {
+                endActivity();
+            }
+        }
+
+        function flipCard() {
+            cardIsFlipped = !cardIsFlipped;
+            flashcardContainer.classList.toggle('card-flipped', cardIsFlipped);
+            pronounceButton.style.display = cardIsFlipped ? 'inline-block' : 'none';
+            assessmentButtons.style.display = cardIsFlipped ? 'flex' : 'none';
+            if (cardIsFlipped) {
+                pronounceTerm(); // Auto-pronounce when definition is shown
+            }
+        }
+
+        function pronounceTerm(event) {
+            if(event) event.stopPropagation(); // Prevent card from flipping if button is clicked
+            if (!cardIsFlipped || !('speechSynthesis' in window)) return;
+            const term = cards[currentCardIndex].term;
+            const utterance = new SpeechSynthesisUtterance(term);
+            speechSynthesis.speak(utterance);
+        }
+
+        function markCard(knewIt) {
+            if (knewIt) {
+                knownCards++;
+            }
+            // In a real scenario, you might mark the card for later review if !knewIt
+            nextCard();
+        }
+
+        function nextCard() {
+            if (currentCardIndex < cards.length - 1) {
+                currentCardIndex++;
+                displayCard();
+            } else {
+                endActivity();
+            }
+        }
+
+        function prevCard() {
+            if (currentCardIndex > 0) {
+                currentCardIndex--;
+                displayCard();
+            }
+        }
+
+        function shuffleCards(redraw = true) {
+            for (let i = cards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [cards[i], cards[j]] = [cards[j], cards[i]];
+            }
+            if (redraw && activityStarted) {
+                currentCardIndex = 0;
+                displayCard();
+            }
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval); // Clear any existing timer
+            timerDisplay.textContent = "Time: 00:00";
+            timerInterval = setInterval(() => {
+                secondsElapsed++;
+                const minutes = Math.floor(secondsElapsed / 60);
+                const seconds = secondsElapsed % 60;
+                timerDisplay.textContent = `Time: ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function endActivity() {
+            activityStarted = false;
+            clearInterval(timerInterval);
+            activityArea.style.display = 'none';
+            resultsArea.style.display = 'block';
+            endNav.style.display = 'block';
+
+            const scorePercentage = (cards.length > 0) ? Math.round((knownCards / cards.length) * 100) : 0;
+            document.getElementById('final-score-display').textContent = `Your Score: ${knownCards} out of ${cards.length} (${scorePercentage}%)`;
+            document.getElementById('final-time-display').textContent = `Time Taken: ${timerDisplay.textContent.replace("Time: ", "")}`;
+            window.finalScoreValue = scorePercentage; // For badge
+            window.timeTakenValue = timerDisplay.textContent.replace("Time: ", "");
+
+
+            let badgeClass = '';
+            let badgeText = '';
+            if (scorePercentage >= 96) {
+                badgeClass = 'gold';
+                badgeText = 'Gold Proficiency';
+            } else if (scorePercentage >= 90) {
+                badgeClass = 'silver';
+                badgeText = 'Silver Proficiency';
+            } else if (scorePercentage >= 80) {
+                badgeClass = 'bronze';
+                badgeText = 'Bronze Proficiency';
+            }
+
+            if (badgeClass) {
+                badgeSection.style.display = 'block';
+                noBadgeMessage.style.display = 'none';
+                document.getElementById('badge-title-text').textContent = `Congratulations! You've Earned a ${badgeText} Badge!`;
+                window.badgeTier = badgeText;
+                const badgeContainerRender = document.getElementById('badge-container-render');
+                // Clear previous badge before rendering new one
+                badgeContainerRender.innerHTML = '';
+                 // Call generateBadge directly or set up the elements if name input is separate
+            } else {
+                badgeSection.style.display = 'none';
+                noBadgeMessage.style.display = 'block';
+            }
+        }
+
+        function generateBadge() {
+            const name = document.getElementById('userNameForBadge').value;
+            if (name.trim() === "") { alert("Please enter your name for the badge."); return; }
+
+            const badgeContainerRender = document.getElementById('badge-container-render');
+            badgeContainerRender.innerHTML = `
+                <div class="badge ${window.badgeTier ? window.badgeTier.split(' ')[0].toLowerCase() : ''}">
+                    <h4>${window.badgeTier || 'Oncology Vocabulary'} Award</h4>
+                    <p class="awardee">${name}</p>
+                    <p class="reason">For excellent recall of Oncology terms.</p>
+                    <p class="details">Score: ${window.finalScoreValue}% | Time: ${window.timeTakenValue}</p>
+                    <p class="logo">RTApps Learning</p>
+                </div>
+            `;
+            document.getElementById('printBadgeButton').style.display = 'inline-block';
+        }
+    </script>
+</body>
+</html>
