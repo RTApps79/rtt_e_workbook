@@ -165,18 +165,16 @@
     <footer class="bg-slate-800 text-slate-300 py-6 mt-auto text-center">
         </footer>
 
-    <script src="linac-component-id-modal.js"></script> 
+      <script src="linac-component-id-modal.js"></script> 
     <script>
-        // Main Activity Script
-        document.getElementById('currentYear').textContent = new Date().getFullYear();
-
-        const labPartsData = [
+        // --- Configuration & State Variables ---
+        const activityData = [
             { 
                 partTitle: "Part 1: Linac Component Identification",
                 type: "modal_trigger", 
-                instruction: "Click 'Launch Challenge' to identify Linac components. You will have 5 components to identify.",
-                numQuestions: 5, // Number of questions for this modal part
-                pointsPerQuestion: 1 // Points for each correct modal answer
+                instruction: "Click 'Launch Challenge' below. You will be shown 5 Linac component diagrams and must choose the correct name for the highlighted part.",
+                numQuestions: 5, // Expected number of questions in the modal
+                pointsPerQuestion: 1 
             },
             { 
                 partTitle: "Part 2: Daily QA Decision-Making",
@@ -193,7 +191,7 @@
                     },
                     {
                         id: "qa_q2",
-                        text: "The treatment room door interlock test fails (the beam does not automatically stop when the door is slightly opened during a test). What is the immediate priority?",
+                        text: "The treatment room door interlock test fails (the beam does not automatically stop when the door is slightly opened during a test). What's the immediate priority?",
                         options: [
                             { text: "Place a warning sign on the door and treat carefully.", value: "a", correct: false, feedback: "Incorrect. This is a critical safety failure that compromises radiation protection." },
                             { text: "Do not use the machine for patient treatment and report the issue to physics/engineering and management immediately.", value: "b", correct: true, feedback: "Correct! A failed door interlock is a critical safety issue preventing treatment." },
@@ -208,111 +206,47 @@
                 questions: [
                     {
                         id: "emg_q1",
-                        text: "During treatment, the beam is on, and the patient urgently calls out on the intercom that they feel very unwell and dizzy. What is your FIRST and most immediate action?",
+                        text: "During treatment, the beam is on, and the patient urgently calls out on the intercom that they feel very unwell and dizzy. What is your FIRST action?",
                         options: [
                             { text: "Finish the current beam segment quickly to minimize delay.", value: "a", correct: false, feedback: "Incorrect. Patient distress during beam-on requires immediate beam termination before anything else." },
-                            { text: "Press the 'BEAM OFF' or an 'EMERGENCY OFF' button on the console.", value: "b", correct: true, feedback: "Correct! Terminating the radiation beam is the absolute immediate priority in any emergency involving the patient during beam-on." },
-                            { text: "Use the intercom to tell them to hold still and try to describe their symptoms further.", value: "c", correct: false, feedback: "Incorrect. While communication is important, stopping the beam is the first critical action." }
+                            { text: "Press the 'BEAM OFF' or an 'EMERGENCY OFF' button on the console.", value: "b", correct: true, feedback: "Correct! Terminating radiation is the immediate priority." },
+                            { text: "Use the intercom to tell them to hold still and try to describe their symptoms further.", value: "c", correct: false, feedback: "Incorrect. Stopping the beam is the first critical action." }
                         ], points: 1
                     }
                 ]
             }
         ];
 
-        let currentLabPartIndex = 0;
-        let currentQuestionInMCQPart = 0;
-        let userLabScore = 0;
-        let maxLabScore = 0;
-        labPartsData.forEach(part => {
-            if(part.type === 'modal_trigger') {
-                maxLabScore += part.numQuestions * part.pointsPerQuestion;
-            } else if (part.type === 'mcq_set') {
-                part.questions.forEach(q => maxLabScore += q.points);
-            }
-        });
-        
-        const startScreenEl = document.getElementById('start-screen-activity');
-        const activityFormEl = document.getElementById('activity-form');
-        const currentPartContainerEl = document.getElementById('current-part-container');
-        const submitPartBtnEl = document.getElementById('submit-part-btn');
-        const resultsDisplayEl = document.getElementById('results-display');
-        const finalScoreTextEl = document.getElementById('final-score-text');
-        const badgeSectionEl = document.getElementById('badge-section');
-        const noBadgeMessageEl = document.getElementById('no-badge-message');
-        const endNavEl = document.getElementById('end-nav');
+        let currentLabPartIndex;
+        let currentQuestionInMCQPart;
+        let userLabScore;
+        let maxLabScore = 0; // Will be calculated in DOMContentLoaded
 
-        // Variables for modal part
-        let modalCorrectAnswersCount = 0;
-        let modalQuestionsAnsweredCount = 0;
-        
-        // Wrapper functions for your linac-component-id-modal.js
-        // Ensure linacComponents array is accessible (e.g., from the linked JS file)
-        function openLinacComponentIDModalEnhanced() {
-            if (typeof openLinacComponentIDModal !== "function") {
-                console.error("Modal functions not loaded from linac-component-id-modal.js");
-                // Skip this part if function not found
-                currentLabPartIndex++;
-                displayCurrentLabPart();
-                return;
-            }
-            modalCorrectAnswersCount = 0;
-            modalQuestionsAnsweredCount = 0;
-            const partConf = labPartsData[currentLabPartIndex];
-            document.getElementById('modal-question-counter').textContent = `Question ${modalQuestionsAnsweredCount + 1} of ${partConf.numQuestions}`;
-            document.getElementById('nextLinacCompBtnInModal').disabled = true;
-            document.getElementById('finishLinacCompPartBtn').textContent = "Finish Component ID Part";
-            openLinacComponentIDModal(); // This function is from your JS file
+        // Variables for modal part state
+        let modalCorrectAnswersCount;
+        let modalQuestionsAnsweredCount;
+        let modalQuestionsTotalForPart;
+
+        // DOM Element variables (to be assigned in DOMContentLoaded)
+        let startScreenEl, activityFormEl, currentPartContainerEl, submitPartBtnEl,
+            resultsDisplayEl, finalScoreTextEl, badgeSectionEl, noBadgeMessageEl, endNavEl,
+            modalBgEl, modalQuestionCounterEl, modalFeedbackEl, modalNextBtnEl, modalFinishBtnEl;
+
+        function calculateMaxScore() {
+            maxLabScore = 0;
+            activityData.forEach(part => {
+                if(part.type === 'modal_trigger') {
+                    maxLabScore += part.numQuestions * part.pointsPerQuestion;
+                } else if (part.type === 'mcq_set') {
+                    part.questions.forEach(q => maxLabScore += q.points);
+                }
+            });
         }
-
-        function checkLinacComponentIDFromModal() {
-            if (typeof checkLinacComponentID !== "function") return;
-            
-            // Call your original function which updates its own feedback div
-            checkLinacComponentID(); 
-            
-            // Then, read the feedback to score
-            const feedbackText = document.getElementById('linac-component-id-feedback').innerHTML;
-            if (feedbackText.includes("Correct")) { // Check for the "pass" class or text
-                modalCorrectAnswersCount++;
-            }
-            document.getElementById('nextLinacCompBtnInModal').disabled = false;
-             const radios = document.getElementsByName('comp');
-             radios.forEach(r => r.disabled = true); // Disable radios after check
-        }
-
-        function nextLinacComponentIDFromModal() {
-            if (typeof nextLinacComponentID !== "function") return;
-            modalQuestionsAnsweredCount++;
-            const partConf = labPartsData[currentLabPartIndex];
-
-            if (modalQuestionsAnsweredCount < partConf.numQuestions) {
-                nextLinacComponentID(); // Your function to load next SVG
-                document.getElementById('modal-question-counter').textContent = `Question ${modalQuestionsAnsweredCount + 1} of ${partConf.numQuestions}`;
-                document.getElementById('nextLinacCompBtnInModal').disabled = true;
-                document.getElementById('linac-component-id-feedback').textContent = '';
-                 const radios = document.getElementsByName('comp');
-                 radios.forEach(r => r.disabled = false);
-
-
-            } else {
-                finishModalPart();
-            }
-        }
-
-        function finishModalPart() {
-            if (typeof closeLinacComponentIDModal === "function") {
-                closeLinacComponentIDModal();
-            }
-            userLabScore += modalCorrectAnswersCount; // Add score from modal to total
-            currentLabPartIndex++;
-            displayCurrentLabPart();
-        }
-        // ---- End Modal Integration ----
-
 
         function startLabActivity() {
             currentLabPartIndex = 0;
             userLabScore = 0;
+            
             activityFormEl.style.display = 'block'; 
             startScreenEl.style.display = 'none';
             resultsDisplayEl.style.display = 'none';
@@ -329,20 +263,20 @@
                 const part = labPartsData[currentLabPartIndex];
                 const partDiv = document.createElement('div');
                 partDiv.className = 'activity-part';
-                let content = `<h3>${part.partTitle}</h3>`;
+                let content = `<h3 class="text-lg font-semibold text-purple-700 mb-3">${part.partTitle}</h3>`; // Ensure h3 styling
 
                 if (part.type === "modal_trigger") {
-                    content += `<p class="question-text">${part.instruction}</p>`;
+                    content += `<p class="question-text text-sm text-slate-600">${part.instruction}</p>`; // Use text-sm slate-600
                     content += `<button type="button" onclick="openLinacComponentIDModalEnhanced()" class="mt-4 bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-2 px-4 rounded-lg text-sm">Launch Component Challenge</button>`;
-                    submitPartBtnEl.style.display = 'none'; // No general submit for modal part
+                    submitPartBtnEl.style.display = 'none'; 
                 } else if (part.type === "mcq_set") {
-                    currentQuestionInMCQPart = 0; // Reset for this set of MCQs
-                    partDiv.innerHTML = content; // Add title first
-                    currentPartContainerEl.appendChild(partDiv); // Add partDiv to DOM
-                    displayNextMCQInPart(part, partDiv); // Then populate with the first question
+                    currentQuestionInMCQPart = 0; 
+                    partDiv.innerHTML = content; 
+                    currentPartContainerEl.appendChild(partDiv); 
+                    displayNextMCQInPart(part, partDiv); 
                     submitPartBtnEl.style.display = 'block';
                     submitPartBtnEl.disabled = false;
-                    return; // displayNextMCQInPart will handle the rest for this part
+                    return; 
                 }
                 partDiv.innerHTML = content;
                 currentPartContainerEl.appendChild(partDiv);
@@ -353,26 +287,24 @@
         }
         
         function displayNextMCQInPart(partData, partDivElement) {
-             // Clear only the question area within the part, not the title
             const existingQuestion = partDivElement.querySelector('.mcq-question-wrapper');
             if(existingQuestion) existingQuestion.remove();
             const existingFeedback = partDivElement.querySelector('.feedback-area-wrapper');
             if(existingFeedback) existingFeedback.remove();
 
-
             if (currentQuestionInMCQPart < partData.questions.length) {
                 const q = partData.questions[currentQuestionInMCQPart];
-                let questionHtml = `<div class="mcq-question-wrapper my-4">`; // Wrapper for individual MCQ
+                let questionHtml = `<div class="mcq-question-wrapper my-4">`;
                 questionHtml += `<p class="question-text">${currentQuestionInMCQPart + 1}. ${q.text}</p><div class="options-list">`;
                 q.options.forEach(opt => {
-                    questionHtml += `<label><input type="radio" name="${q.id}" value="${opt.value}"> ${opt.text}</label>`;
+                    questionHtml += `<label class="block p-2 border border-slate-200 rounded hover:bg-purple-50"><input type="radio" name="${q.id}" value="${opt.value}" class="mr-2 accent-purple-500"> ${opt.text}</label>`;
                 });
                 questionHtml += `</div></div>`;
                 questionHtml += `<div class="feedback-area-wrapper"><div class="feedback-area" id="${q.id}_feedback"></div></div>`;
                 
-                partDivElement.innerHTML += questionHtml; // Append question to partDiv
+                partDivElement.innerHTML += questionHtml; 
                 submitPartBtnEl.textContent = (currentQuestionInMCQPart < partData.questions.length - 1) ? "Submit & Next Question" : "Submit Final Question of Part";
-            } else { // All questions in this MCQ part are done
+            } else { 
                 currentLabPartIndex++;
                 displayCurrentLabPart();
             }
@@ -380,7 +312,7 @@
 
         function submitCurrentActivityPart() { 
             const part = labPartsData[currentLabPartIndex];
-            if (part.type !== "mcq_set") return;
+            if (part.type !== "mcq_set" || currentQuestionInMCQPart >= part.questions.length) return;
 
             const q = part.questions[currentQuestionInMCQPart];
             const feedbackEl = document.getElementById(`${q.id}_feedback`);
@@ -396,28 +328,98 @@
                     feedbackEl.textContent = "Incorrect. " + selectedOpt.feedback;
                     feedbackEl.className = "feedback-area incorrect";
                 }
-                activityFormEl.querySelectorAll(`input[name="${q.id}"]`).forEach(rb => rb.disabled = true); // Disable current question
-                submitPartBtnEl.disabled = true; // Disable submit until next question or part
+                activityFormEl.querySelectorAll(`input[name="${q.id}"]`).forEach(rb => rb.disabled = true);
+                submitPartBtnEl.disabled = true; 
                 
                 currentQuestionInMCQPart++;
                 
                 setTimeout(() => {
+                    submitPartBtnEl.disabled = false; 
+                    const partDivElement = currentPartContainerEl.querySelector('.activity-part');
                     if (currentQuestionInMCQPart < part.questions.length) {
-                        displayNextMCQInPart(part, currentPartContainerEl.querySelector('.activity-part'));
-                         submitPartBtnEl.disabled = false;
-                    } else { // End of this MCQ part
+                        displayNextMCQInPart(part, partDivElement);
+                    } else { 
                         currentLabPartIndex++;
                         displayCurrentLabPart();
                     }
-                }, 2000); // Delay before showing next question or part
+                }, 2000);
 
             } else {
                 feedbackEl.textContent = "Please select an answer.";
                 feedbackEl.className = "feedback-area incorrect";
             }
         }
+        
+        function openLinacComponentIDModalEnhanced() {
+            if (typeof openLinacComponentIDModal !== "function" || typeof nextLinacComponentID !== "function") {
+                console.error("Modal functions not loaded from linac-component-id-modal.js");
+                currentLabPartIndex++; 
+                displayCurrentLabPart();
+                return;
+            }
+            modalCorrectAnswersCount = 0;
+            modalQuestionsAnsweredCount = 0;
+            const partConf = labPartsData[currentLabPartIndex]; // Should be Part 0
+            modalQuestionsTotalForPart = partConf.numQuestions;
 
-        function endLabActivity() { /* ... Same as previous ... */ 
+            modalQuestionCounterEl.textContent = `Question ${modalQuestionsAnsweredCount + 1} of ${modalQuestionsTotalForPart}`;
+            modalNextBtnEl.disabled = true;
+            modalFinishBtnEl.textContent = "Finish Component ID Part";
+            modalFeedbackEl.innerHTML = ""; // Clear previous modal feedback
+            
+            const radios = document.getElementsByName('comp'); // From modal form
+            radios.forEach(r => {r.checked = false; r.disabled = false;});
+
+
+            nextLinacComponentID(); // Call original function from linac-component-id-modal.js
+            modalBgEl.style.display = 'flex';
+            setTimeout(() => { // Ensure modal transition is smooth
+                if(modalBgEl.firstElementChild) modalBgEl.firstElementChild.classList.remove('scale-95', 'opacity-0');
+                if(modalBgEl.firstElementChild) modalBgEl.firstElementChild.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+        
+        function checkLinacComponentIDFromModal() {
+            if (typeof checkLinacComponentID !== "function") return;
+            
+            checkLinacComponentID(); // Your original function that updates #linac-component-id-feedback
+            
+            const feedbackText = modalFeedbackEl.innerHTML; // Read the HTML content
+            if (feedbackText.includes("Correct")) { 
+                modalCorrectAnswersCount++;
+            }
+            modalNextBtnEl.disabled = false;
+            const radios = document.getElementsByName('comp');
+            radios.forEach(r => r.disabled = true); 
+        }
+
+        function nextLinacComponentIDFromModal() {
+            if (typeof nextLinacComponentID !== "function") return;
+            modalQuestionsAnsweredCount++;
+
+            if (modalQuestionsAnsweredCount < modalQuestionsTotalForPart) {
+                nextLinacComponentID(); 
+                modalQuestionCounterEl.textContent = `Question ${modalQuestionsAnsweredCount + 1} of ${modalQuestionsTotalForPart}`;
+                modalNextBtnEl.disabled = true;
+                modalFeedbackEl.innerHTML = "";
+                const radios = document.getElementsByName('comp');
+                radios.forEach(r => {r.checked = false; r.disabled = false;});
+            } else {
+                finishModalPart();
+            }
+        }
+
+        function finishModalPart() {
+            if (typeof closeLinacComponentIDModal === "function") {
+                if(modalBgEl.firstElementChild) modalBgEl.firstElementChild.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => closeLinacComponentIDModal(), 150); // from your script
+            }
+            userLabScore += modalCorrectAnswersCount; 
+            currentLabPartIndex++;
+            displayCurrentLabPart();
+        }
+
+        function endLabActivity() { 
             activityFormEl.style.display = 'none';
             submitPartBtnEl.style.display = 'none';
             resultsDisplayEl.style.display = 'block';
@@ -449,7 +451,7 @@
                 noBadgeMessageEl.style.display = 'block';
             }
         }
-        function generateBadge() { /* ... Same as previous ... */ 
+        function generateBadge() { 
             const name = document.getElementById('userNameForBadge').value;
             if (name.trim() === "") { alert("Please enter your name."); return; }
             const badgeContainerRender = document.getElementById('badge-container-render');
@@ -472,6 +474,28 @@
             document.getElementById('printBadgeButton').style.display = 'inline-block';
             document.getElementById('badge-input').style.display = 'none'; 
         }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            calculateMaxScore();
+            startScreenEl = document.getElementById('start-screen-activity');
+            activityFormEl = document.getElementById('activity-form');
+            currentPartContainerEl = document.getElementById('current-part-container');
+            submitPartBtnEl = document.getElementById('submit-part-btn');
+            resultsDisplayEl = document.getElementById('results-display');
+            finalScoreTextEl = document.getElementById('final-score-text');
+            badgeSectionEl = document.getElementById('badge-section');
+            noBadgeMessageEl = document.getElementById('no-badge-message');
+            endNavEl = document.getElementById('end-nav');
+
+            // Modal specific elements
+            modalBgEl = document.getElementById('linac-component-id-bg');
+            modalQuestionCounterEl = document.getElementById('modal-question-counter');
+            modalFeedbackEl = document.getElementById('linac-component-id-feedback');
+            modalNextBtnEl = document.getElementById('nextLinacCompBtnInModal');
+            modalFinishBtnEl = document.getElementById('finishLinacCompPartBtn');
+
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+        });
     </script>
 </body>
 </html>
