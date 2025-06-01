@@ -1,57 +1,46 @@
 const linacComponents = [
   {
     name: "Gantry",
-    svg: `<svg width="320" height="120" viewBox="0 0 320 120">
-      <ellipse cx="70" cy="60" rx="40" ry="45" fill="#ffe082" stroke="#1976d2" stroke-width="2"/>
-      <rect x="108" y="44" width="32" height="32" fill="#f1c232" stroke="#bfa200" stroke-width="1.5"/>
-      <rect x="140" y="55" width="36" height="10" fill="#b0b0b0" stroke="#888" stroke-width="0.8"/>
-      <rect x="176" y="50" width="18" height="22" fill="#b7e2ee" stroke="#1976d2" stroke-width="1"/>
-      <rect x="212" y="76" width="90" height="17" fill="#b6e0fe" stroke="#1976d2" stroke-width="1.5"/>
-      <text x="70" y="30" text-anchor="middle" fill="#1976d2" font-size="12">?</text>
+    svg: `<svg width="300" height="220" viewBox="0 0 300 220">
+      <rect x="20" y="40" width="70" height="160" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1"/> <rect x="90" y="180" width="120" height="20" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1"/> <rect x="125" y="200" width="50" height="20" fill="#cbd5e1" stroke="#94a3b8" stroke-width="1"/> <path d="M 90 40 L 230 40 L 230 80 L 190 80 L 190 120 L 230 120 L 230 160 L 90 160 Z" fill="#ffe082" stroke="#bfa200" stroke-width="2.5"/>
+      <text x="160" y="105" text-anchor="middle" font-family="Arial, sans-serif" font-size="30" fill="#1976d2" font-weight="bold">?</text>
     </svg>`
   },
   {
-    name: "Collimator",
-    svg: `<svg width="320" height="120" viewBox="0 0 320 120">
-      <ellipse cx="70" cy="60" rx="40" ry="45" fill="#e5edfa" stroke="#1976d2" stroke-width="2"/>
-      <rect x="108" y="44" width="32" height="32" fill="#ffe082" stroke="#bfa200" stroke-width="2.5"/>
-      <rect x="140" y="55" width="36" height="10" fill="#b0b0b0" stroke="#888" stroke-width="0.8"/>
-      <rect x="176" y="50" width="18" height="22" fill="#b7e2ee" stroke="#1976d2" stroke-width="1"/>
-      <rect x="212" y="76" width="90" height="17" fill="#b6e0fe" stroke="#1976d2" stroke-width="1.5"/>
-      <text x="124" y="40" text-anchor="middle" fill="#1976d2" font-size="12">?</text>
+    name: "Collimator", // Representing secondary collimator jaws within the head
+    svg: `<svg width="300" height="220" viewBox="0 0 300 220">
+      <rect x="20" y="40" width="70" height="160" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1"/> <path d="M 90 40 L 230 40 L 230 80 L 190 80 L 190 120 L 230 120 L 230 160 L 90 160 Z" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1"/> <rect x="90" y="180" width="120" height="20" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1"/> <rect x="125" y="200" width="50" height="20" fill="#cbd5e1" stroke="#94a3b8" stroke-width="1"/> <rect x="185" y="85" width="50" height="30" fill="#ffe082" stroke="#bfa200" stroke-width="2.5" rx="2"/>
+      <text x="210" y="100" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" fill="#1976d2" font-weight="bold">?</text>
     </svg>`
   },
   {
-    name: "MLC",
-    svg: `<svg width="320" height="120" viewBox="0 0 320 120">
-      <ellipse cx="70" cy="60" rx="40" ry="45" fill="#e5edfa" stroke="#1976d2" stroke-width="2"/>
-      <rect x="108" y="44" width="32" height="32" fill="#f1c232" stroke="#bfa200" stroke-width="1.5"/>
-      <rect x="140" y="55" width="36" height="10" fill="#ffe082" stroke="#fbc02d" stroke-width="2.5"/>
-      <rect x="176" y="50" width="18" height="22" fill="#b7e2ee" stroke="#1976d2" stroke-width="1"/>
-      <rect x="212" y="76" width="90" height="17" fill="#b6e0fe" stroke="#1976d2" stroke-width="1.5"/>
-      <text x="158" y="50" text-anchor="middle" fill="#1976d2" font-size="12">?</text>
+    name: "MLC", // Representing MLCs within the head, conceptually
+    svg: `<svg width="300" height="220" viewBox="0 0 300 220">
+      <rect x="20" y="40" width="70" height="160" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1"/>
+      <path d="M 90 40 L 230 40 L 230 80 L 190 80 L 190 120 L 230 120 L 230 160 L 90 160 Z" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1"/>
+      <rect x="90" y="180" width="120" height="20" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1"/>
+      <rect x="125" y="200" width="50" height="20" fill="#cbd5e1" stroke="#94a3b8" stroke-width="1"/>
+      <rect x="190" y="110" width="40" height="15" fill="#ffe082" stroke="#bfa200" stroke-width="2.5" rx="2"/>
+      <text x="210" y="120" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#1976d2" font-weight="bold">?</text>
     </svg>`
   },
   {
-    name: "Tray",
-    svg: `<svg width="320" height="120" viewBox="0 0 320 120">
-      <ellipse cx="70" cy="60" rx="40" ry="45" fill="#e5edfa" stroke="#1976d2" stroke-width="2"/>
-      <rect x="108" y="44" width="32" height="32" fill="#f1c232" stroke="#bfa200" stroke-width="1.5"/>
-      <rect x="140" y="55" width="36" height="10" fill="#b0b0b0" stroke="#888" stroke-width="0.8"/>
-      <rect x="176" y="50" width="18" height="22" fill="#ffe082" stroke="#1976d2" stroke-width="2.5"/>
-      <rect x="212" y="76" width="90" height="17" fill="#b6e0fe" stroke="#1976d2" stroke-width="1.5"/>
-      <text x="185" y="45" text-anchor="middle" fill="#1976d2" font-size="12">?</text>
+    name: "Tray", // Representing Accessory Tray/Mount area
+    svg: `<svg width="300" height="220" viewBox="0 0 300 220">
+      <rect x="20" y="40" width="70" height="160" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1"/>
+      <path d="M 90 40 L 230 40 L 230 80 L 190 80 L 190 120 L 230 120 L 230 160 L 90 160 Z" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1"/>
+      <rect x="90" y="180" width="120" height="20" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1"/>
+      <rect x="125" y="200" width="50" height="20" fill="#cbd5e1" stroke="#94a3b8" stroke-width="1"/>
+      <rect x="180" y="130" width="60" height="10" fill="#ffe082" stroke="#bfa200" stroke-width="2.5" rx="1"/>
+      <text x="210" y="138" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#1976d2" font-weight="bold">?</text>
     </svg>`
   },
   {
     name: "Couch",
-    svg: `<svg width="320" height="120" viewBox="0 0 320 120">
-      <ellipse cx="70" cy="60" rx="40" ry="45" fill="#e5edfa" stroke="#1976d2" stroke-width="2"/>
-      <rect x="108" y="44" width="32" height="32" fill="#f1c232" stroke="#bfa200" stroke-width="1.5"/>
-      <rect x="140" y="55" width="36" height="10" fill="#b0b0b0" stroke="#888" stroke-width="0.8"/>
-      <rect x="176" y="50" width="18" height="22" fill="#b7e2ee" stroke="#1976d2" stroke-width="1"/>
-      <rect x="212" y="76" width="90" height="17" fill="#ffe082" stroke="#1976d2" stroke-width="2.5"/>
-      <text x="255" y="100" text-anchor="middle" fill="#1976d2" font-size="12">?</text>
+    svg: `<svg width="300" height="220" viewBox="0 0 300 220">
+      <rect x="20" y="40" width="70" height="160" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1"/>
+      <path d="M 90 40 L 230 40 L 230 80 L 190 80 L 190 120 L 230 120 L 230 160 L 90 160 Z" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1"/>
+      <rect x="90" y="180" width="120" height="20" fill="#ffe082" stroke="#bfa200" stroke-width="2.5"/> <rect x="125" y="200" width="50" height="20" fill="#f1c232" stroke="#bfa200" stroke-width="1.5"/> <text x="150" y="195" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" fill="#1976d2" font-weight="bold">?</text>
     </svg>`
   }
 ];
