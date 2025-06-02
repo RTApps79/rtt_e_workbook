@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Build-a-LINAC Game</title>
+    <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js",
+        "three/examples/jsm/controls/OrbitControls.js": "https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/controls/OrbitControls.js"
+      }
+    }
+    </script>
+    <style>
+        html {
+            height: 100%;
+            overflow: hidden; 
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+            color: #333;
+            display: flex;
+            flex-direction: column; 
+            height: 100vh; 
+            overflow: hidden; 
+        }
+        header {
+            background-color: #4a90e2;
+            color: white;
+            padding: 10px 0; 
+            text-align: center;
+            width: 100%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            flex-shrink: 0; 
+            z-index: 10; 
+        }
+        header h1 {
+            margin: 0;
+            font-size: 1.6em; 
+        }
+        
+        #mainGameArea {
+            display: flex;
+            flex-wrap: nowrap; 
+            justify-content: center;
+            width: 100%;
+            max-width: 100%; 
+            padding: 10px;
+            box-sizing: border-box;
+            flex-grow: 1; 
+            overflow: hidden; 
+            min-height: 0; 
+        }
+        #viewerContainer {
+            flex-grow: 1; 
+            min-width: 300px; 
+            height: 100%; 
+            background-color: #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            position: relative; 
+            margin-right: 10px; 
+        }
+        #sidePanel {
+            width: 380px; 
+            flex-shrink: 0; 
+            height: 100%; 
+            padding: 15px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; 
+        }
+        
+        @media (max-width: 899px) { 
+            #mainGameArea {
+                flex-direction: column; 
+                overflow-y: auto; 
+            }
+            #viewerContainer {
+                width: 100%;
+                margin-right: 0; 
+                margin-bottom: 10px; 
+                height: 400px; 
+                flex-grow: 0; 
+            }
+            #sidePanel {
+                 width: 100%; 
+                 max-width: 100%; 
+                 height: auto; 
+                 max-height: calc(100vh - 50px - 60px - 30px); 
+                 overflow-y: auto; 
+            }
+            #bottomMachineControls {
+                position: relative; 
+            }
+        }
+
+        .tab-buttons-container {
+            display: flex;
+            border-bottom: 1px solid #ccc;
+            margin-bottom: 10px; 
+            flex-shrink: 0;
+        }
+        .tab-button {
+            padding: 8px 10px; 
+            cursor: pointer;
+            border: none;
+            background-color: transparent;
+            font-size: 0.95em; 
+            font-weight: bold;
+            color: #555;
+            border-bottom: 3px solid transparent; 
+            margin-bottom: -1px; 
+            flex-grow: 1; 
+            text-align: center;
+        }
+        .tab-button.active { color: #4a90e2; border-bottom-color: #4a90e2; }
+        .tab-button:not(.active):hover { background-color: #f9f9f9; color: #333; }
+        
+        .tab-content-panel {
+            display: none; 
+            flex-grow: 1; 
+            overflow-y: auto; 
+            padding-right: 5px; 
+        }
+        .tab-content-panel.active { display: block; }
+
+        .control-section, .store-section { 
+            margin-bottom: 15px; padding-bottom: 10px;
+        }
+        .control-section:last-child, .store-section:last-child { border-bottom: none; }
+        
+        #bottomMachineControls {
+            width: 100%;
+            padding: 8px 15px; 
+            background-color: #e9edf0; 
+            border-top: 1px solid #d1d5da;
+            box-sizing: border-box;
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            flex-shrink: 0; 
+            z-index: 5; 
+        }
+        #bottomMachineControls h2 {
+            width: 100%; text-align: center;
+            margin-top: 5px; margin-bottom: 3px; 
+            font-size: 1.2em; 
+        }
+        #bottomMachineControls p {
+            width: 100%; text-align: center;
+            margin-top:0; margin-bottom: 8px; font-size: 0.9em;
+        }
+        .machine-controls-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center; 
+            width: 100%;
+            gap: 8px; 
+        }
+        .machine-controls-grid > div { 
+            margin: 0; 
+            padding: 8px;
+            background-color: #fdfdfd;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            min-width: 140px; 
+            text-align: center; 
+        }
+         .machine-controls-grid h3 {
+            margin-top: 0; margin-bottom: 6px;
+            font-size: 1em; 
+        }
+
+        h2 { font-size: 1.3em; margin-top: 0; margin-bottom: 8px; color: #4a90e2; }
+        label { display: block; margin-bottom: 4px; font-weight: bold; font-size: 0.9em; }
+        select, button {
+            width: 100%; padding: 8px; margin-bottom: 8px; 
+            border-radius: 5px; border: 1px solid #ccc;
+            box-sizing: border-box; font-size: 0.95em; cursor: pointer;
+        }
+        button { background-color: #5cb85c; color: white; border: none; }
+        button:hover { background-color: #4cae4c; }
+        button:disabled { background-color: #d3d3d3; cursor: not-allowed; }
+        #quizArea {
+            margin-top: 10px; padding: 10px; background-color: #f9f9f9;
+            border-radius: 5px; border: 1px solid #e0e0e0;
+        }
+        #quizQuestion { font-weight: bold; margin-bottom: 8px; font-size: 0.95em; }
+        .quiz-option { display: block; margin-bottom: 6px; font-size: 0.9em; }
+        #messageArea {
+            margin-top: 8px; padding: 8px; border-radius: 5px;
+            font-weight: bold; text-align: center; min-height: 36px; font-size: 0.9em;
+        }
+        .message-correct { background-color: #dff0d8; color: #3c763d; border: 1px solid #d6e9c6; }
+        .message-incorrect { background-color: #f2dede; color: #a94442; border: 1px solid #ebccd1; }
+        .message-info { background-color: #d9edf7; color: #31708f; border: 1px solid #bce8f1; }
+        #balanceDisplay { font-size: 1.1em; font-weight: bold; color: #2c3e50; text-align: right; margin-bottom: 5px;}
+        .store-item h4 { font-size: 1.05em; margin-bottom: 4px;}
+        .store-item p { font-size: 0.85em; margin-top: 0; margin-bottom: 6px;}
+        .store-item button { background-color: #f0ad4e; }
+        .store-item button:hover { background-color: #ec971f; }
+        .store-item button:disabled { background-color: #d3d3d3; color: #777; }
+        #resetButton { background-color: #d9534f; }
+        #resetButton:hover { background-color: #c9302c; }
+        .game-options-section { 
+            margin-top: auto; 
+            padding-top: 10px; 
+            flex-shrink: 0;
+        }
+
+        .machine-control-button-group { display: flex; justify-content: space-between; margin-bottom: 5px; }
+        .machine-control-button-group button { width: 48%; background-color: #337ab7; font-size: 0.9em; padding: 6px;}
+        .machine-control-button-group button:hover { background-color: #286090; }
+        .machine-control-button-group button:disabled { background-color: #d3d3d3; cursor: not-allowed; }
+        
+        #loadingScreen, #startScreen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.7); /* Darker overlay for start screen */
+            display: flex;
+            justify-content: center; align-items: center;
+            z-index: 1000;
+            color: #fff; /* White text for start screen */
+            text-align: center;
+        }
+        #startScreenContent {
+            background-color: rgba(255, 255, 255, 0.95); /* Light box for content */
+            color: #333;
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        #startScreenContent h1 {
+            color: #4a90e2;
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+        #startScreenContent h2 {
+            color: #31708f;
+            font-size: 1.3em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+        #startScreenContent ul {
+            list-style-type: disc;
+            padding-left: 20px;
+            text-align: left;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+        #startScreenContent li {
+            margin-bottom: 8px;
+        }
+        #startGameButton {
+            background-color: #5cb85c;
+            color: white;
+            padding: 12px 25px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 25px;
+            transition: background-color 0.3s ease;
+        }
+        #startGameButton:hover {
+            background-color: #4cae4c;
+        }
+        /* Initially hide game areas */
+        #mainGameArea, #bottomMachineControls {
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="loadingScreen">Loading 3D Assets & Game...</div>
+
+    <div id="startScreen">
+        <div id="startScreenContent">
+            <h1>Welcome to Build-a-LINAC!</h1>
+            
+            <h2>Game Objective</h2>
+            <p style="text-align:left; font-size:0.95em;">Your mission is to become a radiation therapy engineer by assembling a complete medical Linear Accelerator (LINAC). Earn parts and money by correctly answering quiz questions, then use your funds to purchase operational enhancements!</p>
+
+            <h2>How to Play</h2>
+            <ul>
+                <li><strong>Assemble Parts:</strong> Navigate to the "LINAC Assembly" tab.</li>
+                <li>Select a LINAC component from the dropdown list.</li>
+                <li>Click "Start Quiz" and answer the multiple-choice question about the selected part.</li>
+                <li><strong>Correct answers:</strong> You'll earn the 3D part, which will appear on the LINAC model, and receive in-game money.</li>
+                <li><strong>Incorrect answers:</strong> Don't worry! You can try again or select a different part.</li>
+                <li><strong>Enhancement Store:</strong> Use your earned money in the "Enhancement Store" tab to purchase upgrades.</li>
+                <li><strong>Machine Controls:</strong> Once all core LINAC parts are assembled, the "Machine Controls" panel will appear at the bottom. Purchase movement and operational enhancements (like Gantry Rotation, Couch Movement, etc.) to activate these controls.</li>
+                <li><strong>3D View:</strong> Use your mouse to interact with the 3D model:
+                    <ul>
+                        <li>Left-click and drag: Orbit around the LINAC.</li>
+                        <li>Right-click and drag (or Ctrl/Cmd + Left-click): Pan the view.</li>
+                        <li>Mouse wheel: Zoom in and out.</li>
+                    </ul>
+                </li>
+            </ul>
+            <button id="startGameButton">Start Building!</button>
+        </div>
+    </div>
+
+    <header style="display:none;">
+        <h1>Build-a-LINAC Game</h1>
+    </header>
+
+    <div id="mainGameArea"> <div id="viewerContainer"></div>
+        <div id="sidePanel">
+            <div class="tab-buttons-container">
+                <button class="tab-button active" data-tab="assemblyContent">LINAC Assembly</button>
+                <button class="tab-button" data-tab="storeContent">Enhancement Store</button>
+            </div>
+
+            <div id="assemblyContent" class="tab-content-panel active">
+                <div class="control-section">
+                    <h2>Assemble Parts</h2>
+                    <div id="balanceDisplay">Balance: $0</div>
+                    <label for="taskSelect">Select Part to Build:</label>
+                    <select id="taskSelect"></select>
+                    <button id="startQuizButton">Start Quiz</button>
+                    <div id="quizArea" style="display:none;">
+                        <p id="quizQuestion"></p>
+                        <div id="quizOptions"></div>
+                        <button id="submitAnswerButton">Submit Answer</button>
+                    </div>
+                    <div id="messageArea"></div>
+                </div>
+            </div>
+
+            <div id="storeContent" class="tab-content-panel">
+                <div class="store-section">
+                    <h2>Purchase Enhancements</h2>
+                    <div id="enhancementStore"></div>
+                </div>
+            </div>
+            
+            <div class="game-options-section"> 
+                <h2>Game Options</h2>
+                <button id="resetButton">Reset Game Progress</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="bottomMachineControls" style="display:none;"> <h2>Machine Controls</h2>
+        <p>Purchase movement enhancements from the store to enable controls.</p>
+        <div class="machine-controls-grid">
+            <div>
+                <h3>Gantry</h3>
+                <div class="machine-control-button-group">
+                    <button id="gantryRotatePlusButton" disabled>Rotate +</button>
+                    <button id="gantryRotateMinusButton" disabled>Rotate -</button>
+                </div>
+            </div>
+            <div>
+                <h3>Collimator Jaws</h3>
+                <div class="machine-control-button-group">
+                    <button id="jawsOpenButton" disabled>Open Jaws</button>
+                    <button id="jawsCloseButton" disabled>Close Jaws</button>
+                </div>
+            </div>
+            <div>
+                <h3>Couch Vertical</h3>
+                <div class="machine-control-button-group">
+                    <button id="couchUpButton" disabled>Up</button>
+                    <button id="couchDownButton" disabled>Down</button>
+                </div>
+            </div>
+            <div>
+                <h3>Couch Longitudinal</h3>
+                <div class="machine-control-button-group">
+                    <button id="couchInButton" disabled>In</button>
+                    <button id="couchOutButton" disabled>Out</button>
+                </div>
+            </div>
+            <div>
+                <h3>Couch Lateral</h3>
+                <div class="machine-control-button-group">
+                    <button id="couchLeftButton" disabled>Left</button>
+                    <button id="couchRightButton" disabled>Right</button>
+                </div>
+            </div>
+            <div>
+                <h3>Imaging Panel</h3>
+                <div class="machine-control-button-group">
+                    <button id="detectorToggleButton" disabled style="width:100%;">Extend Detector</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+
+        // --- DOM Elements ---
+        const viewerContainer = document.getElementById('viewerContainer');
+        const taskSelect = document.getElementById('taskSelect');
+        const startQuizButton = document.getElementById('startQuizButton');
+        const quizArea = document.getElementById('quizArea');
+        const quizQuestionElem = document.getElementById('quizQuestion');
+        const quizOptionsElem = document.getElementById('quizOptions');
+        const submitAnswerButton = document.getElementById('submitAnswerButton');
+        const messageArea = document.getElementById('messageArea');
+        const balanceDisplay = document.getElementById('balanceDisplay');
+        const enhancementStoreElem = document.getElementById('enhancementStore');
+        const resetButton = document.getElementById('resetButton');
+        
+        const loadingScreen = document.getElementById('loadingScreen');
+        const startScreen = document.getElementById('startScreen');
+        const startGameButton = document.getElementById('startGameButton');
+        const gameHeader = document.querySelector('header'); // Get the header element
+        const mainGameArea = document.getElementById('mainGameArea');
+        
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContentPanels = document.querySelectorAll('.tab-content-panel');
+
+        const bottomMachineControls = document.getElementById('bottomMachineControls');
+        const gantryRotatePlusButton = document.getElementById('gantryRotatePlusButton');
+        const gantryRotateMinusButton = document.getElementById('gantryRotateMinusButton');
+        const couchUpButton = document.getElementById('couchUpButton');
+        const couchDownButton = document.getElementById('couchDownButton');
+        const couchInButton = document.getElementById('couchInButton');
+        const couchOutButton = document.getElementById('couchOutButton');
+        const couchLeftButton = document.getElementById('couchLeftButton');
+        const couchRightButton = document.getElementById('couchRightButton');
+        const jawsOpenButton = document.getElementById('jawsOpenButton');
+        const jawsCloseButton = document.getElementById('jawsCloseButton');
+        const detectorToggleButton = document.getElementById('detectorToggleButton');
+
+        let scene, camera, renderer, controls;
+        let staticSetupGroup, gantryRotatingGroup, couchGroup, couchTopGroup; 
+        let linacHeadObject, jawXN, jawXP, jawYN, jawYP; 
+        let detectorPanel, detectorArm; 
+
+        const ISOCENTER_Y_TARGET = 1.5;
+        const GANTRY_PLANE_Z_TARGET = -1.0; 
+        const COUCH_SEPARATION_OFFSET = 3.5;
+        const GROUND_Y = -0.05;
+        const ACCORDION_GEOMETRIC_HEIGHT = 1.0; 
+        const WORLD_ISOCENTER = new THREE.Vector3(0, ISOCENTER_Y_TARGET, GANTRY_PLANE_Z_TARGET);
+
+        let currentBalance = 0;
+        let earnedParts = []; 
+        let purchasedEnhancements = []; 
+        let currentQuizPart = null;
+        let allCorePartsEarned = false;
+        let jawOffset = 0.1; 
+        const MAX_JAW_OFFSET = 0.25; 
+        const MIN_JAW_OFFSET = 0.03; 
+        let detectorExtended = false;
+
+        const earnedMaterial = { 
+            drivestand: new THREE.MeshStandardMaterial({ color: 0xeee8aa, metalness: 0.4, roughness: 0.7, transparent: true, opacity: 0.85 }),
+            modulatorCabinet: new THREE.MeshStandardMaterial({ color: 0x673ab7, metalness: 0.4, roughness: 0.6 }), 
+            klystron: new THREE.MeshStandardMaterial({ color: 0x778899, metalness: 0.3, roughness: 0.6 }), 
+            connectingArm: new THREE.MeshStandardMaterial({ color: 0xd3d3d3, metalness: 0.5, roughness: 0.5 }), 
+            verticalArm: new THREE.MeshStandardMaterial({ color: 0xadd8e6, metalness: 0.5, roughness: 0.5, transparent: true, opacity: 0.7 }), 
+            acceleratorHousing: new THREE.MeshStandardMaterial({ color: 0xadd8e6, metalness: 0.5, roughness: 0.5, transparent: true, opacity: 0.7 }), 
+            electronGun: new THREE.MeshStandardMaterial({ color: 0xaaaaaa, metalness: 0.6, roughness: 0.4 }), 
+            waveguide: new THREE.MeshStandardMaterial({ color: 0xaaaaaa, metalness: 0.7, roughness: 0.3 }),   
+            bendingMagnet: new THREE.MeshStandardMaterial({ color: 0x009688, metalness: 0.8, roughness: 0.3 }), 
+            treatmentHead: new THREE.MeshStandardMaterial({ color: 0xc0c0c0, metalness: 0.4, roughness: 0.5, transparent: true, opacity: 0.75 }), 
+            target: new THREE.MeshStandardMaterial({ color: 0x666666, metalness: 0.8, roughness: 0.3 }), 
+            collimatorJaws: new THREE.MeshStandardMaterial({color: 0xffa500, metalness: 0.6, roughness: 0.4}), 
+            imagingPanel: new THREE.MeshStandardMaterial({color: 0x909090, metalness: 0.5, roughness: 0.5}) 
+        };
+        const silhouetteMaterial = new THREE.MeshStandardMaterial({ color: 0xcccccc, transparent: true, opacity: 0.35, depthWrite: false });
+        const couchMaterial = new THREE.MeshStandardMaterial({ color: 0x546e7a, metalness: 0.3, roughness: 0.7 });
+        const couchAccordionMaterial = new THREE.MeshStandardMaterial({ color: 0x505050 }); 
+
+        const linacPartsData = [
+            { id: 'drivestand', name: 'Drivestand', level: 1, cost: 0, quiz: { question: "The Drivestand typically supports the rotating gantry and houses which key component for microwave generation/amplification?", options: ["Electron Gun", "Klystron or Magnetron", "Treatment Couch", "Target Assembly"], correctAnswerIndex: 1 }, geometryParams: { type: 'box', size: [0.8, ISOCENTER_Y_TARGET + 0.3, 0.8] }, position: [0, (ISOCENTER_Y_TARGET + 0.3) / 2 + GROUND_Y, -(0.4 + 0.8 / 2)], rotation: [0, 0, 0], group: 'static' },
+            { id: 'modulatorCabinet', name: 'Modulator Cabinet', level: 2, cost: 25, quiz: { question: "What is the primary purpose of the Modulator cabinet in a LINAC system?", options: ["To cool the accelerator", "To provide precisely timed high-voltage pulses to the electron gun and microwave source", "To house the beam shaping devices", "To control couch movements"], correctAnswerIndex: 1 }, geometryParams: { type: 'box', size: [0.7, 1.2, 0.5] }, position: [1.2, (1.2/2) + GROUND_Y, -1.0], rotation: [0, 0, 0], group: 'static' },
+            { id: 'klystron', name: 'Klystron', level: 3, cost: 50, quiz: { question: "A Klystron is a specialized vacuum tube that performs what function in a LINAC?", options: ["Generates electrons", "Amplifies microwaves to high power", "Shapes the X-ray beam", "Bends the electron beam"], correctAnswerIndex: 1 }, geometryParams: { type: 'cylinder', size: [0.2, 0.2, 0.6, 16] }, position: [0, GROUND_Y + (ISOCENTER_Y_TARGET + 0.3 - 0.6/2) - (0.6/2) , -(0.4 + 0.8/2)], rotation: [0, 0, 0], group: 'static' },
+            { id: 'connectingArm', name: 'Connecting Arm (to Gantry)', level: 4, cost: 30, quiz: { question: "What is the structural role of the connecting arm between the drivestand and the rotating gantry assembly?", options: ["To carry cooling water", "To provide a stable pivot point and conduit for services", "To generate the primary electron beam", "To house the X-ray target"], correctAnswerIndex: 1 }, geometryParams: { type: 'box', size: [0.3, 0.3, 0.4] }, position: [0, ISOCENTER_Y_TARGET, -0.4 / 2], rotation: [0, 0, 0], group: 'static' },
+            { id: 'verticalArm', name: 'Vertical Gantry Arm', level: 5, cost: 40, quiz: { question: "The large vertical arm of the gantry supports which major components?", options: ["Only the klystron", "The accelerator housing and treatment head", "The patient couch", "The control console"], correctAnswerIndex: 1 }, geometryParams: { type: 'box', size: [0.4, 1.6, 0.4] }, position: [0, 0, 0], rotation: [0, 0, 0], group: 'gantry' },
+            { id: 'acceleratorHousing', name: 'Accelerator Housing', level: 6, cost: 60, quiz: { question: "The accelerator housing encloses the electron gun and what other critical component?", options: ["The X-ray target", "The main part of the accelerating waveguide", "The bending magnet", "The klystron"], correctAnswerIndex: 1 }, geometryParams: { type: 'box', size: [0.5, 0.5, 2.0] }, position: [0, 1.6 / 2, 2.0 / 2], rotation: [0, 0, 0], group: 'gantry' },
+            { id: 'electronGun', name: 'Electron Gun', level: 7, cost: 50, quiz: { question: "The electron gun is the source of electrons. Where is it typically located?", options: ["In the treatment head", "At the beginning of the accelerator waveguide, within the housing", "In the klystron", "On the patient couch"], correctAnswerIndex: 1 }, geometryParams: { type: 'cylinder', size: [0.1, 0.08, 0.3, 16] }, position: [0, 1.6/2, (2.0/2) - (2.0/2) - (0.3/2) + 0.05], rotation: [Math.PI / 2, 0, 0], group: 'gantry' },
+            { id: 'waveguide', name: 'Accelerator Waveguide', level: 8, cost: 75, quiz: { question: "What is the function of the accelerating waveguide?", options: ["To bend the electron beam", "To use microwave energy to accelerate electrons", "To produce X-rays", "To collimate the beam"], correctAnswerIndex: 1 }, geometryParams: { type: 'cylinder', size: [0.05, 0.05, 2.0 - 0.3 - 0.1, 16] }, position: [0, 1.6/2, (2.0/2) - (0.3) - ( (2.0-0.3-0.1)/2 ) + 0.05 ], rotation: [Math.PI / 2, 0, 0], group: 'gantry' },
+            { id: 'bendingMagnet', name: 'Bending Magnet', level: 9, cost: 60, quiz: { question: "What is the role of the bending magnet in the LINAC gantry?", options: ["To generate microwaves", "To steer the accelerated electrons towards the target", "To shape the final treatment beam", "To cool the accelerator structure"], correctAnswerIndex: 1 }, geometryParams: { type: 'box', size: [0.4, 0.4, 0.3] }, position: [0, 1.6 / 2, (2.0/2) + (2.0/2) + (0.3/2) - 0.1], rotation: [0, 0, 0], group: 'gantry' },
+            { id: 'treatmentHead', name: 'Treatment Head', level: 10, cost: 100, quiz: { question: "The treatment head contains the target, flattening filter (for photons), scattering foils (for electrons), and what other crucial beam-shaping component?", options: ["Klystron", "Electron Gun", "Multileaf Collimator (MLC)", "Waveguide"], correctAnswerIndex: 2 }, geometryParams: { type: 'box', size: [0.6, 0.6, 0.6] }, position: [0, 1.6 / 2, (2.0/2) + (2.0/2) + 0.3 + (0.6/2) -0.1 ], rotation: [0, 0, 0], group: 'gantry' },
+            { id: 'target', name: 'X-ray Target', isSubComponent: true, parentPart: 'treatmentHead', geometryParams: { type: 'cylinder', size: [0.08, 0.08, 0.02, 16] }, position: [0, -0.25, 0], rotation: [Math.PI / 2, 0, 0], group: 'gantry' },
+        ];
+        const CORE_PART_IDS = linacPartsData.filter(p => !p.isSubComponent).map(p => p.id);
+
+        const enhancementsData = [
+            { id: 'gantryRotation', name: 'Gantry Rotation System', cost: 100, description: "Unlocks controls to rotate the LINAC gantry.", type: 'movement' },
+            { id: 'couchVertical', name: 'Couch Vertical Drive', cost: 75, description: "Unlocks controls for up/down couch movement.", type: 'movement' },
+            { id: 'couchLongitudinal', name: 'Couch Longitudinal Drive', cost: 75, description: "Unlocks controls for in/out couch movement.", type: 'movement' },
+            { id: 'couchLateral', name: 'Couch Lateral Drive', cost: 75, description: "Unlocks controls for left/right couch movement.", type: 'movement' },
+            { id: 'collimatorJaws', name: 'Collimator Jaws Control', cost: 80, description: "Unlocks controls to open/close collimator jaws.", type: 'movement'},
+            { id: 'imagingPanel', name: 'Imaging Panel System', cost: 120, description: "Unlocks ability to extend/retract the imaging panel.", type: 'movement'}
+        ];
+
+        function initThreeJS() {
+            scene = new THREE.Scene(); scene.background = new THREE.Color(0xf0f0f0); 
+            camera = new THREE.PerspectiveCamera(45, viewerContainer.clientWidth / viewerContainer.clientHeight, 0.1, 120); 
+            camera.position.set(8, ISOCENTER_Y_TARGET + 1.5, GANTRY_PLANE_Z_TARGET + COUCH_SEPARATION_OFFSET + 4); 
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(viewerContainer.clientWidth, viewerContainer.clientHeight);
+            renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap; 
+            viewerContainer.appendChild(renderer.domElement);
+            controls = new OrbitControls(camera, renderer.domElement); 
+            controls.target.set(WORLD_ISOCENTER.x, WORLD_ISOCENTER.y, WORLD_ISOCENTER.z + COUCH_SEPARATION_OFFSET / 2); 
+            controls.enableDamping = true; controls.update();
+            const ambientLight = new THREE.AmbientLight(0x808080, 1.0); scene.add(ambientLight);
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1.2); 
+            directionalLight.position.set(15, 20, 15); directionalLight.castShadow = true;
+            directionalLight.shadow.mapSize.width = 2048; directionalLight.shadow.mapSize.height = 2048;
+            scene.add(directionalLight);
+            const groundPlane = new THREE.Mesh( new THREE.PlaneGeometry(40, 40), new THREE.MeshStandardMaterial({ color: 0xe0e0e0, side: THREE.DoubleSide }) );
+            groundPlane.rotation.x = -Math.PI / 2; groundPlane.position.y = GROUND_Y;
+            groundPlane.receiveShadow = true; scene.add(groundPlane);
+            staticSetupGroup = new THREE.Group(); staticSetupGroup.position.set(0, 0, GANTRY_PLANE_Z_TARGET); scene.add(staticSetupGroup);
+            gantryRotatingGroup = new THREE.Group(); gantryRotatingGroup.position.set(0, ISOCENTER_Y_TARGET, 0); staticSetupGroup.add(gantryRotatingGroup); 
+            const couchBaseHeightRef = 0.7; const initialCouchY = (couchBaseHeightRef / 2) + GROUND_Y;
+            couchGroup = new THREE.Group(); couchGroup.position.set(0, initialCouchY, GANTRY_PLANE_Z_TARGET + COUCH_SEPARATION_OFFSET); scene.add(couchGroup);
+            couchTopGroup = new THREE.Group(); couchTopGroup.position.y = (couchBaseHeightRef / 2) + (0.15 / 2); couchGroup.add(couchTopGroup);
+            createCouch3DModels(); 
+            linacPartsData.forEach(partData => createLinacPart3D(partData));
+            createCollimatorJaws3D(); createImagingPanel3D(); 
+            window.addEventListener('resize', onWindowResize, false);
+            animate(); 
+            // Loading screen is hidden after ThreeJS init, before start screen logic
+            loadingScreen.style.display = 'none'; 
+        }
+
+        function createLinacPart3D(partData) {
+            let geometry; const gp = partData.geometryParams;
+            if (gp.type === 'box') geometry = new THREE.BoxGeometry(...gp.size);
+            else if (gp.type === 'cylinder') geometry = new THREE.CylinderGeometry(...gp.size);
+            else { geometry = new THREE.BoxGeometry(gp.size[0] || 0.5, gp.size[1] || 0.5, gp.size[2] || 0.5); }
+            const mat = earnedMaterial[partData.id] || silhouetteMaterial.clone(); 
+            const mesh = new THREE.Mesh(geometry, mat);
+            mesh.position.set(...partData.position); mesh.rotation.set(...partData.rotation);
+            mesh.castShadow = true; mesh.receiveShadow = true; mesh.name = partData.id;
+            mesh.visible = false; partData.threeJSObject = mesh;
+            const silhouette = new THREE.Mesh(geometry.clone(), silhouetteMaterial);
+            silhouette.position.copy(mesh.position); silhouette.rotation.copy(mesh.rotation);
+            silhouette.name = partData.id + "_silhouette";
+            silhouette.visible = !partData.isSubComponent; partData.silhouetteObject = silhouette;
+            if (partData.isSubComponent) {
+                const parentPartData = linacPartsData.find(p => p.id === partData.parentPart);
+                if (parentPartData && parentPartData.threeJSObject) {
+                    parentPartData.threeJSObject.add(mesh);
+                    partData.silhouetteObject.visible = false; 
+                }
+            } else if (partData.group === 'static') {
+                staticSetupGroup.add(mesh); staticSetupGroup.add(silhouette);
+            } else if (partData.group === 'gantry') {
+                gantryRotatingGroup.add(mesh); gantryRotatingGroup.add(silhouette);
+            }
+        }
+        
+        function createCouch3DModels() {
+            const couchWidthRef = 0.8, couchPlatformHeightRef = 0.15, couchLengthRef = 3.2, couchBaseHeightRef = 0.7;
+            const couchPlatformGeo = new THREE.BoxGeometry(couchWidthRef, couchPlatformHeightRef, couchLengthRef);
+            const couchPlatformMesh = new THREE.Mesh(couchPlatformGeo, couchMaterial);
+            couchTopGroup.add(couchPlatformMesh); 
+            const couchSupportBaseGeo = new THREE.BoxGeometry(couchWidthRef * 0.8, couchBaseHeightRef, couchLengthRef * 0.5);
+            const couchSupportBaseMesh = new THREE.Mesh(couchSupportBaseGeo, couchMaterial);
+            couchGroup.add(couchSupportBaseMesh);
+            const couchAccordionVisualGeo = new THREE.BoxGeometry(couchWidthRef * 0.7, ACCORDION_GEOMETRIC_HEIGHT, couchLengthRef * 0.4);
+            const couchAccordionVisualMesh = new THREE.Mesh(couchAccordionVisualGeo, couchAccordionMaterial);
+            couchAccordionVisualMesh.name = "couchAccordionVisual"; 
+            couchGroup.add(couchAccordionVisualMesh); 
+            updateCouchAccordion(); 
+        }
+        
+        function updateCouchAccordion() {
+            const accordionVisual = couchGroup.getObjectByName("couchAccordionVisual");
+            if (!accordionVisual || !couchGroup) return;
+            const couchBaseHeightRef = 0.7; 
+            const baseBottomWorldY = couchGroup.position.y - (couchBaseHeightRef / 2);
+            const accordionVisibleHeight = Math.max(0.01, baseBottomWorldY - GROUND_Y);
+            accordionVisual.scale.y = accordionVisibleHeight / ACCORDION_GEOMETRIC_HEIGHT; 
+            accordionVisual.position.y = -(couchBaseHeightRef / 2) + (accordionVisibleHeight / 2) - ( (couchBaseHeightRef/2) + (0.15/2) ); 
+        }
+
+        function createCollimatorJaws3D() {
+            const headData = linacPartsData.find(p => p.id === 'treatmentHead');
+            if (!headData || !headData.threeJSObject) return;
+            linacHeadObject = headData.threeJSObject; 
+            const jawMaterialX = new THREE.MeshStandardMaterial({color: 0xffa500}); 
+            const jawMaterialY = new THREE.MeshStandardMaterial({color: 0x00ffff}); 
+            const jawThickness = 0.04; const jawDepth = 0.2; const jawSpan = 0.5;
+            jawXN = new THREE.Mesh(new THREE.BoxGeometry(jawThickness, jawSpan, jawDepth), jawMaterialX);
+            jawXP = new THREE.Mesh(new THREE.BoxGeometry(jawThickness, jawSpan, jawDepth), jawMaterialX);
+            jawYN = new THREE.Mesh(new THREE.BoxGeometry(jawSpan, jawThickness, jawDepth), jawMaterialY);
+            jawYP = new THREE.Mesh(new THREE.BoxGeometry(jawSpan, jawThickness, jawDepth), jawMaterialY);
+            const headCenterToBeamExitY = - (headData.geometryParams.size[1] / 2) - (jawDepth / 2) + 0.2; 
+            jawXN.position.set(-jawOffset, headCenterToBeamExitY, 0);
+            jawXP.position.set(jawOffset, headCenterToBeamExitY, 0);
+            jawYN.position.set(0, headCenterToBeamExitY - jawOffset - jawThickness, 0); 
+            jawYP.position.set(0, headCenterToBeamExitY + jawOffset + jawThickness, 0);
+            [jawXN, jawXP, jawYN, jawYP].forEach(jaw => {
+                jaw.visible = false; jaw.castShadow = true;
+                linacHeadObject.add(jaw);
+            });
+        }
+        
+        function updateJawPositions() {
+            if (!jawXN) return; 
+            const headData = linacPartsData.find(p => p.id === 'treatmentHead');
+            const headCenterToBeamExitY = - (headData.geometryParams.size[1] / 2) - (0.2 / 2) + 0.2; 
+            jawXN.position.x = -jawOffset; jawXP.position.x = jawOffset;
+            jawYN.position.y = headCenterToBeamExitY - jawOffset - 0.04; 
+            jawYP.position.y = headCenterToBeamExitY + jawOffset + 0.04;
+        }
+
+        function createImagingPanel3D() {
+            const detectorPanelWidthRef = 0.7; const detectorPanelHeightRef = 0.6; const detectorPanelThicknessRef = 0.05;
+            const detectorArmRadiusRef = 0.03; 
+            const headPartData = linacPartsData.find(p=>p.id === 'treatmentHead');
+            const headZPositionInGantry = headPartData ? headPartData.position[2] : 2.0; 
+            const detectorPanelGeo = new THREE.BoxGeometry(detectorPanelWidthRef, detectorPanelHeightRef, detectorPanelThicknessRef);
+            detectorPanel = new THREE.Mesh(detectorPanelGeo, earnedMaterial.imagingPanel);
+            const armActualLength = headZPositionInGantry + 0.5; 
+            const detectorArmGeo = new THREE.CylinderGeometry(detectorArmRadiusRef, detectorArmRadiusRef, armActualLength, 16);
+            detectorArm = new THREE.Mesh(detectorArmGeo, earnedMaterial.imagingPanel);
+            detectorArm.visible = false; detectorPanel.visible = false;
+            gantryRotatingGroup.add(detectorArm); gantryRotatingGroup.add(detectorPanel);
+            setDetectorStateGame(false); 
+        }
+
+        function setDetectorStateGame(isExtended) {
+            detectorExtended = isExtended;
+            if (!detectorArm || !detectorPanel) return;
+            const verticalArmPartData = linacPartsData.find(p=>p.id === 'verticalArm');
+            const headPartData = linacPartsData.find(p=>p.id === 'treatmentHead');
+            if (!verticalArmPartData || !headPartData) return;
+            const verticalArmTotalLengthRef = verticalArmPartData.geometryParams.size[1]; 
+            const verticalArmLSizeRef = verticalArmPartData.geometryParams.size[0]; 
+            const headZPositionInGantry = headPartData.position[2];
+            const detectorPanelHeightRef = 0.6;
+            const verticalArmBottomY_local = -verticalArmTotalLengthRef / 2; 
+            if (detectorExtended) {
+                detectorArm.visible = true; detectorPanel.visible = true;
+                const armLength = headZPositionInGantry + 0.2; 
+                detectorArm.geometry.dispose(); 
+                detectorArm.geometry = new THREE.CylinderGeometry(0.03, 0.03, armLength, 16);
+                detectorArm.rotation.set(0, 0, Math.PI / 2); 
+                detectorArm.position.set(0, verticalArmBottomY_local, armLength / 2); 
+                detectorPanel.rotation.set(Math.PI / 2, 0, 0); 
+                detectorPanel.position.set(0, verticalArmBottomY_local, armLength); 
+            } else { 
+                detectorArm.visible = false; detectorPanel.visible = true; 
+                detectorPanel.rotation.set(0,0,0); 
+                detectorPanel.position.set( 0, verticalArmBottomY_local + detectorPanelHeightRef / 2, verticalArmLSizeRef / 2 + 0.05 / 2 );
+            }
+            detectorToggleButton.textContent = detectorExtended ? 'Retract Panel' : 'Extend Panel';
+        }
+
+        function onWindowResize() {
+            if (camera && renderer && viewerContainer) {
+                camera.aspect = viewerContainer.clientWidth / viewerContainer.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(viewerContainer.clientWidth, viewerContainer.clientHeight);
+            }
+        }
+        function animate() {
+            requestAnimationFrame(animate);
+            if (controls) controls.update();
+            if (renderer && scene && camera) renderer.render(scene, camera);
+        }
+
+        function openTab(event) {
+            const tabId = event.currentTarget.dataset.tab;
+            tabContentPanels.forEach(panel => panel.classList.remove('active'));
+            tabButtons.forEach(button => button.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+        tabButtons.forEach(button => button.addEventListener('click', openTab));
+
+        function updateBalanceDisplay() { balanceDisplay.textContent = `Balance: $${currentBalance}`; }
+        
+        function checkAllCorePartsEarned() {
+            allCorePartsEarned = CORE_PART_IDS.every(id => earnedParts.includes(id));
+            // Show/hide bottom controls based on assembly and if any movement enhancements are bought
+            const hasMovementEnhancements = purchasedEnhancements.some(enhId => enhancementsData.find(e => e.id === enhId && e.type ==='movement'));
+            bottomMachineControls.style.display = allCorePartsEarned ? 'flex' : 'none'; 
+            
+            if (allCorePartsEarned && !localStorage.getItem('linacFullyAssembledMessageShown_v2')) { 
+                showMessage("LINAC assembly complete! Movement & operational enhancements now available in store.", "correct");
+                localStorage.setItem('linacFullyAssembledMessageShown_v2', 'true');
+            }
+        }
+
+        function populateTaskSelect() {
+            taskSelect.innerHTML = '';
+            const availableParts = linacPartsData.filter(part => !part.isSubComponent && !earnedParts.includes(part.id));
+            if (availableParts.length === 0) {
+                const option = document.createElement('option');
+                option.textContent = "All LINAC parts assembled!";
+                taskSelect.appendChild(option); startQuizButton.disabled = true;
+            } else {
+                availableParts.sort((a, b) => a.level - b.level).forEach(part => {
+                    const option = document.createElement('option');
+                    option.value = part.id;
+                    option.textContent = `${part.name} (Lvl ${part.level} - Reward: $${part.cost})`;
+                    taskSelect.appendChild(option);
+                });
+                startQuizButton.disabled = false;
+            }
+            checkAllCorePartsEarned(); 
+        }
+
+        function displayQuiz() {
+            const selectedPartId = taskSelect.value;
+            currentQuizPart = linacPartsData.find(part => part.id === selectedPartId);
+            if (!currentQuizPart) { showMessage("Please select a valid part.", "info"); return; }
+            quizQuestionElem.textContent = currentQuizPart.quiz.question;
+            quizOptionsElem.innerHTML = '';
+            currentQuizPart.quiz.options.forEach((option, index) => {
+                const input = document.createElement('input'); input.type = 'radio'; input.name = 'quizOption';
+                input.value = index; input.id = `option${index}`;
+                const label = document.createElement('label'); label.htmlFor = `option${index}`;
+                label.textContent = option; label.style.marginLeft = "5px";
+                const div = document.createElement('div'); div.classList.add('quiz-option');
+                div.appendChild(input); div.appendChild(label);
+                quizOptionsElem.appendChild(div);
+            });
+            quizArea.style.display = 'block';
+            messageArea.textContent = ''; messageArea.className = 'messageArea'; 
+        }
+
+        function handleSubmitAnswer() {
+            if (!currentQuizPart) { showMessage("No quiz active.", "info"); quizArea.style.display = 'none'; return; }
+            const selectedOption = document.querySelector('input[name="quizOption"]:checked');
+            if (!selectedOption) { showMessage("Please select an answer.", "info"); return; }
+            const answerIndex = parseInt(selectedOption.value);
+            if (answerIndex === currentQuizPart.quiz.correctAnswerIndex) {
+                showMessage(`Correct! You've earned the ${currentQuizPart.name} and $${currentQuizPart.cost}.`, "correct");
+                currentBalance += currentQuizPart.cost; earnedParts.push(currentQuizPart.id);
+                if (currentQuizPart.threeJSObject) currentQuizPart.threeJSObject.visible = true;
+                if (currentQuizPart.silhouetteObject) currentQuizPart.silhouetteObject.visible = false;
+                linacPartsData.filter(p => p.isSubComponent && p.parentPart === currentQuizPart.id).forEach(subPart => {
+                    if (subPart.threeJSObject) subPart.threeJSObject.visible = true;
+                });
+                updateBalanceDisplay(); populateTaskSelect(); 
+                populateEnhancementStore(); saveGameState();
+            } else { showMessage("Incorrect. Try again.", "incorrect"); }
+            quizArea.style.display = 'none'; currentQuizPart = null; 
+        }
+        
+        function showMessage(msg, type = "info") { 
+            messageArea.textContent = msg; messageArea.className = 'messageArea'; 
+            if (type === "correct") messageArea.classList.add('message-correct');
+            else if (type === "incorrect") messageArea.classList.add('message-incorrect');
+            else messageArea.classList.add('message-info');
+        }
+
+        function populateEnhancementStore() {
+            enhancementStoreElem.innerHTML = ''; 
+            enhancementsData.forEach(enh => {
+                const itemDiv = document.createElement('div'); itemDiv.classList.add('store-item');
+                let canPurchase = true;
+                if (enh.type === 'movement' && !allCorePartsEarned) canPurchase = false;
+                if (purchasedEnhancements.includes(enh.id)) canPurchase = false;
+                else if (currentBalance < enh.cost) canPurchase = false;
+                itemDiv.innerHTML = `<h4>${enh.name} - $${enh.cost} ${purchasedEnhancements.includes(enh.id) ? "<span style='color:green;'>(Owned)</span>" : ""}</h4><p>${enh.description}</p>`;
+                const purchaseButton = document.createElement('button');
+                purchaseButton.textContent = purchasedEnhancements.includes(enh.id) ? "Purchased" : `Purchase ($${enh.cost})`;
+                purchaseButton.disabled = !canPurchase || purchasedEnhancements.includes(enh.id);
+                 if (purchaseButton.disabled && !purchasedEnhancements.includes(enh.id)) {
+                    let title = "";
+                    if (enh.type === 'movement' && !allCorePartsEarned) title += "Assemble LINAC first. ";
+                    if (currentBalance < enh.cost) title += "Not enough funds.";
+                    purchaseButton.title = title.trim();
+                }
+                purchaseButton.onclick = () => purchaseEnhancement(enh.id);
+                itemDiv.appendChild(purchaseButton);
+                enhancementStoreElem.appendChild(itemDiv);
+            });
+        }
+
+        function purchaseEnhancement(enhId) {
+            const enhancement = enhancementsData.find(e => e.id === enhId);
+            if (!enhancement) return;
+            if (purchasedEnhancements.includes(enhId)) { showMessage("Already owned.", "info"); return; }
+            if (enhancement.type === 'movement' && !allCorePartsEarned) { showMessage("Assemble LINAC first.", "info"); return; }
+            if (currentBalance >= enhancement.cost) {
+                currentBalance -= enhancement.cost; purchasedEnhancements.push(enhId);
+                enableMovementControl(enhId, true); 
+                showMessage(`Purchased ${enhancement.name}!`, "correct");
+                updateBalanceDisplay(); populateEnhancementStore(); saveGameState();
+            } else { showMessage("Not enough funds.", "incorrect"); }
+        }
+        
+        function enableMovementControl(enhId, isEnabled) {
+            switch(enhId) {
+                case 'gantryRotation': gantryRotatePlusButton.disabled = !isEnabled; gantryRotateMinusButton.disabled = !isEnabled; break;
+                case 'couchVertical': couchUpButton.disabled = !isEnabled; couchDownButton.disabled = !isEnabled; break;
+                case 'couchLongitudinal': couchInButton.disabled = !isEnabled; couchOutButton.disabled = !isEnabled; break;
+                case 'couchLateral': couchLeftButton.disabled = !isEnabled; couchRightButton.disabled = !isEnabled; break;
+                case 'collimatorJaws':
+                    jawsOpenButton.disabled = !isEnabled; jawsCloseButton.disabled = !isEnabled;
+                    if (jawXN) [jawXN, jawXP, jawYN, jawYP].forEach(j => j.visible = isEnabled); break;
+                case 'imagingPanel':
+                    detectorToggleButton.disabled = !isEnabled;
+                    if(isEnabled && !detectorExtended) setDetectorStateGame(false); break;
+            }
+        }
+
+        function saveGameState() {
+            try {
+                const gameState = { balance: currentBalance, parts: earnedParts, enhancements: purchasedEnhancements, allCorePartsEarned: allCorePartsEarned, jawOffset: jawOffset, detectorExtended: detectorExtended };
+                localStorage.setItem('linacGameState_v4', JSON.stringify(gameState)); 
+            } catch (e) { console.error("Save failed:", e); }
+        }
+
+        function loadGameState() {
+            try {
+                const savedState = localStorage.getItem('linacGameState_v4');
+                if (savedState) {
+                    const gameState = JSON.parse(savedState);
+                    currentBalance = gameState.balance || 0;
+                    earnedParts = gameState.parts || [];
+                    purchasedEnhancements = gameState.enhancements || [];
+                    allCorePartsEarned = gameState.allCorePartsEarned || false;
+                    jawOffset = gameState.jawOffset !== undefined ? gameState.jawOffset : 0.1;
+                    detectorExtended = gameState.detectorExtended || false;
+                }
+            } catch (e) { console.error("Load failed:", e); }
+            linacPartsData.forEach(partData => {
+                const isEarned = earnedParts.includes(partData.id);
+                if (partData.threeJSObject) partData.threeJSObject.visible = isEarned;
+                if (partData.silhouetteObject) partData.silhouetteObject.visible = !isEarned && !partData.isSubComponent;
+                if (isEarned && partData.isSubComponent) {
+                     const parent = linacPartsData.find(p => p.id === partData.parentPart);
+                     if(parent && earnedParts.includes(parent.id) && partData.threeJSObject) partData.threeJSObject.visible = true;
+                }
+            });
+            purchasedEnhancements.forEach(enhId => enableMovementControl(enhId, true));
+            updateJawPositions(); setDetectorStateGame(detectorExtended); 
+            checkAllCorePartsEarned(); 
+        }
+        
+        function resetGame() {
+            if (window.confirm("Reset all progress?")) {
+                localStorage.removeItem('linacGameState_v4');
+                localStorage.removeItem('linacFullyAssembledMessageShown_v2'); 
+                currentBalance = 0; earnedParts = []; purchasedEnhancements = [];
+                allCorePartsEarned = false; jawOffset = 0.1; detectorExtended = false;
+                linacPartsData.forEach(partData => {
+                    if (partData.threeJSObject) partData.threeJSObject.visible = false;
+                    if (partData.silhouetteObject) partData.silhouetteObject.visible = !partData.isSubComponent;
+                });
+                enhancementsData.forEach(enh => enableMovementControl(enh.id, false));
+                if (jawXN) [jawXN, jawXP, jawYN, jawYP].forEach(j => j.visible = false); 
+                setDetectorStateGame(false); 
+                loadGameState(); updateUI();
+                showMessage("Game progress reset.", "info");
+            }
+        }
+
+        function updateUI() {
+            updateBalanceDisplay(); populateTaskSelect(); 
+            populateEnhancementStore();
+            quizArea.style.display = 'none'; 
+            messageArea.textContent = ''; messageArea.className = 'messageArea';
+            updateCouchAccordion(); 
+        }
+        
+        const ROTATION_STEP = Math.PI / 36; const MOVEMENT_STEP = 0.1; 
+        gantryRotatePlusButton.addEventListener('click', () => { if (gantryRotatingGroup) gantryRotatingGroup.rotation.z -= ROTATION_STEP; });
+        gantryRotateMinusButton.addEventListener('click', () => { if (gantryRotatingGroup) gantryRotatingGroup.rotation.z += ROTATION_STEP; });
+        couchUpButton.addEventListener('click', () => { if (couchGroup) { couchGroup.position.y += MOVEMENT_STEP; updateCouchAccordion(); } });
+        couchDownButton.addEventListener('click', () => {
+            const couchBaseHeightRef = 0.7; const minY = (couchBaseHeightRef / 2) + GROUND_Y; 
+            if (couchGroup && couchGroup.position.y - MOVEMENT_STEP >= minY) { couchGroup.position.y -= MOVEMENT_STEP; updateCouchAccordion(); } 
+            else if (couchGroup) { couchGroup.position.y = minY; updateCouchAccordion(); }
+        });
+        couchInButton.addEventListener('click', () => { if (couchTopGroup) couchTopGroup.position.z -= MOVEMENT_STEP; });
+        couchOutButton.addEventListener('click', () => { if (couchTopGroup) couchTopGroup.position.z += MOVEMENT_STEP; });
+        couchLeftButton.addEventListener('click', () => { if (couchGroup) couchGroup.position.x -= MOVEMENT_STEP; });
+        couchRightButton.addEventListener('click', () => { if (couchGroup) couchGroup.position.x += MOVEMENT_STEP; });
+        jawsOpenButton.addEventListener('click', () => { jawOffset = Math.min(MAX_JAW_OFFSET, jawOffset + 0.02); updateJawPositions(); saveGameState(); });
+        jawsCloseButton.addEventListener('click', () => { jawOffset = Math.max(MIN_JAW_OFFSET, jawOffset - 0.02); updateJawPositions(); saveGameState(); });
+        detectorToggleButton.addEventListener('click', () => { setDetectorStateGame(!detectorExtended); saveGameState(); });
+        startQuizButton.addEventListener('click', displayQuiz);
+        submitAnswerButton.addEventListener('click', handleSubmitAnswer);
+        resetButton.addEventListener('click', resetGame);
+        
+        // --- Game Initialization Flow ---
+        startGameButton.addEventListener('click', () => {
+            startScreen.style.display = 'none';
+            gameHeader.style.display = 'block'; // Show the actual game header
+            mainGameArea.style.display = 'flex'; // Show the main game area
+            // bottomMachineControls will be shown by checkAllCorePartsEarned if applicable
+            
+            // Initialize Three.js and game state *after* start button is clicked
+            // to ensure viewerContainer is visible and has dimensions for renderer.
+            if (!scene) { // Initialize only once
+                initThreeJS(); 
+            }
+            loadGameState(); 
+            updateUI(); 
+            // Set initial tab after UI update
+            document.querySelector('.tab-button[data-tab="assemblyContent"]').click();
+            onWindowResize(); // Call resize to ensure canvas fits new layout
+        });
+
+        // Initially, only loading and start screens are potentially visible.
+        // Game header and main area are hidden by CSS.
+        // Three.js init is deferred until "Start Game" is clicked.
+        // loadingScreen.style.display = 'none'; // Hide loading screen if Three.js init is deferred.
+        // For now, let loading screen show, then start screen will overlay it.
+        // If Three.js was initialized immediately, then loadingScreen.style.display = 'none' would be after initThreeJS().
+        // Since initThreeJS is now deferred, the loading screen will be hidden by the start screen logic.
+        // Ensure loading screen is hidden if start screen is shown.
+         window.addEventListener('DOMContentLoaded', () => {
+            loadingScreen.style.display = 'none'; // Hide loading screen once DOM is ready, start screen takes over.
+            startScreen.style.display = 'flex'; // Ensure start screen is visible
+        });
+
+
+    </script>
+</body>
+</html>
