@@ -1,22 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Integrated TPS & 3D LINAC Simulator</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Three.js import map -->
-    <script type="importmap">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Integrated LINAC TPS & Simulator</title>
+  <script type="importmap">
     {
       "imports": {
         "three": "https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js",
         "three/examples/jsm/controls/OrbitControls.js": "https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/controls/OrbitControls.js"
       }
     }
-    </script>
-    <style>
+  </script>
+  <script type="module" src="tps_main.js"></script>
+</head>
+<body>
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <main id="appRoot">
+   <style>
         body { font-family: 'Inter', sans-serif; overflow: hidden; display: flex; flex-direction: column; height: 100vh; }
         header { flex-shrink: 0; }
         main { flex-grow: 1; display: flex; overflow: hidden; padding: 8px; gap: 8px; background-color: #e5e7eb; /* Light gray background */}
@@ -198,9 +199,6 @@
         <button id="linacCouchIn" class="btn btn-secondary">Couch In</button>
         <button id="linacCouchOut" class="btn btn-secondary">Couch Out</button>
     </div>
-
-    <script type="module" src="run_plan.js"></script>
-    <!-- tutorial.js will be added here if/when integrated -->
-    <!-- <script src="tutorial.js"></script> -->
+  </main>
 </body>
 </html>
