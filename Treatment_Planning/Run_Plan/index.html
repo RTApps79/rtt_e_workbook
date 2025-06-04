@@ -1,23 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Integrated LINAC TPS & Simulator</title>
-  <script type="importmap">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integrated TPS & 3D LINAC Simulator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Three.js import map -->
+    <script type="importmap">
     {
       "imports": {
         "three": "https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js",
         "three/examples/jsm/controls/OrbitControls.js": "https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/controls/OrbitControls.js"
       }
     }
-  </script>
-  <script type="module" src="tps_main.js"></script>
-</head>
-<body>
-  <noscript>You need to enable JavaScript to run this app.</noscript>
-  <main id="appRoot">
-   <style>
+    </script>
+    <style>
         body { font-family: 'Inter', sans-serif; overflow: hidden; display: flex; flex-direction: column; height: 100vh; }
         header { flex-shrink: 0; }
         main { flex-grow: 1; display: flex; overflow: hidden; padding: 8px; gap: 8px; background-color: #e5e7eb; /* Light gray background */}
@@ -199,6 +198,1141 @@
         <button id="linacCouchIn" class="btn btn-secondary">Couch In</button>
         <button id="linacCouchOut" class="btn btn-secondary">Couch Out</button>
     </div>
-  </main>
+
+    <script>
+     /**
+ * integrated_tps_linac_script.js
+ * Main JavaScript for the Integrated TPS & 3D LINAC Simulator
+ */
+import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+
+document.addEventListener('DOMContentLoaded', () => {
+    // --- DOM Element References ---
+    // Panels
+    const leftPanel = document.getElementById('left-panel');
+    const viewerContainer3D = document.getElementById('viewer-container'); // 3D LINAC viewer
+    const rightPanel = document.getElementById('right-panel');
+
+    // Site Selection
+    const siteSelect = document.getElementById('siteSelect');
+
+    // 2D Viewer (in left panel)
+    const ctViewer2D = document.getElementById('ct-viewer-2d');
+    const ctViewerImage2D = document.getElementById('ctViewerImage2D');
+    const isodoseOverlaySVG2D = document.getElementById('isodoseOverlaySVG2D');
+    const ctSliceSlider = document.getElementById('ctSliceSlider');
+    const ctSliceValueText = document.getElementById('ctSliceValueText');
+
+    // Structure Definition
+    const structureSelector = document.getElementById('structureSelector');
+    const toggleStructureVisibilityBtn = document.getElementById('toggleStructureVisibilityBtn');
+    const editStructureBtn = document.getElementById('editStructureBtn');
+    const structureEditorDiv = document.getElementById('structureEditor');
+    const editingStructureNameSpan = document.getElementById('editingStructureName');
+    const structureSliders = document.querySelectorAll('.structure-slider');
+
+    // Planning Mode & Tabs
+    const tabForwardPlanning = document.getElementById('tabForwardPlanning');
+    const tabInversePlanning = document.getElementById('tabInversePlanning');
+    const forwardPlanningTabContent = document.getElementById('forwardPlanningTabContent');
+    const inversePlanningTabContent = document.getElementById('inversePlanningTabContent');
+    const planTypeText = document.getElementById('planTypeText');
+
+    // Forward Planning
+    const gantryAngleInput = document.getElementById('gantryAngle');
+    const fieldSizeXInput = document.getElementById('fieldSizeX');
+    const fieldSizeYInput = document.getElementById('fieldSizeY');
+    const beamWeightInput = document.getElementById('beamWeight');
+    const addBeamBtn = document.getElementById('addBeamBtn');
+    const applyBeamSettingsBtn = document.getElementById('applyBeamSettingsBtn');
+    const clearBeamsBtn = document.getElementById('clearBeamsBtn');
+
+    // Inverse Planning
+    const inverseObjectivesContainer = document.getElementById('inverseObjectivesContainer');
+    const simulateOptimizationBtn = document.getElementById('simulateOptimizationBtn');
+
+    // Right Panel: Evaluation & Control
+    const beamListDiv = document.getElementById('beamList');
+    const dvhChartCanvasEl = document.getElementById('dvhChartCanvas');
+    const planSummaryContainer = document.getElementById('planSummaryContainer');
+    const applyToLinacBtn = document.getElementById('applyToLinacBtn');
+    const runFullPlanBtn = document.getElementById('runFullPlanBtn');
+    const approvePlanBtn = document.getElementById('approvePlanBtn');
+
+    // LINAC Controls Panel (Bottom)
+    const linacControlsPanel = document.getElementById('linac-controls-panel');
+    const linacGantryRotCWBtn = document.getElementById('linacGantryRotCW');
+    const linacGantryRotCCWBtn = document.getElementById('linacGantryRotCCW');
+    const linacStatusDiv = document.getElementById('linac-status');
+    const linacJawsOpenBtn = document.getElementById('linacJawsOpen');
+    const linacJawsCloseBtn = document.getElementById('linacJawsClose');
+    const linacCouchInBtn = document.getElementById('linacCouchIn');
+    const linacCouchOutBtn = document.getElementById('linacCouchOut');
+    // Add other LINAC controls if needed (lateral, vertical)
+
+    // --- Three.js Variables ---
+    let scene, camera3D, renderer3D, controls3D;
+    let staticSetupGroup, gantryRotatingGroup, couchGroup, couchTopGroup;
+    let linacHeadObject, jawXN, jawXP, jawYN, jawYP; // LINAC parts
+    let detectorPanel, detectorArm; // For imaging panel if used
+    let patientPhantomMesh, targetVolumeMesh3D; // For 3D patient representation
+    let beamVisualizationGroup; // For visualizing the beam in 3D
+
+    const ISOCENTER_Y_TARGET = 1.3; // Adjusted for typical couch height
+    const GANTRY_PLANE_Z_TARGET = -0.8; // Gantry rotation plane
+    const COUCH_SEPARATION_OFFSET = 3.0;
+    const GROUND_Y = 0;
+    const WORLD_ISOCENTER = new THREE.Vector3(0, ISOCENTER_Y_TARGET, GANTRY_PLANE_Z_TARGET);
+
+    // --- TPS State Variables ---
+    let currentSite = 'prostate'; // Default site
+    let currentPlanningMode = 'forward'; // 'forward' or 'inverse'
+    let tpsBeams = []; // Array for 2D planned beams
+    let selectedTpsBeamIndex = -1;
+    let currentEditingStructureId2D = null;
+    let ctSliceImagePaths = { prostate: [], lung: [], brain: [] };
+    let allStructuresData = {}; // Will hold structure definitions for all sites
+    let currentSiteStructures = {}; // Structures for the currently selected site
+    let dvhChartInstance;
+
+    // Animation variables for LINAC
+    let isLinacAnimating = false;
+    let planAnimationQueue = [];
+    let currentAnimationStep = 0;
+    let animationFrameId;
+
+    const DEG_TO_RAD = Math.PI / 180;
+    const RAD_TO_DEG = 180 / Math.PI;
+
+
+    // --- DATA DEFINITIONS (Structures, Objectives per site) ---
+    function defineSiteData() {
+        allStructuresData = {
+            prostate: {
+                name: "Prostate Cancer",
+                structures: {
+                    "PTV_Prostate": { id: "PTV_Prostate", name: "PTV Prostate", type: "PTV", color: 'rgba(250, 204, 21, 0.3)', borderColor: '#facc15', x: 45, y: 55, w: 15, h: 20, shapeParams: { borderRadius: '40% 40% 30% 30%' } },
+                    "OAR_Rectum":   { id: "OAR_Rectum", name: "Rectum", type: "OAR", color: 'rgba(239, 68, 68, 0.4)', borderColor: '#ef4444', x: 42, y: 70, w: 20, h: 25, shapeParams: { borderRadius: '15px 15px 35% 35%'} },
+                    "OAR_Bladder":  { id: "OAR_Bladder", name: "Bladder", type: "OAR", color: 'rgba(59, 130, 246, 0.4)', borderColor: '#3b82f6', x: 48, y: 30, w: 20, h: 18, shapeParams: { borderRadius: '35% 35% 15px 15px'} },
+                    "OAR_FemHead_L":{ id: "OAR_FemHead_L", name: "L Femoral Head", type: "OAR", color: 'rgba(168, 85, 247, 0.3)', borderColor: '#a855f7', x: 25, y: 50, w: 12, h: 20, shapeParams: { borderRadius: '50%'}},
+                    "OAR_FemHead_R":{ id: "OAR_FemHead_R", name: "R Femoral Head", type: "OAR", color: 'rgba(168, 85, 247, 0.3)', borderColor: '#a855f7', x: 70, y: 50, w: 12, h: 20, shapeParams: { borderRadius: '50%'}}
+                },
+                objectives: [ // For inverse planning
+                    { label: "PTV D95% (Gy):", id: "ptvD95", defaultValue: 76, type: "PTV" },
+                    { label: "Rectum V70Gy (%):", id: "rectumV70", defaultValue: 20, type: "OAR", constraint: "max" },
+                    { label: "Bladder V75Gy (%):", id: "bladderV75", defaultValue: 25, type: "OAR", constraint: "max" }
+                ],
+                planSummaryMetrics: [
+                    { label: "PTV D95%", key: "PTV_Prostate", metricType: "DoseAtVolume", value: 95, target: 76, unit: "Gy" },
+                    { label: "Rectum V70Gy", key: "OAR_Rectum", metricType: "VolumeAtDose", value: 70, target: 20, unit: "%" },
+                    { label: "Bladder V75Gy", key: "OAR_Bladder", metricType: "VolumeAtDose", value: 75, target: 25, unit: "%" },
+                ],
+                defaultBeamParams: { gantry: 0, fsx: 10, fsy: 12, weight: 50 }
+            },
+            lung: {
+                name: "Lung Cancer",
+                structures: {
+                    "PTV_Lung":         { id: "PTV_Lung", name: "PTV Lung Tumor", type: "PTV", color: 'rgba(250, 204, 21, 0.3)', borderColor: '#facc15', x: 35, y: 45, w: 20, h: 30, shapeParams: { borderRadius: '30% 70% 70% 30% / 30% 30% 70% 70%'} },
+                    "OAR_Lung_L":       { id: "OAR_Lung_L", name: "Left Lung", type: "OAR", color: 'rgba(34, 197, 94, 0.3)', borderColor: '#22c55e', x: 15, y: 20, w: 30, h: 65, shapeParams: { borderRadius: '40% 10% 10% 60% / 50% 10% 10% 50%'} },
+                    "OAR_Lung_R":       { id: "OAR_Lung_R", name: "Right Lung", type: "OAR", color: 'rgba(34, 197, 94, 0.3)', borderColor: '#22c55e', x: 55, y: 20, w: 30, h: 65, shapeParams: { borderRadius: '10% 40% 60% 10% / 10% 50% 50% 10%'} },
+                    "OAR_SpinalCord":   { id: "OAR_SpinalCord", name: "Spinal Cord", type: "OAR", color: 'rgba(239, 68, 68, 0.4)', borderColor: '#ef4444', x: 48, y: 40, w: 4, h: 25, shapeParams: { borderRadius: '5px'} },
+                    "OAR_Heart":        { id: "OAR_Heart", name: "Heart", type: "OAR", color: 'rgba(217, 70, 239, 0.3)', borderColor: '#d946ef', x: 30, y: 55, w: 25, h: 25, shapeParams: { borderRadius: '50% 50% 20% 20%'} },
+                    "OAR_Esophagus":    { id: "OAR_Esophagus", name: "Esophagus", type: "OAR", color: 'rgba(245, 158, 11, 0.4)', borderColor: '#f59e0b', x: 53, y: 45, w: 3, h: 15, shapeParams: { borderRadius: '3px'} },
+                    "LANDMARK_Carina":  { id: "LANDMARK_Carina", name: "Carina", type: "LANDMARK", color: 'rgba(139, 92, 246, 0.25)', borderColor: '#8b5cf6', x: 47, y: 30, w: 6, h: 5, shapeParams: { borderRadius: '40% 40% 20% 20%'} },
+                    "LANDMARK_T4T5":    { id: "LANDMARK_T4T5", name: "T4/T5 Vertebra", type: "LANDMARK", color: 'rgba(139, 92, 246, 0.35)', borderColor: '#8b5cf6', x: 47.5, y: 32, w: 5, h: 8, shapeParams: { borderRadius: '3px'} }
+                },
+                objectives: [
+                    { label: "PTV D95% (Gy):", id: "ptvD95", defaultValue: 60, type: "PTV" },
+                    { label: "Cord Max (Gy):", id: "cordMax", defaultValue: 45, type: "OAR", constraint: "max" },
+                    { label: "Lung V20Gy (%):", id: "lungV20", defaultValue: 30, type: "OAR", constraint: "max" },
+                    { label: "Heart Mean (Gy):", id: "heartMean", defaultValue: 26, type: "OAR", constraint: "max" }
+                ],
+                planSummaryMetrics: [
+                    { label: "PTV D95%", key: "PTV_Lung", metricType: "DoseAtVolume", value: 95, target: 60, unit: "Gy" },
+                    { label: "Cord Max", key: "OAR_SpinalCord", metricType: "MaxDose", target: 45, unit: "Gy" },
+                    { label: "Lung V20Gy", key: "OAR_Lung_Total", metricType: "VolumeAtDose", value: 20, target: 30, unit: "%" }, // Need to handle combined lung
+                    { label: "Heart Mean", key: "OAR_Heart", metricType: "MeanDose", target: 26, unit: "Gy" },
+                ],
+                defaultBeamParams: { gantry: 0, fsx: 8, fsy: 10, weight: 50 }
+            },
+            brain: {
+                name: "Whole Brain",
+                structures: {
+                    "PTV_WholeBrain":   { id: "PTV_WholeBrain", name: "PTV Whole Brain", type: "PTV", color: 'rgba(253, 224, 71, 0.3)', borderColor: '#fde047', x: 15, y: 10, w: 70, h: 80, shapeParams: { borderRadius: '45% 45% 35% 35% / 50% 50% 40% 40%' } },
+                    "OAR_Eye_L":        { id: "OAR_Eye_L", name: "Eye Left", type: "OAR", color: 'rgba(59, 130, 246, 0.4)', borderColor: '#3b82f6', x: 25, y: 38, w: 10, h: 8, shapeParams: { borderRadius: '50%' } },
+                    "OAR_Eye_R":        { id: "OAR_Eye_R", name: "Eye Right", type: "OAR", color: 'rgba(59, 130, 246, 0.4)', borderColor: '#3b82f6', x: 65, y: 38, w: 10, h: 8, shapeParams: { borderRadius: '50%' } },
+                    "OAR_Lens_L":       { id: "OAR_Lens_L", name: "Lens Left", type: "OAR", color: 'rgba(16, 185, 129, 0.5)', borderColor: '#10b981', x: 27, y: 40, w: 4, h: 3, shapeParams: { borderRadius: '50%' } },
+                    "OAR_Lens_R":       { id: "OAR_Lens_R", name: "Lens Right", type: "OAR", color: 'rgba(16, 185, 129, 0.5)', borderColor: '#10b981', x: 69, y: 40, w: 4, h: 3, shapeParams: { borderRadius: '50%' } },
+                    "OAR_OpticNerve_L": { id: "OAR_OpticNerve_L", name: "Optic Nerve L", type: "OAR", color: 'rgba(236, 72, 153, 0.4)', borderColor: '#ec4899', x: 35, y: 42, w: 10, h: 3, shapeParams: { borderRadius: '3px', transform: 'rotate(-10deg)' } },
+                    "OAR_OpticNerve_R": { id: "OAR_OpticNerve_R", name: "Optic Nerve R", type: "OAR", color: 'rgba(236, 72, 153, 0.4)', borderColor: '#ec4899', x: 55, y: 42, w: 10, h: 3, shapeParams: { borderRadius: '3px', transform: 'rotate(10deg)' } },
+                    "OAR_OpticChiasm":  { id: "OAR_OpticChiasm", name: "Optic Chiasm", type: "OAR", color: 'rgba(240, 82, 82, 0.4)', borderColor: '#f05252', x: 46, y: 46, w: 8, h: 4, shapeParams: { borderRadius: '20%' } },
+                    "OAR_Brainstem":    { id: "OAR_Brainstem", name: "Brainstem", type: "OAR", color: 'rgba(239, 68, 68, 0.5)', borderColor: '#ef4444', x: 45, y: 55, w: 10, h: 25, shapeParams: { borderRadius: '10px 10px 25px 25px' } }
+                },
+                objectives: [
+                    { label: "PTV D95% (Gy):", id: "ptvD95_wb", defaultValue: 30, type: "PTV" },
+                    { label: "Lens Max (Gy):", id: "lensMax_wb", defaultValue: 7, type: "OAR", constraint: "max" },
+                    { label: "Eye Max (Gy):", id: "eyeMax_wb", defaultValue: 15, type: "OAR", constraint: "max" },
+                    { label: "Brainstem Max (Gy):", id: "brainstemMax_wb", defaultValue: 30, type: "OAR", constraint: "max" },
+                    { label: "Chiasm Max (Gy):", id: "chiasmMax_wb", defaultValue: 30, type: "OAR", constraint: "max" }
+                ],
+                planSummaryMetrics: [
+                    { label: "PTV D95%", key: "PTV_WholeBrain", metricType: "DoseAtVolume", value: 95, target: 30, unit: "Gy" },
+                    { label: "Lens Max", key: "OAR_Lens_L", metricType: "MaxDose", target: 7, unit: "Gy" }, // Simplified to L, could show both
+                    { label: "Eye Max", key: "OAR_Eye_L", metricType: "MaxDose", target: 15, unit: "Gy" },
+                    { label: "Brainstem Max", key: "OAR_Brainstem", metricType: "MaxDose", target: 30, unit: "Gy" },
+                ],
+                defaultBeamParams: { gantry: 90, fsx: 16, fsy: 20, weight: 50 }
+            }
+        };
+        currentSiteStructures = JSON.parse(JSON.stringify(allStructuresData[currentSite].structures)); // Deep copy
+    }
+
+    // --- Three.js Initialization and LINAC Model ---
+    function initThreeJS() {
+        scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x1f2937); // Dark gray
+
+        camera3D = new THREE.PerspectiveCamera(45, viewerContainer3D.clientWidth / viewerContainer3D.clientHeight, 0.1, 150);
+        camera3D.position.set(6, ISOCENTER_Y_TARGET + 1, COUCH_SEPARATION_OFFSET + 5); // Adjusted camera
+
+        renderer3D = new THREE.WebGLRenderer({ antialias: true });
+        renderer3D.setSize(viewerContainer3D.clientWidth, viewerContainer3D.clientHeight);
+        renderer3D.shadowMap.enabled = true;
+        viewerContainer3D.appendChild(renderer3D.domElement);
+
+        controls3D = new OrbitControls(camera3D, renderer3D.domElement);
+        controls3D.target.set(WORLD_ISOCENTER.x, WORLD_ISOCENTER.y, GANTRY_PLANE_Z_TARGET + COUCH_SEPARATION_OFFSET / 3);
+        controls3D.enableDamping = true;
+        controls3D.update();
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0x606060, 1.5);
+        scene.add(ambientLight);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1.8);
+        directionalLight.position.set(10, 15, 10);
+        directionalLight.castShadow = true;
+        directionalLight.shadow.mapSize.width = 1024;
+        directionalLight.shadow.mapSize.height = 1024;
+        scene.add(directionalLight);
+
+        // Ground
+        const groundPlane = new THREE.Mesh(new THREE.PlaneGeometry(30, 30), new THREE.MeshStandardMaterial({ color: 0x374151, side: THREE.DoubleSide }));
+        groundPlane.rotation.x = -Math.PI / 2;
+        groundPlane.position.y = GROUND_Y;
+        groundPlane.receiveShadow = true;
+        scene.add(groundPlane);
+
+        // LINAC Groups
+        staticSetupGroup = new THREE.Group();
+        staticSetupGroup.position.set(0, 0, GANTRY_PLANE_Z_TARGET);
+        scene.add(staticSetupGroup);
+
+        gantryRotatingGroup = new THREE.Group();
+        gantryRotatingGroup.position.set(WORLD_ISOCENTER.x, WORLD_ISOCENTER.y, 0); // Rotates around world isocenter Y
+        staticSetupGroup.add(gantryRotatingGroup);
+
+        // Couch
+        const couchBaseHeight = 0.7;
+        couchGroup = new THREE.Group();
+        couchGroup.position.set(WORLD_ISOCENTER.x, GROUND_Y + couchBaseHeight / 2, GANTRY_PLANE_Z_TARGET + COUCH_SEPARATION_OFFSET);
+        scene.add(couchGroup);
+
+        couchTopGroup = new THREE.Group(); // For longitudinal movement
+        couchTopGroup.position.y = couchBaseHeight / 2 + 0.15 / 2; // Platform height
+        couchGroup.add(couchTopGroup);
+
+        beamVisualizationGroup = new THREE.Group();
+        scene.add(beamVisualizationGroup); // Add to scene directly, position relative to LINAC head
+
+        createLinacBase3DModels(); // Simplified LINAC model parts
+        createPatientPhantom3D();
+
+        window.addEventListener('resize', onWindowResize3D, false);
+        animate3D();
+    }
+
+    function createLinacBase3DModels() {
+        // Simplified LINAC geometry based on Build-a-LINAC
+        const gantryMaterial = new THREE.MeshStandardMaterial({ color: 0xadd8e6, metalness: 0.5, roughness: 0.5 });
+        const headMaterial = new THREE.MeshStandardMaterial({ color: 0xc0c0c0, metalness: 0.4, roughness: 0.5 });
+        const couchMaterial = new THREE.MeshStandardMaterial({ color: 0x546e7a, metalness: 0.3, roughness: 0.7 });
+
+        // Gantry Stand (Static)
+        const drivestandGeo = new THREE.BoxGeometry(0.8, ISOCENTER_Y_TARGET + 0.2, 0.8);
+        const drivestandMesh = new THREE.Mesh(drivestandGeo, gantryMaterial);
+        drivestandMesh.position.y = (ISOCENTER_Y_TARGET + 0.2) / 2 + GROUND_Y;
+        staticSetupGroup.add(drivestandMesh);
+
+        // Gantry Arm (Rotating)
+        const gantryArmGeo = new THREE.BoxGeometry(0.4, 1.6, 0.4); // Vertical arm
+        const gantryArmMesh = new THREE.Mesh(gantryArmGeo, gantryMaterial);
+        // Position relative to gantryRotatingGroup's origin (which is at ISOCENTER_Y)
+        gantryArmMesh.position.y = 0; // Centered on ISOCENTER_Y
+        gantryRotatingGroup.add(gantryArmMesh);
+
+        // LINAC Head (Attached to gantry arm, will point towards isocenter)
+        const headGeo = new THREE.BoxGeometry(0.6, 0.6, 0.8); // Depth along Z
+        linacHeadObject = new THREE.Mesh(headGeo, headMaterial);
+        // Position head at the end of the conceptual gantry radius, pointing inwards
+        // The gantry arm itself doesn't define the full radius to isocenter for the head.
+        // The head is positioned such that its front face (where beam emits) is at isocenter distance.
+        // For simplicity, assume head is at a fixed distance from gantry rotation center.
+        const headDistanceFromGantryCenter = 1.0; // Conceptual distance
+        linacHeadObject.position.z = -headDistanceFromGantryCenter; // Negative Z in gantry group's local space
+        gantryRotatingGroup.add(linacHeadObject);
+
+
+        // Collimator Jaws (simplified, attached to linacHeadObject)
+        const jawMaterial = new THREE.MeshStandardMaterial({ color: 0xffa500, metalness: 0.6, roughness: 0.4 });
+        const jawThickness = 0.04; const jawDepth = 0.2; const jawSpan = 0.5; // Max span
+        const jawYOffsetInHead = -0.3; // Position jaws at front of head
+
+        jawXN = new THREE.Mesh(new THREE.BoxGeometry(jawThickness, jawSpan, jawDepth), jawMaterial);
+        jawXP = new THREE.Mesh(new THREE.BoxGeometry(jawThickness, jawSpan, jawDepth), jawMaterial);
+        jawYN = new THREE.Mesh(new THREE.BoxGeometry(jawSpan, jawThickness, jawDepth), jawMaterial);
+        jawYP = new THREE.Mesh(new THREE.BoxGeometry(jawSpan, jawThickness, jawDepth), jawMaterial);
+
+        jawXN.position.set(-0.1, 0, jawYOffsetInHead); // Initial small opening
+        jawXP.position.set(0.1, 0, jawYOffsetInHead);
+        jawYN.position.set(0, -0.1, jawYOffsetInHead);
+        jawYP.position.set(0, 0.1, jawYOffsetInHead);
+
+        [jawXN, jawXP, jawYN, jawYP].forEach(jaw => {
+            jaw.castShadow = true;
+            linacHeadObject.add(jaw);
+        });
+
+        // Couch
+        const couchPlatformGeo = new THREE.BoxGeometry(0.8, 0.15, 2.8);
+        const couchPlatformMesh = new THREE.Mesh(couchPlatformGeo, couchMaterial);
+        couchTopGroup.add(couchPlatformMesh);
+
+        const couchSupportGeo = new THREE.BoxGeometry(0.7, 0.7, 1.0);
+        const couchSupportMesh = new THREE.Mesh(couchSupportGeo, couchMaterial);
+        // couchSupportMesh.position.y = - (0.7/2 + 0.15/2); // Already handled by couchGroup and couchTopGroup
+        couchGroup.add(couchSupportMesh); // Add to main couch group, not top
+    }
+
+    function createPatientPhantom3D() {
+        // Simple elongated sphere or capsule for patient body
+        const patientGeo = new THREE.CapsuleGeometry(0.3, 1.2, 4, 12); // Radius, length, capSegments, radialSegments
+        const patientMat = new THREE.MeshStandardMaterial({
+            color: 0xcccccc,
+            transparent: true,
+            opacity: 0.3,
+            depthWrite: false // Allows seeing target inside
+        });
+        patientPhantomMesh = new THREE.Mesh(patientGeo, patientMat);
+        patientPhantomMesh.rotation.x = Math.PI / 2; // Lay it flat
+        patientPhantomMesh.position.set(0, 0.15 / 2 + 0.3, 0); // On top of couch platform, centered
+        couchTopGroup.add(patientPhantomMesh); // Add to the part of couch that moves longitudinally
+
+        // Target volume visualization (simple sphere)
+        const targetGeo = new THREE.SphereGeometry(0.1, 16, 16); // Radius of 10cm
+        const targetMat = new THREE.MeshStandardMaterial({ color: 0xff0000, emissive: 0x550000, transparent: true, opacity: 0.6 });
+        targetVolumeMesh3D = new THREE.Mesh(targetGeo, targetMat);
+        // Position target at isocenter relative to the patient phantom (which is on the couch top)
+        // This needs to be dynamic if couch moves to isocenter
+        targetVolumeMesh3D.position.set(0, 0, 0); // Initially at center of patient phantom
+        patientPhantomMesh.add(targetVolumeMesh3D); // Add as child of phantom
+        targetVolumeMesh3D.visible = false; // Initially hidden
+    }
+
+    function update3DLINACVisuals(gantryAngleDeg, fieldSizeXCm, fieldSizeYCm, couchZCm) {
+        // Gantry Rotation
+        if (gantryRotatingGroup) {
+            gantryRotatingGroup.rotation.y = gantryAngleDeg * DEG_TO_RAD; // Assuming rotation around Y-axis for LINAC model
+        }
+
+        // Collimator Jaws (convert cm to model units, e.g., 10cm = 0.1 model units)
+        const scaleFactor = 0.01; // 1 cm = 0.01 model units for jaws
+        const jawXOpening = fieldSizeXCm * scaleFactor / 2;
+        const jawYOpening = fieldSizeYCm * scaleFactor / 2;
+
+        if (jawXN && jawXP && jawYN && jawYP) {
+            jawXN.position.x = -jawXOpening;
+            jawXP.position.x = jawXOpening;
+            // Y jaws move along their local Y, which is world Z if head is not rotated.
+            // For simplicity, assuming head's local Y is aligned with world Y for jaw movement.
+            jawYN.position.y = -jawYOpening; // This might need adjustment based on head orientation
+            jawYP.position.y = jawYOpening;
+        }
+
+        // Couch Longitudinal Position (Z)
+        // Couch initial Z is GANTRY_PLANE_Z_TARGET + COUCH_SEPARATION_OFFSET
+        // Isocenter Z is GANTRY_PLANE_Z_TARGET
+        // If couchZCm is 0, couch center should align with isocenter Z.
+        if (couchTopGroup) {
+            // This is conceptual: couchZCm would be an isocenter alignment parameter
+            // For now, let's assume it's an offset from a nominal position.
+            // A more robust system would use actual isocenter coordinates.
+            const nominalCouchZ = 0; // Relative to couchGroup's Z
+            couchTopGroup.position.z = nominalCouchZ + (couchZCm * scaleFactor * 10); // Larger scale for couch movement
+        }
+
+        // Update 3D beam visualization
+        update3DBeamVisualization(fieldSizeXCm, fieldSizeYCm);
+    }
+
+    function update3DBeamVisualization(fsx, fsy) {
+        beamVisualizationGroup.clear(); // Remove previous beam
+        if (!linacHeadObject || (fsx === 0 && fsy === 0)) return;
+
+        const beamLength = 2.5; // How far the beam visual extends
+        const scaleFactor = 0.01; // cm to model units
+
+        // Create a pyramid or box shape for the beam
+        // Originates from the front of the linac head
+        const beamGeometry = new THREE.BoxGeometry(fsx * scaleFactor, fsy * scaleFactor, beamLength);
+        const beamMaterial = new THREE.MeshBasicMaterial({
+            color: 0x00ff00,
+            transparent: true,
+            opacity: 0.2,
+            depthWrite: false
+        });
+        const beamMesh = new THREE.Mesh(beamGeometry, beamMaterial);
+
+        // Position the beam relative to the linac head
+        // The beam should emit from the front face of the head, along its local -Z axis
+        beamMesh.position.set(0, 0, - (0.8 / 2) - (beamLength / 2)); // 0.8 is head depth, adjust as needed
+
+        // Add to a group that is a child of the linac head so it rotates with the head
+        linacHeadObject.add(beamMesh); // Make beam child of head
+        // Or, if beamVisualizationGroup is used and positioned/rotated with head:
+        // beamVisualizationGroup.add(beamMesh);
+        // beamVisualizationGroup.position.copy(linacHeadObject.getWorldPosition(new THREE.Vector3()));
+        // beamVisualizationGroup.quaternion.copy(linacHeadObject.getWorldQuaternion(new THREE.Quaternion()));
+        // For simplicity now, making it a child of head.
+    }
+
+
+    function onWindowResize3D() {
+        if (camera3D && renderer3D && viewerContainer3D) {
+            camera3D.aspect = viewerContainer3D.clientWidth / viewerContainer3D.clientHeight;
+            camera3D.updateProjectionMatrix();
+            renderer3D.setSize(viewerContainer3D.clientWidth, viewerContainer3D.clientHeight);
+        }
+    }
+
+    function animate3D() {
+        animationFrameId = requestAnimationFrame(animate3D);
+        if (controls3D) controls3D.update();
+
+        // LINAC Plan Animation Logic
+        if (isLinacAnimating && planAnimationQueue.length > 0) {
+            const targetState = planAnimationQueue[currentAnimationStep];
+            let reachedTarget = true;
+
+            // Animate Gantry
+            if (gantryRotatingGroup) {
+                const currentGantryRad = gantryRotatingGroup.rotation.y;
+                const targetGantryRad = targetState.gantry * DEG_TO_RAD;
+                const diff = targetGantryRad - currentGantryRad;
+                const step = 0.02; // Animation speed
+                if (Math.abs(diff) > step) {
+                    gantryRotatingGroup.rotation.y += Math.sign(diff) * step;
+                    reachedTarget = false;
+                } else {
+                    gantryRotatingGroup.rotation.y = targetGantryRad;
+                }
+            }
+            // Animate Jaws (simplified)
+            const scaleFactor = 0.01;
+            const targetJawX = targetState.fsx * scaleFactor / 2;
+            const targetJawY = targetState.fsy * scaleFactor / 2;
+
+            if(jawXN && Math.abs(-targetJawX - jawXN.position.x) > 0.001) { jawXN.position.x += Math.sign(-targetJawX - jawXN.position.x) * 0.002; reachedTarget = false;} else if(jawXN) {jawXN.position.x = -targetJawX;}
+            if(jawXP && Math.abs(targetJawX - jawXP.position.x) > 0.001) { jawXP.position.x += Math.sign(targetJawX - jawXP.position.x) * 0.002; reachedTarget = false;} else if(jawXP) {jawXP.position.x = targetJawX;}
+            if(jawYN && Math.abs(-targetJawY - jawYN.position.y) > 0.001) { jawYN.position.y += Math.sign(-targetJawY - jawYN.position.y) * 0.002; reachedTarget = false;} else if(jawYN) {jawYN.position.y = -targetJawY;}
+            if(jawYP && Math.abs(targetJawY - jawYP.position.y) > 0.001) { jawYP.position.y += Math.sign(targetJawY - jawYP.position.y) * 0.002; reachedTarget = false;} else if(jawYP) {jawYP.position.y = targetJawY;}
+
+
+            // Update 3D beam for current animated state
+            update3DBeamVisualization(targetState.fsx, targetState.fsy);
+
+
+            if (reachedTarget) {
+                linacStatusDiv.textContent = `Beam ${currentAnimationStep + 1} Delivered. Weight: ${targetState.weight}`;
+                currentAnimationStep++;
+                if (currentAnimationStep >= planAnimationQueue.length) {
+                    isLinacAnimating = false;
+                    planAnimationQueue = [];
+                    currentAnimationStep = 0;
+                    linacStatusDiv.textContent = "Plan Complete. LINAC Idle.";
+                    beamVisualizationGroup.clear(); // Clear beam after plan
+                    if (linacHeadObject.children.find(c => c.material?.transparent)) { // Remove temporary beam from head
+                        const tempBeam = linacHeadObject.children.find(c => c.material?.transparent);
+                        if(tempBeam) linacHeadObject.remove(tempBeam);
+                    }
+                } else {
+                     linacStatusDiv.textContent = `Moving to Beam ${currentAnimationStep + 1}...`;
+                }
+            } else {
+                 linacStatusDiv.textContent = `Delivering Beam ${currentAnimationStep + 1} (G:${Math.round(gantryRotatingGroup.rotation.y * RAD_TO_DEG)}°)...`;
+            }
+        }
+
+
+        if (renderer3D && scene && camera3D) renderer3D.render(scene, camera3D);
+    }
+
+
+    // --- TPS Functions ---
+    function initializeSite(siteId) {
+        currentSite = siteId;
+        const siteData = allStructuresData[currentSite];
+        if (!siteData) {
+            console.error("Site data not found for:", siteId);
+            return;
+        }
+
+        // 1. Update 2D CT Viewer Image (conceptual)
+        ctSliceImagePaths[currentSite] = Array.from({ length: 50 }, (_, i) => `https://placehold.co/300x200/111827/4b5563?text=${siteData.name.split(" ")[0]}+Slice+${i + 1}`);
+        ctSliceSlider.value = 25;
+        ctSliceValueText.textContent = "25";
+        ctViewerImage2D.src = ctSliceImagePaths[currentSite][24];
+        ctViewerImage2D.alt = `${siteData.name} CT Slice`;
+
+        // 2. Populate Structure Selector & 2D Overlays
+        currentSiteStructures = JSON.parse(JSON.stringify(siteData.structures)); // Deep copy
+        structureSelector.innerHTML = '';
+        ctViewer2D.querySelectorAll('.structure-overlay-2d').forEach(el => el.remove()); // Clear old 2D overlays
+
+        Object.values(currentSiteStructures).forEach(s => {
+            const option = document.createElement('option');
+            option.value = s.id;
+            option.textContent = s.name;
+            structureSelector.appendChild(option);
+
+            // Create 2D overlay div
+            const overlayDiv = document.createElement('div');
+            overlayDiv.id = `${s.id}_overlay2D`; // Unique ID for 2D overlay
+            overlayDiv.className = 'structure-overlay structure-overlay-2d'; // Add specific class
+            overlayDiv.classList.add(s.type === "PTV" ? 'ptv-overlay' : (s.type === "OAR" ? 'oar-overlay' : 'landmark-overlay'));
+            overlayDiv.textContent = s.name.split(" ")[0]; // Short name
+            overlayDiv.style.left = `${s.x}%`;
+            overlayDiv.style.top = `${s.y}%`;
+            overlayDiv.style.width = `${s.w}%`;
+            overlayDiv.style.height = `${s.h}%`;
+            overlayDiv.style.borderColor = s.borderColor;
+            overlayDiv.style.backgroundColor = s.color;
+            if (s.shapeParams?.borderRadius) overlayDiv.style.borderRadius = s.shapeParams.borderRadius;
+            if (s.shapeParams?.transform) overlayDiv.style.transform = s.shapeParams.transform;
+            overlayDiv.style.display = s.visible ? 'flex' : 'none';
+            s.element2D = overlayDiv; // Store reference to 2D overlay
+            ctViewer2D.appendChild(overlayDiv);
+        });
+        if (structureSelector.options.length > 0) {
+            currentEditingStructureId2D = structureSelector.options[0].value;
+        }
+
+
+        // 3. Populate Inverse Planning Objectives
+        inverseObjectivesContainer.innerHTML = '';
+        siteData.objectives.forEach(obj => {
+            const div = document.createElement('div');
+            div.className = "mb-1";
+            const label = document.createElement('label');
+            label.textContent = obj.label;
+            label.className = "text-xs mr-1";
+            const input = document.createElement('input');
+            input.type = "number";
+            input.id = obj.id; // Use the ID from siteData
+            input.value = obj.defaultValue;
+            input.className = "input-sm w-20 inline";
+            div.appendChild(label);
+            div.appendChild(input);
+            inverseObjectivesContainer.appendChild(div);
+        });
+
+        // 4. Update Plan Summary Placeholders
+        planSummaryContainer.innerHTML = '';
+        siteData.planSummaryMetrics.forEach(metric => {
+            const p = document.createElement('p');
+            p.innerHTML = `${metric.label}: <span id="summary_${metric.key.replace(/\s+/g, '_')}" class="font-semibold text-gray-500">N/A</span>`;
+            planSummaryContainer.appendChild(p);
+        });
+
+        // 5. Reset Beams and UI for the new site
+        const defaultParams = siteData.defaultBeamParams;
+        gantryAngleInput.value = defaultParams.gantry;
+        fieldSizeXInput.value = defaultParams.fsx;
+        fieldSizeYInput.value = defaultParams.fsy;
+        beamWeightInput.value = defaultParams.weight;
+
+        clearBeams(); // Clears tpsBeams and updates display
+        updateDVH();
+        drawSimulatedIsodose2D();
+        update3DPatientAndTarget(); // Update 3D phantom based on site
+    }
+
+    function update2DStructureVisuals() {
+        Object.values(currentSiteStructures).forEach(s => {
+            if (s.element2D) {
+                s.element2D.style.display = s.visible ? 'flex' : 'none';
+                s.element2D.style.left = `${s.x}%`;
+                s.element2D.style.top = `${s.y}%`;
+                s.element2D.style.width = `${s.w}%`;
+                s.element2D.style.height = `${s.h}%`;
+                // Other style updates if needed
+            }
+        });
+    }
+    // Hook up 2D structure editor (similar to previous TPS)
+    structureSelector.addEventListener('change', () => {
+        currentEditingStructureId2D = structureSelector.value;
+        // If editor is open, update its fields
+        if (!structureEditorDiv.classList.contains('hidden') && currentSiteStructures[currentEditingStructureId2D]) {
+            const s = currentSiteStructures[currentEditingStructureId2D];
+            editingStructureNameSpan.textContent = s.name;
+            structureSliders.forEach(slider => {
+                const param = slider.dataset.param;
+                slider.value = s[param];
+                slider.nextElementSibling.textContent = s[param];
+            });
+        }
+    });
+     toggleStructureVisibilityBtn.addEventListener('click', () => {
+        const selectedId = structureSelector.value;
+        if (currentSiteStructures[selectedId]) {
+            currentSiteStructures[selectedId].visible = !currentSiteStructures[selectedId].visible;
+            update2DStructureVisuals();
+            updateDVH();
+        }
+    });
+    editStructureBtn.addEventListener('click', () => {
+        currentEditingStructureId2D = structureSelector.value;
+        const s = currentSiteStructures[currentEditingStructureId2D];
+        if (s) {
+            structureEditorDiv.classList.remove('hidden');
+            editingStructureNameSpan.textContent = s.name;
+            structureSliders.forEach(slider => {
+                const param = slider.dataset.param;
+                slider.value = s[param];
+                slider.nextElementSibling.textContent = s[param];
+            });
+        } else {
+            structureEditorDiv.classList.add('hidden');
+        }
+    });
+    structureSliders.forEach(slider => {
+        slider.addEventListener('input', (e) => {
+            if (currentEditingStructureId2D && currentSiteStructures[currentEditingStructureId2D]) {
+                const param = e.target.dataset.param;
+                const value = parseInt(e.target.value);
+                currentSiteStructures[currentEditingStructureId2D][param] = value;
+                e.target.nextElementSibling.textContent = value;
+                update2DStructureVisuals();
+                updateDVH();
+                drawSimulatedIsodose2D();
+            }
+        });
+    });
+
+
+    // Update 2D CT slice view
+    ctSliceSlider.addEventListener('input', () => {
+        const sliceNum = parseInt(ctSliceSlider.value);
+        ctSliceValueText.textContent = sliceNum;
+        if (ctSliceImagePaths[currentSite] && ctSliceImagePaths[currentSite][sliceNum - 1]) {
+            ctViewerImage2D.src = ctSliceImagePaths[currentSite][sliceNum - 1];
+        }
+        // Optional: Adjust 2D overlay positions based on slice (conceptual)
+        Object.values(currentSiteStructures).forEach(s => {
+            if (s.element2D) {
+                s.element2D.style.transform = `translateY(${(sliceNum - 25) * 0.08}%) ${s.shapeParams?.transform || ''}`;
+            }
+        });
+        drawSimulatedIsodose2D();
+    });
+
+
+    // Planning mode switching
+    tabForwardPlanning.addEventListener('click', () => switchPlanningModeUI('forward'));
+    tabInversePlanning.addEventListener('click', () => switchPlanningModeUI('inverse'));
+
+    function switchPlanningModeUI(mode) {
+        currentPlanningMode = mode;
+        const siteData = allStructuresData[currentSite];
+        if (!siteData) return;
+
+        if (mode === 'forward') {
+            tabForwardPlanning.classList.add('active');
+            tabInversePlanning.classList.remove('active');
+            forwardPlanningTabContent.classList.remove('hidden');
+            inversePlanningTabContent.classList.add('hidden');
+            planTypeText.textContent = `Current Mode: Forward (${siteData.name === "Whole Brain" ? "POP" : "Static"})`;
+            gantryAngleInput.value = siteData.defaultBeamParams.gantry;
+            fieldSizeXInput.value = siteData.defaultBeamParams.fsx;
+            fieldSizeYInput.value = siteData.defaultBeamParams.fsy;
+            beamWeightInput.value = siteData.defaultBeamParams.weight;
+        } else { // inverse
+            tabForwardPlanning.classList.remove('active');
+            tabInversePlanning.classList.add('active');
+            forwardPlanningTabContent.classList.add('hidden');
+            inversePlanningTabContent.classList.remove('hidden');
+            planTypeText.textContent = `Current Mode: Inverse (${siteData.name === "Whole Brain" ? "Arc" : "IMRT"} Concept)`;
+        }
+        clearBeams(); // Clear beams when switching modes
+    }
+
+    // Forward Planning: Beam Management
+    addBeamBtn.addEventListener('click', () => {
+        if (currentPlanningMode !== 'forward') return;
+        const newBeam = {
+            angle: parseInt(gantryAngleInput.value),
+            sizeX: parseInt(fieldSizeXInput.value),
+            sizeY: parseInt(fieldSizeYInput.value),
+            weight: parseInt(beamWeightInput.value),
+            // Add couch parameters if you implement couch in TPS
+            // couchZ: parseFloat(document.getElementById('couchZInput')?.value || 0)
+        };
+        tpsBeams.push(newBeam);
+        selectedTpsBeamIndex = tpsBeams.length - 1;
+        renderTpsBeams();
+    });
+
+    applyBeamSettingsBtn.addEventListener('click', () => {
+        if (currentPlanningMode !== 'forward' || selectedTpsBeamIndex === -1 || !tpsBeams[selectedTpsBeamIndex]) {
+            if (typeof alert !== 'undefined') alert('Please select a beam in Forward Planning mode.'); return;
+        }
+        tpsBeams[selectedTpsBeamIndex].angle = parseInt(gantryAngleInput.value);
+        tpsBeams[selectedTpsBeamIndex].sizeX = parseInt(fieldSizeXInput.value);
+        tpsBeams[selectedTpsBeamIndex].sizeY = parseInt(fieldSizeYInput.value);
+        tpsBeams[selectedTpsBeamIndex].weight = parseInt(beamWeightInput.value);
+        renderTpsBeams();
+    });
+
+    clearBeamsBtn.addEventListener('click', clearBeams);
+
+    function clearBeams() {
+        tpsBeams = [];
+        selectedTpsBeamIndex = -1;
+        renderTpsBeams(); // This will update DVH, isodose, beam list
+    }
+
+    function renderTpsBeams() { // Updates 2D plan aspects
+        updateTpsBeamListDisplay();
+        updateDVH();
+        drawSimulatedIsodose2D();
+        // If a beam is selected, could update its parameters in the input fields
+        if (selectedTpsBeamIndex !== -1 && tpsBeams[selectedTpsBeamIndex]) {
+            const beam = tpsBeams[selectedTpsBeamIndex];
+            gantryAngleInput.value = beam.angle;
+            fieldSizeXInput.value = beam.sizeX;
+            fieldSizeYInput.value = beam.sizeY;
+            beamWeightInput.value = beam.weight;
+        }
+    }
+
+    function updateTpsBeamListDisplay() {
+        beamListDiv.innerHTML = '';
+        if (currentPlanningMode === 'forward' && tpsBeams.length > 0) {
+            tpsBeams.forEach((beam, index) => {
+                const item = document.createElement('div');
+                item.className = `flex justify-between items-center p-1 rounded cursor-pointer ${index === selectedTpsBeamIndex ? 'bg-indigo-200' : 'bg-slate-100'}`;
+                item.innerHTML = `<span>B${index + 1} (G:${beam.angle}°, FS:${beam.sizeX}x${beam.sizeY}, W:${beam.weight})</span>
+                                  <button class="text-red-500 text-xs delete-beam hover:font-bold" data-index="${index}">X</button>`;
+                item.addEventListener('click', (e) => {
+                    if (!e.target.classList.contains('delete-beam')) {
+                        selectedTpsBeamIndex = index;
+                        renderTpsBeams(); // Re-render to highlight and update inputs
+                    }
+                });
+                beamListDiv.appendChild(item);
+            });
+            beamListDiv.querySelectorAll('.delete-beam').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const indexToDelete = parseInt(e.target.dataset.index);
+                    tpsBeams.splice(indexToDelete, 1);
+                    if (selectedTpsBeamIndex === indexToDelete) selectedTpsBeamIndex = -1;
+                    else if (selectedTpsBeamIndex > indexToDelete) selectedTpsBeamIndex--;
+                    renderTpsBeams();
+                });
+            });
+        } else if (currentPlanningMode === 'inverse' && tpsBeams.length > 0) {
+            const planType = allStructuresData[currentSite]?.name === "Whole Brain" ? "Arc" : "IMRT";
+            beamListDiv.innerHTML = `<div class="p-1 bg-slate-100 rounded text-center">Simulated ${planType} Plan Active (${tpsBeams.length} conceptual segments/beams)</div>`;
+        } else {
+            beamListDiv.innerHTML = '<div class="p-1 text-slate-400 text-center">No beams defined.</div>';
+        }
+    }
+
+    // Inverse Planning Simulation
+    simulateOptimizationBtn.addEventListener('click', () => {
+        if (currentPlanningMode !== 'inverse') return;
+        const siteData = allStructuresData[currentSite];
+        if (!siteData) return;
+
+        tpsBeams = []; // Clear previous
+        const numSegments = siteData.name === "Whole Brain" ? 12 : 7; // More segments for Arc
+        const baseFSX = siteData.defaultBeamParams.fsx;
+        const baseFSY = siteData.defaultBeamParams.fsy;
+
+        for (let i = 0; i < numSegments; i++) {
+            tpsBeams.push({
+                angle: Math.round((360 / numSegments) * i + Math.random() * 10 - 5) % 360,
+                sizeX: Math.round(baseFSX * 0.8 + Math.random() * (baseFSX * 0.4)),
+                sizeY: Math.round(baseFSY * 0.8 + Math.random() * (baseFSY * 0.4)),
+                weight: Math.round(80 / numSegments + Math.random() * (40 / numSegments))
+            });
+        }
+        updateDVH(true); // Pass flag for inverse simulation
+        drawSimulatedIsodose2D();
+        updateTpsBeamListDisplay();
+        if (typeof alert !== 'undefined') alert(`${siteData.name === "Whole Brain" ? "Arc" : "IMRT"} optimization simulated!`);
+    });
+
+
+    // --- DVH, Isodose, Plan Summary (Conceptual) ---
+    function initializeDVHChart() {
+        if (dvhChartInstance) dvhChartInstance.destroy();
+        dvhChartInstance = new Chart(dvhChartCanvasEl.getContext('2d'), {
+             type: 'line',
+            data: {
+                labels: Array.from({ length: 101 }, (_, i) => i.toString()),
+                datasets: []
+            },
+            options: { /* ... same as previous TPS ... */
+                responsive: true, maintainAspectRatio: false,
+                scales: {
+                    x: { title: { display: true, text: 'Dose (Gy)', font: {size: 9}}, ticks: {font: {size: 8}}},
+                    y: { title: { display: true, text: 'Volume (%)', font: {size: 9}}, min: 0, max: 100, ticks: {font: {size: 8}}}
+                },
+                plugins: { legend: { display: true, position: 'top', labels: {font: {size: 8}, boxWidth:8, padding:3 } } },
+                animation: { duration: 150 }
+            }
+        });
+    }
+
+    function updateDVH(isInverseSim = false) {
+        if (!dvhChartInstance || !currentSiteStructures) return;
+        const datasets = [];
+        const doseValues = Array.from({ length: 101 }, (_, i) => i);
+        const siteData = allStructuresData[currentSite];
+
+        Object.values(currentSiteStructures).filter(s => s.type === "PTV" && s.visible).forEach(ptv => {
+            let ptvTargetScore = 0;
+            if (currentPlanningMode === 'forward' && tpsBeams.length > 0) {
+                let totalWeightEffect = tpsBeams.reduce((sum, b) => sum + b.weight,0);
+                ptvTargetScore = Math.min(95, 10 + totalWeightEffect / tpsBeams.length * 0.8);
+            } else if (currentPlanningMode === 'inverse') {
+                const ptvObj = siteData.objectives.find(obj => obj.type === "PTV");
+                ptvTargetScore = ptvObj ? parseFloat(document.getElementById(ptvObj.id)?.value || ptvObj.defaultValue) : 60;
+                if (isInverseSim) ptvTargetScore *= 1.02; // Simulate slightly better
+            }
+            ptvTargetScore = Math.max(10, ptvTargetScore);
+            datasets.push({
+                label: ptv.name,
+                data: doseValues.map(dose => conceptualDVHCalculator(100, dose, ptvTargetScore, 0, true)),
+                borderColor: ptv.borderColor, backgroundColor: ptv.color, fill: true, tension: 0.1,
+                pointRadius: 0, borderWidth: 1.5
+            });
+        });
+
+        Object.values(currentSiteStructures).filter(s => s.type === "OAR" && s.visible).forEach(oar => {
+            let oarSensitivity = 30; let oarMaxConstraint = 100;
+            const oarObj = siteData.objectives.find(obj => obj.id.toLowerCase().includes(oar.id.split('_')[1]?.toLowerCase()));
+
+            if (currentPlanningMode === 'forward' && tpsBeams.length > 0) {
+                oarSensitivity = tpsBeams.reduce((sum,b) => sum + b.weight, 0) / (tpsBeams.length * 2); // Basic sensitivity
+            } else if (currentPlanningMode === 'inverse') {
+                oarSensitivity = oarObj ? (100 - (parseFloat(document.getElementById(oarObj.id)?.value || oarObj.defaultValue) * 0.8)) : 70;
+                if (isInverseSim) oarSensitivity *= 1.1; // Inverse spares better
+                if (oarObj && oarObj.constraint === "max") oarMaxConstraint = parseFloat(document.getElementById(oarObj.id)?.value || oarObj.defaultValue);
+            }
+            oarSensitivity = Math.max(5, Math.min(95, oarSensitivity));
+            datasets.push({
+                label: oar.name,
+                data: doseValues.map(dose => conceptualDVHCalculator(100, dose, 0, oarSensitivity, false, oarMaxConstraint)),
+                borderColor: oar.borderColor, backgroundColor: 'transparent', fill: false, tension: 0.1,
+                borderDash: [3, 3], pointRadius: 0, borderWidth: 1.5
+            });
+        });
+        dvhChartInstance.data.datasets = datasets;
+        dvhChartInstance.update();
+        updatePlanSummary();
+    }
+
+    function conceptualDVHCalculator(baseVolume, dose, targetScore, oarSensitivity, isPTV, oarMaxConstraint = 100) {
+        // Simplified logic (can be refined)
+        let volume = baseVolume;
+        if (isPTV) {
+            const targetDose = targetScore;
+            if (dose < targetDose * 0.95) volume = 100;
+            else if (dose < targetDose * 1.05) volume = Math.max(5, 100 - (dose - targetDose * 0.95) * (95 / (targetDose * 0.10 + 1)));
+            else volume = Math.max(0, 5 - (dose - targetDose * 1.05) * 0.8);
+        } else {
+            const effectiveTolerance = Math.min(oarMaxConstraint, 100 - oarSensitivity);
+            if (dose < effectiveTolerance * 0.3) volume = Math.max(0, 70 - oarSensitivity * 0.3);
+            else if (dose < effectiveTolerance) volume = Math.max(0, (70 - oarSensitivity * 0.3) - (dose - effectiveTolerance * 0.3) * ((70 - oarSensitivity * 0.3) / (effectiveTolerance * 0.7 + 1)));
+            else volume = 0;
+        }
+        return Math.max(0, Math.min(100, volume));
+    }
+
+
+    function drawSimulatedIsodose2D() {
+        isodoseOverlaySVG2D.innerHTML = '';
+        if (tpsBeams.length === 0 && currentPlanningMode === 'forward') return;
+
+        const ptvData = Object.values(currentSiteStructures).find(s => s.type === "PTV" && s.visible);
+        if (!ptvData) return;
+
+        const ptvRect = { x: ptvData.x, y: ptvData.y, w: ptvData.w, h: ptvData.h };
+        const ptvCenterX = ptvRect.x + ptvRect.w / 2;
+        const ptvCenterY = ptvRect.y + ptvRect.h / 2;
+        let intensity = 1.0, spread = 1.0;
+
+        if (currentPlanningMode === 'forward' && tpsBeams.length > 0) {
+            intensity = tpsBeams.reduce((sum,b) => sum + b.weight, 0) / (tpsBeams.length * 50 + 1);
+        } else if (currentPlanningMode === 'inverse') {
+            const ptvObj = allStructuresData[currentSite].objectives.find(obj => obj.type === "PTV");
+            intensity = ptvObj ? (parseFloat(document.getElementById(ptvObj.id)?.value || ptvObj.defaultValue) / 60) : 1.0; // Normalize to 60Gy
+            spread = 0.85; // Inverse plans often more conformal
+        }
+
+        const isoColors = { high: '#16a34a', medium: '#facc15', low: '#60a5fa' };
+        const createIsoEllipse = (cx, cy, rx, ry, fill, op, bRad) => {
+            const el = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
+            el.setAttribute("cx", `${cx}%`); el.setAttribute("cy", `${cy}%`);
+            el.setAttribute("rx", `${rx}%`); el.setAttribute("ry", `${ry}%`);
+            el.style.fill = fill; el.style.opacity = op;
+            // SVG ellipse doesn't use border-radius, this is simplified
+            isodoseOverlaySVG2D.appendChild(el);
+        };
+        createIsoEllipse(ptvCenterX, ptvCenterY, ptvRect.w * 0.5 * intensity * spread, ptvRect.h * 0.6 * intensity * spread, isoColors.high, 0.5, ptvData.shapeParams?.borderRadius);
+        createIsoEllipse(ptvCenterX, ptvCenterY, ptvRect.w * 0.8 * intensity * spread, ptvRect.h * 0.9 * intensity * spread, isoColors.medium, 0.35, '50%');
+        createIsoEllipse(ptvCenterX, ptvCenterY, ptvRect.w * 1.2 * intensity * spread, ptvRect.h * 1.3 * intensity * spread, isoColors.low, 0.2, '50%');
+    }
+
+    function updatePlanSummary() {
+        planSummaryContainer.innerHTML = ''; // Clear previous
+        const siteData = allStructuresData[currentSite];
+        if (!siteData || !dvhChartInstance.data.datasets.length) {
+            planSummaryContainer.innerHTML = '<p class="text-gray-500">N/A</p>';
+            return;
+        }
+
+        siteData.planSummaryMetrics.forEach(metricInfo => {
+            let metricValueText = "N/A";
+            const ptvDataset = dvhChartInstance.data.datasets.find(ds => ds.label === metricInfo.key || (metricInfo.key === "OAR_Lung_Total" && ds.label.includes("Lung"))); // Handle combined lung
+
+            if (ptvDataset) {
+                const doseValues = dvhChartInstance.data.labels.map(l => parseFloat(l));
+                if (metricInfo.metricType === "DoseAtVolume") { // Dxx%
+                    for (let i = 0; i < doseValues.length; i++) {
+                        if (ptvDataset.data[i] <= metricInfo.value) { // Find dose where volume drops to Dxx
+                            metricValueText = doseValues[i].toFixed(1) + " " + metricInfo.unit; break;
+                        }
+                    }
+                    if (metricValueText === "N/A") metricValueText = `>${doseValues[doseValues.length-1].toFixed(1)} ${metricInfo.unit}`;
+                } else if (metricInfo.metricType === "VolumeAtDose") { // VxxGy
+                    const index = doseValues.findIndex(d => d >= metricInfo.value);
+                    if (index !== -1) metricValueText = ptvDataset.data[index].toFixed(1) + " " + metricInfo.unit;
+                } else if (metricInfo.metricType === "MaxDose") {
+                     for (let i = doseValues.length - 1; i >= 0; i--) {
+                        if (ptvDataset.data[i] > 0.5) { // Find highest dose with >0.5% volume
+                            metricValueText = doseValues[i].toFixed(1) + " " + metricInfo.unit; break;
+                        }
+                    }
+                    if (metricValueText === "N/A") metricValueText = `<1 ${metricInfo.unit}`;
+                } else if (metricInfo.metricType === "MeanDose") {
+                    metricValueText = "Conceptual"; // True mean dose is complex from DVH array
+                }
+            }
+
+            const p = document.createElement('p');
+            const objectiveInput = siteData.objectives.find(obj => obj.id.toLowerCase().includes(metricInfo.key.split('_')[1]?.toLowerCase()) || (obj.type==="PTV" && metricInfo.type==="PTV"));
+            let targetValue = metricInfo.target;
+            if(objectiveInput && document.getElementById(objectiveInput.id)){
+                targetValue = parseFloat(document.getElementById(objectiveInput.id).value);
+            }
+
+            let isMet = false;
+            const numericMetricValue = parseFloat(metricValueText);
+            if (!isNaN(numericMetricValue) && !isNaN(targetValue)) {
+                if (metricInfo.metricType === "DoseAtVolume") isMet = numericMetricValue >= targetValue; // Want D95 >= Rx
+                else if (metricInfo.metricType === "VolumeAtDose" || metricInfo.metricType === "MaxDose" || metricInfo.metricType === "MeanDose") isMet = numericMetricValue <= targetValue; // Want Vxx, Max, Mean <= Constraint
+            }
+            const colorClass = isMet ? 'text-green-600' : 'text-red-600';
+
+            p.innerHTML = `${metricInfo.label}: <span id="summary_${metricInfo.key.replace(/\s+/g, '_')}" class="font-semibold ${colorClass}">${metricValueText}</span> (Target: ${metricInfo.constraint || (metricInfo.metricType === "DoseAtVolume" ? ">=" : "<=")}${targetValue}${metricInfo.unit})`;
+            planSummaryContainer.appendChild(p);
+        });
+    }
+
+
+    // --- 3D LINAC Control and Animation ---
+    applyToLinacBtn.addEventListener('click', () => {
+        if (selectedTpsBeamIndex === -1 && currentPlanningMode === 'forward') {
+            if (typeof alert !== 'undefined') alert("Please select a beam from the list first."); return;
+        }
+        if (isLinacAnimating) { if (typeof alert !== 'undefined') alert("LINAC is currently busy running a plan."); return; }
+
+        const beamToApply = (currentPlanningMode === 'forward' && tpsBeams[selectedTpsBeamIndex])
+            ? tpsBeams[selectedTpsBeamIndex]
+            : (tpsBeams.length > 0 ? tpsBeams[0] : null); // Apply first beam of IMRT/Arc or default
+
+        if (beamToApply) {
+            update3DLINACVisuals(beamToApply.angle, beamToApply.sizeX, beamToApply.sizeY, 0 /* conceptual couch Z */);
+            linacStatusDiv.textContent = `LINAC set to Beam (G:${beamToApply.angle}°, FS:${beamToApply.sizeX}x${beamToApply.sizeY})`;
+        } else {
+            if (typeof alert !== 'undefined') alert("No beam to apply to LINAC.");
+        }
+    });
+
+    runFullPlanBtn.addEventListener('click', () => {
+        if (tpsBeams.length === 0) { if (typeof alert !== 'undefined') alert("No beams in the current plan to run."); return; }
+        if (isLinacAnimating) { if (typeof alert !== 'undefined') alert("LINAC is already running a plan."); return; }
+
+        planAnimationQueue = [...tpsBeams]; // Copy the beams
+        currentAnimationStep = 0;
+        isLinacAnimating = true;
+        linacStatusDiv.textContent = "Starting plan delivery...";
+        // Animation loop is handled in animate3D()
+    });
+
+    // Manual LINAC Controls (bottom panel)
+    linacGantryRotCWBtn.addEventListener('click', () => { if (gantryRotatingGroup && !isLinacAnimating) gantryRotatingGroup.rotation.y -= 5 * DEG_TO_RAD; updateLinacStatusFromManual(); });
+    linacGantryRotCCWBtn.addEventListener('click', () => { if (gantryRotatingGroup && !isLinacAnimating) gantryRotatingGroup.rotation.y += 5 * DEG_TO_RAD; updateLinacStatusFromManual(); });
+    linacJawsOpenBtn.addEventListener('click', () => {
+        if (!isLinacAnimating && jawXN) {
+            const currentX = Math.abs(jawXN.position.x); const currentY = Math.abs(jawYN.position.y);
+            update3DLINACVisuals(gantryRotatingGroup.rotation.y * RAD_TO_DEG, (currentX / 0.005) + 2, (currentY / 0.005) + 2, 0);
+            updateLinacStatusFromManual();
+        }
+    });
+    linacJawsCloseBtn.addEventListener('click', () => {
+         if (!isLinacAnimating && jawXN) {
+            const currentX = Math.abs(jawXN.position.x); const currentY = Math.abs(jawYN.position.y);
+            update3DLINACVisuals(gantryRotatingGroup.rotation.y * RAD_TO_DEG, Math.max(1,(currentX / 0.005) - 2), Math.max(1,(currentY / 0.005) - 2), 0);
+            updateLinacStatusFromManual();
+        }
+    });
+    linacCouchInBtn.addEventListener('click', () => { if (couchTopGroup && !isLinacAnimating) couchTopGroup.position.z -= 0.1; updateLinacStatusFromManual();});
+    linacCouchOutBtn.addEventListener('click', () => { if (couchTopGroup && !isLinacAnimating) couchTopGroup.position.z += 0.1; updateLinacStatusFromManual();});
+
+    function updateLinacStatusFromManual() {
+        if(isLinacAnimating) return;
+        const gantryDeg = gantryRotatingGroup ? Math.round(gantryRotatingGroup.rotation.y * RAD_TO_DEG) % 360 : 0;
+        const fsx = jawXP ? Math.round(Math.abs(jawXP.position.x * 2 / 0.01)) : "N/A";
+        const fsy = jawYP ? Math.round(Math.abs(jawYP.position.y * 2 / 0.01)) : "N/A";
+        linacStatusDiv.textContent = `Manual G:${gantryDeg}° FS:${fsx}x${fsy} CouchZ:${couchTopGroup?.position.z.toFixed(1)}`;
+    }
+
+    function update3DPatientAndTarget() {
+        const siteData = allStructuresData[currentSite];
+        const ptvData = Object.values(siteData.structures).find(s => s.type === "PTV");
+
+        if (patientPhantomMesh && targetVolumeMesh3D && ptvData) {
+            targetVolumeMesh3D.visible = true;
+            // Scale target roughly based on PTV 2D dimensions (conceptual)
+            const scaleX = ptvData.w / 50; // Assuming PTV w/h are % of 2D viewer
+            const scaleY = ptvData.h / 50; // And 3D target base size is ~0.1
+            targetVolumeMesh3D.scale.set(scaleX, scaleY, (scaleX + scaleY) / 2);
+
+            // Position target conceptually within the phantom
+            // For simplicity, keep it centered in the phantom for now
+            targetVolumeMesh3D.position.set(0,0,0);
+
+            // Adjust patient phantom if needed (e.g. size for brain vs prostate)
+            if (currentSite === 'brain') {
+                patientPhantomMesh.geometry.dispose();
+                patientPhantomMesh.geometry = new THREE.CapsuleGeometry(0.25, 0.8, 4, 12); // Smaller for head
+                patientPhantomMesh.position.y = 0.15 / 2 + 0.25; // Adjust height
+            } else { // Prostate, Lung
+                patientPhantomMesh.geometry.dispose();
+                patientPhantomMesh.geometry = new THREE.CapsuleGeometry(0.3, 1.2, 4, 12);
+                patientPhantomMesh.position.y = 0.15 / 2 + 0.3;
+            }
+        } else if (targetVolumeMesh3D) {
+            targetVolumeMesh3D.visible = false;
+        }
+    }
+
+
+    // --- Initialization ---
+    function initializeApp() {
+        defineSiteData();
+        initThreeJS(); // Initialize 3D LINAC model
+        initializeDVHChart();
+        initializeSite(currentSite); // Load default site data into TPS UI
+
+        siteSelect.addEventListener('change', (e) => {
+            initializeSite(e.target.value);
+        });
+        approvePlanBtn.addEventListener('click', () => {
+             if (typeof alert !== 'undefined') alert("Plan Approved! (Conceptual Action)");
+        });
+
+        // Expose context for tutorial.js
+        window.tpsContext = {
+            beams: tpsBeams, // Note: tutorial.js expects direct array, not getter if it modifies it
+            get currentPlanningMode() { return currentPlanningMode; },
+            get structures() { // Provide a copy or a way to access currentSiteStructures
+                 return JSON.parse(JSON.stringify(currentSiteStructures));
+            },
+            // DOM Elements
+            gantryAngleInput, fieldSizeXInput, fieldSizeYInput, beamWeightInput, addBeamBtn,
+            applyBeamSettingsBtn, beamListDiv, clearBeamsBtn,
+            dvhChartCanvas: dvhChartCanvasEl, // Pass canvas element
+            isodoseOverlaySVG: isodoseOverlaySVG2D, // 2D isodose SVG
+            planTypeText, simulateOptimizationBtn,
+            tabForwardPlanning, tabInversePlanning,
+
+            // Site specific objective inputs (example for brain, adapt if tutorial needs others)
+            ptvD95Input: document.getElementById('ptvD95_wb'), // Assuming brain is default or tutorial handles this
+            lensMaxInput: document.getElementById('lensMax_wb'),
+            eyeMaxInput: document.getElementById('eyeMax_wb'),
+            brainstemMaxInput: document.getElementById('brainstemMax_wb'),
+            chiasmMaxInput: document.getElementById('chiasmMax_wb'),
+            // For lung (if tutorial switches context)
+            // ptvD95InputLung: document.getElementById('ptvD95'), // from lung objectives
+            // cordMaxInput: document.getElementById('cordMax'), // from lung objectives
+
+            // Structure Overlays (2D) - pass by ID for tutorial to getElementById
+            // Or pass direct element references if main.js keeps them updated
+            // For simplicity, tutorial.js can use getElementById with the _overlay2D suffix
+            // PTV_WholeBrain_overlay: `${structures["PTV_WholeBrain"].id}_overlay2D`, // Example ID string
+
+            // Summary Spans (pass by ID for tutorial to getElementById)
+            summary_PTV_D95_wb: `summary_${allStructuresData.brain.planSummaryMetrics[0].key.replace(/\s+/g, '_')}`,
+
+
+            // Functions
+            clearBeams: () => clearBeams(), // Expose the function
+            switchPlanningMode: (mode) => switchPlanningModeUI(mode),
+            setStructureVisibility: (structureKeyArray, isVisible) => {
+                if (!currentSiteStructures) return;
+                structureKeyArray.forEach(keyName => {
+                    // Find structure by name part if keyName is generic (e.g. "PTV_Lung" from tutorial)
+                    const structure = Object.values(currentSiteStructures).find(s => s.id === keyName || s.name.includes(keyName.split('_')[1]));
+                    if (structure) {
+                        structure.visible = isVisible;
+                    } else if (currentSiteStructures[keyName]) {
+                         currentSiteStructures[keyName].visible = isVisible;
+                    }
+                });
+                update2DStructureVisuals();
+                updateDVH();
+            },
+            ensureStructureVisible: (structureId) => { // Simplified for tutorial
+                if (currentSiteStructures[structureId] && !currentSiteStructures[structureId].visible) {
+                    currentSiteStructures[structureId].visible = true;
+                    update2DStructureVisuals(); updateDVH();
+                }
+            },
+        };
+        console.log("Integrated TPS Initialized. tpsContext ready for tutorial.");
+    }
+
+    initializeApp();
+});
+
+    </script>
+
 </body>
 </html>
