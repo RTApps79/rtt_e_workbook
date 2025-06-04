@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lung TPS: Forward & Inverse Planning Concepts</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .tps-grid { display: grid; grid-template-columns: 300px 1fr 340px; grid-template-rows: auto 1fr; gap: 16px; height: calc(100vh - 100px); }
+        .tps-panel { background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 16px; overflow: auto; }
+        .viewer-area { grid-column: 2 / 3; grid-row: 1 / 3; background-color: #111827; /* Darker gray */ display: flex; justify-content: center; align-items: center; position: relative; overflow: hidden; border-radius: 8px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); }
+        .viewer-image { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .beam-icon { cursor: pointer; position: absolute; font-size: 1.8em; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); transition: transform 0.2s; z-index: 10; }
+        .beam-icon:hover { transform: scale(1.1); }
+        .beam-line { position: absolute; transform-origin: 0 0; height: 2px; z-index: 5; }
+        .structure-overlay { position: absolute; z-index: 8; text-align: center; font-size: 0.6rem; color: white; text-shadow: 1px 1px 1px black; padding-top: 2px; box-sizing: border-box; pointer-events: none; }
+        .ptv-overlay { border: 2px dashed #facc15; /* Yellow-400 */ background-color: rgba(250, 204, 21, 0.2); }
+        .oar-overlay { border: 1px solid; }
+        /* Style for anatomical landmarks */
+        .landmark-overlay { border: 1px dashed; background-color: rgba(139, 92, 246, 0.15); /* Violet-400 with alpha */ }
+
+        .workflow-step-done span { text-decoration: line-through; color: #10b981; }
+        .workflow-step-done .status-icon { display: inline !important; color: #10b981; }
+        .input-sm { width: 100%; padding: 6px 8px; border-radius: 4px; border: 1px solid #d1d5db; font-size: 0.875rem; box-sizing: border-box; }
+        .btn { padding: 8px 12px; border-radius: 6px; font-size: 0.875rem; font-weight: 500; transition: background-color 0.2s; }
+        .btn-primary { background-color: #4f46e5; color: white; } .btn-primary:hover { background-color: #4338ca; }
+        .btn-secondary { background-color: #6b7280; color: white; } .btn-secondary:hover { background-color: #4b5563; }
+        .btn-success { background-color: #16a34a; color: white; } .btn-success:hover { background-color: #15803d; }
+        .btn-warning { background-color: #f59e0b; color: white; } .btn-warning:hover { background-color: #d97706; }
+        .tab-button { padding: 8px 12px; font-size: 0.9rem; font-weight: 500; border-bottom: 2px solid transparent; cursor: pointer; }
+        .tab-button.active { border-bottom-color: #4f46e5; color: #4f46e5; }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 flex flex-col min-h-screen">
+    <header class="bg-slate-800 text-white shadow-md z-50">
+        <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <h1 class="text-xl font-bold">Lung TPS: Forward & Inverse Planning Concepts</h1>
+            <div id="tutorialButtonsContainer" class="space-x-2">
+                <!-- Tutorial buttons will be added here by JS -->
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-4 flex-grow tps-grid">
+        <!-- Left Panel: Workflow, Patient, Structures, Planning Mode -->
+        <div class="tps-panel col-start-1 row-start-1 row-span-2 flex flex-col">
+            <h2 class="text-lg font-semibold mb-3 text-indigo-700">Planning Controls</h2>
+
+            <!-- Workflow Steps -->
+            <div class="mb-4 p-3 bg-indigo-50 rounded-lg border border-indigo-200 text-xs">
+                <h3 class="font-bold mb-1 text-indigo-600">Workflow Guide</h3>
+                <ul class="list-none space-y-1">
+                    <li id="wf-step1" class="flex items-center">1. Patient & Imaging Setup <span class="status-icon hidden ml-1">✓</span></li>
+                    <li id="wf-step2" class="flex items-center">2. Structure Definition <span class="status-icon hidden ml-1">✓</span></li>
+                    <li id="wf-step3" class="flex items-center">3. Planning Mode & Beam Setup <span class="status-icon hidden ml-1">✓</span></li>
+                    <li id="wf-step4" class="flex items-center">4. Plan Evaluation <span class="status-icon hidden ml-1">✓</span></li>
+                </ul>
+            </div>
+
+            <!-- Patient & Imaging -->
+            <div class="mb-3">
+                <h3 class="font-semibold mb-1 text-sm">1. Patient & Imaging</h3>
+                <p class="text-xs text-slate-600 mb-1">Simulated CT Scan: Lung Cancer Case</p>
+                <div class="flex items-center space-x-2 mb-1">
+                    <label for="ctSliceSlider" class="text-xs">CT Slice:</label>
+                    <input type="range" id="ctSliceSlider" min="1" max="50" value="25" class="w-full">
+                    <span id="ctSliceValueText" class="text-xs w-6 text-right">25</span>
+                </div>
+                 <button class="btn btn-secondary text-xs w-full mt-1">Load New Patient (Conceptual)</button>
+            </div>
+
+            <!-- Structure Definition -->
+            <div class="mb-3">
+                <h3 class="font-semibold mb-1 text-sm">2. Structure Definition</h3>
+                <p class="text-xs text-slate-500 mb-1">Target: PTV Lung. OARs: Healthy Lung, Spinal Cord, Heart, Esophagus. Landmarks: Carina, T4/T5.</p>
+                <select id="structureSelector" class="input-sm mb-1">
+                    <option value="PTV_Lung">PTV: Lung Tumor</option>
+                    <option value="OAR_Lung_L">OAR: Left Lung</option>
+                    <option value="OAR_Lung_R">OAR: Right Lung</option>
+                    <option value="OAR_SpinalCord">OAR: Spinal Cord</option>
+                    <option value="OAR_Heart">OAR: Heart</option>
+                    <option value="OAR_Esophagus">OAR: Esophagus</option>
+                    <option value="LANDMARK_Carina">LANDMARK: Carina</option> <!-- NEW -->
+                    <option value="LANDMARK_T4T5">LANDMARK: T4/T5 Vertebra</option> <!-- NEW -->
+                </select>
+                <div class="grid grid-cols-2 gap-2">
+                    <button id="toggleStructureVisibilityBtn" class="btn btn-primary text-xs">Show/Hide</button>
+                    <button id="editStructureBtn" class="btn btn-secondary text-xs" title="Conceptual: Adjust size/position">Edit Selected</button>
+                </div>
+                <div id="structureEditor" class="hidden mt-2 p-2 border rounded bg-slate-50 text-xs space-y-1">
+                    Editing: <span id="editingStructureName" class="font-semibold"></span>
+                    <div><label>Size X (%): <input type="range" data-param="w" min="5" max="40" class="w-2/3 structure-slider"> <span class="structure-value"></span></label></div>
+                    <div><label>Size Y (%): <input type="range" data-param="h" min="5" max="40" class="w-2/3 structure-slider"> <span class="structure-value"></span></label></div>
+                    <div><label>Pos X (%): <input type="range" data-param="x" min="10" max="90" class="w-2/3 structure-slider"> <span class="structure-value"></span></label></div>
+                    <div><label>Pos Y (%): <input type="range" data-param="y" min="10" max="90" class="w-2/3 structure-slider"> <span class="structure-value"></span></label></div>
+                </div>
+            </div>
+
+            <!-- Planning Mode Tabs -->
+            <div class="mb-3 flex-grow flex flex-col min-h-0">
+                <h3 class="font-semibold mb-1 text-sm">3. Planning Mode & Beam Setup</h3>
+                <div class="flex border-b mb-2">
+                    <button id="tabForwardPlanning" class="tab-button active" data-tab="forwardPlanningTabContent">Forward (3D CRT)</button>
+                    <button id="tabInversePlanning" class="tab-button" data-tab="inversePlanningTabContent">Inverse (IMRT Concept)</button>
+                </div>
+
+                <!-- Forward Planning Tab Content -->
+                <div id="forwardPlanningTabContent" class="tab-content active flex-grow overflow-y-auto pr-1 space-y-2">
+                    <p class="text-xs text-slate-600">Manually place beams, set angles, field sizes, and weights.</p>
+                    <div>
+                        <label for="gantryAngle" class="text-xs font-medium">Gantry Angle (0-359°):</label>
+                        <input type="number" id="gantryAngle" min="0" max="359" value="0" class="input-sm">
+                    </div>
+                    <div>
+                        <label for="fieldSizeX" class="text-xs font-medium">Field Size X (cm):</label>
+                        <input type="number" id="fieldSizeX" min="1" max="25" value="8" class="input-sm">
+                    </div>
+                    <div>
+                        <label for="fieldSizeY" class="text-xs font-medium">Field Size Y (cm):</label>
+                        <input type="number" id="fieldSizeY" min="1" max="25" value="10" class="input-sm">
+                    </div>
+                    <div>
+                        <label for="beamWeight" class="text-xs font-medium">Beam Weight/MU (1-100):</label>
+                        <input type="number" id="beamWeight" min="1" max="100" value="50" class="input-sm">
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 mt-1">
+                        <button id="addBeamBtn" class="btn btn-primary text-xs">Add Beam</button>
+                        <button id="applyBeamSettingsBtn" class="btn btn-secondary text-xs">Apply to Selected</button>
+                    </div>
+                     <button id="clearBeamsBtn" class="btn btn-secondary text-xs w-full mt-1">Clear All Beams</button>
+                </div>
+
+                <!-- Inverse Planning Tab Content -->
+                <div id="inversePlanningTabContent" class="tab-content hidden flex-grow overflow-y-auto pr-1 space-y-2">
+                    <p class="text-xs text-slate-600">Define dose objectives. The system will simulate an optimized IMRT plan.</p>
+                    <div class="text-xs space-y-1">
+                        <h4 class="font-medium text-slate-700">PTV: Lung Tumor</h4>
+                        <label>D95% receives: <input type="number" id="ptvD95" value="60" class="input-sm w-20 inline"> Gy</label>
+
+                        <h4 class="font-medium text-slate-700 mt-1">OAR: Spinal Cord</h4>
+                        <label>Max Dose < <input type="number" id="cordMax" value="45" class="input-sm w-20 inline"> Gy</label>
+
+                        <h4 class="font-medium text-slate-700 mt-1">OAR: Healthy Lungs (Total - PTV)</h4>
+                        <label>V20Gy < <input type="number" id="lungV20" value="30" class="input-sm w-20 inline"> %</label>
+                        <label>Mean Dose < <input type="number" id="lungMean" value="20" class="input-sm w-20 inline"> Gy</label>
+
+                        <h4 class="font-medium text-slate-700 mt-1">OAR: Heart</h4>
+                        <label>Mean Dose < <input type="number" id="heartMean" value="26" class="input-sm w-20 inline"> Gy</label>
+                         <label>V30Gy < <input type="number" id="heartV30" value="40" class="input-sm w-20 inline"> %</label>
+                    </div>
+                    <button id="simulateImrtBtn" class="btn btn-warning text-xs w-full mt-2">Optimize Plan (Simulate IMRT)</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Center Panel: CT Viewer -->
+        <div class="viewer-area">
+            <!-- Placeholder for CT Image - to be replaced by JS -->
+            <img id="ctViewerImage" src="https://placehold.co/600x500/111827/4b5563?text=Lung+CT+Slice" alt="Lung CT Slice Viewer" class="viewer-image" draggable="false">
+            <!-- Structure Overlays -->
+            <div id="PTV_Lung_overlay" class="structure-overlay ptv-overlay" style="left: 45%; top: 40%; width: 15%; height: 25%; border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;">PTV Lung</div>
+            <div id="OAR_Lung_L_overlay" class="structure-overlay oar-overlay" style="left: 20%; top: 25%; width: 25%; height: 55%; border-radius: 40% 10% 10% 60% / 50% 10% 10% 50%; background-color: rgba(34, 197, 94, 0.2); border-color: #22c55e;">L.Lung</div>
+            <div id="OAR_Lung_R_overlay" class="structure-overlay oar-overlay" style="left: 55%; top: 25%; width: 25%; height: 55%; border-radius: 10% 40% 60% 10% / 10% 50% 50% 10%; background-color: rgba(34, 197, 94, 0.2); border-color: #22c55e;">R.Lung</div>
+            <div id="OAR_SpinalCord_overlay" class="structure-overlay oar-overlay" style="left: 48%; top: 45%; width: 4%; height: 15%; border-radius: 5px; background-color: rgba(239, 68, 68, 0.3); border-color: #ef4444;">Cord</div>
+            <div id="OAR_Heart_overlay" class="structure-overlay oar-overlay" style="left: 35%; top: 55%; width: 20%; height: 20%; border-radius: 50% 50% 20% 20%; background-color: rgba(217, 70, 239, 0.2); border-color: #d946ef;">Heart</div>
+            <div id="OAR_Esophagus_overlay" class="structure-overlay oar-overlay" style="left: 53%; top: 48%; width: 3%; height: 10%; border-radius: 3px; background-color: rgba(245, 158, 11, 0.3); border-color: #f59e0b;">Eso.</div>
+            
+            <!-- NEW Anatomical Landmarks -->
+            <div id="LANDMARK_Carina_overlay" class="structure-overlay landmark-overlay" style="left: 47%; top: 30%; width: 6%; height: 5%; border-radius: 40% 40% 20% 20%; border-color: #8b5cf6;">Carina</div>
+            <div id="LANDMARK_T4T5_overlay" class="structure-overlay landmark-overlay" style="left: 47.5%; top: 32%; width: 5%; height: 8%; border-radius: 3px; border-color: #8b5cf6; background-color: rgba(139, 92, 246, 0.25);">T4/T5</div>
+
+
+            <!-- Isodose Lines SVG Container -->
+            <svg id="isodoseOverlaySVG" width="100%" height="100%" style="position: absolute; top: 0; left: 0; z-index: 6; pointer-events: none;"></svg>
+        </div>
+
+        <!-- Right Panel: Beam List, DVH, Plan Summary -->
+        <div class="tps-panel col-start-3 row-start-1 row-span-2">
+            <h2 class="text-lg font-semibold mb-3 text-indigo-700">4. Plan Evaluation</h2>
+
+            <div class="mb-3">
+                <h3 class="font-semibold mb-1 text-sm">Beam List / Plan Type</h3>
+                 <p id="planTypeText" class="text-xs text-indigo-600 font-medium mb-1">Current Mode: Forward Planning (3D CRT)</p>
+                <div id="beamList" class="space-y-1 text-xs max-h-32 overflow-y-auto border p-1 rounded bg-slate-50">
+                    <!-- Beams will be populated by JS -->
+                </div>
+                 <div id="bevPlaceholder" class="mt-1 w-full h-16 bg-gray-700 text-white flex items-center justify-center text-xs rounded">Conceptual BEV</div>
+            </div>
+
+            <div class="mb-3">
+                <h3 class="font-semibold mb-1 text-sm">Simulated Dose Volume Histogram (DVH)</h3>
+                <div class="w-full h-48"><canvas id="dvhChartCanvas"></canvas></div>
+            </div>
+
+            <div class="mb-3">
+                <h3 class="font-semibold mb-1 text-sm">Simulated Isodose Lines</h3>
+                 <div id="isodoseKey" class="text-xs mb-1 flex items-center space-x-2">
+                    <div><span class="inline-block w-2 h-2 mr-1 rounded-full" style="background-color: #16a34a;"></span> High (PTV Rx)</div>
+                    <div><span class="inline-block w-2 h-2 mr-1 rounded-full" style="background-color: #facc15;"></span> Med</div>
+                    <div><span class="inline-block w-2 h-2 mr-1 rounded-full" style="background-color: #60a5fa;"></span> Low</div>
+                </div>
+                <p class="text-xs text-slate-500">Isodose lines are visualized on the CT Viewer.</p>
+            </div>
+
+            <div class="mb-3">
+                <h3 class="font-semibold mb-1 text-sm">Plan Summary (Conceptual)</h3>
+                <div class="text-xs space-y-0.5 text-slate-700">
+                    <p>PTV Coverage (D95%): <span id="summary_PTV_D95" class="font-semibold text-gray-500">N/A</span></p>
+                    <hr class="my-1">
+                    <p>Spinal Cord Max: <span id="summary_Cord_Max" class="font-semibold text-gray-500">N/A</span></p>
+                    <p>Healthy Lung V20Gy: <span id="summary_Lung_V20" class="font-semibold text-gray-500">N/A</span></p>
+                    <p>Healthy Lung Mean: <span id="summary_Lung_Mean" class="font-semibold text-gray-500">N/A</span></p>
+                    <p>Heart Mean: <span id="summary_Heart_Mean" class="font-semibold text-gray-500">N/A</span></p>
+                    <p>Heart V30Gy: <span id="summary_Heart_V30" class="font-semibold text-gray-500">N/A</span></p>
+                </div>
+            </div>
+             <button id="approvePlanBtn" class="btn btn-success text-xs w-full mt-2">Approve Plan (Conceptual)</button>
+        </div>
+    </main>
+
+    <footer class="bg-slate-700 text-slate-300 py-2 text-center text-xs">
+        <p>&copy; <span id="currentYear"></span> Lung TPS Simulator. For Educational Purposes Only.</p>
+    </footer>
+
+    <script src="main.js"></script>
+    <script src="tutorial.js"></script>
+    <script>
+        // Small script to initialize tutorial buttons after global tpsTutorial is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            // This assumes lung_tutorial.js creates a global `lungTpsTutorial` instance
+            // and that lung_tps_script.js creates the tpsContext needed by the tutorial.
+            // The instantiation of lungTpsTutorial should happen AFTER tpsContext is fully populated.
+
+            const tutorialButtonContainer = document.getElementById('tutorialButtonsContainer');
+            if (tutorialButtonContainer && window.lungTpsTutorial) {
+                 const forwardPlanButton = document.createElement('button');
+                forwardPlanButton.textContent = 'Forward Plan Tutorial';
+                forwardPlanButton.className = 'bg-sky-500 hover:bg-sky-600 text-white px-2 py-1 text-xs rounded-md shadow transition-colors';
+                forwardPlanButton.onclick = () => window.lungTpsTutorial.startTutorial('forwardLung');
+                tutorialButtonContainer.appendChild(forwardPlanButton);
+
+                const inversePlanButton = document.createElement('button');
+                inversePlanButton.textContent = 'Inverse Plan Tutorial';
+                inversePlanButton.className = 'bg-teal-500 hover:bg-teal-600 text-white px-2 py-1 text-xs rounded-md shadow transition-colors';
+                inversePlanButton.onclick = () => window.lungTpsTutorial.startTutorial('inverseLung');
+                tutorialButtonContainer.appendChild(inversePlanButton);
+            } else {
+                console.warn("Tutorial buttons or lungTpsTutorial instance not ready.");
+            }
+        });
+    </script>
+</body>
+</html>
