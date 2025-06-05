@@ -712,7 +712,26 @@ document.addEventListener('DOMContentLoaded', () => {
             const colorClass = isMet ? 'text-green-600' : 'text-red-600'; const summarySpanId = `summary_${metricInfo.key.replace(/\s+/g, '_')}`;
             p.innerHTML = `${metricInfo.label}: <span id="${summarySpanId}" class="font-semibold ${colorClass}">${metricValueText}</span> (Target: ${metricInfo.constraint || (metricInfo.metricType === "DoseAtVolume" ? ">=" : "<=")}${targetValue}${metricInfo.unit})`;
             planSummaryContainer.appendChild(p);
-        });
+        }
+    function update3DPatientAndTarget() {
+    if (targetVolumeMesh3D) {
+        // Make the 3D target volume visible
+        targetVolumeMesh3D.visible = true;
+
+        // Placeholder for future enhancements:
+        // You could add logic here to change the target's size, shape,
+        // or position based on the currentSite data if needed.
+        // For example:
+        // const siteData = allStructuresData[currentSite];
+        // if (siteData && siteData.target3DParams) {
+        //     targetVolumeMesh3D.scale.set(siteData.target3DParams.scaleX, siteData.target3DParams.scaleY, siteData.target3DParams.scaleZ);
+        // }
+        console.log("3D Patient and Target Updated (Target Visibility: true)");
+    } else {
+        console.warn("update3DPatientAndTarget called but targetVolumeMesh3D is not defined.");
+    }
+}
+);
     }
 
     // --- Initialization ---
