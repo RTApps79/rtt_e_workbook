@@ -77,6 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let patientPhantomMesh, targetVolumeMesh3D;
     let beamVisualizationMesh; // Single mesh for beam vis
     let beamVisualizationGroup; // For visualizing the beam in 3D - Declare it here
+    let linacHeadObject;
 
     // Constants from Build-a-LINAC, adjusted if necessary
     const ISOCENTER_Y_TARGET = 1.3;
