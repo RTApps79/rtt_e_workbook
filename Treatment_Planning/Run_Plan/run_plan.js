@@ -712,7 +712,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const colorClass = isMet ? 'text-green-600' : 'text-red-600'; const summarySpanId = `summary_${metricInfo.key.replace(/\s+/g, '_')}`;
             p.innerHTML = `${metricInfo.label}: <span id="${summarySpanId}" class="font-semibold ${colorClass}">${metricValueText}</span> (Target: ${metricInfo.constraint || (metricInfo.metricType === "DoseAtVolume" ? ">=" : "<=")}${targetValue}${metricInfo.unit})`;
             planSummaryContainer.appendChild(p);
-        }
+        }}
     function update3DPatientAndTarget() {
     if (targetVolumeMesh3D) {
         // Make the 3D target volume visible
@@ -732,7 +732,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 }
 );
-    }
 
     // --- Initialization ---
     function initializeApp() {
