@@ -702,18 +702,61 @@ document.addEventListener('DOMContentLoaded', () => {
         createIsoEllipse(ptvCenterX, ptvCenterY, ptvRect.w * 0.8 * intensity * spread, ptvRect.h * 0.9 * intensity * spread, isoColors.medium, 0.35);
         createIsoEllipse(ptvCenterX, ptvCenterY, ptvRect.w * 1.2 * intensity * spread, ptvRect.h * 1.3 * intensity * spread, isoColors.low, 0.2);
     }
-    function updatePlanSummary() { /* ... from your run_plan.js ... */
-        planSummaryContainer.innerHTML = ''; const siteData = allStructuresData[currentSite]; if (!siteData || !dvhChartInstance.data.datasets.length) { planSummaryContainer.innerHTML = '<p class="text-gray-500">N/A</p>'; return; }
-        siteData.planSummaryMetrics.forEach(metricInfo => {
-            let metricValueText = "N/A"; const datasetForMetric = dvhChartInstance.data.datasets.find(ds => ds.label === metricInfo.key || (metricInfo.key === "OAR_Lung_Total" && ds.label.includes("Lung")) || (metricInfo.key === "OAR_Lens_L" && ds.label.includes("Lens Left")) || (metricInfo.key === "OAR_Eye_L" && ds.label.includes("Eye Left")));
-            if (datasetForMetric) { const doseValues = dvhChartInstance.data.labels.map(l => parseFloat(l)); if (metricInfo.metricType === "DoseAtVolume") { for (let i = 0; i < doseValues.length; i++) { if (datasetForMetric.data[i] <= metricInfo.value) { metricValueText = doseValues[i].toFixed(1) + " " + metricInfo.unit; break; } } if (metricValueText === "N/A") metricValueText = `>${doseValues[doseValues.length-1].toFixed(1)} ${metricInfo.unit}`; } else if (metricInfo.metricType === "VolumeAtDose") { const index = doseValues.findIndex(d => d >= metricInfo.value); if (index !== -1) metricValueText = datasetForMetric.data[index].toFixed(1) + " " + metricInfo.unit; } else if (metricInfo.metricType === "MaxDose") { for (let i = doseValues.length - 1; i >= 0; i--) { if (datasetForMetric.data[i] > 0.5) { metricValueText = doseValues[i].toFixed(1) + " " + metricInfo.unit; break; } } if (metricValueText === "N/A") metricValueText = `<1 ${metricInfo.unit}`; } else if (metricInfo.metricType === "MeanDose") { metricValueText = "Conceptual"; } }
-            const p = document.createElement('p'); const objectiveInputEl = siteData.objectives.find(obj => obj.id === metricInfo.id_objective || obj.id.toLowerCase().includes(metricInfo.key.split('_')[1]?.toLowerCase()) || (obj.type==="PTV" && metricInfo.type==="PTV")); let targetValue = metricInfo.target; if(objectiveInputEl && document.getElementById(objectiveInputEl.id)){ targetValue = parseFloat(document.getElementById(objectiveInputEl.id).value); }
-            let isMet = false; const numericMetricValue = parseFloat(metricValueText); if (!isNaN(numericMetricValue) && !isNaN(targetValue)) { if (metricInfo.metricType === "DoseAtVolume") isMet = numericMetricValue >= targetValue; else isMet = numericMetricValue <= targetValue; }
-            const colorClass = isMet ? 'text-green-600' : 'text-red-600'; const summarySpanId = `summary_${metricInfo.key.replace(/\s+/g, '_')}`;
-            p.innerHTML = `${metricInfo.label}: <span id="${summarySpanId}" class="font-semibold ${colorClass}">${metricValueText}</span> (Target: ${metricInfo.constraint || (metricInfo.metricType === "DoseAtVolume" ? ">=" : "<=")}${targetValue}${metricInfo.unit})`;
-            planSummaryContainer.appendChild(p);
-        }}
-    function update3DPatientAndTarget() {
+   function updatePlanSummary() { /* ... from your run_plan.js ... */
+    planSummaryContainer.innerHTML = '';
+    const siteData = allStructuresData[currentSite];
+    if (!siteData || !dvhChartInstance.data.datasets.length) {
+        planSummaryContainer.innerHTML = '<p class="text-gray-500">N/A</p>';
+        return;
+    }
+    siteData.planSummaryMetrics.forEach(metricInfo => { // forEach call starts
+        let metricValueText = "N/A";
+        const datasetForMetric = dvhChartInstance.data.datasets.find(ds => ds.label === metricInfo.key || (metricInfo.key === "OAR_Lung_Total" && ds.label.includes("Lung")) || (metricInfo.key === "OAR_Lens_L" && ds.label.includes("Lens Left")) || (metricInfo.key === "OAR_Eye_L" && ds.label.includes("Eye Left")));
+        if (datasetForMetric) {
+            const doseValues = dvhChartInstance.data.labels.map(l => parseFloat(l));
+            if (metricInfo.metricType === "DoseAtVolume") {
+                for (let i = 0; i < doseValues.length; i++) {
+                    if (datasetForMetric.data[i] <= metricInfo.value) {
+                        metricValueText = doseValues[i].toFixed(1) + " " + metricInfo.unit;
+                        break;
+                    }
+                }
+                if (metricValueText === "N/A") metricValueText = `>${doseValues[doseValues.length-1].toFixed(1)} ${metricInfo.unit}`;
+            } else if (metricInfo.metricType === "VolumeAtDose") {
+                const index = doseValues.findIndex(d => d >= metricInfo.value);
+                if (index !== -1) metricValueText = datasetForMetric.data[index].toFixed(1) + " " + metricInfo.unit;
+            } else if (metricInfo.metricType === "MaxDose") {
+                for (let i = doseValues.length - 1; i >= 0; i--) {
+                    if (datasetForMetric.data[i] > 0.5) {
+                        metricValueText = doseValues[i].toFixed(1) + " " + metricInfo.unit;
+                        break;
+                    }
+                }
+                if (metricValueText === "N/A") metricValueText = `<1 ${metricInfo.unit}`;
+            } else if (metricInfo.metricType === "MeanDose") {
+                metricValueText = "Conceptual";
+            }
+        }
+        const p = document.createElement('p');
+        const objectiveInputEl = siteData.objectives.find(obj => obj.id === metricInfo.id_objective || obj.id.toLowerCase().includes(metricInfo.key.split('_')[1]?.toLowerCase()) || (obj.type === "PTV" && metricInfo.type === "PTV"));
+        let targetValue = metricInfo.target;
+        if (objectiveInputEl && document.getElementById(objectiveInputEl.id)) {
+            targetValue = parseFloat(document.getElementById(objectiveInputEl.id).value);
+        }
+        let isMet = false;
+        const numericMetricValue = parseFloat(metricValueText);
+        if (!isNaN(numericMetricValue) && !isNaN(targetValue)) {
+            if (metricInfo.metricType === "DoseAtVolume") isMet = numericMetricValue >= targetValue;
+            else isMet = numericMetricValue <= targetValue;
+        }
+        const colorClass = isMet ? 'text-green-600' : 'text-red-600';
+        const summarySpanId = `summary_${metricInfo.key.replace(/\s+/g, '_')}`;
+        p.innerHTML = `${metricInfo.label}: <span id="${summarySpanId}" class="font-semibold ${colorClass}">${metricValueText}</span> (Target: ${metricInfo.constraint || (metricInfo.metricType === "DoseAtVolume" ? ">=" : "<=")}${targetValue}${metricInfo.unit})`;
+        planSummaryContainer.appendChild(p);
+    }); // Correctly closes the forEach call (added the parenthesis)
+} // Correctly closes the updatePlanSummary function
+
+function update3DPatientAndTarget() {
     if (targetVolumeMesh3D) {
         // Make the 3D target volume visible
         targetVolumeMesh3D.visible = true;
@@ -731,7 +774,6 @@ document.addEventListener('DOMContentLoaded', () => {
         console.warn("update3DPatientAndTarget called but targetVolumeMesh3D is not defined.");
     }
 }
-);
 
     // --- Initialization ---
     function initializeApp() {
