@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DICOM Image Stack Viewer</title>
+  <style>
+    #dicom-viewer {
+      text-align: center;
+      margin-top: 40px;
+    }
+    #dicom-img {
+      max-width: 90vw;
+      max-height: 80vh;
+      border: 2px solid #444;
+    }
+    .controls {
+      margin-top: 10px;
+    }
+    button {
+      padding: 8px 16px;
+      font-size: 1.1em;
+    }
+  </style>
+</head>
+<body>
+  <div id="dicom-viewer">
+    <img id="dicom-img" src="" alt="DICOM Series Image">
+    <div class="controls">
+      <button onclick="prevImg()">Previous</button>
+      <span id="img-counter"></span>
+      <button onclick="nextImg()">Next</button>
+    </div>
+  </div>
+  <script>
+    // List your image file names here, in order
+    const images = [
+      'assets/images/series/img1.jpg',
+      'assets/images/series/img2.jpg',
+      'assets/images/series/img3.jpg',
+      // ...add all image paths
+    ];
+    let idx = 0;
+    const imgElem = document.getElementById('dicom-img');
+    const counterElem = document.getElementById('img-counter');
+
+    function showImg() {
+      imgElem.src = images[idx];
+      counterElem.textContent = `Image ${idx + 1} of ${images.length}`;
+    }
+    function prevImg() {
+      if (idx > 0) { idx--; showImg(); }
+    }
+    function nextImg() {
+      if (idx < images.length - 1) { idx++; showImg(); }
+    }
+    // Initialize viewer
+    showImg();
+  </script>
+</body>
+</html>
