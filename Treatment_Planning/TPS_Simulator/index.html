@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Virtual TPS: Beam Placement Simulator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; /* ... existing styles ... */ }
+        .hero-banner { background: linear-gradient(to right, #667eea, #764ba2); }
+        .tps-grid { display: grid; grid-template-columns: 280px 1fr 320px; /* Adjusted for more tools */ grid-template-rows: auto 1fr; gap: 16px; height: calc(100vh - 120px); }
+        .tps-panel { background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); padding: 16px; overflow: auto; }
+        .viewer-area { grid-column: 2 / 3; grid-row: 1 / 3; background-color: #1a202c; display: flex; justify-content: center; align-items: center; position: relative; overflow: hidden; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+        .viewer-image { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .beam-icon { cursor: pointer; position: absolute; font-size: 2em; color: #4CAF50; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); transition: transform 0.2s; z-index: 10; }
+        .beam-icon:hover { transform: scale(1.1); }
+        .beam-line { position: absolute; background-color: rgba(76, 175, 80, 0.5); transform-origin: 0 0; height: 2px; z-index: 5; }
+        .target-overlay, .organ-overlay { position: absolute; z-index: 8; text-align: center; font-size: 0.6rem; color: white; text-shadow: 1px 1px 1px black; padding-top: 2px;}
+        .target-overlay { border: 2px dashed #f59e0b; background-color: rgba(245, 158, 11, 0.2); border-radius: 50%; }
+        .organ-overlay { background-color: rgba(239, 68, 68, 0.3); border: 1px solid #ef4444; z-index: 7; }
+        /* Styles for workflow steps */
+        .workflow-step-done span { text-decoration: line-through; color: #10b981; }
+        .workflow-step-done .status-icon { display: inline !important; color: #10b981; }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 flex flex-col min-h-screen">
+    <header class="bg-white shadow-md z-50">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-purple-700">Enhanced Virtual TPS Simulator</h1>
+            <a href="index.html" class="text-purple-600 hover:text-purple-800 px-3 py-1 rounded border border-purple-600 hover:border-purple-800 transition-colors duration-300">Back to Menu</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-8 flex-grow tps-grid">
+        <div class="tps-panel col-start-1 row-start-1 row-span-2">
+            <h2 class="text-xl font-semibold mb-4 text-purple-600">Workflow & Tools</h2>
+
+            <div class="mb-6 p-3 bg-amber-50 rounded-lg border border-amber-200">
+                <h3 class="font-bold mb-2 text-amber-700">Planning Workflow Guide</h3>
+                <ul class="list-none text-sm text-slate-700 space-y-1">
+                    <li id="wf-step1">1. Patient & Imaging <span class="status-icon hidden">✓</span></li>
+                    <li id="wf-step2">2. Structure Definition (Target/OARs) <span class="status-icon hidden">✓</span></li>
+                    <li id="wf-step3">3. Beam Placement & Configuration <span class="status-icon hidden">✓</span></li>
+                    <li id="wf-step4">4. Plan Evaluation (DVH, Isodose) <span class="status-icon hidden">✓</span></li>
+                    <li id="wf-step5">5. Optimization & Approval (Conceptual) <span class="status-icon hidden">✓</span></li>
+                </ul>
+            </div>
+
+            <div class="mb-6">
+                <h3 class="font-bold mb-2">1. Patient & Imaging</h3>
+                <p class="text-sm text-slate-600 mb-2">Simulated CT Scan Loaded (Prostate)</p>
+                <div class="flex items-center space-x-2 mb-2">
+                    <label for="ctSlice" class="text-sm">CT Slice:</label>
+                    <input type="range" id="ctSlice" min="1" max="100" value="50" class="w-full">
+                    <span id="ctSliceValue">50</span>
+                </div>
+                <button class="bg-blue-500 text-white px-3 py-1 rounded text-sm w-full mb-2 hover:bg-blue-600">Load New Patient (Conceptual)</button>
+                <button class="bg-gray-400 text-white px-3 py-1 rounded text-sm w-full mb-2 hover:bg-gray-500">View 3D Patient (Conceptual)</button>
+                <button class="bg-indigo-500 text-white px-3 py-1 rounded text-sm w-full hover:bg-indigo-600" title="Concept: Fuse MRI/PET for better delineation">Load MRI/PET (Conceptual)</button>
+            </div>
+
+            <div class="mb-6">
+                <h3 class="font-bold mb-2">2. Structure Definition</h3>
+                <p class="text-xs text-slate-500 mb-1">Define Gross Tumor Volume (GTV), Clinical Target Volume (CTV), Planning Target Volume (PTV), and Organs at Risk (OARs). Based on ICRU 50/62.</p>
+                <select id="structureSelector" class="w-full p-1 border rounded text-sm mb-2">
+                    <option value="PTV_Prostate">PTV: Prostate</option>
+                    <option value="OAR_Rectum">OAR: Rectum</option>
+                    <option value="OAR_Bladder">OAR: Bladder</option>
+                    <option value="OAR_FemHead_L">OAR: Left Femoral Head</option>
+                    <option value="OAR_FemHead_R">OAR: Right Femoral Head</option>
+                </select>
+                <div class="grid grid-cols-2 gap-2 mb-2">
+                    <button id="toggleStructureVisibilityBtn" class="bg-cyan-500 text-white px-2 py-1 rounded text-sm hover:bg-cyan-600">Show/Hide Selected</button>
+                    <button id="editStructureBtn" class="bg-teal-500 text-white px-2 py-1 rounded text-sm hover:bg-teal-600" title="Conceptual: Adjust size/position of selected structure">Edit Selected</button>
+                </div>
+                 <div id="structureEditor" class="hidden mt-2 p-2 border rounded bg-slate-50 text-sm">
+                    Editing: <span id="editingStructureName" class="font-semibold"></span>
+                    <div><label>Size X: <input type="range" id="structureSizeX" min="5" max="30" value="10" class="w-2/3 structure-slider"> <span id="structureSizeXValue">10</span>%</label></div>
+                    <div><label>Size Y: <input type="range" id="structureSizeY" min="5" max="30" value="10" class="w-2/3 structure-slider"> <span id="structureSizeYValue">10</span>%</label></div>
+                    <div><label>Pos X: <input type="range" id="structurePosX" min="10" max="90" value="50" class="w-2/3 structure-slider"> <span id="structurePosXValue">50</span>%</label></div>
+                    <div><label>Pos Y: <input type="range" id="structurePosY" min="10" max="90" value="50" class="w-2/3 structure-slider"> <span id="structurePosYValue">50</span>%</label></div>
+                </div>
+                <div class="mt-2 text-sm text-slate-700">
+                    <p>Displayed: <span id="displayingStructuresText" class="font-semibold text-orange-600">PTV, Rectum, Bladder, FemHeads</span></p>
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <h3 class="font-bold mb-2">3. Beam Tools (3D CRT)</h3>
+                <p class="text-sm text-slate-600 mb-2">Click to add/remove beams. Field design based on BEV projection of target.</p>
+                <div class="grid grid-cols-2 gap-2">
+                    <button id="addBeamBtn" class="bg-purple-600 text-white px-3 py-1 rounded text-sm hover:bg-purple-700">Add Beam</button>
+                    <button id="clearBeamsBtn" class="bg-slate-500 text-white px-3 py-1 rounded text-sm hover:bg-slate-600">Clear Beams</button>
+                </div>
+                <div class="mt-3">
+                    <label for="gantryAngle" class="text-sm font-medium">Gantry Angle (0-359°):</label>
+                    <input type="number" id="gantryAngle" min="0" max="359" value="0" class="w-full p-1 border rounded text-sm mb-2">
+                    <label for="fieldSizeX" class="text-sm font-medium">Field Size X (cm):</label>
+                    <input type="number" id="fieldSizeX" min="1" max="20" value="10" class="w-full p-1 border rounded text-sm mb-2">
+                    <label for="fieldSizeY" class="text-sm font-medium">Field Size Y (cm):</label>
+                    <input type="number" id="fieldSizeY" min="1" max="20" value="10" class="w-full p-1 border rounded text-sm mb-2">
+                    <label for="beamWeight" class="text-sm font-medium">Beam Weight/MU (1-100):</label> <input type="number" id="beamWeight" min="1" max="100" value="50" class="w-full p-1 border rounded text-sm mb-2">
+                    <button id="applyBeamSettings" class="bg-purple-500 text-white px-3 py-1 rounded text-sm w-full hover:bg-purple-600">Apply to Selected Beam</button>
+                </div>
+                <div class="mt-2 p-2 border rounded bg-slate-50">
+                     <h4 class="text-xs font-semibold text-slate-700">Beam's Eye View (Selected Beam)</h4>
+                     <div id="bevPlaceholder" class="w-full h-20 bg-gray-700 text-white flex items-center justify-center text-xs">Conceptual BEV - Target appears here</div>
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <h3 class="font-bold mb-2">5. Optimization & Approval (Conceptual)</h3>
+                <button id="optimizePlanBtn" class="bg-yellow-500 text-white px-3 py-1 rounded text-sm w-full mb-2 hover:bg-yellow-600">Simulate Optimization</button>
+                 <button id="approvePlanBtn" class="bg-green-700 text-white px-3 py-1 rounded text-sm w-full hover:bg-green-800">Approve Plan</button>
+            </div>
+        </div>
+
+        <div class="viewer-area">
+            <img id="ctViewerImage" src="image_5f6eda.jpg" alt="CT Slice Viewer" class="viewer-image" draggable="false">
+            <div id="PTV_Prostate_overlay" class="target-overlay" style="left: 45%; top: 40%; width: 10%; height: 20%;">PTV</div>
+            <div id="OAR_Rectum_overlay" class="organ-overlay" style="left: 40%; top: 60%; width: 20%; height: 15%; border-radius: 15px 35% 35% 15px;">Rectum</div>
+            <div id="OAR_Bladder_overlay" class="organ-overlay" style="left: 48%; top: 25%; width: 15%; height: 12%; border-radius: 40% 40% 15px 15px;">Bladder</div>
+            <div id="OAR_FemHead_L_overlay" class="organ-overlay" style="left: 25%; top: 42%; width: 10%; height: 18%; border-radius: 50%;">L Fem</div>
+            <div id="OAR_FemHead_R_overlay" class="organ-overlay" style="left: 65%; top: 42%; width: 10%; height: 18%; border-radius: 50%;">R Fem</div>
+            <svg id="isodoseOverlaySVG" width="100%" height="100%" style="position: absolute; top: 0; left: 0; z-index: 6; pointer-events: none;"></svg>
+        </div>
+
+        <div class="tps-panel col-start-3 row-start-1 row-span-2">
+            <h2 class="text-xl font-semibold mb-4 text-purple-600">4. Plan Information & Outputs</h2>
+
+            <div class="mb-6">
+                <h3 class="font-bold mb-2">Beam List</h3>
+                <div id="beamList" class="space-y-1 text-sm max-h-40 overflow-y-auto">
+                    </div>
+            </div>
+
+            <div class="mb-6">
+                <h3 class="font-bold mb-2">Simulated Dose Volume Histogram (DVH)</h3>
+                <p class="text-sm text-slate-600 mb-2">Conceptual DVH. Evaluates PTV coverage and OAR sparing.</p>
+                <div class="w-full h-48"><canvas id="dvhChartCanvas"></canvas></div>
+            </div>
+
+            <div class="mb-6">
+                <h3 class="font-bold mb-2">Simulated Isodose Lines (Conceptual)</h3>
+                <p class="text-sm text-slate-600">Visual representation of dose distribution. Updated with beam changes.</p>
+                <div id="isodoseKey" class="text-xs mb-1 flex items-center space-x-4">
+                    <div><span class="inline-block w-3 h-3 mr-1" style="background-color: rgba(76, 175, 80, 0.7);"></span> High (PTV Rx)</div>
+                    <div><span class="inline-block w-3 h-3 mr-1" style="background-color: rgba(253, 224, 71, 0.6);"></span> Med (Spread)</div>
+                    <div><span class="inline-block w-3 h-3 mr-1" style="background-color: rgba(100, 116, 139, 0.5);"></span> Low (Entrance)</div>
+                </div>
+                <div class="w-full h-32 border border-gray-300 rounded bg-gray-100 flex items-center justify-center text-gray-400 text-sm">
+                    Isodose lines visualized on CT Viewer.
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <h3 class="font-bold mb-2">Plan Summary (Conceptual)</h3>
+                <p class="text-sm text-slate-600">PTV Coverage (e.g., V95%): <span id="planSummaryPTV" class="font-semibold text-gray-500">N/A</span></p>
+                <p class="text-sm text-slate-600">OAR Sparing (e.g., Rectum V70Gy): <span id="planSummaryOAR" class="font-semibold text-gray-500">N/A</span></p>
+                <p class="text-sm text-slate-600">Plan Complexity: <span id="planSummaryComplexity" class="font-semibold text-gray-500">N/A</span></p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-slate-800 text-slate-300 py-6 mt-auto text-center">
+        <div class="container mx-auto px-6">
+            <p>&copy; <span id="currentYear"></span> Enhanced Radiation Therapy E-Workbook. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+   <script src="main.js"></script>
+   <script src="tutorial.js"></script>
+
+</body>
+</html>

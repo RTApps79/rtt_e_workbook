@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MLC & Field Shaping Lab Activity</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .simulator-wrapper { 
+            background-color: #e0e7ff; /* indigo-100 */
+            padding: 1.5rem;
+            border-radius: 0.5rem; 
+            border: 1px solid #a5b4fc; /* indigo-300 */
+            margin-top: 1.5rem;
+        }
+        .simulator-container-internal {
+            background: #fff;
+            padding: 1.5rem; 
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-wrap: wrap; 
+            gap: 20px; 
+            align-items: flex-start;
+        }
+        .controls-section, .visualizer-section {
+            display: flex;
+            flex-direction: column;
+            flex-basis: calc(50% - 10px); 
+            flex-grow: 1;
+            min-width: 280px; 
+        }
+        .visualizer-section { align-items: center; }
+        .simulator-container-internal h3 {font-size: 1.25rem; margin-bottom: 1rem; font-weight: 600; color: #4338ca; /* indigo-700 */}
+        .simulator-container-internal h4 { font-size: 1rem; margin-bottom: 0.75rem; font-weight: 500; color: #4f46e5; /* indigo-600 */}
+
+        .field-size-controls { gap: 10px; margin-top: 10px; display: flex; flex-direction: column; }
+        .field-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 10px; }
+        .field-control-group { display: flex; align-items: center; gap: 5px; }
+        .field-control-group label { min-width: 25px; font-weight: bold; margin: 0; color: #4f46e5; font-size: 0.9rem; }
+        .field-control-group button {
+            padding: 4px 10px; font-size: 1.2em; line-height: 1; cursor: pointer;
+            border: 1px solid #6366f1; background-color: #818cf8; color: white;
+            border-radius: 0.375rem;
+        }
+        .field-control-group button:hover { background-color: #6366f1; }
+        .field-control-group button:active { background-color: #4f46e5; }
+        .field-size-display {
+            font-weight: bold; min-width: 50px; text-align: center; font-family: 'Courier New', Courier, monospace;
+            background: #c7d2fe; color: #312e81; padding: 6px 8px; 
+            border: 1px solid #a5b4fc; border-radius: 0.25rem; font-size: 1rem;
+        }
+
+        #fieldDisplayContainer {
+            width: 220px; height: 220px; 
+            border: 2px solid #4f46e5; 
+            position: relative; margin: 15px auto;
+            background-color: #eef2ff; /* Light field background - area outside jaws */
+            overflow: hidden;
+        }
+        #fieldDisplayContainer::before, #fieldDisplayContainer::after { content: ''; position: absolute; background-color: #a5b4fc; }
+        #fieldDisplayContainer::before { width: 2px; height: 100%; top: 0; left: 50%; transform: translateX(-50%); } /* Vertical crosshair */
+        #fieldDisplayContainer::after { width: 100%; height: 2px; top: 50%; left: 0; transform: translateY(-50%); } /* Horizontal crosshair */
+        
+        #fieldDisplayRect { /* Jaw-defined light field - this is the OPEN area */
+            position: absolute; 
+            background-color: rgba(59, 130, 246, 0.3); /* Tailwind blue-500 with opacity for light field */ 
+            /* border: 1px dotted #2563eb; */ /* Removed border to make MLC effect clearer */
+        }
+        #mlc-leaf-layer { /* Container for MLC leaf elements */
+            position: absolute;
+            /* Dimensions will be set by JS to match fieldDisplayRect */
+            pointer-events: none; 
+        }
+        .mlc-leaf { /* Individual simulated leaf */
+            position: absolute;
+            background-color: rgba(75, 85, 99, 0.8); /* Tailwind gray-600 with more opacity */
+            /* border-bottom: 1px solid #9ca3af; */ /* gray-400 for slight interleaf effect - can make it look too busy */
+            box-sizing: border-box;
+        }
+
+        .field-label { position: absolute; font-size: 9px; font-family: sans-serif; color: #4338ca; background-color: rgba(224, 231, 255, 0.7); padding: 0 2px; border-radius: 2px; z-index:10; }
+        .label-x1 { top: 50%; left: 2px; transform: translateY(-50%); }
+        .label-x2 { top: 50%; right: 2px; transform: translateY(-50%); }
+        .label-y1 { bottom: 2px; left: 50%; transform: translateX(-50%); } 
+        .label-y2 { top: 2px; left: 50%; transform: translateX(-50%); }    
+        #totalFieldDisplay, #mlcPatternDisplay, #challengeInstructionP, #challengeFeedback { margin-top: 10px; text-align:center; font-family: monospace; font-weight: bold; color: #4338ca; font-size: 0.95rem;}
+        #challengeFeedback { min-height: 2.5em; font-weight: 500; padding: 0.25rem; }
+        #challengeInstructionP { font-size: 1rem; color: #3730a3; margin-bottom: 1rem; background-color: #e0e7ff; padding: 0.75rem; border-radius: 0.375rem; border: 1px solid #c7d2fe; text-align:left;}
+        #challengeInstructionP strong {color: #4f46e5;}
+        #challenge-display h3 { color: #4338ca; font-size:1.1rem; font-weight:600; margin-bottom:0.5rem;}
+
+
+        .mlc-controls button {
+            background-color: #818cf8; color: white;
+            font-size: 0.85rem; padding: 8px 12px; margin: 5px; border-radius: 0.375rem;
+        }
+        .mlc-controls button:hover { background-color: #6366f1; }
+        .mlc-controls button.active-mlc { background-color: #4f46e5; font-weight: bold; box-shadow: 0 0 0 2px white, 0 0 0 4px #4f46e5; }
+
+        /* Standard Page Styles */
+        #start-screen-activity { background-color: #f0f8ff; border: 1px solid #b3d7ff; padding: 15px 25px; border-radius: 8px; margin-bottom: 30px; }
+        #start-screen-activity h3 { color: #004085; margin-top: 15px; border-bottom: 1px solid #b3d7ff; padding-bottom: 5px; font-size:1.2rem; }
+        #start-activity-btn { background-color: #28a745; font-size: 1.2em; padding: 12px 25px; display: block; margin: 25px auto 10px auto; }
+        #start-activity-btn:hover { background-color: #218838; }
+        body {font-family: 'Inter', sans-serif; line-height: 1.6; margin: 0; padding: 0; background-color: #f4f4f4; color: #333; display: flex; flex-direction: column; align-items: center; min-height: 100vh; position: relative; padding-bottom: 80px;}
+        .main-content-wrapper { background-color: #fff; padding: 25px 35px; border-radius: 0.5rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05); width: 90%; max-width: 56rem; margin: 20px auto; }
+        .nav-links-header { background-color: #fff; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1), 0 1px 2px 0 rgba(0,0,0,0.06); position: sticky; top: 0; z-index: 50; }
+        footer { position: fixed; bottom: 0; left: 0; width: 100%; text-align: center; padding: 15px 0; background-color: #e5e7eb; color: #4b5563; font-size: 0.875rem; border-top: 1px solid #d1d5db; z-index: 40; }
+        .post-activity-nav { text-align: center; margin-top: 2.5rem; padding: 1.25rem; background-color: #f9fafb; border-top: 1px solid #e5e7eb; border-radius: 0 0 0.5rem 0.5rem; }
+        .post-activity-nav button { margin: 0.3125rem 0.9375rem; padding: 0.625rem 1.25rem; border-radius: 0.375rem; font-weight: 500; transition: background-color 0.2s; }
+        .post-activity-nav button.menu { background-color: #6b7280; color:white; } .post-activity-nav button.menu:hover { background-color: #4b5563; }
+        .post-activity-nav button.repeat { background-color: #22c55e; color:white; } .post-activity-nav button.repeat:hover { background-color: #16a34a; }
+        .post-activity-nav button.lesson-link { background-color: #6d28d9; color:white; } .post-activity-nav button.lesson-link:hover { background-color: #5b21b6; }
+        
+        /* Badge Styles */
+        #badge-section { margin-top: 30px; padding: 20px; background-color: #fff; border: 1px solid #ccc; text-align: center; display: none; }
+        #badge-input input { padding: 8px; margin-right: 10px; border: 1px solid #ccc; border-radius: 4px; }
+        .badge-container { margin: 20px auto; }
+        .badge { width: 380px; height: auto; min-height:280px; margin: 0 auto; padding: 25px; display: flex; flex-direction: column; justify-content: center; align-items: center; box-shadow: 3px 3px 8px rgba(0,0,0,0.2); font-family: 'Georgia', serif; text-align: center; border-radius: 10px; color: #fff; }
+        .badge h4 { font-size: 1.6em; margin: 0 0 10px 0; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
+        .badge .awardee { font-size: 1.4em; font-weight: bold; margin: 15px 0; border-bottom: 1px dashed #fff; padding-bottom: 8px; }
+        .badge .reason { font-size: 1.1em; margin: 10px 0; }
+        .badge .details { font-size: 0.9em; font-style: italic; margin-top: 10px; }
+        .badge .logo { font-size: 0.9em; margin-top: 15px; font-weight: bold; }
+        .gold-badge { border: 10px solid #FFD700; background: linear-gradient(135deg, #fceabb 0%, #f8b500 100%); }
+        .gold-badge h4, .gold-badge .awardee, .gold-badge .logo { color: #A0522D; } .gold-badge .awardee {border-bottom-color: #DAA520;}
+        .silver-badge { border: 10px solid #C0C0C0; background: linear-gradient(135deg, #e9e9e9 0%, #b8b8b8 100%); }
+        .silver-badge h4, .silver-badge .awardee, .silver-badge .logo { color: #4F4F4F; } .silver-badge .awardee {border-bottom-color: #A9A9A9;}
+        .bronze-badge { border: 10px solid #CD7F32; background: linear-gradient(135deg, #d29961 0%, #a05d2c 100%); }
+        .bronze-badge h4, .bronze-badge .awardee, .bronze-badge .logo { color: #5C3317; } .bronze-badge .awardee {border-bottom-color: #8C5A2D;}
+        #no-badge-message { font-size: 1.1em; color: #dc2626; font-weight: bold; }
+
+        @media print { /* Print styles for badge */ }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800">
+
+    <header class="bg-white shadow-md sticky top-0 z-50 nav-links-header">
+        <div class="container mx-auto px-6 py-3 flex flex-col sm:flex-row justify-between items-center">
+            <h1 class="text-xl font-bold text-purple-700 mb-2 sm:mb-0">MLC & Field Shaping Lab Activity</h1>
+            <div class="flex flex-wrap justify-center sm:justify-end space-x-2">
+                <a href="console_mlc_lesson.html#lesson-page-5" class="text-xs sm:text-sm bg-purple-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-purple-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to MLC Lesson
+                </a>
+                <a href="../index.html" class="text-xs sm:text-sm bg-purple-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-purple-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Modalities Menu
+                </a>
+                <a href="../../index.html" class="text-xs sm:text-sm bg-slate-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-slate-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Main Workbook
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto max-w-4xl px-4 sm:px-6 py-8 flex-grow main-content-wrapper">
+        <div class="bg-white p-6 sm:p-8 rounded-xl shadow-xl">
+            <h1 class="text-3xl font-bold text-purple-700 mb-6 text-center border-b-2 border-purple-300 pb-4">Interactive MLC & Field Shaping Lab 💡</h1>
+
+            <div id="start-screen-activity" class="bg-purple-50 p-4 sm:p-6 rounded-lg shadow-md mb-8 border border-purple-200">
+                <h2 class="text-2xl font-semibold text-purple-600 mb-4">Lab Instructions: Understanding Jaws & MLCs</h2>
+                 <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                    <h3 class="text-lg font-medium text-purple-700 mb-1">Purpose</h3>
+                    <p class="text-sm text-slate-600">To understand how Multi-Leaf Collimators (MLCs) work with primary jaws to shape radiation fields, and to practice setting basic field configurations by completing specific tasks.</p>
+                </div>
+                <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                    <h3 class="text-lg font-medium text-purple-700 mb-1">Task</h3>
+                    <p class="text-sm text-slate-600">This lab includes a series of challenges. For each challenge:
+                        <ol class="list-decimal list-inside ml-4 text-xs">
+                            <li>Read the instruction carefully.</li>
+                            <li>Use the jaw controls (X1, X2, Y1, Y2) to set the required field dimensions.</li>
+                            <li>If prompted, categorize the resulting jaw-defined field as symmetric or asymmetric.</li>
+                            <li>If prompted, select the correct MLC pattern to apply.</li>
+                            <li>Click "Check My Settings" to verify your setup.</li>
+                        </ol>
+                    </p>
+                </div>
+                 <div class="p-3 bg-purple-100 rounded-md border border-purple-200">
+                    <h3 class="text-lg font-medium text-purple-700 mb-1">Criteria for Success & Badges</h3>
+                    <p class="text-sm text-slate-600">Your total score based on accurate completion of all challenges determines "MLC & Field Shaping Pro" badge eligibility:</p>
+                     <ul class="list-disc list-inside text-sm text-slate-600 ml-4">
+                        <li><strong style="color:#b8860b;">Gold Pro:</strong> 90-100%</li>
+                        <li><strong style="color:#708090;">Silver Pro:</strong> 80-89%</li>
+                        <li><strong style="color:#8B4513;">Bronze Pro:</strong> 70-79%</li>
+                    </ul>
+                </div>
+                <button id="start-activity-btn" onclick="startLabActivity()" class="mt-6 bg-green-500 hover:bg-green-600 text-white font-medium py-3 px-5 rounded-lg text-base transition-colors duration-150 block mx-auto">Start MLC Lab</button>
+            </div>
+
+            <div id="activity-area" style="display: none;" class="simulator-wrapper">
+                <div id="challenge-display" class="mb-6">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-2 text-center">Lab Question</h3>
+                    <p id="challengeInstructionP" class="p-3 bg-indigo-100 border border-indigo-300 rounded-md text-indigo-800"></p>
+                    <div id="symmetry-question-area" style="display:none;" class="mt-4 p-3 bg-indigo-50 border border-indigo-200 rounded-md">
+                        <p class="text-sm font-medium text-slate-700 mb-2 text-center">Based on your current jaw settings, is the light field <strong class="text-indigo-600">Symmetric</strong> or <strong class="text-indigo-600">Asymmetric</strong>?</p>
+                        <div class="flex justify-center gap-4">
+                            <label class="inline-flex items-center"><input type="radio" name="symmetry_answer" value="symmetric" class="mr-1 accent-purple-600"> Symmetric</label>
+                            <label class="inline-flex items-center"><input type="radio" name="symmetry_answer" value="asymmetric" class="mr-1 accent-purple-600"> Asymmetric</label>
+                        </div>
+                    </div>
+                    <div id="challengeFeedback" class="mt-3 text-center font-medium min-h-[1.5em]"></div>
+                </div>
+
+                <div class="simulator-container-internal">
+                    <div class="controls-section">
+                        <h3>Jaw Controls</h3>
+                        <div class="field-size-controls">
+                            <h4>Field Size (cm)</h4>
+                            <div class="field-row">
+                                <div class="field-control-group">
+                                    <label for="control-jawX1">X1:</label>
+                                    <button onclick="changeFieldSize('X1', -0.5)">–</button> <span class="field-size-display" id="control-jawX1">5.0</span> <button onclick="changeFieldSize('X1', 0.5)">+</button>
+                                </div>
+                                <div class="field-control-group">
+                                    <label for="control-jawX2">X2:</label>
+                                    <button onclick="changeFieldSize('X2', -0.5)">–</button> <span class="field-size-display" id="control-jawX2">5.0</span> <button onclick="changeFieldSize('X2', 0.5)">+</button>
+                                </div>
+                            </div>
+                            <div class="field-row">
+                                <div class="field-control-group">
+                                    <label for="control-jawY1">Y1:</label>
+                                    <button onclick="changeFieldSize('Y1', -0.5)">–</button> <span class="field-size-display" id="control-jawY1">5.0</span> <button onclick="changeFieldSize('Y1', 0.5)">+</button>
+                                </div>
+                                <div class="field-control-group">
+                                    <label for="control-jawY2">Y2:</label>
+                                    <button onclick="changeFieldSize('Y2', -0.5)">–</button> <span class="field-size-display" id="control-jawY2">5.0</span> <button onclick="changeFieldSize('Y2', 0.5)">+</button>
+                                </div>
+                            </div>
+                            <div id="totalFieldDisplay" class="text-base">Total Field: 10.0W x 10.0L cm</div>
+                        </div>
+                        <hr class="my-4 border-purple-200">
+                        <h3 class="text-purple-700">MLC Pattern Selector</h3>
+                        <div class="mlc-controls flex flex-wrap gap-2 justify-center">
+                            <button id="mlc-open" onclick="selectMLCPattern('open')" class="active-mlc">Open</button>
+                            <button id="mlc-center-block" onclick="selectMLCPattern('center-block')">Central Block</button>
+                            <button id="mlc-c-shape" onclick="selectMLCPattern('c-shape')">C-Shape Block</button>
+                            <button id="mlc-diagonal" onclick="selectMLCPattern('diagonal')">Diagonal Block</button>
+                        </div>
+                         <div id="mlcPatternDisplay" class="mt-2">MLC: Open</div>
+                         <button type="button" onclick="resetSimulatorControls()" class="mt-6 bg-amber-500 hover:bg-amber-600 text-white font-medium py-2 px-4 rounded-lg text-sm transition-colors self-center">Reset Controls</button>
+                    </div>
+
+                    <div class="visualizer-section">
+                        <h3>Field Visualizer</h3>
+                        <div id="fieldDisplayContainer">
+                            <div id="fieldDisplayRect"></div> 
+                            <div id="mlc-leaf-layer"></div>
+                            <span class="field-label label-x1">X1</span> <span class="field-label label-x2">X2</span>
+                            <span class="field-label label-y1">Y1</span> <span class="field-label label-y2">Y2</span>
+                        </div>
+                    </div>
+                </div>
+                 <div class="text-center mt-6">
+                    <button id="check-challenge-btn" onclick="checkChallengeAnswer()" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg text-base">Check My Settings</button>
+                    <button id="next-challenge-btn" onclick="nextChallenge()" style="display:none;" class="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-6 rounded-lg text-base">Next Challenge</button>
+                </div>
+            </div>
+
+            <div id="results-display" style="display: none;" class="mt-8 text-center p-6 bg-purple-50 rounded-lg shadow-md border border-purple-200">
+                <h2 class="text-2xl font-bold text-purple-700">Lab Complete!</h2>
+                <p id="final-score-text" class="mt-2 text-slate-700 text-xl"></p>
+            </div>
+
+            <div id="badge-section" class="mt-8 p-6 bg-slate-50 rounded-lg shadow-md">
+                 <h3 id="badge-congrats-text" class="text-xl font-semibold text-purple-700 mb-4 text-center"></h3>
+                <div id="badge-input" class="text-center mb-4">
+                    <label for="userNameForBadge" class="block text-sm font-medium text-slate-700 mb-1">Enter Your Name for the Badge:</label>
+                    <input type="text" id="userNameForBadge" placeholder="Your Name Here" class="mt-1 inline-block max-w-xs px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm">
+                    <button onclick="generateBadge()" class="ml-2 bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg text-sm transition-colors">Generate Badge</button>
+                </div>
+                <div id="badge-container-render" class="mt-4"></div>
+                <button id="printBadgeButton" onclick="window.print()" style="display:none;" class="block mx-auto mt-4 bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg text-sm transition-colors">Print Badge</button>
+                <div id="no-badge-message" style="display:none;" class="mt-4 text-lg font-semibold text-red-600 text-center">Keep practicing to earn a badge!</div>
+            </div>
+
+
+            <div class="post-activity-nav" id="end-nav" style="display: none;">
+                <h3 class="text-xl font-semibold text-slate-700 mb-4">Options</h3>
+                <button class="menu" onclick="window.location.href='../Modalities_Equipment_Terminology/index.html'">Back to Modalities Menu</button> 
+                <button class="repeat" onclick="startLabActivity()">Try Lab Again</button>
+                <button class="lesson-link" onclick="window.location.href='console_mlc_lesson.html#lesson-page-5'">Back to MLC Lesson</button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-slate-800 text-slate-300 py-6 mt-auto text-center">
+        <div class="container mx-auto px-6">
+            <p class="text-sm">&copy; <span id="currentYear"></span> RTApps. All Rights Reserved.</p>
+            <p class="text-xs mt-1">MLC & Field Shaping Lab Activity</p>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        // --- Simulator State Variables ---
+        let jawX1 = 5.0; let jawX2 = 5.0; let jawY1 = 5.0; let jawY2 = 5.0; 
+        let currentMLCPattern = 'open';
+        const fieldDisplayContainerSize = 200; 
+        const maxFieldCoordinate = 20.0; 
+        const scaleFactor = (fieldDisplayContainerSize / 2.0) / maxFieldCoordinate; 
+        const MLC_LEAF_HEIGHT_PX = 5; 
+
+        // --- Challenge Data & State ---
+        // Updated challenges based on user feedback
+        const challenges = [
+            { 
+                type: 'set_field_and_categorize', 
+                instruction: "<strong>Task 1:</strong> Set the jaw controls to create a field that is 10cm wide (X) and 15cm long (Y), <strong class='text-indigo-600'>centered on the isocenter</strong>. Then, select if this field is 'Symmetric' or 'Asymmetric'.", 
+                targetX1: 5, targetX2: 5, targetY1: 7.5, targetY2: 7.5, 
+                correctSymmetry: true, points: 3 // 2 for field, 1 for categorization
+            },
+            { 
+                type: 'set_field_and_categorize', 
+                instruction: "<strong>Task 2:</strong> Set the jaw controls as follows: X1=2cm, X2=8cm, Y1=4cm, Y2=6cm. Then, select if this field is 'Symmetric' or 'Asymmetric'.", 
+                targetX1: 2, targetX2: 8, targetY1: 4, targetY2: 6, 
+                correctSymmetry: false, points: 3 // 2 for field, 1 for categorization
+            },
+            { 
+                type: 'set_mlc_and_categorize_jaw', 
+                instruction: "<strong>Task 3:</strong> First, set the jaws to define a <strong class='text-indigo-600'>12cm (X) by 12cm (Y) field that is centered on the isocenter</strong>. Second, apply the '<strong class='text-indigo-600'>Central Block</strong>' MLC pattern. Finally, categorize the <strong class='text-indigo-600'>jaw-defined field</strong> (not the MLC shape) as symmetric or asymmetric.", 
+                targetX1: 6, targetX2: 6, targetY1: 6, targetY2: 6, targetMLC: 'center-block', 
+                correctSymmetry: true, points: 3 // 2 for jaw/MLC, 1 for jaw categorization
+            }
+        ];
+        let currentChallengeIndex = 0;
+        let userScore = 0;
+        const maxScore = challenges.reduce((sum, chal) => sum + chal.points, 0);
+
+        // --- DOM Elements ---
+        const startScreenEl = document.getElementById('start-screen-activity');
+        const activityAreaEl = document.getElementById('activity-area');
+        const challengeInstructionEl = document.getElementById('challengeInstructionP'); // Changed ID
+        const challengeFeedbackEl = document.getElementById('challengeFeedback');
+        const symmetryQuestionAreaEl = document.getElementById('symmetry-question-area');
+        const mlcPatternDisplayEl = document.getElementById('mlcPatternDisplay');
+        const checkChallengeBtnEl = document.getElementById('check-challenge-btn');
+        const nextChallengeBtnEl = document.getElementById('next-challenge-btn');
+        const resultsDisplayEl = document.getElementById('results-display');
+        const finalScoreTextEl = document.getElementById('final-score-text');
+        const badgeSectionEl = document.getElementById('badge-section');
+        const noBadgeMessageEl = document.getElementById('no-badge-message');
+        const endNavEl = document.getElementById('end-nav');
+        const mlcLeafLayerEl = document.getElementById('mlc-leaf-layer'); 
+
+        function roundToDecimalPlace(num, places) { const factor = 10 ** places; return Math.round(num * factor) / factor; }
+
+        function updateFieldDisplay() { 
+            const rect = document.getElementById('fieldDisplayRect'); 
+            if (!rect) return; 
+            let totalWidthCm = roundToDecimalPlace(jawX1 + jawX2, 1);
+            let totalHeightCm = roundToDecimalPlace(jawY1 + jawY2, 1);
+            let widthPx = Math.max(0, totalWidthCm * scaleFactor); 
+            let heightPx = Math.max(0, totalHeightCm * scaleFactor); 
+            // Corrected positioning for isocenter-based jaw values (X1, X2, Y1, Y2 are extents from center)
+            // The yellow rect's left edge is at (container_center_X - jawX1_in_pixels)
+            // Its top edge is at (container_center_Y - jawY2_in_pixels)
+            let leftPx = (fieldDisplayContainerSize / 2.0) - (jawX1 * scaleFactor); 
+            let topPx = (fieldDisplayContainerSize / 2.0) - (jawY2 * scaleFactor); 
+
+            rect.style.width = `${widthPx}px`; rect.style.height = `${heightPx}px`; 
+            rect.style.left = `${leftPx}px`; rect.style.top = `${topPx}px`; 
+            document.getElementById('totalFieldDisplay').textContent = `Jaw Field: ${totalWidthCm.toFixed(1)}W x ${totalHeightCm.toFixed(1)}L cm`;
+            renderMLCs(leftPx, topPx, widthPx, heightPx);
+        }
+        
+        function renderMLCs(jawRectLeftPx, jawRectTopPx, jawRectWidthPx, jawRectHeightPx) {
+            mlcLeafLayerEl.innerHTML = ''; 
+            // MLC Leaf Layer position should match the jawRect (light field)
+            mlcLeafLayerEl.style.left = `0px`; // Relative to fieldDisplayRect
+            mlcLeafLayerEl.style.top = `0px`;  // Relative to fieldDisplayRect
+            mlcLeafLayerEl.style.width = `${jawRectWidthPx}px`;
+            mlcLeafLayerEl.style.height = `${jawRectHeightPx}px`;
+
+            const numLeafRows = Math.max(1, Math.floor(jawRectHeightPx / MLC_LEAF_HEIGHT_PX)); // Ensure at least 1 row if field has height
+
+            if (currentMLCPattern === 'open' || jawRectWidthPx <= 0 || jawRectHeightPx <= 0) return;
+
+            for (let i = 0; i < numLeafRows; i++) {
+                const leafTop = i * MLC_LEAF_HEIGHT_PX;
+                let blockedSegments = [];
+
+                if (currentMLCPattern === 'center-block') {
+                    const centralOpeningWidth = jawRectWidthPx * 0.4; 
+                    const sideBlockWidth = (jawRectWidthPx - centralOpeningWidth) / 2;
+                    if (sideBlockWidth > 0.1) { // Only draw if block has some width
+                        blockedSegments.push({ left: 0, width: sideBlockWidth });
+                        blockedSegments.push({ left: sideBlockWidth + centralOpeningWidth, width: sideBlockWidth });
+                    }
+                } else if (currentMLCPattern === 'c-shape') {
+                    const sideBarWidth = jawRectWidthPx * 0.3;
+                    const isTopOrBottomThird = (i < numLeafRows / 3 || i >= (numLeafRows * 2 / 3));
+                    if (!isTopOrBottomThird) { 
+                        if (jawRectWidthPx - sideBarWidth > 0.1) {
+                             blockedSegments.push({ left: sideBarWidth, width: jawRectWidthPx - sideBarWidth });
+                        }
+                    }
+                } else if (currentMLCPattern === 'diagonal') {
+                    const blockedWidth = (i / numLeafRows) * jawRectWidthPx * 0.7; 
+                    if (blockedWidth > 0.1) {
+                        blockedSegments.push({ left: 0, width: blockedWidth });
+                    }
+                }
+
+                blockedSegments.forEach(seg => {
+                    const leafDiv = document.createElement('div');
+                    leafDiv.className = 'mlc-leaf';
+                    leafDiv.style.top = `${leafTop}px`;
+                    leafDiv.style.left = `${seg.left}px`;
+                    leafDiv.style.width = `${seg.width}px`;
+                    leafDiv.style.height = `${MLC_LEAF_HEIGHT_PX}px`;
+                    mlcLeafLayerEl.appendChild(leafDiv);
+                });
+            }
+        }
+
+        function changeFieldSize(dimension, delta) { 
+            const maxJawPos = 20.0; 
+            let displayEl = document.getElementById('control-jaw' + dimension);
+            switch (dimension) {
+                case 'X1': jawX1 = Math.min(maxJawPos, Math.max(0, roundToDecimalPlace(jawX1 + delta, 1))); displayEl.textContent = jawX1.toFixed(1); break;
+                case 'X2': jawX2 = Math.min(maxJawPos, Math.max(0, roundToDecimalPlace(jawX2 + delta, 1))); displayEl.textContent = jawX2.toFixed(1); break;
+                case 'Y1': jawY1 = Math.min(maxJawPos, Math.max(0, roundToDecimalPlace(jawY1 + delta, 1))); displayEl.textContent = jawY1.toFixed(1); break;
+                case 'Y2': jawY2 = Math.min(maxJawPos, Math.max(0, roundToDecimalPlace(jawY2 + delta, 1))); displayEl.textContent = jawY2.toFixed(1); break;
+            }
+            updateFieldDisplay(); 
+        }
+        
+        function selectMLCPattern(patternName) {
+            currentMLCPattern = patternName;
+            mlcPatternDisplayEl.textContent = `MLC: ${patternName.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}`;
+            document.querySelectorAll('.mlc-controls button').forEach(btn => btn.classList.remove('active-mlc', 'bg-purple-700'));
+            const activeBtn = document.getElementById(`mlc-${patternName.replace('_', '-')}`); 
+            if(activeBtn) activeBtn.classList.add('active-mlc', 'bg-purple-700');
+            updateFieldDisplay();
+        }
+
+        function resetSimulatorControls() { // Renamed to avoid conflict with potential global reset
+            jawX1 = 5.0; jawX2 = 5.0; jawY1 = 5.0; jawY2 = 5.0;
+            document.getElementById('control-jawX1').textContent = jawX1.toFixed(1);
+            document.getElementById('control-jawX2').textContent = jawX2.toFixed(1);
+            document.getElementById('control-jawY1').textContent = jawY1.toFixed(1);
+            document.getElementById('control-jawY2').textContent = jawY2.toFixed(1);
+            selectMLCPattern('open');
+        }
+
+        function startLabActivity() {
+            currentChallengeIndex = 0; userScore = 0;
+            startScreenEl.style.display = 'none';
+            activityAreaEl.style.display = 'block';
+            resultsDisplayEl.style.display = 'none';
+            badgeSectionEl.style.display = 'none';
+            noBadgeMessageEl.style.display = 'none';
+            endNavEl.style.display = 'none';
+            resetSimulatorControls(); 
+            displayCurrentChallenge();
+        }
+
+        function displayCurrentChallenge() {
+            challengeFeedbackEl.textContent = '';
+            challengeFeedbackEl.className = "mt-2 text-center font-medium";
+            const challenge = challenges[currentChallengeIndex];
+            challengeInstructionEl.innerHTML = `<strong class="text-indigo-700">Lab Task ${currentChallengeIndex + 1}/${challenges.length}:</strong> ${challenge.instruction}`;
+            
+            symmetryQuestionAreaEl.style.display = (challenge.checkSymmetry || challenge.type === 'categorize_field') ? 'block' : 'none';
+            if(symmetryQuestionAreaEl.style.display === 'block'){
+                 document.querySelectorAll('input[name="symmetry_answer"]').forEach(rb => rb.checked = false);
+            }
+
+            if(challenge.preset) { // For 'categorize_field' tasks, preset the jaws for the student
+                jawX1 = challenge.preset.x1; jawX2 = challenge.preset.x2;
+                jawY1 = challenge.preset.y1; jawY2 = challenge.preset.y2;
+                document.getElementById('control-jawX1').textContent = jawX1.toFixed(1);
+                document.getElementById('control-jawX2').textContent = jawX2.toFixed(1);
+                document.getElementById('control-jawY1').textContent = jawY1.toFixed(1);
+                document.getElementById('control-jawY2').textContent = jawY2.toFixed(1);
+            }
+            selectMLCPattern(challenge.targetMLC || 'open'); // Reset MLC for jaw tasks unless it's an MLC task
+            updateFieldDisplay();
+            checkChallengeBtnEl.style.display = 'inline-block';
+            checkChallengeBtnEl.disabled = false;
+            nextChallengeBtnEl.style.display = 'none';
+        }
+
+        function checkChallengeAnswer() {
+            const challenge = challenges[currentChallengeIndex];
+            let scoreForThisChallenge = 0;
+            let allPartsCorrect = true;
+            let feedback = "";
+
+            // Check jaw settings if applicable
+            if (challenge.targetX1 !== undefined && (jawX1 !== challenge.targetX1 || jawX2 !== challenge.targetX2 || jawY1 !== challenge.targetY1 || jawY2 !== challenge.targetY2)) {
+                allPartsCorrect = false;
+                feedback += "Jaw settings are not correct for the task. ";
+            }
+
+            // Check symmetry categorization if applicable
+            if (challenge.checkSymmetry) {
+                const currentFieldIsSymmetric = (Math.abs(jawX1 - jawX2) < 0.01) && (Math.abs(jawY1 - jawY2) < 0.01);
+                const selectedSymmetryRadio = document.querySelector('input[name="symmetry_answer"]:checked');
+                if (!selectedSymmetryRadio || (selectedSymmetryRadio.value === 'symmetric') !== challenge.correctSymmetry) {
+                    allPartsCorrect = false;
+                    feedback += `Symmetry categorization is incorrect. Expected: ${challenge.correctSymmetry ? 'Symmetric' : 'Asymmetric'}. `;
+                }
+            }
+
+            // Check MLC pattern if applicable
+            if (challenge.targetMLC && currentMLCPattern !== challenge.targetMLC) {
+                allPartsCorrect = false;
+                feedback += `MLC pattern is incorrect. Expected: '${challenge.targetMLC}'. `;
+            }
+
+            if (allPartsCorrect) {
+                scoreForThisChallenge = challenge.points;
+                // Add points for correct symmetry categorization when checkSymmetry is true
+                if(challenge.checkSymmetry) scoreForThisChallenge +=1; 
+
+                userScore += scoreForThisChallenge;
+                challengeFeedbackEl.textContent = "Correct! All settings/answers for this task are accurate. (" + scoreForThisChallenge + " points)";
+                challengeFeedbackEl.className = "mt-2 text-center font-medium text-green-600";
+            } else {
+                challengeFeedbackEl.textContent = "Attention: " + (feedback || "One or more settings/answers are incorrect. Please review.");
+                challengeFeedbackEl.className = "mt-2 text-center font-medium text-red-600";
+            }
+            checkChallengeBtnEl.disabled = true;
+            nextChallengeBtnEl.style.display = 'inline-block';
+        }
+
+        function nextChallenge() {
+            currentChallengeIndex++;
+            if (currentChallengeIndex < challenges.length) {
+                displayCurrentChallenge();
+            } else {
+                endLabActivity();
+            }
+        }
+        
+        function endLabActivity() { /* ... same as before ... */
+            activityAreaEl.style.display = 'none';
+            resultsDisplayEl.style.display = 'block';
+            endNavEl.style.display = 'block';
+            const percentage = (maxScore > 0) ? Math.round((userScore / maxScore) * 100) : 0;
+            finalScoreTextEl.textContent = `Your Final Score: ${userScore} out of ${maxScore} (${percentage}%)`;
+            
+            window.finalScoreValue = percentage;
+            let badgeClass = ''; let badgeTierText = 'MLC & Field Shaping Pro';
+            if (percentage >= 90) { badgeClass = 'gold-badge'; badgeTierText = 'Gold ' + badgeTierText; }
+            else if (percentage >= 80) { badgeClass = 'silver-badge'; badgeTierText = 'Silver ' + badgeTierText; }
+            else if (percentage >= 70) { badgeClass = 'bronze-badge'; badgeTierText = 'Bronze ' + badgeTierText; }
+
+            if (badgeClass) {
+                badgeSectionEl.style.display = 'block'; noBadgeMessageEl.style.display = 'none';
+                document.getElementById('badge-congrats-text').textContent = `Congratulations! You've earned a ${badgeTierText} Badge!`;
+                window.badgeTierName = badgeTierText; 
+                document.getElementById('badge-input').style.display = 'block';
+                document.getElementById('printBadgeButton').style.display = 'none';
+                document.getElementById('badge-container-render').innerHTML = '';
+                const printableBadgeEl = document.getElementById('printableBadge'); 
+                if(printableBadgeEl) printableBadgeEl.style.display = 'none';
+            } else {
+                badgeSectionEl.style.display = 'none'; noBadgeMessageEl.style.display = 'block';
+            }
+        }
+
+        function generateBadge() { /* ... same as before ... */
+             const name = document.getElementById('userNameForBadge').value;
+            if (name.trim() === "") { alert("Please enter your name."); return; }
+            const badgeContainerRender = document.getElementById('badge-container-render');
+            let badgeColorClass = '';
+            if (window.finalScoreValue >= 90) badgeColorClass = 'gold-badge';
+            else if (window.finalScoreValue >= 80) badgeColorClass = 'silver-badge';
+            else if (window.finalScoreValue >= 70) badgeColorClass = 'bronze-badge';
+
+            badgeContainerRender.innerHTML = `
+                <div class="badge ${badgeColorClass}" id="printableBadge">
+                    <h4>${window.badgeTierName || 'Field Shaping Award'}</h4>
+                    <p class="awardee">${name}</p>
+                    <p class="reason">For proficiency in MLC & Field Shaping concepts.</p>
+                    <p class="details">Score: ${window.finalScoreValue}%</p>
+                    <p class="logo">RTApps Learning</p>
+                </div>
+            `;
+            const actualBadgeEl = document.getElementById('printableBadge');
+            if(actualBadgeEl) actualBadgeEl.style.display = 'flex';
+            document.getElementById('printBadgeButton').style.display = 'inline-block';
+            document.getElementById('badge-input').style.display = 'none'; 
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => { resetSimulatorControls(); });
+    </script>
+</body>
+</html>

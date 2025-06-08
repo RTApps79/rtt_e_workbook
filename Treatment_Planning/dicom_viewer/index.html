@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DICOM Image Stack Viewer</title>
+  <style>
+    #dicom-viewer {
+      text-align: center;
+      margin-top: 40px;
+    }
+    #dicom-img {
+      max-width: 90vw;
+      max-height: 80vh;
+      border: 2px solid #444;
+    }
+    .controls {
+      margin-top: 10px;
+    }
+    button {
+      padding: 8px 16px;
+      font-size: 1.1em;
+    }
+  </style>
+</head>
+<body>
+  <div id="dicom-viewer">
+    <img id="dicom-img" src="" alt="DICOM Series Image">
+    <div class="controls">
+      <button onclick="prevImg()">Previous</button>
+      <span id="img-counter"></span>
+      <button onclick="nextImg()">Next</button>
+    </div>
+  </div>
+  <script>
+    // List your image file names here, in order
+    const images = [
+      '../../assets/image-00000.jpg',
+      '../../assets/image-00001.jpg',
+      '../../assets/image-00002.jpg',
+      '../../assets/image-00003.jpg',
+      '../../assets/image-00004.jpg',
+      '../../assets/image-00005.jpg',
+      '../../assets/image-00006.jpg',
+      '../../assets/image-00007.jpg',
+      '../../assets/image-00008.jpg',
+      '../../assets/image-00009.jpg',
+      '../../assets/image-00010.jpg',
+      '../../assets/image-00011.jpg',
+      '../../assets/image-00012.jpg',
+      '../../assets/image-00013.jpg',
+      '../../assets/image-00014.jpg',
+      '../../assets/image-00015.jpg',
+      '../../assets/image-00016.jpg',
+      '../../assets/image-00017.jpg',
+      '../../assets/image-00018.jpg',
+      '../../assets/image-00019.jpg',
+      '../../assets/image-00020.jpg',
+      '../../assets/image-00021.jpg',
+      '../../assets/image-00022.jpg',
+      '../../assets/image-00023.jpg',
+      '../../assets/image-00024.jpg',
+      '../../assets/image-00025.jpg',
+      '../../assets/image-00026.jpg',
+      '../../assets/image-00027.jpg',
+      '../../assets/image-00028.jpg',
+      '../../assets/image-00029.jpg',
+      '../../assets/image-00030.jpg',
+      '../../assets/image-00031.jpg',
+      '../../assets/image-00032.jpg',
+      '../../assets/image-00033.jpg',
+      '../../assets/image-00034.jpg',
+      '../../assets/image-00035.jpg',
+      '../../assets/image-00036.jpg',
+      '../../assets/image-00037.jpg',
+      '../../assets/image-00038.jpg',
+      '../../assets/image-00039.jpg',
+      '../../assets/image-00040.jpg',
+      '../../assets/image-00041.jpg',
+      '../../assets/image-00042.jpg',
+      '../../assets/image-00043.jpg',
+      '../../assets/image-00044.jpg',
+      '../../assets/image-00045.jpg',
+      '../../assets/image-00046.jpg',
+      '../../assets/image-00047.jpg',
+      '../../assets/image-00048.jpg',
+      '../../assets/image-00049.jpg',
+      '../../assets/image-00050.jpg',
+      '../../assets/image-00051.jpg',
+      '../../assets/image-00052.jpg',
+      '../../assets/image-00053.jpg',
+      '../../assets/image-00054.jpg',
+      '../../assets/image-00055.jpg',
+    ];
+    let idx = 0;
+    const imgElem = document.getElementById('dicom-img');
+    const counterElem = document.getElementById('img-counter');
+
+    function showImg() {
+      imgElem.src = images[idx];
+      counterElem.textContent = `Image ${idx + 1} of ${images.length}`;
+    }
+    function prevImg() {
+      if (idx > 0) { idx--; showImg(); }
+    }
+    function nextImg() {
+      if (idx < images.length - 1) { idx++; showImg(); }
+    }
+    // Initialize viewer
+    showImg();
+  </script>
+</body>
+</html>

@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity: Comprehensive HIPAA Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .question-option:hover {
+            background-color: #f0f9ff; /* Tailwind sky-50 */
+        }
+        .selected-option {
+            background-color: #e0f2fe; /* Tailwind sky-100 */
+            border-color: #38bdf8; /* Tailwind sky-400 */
+        }
+        .correct-answer {
+            background-color: #dcfce7; /* Tailwind green-100 */
+            border-left-color: #22c55e !important; /* Tailwind green-500 */
+        }
+        .incorrect-answer {
+            background-color: #fee2e2; /* Tailwind red-100 */
+            border-left-color: #ef4444 !important; /* Tailwind red-500 */
+        }
+        .correct-indicator::after {
+            content: '✔ Correct';
+            color: #16a34a; /* Tailwind green-600 */
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .incorrect-indicator::after {
+            content: '✖ Incorrect';
+            color: #dc2626; /* Tailwind red-600 */
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .correct-option-text {
+            font-weight: bold;
+            color: #15803d; /* Tailwind green-700 */
+        }
+
+        /* Print Styles for Badge */
+        @media print {
+            body { margin: 0; padding: 0; }
+            body * { visibility: hidden; }
+            #printableBadge, #printableBadge * { visibility: visible; }
+            #printableBadge {
+                position: absolute; left: 50%; top: 50%;
+                transform: translate(-50%, -50%);
+                width: 90vw; height: auto; margin: 0; padding: 20px;
+                box-shadow: none;
+                border: 10px solid #FACC15 !important; /* Tailwind yellow-400 */
+                color: #000 !important;
+                background-color: #FEF9C3 !important; /* Tailwind yellow-100 */
+                -webkit-print-color-adjust: exact; print-color-adjust: exact;
+            }
+            #printableBadge h4, #printableBadge .awardee-name, #printableBadge .badge-logo-print, 
+            #printableBadge .badge-score-print, #printableBadge .completion-date-print {
+                color: #A16207 !important; /* Tailwind yellow-700 */
+            }
+            #printableBadge .awardee-name {
+                border-bottom: 1px dashed #CA8A04 !important; /* Tailwind yellow-600 */
+            }
+            .nav-links-header, #start-screen-container, #quiz-area-container, #results-area-container > h2,
+            #badge-input-section, #post-activity-navigation, footer, #printBadgeButtonTrigger, #quiz-submit-button, #quiz-questions-container label {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 flex flex-col min-h-screen">
+
+    <header class="bg-white shadow-md sticky top-0 z-50 nav-links-header">
+        <div class="container mx-auto px-6 py-3 flex flex-col sm:flex-row justify-between items-center">
+            <h1 class="text-xl font-bold text-purple-700 mb-2 sm:mb-0">Activity: Comprehensive HIPAA Quiz</h1>
+            <div class="flex flex-wrap justify-center sm:justify-end space-x-2">
+                <a href="./index.html#lesson-page-10" class="text-xs sm:text-sm bg-purple-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-purple-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to HIPAA Lesson
+                </a>
+                <a href="../index.html" class="text-xs sm:text-sm bg-purple-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-purple-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to Ethics Module
+                </a>
+                <a href="../../index.html" class="text-xs sm:text-sm bg-slate-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-slate-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to Main Workbook
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto max-w-3xl px-4 sm:px-6 py-8 flex-grow">
+        <div class="bg-white p-6 sm:p-8 rounded-xl shadow-xl">
+            <h1 class="text-3xl font-bold text-purple-700 mb-8 text-center border-b-2 border-purple-300 pb-4">Activity: Comprehensive HIPAA Quiz</h1>
+
+            <div id="start-screen-container" class="bg-purple-50 p-6 rounded-lg shadow-md mb-8 border border-purple-200">
+                <h2 class="text-2xl font-semibold text-purple-600 mb-4">Before You Begin...</h2>
+                <h3 class="text-xl font-medium text-purple-700 mb-2">Purpose</h3>
+                <p class="text-slate-700 mb-4 text-sm">This quiz will test your understanding of the key concepts covered in the HIPAA Essentials lesson, including the Privacy Rule, Security Rule, Breach Notification Rule, and common applications in a healthcare setting.</p>
+                <h3 class="text-xl font-medium text-purple-700 mb-2">Task</h3>
+                <p class="text-slate-700 mb-4 text-sm">Answer all multiple-choice questions to the best of your ability. After submitting, you will receive your score and feedback on your answers.</p>
+                <h3 class="text-xl font-medium text-purple-700 mb-2">Criteria for Success</h3>
+                <p class="text-slate-700 mb-4 text-sm">A successful completion involves answering the questions thoughtfully. A score of <span class="font-bold text-green-600">80% or higher</span> will earn you a printable "HIPAA Proficiency Certificate".</p>
+                <button id="start-quiz-button" onclick="startQuiz()" class="w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-lg text-lg transition-colors duration-300 block mx-auto">Start Quiz</button>
+            </div>
+
+            <div id="quiz-area-container" style="display: none;" class="bg-purple-50 p-6 rounded-lg shadow-md mb-8 border border-purple-200">
+                <div id="quiz-questions-container" class="space-y-6">
+                    {/* Questions will be injected here by JavaScript */}
+                </div>
+                <button id="quiz-submit-button" onclick="submitQuiz()" class="mt-8 w-full sm:w-auto bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg text-lg transition-colors duration-300 block mx-auto">Submit Answers</button>
+            </div>
+
+            <div id="results-area-container" style="display: none;" class="text-center">
+                <h2 class="text-2xl font-semibold text-purple-600 mb-4">Quiz Results</h2>
+                <p id="final-score-display" class="text-3xl font-bold text-purple-700 mb-2"></p>
+                <p id="score-percentage-display" class="text-xl text-slate-600 mb-6"></p>
+                
+                <div id="feedback-summary-container" class="mt-4 mb-6 text-left space-y-3">
+                    {/* Detailed feedback will be injected here */}
+                </div>
+
+                <div id="badge-section" style="display: none;" class="mt-10 p-6 bg-yellow-50 rounded-lg shadow-md text-center border border-yellow-300">
+                    <h3 class="text-xl font-semibold text-yellow-700 mb-4">Congratulations! You've Earned a Certificate!</h3>
+                    <div id="badge-input-section" class="mb-4">
+                        <label for="userNameForBadge" class="block text-sm font-medium text-slate-700 mb-1">Enter Your Name for Certificate:</label>
+                        <input type="text" id="userNameForBadge" placeholder="Your Name Here" class="mt-1 block w-full sm:w-auto sm:inline-block max-w-xs px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm">
+                        <button onclick="generateBadge()" class="mt-2 sm:mt-0 sm:ml-2 bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg text-sm transition-colors">Generate Certificate</button>
+                    </div>
+                    <div id="printableBadge" style="display:none;" class="w-full max-w-md h-auto border-8 border-yellow-400 bg-yellow-100 mx-auto p-6 sm:p-8 flex flex-col justify-center items-center shadow-lg font-serif text-center rounded-lg">
+                        <h4 class="text-yellow-700 text-2xl sm:text-3xl font-bold mb-2 sm:mb-4">HIPAA Proficiency Certificate</h4>
+                        <p class="awardee-name text-yellow-600 text-xl sm:text-2xl font-semibold my-3 sm:my-5 border-b-2 border-dashed border-yellow-600 pb-1 sm:pb-2" id="badgeNameDisplay"></p>
+                        <p class="reason-text text-slate-700 text-md sm:text-lg my-2 sm:my-3">For demonstrating proficiency in the HIPAA Essentials Quiz.</p>
+                        <p class="badge-score-print text-slate-600 text-sm my-1" id="badgeScoreDisplay"></p>
+                        <p class="completion-date-print text-slate-600 text-xs my-1" id="badgeDateDisplay"></p>
+                        <p class="badge-logo-print text-yellow-700 text-sm font-bold mt-3 sm:mt-4">RTApps Learning</p>
+                    </div>
+                    <button id="printBadgeButtonTrigger" onclick="window.print()" style="display:none;" class="mt-4 bg-sky-500 hover:bg-sky-600 text-white font-medium py-2 px-4 rounded-lg text-sm transition-colors">Print Certificate</button>
+                    <div id="print-error-message" class="text-red-500 text-xs mt-2" style="display:none;">Please enter your name to generate the certificate.</div>
+                </div>
+            </div>
+
+            <div id="post-activity-navigation" style="display: none;" class="text-center mt-10 pt-6 border-t border-slate-200">
+                <h3 class="text-xl font-semibold text-slate-700 mb-4">What's Next?</h3>
+                <div class="flex flex-col sm:flex-row justify-center items-center space-y-3 sm:space-y-0 sm:space-x-4">
+                    <button onclick="window.location.href='../index.html'" class="w-full sm:w-auto bg-slate-500 hover:bg-slate-600 text-white font-medium py-2 px-4 rounded-lg text-sm transition-colors">Back to Ethics Menu</button>
+                    <button onclick="startQuiz()" class="w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg text-sm transition-colors">Retake Quiz</button>
+                    <button onclick="window.location.href='index.html#lesson-page-10'" class="w-full sm:w-auto bg-purple-500 hover:bg-purple-600 text-white font-medium py-2 px-4 rounded-lg text-sm transition-colors">Other HIPAA Activities</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-slate-800 text-slate-300 py-6 mt-auto text-center">
+        <div class="container mx-auto px-6">
+            <p class="text-sm">&copy; <span id="currentYear"></span> Radiation Therapy E-Workbook. RTApps All Rights Reserved.</p>
+            <p class="text-xs mt-1">HIPAA Comprehensive Quiz</p>
+        </div>
+    </footer>
+
+    <script>
+        const quizQuestions = [
+            {
+                question: "What does HIPAA primarily stand for?",
+                options: [
+                    "Health Information Privacy and Accessibility Act",
+                    "Health Insurance Portability and Accountability Act",
+                    "Healthcare Information Protection and Administration Act",
+                    "Health Insurance Privacy and Administration Act"
+                ],
+                answer: "Health Insurance Portability and Accountability Act",
+                explanation: "HIPAA stands for the Health Insurance Portability and Accountability Act of 1996."
+            },
+            {
+                question: "Which of the following is considered Protected Health Information (PHI) under HIPAA?",
+                options: [
+                    "A patient's favorite color",
+                    "A patient's name and diagnosis",
+                    "General hospital statistics not linked to individuals",
+                    "A de-identified research dataset"
+                ],
+                answer: "A patient's name and diagnosis",
+                explanation: "PHI includes individually identifiable health information, such as name, address, dates, and medical records."
+            },
+            {
+                question: "The HIPAA Security Rule applies specifically to:",
+                options: [
+                    "All paper-based patient records",
+                    "Verbal communications between doctors",
+                    "Electronic Protected Health Information (ePHI)",
+                    "Patient billing information only"
+                ],
+                answer: "Electronic Protected Health Information (ePHI)",
+                explanation: "The Security Rule establishes national standards for protecting ePHI created, received, used, or maintained by a covered entity."
+            },
+            {
+                question: "Under the HIPAA Privacy Rule, when is it generally permissible to disclose PHI without patient authorization?",
+                options: [
+                    "For marketing purposes to a third party",
+                    "To a patient's employer for a job evaluation",
+                    "For Treatment, Payment, or Healthcare Operations (TPO)",
+                    "To a news reporter asking about a public figure"
+                ],
+                answer: "For Treatment, Payment, or Healthcare Operations (TPO)",
+                explanation: "HIPAA allows covered entities to use and disclose PHI for TPO without patient authorization, subject to certain conditions."
+            },
+            {
+                question: "If a breach of unsecured PHI affects 600 individuals, who must be notified?",
+                options: [
+                    "Only the affected individuals",
+                    "The affected individuals and the HHS Secretary",
+                    "The affected individuals, the HHS Secretary, and prominent media outlets",
+                    "Only the HHS Secretary"
+                ],
+                answer: "The affected individuals, the HHS Secretary, and prominent media outlets",
+                explanation: "For breaches affecting more than 500 residents of a state or jurisdiction, covered entities must notify affected individuals, the HHS Secretary, and prominent media outlets serving the State or jurisdiction."
+            }
+        ];
+
+        const startScreenContainer = document.getElementById('start-screen-container');
+        const quizAreaContainer = document.getElementById('quiz-area-container');
+        const resultsAreaContainer = document.getElementById('results-area-container');
+        const postActivityNavigation = document.getElementById('post-activity-navigation');
+        const quizQuestionsContainer = document.getElementById('quiz-questions-container');
+        const badgeSection = document.getElementById('badge-section');
+        const printErrorMessage = document.getElementById('print-error-message');
+        let userAnswers = [];
+        let finalQuizScore = 0;
+
+        function startQuiz() {
+            startScreenContainer.style.display = 'none';
+            resultsAreaContainer.style.display = 'none';
+            postActivityNavigation.style.display = 'none';
+            badgeSection.style.display = 'none';
+            quizAreaContainer.style.display = 'block';
+            userAnswers = new Array(quizQuestions.length).fill(null);
+            renderQuestions();
+        }
+
+        function renderQuestions() {
+            quizQuestionsContainer.innerHTML = '';
+            quizQuestions.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question-block bg-white p-4 rounded-lg shadow border border-slate-200';
+                questionDiv.innerHTML = `<p class="text-md font-semibold text-purple-700 mb-3">${index + 1}. ${q.question}</p>`;
+                
+                const optionsDiv = document.createElement('div');
+                optionsDiv.className = 'space-y-2';
+                q.options.forEach((option, i) => {
+                    optionsDiv.innerHTML += `
+                        <label class="block p-3 rounded-md border border-slate-300 cursor-pointer question-option transition-colors duration-150">
+                            <input type="radio" name="question${index}" value="${option}" class="mr-2 accent-purple-600">
+                            ${option}
+                        </label>
+                    `;
+                });
+                questionDiv.appendChild(optionsDiv);
+                quizQuestionsContainer.appendChild(questionDiv);
+
+                // Add event listeners to options for visual feedback on selection
+                questionDiv.querySelectorAll(`input[name="question${index}"]`).forEach(radio => {
+                    radio.addEventListener('change', (event) => {
+                        // Remove 'selected-option' from all labels for this question
+                        questionDiv.querySelectorAll('label').forEach(label => label.classList.remove('selected-option', 'border-l-4'));
+                        // Add 'selected-option' to the parent label of the checked radio
+                        if(event.target.checked) {
+                            event.target.parentElement.classList.add('selected-option', 'border-l-4');
+                        }
+                    });
+                });
+            });
+        }
+
+        function submitQuiz() {
+            quizQuestions.forEach((q, index) => {
+                const selectedOption = document.querySelector(`input[name="question${index}"]:checked`);
+                if (selectedOption) {
+                    userAnswers[index] = selectedOption.value;
+                }
+            });
+            showResults();
+        }
+
+        function showResults() {
+            quizAreaContainer.style.display = 'none';
+            resultsAreaContainer.style.display = 'block';
+            postActivityNavigation.style.display = 'block';
+
+            let score = 0;
+            quizQuestions.forEach((q, index) => {
+                if (userAnswers[index] === q.answer) {
+                    score++;
+                }
+            });
+
+            finalQuizScore = score;
+            const percentage = Math.round((score / quizQuestions.length) * 100);
+            document.getElementById('final-score-display').textContent = `Your Score: ${score} out of ${quizQuestions.length}`;
+            document.getElementById('score-percentage-display').textContent = `(${percentage}%)`;
+
+            renderFeedbackSummary();
+
+            if (percentage >= 80) {
+                badgeSection.style.display = 'block';
+            } else {
+                badgeSection.style.display = 'none';
+            }
+        }
+        
+        function renderFeedbackSummary() {
+            const feedbackContainer = document.getElementById('feedback-summary-container');
+            feedbackContainer.innerHTML = '<h3 class="text-lg font-semibold text-purple-700 mb-3">Answer Review:</h3>';
+            quizQuestions.forEach((q, index) => {
+                const userAnswer = userAnswers[index];
+                const isCorrect = userAnswer === q.answer;
+                const feedbackDiv = document.createElement('div');
+                feedbackDiv.className = `p-3 mb-3 rounded-md border-l-4 ${isCorrect ? 'correct-answer' : 'incorrect-answer'}`;
+                
+                let feedbackHTML = `<p class="text-sm font-medium">${index + 1}. ${q.question}</p>`;
+                if (userAnswer) {
+                    feedbackHTML += `<p class="text-xs mt-1">Your answer: <span class="${isCorrect ? '' : 'text-red-700'}">${userAnswer}</span> <span class="${isCorrect ? 'correct-indicator' : 'incorrect-indicator'}"></span></p>`;
+                } else {
+                    feedbackHTML += `<p class="text-xs mt-1 text-red-700">You did not answer this question. <span class="incorrect-indicator"></span></p>`;
+                }
+                if (!isCorrect) {
+                    feedbackHTML += `<p class="text-xs mt-1">Correct answer: <span class="correct-option-text">${q.answer}</span></p>`;
+                }
+                feedbackHTML += `<p class="text-xs mt-1 text-slate-600"><em>Explanation: ${q.explanation}</em></p>`;
+                
+                feedbackDiv.innerHTML = feedbackHTML;
+                feedbackContainer.appendChild(feedbackDiv);
+            });
+        }
+
+
+        function generateBadge() {
+            const nameInput = document.getElementById('userNameForBadge');
+            const name = nameInput.value.trim();
+            
+            if (name === "") {
+                nameInput.classList.add('border-red-500');
+                printErrorMessage.textContent = "Please enter your name to generate the certificate.";
+                printErrorMessage.style.display = 'block';
+                return;
+            }
+            nameInput.classList.remove('border-red-500');
+            printErrorMessage.style.display = 'none';
+
+            const today = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const formattedDate = today.toLocaleDateString(undefined, options);
+            const percentage = Math.round((finalQuizScore / quizQuestions.length) * 100);
+
+
+            document.getElementById('badgeNameDisplay').textContent = name;
+            document.getElementById('badgeScoreDisplay').textContent = `Achieved with a score of ${percentage}%`;
+            document.getElementById('badgeDateDisplay').textContent = "Completed on: " + formattedDate;
+            document.getElementById('printableBadge').style.display = 'flex';
+            document.getElementById('printBadgeButtonTrigger').style.display = 'inline-block';
+        }
+        
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

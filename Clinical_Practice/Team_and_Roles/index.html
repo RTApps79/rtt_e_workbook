@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Radiation Oncology Team & Roles</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .selected-option {
+            background-color: #e0f2fe; /* Tailwind sky-100 */
+            border-color: #38bdf8; /* Tailwind sky-400 */
+        }
+        .correct-answer-feedback {
+            background-color: #dcfce7 !important; /* Tailwind green-100 */
+            border-left-color: #22c55e !important; /* Tailwind green-500 */
+        }
+        .incorrect-answer-feedback {
+            background-color: #fee2e2 !important; /* Tailwind red-100 */
+            border-left-color: #ef4444 !important; /* Tailwind red-500 */
+        }
+        .correct-indicator::after {
+            content: '✔ Correct';
+            color: #16a34a; /* Tailwind green-600 */
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .incorrect-indicator::after {
+            content: '✖ Incorrect';
+            color: #dc2626; /* Tailwind red-600 */
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .correct-option-text {
+            font-weight: bold;
+            color: #15803d; /* Tailwind green-700 */
+        }
+        .external-link-icon::after { /* For styling external links if needed */
+            content: ' ↗';
+            font-size: 0.8em;
+        }
+
+        /* Print Styles */
+        @media print {
+            body { background-color: #fff; margin: 10px; padding: 0; font-size: 10pt; }
+            .main-content-wrapper, .flip-lesson-container { box-shadow: none !important; border: none !important; width: 100%; max-width: 100%; padding: 5px; margin-bottom: 15px;}
+            .lesson-navigation-bar, .check-page-answers-button, .nav-links-header, .print-button-container { display: none !important; }
+            .lesson-page { page-break-inside: avoid; border: 1px solid #eee !important; }
+            .interactive-question-block {background: #fff !important; border: 1px solid #ccc !important; }
+            h1, h2, h3, h4 { color: #000 !important; border-color: #000 !important; margin-bottom: 10px; padding-bottom: 3px;}
+            .explanation-text { display: none !important; }
+            .external-link-icon::after { content: '';} 
+            a {text-decoration: none; color: #000 !important;}
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 flex flex-col min-h-screen">
+
+    <header class="bg-white shadow-md sticky top-0 z-50 nav-links-header">
+        <div class="container mx-auto px-6 py-3 flex flex-col sm:flex-row justify-between items-center">
+            <h1 class="text-xl font-bold text-purple-700 mb-2 sm:mb-0">The Radiation Oncology Team</h1>
+            <div class="flex flex-wrap justify-center sm:justify-end space-x-2">
+                <a href="../index.html" class="text-xs sm:text-sm bg-purple-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-purple-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to Clinical Practice
+                </a>
+                <a href="../../index.html" class="text-xs sm:text-sm bg-slate-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-slate-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to Main Workbook
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto max-w-4xl px-4 sm:px-6 py-8 flex-grow main-content-wrapper">
+        <div class="bg-white p-6 sm:p-8 rounded-xl shadow-xl">
+            <h1 class="text-3xl font-bold text-purple-700 mb-6 text-center border-b-2 border-purple-300 pb-4">The Radiation Oncology Team & Roles</h1>
+
+            <div class="flip-lesson-container bg-purple-50 p-4 sm:p-6 rounded-lg shadow-md mb-8 border border-purple-200">
+                <h2 class="text-2xl font-semibold text-purple-600 mb-4">Interactive Lesson Overview</h2>
+
+                <div id="lesson-page-1" class="lesson-page active bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[450px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 1: Introduction - The Collaborative Care Team</h3>
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Purpose: Why This Matters</h4>
+                        <p class="text-sm text-slate-600">This lesson will introduce you to the multidisciplinary team involved in radiation oncology. Understanding each member's distinct and overlapping roles is crucial for effective collaboration, seamless patient care, and ensuring treatment accuracy and safety. As a radiation therapist, you are a key player in this team, and recognizing how your colleagues contribute will enhance your own practice and patient outcomes.</p>
+                    </div>
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Task: What You Will Do</h4>
+                        <p class="text-sm text-slate-600">Throughout this lesson, you will:</p>
+                        <ul class="list-disc list-inside text-slate-600 space-y-1 text-sm ml-4">
+                            <li>Learn about the primary responsibilities of various professionals in the radiation oncology team.</li>
+                            <li>Explore how these roles intersect and require close communication.</li>
+                            <li>Consider examples of teamwork and where role crossovers can occur.</li>
+                            <li>Answer "Quick Check" questions to reinforce your understanding.</li>
+                            <li>At the end, you will be directed to a summative speech quiz activity to test your recall of these roles.</li>
+                        </ul>
+                    </div>
+                    <div class="p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Criteria for Success: How You'll Know You've Learned</h4>
+                        <p class="text-sm text-slate-600">By the end of this lesson, you should be able to:</p>
+                        <ul class="list-disc list-inside text-slate-600 space-y-1 text-sm ml-4">
+                            <li>Identify the core members of the radiation oncology team and their main responsibilities.</li>
+                            <li>Describe how effective communication and collaboration among team members contribute to patient care.</li>
+                            <li>Recognize examples of role crossover and the importance of a team-based approach.</li>
+                            <li>Successfully complete the "Quick Check" questions.</li>
+                        </ul>
+                    </div>
+                    <p class="mt-4 text-slate-700">Effective patient care in radiation oncology is not the job of one person, but the coordinated effort of a highly skilled team. Let's meet the players!</p>
+                </div>
+
+                <div id="lesson-page-2" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 2: Radiation Oncologist & Oncology Nurse</h3>
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Radiation Oncologist</h4>
+                        <p class="text-sm text-slate-600">A physician who specializes in using radiation to treat cancer. <br><strong>Key Responsibilities:</strong> Leads the radiation oncology team; evaluates the patient to determine if radiation therapy is appropriate; prescribes the type and amount of radiation; localizes the tumor; monitors patient progress and manages side effects related to radiation; collaborates with other physicians.</p>
+                    </div>
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Oncology Nurse (often an RN with specialized oncology training/certification)</h4>
+                        <p class="text-sm text-slate-600">Provides direct nursing care to patients undergoing radiation therapy. <br><strong>Key Responsibilities:</strong> Patient education about treatment and side effect management; assessment and monitoring of patient's physical and emotional status; administration of medications; symptom management; coordination of care; emotional support for patients and families; collaboration with the radiation oncologist and other team members regarding patient status and needs.</p>
+                    </div>
+                    <p class="text-sm text-slate-700 mt-3"><strong>Collaboration Example:</strong> The radiation oncologist and oncology nurse work closely to manage acute side effects. The nurse assesses the patient, communicates findings to the oncologist, and implements prescribed interventions.</p>
+
+                    <div class="interactive-question-block mt-6 bg-white p-3 rounded-md border border-slate-300" id="q_page2_1">
+                        <p class="question-text font-semibold text-slate-700 mb-2">Quick Check: Who is primarily responsible for prescribing the radiation treatment and leading the overall radiation oncology team?</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page2_1_ans" value="A" class="mr-2 accent-purple-600"> Oncology Nurse</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page2_1_ans" value="B" class="mr-2 accent-purple-600"> Radiation Oncologist</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page2_1_ans" value="C" class="mr-2 accent-purple-600"> Medical Physicist</label>
+                        <div class="explanation-text text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">The correct answer is B. The Radiation Oncologist leads the team and prescribes the treatment.</div>
+                    </div>
+                    <button class="check-page-answers-button mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswer('q_page2_1', 'B')">Check Answer</button>
+                </div>
+                
+                <div id="lesson-page-3" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 3: Medical Physicist & Medical Dosimetrist</h3>
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Medical Physicist</h4>
+                        <p class="text-sm text-slate-600">An expert in radiation physics who ensures the safe and accurate delivery of radiation. <br><strong>Key Responsibilities:</strong> Oversees quality assurance (QA) of treatment machines and planning systems; calibrates equipment; consults with the radiation oncologist on treatment planning and delivery techniques; develops and implements radiation safety protocols; involved in commissioning new equipment and techniques.</p>
+                    </div>
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Medical Dosimetrist</h4>
+                        <p class="text-sm text-slate-600">Works closely with the radiation oncologist and medical physicist to design optimal radiation treatment plans. <br><strong>Key Responsibilities:</strong> Uses specialized software to calculate radiation dose distributions; develops treatment plans that deliver the prescribed dose to the tumor while minimizing exposure to healthy tissues; performs quality checks on treatment plans; assists with brachytherapy planning and procedures.</p>
+                    </div>
+                    <p class="text-sm text-slate-700 mt-3"><strong>Collaboration Example:</strong> The dosimetrist designs a complex treatment plan, which is then reviewed and approved by both the medical physicist (for technical accuracy and safety) and the radiation oncologist (for clinical appropriateness).</p>
+
+                    <div class="interactive-question-block mt-6 bg-white p-3 rounded-md border border-slate-300" id="q_page3_1">
+                        <p class="question-text font-semibold text-slate-700 mb-2">Quick Check: Which team member is primarily responsible for designing the patient's radiation treatment plan by calculating dose distributions?</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page3_1_ans" value="A" class="mr-2 accent-purple-600"> Radiation Therapist</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page3_1_ans" value="B" class="mr-2 accent-purple-600"> Medical Physicist</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page3_1_ans" value="C" class="mr-2 accent-purple-600"> Medical Dosimetrist</label>
+                        <div class="explanation-text text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">The correct answer is C. The Medical Dosimetrist designs the treatment plans.</div>
+                    </div>
+                    <button class="check-page-answers-button mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswer('q_page3_1', 'C')">Check Answer</button>
+                </div>
+
+                <div id="lesson-page-4" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 4: Radiation Therapist (RTT)</h3>
+                    <p class="mb-3 text-slate-700">Radiation Therapists are the primary point of contact for patients during their daily treatments. They are highly skilled professionals responsible for the accurate delivery of radiation therapy as prescribed by the radiation oncologist.</p>
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Radiation Therapist (RTT)</h4>
+                        <p class="text-sm text-slate-600">Administers daily radiation treatments, positions patients accurately, operates treatment machines, and provides patient support. <br><strong>Key Responsibilities:</strong>
+                            <ul class="list-disc list-inside text-slate-600 space-y-1 text-xs ml-4 my-1">
+                                <li>Accurately interpreting and implementing the treatment plan.</li>
+                                <li>Positioning the patient precisely for treatment using immobilization devices.</li>
+                                <li>Operating sophisticated radiation therapy equipment (e.g., linear accelerators).</li>
+                                <li>Performing daily quality assurance checks on treatment machines.</li>
+                                <li>Utilizing imaging systems (e.g., OBI, CBCT) for treatment verification.</li>
+                                <li>Monitoring the patient's physical and emotional state during treatment sessions.</li>
+                                <li>Observing for and reporting acute side effects to the nurse or oncologist.</li>
+                                <li>Educating patients about procedures and self-care for side effects (within scope).</li>
+                                <li>Maintaining accurate treatment records.</li>
+                                <li>Ensuring radiation safety for the patient, themselves, and others.</li>
+                            </ul>
+                        </p>
+                    </div>
+                    <p class="text-sm text-slate-700 mt-3"><strong>Collaboration Example:</strong> RTTs work very closely with medical physicists for machine QA and with dosimetrists to understand complex plan details. They are the "eyes and ears" for the oncologist and nurse regarding the patient's daily condition and tolerance to treatment.</p>
+                     <div class="interactive-question-block mt-6 bg-white p-3 rounded-md border border-slate-300" id="q_page4_1">
+                        <p class="question-text font-semibold text-slate-700 mb-2">Quick Check: A key daily responsibility of the Radiation Therapist is:</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page4_1_ans" value="A" class="mr-2 accent-purple-600"> Prescribing changes to the radiation dose.</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page4_1_ans" value="B" class="mr-2 accent-purple-600"> Accurately positioning the patient and operating the treatment machine.</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page4_1_ans" value="C" class="mr-2 accent-purple-600"> Calibrating the treatment machine independently each morning.</label>
+                        <div class="explanation-text text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">The correct answer is B. Accurate patient positioning and machine operation are core daily tasks for RTTs. Dose changes are prescribed by the oncologist, and full machine calibration is primarily the physicist's role, though RTTs perform daily QA checks.</div>
+                    </div>
+                    <button class="check-page-answers-button mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswer('q_page4_1', 'B')">Check Answer</button>
+                </div>
+
+                <div id="lesson-page-5" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 5: Supportive & Ancillary Roles</h3>
+                    <p class="mb-3 text-slate-700">Beyond the core clinical team, many other professionals contribute significantly to the comprehensive care of radiation oncology patients:</p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-2 text-sm mb-4">
+                        <li><strong>Social Workers:</strong> Provide psychosocial support, counseling, and connect patients with community resources (financial aid, transportation, support groups).</li>
+                        <li><strong>Registered Dietitians:</strong> Offer nutritional counseling to help manage side effects, maintain weight, and support overall health during treatment.</li>
+                        <li><strong>Front Office Staff/Patient Coordinators:</strong> Manage scheduling, patient registration, insurance verification, and are often the first point of contact.</li>
+                        <li><strong>Clinical Research Coordinators/Staff:</strong> Manage clinical trials, enroll patients, and collect data if the department is involved in research.</li>
+                        <li><strong>Rehabilitation Therapists (Physical/Occupational):</strong> Help patients manage functional impairments or lymphedema resulting from cancer or its treatment.</li>
+                        <li><strong>Palliative Care Team:</strong> Focuses on symptom management and improving quality of life for patients with serious illness, can be involved alongside curative treatment.</li>
+                    </ul>
+                    <p class="text-sm text-slate-700 mt-3"><strong>Teamwork Aspect:</strong> RTTs often interact with these supportive roles, for example, by identifying a patient struggling emotionally and suggesting a referral to a social worker, or noticing significant weight loss and alerting the nurse or dietitian.</p>
+                    
+                    <div class="interactive-question-block mt-6 bg-white p-3 rounded-md border border-slate-300" id="q_page5_1">
+                        <p class="question-text font-semibold text-slate-700 mb-2">Quick Check: If a patient expresses significant anxiety about coping with their diagnosis and treatment, which team member would be most appropriate for the RTT to suggest as a resource (after discussing with the nurse/oncologist)?</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page5_1_ans" value="A" class="mr-2 accent-purple-600"> Medical Physicist</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page5_1_ans" value="B" class="mr-2 accent-purple-600"> Medical Dosimetrist</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page5_1_ans" value="C" class="mr-2 accent-purple-600"> Social Worker</label>
+                        <div class="explanation-text text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">The correct answer is C. Social Workers specialize in providing psychosocial support and resources for patients dealing with the emotional and practical challenges of cancer.</div>
+                    </div>
+                    <button class="check-page-answers-button mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswer('q_page5_1', 'C')">Check Answer</button>
+                </div>
+
+                <div id="lesson-page-6" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 6: Teamwork, Communication & Role Crossover</h3>
+                    <p class="mb-3 text-slate-700">Effective radiation oncology care hinges on exceptional teamwork and clear communication among all members.</p>
+                    <p class="mb-3 text-slate-700"><strong>Key Elements of Successful Teamwork:</strong></p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li><strong>Respect and Trust:</strong> Valuing the expertise and contribution of each team member.</li>
+                        <li><strong>Open Communication:</strong> Regular, clear, and concise exchange of information (e.g., daily huddles, team meetings, accurate EMR documentation).</li>
+                        <li><strong>Shared Goals:</strong> Everyone focused on the patient's well-being and treatment success.</li>
+                        <li><strong>Understanding Scope of Practice:</strong> Knowing one's own responsibilities and limitations, as well as those of colleagues.</li>
+                        <li><strong>Constructive Feedback & Problem Solving:</strong> Addressing issues collaboratively and professionally.</li>
+                    </ul>
+                    <p class="mb-3 text-slate-700"><strong>Role Crossover and Interdependence:</strong><br>While each role is distinct, there are many areas of interdependence and "role crossover" where responsibilities might touch or require close coordination:</p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li><strong>RTTs & Dosimetrists:</strong> RTTs implement the plans created by dosimetrists. Clear communication is vital if an RTT encounters difficulty achieving a planned setup or has questions about plan parameters.</li>
+                        <li><strong>RTTs & Nurses:</strong> Both monitor patients. An RTT might be the first to notice an acute skin reaction, which they then report to the nurse for assessment and management advice for the patient.</li>
+                        <li><strong>RTTs & Physicists:</strong> RTTs perform daily machine QA checks under the guidance of physicists. Any machine issues are immediately reported to physics for resolution.</li>
+                        <li><strong>Oncologists & the Entire Team:</strong> Oncologists rely on information from all team members to make clinical decisions.</li>
+                    </ul>
+                    <p class="text-slate-700 text-sm">Recognizing these intersections helps in anticipating needs, supporting colleagues, and ensuring a holistic approach to patient care.</p>
+                    <div class="interactive-question-block mt-6 bg-white p-3 rounded-md border border-slate-300" id="q_page6_1">
+                        <p class="question-text font-semibold text-slate-700 mb-2">Quick Check: If a Radiation Therapist has a question about the specific beam angles or energy listed in a patient's treatment plan, who would be the most appropriate team members to consult initially?</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page6_1_ans" value="A" class="mr-2 accent-purple-600"> The Social Worker and Front Office Staff.</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page6_1_ans" value="B" class="mr-2 accent-purple-600"> The Medical Dosimetrist who created the plan and/or the Medical Physicist.</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page6_1_ans" value="C" class="mr-2 accent-purple-600"> Only the Radiation Oncologist.</label>
+                        <div class="explanation-text text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">The correct answer is B. The Medical Dosimetrist creates the plan details, and the Medical Physicist oversees its technical aspects. They are the primary resources for plan-specific technical questions. The Oncologist would be consulted for clinical decisions.</div>
+                    </div>
+                    <button class="check-page-answers-button mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswer('q_page6_1', 'B')">Check Answer</button>
+                </div>
+
+                <div id="lesson-page-7" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 7: Conclusion & Summative Activity</h3>
+                    <p class="mb-3 text-slate-700">Throughout this lesson, we've explored the diverse yet interconnected roles within the radiation oncology team. Each professional brings unique expertise essential for delivering safe, effective, and compassionate patient care. As a radiation therapist, you are a vital member of this team, requiring not only technical skill but also strong communication and collaboration abilities.</p>
+                    <p class="mb-3 text-slate-700">Understanding the responsibilities of your colleagues helps you:
+                        <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm ml-4 mb-4">
+                            <li>Anticipate patient needs more effectively.</li>
+                            <li>Communicate more clearly with other team members.</li>
+                            <li>Appreciate the full spectrum of care provided.</li>
+                            <li>Contribute to a positive and efficient team environment.</li>
+                        </ul>
+                    </p>
+                    <h4 class="text-lg font-medium text-purple-600 mt-6 mb-2">Summative Activity: Healthcare Roles Speech Quiz</h4>
+                    <p class="mb-3 text-slate-700">To reinforce your understanding of these roles, you will now complete a summative activity. This interactive quiz will present descriptions of various healthcare roles, and you will need to verbally identify the correct role.</p>
+                    <p class="mb-3 text-slate-700">This activity emphasizes quick recall and understanding of different professional responsibilities within the broader healthcare context, including many of those discussed in this lesson.</p>
+                    <div class="mt-6 text-center">
+                        <a href="speech_quiz.html" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-lg text-lg transition-colors duration-300 inline-block">
+                            Go to Speech Quiz Activity
+                        </a>
+                    </div>
+                     <p class="mt-4 text-xs text-center text-slate-500">Note: The speech quiz contains a broad range of healthcare roles. Focus on identifying those relevant to oncology and radiation therapy as discussed.</p>
+                </div>
+
+                <div class="lesson-navigation-bar text-center mt-6">
+                    <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled aria-label="Go to Previous Lesson Page" class="bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors disabled:bg-slate-300 text-sm">Previous Page</button>
+                    <span class="page-indicator mx-2 sm:mx-4 text-sm text-slate-600" id="lessonPageIndicator">Page 1 of 7</span>
+                    <button id="nextLessonPage" onclick="changeLessonPage(1)" aria-label="Go to Next Lesson Page" class="bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors text-sm">Next Page</button>
+                </div>
+            </div>
+
+            <div class="print-button-container text-center mt-8">
+                <button onclick="window.print()" class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-6 rounded-lg text-sm transition-colors">Print Lesson</button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-slate-800 text-slate-300 py-6 mt-auto text-center">
+        <div class="container mx-auto px-6">
+            <p class="text-sm">&copy; <span id="currentYear"></span> Radiation Therapy E-Workbook. RTApps All Rights Reserved.</p>
+            <p class="text-xs mt-1">The Radiation Oncology Team & Roles Lesson</p>
+        </div>
+    </footer>
+
+    <script>
+        let currentLessonPage = 1;
+        const totalLessonPages = 7; // Updated total pages
+        const lessonPages = document.querySelectorAll('.lesson-page');
+        const prevLessonButton = document.getElementById('prevLessonPage');
+        const nextLessonButton = document.getElementById('nextLessonPage');
+        const lessonPageIndicator = document.getElementById('lessonPageIndicator');
+
+        const correctAnswers = {
+            'q_page2_1': 'B',
+            'q_page3_1': 'C',
+            'q_page4_1': 'B',
+            'q_page5_1': 'C',
+            'q_page6_1': 'B'
+        };
+
+        function displayLessonPage() {
+            lessonPages.forEach((page, index) => {
+                page.style.display = (index === currentLessonPage - 1) ? 'block' : 'none';
+            });
+            prevLessonButton.disabled = currentLessonPage === 1;
+            nextLessonButton.disabled = currentLessonPage === totalLessonPages;
+            lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
+        }
+
+        function changeLessonPage(direction) {
+            currentLessonPage += direction;
+            displayLessonPage();
+        }
+
+        function checkPageAnswer(questionBlockId, correctAnswerValue) {
+            const questionBlock = document.getElementById(questionBlockId);
+            if (!questionBlock) return;
+
+            const selectedRadio = questionBlock.querySelector(`input[name="${questionBlockId}_ans"]:checked`);
+            const explanationDiv = questionBlock.querySelector('.explanation-text');
+            
+            questionBlock.classList.remove('correct-answer-feedback', 'incorrect-answer-feedback');
+            questionBlock.querySelectorAll('label').forEach(label => {
+                label.classList.remove('font-semibold', 'text-green-700', 'text-red-700');
+                const indicator = label.querySelector('.correct-indicator, .incorrect-indicator');
+                if(indicator) indicator.remove();
+            });
+            if (explanationDiv) explanationDiv.style.display = 'none';
+
+            if (selectedRadio) {
+                const userAnswer = selectedRadio.value;
+                const userSelectedLabel = selectedRadio.parentElement;
+
+                if (userAnswer === correctAnswerValue) {
+                    questionBlock.classList.add('correct-answer-feedback');
+                    userSelectedLabel.classList.add('font-semibold', 'text-green-700');
+                    const indicator = document.createElement('span');
+                    indicator.className = 'correct-indicator';
+                    userSelectedLabel.appendChild(indicator);
+                } else {
+                    questionBlock.classList.add('incorrect-answer-feedback');
+                    userSelectedLabel.classList.add('font-semibold', 'text-red-700');
+                    const indicator = document.createElement('span');
+                    indicator.className = 'incorrect-indicator';
+                    userSelectedLabel.appendChild(indicator);
+                    
+                    const correctRadio = questionBlock.querySelector(`input[name="${questionBlockId}_ans"][value="${correctAnswerValue}"]`);
+                    if (correctRadio && correctRadio.parentElement) {
+                        correctRadio.parentElement.classList.add('font-semibold', 'text-green-700');
+                         const correctIndicator = document.createElement('span');
+                         correctIndicator.className = 'correct-indicator';
+                         correctRadio.parentElement.appendChild(correctIndicator);
+                    }
+                }
+            } else { 
+                questionBlock.classList.add('incorrect-answer-feedback');
+                const correctRadio = questionBlock.querySelector(`input[name="${questionBlockId}_ans"][value="${correctAnswerValue}"]`);
+                if (correctRadio && correctRadio.parentElement) {
+                    correctRadio.parentElement.classList.add('font-semibold', 'text-green-700');
+                    const correctIndicator = document.createElement('span');
+                    correctIndicator.className = 'correct-indicator';
+                    correctRadio.parentElement.appendChild(correctIndicator);
+                }
+            }
+            if (explanationDiv) explanationDiv.style.display = 'block';
+        }
+        
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        displayLessonPage();
+    </script>
+
+</body>
+</html>

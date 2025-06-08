@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity: Radiologic History Timeline Challenge (Drag & Drop)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Feedback styles consistent with other updated lessons */
+        .feedback.correct { color: #16a34a; /* Tailwind green-600 */ font-weight: bold; }
+        .feedback.incorrect { color: #dc2626; /* Tailwind red-600 */ font-weight: bold; }
+        
+        /* Badge Area - Blue/Teal Theme for Awards */
+        #badge-section { margin-top: 30px; padding: 20px; background-color: #fff; border: 1px solid #ccc; text-align: center; display: none; }
+        #badge-input input { padding: 8px; margin-right: 10px; border: 1px solid #ccc; border-radius: 4px; }
+        .badge {
+            width: 350px; height: 250px; border: 10px solid #0056b3; /* Blue border */
+            background-color: #e7f3ff; /* Light Blue background */
+            margin: 20px auto; padding: 30px; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; box-shadow: 3px 3px 8px rgba(0,0,0,0.2);
+            font-family: 'Georgia', serif; text-align: center;
+        }
+        .badge h4 { color: #003d7a; font-size: 1.5em; margin: 0; } /* Darker Blue title */
+        .badge .awardee { font-size: 1.3em; font-weight: bold; color: #17a2b8; /* Teal name */
+            margin: 15px 0; border-bottom: 1px dashed #17a2b8; padding-bottom: 5px; }
+        .badge .reason { font-size: 1.1em; margin: 10px 0; }
+        .badge .score { font-size: 1em; font-style: italic; color: #555; }
+        .badge .logo { font-size: 0.8em; margin-top: 15px; font-weight: bold; color: #0056b3; } /* Blue logo */
+
+        /* Activity Specific Styles */
+        #start-screen-activity { background-color: #e7f3ff; border: 1px solid #b3d7ff; padding: 15px 25px; border-radius: 8px; margin-bottom: 30px; }
+        #start-screen-activity h3 { margin-top: 15px; border-bottom: 1px solid #b3d7ff; padding-bottom: 5px; }
+        #start-activity-btn { background-color: #28a745; font-size: 1.2em; padding: 12px 25px; display: block; margin: 25px auto 10px auto; }
+        #start-activity-btn:hover { background-color: #218838; }
+        
+        #timeline-activity-area { display: flex; flex-direction: column; align-items: center; }
+        #draggable-events { margin-bottom: 30px; padding: 10px; background-color: #f0f0f0; border-radius: 5px; display: flex; flex-wrap: wrap; justify-content: center; gap:10px;}
+        .event-item {
+            padding: 8px 12px; background-color: #fff3cd; /* Light yellow */
+            border: 1px solid #ffeeba; border-radius: 5px; cursor: grab;
+            text-align: center; font-size: 0.9em; box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+        }
+        .event-item:active { cursor: grabbing; }
+
+        #timeline-eras { display: flex; flex-direction: column; width: 100%; max-width: 600px; }
+        .timeline-era {
+            border: 2px dashed #b3d7ff; /* Dashed blue border */
+            padding: 15px; margin-bottom: 10px; border-radius: 5px;
+            background-color: #f0f8ff; /* Lightest blue */
+            min-height: 60px;
+            text-align: center;
+        }
+        .timeline-era h4 { font-semibold text-purple-700 mt-0 mb-2; font-size: 1.1em;}
+        .timeline-era.over { background-color: #cfe2ff; /* Lighter blue for hover indication */ }
+        .timeline-era .event-item { background-color: #d1ecf1; border-color: #bee5eb; margin-top: 5px; cursor: auto; } /* Placed item */
+
+        #activity-results { text-align: center; margin-top: 20px; display: none; }
+        #activity-results p {font-size: 1.2em; font-weight:bold; color: #0056b3;}
+        
+        /* General Tailwind utility classes from previous lessons */
+        .container { background-color: #fff; padding: 25px 35px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 90%; max-width: 800px; margin: 20px auto; }
+        body { font-family: 'Inter', sans-serif; line-height: 1.6; margin: 0; padding: 0; background-color: #f4f4f4; color: #333; display: flex; flex-direction: column; align-items: center; min-height: 100vh; position: relative; padding-bottom: 80px; }
+        h1 { text-align: center; border-bottom: 2px solid #0056b3; padding-bottom: 10px; font-size: 1.8rem; color:#0056b3; margin-bottom: 1.5rem; }
+        h2 { margin-top: 1.5rem; color: #003d7a; font-size:1.5rem; margin-bottom:1rem; }
+        h3 { color: #004085; font-size:1.2rem; margin-top:1rem; margin-bottom:0.5rem; }
+        button { background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 1em; margin: 5px; transition: background-color 0.2s; }
+        button:hover { background-color: #0056b3; }
+        footer { position: absolute; bottom: 0; left: 0; width: 100%; text-align: center; padding: 15px 0; background-color: #e9ecef; color: #6c757d; font-size: 0.9em; border-top: 1px solid #dee2e6; }
+        .post-activity-nav { text-align: center; margin-top: 40px; padding: 20px; background-color: #f8f9fa; border-top: 1px solid #e9ecef; border-radius: 0 0 8px 8px; }
+        .post-activity-nav button { margin: 5px 15px; }
+        .post-activity-nav button.repeat { background-color: #28a745; }
+        .post-activity-nav button.repeat:hover { background-color: #218838; }
+        .post-activity-nav button.menu { background-color: #6c757d; }
+        .post-activity-nav button.menu:hover { background-color: #5a6268; }
+
+        @media print {
+            /* Same print styles as before for the badge */
+            body * { visibility: hidden; }
+            #badge-section, #badge-section * { visibility: visible; }
+            .badge { visibility: visible; position: absolute; left: 0; top: 0; width: 90%; height: auto; margin: 5%; padding: 20px; box-shadow: none; border: 5px solid #000 !important; color: #000 !important; background: #fff !important; }
+            .badge h4, .badge .awardee, .badge .logo, .badge .reason, .badge .score { color: #000 !important; text-shadow: none;}
+            .badge .awardee { border-bottom: 1px dashed #000 !important; }
+            #badge-input, .post-activity-nav, h1, h2, h3, .container > p, button:not(#printBadgeButton), footer, #start-screen-activity, #timeline-activity-area { display: none !important; }
+            #activity-results > p:not(#activity-score) {display:none !important;}
+            #activity-score { visibility: hidden !important; }
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800">
+    <header class="bg-white shadow-md sticky top-0 z-50 nav-links-header">
+        <div class="container mx-auto px-6 py-3 flex flex-col sm:flex-row justify-between items-center">
+            <h1 class="text-xl font-bold text-purple-700 mb-2 sm:mb-0">Radiologic History Timeline Challenge</h1>
+            <div class="flex flex-wrap justify-center sm:justify-end space-x-2">
+                <a href="history_of_rad_tech_lesson.html#lesson-page-6" class="text-xs sm:text-sm bg-purple-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-purple-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to History Lesson
+                </a>
+                <a href="index.html" class="text-xs sm:text-sm bg-slate-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-slate-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to Orientation Menu
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto max-w-4xl px-4 sm:px-6 py-8 flex-grow main-content-wrapper">
+        <div class="bg-white p-6 sm:p-8 rounded-xl shadow-xl">
+            <h1 class="text-3xl font-bold text-purple-700 mb-6 text-center border-b-2 border-purple-300 pb-4">Activity: Radiologic History Timeline Challenge ⏳</h1>
+
+            <div id="start-screen-activity" class="bg-purple-50 p-4 sm:p-6 rounded-lg shadow-md mb-8 border border-purple-200">
+                <h2 class="text-2xl font-semibold text-purple-600 mb-4">Drag the Events to the Correct Era!</h2>
+                 <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                    <h3 class="text-lg font-medium text-purple-700 mb-1">Purpose</h3>
+                    <p class="text-sm text-slate-600">This activity will help you solidify your understanding of the key discoveries and advancements in the early history of radiologic technology by placing them in their correct chronological context.</p>
+                </div>
+                <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                    <h3 class="text-lg font-medium text-purple-700 mb-1">Task</h3>
+                    <p class="text-sm text-slate-600">Drag each historical event from the "Events to Place" list and drop it into the timeline era where it belongs. After placing all events, click "Check Answers" to see your score.</p>
+                </div>
+                 <div class="p-3 bg-purple-100 rounded-md border border-purple-200">
+                    <h3 class="text-lg font-medium text-purple-700 mb-1">Criteria for Success</h3>
+                    <p class="text-sm text-slate-600">Accuracy in placing events into their correct historical eras is key. A score of <strong class="text-purple-700">80% or higher</strong> will earn you a "History Buff Award" badge!</p>
+                </div>
+                <button id="start-activity-btn" onclick="startActivity()" class="mt-6 bg-green-500 hover:bg-green-600 text-white font-medium py-3 px-5 rounded-lg text-base transition-colors duration-150 block mx-auto">Start Timeline Challenge</button>
+            </div>
+
+            <div id="timeline-activity-area" style="display: none;" class="bg-purple-50 p-4 sm:p-6 rounded-lg shadow-md border border-purple-200">
+                <h2 class="text-2xl font-semibold text-purple-600 mb-4 text-center">Place the Events on the Timeline</h2>
+                <div id="draggable-events" class="mb-8 p-4 bg-slate-100 rounded-md border border-slate-300">
+                    <h3 class="text-lg font-medium text-purple-700 mb-3 text-center">Events to Place:</h3>
+                    </div>
+                <div id="timeline-eras">
+                    </div>
+                <button type="button" onclick="checkTimelineAnswers()" class="block mx-auto mt-6 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg text-base transition-colors">Check Answers</button>
+                <div id="activity-results" class="mt-6 text-center">
+                    <p id="activity-score" class="text-xl font-semibold text-purple-700"></p>
+                </div>
+            </div>
+
+            <div id="badge-section" class="mt-8">
+                <h3 class="text-xl font-semibold text-purple-700 mb-4 text-center">Congratulations! You've Earned an Award!</h3>
+                <div id="badge-input" class="text-center mb-4">
+                    <label for="userNameForBadge" class="block text-sm font-medium text-slate-700 mb-1">Enter Your Name:</label>
+                    <input type="text" id="userNameForBadge" placeholder="Your Name Here" class="mt-1 inline-block max-w-xs px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm">
+                    <button onclick="generateBadge()" class="ml-2 bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg text-sm transition-colors">Generate Badge</button>
+                </div>
+                <div class="badge" id="printableBadge" style="display:none;">
+                    <h4>History Buff Award</h4>
+                    <p class="awardee" id="badgeName"></p>
+                    <p class="reason">For excellent knowledge of key milestones in Radiologic History.</p>
+                    <p class="score" id="badgeScore"></p>
+                    <p class="logo">RTApps Learning</p>
+                </div>
+                <button id="printBadgeButton" onclick="window.print()" style="display:none;" class="block mx-auto mt-4 bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg text-sm transition-colors">Print Badge</button>
+            </div>
+
+            <div class="post-activity-nav" id="end-nav" style="display: none;">
+                <h3 class="text-xl font-semibold text-slate-700 mb-4">What's Next?</h3>
+                <button class="menu" onclick="window.location.href='index.html'">Back to Orientation Menu</button> 
+                <button class="repeat" onclick="startActivity()">Try Again</button>
+                <button onclick="window.location.href='history_of_rad_tech_lesson.html#lesson-page-6'">Back to History Lesson</button>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; <span id="currentYear"></span> RTApps. All Rights Reserved.</p>
+        <p class="text-xs mt-1">Radiologic History Timeline Challenge</p>
+    </footer>
+
+    <script>
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        const historicalEvents = [
+            { id: "event1", text: "Discovery of X-rays", correctEra: "era1", details: "Wilhelm Roentgen" },
+            { id: "event2", text: "Discovery of natural radioactivity", correctEra: "era1", details: "Henri Becquerel" },
+            { id: "event3", text: "Isolation of Radium and Polonium", correctEra: "era1", details: "Marie & Pierre Curie" },
+            { id: "event4", text: "First medical uses of X-rays for imaging", correctEra: "era2", details: "" },
+            { id: "event5", text: "Growing awareness of radiation hazards", correctEra: "era2", details: "" },
+            { id: "event6", text: "ARRT Precursor Formed (Am. Registry of X-Ray Techs)", correctEra: "era3", details: "" }
+        ];
+
+        const timelineEras = [
+            { id: "era1", name: "1895-1899: Foundational Discoveries", events: [] },
+            { id: "era2", name: "Early 1900s: Applications & Awareness", events: [] },
+            { id: "era3", name: "1920s: Early Professionalization", events: [] }
+        ];
+
+        let draggedItem = null;
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function startActivity() {
+            document.getElementById('start-screen-activity').style.display = 'none';
+            document.getElementById('timeline-activity-area').style.display = 'flex'; // Changed to flex
+            document.getElementById('activity-results').style.display = 'none';
+            document.getElementById('badge-section').style.display = 'none';
+            document.getElementById('end-nav').style.display = 'none';
+            const checkButton = document.querySelector('#timeline-activity-area button[type="button"]');
+            if(checkButton) checkButton.disabled = false;
+            renderTimeline();
+        }
+
+        function renderTimeline() {
+            const draggableEventsContainer = document.getElementById('draggable-events');
+            const timelineErasContainer = document.getElementById('timeline-eras');
+            
+            draggableEventsContainer.innerHTML = '<h3 class="text-lg font-medium text-purple-700 mb-3 text-center w-full">Events to Place:</h3>'; // Clear and add heading
+            timelineErasContainer.innerHTML = ''; // Clear eras
+
+            // Reset events in eras
+            timelineEras.forEach(era => era.events = []);
+
+            const shuffledEvents = [...historicalEvents];
+            shuffleArray(shuffledEvents);
+
+            shuffledEvents.forEach(item => {
+                const eventDiv = document.createElement('div');
+                eventDiv.id = item.id;
+                eventDiv.textContent = item.text;
+                eventDiv.className = 'event-item p-2 m-1 bg-yellow-200 border border-yellow-400 rounded shadow cursor-grab';
+                eventDiv.draggable = true;
+                eventDiv.addEventListener('dragstart', dragStart);
+                draggableEventsContainer.appendChild(eventDiv);
+            });
+
+            timelineEras.forEach(era => {
+                const eraDiv = document.createElement('div');
+                eraDiv.id = era.id;
+                eraDiv.className = 'timeline-era p-4 mb-2 border-2 border-dashed border-purple-300 rounded bg-purple-100 min-h-[80px]';
+                eraDiv.dataset.eraId = era.id;
+                eraDiv.innerHTML = `<h4 class="text-md font-semibold text-purple-700 mb-2">${era.name}</h4>`;
+                eraDiv.addEventListener('dragover', dragOver);
+                eraDiv.addEventListener('drop', drop);
+                timelineErasContainer.appendChild(eraDiv);
+            });
+        }
+
+        function dragStart(event) {
+            draggedItem = event.target;
+            event.dataTransfer.setData('text/plain', event.target.id);
+            event.dataTransfer.effectAllowed = 'move';
+        }
+
+        function dragOver(event) {
+            event.preventDefault();
+            event.dataTransfer.dropEffect = 'move';
+            this.classList.add('over'); // Highlight drop zone
+        }
+        
+        // Add dragleave to remove highlight
+        document.querySelectorAll('.timeline-era').forEach(eraDiv => {
+            eraDiv.addEventListener('dragleave', function() { this.classList.remove('over'); });
+        });
+
+
+        function drop(event) {
+            event.preventDefault();
+            this.classList.remove('over'); // Remove highlight
+            if (draggedItem && this.classList.contains('timeline-era')) {
+                this.appendChild(draggedItem); // Append to the content area of the era div
+                draggedItem.style.backgroundColor = '#d1ecf1'; // Visually confirm drop
+                draggedItem.style.borderColor = '#bee5eb';
+                draggedItem.draggable = false; // Prevent re-dragging once placed
+                draggedItem.style.cursor = 'auto';
+            }
+            draggedItem = null;
+        }
+
+        function checkTimelineAnswers() {
+            let score = 0;
+            timelineEras.forEach(era => {
+                const eraDiv = document.getElementById(era.id);
+                const placedItems = eraDiv.querySelectorAll('.event-item');
+                placedItems.forEach(itemElement => {
+                    const eventData = historicalEvents.find(ev => ev.id === itemElement.id);
+                    if (eventData && eventData.correctEra === era.id) {
+                        score++;
+                        itemElement.style.backgroundColor = '#d4edda'; // Correct: light green
+                        itemElement.style.borderColor = '#c3e6cb';
+                    } else {
+                        itemElement.style.backgroundColor = '#f8d7da'; // Incorrect: light red
+                        itemElement.style.borderColor = '#f5c6cb';
+                        // Optionally move it back or indicate correct era
+                    }
+                });
+            });
+
+            const percentage = Math.round((score / historicalEvents.length) * 100);
+            document.getElementById('activity-score').textContent = `Your Score: ${score} out of ${historicalEvents.length} (${percentage}%)`;
+            document.getElementById('activity-results').style.display = 'block';
+            document.getElementById('end-nav').style.display = 'block';
+
+            if (percentage >= 80) {
+                document.getElementById('badge-section').style.display = 'block';
+                window.finalScoreValue = percentage;
+            } else {
+                document.getElementById('badge-section').style.display = 'none';
+            }
+            const checkButton = document.querySelector('#timeline-activity-area button[type="button"]');
+            if(checkButton) checkButton.disabled = true;
+        }
+
+        function generateBadge() {
+            const name = document.getElementById('userNameForBadge').value;
+            if (name.trim() === "") { alert("Please enter your name for the badge."); return; }
+            document.getElementById('badgeName').textContent = name;
+            document.getElementById('badgeScore').textContent = `Achieved with a score of ${window.finalScoreValue}%`;
+            document.getElementById('printableBadge').style.display = 'flex';
+            document.getElementById('printBadgeButton').style.display = 'inline-block';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Console Ops: MLCs & Field Shaping</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Consistent Feedback & Element Styles */
+        .selected-option { background-color: #e0f2fe; border-color: #38bdf8; }
+        .correct-answer-feedback { background-color: #dcfce7 !important; border-left: 4px solid #22c55e !important; }
+        .incorrect-answer-feedback { background-color: #fee2e2 !important; border-left: 4px solid #ef4444 !important; }
+        .correct-indicator::after { content: '✔ Correct'; color: #16a34a; font-weight: bold; margin-left: 10px; }
+        .incorrect-indicator::after { content: '✖ Incorrect'; color: #dc2626; font-weight: bold; margin-left: 10px; }
+        .correct-option-text { font-weight: bold; color: #15803d; }
+        .highlight { background-color: #ede9fe; color: #5b21b6; padding: 0.1em 0.3em; border-radius: 0.25rem; font-weight: 500; }
+        .note { font-size: 0.9em; font-style: italic; color: #4b5563; background-color: #f3f4f6; padding: 10px; border-left: 3px solid #6b7280; margin: 15px 0; border-radius: 4px; }
+        .activity-link-button { display: inline-block; background-color: #22c55e; color: white; padding: 12px 25px; text-align: center; text-decoration: none; border-radius: 0.375rem; font-size: 1.1em; font-weight: 500; margin-top: 15px; transition: background-color 0.2s; }
+        .activity-link-button:hover { background-color: #16a34a; }
+
+        /* Print Styles */
+        @media print {
+            body { background-color: #fff; margin: 10px; padding: 0; font-size: 10pt; }
+            .main-content-wrapper, .flip-lesson-container { box-shadow: none !important; border: none !important; width: 100%; max-width: 100%; padding: 5px; margin-bottom: 15px;}
+            .lesson-navigation-bar, .check-page-answers-button, .nav-links-header, .print-button-container, .activity-link-button { display: none !important; }
+            .lesson-page { page-break-inside: avoid; border: 1px solid #eee !important; }
+            .interactive-question-block {background: #fff !important; border: 1px solid #ccc !important; }
+            h1, h2, h3, h4 { color: #000 !important; border-color: #000 !important; margin-bottom: 10px; padding-bottom: 3px;}
+            .explanation-text { display: none !important; } 
+            a {text-decoration: none; color: #000 !important;}
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 flex flex-col min-h-screen">
+
+    <header class="bg-white shadow-md sticky top-0 z-50 nav-links-header">
+        <div class="container mx-auto px-6 py-3 flex flex-col sm:flex-row justify-between items-center">
+            <h1 class="text-xl font-bold text-purple-700 mb-2 sm:mb-0">Console Operations: MLCs & Field Shaping</h1>
+            <div class="flex flex-wrap justify-center sm:justify-end space-x-2">
+                 <a href="../Modalities_Equipment_Terminology/index.html" class="text-xs sm:text-sm bg-purple-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-purple-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to Modalities Menu
+                </a>
+                <a href="../../index.html" class="text-xs sm:text-sm bg-slate-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-slate-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to Main Workbook
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto max-w-4xl px-4 sm:px-6 py-8 flex-grow main-content-wrapper">
+        <div class="bg-white p-6 sm:p-8 rounded-xl shadow-xl">
+            <h1 class="text-3xl font-bold text-purple-700 mb-6 text-center border-b-2 border-purple-300 pb-4">Console Operations: Introduction to MLCs & Advanced Field Shaping</h1>
+
+            <div class="flip-lesson-container bg-purple-50 p-4 sm:p-6 rounded-lg shadow-md mb-8 border border-purple-200">
+                <h2 class="text-2xl font-semibold text-purple-600 mb-4">Interactive Lesson</h2>
+
+                <div id="lesson-page-1" class="lesson-page active bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[480px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 1: Beyond Rectangles - Introducing MLCs</h3>
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Purpose: Why This Matters</h4>
+                        <p class="text-sm text-slate-600">This lesson introduces Multi-Leaf Collimators (MLCs), a critical component in modern Linacs for precise radiation beam shaping. Understanding MLCs is key to comprehending advanced treatment techniques like 3D-CRT, IMRT, and VMAT.</p>
+                    </div>
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Task: What You Will Do</h4>
+                        <p class="text-sm text-slate-600">You will learn:
+                            <ul class="list-disc list-inside text-slate-600 space-y-1 text-xs ml-4">
+                                <li>What MLCs are and where they are located.</li>
+                                <li>How MLCs shape the radiation beam.</li>
+                                <li>The difference between MLC shaping and jaw collimation.</li>
+                                <li>The basic principles of how MLCs enable conformal therapy.</li>
+                            </ul>
+                        </p>
+                    </div>
+                    <div class="p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Criteria for Success</h4>
+                        <p class="text-sm text-slate-600">By the end, you should be able to:
+                            <ul class="list-disc list-inside text-slate-600 space-y-1 text-xs ml-4">
+                                <li>Describe the function of MLCs.</li>
+                                <li>Explain why MLCs are important for conforming dose to the tumor.</li>
+                                <li>Differentiate the roles of jaws and MLCs in field definition.</li>
+                            </ul>
+                        </p>
+                    </div>
+                    <p class="mt-4 text-slate-700 text-sm">While X and Y jaws create rectangular fields, tumors are rarely simple shapes. MLCs provide the solution!</p>
+                </div>
+
+                <div id="lesson-page-2" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[480px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 2: What are Multi-Leaf Collimators (MLCs)?</h3>
+                    <p class="text-slate-700">A <span class="highlight">Multi-Leaf Collimator (MLC)</span> system is a device located in the treatment head of a linear accelerator, typically positioned below the secondary (X and Y) jaws[cite: 504, 507]. It consists of numerous individual "leaves" made of a high-density material like tungsten.</p>
+                    <h4 class="text-lg font-medium text-purple-600 my-2">Key Characteristics:</h4>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li><strong>Individual Leaves:</strong> MLCs usually have between 52 to 160 leaves, arranged in opposing banks[cite: 507].</li>
+                        <li><strong>Independent Movement:</strong> Each leaf (or sometimes pairs of leaves) can be moved independently into or out of the radiation field under computer control[cite: 507, 1442].</li>
+                        <li><strong>Leaf Width:</strong> The width of each leaf as projected at the isocenter is typically small (e.g., 0.25 cm, 0.5 cm, or 1.0 cm), allowing for fine shaping of the beam[cite: 508]. Micro-MLCs have even smaller leaf widths for highly precise treatments like SRS[cite: 509].</li>
+                        <li><strong>Purpose:</strong> To conform the shape of the radiation beam very closely to the projected outline of the target volume (Beam's Eye View - BEV), thereby shielding surrounding healthy tissues[cite: 503].</li>
+                    </ul>
+                    <p class="note text-sm">MLCs have largely replaced the need for custom-made cerrobend blocks for many treatments, offering greater efficiency and flexibility[cite: 504].</p>
+                </div>
+                
+                <div id="lesson-page-3" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[480px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 3: How MLCs Shape the Beam</h3>
+                    <p class="text-slate-700">The secondary X and Y jaws define the maximum rectangular outer boundary of the radiation field. The MLCs then provide further, more intricate shaping <span class="highlight">within</span> this jaw-defined aperture.</p>
+                    <h4 class="text-lg font-medium text-purple-600 my-2">Conformal Shaping:</h4>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li>The computer-controlled movement of each leaf allows the MLCs to create an opening that closely matches the shape of the tumor from the beam's perspective.</li>
+                        <li>This is critical for <span class="highlight">3D Conformal Radiation Therapy (3D-CRT)</span>, where the goal is to deliver a uniform dose to the target while minimizing dose to adjacent normal structures[cite: 503, 506].</li>
+                    </ul>
+                    <h4 class="text-lg font-medium text-purple-600 my-2">Design Considerations:</h4>
+                     <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li><strong>Leaf End Shape:</strong> MLC leaves often have a rounded-end design to maintain a consistent penumbra (the fuzzy edge of the beam) as they move across the field[cite: 556].</li>
+                        <li><strong>Tongue-and-Groove Design:</strong> To minimize radiation leakage between adjacent leaves, they often have an interlocking "tongue-and-groove" design[cite: 544].</li>
+                        <li><strong>Transmission:</strong> While MLCs are thick, a very small amount of radiation can still transmit through the leaves (typically <2%) or leak between them (interleaf leakage, ideally <3-4%)[cite: 526, 529, 578]. These factors are accounted for in treatment planning.</li>
+                    </ul>
+                     <div class="interactive-question-block mt-6 bg-purple-50 p-3 rounded-md border border-purple-200" id="q_page3_1">
+                        <p class="question-text font-semibold text-slate-700 mb-2">Quick Check: What is the primary advantage of MLCs over using only X and Y jaws for field shaping?</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-100 cursor-pointer"><input type="radio" name="q_page3_1_ans" value="A" class="mr-2 accent-purple-600"> MLCs can create much larger rectangular fields.</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-100 cursor-pointer"><input type="radio" name="q_page3_1_ans" value="B" class="mr-2 accent-purple-600"> MLCs can create complex, non-rectangular shapes to conform closely to the tumor.</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-100 cursor-pointer"><input type="radio" name="q_page3_1_ans" value="C" class="mr-2 accent-purple-600"> MLCs completely eliminate the need for X and Y jaws.</label>
+                        <div class="explanation-text text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">Correct! B. MLCs allow for detailed shaping of the beam to match the tumor's contour, which simple rectangular jaws cannot achieve alone[cite: 503].</div>
+                    </div>
+                    <button class="check-page-answers-button mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswer('q_page3_1', 'B')">Check Answer</button>
+                </div>
+
+                <div id="lesson-page-4" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[480px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 4: MLCs in Advanced Techniques</h3>
+                    <p class="text-slate-700">MLCs are not just for static conformal shaping; their ability to move dynamically during treatment is key to several advanced radiation therapy techniques.</p>
+                    <h4 class="text-lg font-medium text-purple-600 my-2">Intensity-Modulated Radiation Therapy (IMRT):</h4>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li>In IMRT, MLCs move dynamically during beam delivery to modulate (vary) the intensity of radiation across different parts of the field[cite: 1635, 1641].</li>
+                        <li>This allows for "dose painting," where higher doses can be delivered to specific parts of the tumor while simultaneously creating steep dose gradients to protect nearby critical organs[cite: 1628, 1631].</li>
+                        <li>Two common IMRT delivery modes using MLCs are:
+                            <ul>
+                                <li><strong>Step-and-Shoot (Segmental MLC):</strong> The beam is turned off, MLC leaves move to shape a segment, the beam is turned on for that segment, then off again to move to the next segment[cite: 1638, 1639].</li>
+                                <li><strong>Sliding Window (Dynamic MLC):</strong> The MLC leaves move continuously across the field while the beam remains on, varying the exposure time (and thus intensity) to different parts of the target[cite: 1641].</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <h4 class="text-lg font-medium text-purple-600 my-2">Volumetric Modulated Arc Therapy (VMAT):</h4>
+                     <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm">
+                        <li>VMAT takes IMRT a step further by delivering modulated beams as the Linac gantry rotates around the patient[cite: 482].</li>
+                        <li>MLC leaf positions, dose rate, and gantry speed can all change continuously during the arc, allowing for highly complex and efficient dose delivery.</li>
+                    </ul>
+                     <p class="note">The precise and rapid movement of MLCs, controlled by sophisticated computer systems, is essential for these advanced techniques.</p>
+                </div>
+
+                <div id="lesson-page-5" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[480px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 5: Console Operations & MLCs</h3>
+                    <p class="text-slate-700">From the Linac control console, Radiation Therapists manage and verify MLC settings as part of the overall treatment parameters.</p>
+                    <h4 class="text-lg font-medium text-purple-600 my-2">What RTTs Typically See/Do:</h4>
+                     <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li>Treatment plans (often from systems like MOSAIQ or Aria) will contain the specific MLC leaf positions for each beam or segment.</li>
+                        <li>These MLC patterns are automatically loaded into the Linac control system.</li>
+                        <li>RTTs verify that the correct plan and MLC sequence are loaded.</li>
+                        <li>The console may display a representation of the MLC leaf positions for each field.</li>
+                        <li>IGRT systems are often used to ensure the patient is correctly aligned before delivering treatments that rely on precise MLC shaping.</li>
+                        <li>Any errors or warnings related to MLC positioning or function are displayed on the console and must be addressed.</li>
+                    </ul>
+                    <p class="text-slate-700 text-sm">While RTTs don't manually program individual leaf movements for IMRT/VMAT (this is done in the treatment planning system), they are responsible for ensuring the correct MLC plan is loaded and that the machine delivers it as intended, including performing relevant QA checks.</p>
+                    <h4 class="text-lg font-medium text-purple-600 mt-4 mb-2">Ready to Simulate?</h4>
+                    <p class="text-slate-700 text-sm">The "MLC & Field Shaping Lab Activity" will allow you to visualize how jaw settings define an outer boundary and how preset MLC patterns can further shape the field within that boundary. You can then progress to more advanced console emulators as they become available to explore dynamic MLC movements.</p>
+                    <div class="mt-6 text-center">
+                        <a href="mlc_field_shaping_activity.html" class="activity-link-button">
+                            Go to MLC & Field Shaping Lab
+                        </a>
+                    </div>
+                </div>
+
+                <div class="lesson-navigation-bar text-center mt-6">
+                    <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled class="bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors disabled:bg-slate-300 text-sm">Previous Page</button>
+                    <button id="backToMenuButton" onclick="goBackToModalitiesMenu()" style="display:none;" class="bg-slate-500 text-white py-2 px-4 rounded-lg hover:bg-slate-600 transition-colors text-sm">Back to Modalities Menu</button>
+                    <span class="page-indicator mx-2 sm:mx-4 text-sm text-slate-600" id="lessonPageIndicator">Page 1 of 5</span>
+                    <button id="nextLessonPage" onclick="changeLessonPage(1)" class="bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors text-sm">Next Page</button>
+                </div>
+            </div>
+
+            <div class="print-button-container text-center mt-8">
+                <button onclick="window.print()" class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-6 rounded-lg text-sm transition-colors">Print Lesson</button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-slate-800 text-slate-300 py-6 mt-auto text-center">
+        <div class="container mx-auto px-6">
+            <p class="text-sm">&copy; <span id="currentYear"></span> RTApps. All Rights Reserved.</p>
+            <p class="text-xs mt-1">Console Ops: MLCs & Field Shaping Lesson</p>
+        </div>
+    </footer>
+
+    <script>
+        let currentLessonPage = 1;
+        const totalLessonPages = 5; 
+        const lessonPages = document.querySelectorAll('.lesson-page');
+        const prevLessonButton = document.getElementById('prevLessonPage');
+        const nextLessonButton = document.getElementById('nextLessonPage');
+        const backToMenuButton = document.getElementById('backToMenuButton');
+        const lessonPageIndicator = document.getElementById('lessonPageIndicator');
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        const lessonCorrectAnswers = {
+            'q_page3_1': 'B' // Example for page 3
+        };
+
+        function displayLessonPage() {
+            lessonPages.forEach((page, index) => {
+                page.style.display = (index === currentLessonPage - 1) ? 'block' : 'none';
+            });
+            prevLessonButton.disabled = currentLessonPage === 1;
+            if (currentLessonPage === totalLessonPages) {
+                nextLessonButton.style.display = 'none';
+                if (backToMenuButton) backToMenuButton.style.display = 'inline-block';
+            } else {
+                nextLessonButton.style.display = 'inline-block';
+                if (backToMenuButton) backToMenuButton.style.display = 'none';
+            }
+            lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
+        }
+
+        function changeLessonPage(direction) {
+            currentLessonPage += direction;
+            displayLessonPage();
+        }
+
+        function goBackToModalitiesMenu() {
+            // Assumes this lesson is inside Modalities_Equipment_Terminology folder,
+            // and index.html is the menu for that folder.
+            window.location.href = 'index.html'; 
+        }
+
+        function checkPageAnswer(questionBlockId, correctAnswerValue) {
+            const questionBlock = document.getElementById(questionBlockId);
+            if (!questionBlock) return;
+            const selectedRadio = questionBlock.querySelector(`input[name="${questionBlockId}_ans"]:checked`);
+            const explanationDiv = questionBlock.querySelector('.explanation-text');
+            
+            questionBlock.classList.remove('correct-answer-feedback', 'incorrect-answer-feedback');
+            questionBlock.querySelectorAll('label').forEach(label => {
+                label.classList.remove('font-semibold', 'text-green-700', 'text-red-700');
+                const indicator = label.querySelector('.correct-indicator, .incorrect-indicator');
+                if(indicator) indicator.remove();
+            });
+            if (explanationDiv) explanationDiv.style.display = 'none';
+
+            if (selectedRadio) {
+                const userAnswer = selectedRadio.value;
+                const userSelectedLabel = selectedRadio.parentElement;
+                if (userAnswer === correctAnswerValue) {
+                    questionBlock.classList.add('correct-answer-feedback');
+                    userSelectedLabel.classList.add('font-semibold', 'text-green-700');
+                    const indicator = document.createElement('span');
+                    indicator.className = 'correct-indicator';
+                    userSelectedLabel.appendChild(indicator);
+                } else {
+                    questionBlock.classList.add('incorrect-answer-feedback');
+                    userSelectedLabel.classList.add('font-semibold', 'text-red-700');
+                    const indicator = document.createElement('span');
+                    indicator.className = 'incorrect-indicator';
+                    userSelectedLabel.appendChild(indicator);
+                    const correctRadio = questionBlock.querySelector(`input[name="${questionBlockId}_ans"][value="${correctAnswerValue}"]`);
+                    if (correctRadio && correctRadio.parentElement) {
+                        correctRadio.parentElement.classList.add('font-semibold', 'text-green-700');
+                        const correctIndicator = document.createElement('span');
+                        correctIndicator.className = 'correct-indicator';
+                        correctRadio.parentElement.appendChild(correctIndicator);
+                    }
+                }
+            } else { 
+                questionBlock.classList.add('incorrect-answer-feedback');
+                const correctRadio = questionBlock.querySelector(`input[name="${questionBlockId}_ans"][value="${correctAnswerValue}"]`);
+                if (correctRadio && correctRadio.parentElement) {
+                    correctRadio.parentElement.classList.add('font-semibold', 'text-green-700');
+                     const correctIndicator = document.createElement('span');
+                     correctIndicator.className = 'correct-indicator';
+                     correctRadio.parentElement.appendChild(correctIndicator);
+                }
+            }
+            if (explanationDiv) explanationDiv.style.display = 'block';
+        }
+        
+        displayLessonPage();
+    </script>
+</body>
+</html>

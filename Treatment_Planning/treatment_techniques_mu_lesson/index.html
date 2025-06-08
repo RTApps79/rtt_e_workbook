@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treatment Techniques & MU Calculations</title>
+    <style>
+        /* Using the same CSS as the HIPAA Lesson for consistency */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.7;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+            padding-bottom: 60px; /* Space for the footer */
+        }
+        .container {
+            background-color: #fff;
+            padding: 25px 35px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 900px;
+            margin: 20px auto;
+        }
+        h1, h2, h3, h4 {
+            color: #0056b3;
+        }
+        h1 {
+            text-align: center;
+            border-bottom: 2px solid #0056b3;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+        h2 {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            margin-top: 30px;
+            margin-bottom: 20px;
+            color: #003d7a;
+            font-size: 1.6em;
+        }
+        h3 {
+            color: #004085;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+         h4 {
+            color: #17a2b8;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        p, li {
+            margin-bottom: 12px;
+            font-size: 1.05em;
+        }
+        ul, ol {
+            margin-bottom: 15px;
+            padding-left: 25px;
+            list-style: disc;
+        }
+        strong {
+            font-weight: 600;
+        }
+        .highlight {
+            background-color: #e6f7ff;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+        .note {
+            font-size: 0.9em;
+            font-style: italic;
+            color: #555;
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-left: 3px solid #6c757d;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        .activity-link-button {
+            display: inline-block;
+            background-color: #28a745;
+            color: white;
+            padding: 12px 25px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            margin-top: 15px;
+            transition: background-color 0.2s;
+        }
+        .activity-link-button:hover {
+            background-color: #218838;
+        }
+
+        /* --- Flip Page Lesson Styles --- */
+        .flip-lesson-container {
+            border: 1px solid #b3d7ff;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f0f8ff;
+            margin-bottom: 30px;
+        }
+        .lesson-page {
+            display: none;
+            padding: 15px;
+            border: 1px solid #ddeeff;
+            background-color: #fff;
+            border-radius: 5px;
+            min-height: 450px;
+        }
+        .lesson-page.active {
+            display: block;
+        }
+        .lesson-navigation {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .lesson-navigation button, .lesson-page .check-page-answers {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin: 5px 10px;
+            transition: background-color 0.2s;
+        }
+        .lesson-navigation button:hover, .lesson-page .check-page-answers:hover {
+            background-color: #0056b3;
+        }
+        .lesson-navigation button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        #backToMenuButton { /* For a general menu, if you create one for Treatment Planning */
+             background-color: #6c757d;
+        }
+        #backToMenuButton:hover {
+            background-color: #5a6268;
+        }
+        .page-indicator { font-style: italic; color: #555; margin: 10px 0; }
+
+        /* Interactive Questions */
+        .interactive-question-block { background: #f9f9f9; padding: 15px; margin: 20px 0; border: 1px solid #e0e0e0; border-radius: 8px; }
+        .interactive-question-block .question-text { font-weight: bold; margin-bottom: 8px; font-size: 1em; color: #555; }
+        .interactive-question-block label { display: block; margin-left: 0; padding: 8px 12px; border-radius: 5px; cursor: pointer; border: 1px solid transparent; margin-bottom: 5px; }
+        .interactive-question-block input[type="radio"] { margin-right: 10px; vertical-align: middle; }
+        .interactive-question-block label:hover { background-color: #f0f8ff; }
+        .feedback-correct { background-color: #e8f8f0 !important; border-left: 4px solid #2ecc71 !important; }
+        .feedback-incorrect { background-color: #fdedec !important; border-left: 4px solid #e74c3c !important; }
+        .feedback-correct label.correct-option,
+        .feedback-incorrect label.correct-option { font-weight: bold; color: #1E8449; }
+        .feedback-incorrect label.selected-incorrect { color: #A93226; }
+        .explanation { font-size: 0.9em; color: #444; margin-top: 5px; padding-left: 20px;}
+
+        /* Footer Styles */
+        footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            padding: 15px 0;
+            background-color: #e9ecef;
+            color: #6c757d;
+            font-size: 0.9em;
+            border-top: 1px solid #dee2e6;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Treatment Techniques & MU Calculations</h1>
+
+        <div class="flip-lesson-container">
+            <h2>Interactive Lesson</h2>
+
+            <div id="lesson-page-1" class="lesson-page active">
+                <h3>Page 1: Introduction</h3>
+                <h4>Purpose of this Lesson</h4>
+                <p>This lesson will introduce you to fundamental radiation therapy treatment techniques and the principles behind Monitor Unit (MU) calculations. Understanding these concepts is crucial for ensuring accurate and safe treatment delivery to patients.</p>
+                <h4>What You Will Learn (Objectives)</h4>
+                <ul>
+                    <li>Differentiate between SSD, SAD, and electron treatment setups.</li>
+                    <li>Identify key parameters used in MU calculations for each technique.</li>
+                    <li>Understand the basic formulas and factors involved in determining MUs.</li>
+                    <li>Recognize how changes in treatment parameters can affect MU values.</li>
+                </ul>
+                <h4>Task Overview</h4>
+                <p>You will navigate through several pages explaining these techniques and the factors influencing MU calculations. Each section may include "Quick Checks" to reinforce your understanding. Finally, you will be introduced to an MU calculator tool to practice applying these concepts.</p>
+                <h4>Criteria for Success</h4>
+                <p>Successful completion of this lesson means you can:
+                    <ul>
+                        <li>Clearly explain the setup for SSD, SAD, and electron treatments.</li>
+                        <li>List the main factors used in MU calculations for these techniques.</li>
+                        <li>Conceptually understand why MU calculations are necessary and how they relate to the prescribed dose.</li>
+                    </ul>
+                </p>
+            </div>
+
+            <div id="lesson-page-2" class="lesson-page">
+                <h3>Page 2: Photon SSD Technique</h3>
+                <p>The <span class="highlight">Source-to-Surface Distance (SSD)</span> technique, also known as a fixed SSD technique, is commonly used for treating superficial tumors or when a specific dose at a shallow depth is required.</p>
+                <h4>Setup Characteristics:</h4>
+                <ul>
+                    <li>The distance from the radiation source (target in the Linac) to the patient's skin surface is kept constant, typically 100 cm.</li>
+                    <li>The machine's isocenter is usually located at this fixed SSD on the patient's surface.</li>
+                    <li>Dose is often prescribed to D<sub>max</sub> (depth of maximum dose) or another specific depth.</li>
+                </ul>
+                <h4>Key Parameters & Concepts for MU Calculation:</h4>
+                <ul>
+                    <li><strong>Prescription Dose (TD):</strong> The total dose to be delivered to the prescription point.</li>
+                    <li><strong>SSD:</strong> The fixed source-to-surface distance (e.g., 100 cm).</li>
+                    <li><strong>Depth (d):</strong> Depth of the calculation point from the skin surface.</li>
+                    <li><strong>D<sub>max</sub>:</strong> Depth of maximum ionization/dose buildup for the given energy and field size.</li>
+                    <li><strong>Percent Depth Dose (PDD):</strong> Ratio of dose at depth 'd' to dose at D<sub>max</sub>, for a given field size and SSD.
+                        `PDD(d, FS, E, SSD) = (Dose at depth / Dose at Dmax) * 100%`</li>
+                    <li><strong>Output Factor (OF) or Dose Rate:</strong> cGy/MU at D<sub>max</sub> for a reference field size (e.g., 10x10 cm) at the standard SSD.</li>
+                    <li><strong>Field Size Factors (Sc, Sp):</strong> Correct for changes in scatter due to collimator and phantom size.</li>
+                    <li><strong>Inverse Square Factor (ISF):</strong> Accounts for changes in dose rate if the treatment SSD differs from the calibration SSD, or to correct PDD for depths other than Dmax.
+                        `ISF = ((SSD_cal + Dmax_cal) / (SSD_treat + d))^2` (when PDD is defined at Dmax) or `((SSD_cal + d_cal) / (SSD_treat + d))^2`
+                    </li>
+                    <li><strong>Accessory Factors:</strong> Tray Factor (TF), Wedge Factor (WF).</li>
+                </ul>
+                <h4>Basic SSD MU Formula (Conceptual):</h4>
+                <p>`MU = Prescription_Dose / (Output_Factor_ref * (PDD/100) * Sc * Sp * Tray_Factor * Wedge_Factor * ISF_PDD_correction)`</p>
+                <p class="note">The specific implementation of ISF can vary depending on how PDD tables are normalized and if calibration SSD is different from treatment SSD.</p>
+            </div>
+
+            <div id="lesson-page-3" class="lesson-page">
+                <h3>Page 3: Photon SAD Technique</h3>
+                <p>The <span class="highlight">Source-to-Axis Distance (SAD)</span> technique, also known as an isocentric technique, is widely used for treating deeper tumors and for rotational therapies (like IMRT/VMAT).</p>
+                <h4>Setup Characteristics:</h4>
+                <ul>
+                    <li>The distance from the radiation source to the machine's isocenter is fixed (typically 100 cm).</li>
+                    <li>The machine isocenter is positioned at a specific point <span class="highlight">within the patient</span>, usually the center of the target volume.</li>
+                    <li>The patient's skin surface will be at varying distances from the source depending on the beam angle and patient anatomy.</li>
+                    <li>Dose is prescribed to the isocenter or another point defined relative to the isocenter.</li>
+                </ul>
+                <h4>Key Parameters & Concepts for MU Calculation:</h4>
+                <ul>
+                    <li><strong>Prescription Dose (TD):</strong> Dose to the prescription point (often isocenter).</li>
+                    <li><strong>SAD:</strong> Fixed source-to-axis distance (e.g., 100 cm).</li>
+                    <li><strong>Depth (d):</strong> Depth of the calculation point (isocenter) from the surface <span class="highlight">along the beam's central axis</span>.</li>
+                    <li><strong>Tissue-Maximum Ratio (TMR)</strong> or Tissue-Phantom Ratio (TPR): Ratio of dose at depth 'd' in phantom to dose at D<sub>max</sub> in phantom, with the phantom surface shifted so that depth 'd' is at the SAD. TMR is normalized to Dmax at depth.
+                        `TMR(d, FS, E)`</li>
+                    <li><strong>Output Factor (OF) or Dose Rate:</strong> cGy/MU at D<sub>max</sub> for a reference field size (e.g., 10x10 cm) in phantom, with the measurement point at SAD (effectively, output in air corrected by BSF/PSF). More commonly, calibration is done at Dmax for a 10x10 field at SAD.</li>
+                    <li><strong>Field Size Factors (Sc, Sp):</strong> Collimator Scatter and Phantom Scatter factors.</li>
+                    <li><strong>Accessory Factors:</strong> Tray Factor (TF), Wedge Factor (WF).</li>
+                    <li><strong>Inverse Square Factor (ISF):</strong> Generally, for SAD calculations, the ISF is implicitly included in the TMR/TPR values *if measured correctly*. If output is defined at a point other than SAD, an ISF correction would be needed. `ISF = (SAD_cal / SAD_treat)^2`.</li>
+                </ul>
+                <h4>Basic SAD MU Formula (Conceptual):</h4>
+                <p>`MU = Prescription_Dose / (Output_Factor_ref * TMR * Sc * Sp * Tray_Factor * Wedge_Factor * [ISF_if_needed])`</p>
+            </div>
+
+            <div id="lesson-page-4" class="lesson-page">
+                <h3>Page 4: Electron Beam Technique</h3>
+                <p>Electron beams are used to treat superficial tumors (e.g., skin lesions, boost fields) due to their characteristic finite range in tissue, which spares deeper healthy tissues.</p>
+                <h4>Setup Characteristics:</h4>
+                <ul>
+                    <li>Electrons are produced by the Linac and usually collimated by electron <span class="highlight">applicators (cones)</span> that attach to the gantry head.</li>
+                    <li>The end of the applicator is typically placed close to or directly on the patient's skin surface (often at 100 cm SSD to the applicator end).</li>
+                    <li>Custom <span class="highlight">cutouts</span> (cerrobend or lead) are often used within the applicator to shape the field to the target.</li>
+                </ul>
+                <h4>Key Parameters & Concepts for MU Calculation:</h4>
+                <ul>
+                    <li><strong>Prescription Dose (TD):</strong> Dose prescribed, often to a certain percentage depth dose (e.g., 90% or 80% isodose line).</li>
+                    <li><strong>Electron Energy (MeV):</strong> Determines the depth of penetration and D<sub>max</sub>.</li>
+                    <li><strong>Applicator (Cone) Size:</strong> e.g., 6x6, 10x10, 15x15 cm.</li>
+                    <li><strong>Treatment SSD:</strong> Distance from the source to the skin surface.</li>
+                    <li><strong>Depth (d):</strong> Depth of calculation.</li>
+                    <li><strong>PDD<sub>electron</sub>:</strong> Percent depth dose for electrons, highly dependent on energy and cone size.</li>
+                    <li><strong>Output Factor (OF<sub>cone</sub>):</strong> cGy/MU for the specific energy and cone size, measured at D<sub>max</sub> for that cone at the standard SSD (usually 100 cm). This accounts for changes in scatter and electron fluency.</li>
+                    <li><strong>Effective SSD (SSD<sub>eff</sub>):</strong> Electrons don't strictly follow the inverse square law like photons due to scatter. An "effective SSD" is used for air gap corrections. It's typically shorter than the nominal SSD and varies with energy and cone size.</li>
+                    <li><strong>Inverse Square Factor (ISF<sub>electron</sub>):</strong> Uses SSD<sub>eff</sub>.
+                        `ISF = ((SSD_eff + Dmax_cal) / (SSD_eff + Dmax_cal + gap))^2` or simplified to `((SSD_eff) / (SSD_eff + gap))^2` if output is at surface.
+                        Where `gap = Treatment_SSD - Standard_SSD_of_calibration`.
+                    </li>
+                    <li><strong>Cutout Factor:</strong> If a custom cutout is used, it will further modify the output and requires a specific factor, usually measured.</li>
+                </ul>
+                <h4>Basic Electron MU Formula (Conceptual):</h4>
+                <p>`MU = Prescription_Dose / (Output_Factor_cone * (PDD_electron/100) * ISF_electron * [Cutout_Factor])`</p>
+            </div>
+
+            <div id="lesson-page-5" class="lesson-page">
+                <h3>Page 5: Photon MU Calculation Factors</h3>
+                <p>Several factors modify the dose delivered per MU for photon beams. Understanding these is key.</p>
+                <ul>
+                    <li><strong>Machine Output (Dose Rate):</strong>
+                        The fundamental calibration of the machine, usually stated as cGy/MU at D<sub>max</sub> for a 10x10 cm field at a reference SSD (for SSD calcs) or SAD (for SAD calcs). E.g., 1.0 cGy/MU.</li>
+                    <li><strong>Equivalent Square Field Size (FS<sub>eq</sub>):</strong>
+                        Since dose output varies with field size, non-square fields are converted to an equivalent square field. A common formula is `4A/P` (4 * Area / Perimeter).</li>
+                    <li><strong>Collimator Scatter Factor (Sc):</strong>
+                        Also known as Output Factor in Air (OF<sub>air</sub>). Accounts for scatter radiation from the machine's collimators and flattening filter. It depends on the collimator setting (field size). It's normalized to 1.0 for a 10x10 cm field.</li>
+                    <li><strong>Phantom Scatter Factor (Sp):</strong>
+                        Accounts for scatter radiation within the phantom/patient. It depends on the field size at depth and energy. It's normalized to 1.0 for a 10x10 cm field.
+                        <p class="note">Sometimes Sc and Sp are combined into a Total Scatter Factor (S<sub>cp</sub>) = Sc * Sp.</p></li>
+                    <li><strong>Percent Depth Dose (PDD) - for SSD setups:</strong>
+                        `PDD = (Dose at depth d / Dose at Dmax) * 100%`. Depends on energy, depth, field size, and SSD.</li>
+                    <li><strong>Tissue-Maximum Ratio (TMR) - for SAD setups:</strong>
+                        `TMR = (Dose at depth d in phantom / Dose at Dmax in phantom at same point)`. Independent of SSD but depends on energy, depth, and field size. TPR is similar but normalized to a reference depth.</li>
+                    <li><strong>Inverse Square Factor (ISF):</strong>
+                        Corrects for changes in distance from the source.
+                        For SSD: `ISF_PDD_corr = ((SSD + Dmax) / (SSD + d))^2` (to correct PDD at d to Dmax).
+                        For SAD, if output is defined at a distance other than treatment SAD, or to correct TMR/TPR if tables are for different SAD. Often implicitly included.</li>
+                    <li><strong>Tray Factor (TF):</strong>
+                        Accounts for attenuation by a blocking tray. Value is typically < 1.0.</li>
+                    <li><strong>Wedge Factor (WF):</strong>
+                        Accounts for attenuation by a physical wedge or the effect of a dynamic/virtual wedge. Value is typically < 1.0.</li>
+                </ul>
+            </div>
+
+            <div id="lesson-page-6" class="lesson-page">
+                <h3>Page 6: Electron MU Calculation Factors</h3>
+                <p>Electron MU calculations also involve several specific factors:</p>
+                <ul>
+                    <li><strong>Machine Output (Dose Rate):</strong>
+                        Calibrated as cGy/MU at D<sub>max</sub> for a reference applicator (often 10x10 cm) at a standard SSD (usually 100 cm).</li>
+                    <li><strong>Applicator (Cone) Factor / Output Factor (OF<sub>cone</sub>):</strong>
+                        Specific to each electron energy and applicator/cone size. This factor accounts for the scatter conditions and electron fluency produced by that specific cone. It's normalized to 1.0 for the reference cone if calibration is done that way, or it's an absolute factor relative to a baseline.</li>
+                    <li><strong>Percent Depth Dose (PDD<sub>electron</sub>):</strong>
+                        `PDD = (Dose at depth d / Dose at Dmax) * 100%`. Highly dependent on electron energy and applicator size (due to scatter).</li>
+                    <li><strong>Effective SSD (SSD<sub>eff</sub>):</strong>
+                        Electrons scatter significantly in air. The inverse square law doesn't apply perfectly as it does for photons. An "effective SSD" is determined experimentally for each energy/cone combination to allow for air gap corrections. It's usually shorter than the nominal SSD.</li>
+                    <li><strong>Inverse Square Factor for Electrons (ISF<sub>electron</sub>):</strong>
+                        Uses the SSD<sub>eff</sub> to correct for differences between the treatment SSD and the standard SSD at which the PDD and output factors were measured.
+                        A common formula for the gap correction factor is: `ISF = ((SSD_eff + Dmax_cal) / (SSD_eff + Dmax_cal + gap))^2`, where `gap = Actual_SSD - Standard_SSD_cal`. If PDD is already defined at the surface, it simplifies.</li>
+                    <li><strong>Cutout Factor:</strong>
+                        If an irregularly shaped field is created using a cutout (e.g., cerrobend block) placed in the applicator, this cutout will change the electron scatter and output. A specific cutout factor, usually measured or determined from tables, must be applied.</li>
+                </ul>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block" id="lq_page6_1_block">
+                    <p class="question-text">For electrons, the Inverse Square Law correction typically uses:</p>
+                    <label><input type="radio" name="lq_page6_1" value="A"> The nominal Linac SSD (e.g., 100cm).</label>
+                    <label><input type="radio" name="lq_page6_1" value="B"> An 'Effective SSD' specific to the energy and applicator.</label>
+                    <label><input type="radio" name="lq_page6_1" value="C"> No ISF is needed for electrons.</label>
+                    <div class="explanation" style="display:none;">Correct! Due to scatter, an 'Effective SSD' is used for more accurate air gap corrections with electrons.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(6)">Check Answer</button>
+            </div>
+
+            <div id="lesson-page-7" class="lesson-page">
+                <h3>Page 7: Using the MU Calculator & Practice</h3>
+                <p>Now that you've learned about the different techniques and factors, it's time to see them in action!</p>
+                <p>The MU Calculator tool linked below allows you to input various treatment parameters for SSD, SAD, and electron techniques and see the calculated Monitor Units. It also provides a simple visualization of the beam setup.</p>
+                <h4>How to Use the Calculator:</h4>
+                <ul>
+                    <li>Select the "Treatment Technique" (Photon SSD, Photon SAD, or Electron).</li>
+                    <li>The relevant input fields for that technique will appear.</li>
+                    <li>Enter the parameters like dose, depth, field size (using jaw settings), energy, SSD, applicator size, etc.</li>
+                    <li>Some factors (like Dmax, Tray Factor, Wedge Factor, Electron Output Factors) will auto-update based on your selections from built-in tables.</li>
+                    <li>Click "Calculate Monitor Units" to see the result and a breakdown of the factors used.</li>
+                </ul>
+                <h4>Practice Scenarios:</h4>
+                <p>Use the calculator to solve the following (you can open the calculator in a new tab):</p>
+                <ol>
+                    <li><strong>Photon SSD:</strong> Energy 6MV, Rx Dose 200 cGy, Depth 5cm, SSD 100cm, Field Size 12x12cm, No Tray, No Wedge. What are the MUs?</li>
+                    <li><strong>Photon SAD:</strong> Energy 10MV, Rx Dose 180 cGy, Depth to Iso 10cm, Field Size 8x15cm, No Tray, 15-deg Wedge. What are the MUs?</li>
+                    <li><strong>Electron:</strong> Energy 9MeV, Applicator 10x10cm, Rx Dose 250 cGy, Depth 2.0cm, Treatment SSD 100cm. What are the MUs?</li>
+                </ol>
+                <p class="note">The calculator uses specific beam data tables. Your clinic's data may differ. This tool is for educational understanding.</p>
+                <div style="text-align: center; margin-top: 30px;">
+                    <a href="mu_calculator.html" target="_blank" class="activity-link-button">Open MU Calculator Activity</a>
+                </div>
+            </div>
+
+            <div id="lesson-page-8" class="lesson-page">
+                <h3>Page 8: Summary & Next Steps</h3>
+                <p>In this lesson, we've covered:</p>
+                <ul>
+                    <li>The fundamental differences and applications of **SSD, SAD, and Electron** treatment techniques.</li>
+                    <li>The core concept of **Monitor Units (MUs)** and their relation to delivering the prescribed dose.</li>
+                    <li>Key dosimetric factors like **PDD, TMR, Sc, Sp, Output Factors, ISF, TF, WF, and electron-specific factors** that influence MU calculations.</li>
+                </ul>
+                <p>Accurate MU calculation is paramount for patient safety and treatment efficacy. While modern treatment planning systems (TPS) automate many of these calculations, understanding the underlying principles remains essential for RTTs to:</p>
+                <ul>
+                    <li>Perform independent checks or manual calculations when needed.</li>
+                    <li>Troubleshoot discrepancies.</li>
+                    <li>Understand the impact of setup variations on dose delivery.</li>
+                    <li>Communicate effectively with dosimetrists and physicists.</li>
+                </ul>
+                <h4>Further Learning:</h4>
+                <p>To deepen your understanding, consider researching:</p>
+                <ul>
+                    <li>Your specific clinic's MU calculation protocols and beam data.</li>
+                    <li>Advanced MU calculation techniques for IMRT, VMAT, and SBRT.</li>
+                    <li>The role of quality assurance in MU verification.</li>
+                </ul>
+                <p>Thank you for completing this lesson! Use the button below if you need to return to a main menu.</p>
+            </div>
+
+            <div class="lesson-navigation">
+                <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled>Previous Page</button>
+                <button id="backToMenuButton" onclick="goBackToTreatmentPlanningMenu()" style="display:none;">Back to Treatment Planning Menu</button>
+                <span class="page-indicator" id="lessonPageIndicator">Page 1 of 8</span>
+                <button id="nextLessonPage" onclick="changeLessonPage(1)">Next Page</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 RTApps. All rights reserved.</p>
+    </footer>
+
+    <script>
+        let currentLessonPage = 1;
+        const totalLessonPages = 8;
+        const lessonPages = document.querySelectorAll('.lesson-page');
+        const prevLessonButton = document.getElementById('prevLessonPage');
+        const nextLessonButton = document.getElementById('nextLessonPage');
+        const backToMenuButton = document.getElementById('backToMenuButton'); // Assuming you'll have a TP menu
+        const lessonPageIndicator = document.getElementById('lessonPageIndicator');
+
+        const lessonCorrectAnswers = {
+             lq_page6_1: "B" // Example: For a Quick Check on Page 6 if added
+            // Add more answers for other quick checks if implemented
+        };
+
+        function displayLessonPage() {
+            lessonPages.forEach((page, index) => {
+                page.classList.toggle('active', index === currentLessonPage - 1);
+            });
+            prevLessonButton.disabled = currentLessonPage === 1;
+            nextLessonButton.style.display = currentLessonPage === totalLessonPages ? 'none' : 'inline-block';
+            // Logic for a "Back to Treatment Planning Menu" button if it exists
+            // For now, we'll keep it hidden as the main Ethics menu might not be relevant here.
+            // You can enable it if you create a `goBackToTreatmentPlanningMenu` function and a relevant menu page.
+            backToMenuButton.style.display = currentLessonPage === totalLessonPages ? 'inline-block' : 'none';
+            lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
+        }
+
+        function changeLessonPage(direction) {
+            currentLessonPage += direction;
+            if (currentLessonPage < 1) currentLessonPage = 1;
+            if (currentLessonPage > totalLessonPages) currentLessonPage = totalLessonPages;
+            displayLessonPage();
+        }
+
+        function goBackToTreatmentPlanningMenu() {
+            // Replace with the actual URL of your Treatment Planning menu page
+            // window.location.href = 'https://rtapps79.github.io/rtt_e_workbook/TreatmentPlanning/';
+            alert("Navigating to Treatment Planning Menu (placeholder).");
+        }
+
+        function checkPageAnswers(pageNumber) {
+            const questionsOnPage = document.querySelectorAll(`#lesson-page-${pageNumber} .interactive-question-block`);
+            questionsOnPage.forEach(block => {
+                const questionName = block.querySelector('input[type="radio"]').name;
+                if (!lessonCorrectAnswers.hasOwnProperty(questionName)) return;
+
+                const correctAnswerValue = lessonCorrectAnswers[questionName];
+                const selectedRadio = block.querySelector(`input[name="${questionName}"]:checked`);
+                const explanationDiv = block.querySelector('.explanation');
+
+                block.classList.remove('feedback-correct', 'feedback-incorrect');
+                block.querySelectorAll('label').forEach(label => {
+                    label.classList.remove('correct-option', 'selected-incorrect');
+                });
+                if(explanationDiv) explanationDiv.style.display = 'none';
+
+                if (selectedRadio) {
+                    const userAnswer = selectedRadio.value;
+                    const userSelectedLabel = selectedRadio.parentElement;
+                    if (userAnswer === correctAnswerValue) {
+                        block.classList.add('feedback-correct');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('correct-option');
+                    } else {
+                        block.classList.add('feedback-incorrect');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('selected-incorrect');
+                        const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                        if (correctRadio && correctRadio.parentElement) {
+                            correctRadio.parentElement.classList.add('correct-option');
+                        }
+                    }
+                } else {
+                    block.classList.add('feedback-incorrect');
+                    const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                    if (correctRadio && correctRadio.parentElement) {
+                        correctRadio.parentElement.classList.add('correct-option');
+                    }
+                }
+                if(explanationDiv) explanationDiv.style.display = 'block';
+            });
+        }
+        displayLessonPage();
+    </script>
+</body>
+</html>

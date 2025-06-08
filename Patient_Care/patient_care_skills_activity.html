@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity: Patient Care Skills Challenge</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Feedback and Badge Styles (consistent with other activities) */
+        .feedback.correct { color: #16a34a; font-weight: bold; }
+        .feedback.incorrect { color: #dc2626; font-weight: bold; }
+        .item-selected { background-color: #dbeafe; /* Tailwind blue-200 */ border-color: #60a5fa; /* Tailwind blue-400 */}
+
+        #badge-section { margin-top: 30px; padding: 20px; background-color: #fff; border: 1px solid #ccc; text-align: center; display: none; }
+        #badge-input input { padding: 8px; margin-right: 10px; border: 1px solid #ccc; border-radius: 4px; }
+        .badge { /* Single style badge for this activity - can be tiered if preferred */
+            width: 350px; height: 250px; border: 10px solid #0056b3; 
+            background-color: #e7f3ff; margin: 20px auto; padding: 30px; 
+            display: flex; flex-direction: column; justify-content: center; align-items: center; 
+            box-shadow: 3px 3px 8px rgba(0,0,0,0.2); font-family: 'Georgia', serif; text-align: center;
+        }
+        .badge h4 { color: #003d7a; font-size: 1.5em; margin: 0; }
+        .badge .awardee { font-size: 1.3em; font-weight: bold; color: #17a2b8; margin: 15px 0; border-bottom: 1px dashed #17a2b8; padding-bottom: 5px; }
+        .badge .reason { font-size: 1.1em; margin: 10px 0; }
+        .badge .score-display { font-size: 1em; font-style: italic; color: #555; } /* Changed from .score */
+        .badge .logo { font-size: 0.8em; margin-top: 15px; font-weight: bold; color: #0056b3; }
+
+        /* Activity Specific Styles */
+        #start-screen-activity, .activity-part { background-color: #e7f3ff; border: 1px solid #b3d7ff; padding: 20px 25px; border-radius: 8px; margin-bottom: 30px; }
+        #start-screen-activity h3, .activity-part h3 { color: #004085; margin-top: 0; border-bottom: 1px solid #b3d7ff; padding-bottom: 10px; font-size:1.4rem; font-weight:600; }
+        .activity-part h4 { color: #0056b3; font-size: 1.1rem; font-weight: 600; margin-top:1rem; margin-bottom:0.5rem;}
+        #start-activity-btn { background-color: #28a745; font-size: 1.2em; padding: 12px 25px; display: block; margin: 25px auto 10px auto; }
+        #start-activity-btn:hover { background-color: #218838; }
+        
+        .scenario-box { background-color: #fff; border:1px solid #d1d5db; padding:1rem; border-radius: 0.375rem; margin-bottom:1rem;}
+        .question-prompt { font-weight: 500; color: #1f2937; margin-bottom:0.75rem;}
+        .options-list label { display: block; background-color: #f9fafb; padding: 0.75rem; border:1px solid #e5e7eb; border-radius: 0.375rem; margin-bottom:0.5rem; cursor:pointer; transition: background-color 0.2s;}
+        .options-list label:hover { background-color: #eff6ff;}
+        .options-list input[type="radio"], .options-list input[type="checkbox"] { margin-right: 0.5rem; accent-color: #6d28d9;}
+        .image-container { text-align:center; margin:1rem 0;}
+        .image-container img { max-width:100%; height:auto; border:1px solid #d1d5db; border-radius:0.375rem;}
+        .clickable-area { display:inline-block; padding:0.5rem; border:2px dashed #9ca3af; margin:0.25rem; cursor:pointer;}
+        .clickable-area.clicked-hazard { border-color: #ef4444; background-color: #fee2e2;}
+        .clickable-area.clicked-safe { border-color: #22c55e; background-color: #dcfce7;}
+
+
+        #overall-results { text-align: center; margin-top: 20px; display: none; }
+        #overall-results p {font-size: 1.3em; font-weight:bold; color: #0056b3;}
+
+        /* Print Styles */
+        @media print {
+             body { background-color: #fff !important; color: #000 !important; padding-bottom: 0 !important; font-size: 10pt; }
+            .main-content-wrapper { box-shadow: none !important; border: none !important; width: 100% !important; max-width: 100% !important; padding: 5px !important; margin:0 !important;}
+            .nav-links-header, .post-activity-nav, #start-screen-activity button, .activity-part button:not(#printCertificateButton), footer, #badge-input button:not(#printCertificateButton), #overall-results button, .submit-part-btn  { display: none !important; }
+            h1, h2, h3, h4 { color: #000 !important; border-color: #000 !important; margin-bottom: 10px; padding-bottom: 3px;}
+            a {text-decoration: none; color: #000 !important;}
+            
+            #badge-section, #badge-section * { visibility: visible; }
+            .badge { visibility: visible; position: absolute; left: 0; top: 0; width: 90%; height: auto; margin: 5%; padding: 20px; box-shadow: none; border: 5px solid #000 !important; color: #000 !important; background: #fff !important; }
+            .badge h4, .badge .awardee, .badge .logo, .badge .reason, .badge .score-display { color: #000 !important; text-shadow: none;} /* Updated .score to .score-display */
+            .badge .awardee { border-bottom: 1px dashed #000 !important; }
+            #start-screen-activity, .activity-part > *:not(#badge-section):not(#printableCertificate), #overall-results > *:not(#badge-section) { display: none !important; }
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 flex flex-col min-h-screen">
+
+    <header class="bg-white shadow-md sticky top-0 z-50 nav-links-header">
+        <div class="container mx-auto px-6 py-3 flex flex-col sm:flex-row justify-between items-center">
+            <h1 class="text-xl font-bold text-purple-700 mb-2 sm:mb-0">Patient Care Skills Challenge</h1>
+            <div class="flex flex-wrap justify-center sm:justify-end space-x-2">
+                <a href="patient_care_foundations_lesson.html#lesson-page-8" class="text-xs sm:text-sm bg-purple-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-purple-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to Patient Care Lesson
+                </a>
+                <a href="index.html" class="text-xs sm:text-sm bg-slate-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-slate-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to Patient Care Menu
+                </a>
+                <a href="../index.html" class="text-xs sm:text-sm bg-slate-400 text-white font-medium py-2 px-3 rounded-lg hover:bg-slate-500 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Main Workbook
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto max-w-3xl px-4 sm:px-6 py-8 flex-grow main-content-wrapper">
+        <div class="bg-white p-6 sm:p-8 rounded-xl shadow-xl">
+            <h1 class="text-3xl font-bold text-purple-700 mb-6 text-center border-b-2 border-purple-300 pb-4">Patient Care Skills Interactive Challenge</h1>
+
+            <div id="start-screen-activity" class="bg-purple-50 p-4 sm:p-6 rounded-lg shadow-md mb-8 border border-purple-200">
+                <h2 class="text-2xl font-semibold text-purple-600 mb-4">Test Your Patient Care Knowledge!</h2>
+                 <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                    <h3 class="text-lg font-medium text-purple-700 mb-1">Purpose</h3>
+                    <p class="text-sm text-slate-600">This activity is designed to help you apply your understanding of essential patient care skills, including identification, communication, basic procedures, and safety protocols.</p>
+                </div>
+                <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                    <h3 class="text-lg font-medium text-purple-700 mb-1">Task</h3>
+                    <p class="text-sm text-slate-600">You will navigate through a series of mini-scenarios and challenges. For each part, follow the instructions to identify correct procedures, choose appropriate responses, or select necessary actions. Your performance will be scored.</p>
+                </div>
+                 <div class="p-3 bg-purple-100 rounded-md border border-purple-200">
+                    <h3 class="text-lg font-medium text-purple-700 mb-1">Criteria for Success</h3>
+                    <p class="text-sm text-slate-600">Success involves making accurate choices in each scenario, demonstrating your understanding of safe and effective patient care. A score of <strong class="text-purple-700">80% or higher</strong> will earn you a "Patient Care Champion" badge!</p>
+                </div>
+                <button id="start-activity-btn" onclick="startActivity()" class="mt-6 bg-green-500 hover:bg-green-600 text-white font-medium py-3 px-5 rounded-lg text-base transition-colors duration-150 block mx-auto">Start Challenge</button>
+            </div>
+
+            <div id="activity-content-area" style="display: none;">
+                </div>
+
+            <div id="overall-results" class="mt-8 text-center">
+                <h2 class="text-2xl font-bold text-purple-700">Challenge Complete!</h2>
+                <p id="overall-score-display" class="mt-2 text-slate-700 text-xl"></p>
+            </div>
+            
+            <div id="badge-section" class="mt-8">
+                <h3 class="text-xl font-semibold text-purple-700 mb-4 text-center">Congratulations!</h3>
+                <div id="badge-input" class="text-center mb-4">
+                    <label for="userNameForBadge" class="block text-sm font-medium text-slate-700 mb-1">Enter Your Name for the Badge:</label>
+                    <input type="text" id="userNameForBadge" placeholder="Your Name Here" class="mt-1 inline-block max-w-xs px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm">
+                    <button onclick="generateBadge()" class="ml-2 bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg text-sm transition-colors">Generate Badge</button>
+                </div>
+                <div class="badge" id="printableBadge" style="display:none;">
+                    <h4>Patient Care Champion</h4>
+                    <p class="awardee" id="badgeName"></p>
+                    <p class="reason">For demonstrating proficiency in fundamental patient care skills.</p>
+                    <p class="score-display" id="badgeScore"></p> <p class="logo">RTApps Learning</p>
+                </div>
+                <button id="printBadgeButton" onclick="window.print()" style="display:none;" class="block mx-auto mt-4 bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg text-sm transition-colors">Print Badge</button>
+            </div>
+
+            <div class="post-activity-nav" id="end-nav" style="display: none;">
+                <h3 class="text-xl font-semibold text-slate-700 mb-4">What's Next?</h3>
+                <button class="menu" onclick="window.location.href='index.html'">Back to Patient Care Menu</button> 
+                <button class="repeat" onclick="startActivity()">Try Challenge Again</button>
+                <button onclick="window.location.href='patient_care_foundations_lesson.html#lesson-page-8'">Back to Patient Care Lesson</button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-slate-800 text-slate-300 py-6 mt-auto text-center">
+        <div class="container mx-auto px-6">
+            <p class="text-sm">&copy; <span id="currentYear"></span> RTApps. All Rights Reserved.</p>
+            <p class="text-xs mt-1">Patient Care Skills Challenge</p>
+        </div>
+    </footer>
+
+    <script>
+        // JavaScript for the Patient Care Skills Challenge will go here.
+        // This will be a multi-part activity.
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        const activityParts = [
+            {
+                title: "Part 1: Patient Identification",
+                type: "mcq", // Multiple Choice Question
+                scenario: "You are about to start a simulation. The patient in the room is an elderly woman. You check the chart: 'Eleanor Vance, DOB 03/15/1958'. You approach the patient.",
+                question: "What is the BEST way to confirm her identity?",
+                options: [
+                    { text: "Ask 'Are you Eleanor Vance?'", correct: false, feedback: "Leading question. Always ask the patient to state their identifiers." },
+                    { text: "Ask 'Can you please state your full name and date of birth?'", correct: true, feedback: "Correct! Using two active identifiers stated by the patient is best practice." },
+                    { text: "Check her room number against the schedule.", correct: false, feedback: "Room number is not a reliable primary patient identifier." }
+                ],
+                points: 1
+            },
+            {
+                title: "Part 2: Safe Patient Transfer - Body Mechanics",
+                type: "image_hotspot", // User clicks on image to identify error/correct
+                scenario: "Review the image below showing a therapist assisting a patient from a wheelchair to a table. Click on the part of the image that demonstrates INCORRECT body mechanics by the therapist.",
+                // In a real implementation, you'd have an image and define hotspot coordinates.
+                // For this example, we'll simplify to a descriptive question.
+                question: "A therapist is lifting a patient by bending their back and twisting. Is this correct body mechanics?",
+                options: [ // Simplified to MCQ for this example
+                    { text: "Yes, as long as the patient is light.", correct: false, feedback: "Incorrect. Twisting and lifting with the back are major causes of injury." },
+                    { text: "No, the therapist should use their leg muscles and avoid twisting.", correct: true, feedback: "Correct! Use leg muscles, keep back straight, and pivot feet to avoid twisting." }
+                ],
+                points: 1
+            },
+            {
+                title: "Part 3: Infection Control - PPE Choice",
+                type: "checkbox", // Multiple correct answers possible
+                scenario: "You are about to perform a procedure that involves a high risk of splashing bodily fluids.",
+                question: "Which PPE items should you definitely wear? (Select all that apply)",
+                options: [
+                    { text: "Gloves", id: "ppe_gloves", correct: true },
+                    { text: "Standard Surgical Mask", id: "ppe_mask", correct: true },
+                    { text: "Gown", id: "ppe_gown", correct: true },
+                    { text: "Eye Protection (Goggles/Face Shield)", id: "ppe_eye", correct: true },
+                    { text: "Shoe Covers", id: "ppe_shoe", correct: false } // Shoe covers might be optional depending on exact procedure
+                ],
+                feedback: "Correct choices: Gloves, Mask, Gown, Eye Protection. Shoe covers may be indicated in some specific high-contamination scenarios but are not universally standard for all splash risks.",
+                points: 2 // Award points if key items are selected
+            },
+            {
+                title: "Part 4: AED Pad Placement",
+                type: "mcq_image_based", // Would ideally be image hotspot
+                scenario: "You are responding to an adult cardiac arrest and an AED has arrived.",
+                question: "Where are the two AED pads typically placed on an adult for defibrillation?",
+                // Simplified for now, an image hotspot would be better
+                options: [
+                    { text: "One on the center of the chest, one on the center of the back.", correct: false, feedback: "Incorrect. This placement is not standard for adult AED." },
+                    { text: "One on the upper right chest (below clavicle), one on the lower left side (mid-axillary line).", correct: true, feedback: "Correct! This is the standard anterolateral placement for adult AED pads." },
+                    { text: "Both pads on the left side of the chest.", correct: false, feedback: "Incorrect. Pads need to create a path for electricity across the heart." }
+                ],
+                points: 1
+            }
+            // Add more parts for other skills: Vital Signs interpretation, O2 setup steps
+        ];
+
+        let currentPartIndex = -1;
+        let userScores = [];
+        let totalActivityPoints = 0;
+        activityParts.forEach(p => totalActivityPoints += p.points);
+
+        const activityContentArea = document.getElementById('activity-content-area');
+        const startScreen = document.getElementById('start-screen-activity');
+        const overallResultsArea = document.getElementById('overall-results');
+        const overallScoreDisplay = document.getElementById('overall-score-display');
+        const badgeSection = document.getElementById('badge-section');
+        const noBadgeMessage = document.getElementById('no-badge-message'); // Assuming you might add this
+        const endNav = document.getElementById('end-nav');
+
+
+        function startActivity() {
+            startScreen.style.display = 'none';
+            overallResultsArea.style.display = 'none';
+            badgeSection.style.display = 'none';
+            if(noBadgeMessage) noBadgeMessage.style.display = 'none';
+            endNav.style.display = 'none';
+            activityContentArea.style.display = 'block';
+            currentPartIndex = -1;
+            userScores = [];
+            loadNextPart();
+        }
+
+        function loadNextPart() {
+            currentPartIndex++;
+            activityContentArea.innerHTML = ''; // Clear previous part
+
+            if (currentPartIndex < activityParts.length) {
+                const part = activityParts[currentPartIndex];
+                let partHtml = `<div class="activity-part bg-purple-50 p-4 sm:p-6 rounded-lg shadow-md border border-purple-200">`;
+                partHtml += `<h3 class="text-xl font-semibold text-purple-700 mb-3">${part.title}</h3>`;
+                if(part.scenario) partHtml += `<p class="scenario-box text-sm text-slate-700">${part.scenario}</p>`;
+                partHtml += `<p class="question-prompt text-slate-800">${part.question}</p>`;
+                
+                partHtml += `<div class="options-list mt-4">`;
+                if (part.type === "mcq" || part.type === "mcq_image_based") {
+                    part.options.forEach((opt, index) => {
+                        partHtml += `<label class="block"><input type="radio" name="part_${currentPartIndex}" value="${index}" class="mr-2 accent-purple-500"> ${opt.text}</label>`;
+                    });
+                } else if (part.type === "checkbox"){
+                     part.options.forEach((opt, index) => {
+                        partHtml += `<label class="block"><input type="checkbox" name="part_${currentPartIndex}" value="${opt.id}" id="${opt.id}_${index}" class="mr-2 accent-purple-500"> ${opt.text}</label>`;
+                    });
+                }
+                partHtml += `</div>`;
+                partHtml += `<button onclick="submitPart(${currentPartIndex})" class="submit-part-btn mt-6 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg text-sm">Submit Answer</button>`;
+                partHtml += `<div id="feedback_part_${currentPartIndex}" class="feedback mt-3 text-sm"></div>`;
+                partHtml += `</div>`;
+                activityContentArea.innerHTML = partHtml;
+
+            } else {
+                showOverallResults();
+            }
+        }
+
+        function submitPart(partIndex) {
+            const part = activityParts[partIndex];
+            const feedbackEl = document.getElementById(`feedback_part_${partIndex}`);
+            let scoreForPart = 0;
+            let allCorrectInCheckbox = true; // For checkbox type
+
+            if (part.type === "mcq" || part.type === "mcq_image_based") {
+                const selectedOption = document.querySelector(`input[name="part_${partIndex}"]:checked`);
+                if (selectedOption) {
+                    const selectedIndex = parseInt(selectedOption.value);
+                    if (part.options[selectedIndex].correct) {
+                        scoreForPart = part.points;
+                        feedbackEl.innerHTML = `<span class="text-green-600 font-semibold">Correct!</span> ${part.options[selectedIndex].feedback}`;
+                    } else {
+                        feedbackEl.innerHTML = `<span class="text-red-600 font-semibold">Incorrect.</span> ${part.options[selectedIndex].feedback} <br>The correct answer often involves: ${part.options.find(o=>o.correct)?.feedback || 'Review the lesson material.'}`;
+                    }
+                } else {
+                    feedbackEl.innerHTML = `<span class="text-orange-500 font-semibold">Please select an answer.</span>`;
+                    return; // Don't proceed if no answer selected
+                }
+            } else if (part.type === "checkbox") {
+                let correctSelections = 0;
+                let incorrectSelections = 0;
+                part.options.forEach((opt, index) => {
+                    const checkbox = document.getElementById(`${opt.id}_${index}`);
+                    if (checkbox.checked) {
+                        if (opt.correct) {
+                            correctSelections++;
+                        } else {
+                            incorrectSelections++; // Clicked a wrong one
+                        }
+                    } else {
+                        if (opt.correct) {
+                            allCorrectInCheckbox = false; // Missed a correct one
+                        }
+                    }
+                });
+                 // Simple scoring for checkbox: all correct options checked AND no incorrect options checked
+                if (allCorrectInCheckbox && incorrectSelections === 0 && correctSelections === part.options.filter(o => o.correct).length) {
+                    scoreForPart = part.points;
+                }
+                feedbackEl.innerHTML = scoreForPart > 0 ? `<span class="text-green-600 font-semibold">Partial/Full Credit.</span> ${part.feedback}` : `<span class="text-red-600 font-semibold">Check your selections.</span> ${part.feedback}`;
+            }
+
+
+            userScores[partIndex] = scoreForPart;
+            
+            // Disable submit button for this part and show next part button
+            const submitButton = activityContentArea.querySelector('.submit-part-btn');
+            if(submitButton) submitButton.style.display = 'none'; // Hide submit
+
+            const nextPartButton = document.createElement('button');
+            nextPartButton.textContent = (currentPartIndex < activityParts.length - 1) ? "Next Part" : "Show Results";
+            nextPartButton.className = "mt-4 bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg text-sm";
+            nextPartButton.onclick = loadNextPart;
+            feedbackEl.parentNode.appendChild(nextPartButton);
+        }
+
+        function showOverallResults() {
+            activityContentArea.style.display = 'none';
+            overallResultsArea.style.display = 'block';
+            endNav.style.display = 'block';
+
+            const totalScored = userScores.reduce((sum, score) => sum + (score || 0), 0);
+            const percentage = (totalActivityPoints > 0) ? Math.round((totalScored / totalActivityPoints) * 100) : 0;
+
+            overallScoreDisplay.textContent = `Your Overall Score: ${totalScored} out of ${totalActivityPoints} (${percentage}%)`;
+            window.finalScoreValue = percentage; // For badge
+
+            if (percentage >= 80) {
+                badgeSection.style.display = 'block';
+                // Clear previous badge render if any
+                document.getElementById('printableBadge').style.display = 'none';
+                document.getElementById('printBadgeButton').style.display = 'none';
+                document.getElementById('userNameForBadge').value = ''; // Clear name input
+
+            } else {
+                badgeSection.style.display = 'none';
+                const noBadgeMsgDiv = document.getElementById('no-badge-message');
+                if(noBadgeMsgDiv) { // Check if it exists
+                    noBadgeMsgDiv.textContent = "Keep practicing! A score of 80% or higher is needed for a badge.";
+                    noBadgeMsgDiv.style.display = 'block';
+                } else { // Create if it doesn't
+                    let newNoBadgeMsg = document.createElement('p');
+                    newNoBadgeMsg.id = 'no-badge-message';
+                    newNoBadgeMsg.className = 'text-red-600 font-semibold mt-4';
+                    newNoBadgeMsg.textContent = "Keep practicing! A score of 80% or higher is needed for a badge.";
+                    overallResultsArea.appendChild(newNoBadgeMsg);
+                }
+            }
+        }
+        
+        function generateBadge() {
+            const name = document.getElementById('userNameForBadge').value;
+            if (name.trim() === "") { alert("Please enter your name for the badge."); return; }
+            document.getElementById('badgeName').textContent = name;
+            document.getElementById('badgeScore').textContent = `Achieved with a score of ${window.finalScoreValue}%`;
+            document.getElementById('printableBadge').style.display = 'flex';
+            document.getElementById('printBadgeButton').style.display = 'inline-block';
+        }
+    </script>
+</body>
+</html>

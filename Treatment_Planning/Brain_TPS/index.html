@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whole Brain TPS: POP & Arc Concepts</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .tps-grid { display: grid; grid-template-columns: 300px 1fr 340px; grid-template-rows: auto 1fr; gap: 16px; height: calc(100vh - 100px); }
+        .tps-panel { background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 16px; overflow: auto; }
+        .viewer-area { grid-column: 2 / 3; grid-row: 1 / 3; background-color: #111827; display: flex; justify-content: center; align-items: center; position: relative; overflow: hidden; border-radius: 8px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); }
+        .viewer-image { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .beam-icon { cursor: pointer; position: absolute; font-size: 1.8em; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); transition: transform 0.2s; z-index: 10; }
+        .beam-icon:hover { transform: scale(1.1); }
+        .beam-line { position: absolute; transform-origin: 0 0; height: 2px; z-index: 5; }
+        .structure-overlay { position: absolute; z-index: 8; text-align: center; font-size: 0.55rem; /* Smaller font for more structures */ color: white; text-shadow: 1px 1px 1px black; padding-top: 1px; box-sizing: border-box; pointer-events: none; display: flex; align-items: center; justify-content: center;}
+        .ptv-overlay { border: 2px dashed #fde047; /* Yellow-300 */ background-color: rgba(253, 224, 71, 0.2); }
+        .oar-overlay { border: 1px solid; }
+        .landmark-overlay { border: 1px dashed; background-color: rgba(139, 92, 246, 0.15); } /* Retained for potential future use */
+
+        .workflow-step-done span { text-decoration: line-through; color: #10b981; }
+        .workflow-step-done .status-icon { display: inline !important; color: #10b981; }
+        .input-sm { width: 100%; padding: 6px 8px; border-radius: 4px; border: 1px solid #d1d5db; font-size: 0.875rem; box-sizing: border-box; }
+        .btn { padding: 8px 12px; border-radius: 6px; font-size: 0.875rem; font-weight: 500; transition: background-color 0.2s; }
+        .btn-primary { background-color: #4f46e5; color: white; } .btn-primary:hover { background-color: #4338ca; }
+        .btn-secondary { background-color: #6b7280; color: white; } .btn-secondary:hover { background-color: #4b5563; }
+        .btn-success { background-color: #16a34a; color: white; } .btn-success:hover { background-color: #15803d; }
+        .btn-warning { background-color: #f59e0b; color: white; } .btn-warning:hover { background-color: #d97706; }
+        .tab-button { padding: 8px 12px; font-size: 0.9rem; font-weight: 500; border-bottom: 2px solid transparent; cursor: pointer; }
+        .tab-button.active { border-bottom-color: #4f46e5; color: #4f46e5; }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 flex flex-col min-h-screen">
+    <header class="bg-slate-800 text-white shadow-md z-50">
+        <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <h1 class="text-xl font-bold">Whole Brain TPS: POP & Arc Concepts</h1>
+            <div id="tutorialButtonsContainer" class="space-x-2">
+                <!-- Tutorial buttons will be added here by JS from tutorial.js -->
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-4 flex-grow tps-grid">
+        <!-- Left Panel: Workflow, Patient, Structures, Planning Mode -->
+        <div class="tps-panel col-start-1 row-start-1 row-span-2 flex flex-col">
+            <h2 class="text-lg font-semibold mb-3 text-indigo-700">Planning Controls</h2>
+
+            <!-- Workflow Steps -->
+            <div class="mb-4 p-3 bg-indigo-50 rounded-lg border border-indigo-200 text-xs">
+                <h3 class="font-bold mb-1 text-indigo-600">Workflow Guide</h3>
+                <ul class="list-none space-y-1">
+                    <li id="wf-step1" class="flex items-center">1. Patient & Imaging Setup <span class="status-icon hidden ml-1">✓</span></li>
+                    <li id="wf-step2" class="flex items-center">2. Structure Definition <span class="status-icon hidden ml-1">✓</span></li>
+                    <li id="wf-step3" class="flex items-center">3. Planning Mode & Beam Setup <span class="status-icon hidden ml-1">✓</span></li>
+                    <li id="wf-step4" class="flex items-center">4. Plan Evaluation <span class="status-icon hidden ml-1">✓</span></li>
+                </ul>
+            </div>
+
+            <!-- Patient & Imaging -->
+            <div class="mb-3">
+                <h3 class="font-semibold mb-1 text-sm">1. Patient & Imaging</h3>
+                <p class="text-xs text-slate-600 mb-1">Simulated CT Scan: Whole Brain Case</p>
+                <div class="flex items-center space-x-2 mb-1">
+                    <label for="ctSliceSlider" class="text-xs">CT Slice:</label>
+                    <input type="range" id="ctSliceSlider" min="1" max="50" value="25" class="w-full">
+                    <span id="ctSliceValueText" class="text-xs w-6 text-right">25</span>
+                </div>
+                 <button class="btn btn-secondary text-xs w-full mt-1">Load New Patient (Conceptual)</button>
+            </div>
+
+            <!-- Structure Definition -->
+            <div class="mb-3">
+                <h3 class="font-semibold mb-1 text-sm">2. Structure Definition</h3>
+                <p class="text-xs text-slate-500 mb-1">Target: PTV Whole Brain. OARs: Eyes, Lenses, Optic Nerves, Chiasm, Brainstem.</p>
+                <select id="structureSelector" class="input-sm mb-1">
+                    <option value="PTV_WholeBrain">PTV: Whole Brain</option>
+                    <option value="OAR_Eye_L">OAR: Eye Left</option>
+                    <option value="OAR_Eye_R">OAR: Eye Right</option>
+                    <option value="OAR_Lens_L">OAR: Lens Left</option>
+                    <option value="OAR_Lens_R">OAR: Lens Right</option>
+                    <option value="OAR_OpticNerve_L">OAR: Optic Nerve Left</option>
+                    <option value="OAR_OpticNerve_R">OAR: Optic Nerve Right</option>
+                    <option value="OAR_OpticChiasm">OAR: Optic Chiasm</option>
+                    <option value="OAR_Brainstem">OAR: Brainstem</option>
+                </select>
+                <div class="grid grid-cols-2 gap-2">
+                    <button id="toggleStructureVisibilityBtn" class="btn btn-primary text-xs">Show/Hide</button>
+                    <button id="editStructureBtn" class="btn btn-secondary text-xs" title="Conceptual: Adjust size/position">Edit Selected</button>
+                </div>
+                <div id="structureEditor" class="hidden mt-2 p-2 border rounded bg-slate-50 text-xs space-y-1">
+                    Editing: <span id="editingStructureName" class="font-semibold"></span>
+                    <div><label>Size X (%): <input type="range" data-param="w" min="2" max="80" class="w-2/3 structure-slider"> <span class="structure-value"></span></label></div> <!-- Adjusted max for whole brain -->
+                    <div><label>Size Y (%): <input type="range" data-param="h" min="2" max="80" class="w-2/3 structure-slider"> <span class="structure-value"></span></label></div> <!-- Adjusted max for whole brain -->
+                    <div><label>Pos X (%): <input type="range" data-param="x" min="5" max="95" class="w-2/3 structure-slider"> <span class="structure-value"></span></label></div>
+                    <div><label>Pos Y (%): <input type="range" data-param="y" min="5" max="95" class="w-2/3 structure-slider"> <span class="structure-value"></span></label></div>
+                </div>
+            </div>
+
+            <!-- Planning Mode Tabs -->
+            <div class="mb-3 flex-grow flex flex-col min-h-0">
+                <h3 class="font-semibold mb-1 text-sm">3. Planning Mode & Beam Setup</h3>
+                <div class="flex border-b mb-2">
+                    <button id="tabForwardPlanning" class="tab-button active" data-tab="forwardPlanningTabContent">Forward (POP)</button>
+                    <button id="tabInversePlanning" class="tab-button" data-tab="inversePlanningTabContent">Inverse (Arc Concept)</button>
+                </div>
+
+                <!-- Forward Planning Tab Content -->
+                <div id="forwardPlanningTabContent" class="tab-content active flex-grow overflow-y-auto pr-1 space-y-2">
+                    <p class="text-xs text-slate-600">Manually place beams, set angles, field sizes, and weights for POP WBRT.</p>
+                    <div>
+                        <label for="gantryAngle" class="text-xs font-medium">Gantry Angle (0-359°):</label>
+                        <input type="number" id="gantryAngle" min="0" max="359" value="90" class="input-sm"> <!-- Default to 90 for lateral -->
+                    </div>
+                    <div>
+                        <label for="fieldSizeX" class="text-xs font-medium">Field Size X (cm):</label>
+                        <input type="number" id="fieldSizeX" min="5" max="25" value="16" class="input-sm"> <!-- Typical WBRT FS -->
+                    </div>
+                    <div>
+                        <label for="fieldSizeY" class="text-xs font-medium">Field Size Y (cm):</label>
+                        <input type="number" id="fieldSizeY" min="5" max="25" value="20" class="input-sm"> <!-- Typical WBRT FS -->
+                    </div>
+                    <div>
+                        <label for="beamWeight" class="text-xs font-medium">Beam Weight/MU (1-100):</label>
+                        <input type="number" id="beamWeight" min="1" max="100" value="50" class="input-sm">
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 mt-1">
+                        <button id="addBeamBtn" class="btn btn-primary text-xs">Add Beam</button>
+                        <button id="applyBeamSettingsBtn" class="btn btn-secondary text-xs">Apply to Selected</button>
+                    </div>
+                     <button id="clearBeamsBtn" class="btn btn-secondary text-xs w-full mt-1">Clear All Beams</button>
+                </div>
+
+                <!-- Inverse Planning Tab Content -->
+                <div id="inversePlanningTabContent" class="tab-content hidden flex-grow overflow-y-auto pr-1 space-y-2">
+                    <p class="text-xs text-slate-600">Define dose objectives. The system will simulate an optimized Arc plan.</p>
+                    <div class="text-xs space-y-1">
+                        <h4 class="font-medium text-slate-700">PTV: Whole Brain</h4>
+                        <label>D95% receives: <input type="number" id="ptvD95_wb" value="30" class="input-sm w-20 inline"> Gy</label>
+
+                        <h4 class="font-medium text-slate-700 mt-1">OAR: Lens (Left/Right)</h4>
+                        <label>Max Dose < <input type="number" id="lensMax_wb" value="7" class="input-sm w-20 inline"> Gy</label>
+
+                        <h4 class="font-medium text-slate-700 mt-1">OAR: Eye (Left/Right)</h4>
+                        <label>Max Dose < <input type="number" id="eyeMax_wb" value="15" class="input-sm w-20 inline"> Gy</label>
+                        
+                        <h4 class="font-medium text-slate-700 mt-1">OAR: Brainstem</h4>
+                        <label>Max Dose < <input type="number" id="brainstemMax_wb" value="30" class="input-sm w-20 inline"> Gy</label>
+
+                        <h4 class="font-medium text-slate-700 mt-1">OAR: Optic Chiasm</h4>
+                        <label>Max Dose < <input type="number" id="chiasmMax_wb" value="30" class="input-sm w-20 inline"> Gy</label>
+                    </div>
+                    <button id="simulateImrtBtn" class="btn btn-warning text-xs w-full mt-2">Optimize Plan (Simulate Arc)</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Center Panel: CT Viewer -->
+        <div class="viewer-area">
+            <img id="ctViewerImage" src="https://placehold.co/600x500/111827/4b5563?text=Whole+Brain+CT+Slice" alt="Whole Brain CT Slice Viewer" class="viewer-image" draggable="false">
+            <!-- Structure Overlays for Whole Brain -->
+            <div id="PTV_WholeBrain_overlay" class="structure-overlay ptv-overlay" style="left: 15%; top: 10%; width: 70%; height: 80%; border-radius: 45% 45% 35% 35% / 50% 50% 40% 40%;">PTV Brain</div>
+            <div id="OAR_Eye_L_overlay" class="structure-overlay oar-overlay" style="left: 25%; top: 38%; width: 10%; height: 8%; border-radius: 50%; background-color: rgba(59, 130, 246, 0.3); border-color: #3b82f6;">L Eye</div>
+            <div id="OAR_Eye_R_overlay" class="structure-overlay oar-overlay" style="left: 65%; top: 38%; width: 10%; height: 8%; border-radius: 50%; background-color: rgba(59, 130, 246, 0.3); border-color: #3b82f6;">R Eye</div>
+            <div id="OAR_Lens_L_overlay" class="structure-overlay oar-overlay" style="left: 27%; top: 40%; width: 4%; height: 3%; border-radius: 50%; background-color: rgba(16, 185, 129, 0.4); border-color: #10b981;">L Lens</div>
+            <div id="OAR_Lens_R_overlay" class="structure-overlay oar-overlay" style="left: 69%; top: 40%; width: 4%; height: 3%; border-radius: 50%; background-color: rgba(16, 185, 129, 0.4); border-color: #10b981;">R Lens</div>
+            <div id="OAR_OpticNerve_L_overlay" class="structure-overlay oar-overlay" style="left: 35%; top: 42%; width: 10%; height: 3%; border-radius: 3px; transform: rotate(-10deg); background-color: rgba(236, 72, 153, 0.3); border-color: #ec4899;">L OptNrv</div>
+            <div id="OAR_OpticNerve_R_overlay" class="structure-overlay oar-overlay" style="left: 55%; top: 42%; width: 10%; height: 3%; border-radius: 3px; transform: rotate(10deg); background-color: rgba(236, 72, 153, 0.3); border-color: #ec4899;">R OptNrv</div>
+            <div id="OAR_OpticChiasm_overlay" class="structure-overlay oar-overlay" style="left: 46%; top: 46%; width: 8%; height: 4%; border-radius: 20%; background-color: rgba(240, 82, 82, 0.3); border-color: #f05252;">Chiasm</div>
+            <div id="OAR_Brainstem_overlay" class="structure-overlay oar-overlay" style="left: 45%; top: 55%; width: 10%; height: 25%; border-radius: 10px 10px 25px 25px; background-color: rgba(239, 68, 68, 0.4); border-color: #ef4444;">Brainstem</div>
+
+            <svg id="isodoseOverlaySVG" width="100%" height="100%" style="position: absolute; top: 0; left: 0; z-index: 6; pointer-events: none;"></svg>
+        </div>
+
+        <!-- Right Panel: Beam List, DVH, Plan Summary -->
+        <div class="tps-panel col-start-3 row-start-1 row-span-2">
+            <h2 class="text-lg font-semibold mb-3 text-indigo-700">4. Plan Evaluation</h2>
+
+            <div class="mb-3">
+                <h3 class="font-semibold mb-1 text-sm">Beam List / Plan Type</h3>
+                 <p id="planTypeText" class="text-xs text-indigo-600 font-medium mb-1">Current Mode: Forward Planning (POP)</p>
+                <div id="beamList" class="space-y-1 text-xs max-h-32 overflow-y-auto border p-1 rounded bg-slate-50">
+                    <!-- Beams will be populated by JS -->
+                </div>
+                 <div id="bevPlaceholder" class="mt-1 w-full h-16 bg-gray-700 text-white flex items-center justify-center text-xs rounded">Conceptual BEV</div>
+            </div>
+
+            <div class="mb-3">
+                <h3 class="font-semibold mb-1 text-sm">Simulated Dose Volume Histogram (DVH)</h3>
+                <div class="w-full h-48"><canvas id="dvhChartCanvas"></canvas></div>
+            </div>
+
+            <div class="mb-3">
+                <h3 class="font-semibold mb-1 text-sm">Simulated Isodose Lines</h3>
+                 <div id="isodoseKey" class="text-xs mb-1 flex items-center space-x-2">
+                    <div><span class="inline-block w-2 h-2 mr-1 rounded-full" style="background-color: #16a34a;"></span> High (PTV Rx)</div>
+                    <div><span class="inline-block w-2 h-2 mr-1 rounded-full" style="background-color: #facc15;"></span> Med</div>
+                    <div><span class="inline-block w-2 h-2 mr-1 rounded-full" style="background-color: #60a5fa;"></span> Low</div>
+                </div>
+                <p class="text-xs text-slate-500">Isodose lines are visualized on the CT Viewer.</p>
+            </div>
+
+            <div class="mb-3">
+                <h3 class="font-semibold mb-1 text-sm">Plan Summary (Conceptual WBRT)</h3>
+                <div class="text-xs space-y-0.5 text-slate-700">
+                    <p>PTV Whole Brain D95%: <span id="summary_PTV_D95_wb" class="font-semibold text-gray-500">N/A</span></p>
+                    <hr class="my-1">
+                    <p>Lens Max (L/R): <span id="summary_Lens_Max_wb" class="font-semibold text-gray-500">N/A</span></p>
+                    <p>Eye Max (L/R): <span id="summary_Eye_Max_wb" class="font-semibold text-gray-500">N/A</span></p>
+                    <p>Optic Chiasm Max: <span id="summary_Chiasm_Max_wb" class="font-semibold text-gray-500">N/A</span></p>
+                    <p>Brainstem Max: <span id="summary_Brainstem_Max_wb" class="font-semibold text-gray-500">N/A</span></p>
+                </div>
+            </div>
+             <button id="approvePlanBtn" class="btn btn-success text-xs w-full mt-2">Approve Plan (Conceptual)</button>
+        </div>
+    </main>
+
+    <footer class="bg-slate-700 text-slate-300 py-2 text-center text-xs">
+        <p>&copy; <span id="currentYear"></span> Whole Brain TPS Simulator. For Educational Purposes Only.</p>
+    </footer>
+
+    <script src="main.js"></script>
+    <script src="tutorial.js"></script>
+    <!-- The script in tutorial.js now dynamically adds buttons to tutorialButtonsContainer -->
+</body>
+</html>

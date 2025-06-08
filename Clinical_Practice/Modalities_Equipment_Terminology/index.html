@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RT Modalities, Equipment & Terminology</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .selected-option {
+            background-color: #e0f2fe; /* Tailwind sky-100 */
+            border-color: #38bdf8; /* Tailwind sky-400 */
+        }
+        .correct-answer-feedback {
+            background-color: #dcfce7 !important; /* Tailwind green-100 */
+            border-left-color: #22c55e !important; /* Tailwind green-500 */
+        }
+        .incorrect-answer-feedback {
+            background-color: #fee2e2 !important; /* Tailwind red-100 */
+            border-left-color: #ef4444 !important; /* Tailwind red-500 */
+        }
+        .correct-indicator::after {
+            content: '✔ Correct';
+            color: #16a34a; /* Tailwind green-600 */
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .incorrect-indicator::after {
+            content: '✖ Incorrect';
+            color: #dc2626; /* Tailwind red-600 */
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .correct-option-text {
+            font-weight: bold;
+            color: #15803d; /* Tailwind green-700 */
+        }
+        .external-link-icon::after {
+            content: ' ↗';
+            font-size: 0.8em;
+        }
+
+        /* Print Styles */
+        @media print {
+            body { background-color: #fff; margin: 10px; padding: 0; font-size: 10pt; }
+            .main-content-wrapper, .flip-lesson-container { box-shadow: none !important; border: none !important; width: 100%; max-width: 100%; padding: 5px; margin-bottom: 15px;}
+            .lesson-navigation-bar, .check-page-answers-button, .nav-links-header, .print-button-container, .activity-links-container { display: none !important; }
+            .lesson-page { page-break-inside: avoid; border: 1px solid #eee !important; }
+            .interactive-question-block {background: #fff !important; border: 1px solid #ccc !important; }
+            h1, h2, h3, h4 { color: #000 !important; border-color: #000 !important; margin-bottom: 10px; padding-bottom: 3px;}
+            .explanation-text { display: none !important; }
+            .external-link-icon::after { content: '';} 
+            a {text-decoration: none; color: #000 !important;}
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 flex flex-col min-h-screen">
+
+    <header class="bg-white shadow-md sticky top-0 z-50 nav-links-header">
+        <div class="container mx-auto px-6 py-3 flex flex-col sm:flex-row justify-between items-center">
+            <h1 class="text-xl font-bold text-purple-700 mb-2 sm:mb-0">RT Modalities, Equipment & Terminology</h1>
+            <div class="flex flex-wrap justify-center sm:justify-end space-x-2">
+                <a href="../index.html" class="text-xs sm:text-sm bg-purple-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-purple-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to Clinical Practice
+                </a>
+                <a href="../../index.html" class="text-xs sm:text-sm bg-slate-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-slate-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to Main Workbook
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto max-w-4xl px-4 sm:px-6 py-8 flex-grow main-content-wrapper">
+        <div class="bg-white p-6 sm:p-8 rounded-xl shadow-xl">
+            <h1 class="text-3xl font-bold text-purple-700 mb-6 text-center border-b-2 border-purple-300 pb-4">Introduction to Radiation Therapy: Modalities, Equipment, and Terminology</h1>
+
+            <div class="flip-lesson-container bg-purple-50 p-4 sm:p-6 rounded-lg shadow-md mb-8 border border-purple-200">
+                <h2 class="text-2xl font-semibold text-purple-600 mb-4">Interactive Lesson Overview</h2>
+
+                <div id="lesson-page-1" class="lesson-page active bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[450px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 1: Purpose, Task & Criteria</h3>
+                    <p class="mb-3 text-slate-700">Welcome, future Radiation Therapist! This comprehensive lesson will introduce you to the fundamental treatment modalities, key equipment, and essential medical terminology used in radiation oncology, with a special focus on External Beam Radiation Therapy (EBRT).</p>
+                    
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Purpose: Why This Matters</h4>
+                        <p class="text-sm text-slate-600">Understanding the "what, why, and how" of radiation therapy treatments and the language used to describe them is critical for your role. This knowledge will enable you to:
+                            <ul class="list-disc list-inside text-slate-600 space-y-1 text-xs ml-4 my-1">
+                                <li>Safely and accurately operate complex treatment equipment.</li>
+                                <li>Effectively communicate with patients and other members of the healthcare team.</li>
+                                <li>Comprehend treatment plans and patient charts.</li>
+                                <li>Contribute to high-quality patient care and treatment outcomes.</li>
+                            </ul>
+                        </p>
+                    </div>
+
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Task: What You Will Do</h4>
+                        <p class="text-sm text-slate-600">In this lesson, you will:</p>
+                        <ul class="list-disc list-inside text-slate-600 space-y-1 text-sm ml-4">
+                            <li>Learn basic principles of radiation therapy and its goals.</li>
+                            <li>Familiarize yourself with essential medical and radiation oncology terminology.</li>
+                            <li>Explore the components and functions of a Linear Accelerator (Linac).</li>
+                            <li>Understand the processes of patient simulation and immobilization.</li>
+                            <li>Be introduced to various EBRT techniques (3D-CRT, IMRT, VMAT, SBRT/SRS) and Image-Guided Radiation Therapy (IGRT).</li>
+                            <li>Briefly learn about other modalities like brachytherapy.</li>
+                            <li>Test your understanding through "Quick Check" questions on each topic.</li>
+                            <li>Engage with summative interactive activities at the end of the lesson.</li>
+                        </ul>
+                    </div>
+
+                    <div class="p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Criteria for Success: How You'll Know You've Learned</h4>
+                        <p class="text-sm text-slate-600">By the end of this lesson, you should be able to:</p>
+                        <ul class="list-disc list-inside text-slate-600 space-y-1 text-sm ml-4">
+                            <li>Define basic radiation therapy concepts and key medical/RT terms.</li>
+                            <li>Identify major components of a Linac and their functions.</li>
+                            <li>Describe the purpose of simulation, immobilization, and IGRT.</li>
+                            <li>Differentiate between common EBRT techniques and their general applications.</li>
+                            <li>Successfully answer the "Quick Check" questions.</li>
+                            <li>Feel prepared to tackle the end-of-lesson interactive activities.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="lesson-page-2" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 2: What is Radiation Therapy? Basic Principles & Goals</h3>
+                    <p class="mb-3 text-slate-700"><strong>Radiation Therapy</strong> (also called radiotherapy) is a cancer treatment that uses high doses of radiation to kill cancer cells and shrink tumors. At high doses, radiation damages the DNA of cancer cells, preventing them from growing and dividing. While it can also affect normal cells, healthy cells are generally better able to repair themselves from radiation damage than cancer cells.</p>
+                    <p class="mb-3 text-slate-700"><strong>How it Works (Simplified):</strong></p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li>Radiation (like X-rays or gamma rays) is directed at the tumor.</li>
+                        <li>This energy damages the genetic material (DNA) within the cancer cells.</li>
+                        <li>Damaged cancer cells lose their ability to reproduce and eventually die.</li>
+                        <li>The body then naturally eliminates these dead cells.</li>
+                    </ul>
+                    <p class="mb-3 text-slate-700"><strong>Goals of Radiation Therapy:</strong></p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li><strong>Curative Intent:</strong> To completely eradicate the cancer and prevent it from returning. This may be used alone or in combination with other treatments like surgery or chemotherapy.</li>
+                        <li><strong>Palliative Intent:</strong> To relieve symptoms and improve the quality of life when a cure is not possible. This can involve shrinking tumors to reduce pain, pressure, or other complications.</li>
+                        <li><strong>Adjuvant Therapy:</strong> Given after the primary treatment (like surgery) to kill any remaining cancer cells.</li>
+                        <li><strong>Neoadjuvant Therapy:</strong> Given before the primary treatment (like surgery) to shrink a tumor, making it easier to remove or treat.</li>
+                    </ul>
+                    <p class="text-slate-700 text-sm">As a Radiation Therapist, you will play a crucial role in delivering these life-altering treatments with precision and care.</p>
+                </div>
+
+              
+                <div id="lesson-page-3" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 3: Essential Medical Terminology - Part 1 (Foundational)</h3>
+                    <p class="mb-3 text-slate-700">Understanding medical terminology is like learning a new language. It's built on prefixes, suffixes, and root words, mostly from Greek and Latin.</p>
+                    <h4 class="text-lg font-medium text-purple-600 mb-2">Common Prefixes:</h4>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-2">
+                        <li><strong>a-, an-:</strong> without, not (e.g., <span class="font-semibold">a</span>symptomatic - without symptoms)</li>
+                        <li><strong>ante-:</strong> before (e.g., <span class="font-semibold">ante</span>rior - front side)</li>
+                        <li><strong>anti-:</strong> against (e.g., <span class="font-semibold">anti</span>biotic - against life/bacteria)</li>
+                        <li><strong>brady-:</strong> slow (e.g., <span class="font-semibold">brady</span>cardia - slow heart rate)</li>
+                        <li><strong>dys-:</strong> bad, painful, difficult (e.g., <span class="font-semibold">dys</span>phagia - difficulty swallowing)</li>
+                        <li><strong>hyper-:</strong> excessive, above (e.g., <span class="font-semibold">hyper</span>tension - high blood pressure)</li>
+                        <li><strong>hypo-:</strong> deficient, below (e.g., <span class="font-semibold">hypo</span>glycemia - low blood sugar)</li>
+                        <li><strong>inter-:</strong> between (e.g., <span class="font-semibold">inter</span>costal - between the ribs)</li>
+                        <li><strong>intra-:</strong> within (e.g., <span class="font-semibold">intra</span>venous - within a vein)</li>
+                        <li><strong>macro-:</strong> large (e.g., <span class="font-semibold">macro</span>cyte - large cell)</li>
+                        <li><strong>micro-:</strong> small (e.g., <span class="font-semibold">micro</span>scope - instrument to view small things)</li>
+                        <li><strong>neo-:</strong> new (e.g., <span class="font-semibold">neo</span>plasm - new growth/tumor)</li>
+                        <li><strong>peri-:</strong> surrounding (e.g., <span class="font-semibold">peri</span>cardium - around the heart)</li>
+                        <li><strong>post-:</strong> after, behind (e.g., <span class="font-semibold">post</span>erior - back side)</li>
+                        <li><strong>pre-:</strong> before, in front of (e.g., <span class="font-semibold">pre</span>natal - before birth)</li>
+                        <li><strong>tachy-:</strong> fast (e.g., <span class="font-semibold">tachy</span>pnea - fast breathing)</li>
+                    </ul>
+                    <h4 class="text-lg font-medium text-purple-600 mb-2">Anatomical Planes & Directions:</h4>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-2">
+                        <li><strong>Anterior (Ventral):</strong> Front of the body.</li>
+                        <li><strong>Posterior (Dorsal):</strong> Back of the body.</li>
+                        <li><strong>Superior (Cranial/Cephalic):</strong> Towards the head or upper part.</li>
+                        <li><strong>Inferior (Caudal):</strong> Away from the head or towards the lower part.</li>
+                        <li><strong>Medial:</strong> Toward the midline of the body.</li>
+                        <li><strong>Lateral:</strong> Away from the midline of the body.</li>
+                        <li><strong>Proximal:</strong> Closer to the origin of a body part or point of attachment.</li>
+                        <li><strong>Distal:</strong> Farther from the origin of a body part or point of attachment.</li>
+                        <li><strong>Superficial:</strong> Toward or at the body surface.</li>
+                        <li><strong>Deep:</strong> Away from the body surface; more internal.</li>
+                        <li><strong>Sagittal Plane:</strong> Divides body into right and left parts.
+                            <ul class="list-disc list-inside text-slate-600 space-y-1 text-xs ml-6">
+                                <li><strong>Midsagittal (Median) Plane:</strong> Sagittal plane exactly at midline.</li>
+                            </ul>
+                        </li>
+                        <li><strong>Frontal (Coronal) Plane:</strong> Divides body into anterior and posterior parts.</li>
+                        <li><strong>Transverse (Horizontal/Axial) Plane:</strong> Divides body into superior and inferior parts.</li>
+                    </ul>
+
+                    <div class="interactive-question-block mt-6 bg-purple-100 p-3 rounded-md border border-purple-300" id="q_page3_1">
+                        <p class="question-text font-semibold text-slate-700 mb-2">Quick Check: The term "hypogastric" refers to a region located:</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page3_1_ans" value="A" class="mr-2 accent-purple-600"> Above the stomach</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page3_1_ans" value="B" class="mr-2 accent-purple-600"> Below the stomach</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page3_1_ans" value="C" class="mr-2 accent-purple-600"> Around the stomach</label>
+                        <div class="explanation-text text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">The correct answer is B. "Hypo-" means below or deficient, and "gastric" refers to the stomach.</div>
+                    </div>
+                    <button class="check-page-answers-button mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswer('q_page3_1', 'B')">Check Answer</button>
+                </div>
+                
+               
+                <div id="lesson-page-4" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 4: Essential Medical Terminology - Part 2 (Oncology & RT)</h3>
+                    <h4 class="text-lg font-medium text-purple-600 mb-2">Common Oncology Suffixes & Roots:</h4>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-2">
+                        <li><strong>-oma:</strong> tumor, mass (e.g., carcin<span class="font-semibold">oma</span> - cancerous tumor, aden<span class="font-semibold">oma</span> - glandular tumor)</li>
+                        <li><strong>onc/o:</strong> tumor (e.g., <span class="font-semibold">onc</span>ology - study of tumors/cancer)</li>
+                        <li><strong>carcin/o:</strong> cancer, cancerous (e.g., <span class="font-semibold">carcin</span>ogen - cancer-causing substance)</li>
+                        <li><strong>sarc/o:</strong> flesh, connective tissue (e.g., <span class="font-semibold">sarc</span>oma - cancer of connective tissue)</li>
+                        <li><strong>-plasia:</strong> formation, growth (e.g., neo<span class="font-semibold">plasia</span> - new growth)</li>
+                        <li><strong>-stasis:</strong> stopping, controlling (e.g., meta<span class="font-semibold">stasis</span> - spread of cancer beyond its origin)</li>
+                    </ul>
+                    <h4 class="text-lg font-medium text-purple-600 mb-2">Key Oncology Terms:</h4>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-2">
+                        <li><strong>Benign:</strong> Not cancerous; does not invade nearby tissue or spread.</li>
+                        <li><strong>Malignant:</strong> Cancerous; can invade and destroy nearby tissue and spread to other parts of the body (metastasize).</li>
+                        <li><strong>Metastasis (mets):</strong> The spread of cancer cells from the primary site to other parts of the body.</li>
+                        <li><strong>Primary Site:</strong> The original location where cancer begins.</li>
+                        <li><strong>Staging:</strong> Process of finding out how much cancer is in a person's body and where it's located (e.g., TNM staging - Tumor, Nodes, Metastasis).</li>
+                        <li><strong>Grade:</strong> How abnormal cancer cells look under a microscope and how quickly the tumor is likely to grow and spread.</li>
+                        <li><strong>Biopsy:</strong> Removal of a sample of tissue for examination under a microscope to check for cancer cells.</li>
+                    </ul>
+                     <h4 class="text-lg font-medium text-purple-600 mb-2">Common Radiation Therapy Abbreviations:</h4>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-2">
+                        <li><strong>RT:</strong> Radiation Therapy</li>
+                        <li><strong>EBRT:</strong> External Beam Radiation Therapy</li>
+                        <li><strong>Fx:</strong> Fraction (a single radiation treatment session)</li>
+                        <li><strong>Gy:</strong> Gray (unit of absorbed radiation dose)</li>
+                        <li><strong>cGy:</strong> Centigray (1/100th of a Gray)</li>
+                        <li><strong>PTV:</strong> Planning Target Volume</li>
+                        <li><strong>CTV:</strong> Clinical Target Volume</li>
+                        <li><strong>GTV:</strong> Gross Tumor Volume</li>
+                        <li><strong>OAR:</strong> Organ at Risk</li>
+                        <li><strong>SSD:</strong> Source-to-Skin Distance</li>
+                        <li><strong>SAD:</strong> Source-to-Axis Distance</li>
+                        <li><strong>MLC:</strong> Multi-Leaf Collimator</li>
+                        <li><strong>OBI:</strong> On-Board Imager</li>
+                        <li><strong>CBCT:</strong> Cone-Beam Computed Tomography</li>
+                    </ul>
+                    <div class="interactive-question-block mt-6 bg-purple-100 p-3 rounded-md border border-purple-300" id="q_page4_1">
+                        <p class="question-text font-semibold text-slate-700 mb-2">Quick Check: A patient's chart indicates "mets to liver." What does "mets" likely refer to?</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page4_1_ans" value="A" class="mr-2 accent-purple-600"> The primary tumor site.</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page4_1_ans" value="B" class="mr-2 accent-purple-600"> A benign growth.</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page4_1_ans" value="C" class="mr-2 accent-purple-600"> Metastasis, meaning the cancer has spread.</label>
+                        <div class="explanation-text text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">The correct answer is C. "Mets" is a common abbreviation for metastasis, indicating the cancer has spread from its original site.</div>
+                    </div>
+                    <button class="check-page-answers-button mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswer('q_page4_1', 'C')">Check Answer</button>
+                </div>
+
+               
+                <div id="lesson-page-5" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 5: Overview of External Beam Radiation Therapy (EBRT)</h3>
+                    <p class="mb-3 text-slate-700"><strong>External Beam Radiation Therapy (EBRT)</strong> is the most common type of radiation therapy. In EBRT, a machine called a <span class="font-semibold">linear accelerator (Linac)</span> directs high-energy radiation beams from outside the body into the tumor.</p>
+                    <p class="mb-3 text-slate-700"><strong>Key Concepts of EBRT:</strong></p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li><strong>Targeted Treatment:</strong> The primary goal is to deliver a precise dose of radiation to the cancerous tumor while minimizing exposure to surrounding healthy tissues and organs.</li>
+                        <li><strong>Fractionation:</strong> Radiation is typically delivered in a series of daily treatments called <span class="font-semibold">fractions</span>, over several days or weeks. This allows healthy cells time to repair between treatments and can make the overall treatment more effective and tolerable.</li>
+                        <li><strong>Non-Invasive:</strong> Unlike surgery, EBRT does not require incisions. The radiation passes through the skin to reach the tumor.</li>
+                        <li><strong>Customized Plans:</strong> Each patient's treatment is meticulously planned based on their specific tumor type, location, stage, and overall health.</li>
+                    </ul>
+                    <p class="mb-3 text-slate-700"><strong>Rationale for Using EBRT:</strong></p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li>To cure cancer (e.g., early-stage prostate, head and neck, lung cancers).</li>
+                        <li>To shrink tumors before other treatments like surgery (neoadjuvant).</li>
+                        <li>To eliminate any remaining cancer cells after surgery (adjuvant).</li>
+                        <li>To treat cancer that has spread (metastases).</li>
+                        <li>To alleviate symptoms caused by cancer, such as pain or bleeding (palliative).</li>
+                    </ul>
+                    <p class="text-slate-700 text-sm">Radiation Therapists are central to the EBRT process, responsible for the accurate daily delivery of these treatments.</p>
+                </div>
+
+              
+                <div id="lesson-page-6" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 6: The Linear Accelerator (Linac) - Key Components</h3>
+                    <p class="mb-3 text-slate-700">The <span class="font-semibold">Linear Accelerator (Linac)</span> is the primary machine used to deliver EBRT. It generates high-energy X-rays or electrons for cancer treatment. Understanding its components is crucial for RTTs.</p>
+                    <img src="https://oncologymedicalphysics.com/wp-content/uploads/2021/04/Linac-Components-OMP.png" alt="Diagram of a Linear Accelerator" class="mx-auto my-4 rounded-md shadow-md" onerror="this.onerror=null; this.src='https://placehold.co/600x300/E9D5FF/4C1D95?text=Linac+Diagram+Placeholder';">
+                    <p class="text-xs text-center text-slate-500 mb-4">Linac Diagram </p>
+                    <p class="text-xs text-center text-slate-500 mb-4 image-citation">
+                        Image source: 
+                        <a href="https://oncologymedicalphysics.com/introduction-to-clinical-linear-accelerators/" target="_blank" rel="noopener noreferrer" class="text-purple-600 hover:underline">
+                            Linear Accelerator Basics | Oncology Medical Physics
+                        </a>
+                    <h4 class="text-lg font-medium text-purple-600 mb-2">Major Components & Functions:</h4>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li><strong>Gantry:</strong> The large rotating part of the Linac that houses the radiation-producing components. It can rotate 360 degrees around the patient, allowing treatment from various angles.</li>
+                        <li><strong>Treatment Head (within Gantry):</strong> Contains components that shape and monitor the radiation beam, including:
+                            <ul class="list-disc list-inside text-slate-600 space-y-1 text-xs ml-6">
+                                <li><strong>Collimators (Jaws):</strong> Heavy metal plates (primary and secondary) that define the general size of the radiation field (e.g., a square or rectangle).</li>
+                                <li><strong>Multi-Leaf Collimator (MLCs):</strong> Dozens to over a hundred individually controlled metal "leaves" that can move independently to precisely shape the radiation beam to conform to the tumor's shape, sparing healthy tissue.</li>
+                            </ul>
+                        </li>
+                        <li><strong>Treatment Couch (Table/Bed):</strong> Where the patient lies during treatment. It can move in multiple directions (up/down, in/out, left/right, and sometimes rotate) to accurately position the patient.</li>
+                        <li><strong>Imaging Systems (IGRT components):</strong>
+                            <ul class="list-disc list-inside text-slate-600 space-y-1 text-xs ml-6">
+                                <li><strong>Electronic Portal Imaging Device (EPID):</strong> An imager on the opposite side of the gantry from the treatment head, used to acquire MV images (using the treatment beam) to verify patient position and beam placement.</li>
+                                <li><strong>On-Board Imager (OBI):</strong> Typically includes kV X-ray sources and detectors mounted on retractable arms, allowing for planar X-rays (2D) or Cone-Beam CT (CBCT - 3D) images to be taken just before treatment for precise patient alignment.</li>
+                            </ul>
+                        </li>
+                        <li><strong>Control Console:</strong> Located outside the treatment room, where RTTs operate the Linac, monitor the patient via cameras, and deliver the prescribed treatment.</li>
+                    </ul>
+                    <div class="interactive-question-block mt-6 bg-purple-100 p-3 rounded-md border border-purple-300" id="q_page6_1">
+                        <p class="question-text font-semibold text-slate-700 mb-2">Quick Check: Which Linac component is primarily responsible for shaping the radiation beam to match the complex outline of a tumor?</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page6_1_ans" value="A" class="mr-2 accent-purple-600"> The Gantry</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page6_1_ans" value="B" class="mr-2 accent-purple-600"> The Treatment Couch</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page6_1_ans" value="C" class="mr-2 accent-purple-600"> The Multi-Leaf Collimator (MLCs)</label>
+                        <div class="explanation-text text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">The correct answer is C. The MLCs, with their independently moving leaves, allow for highly conformal shaping of the radiation beam.</div>
+                    </div>
+                    <button class="check-page-answers-button mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswer('q_page6_1', 'C')">Check Answer</button>
+                </div>
+
+               
+                <div id="lesson-page-7" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 7: Patient Simulation for EBRT - Planning the Attack</h3>
+                    <p class="mb-3 text-slate-700">Before any radiation treatment can begin, a crucial step called <span class="font-semibold">simulation</span> (often CT simulation) is performed. This process is like creating a detailed map for the radiation treatment.</p>
+                    <p class="mb-3 text-slate-700"><strong>Purpose of Simulation:</strong></p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li>To precisely locate and define the tumor and surrounding healthy organs.</li>
+                        <li>To determine the optimal patient position for treatment that will be reproducible daily.</li>
+                        <li>To create immobilization devices to ensure the patient remains in the exact same position for each treatment fraction.</li>
+                        <li>To acquire CT images that will be used by the dosimetrist and radiation oncologist to design the treatment plan.</li>
+                        <li>To mark the patient's skin (or immobilization device) with reference points for daily setup on the treatment machine.</li>
+                    </ul>
+                    <p class="mb-3 text-slate-700"><strong>Typical CT Simulation Process Overview:</strong></p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li><strong>Patient Preparation:</strong> May include instructions like fasting, full/empty bladder, or specific positioning aids.</li>
+                        <li><strong>Positioning:</strong> The RTT carefully positions the patient on the CT scanner couch in the intended treatment position.</li>
+                        <li><strong>Immobilization:</strong> Custom or standard immobilization devices (masks, vac-bags, etc.) are created or fitted.</li>
+                        <li><strong>Contrast Administration (if needed):</strong> Intravenous (IV) or oral contrast agents may be used to better visualize certain organs or blood vessels.</li>
+                        <li><strong>CT Scanning:</strong> A series of CT images are acquired through the area of interest.</li>
+                        <li><strong>Marking:</strong> Reference marks (often small tattoos or permanent ink on skin or device) are placed on the patient. These marks, along with lasers in the CT and treatment rooms, are used for daily alignment.</li>
+                        <li><strong>Documentation:</strong> All setup parameters, devices used, and patient instructions are meticulously documented.</li>
+                    </ul>
+                    <p class="text-slate-700 text-sm">The accuracy of the entire radiation therapy course relies heavily on a precise and reproducible simulation. RTTs play a key role in this process.</p>
+                </div>
+
+               
+                <div id="lesson-page-8" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 8: Immobilization Devices in EBRT - Precision and Comfort</h3>
+                    <p class="mb-3 text-slate-700"><strong>Immobilization devices</strong> are essential tools in radiation therapy used to ensure the patient remains in the exact same position for every treatment fraction. This reproducibility is critical for accurately targeting the tumor while sparing healthy tissue.</p>
+                    <p class="mb-3 text-slate-700"><strong>Rationale for Immobilization:</strong></p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li><strong>Accuracy:</strong> Even small movements can cause the radiation beam to miss part of the tumor or irradiate healthy tissue unnecessarily.</li>
+                        <li><strong>Reproducibility:</strong> Ensures the patient is set up identically from simulation through each treatment day.</li>
+                        <li><strong>Patient Comfort:</strong> While some devices can feel restrictive, they are designed to help the patient maintain a stable and often more comfortable position for the duration of the treatment.</li>
+                        <li><strong>Efficiency:</strong> Consistent setups can make the daily treatment process quicker.</li>
+                    </ul>
+                    <p class="mb-3 text-slate-700"><strong>Common Types of Immobilization Devices:</strong></p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li><strong>Thermoplastic Masks (Aquaplast™):</strong> Used for head and neck, and sometimes brain treatments. A sheet of plastic is warmed, molded to the patient's contours, and then hardens, creating a custom fit.</li>
+                        <li><strong>Vacuum Bags (Vac-Lok™, Alpha Cradle®):</strong> Bags filled with small styrofoam beads. Air is evacuated, causing the bag to become rigid and conform to the patient's body shape. Used for various body sites.</li>
+                        <li><strong>Bite Blocks/Oral Stents:</strong> Used in head and neck treatments to position the jaw, tongue, or displace normal tissues away from the radiation field.</li>
+                        <li><strong>Wing Boards™ / Breast Boards:</strong> Used for breast treatments to position the arms out of the way and ensure consistent chest wall positioning.</li>
+                        <li><strong>Knee Sponges/Foot Rests:</strong> Provide support and help maintain leg and foot position.</li>
+                        <li><strong>Prone Head Cushions/Belly Boards:</strong> Used for specific treatments where the patient is lying face down (prone).</li>
+                    </ul>
+                    <div class="interactive-question-block mt-6 bg-purple-100 p-3 rounded-md border border-purple-300" id="q_page8_1">
+                        <p class="question-text font-semibold text-slate-700 mb-2">Quick Check: For a patient receiving radiation therapy to the brain or head and neck region, which type of immobilization device is most commonly custom-made for them?</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page8_1_ans" value="A" class="mr-2 accent-purple-600"> Vacuum Bag (Vac-Lok™)</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page8_1_ans" value="B" class="mr-2 accent-purple-600"> Thermoplastic Mask</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page8_1_ans" value="C" class="mr-2 accent-purple-600"> Breast Board</label>
+                        <div class="explanation-text text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">The correct answer is B. Thermoplastic masks are custom-molded to the patient's head and/or neck to ensure precise and reproducible positioning for these treatments.</div>
+                    </div>
+                    <button class="check-page-answers-button mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswer('q_page8_1', 'B')">Check Answer</button>
+                </div>
+
+             
+                <div id="lesson-page-9" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 9: Image-Guided Radiation Therapy (IGRT) - Seeing is Treating</h3>
+                    <p class="mb-3 text-slate-700"><strong>Image-Guided Radiation Therapy (IGRT)</strong> refers to the use of various imaging techniques before and/or during radiation treatment to ensure the accuracy and precision of dose delivery.</p>
+                    <p class="mb-3 text-slate-700"><strong>Purpose of IGRT:</strong></p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li><strong>Verify Patient Position:</strong> To confirm that the patient is positioned on the treatment couch exactly as they were during simulation.</li>
+                        <li><strong>Account for Organ Motion:</strong> Internal organs can move day-to-day (e.g., bladder filling, bowel gas) or even during treatment (e.g., breathing). IGRT helps to adjust for these changes.</li>
+                        <li><strong>Increase Targeting Accuracy:</strong> Allows for smaller treatment margins around the tumor, thereby reducing radiation dose to surrounding healthy tissues.</li>
+                        <li><strong>Enable Advanced Techniques:</strong> Essential for highly conformal treatments like IMRT, VMAT, SBRT, and SRS where precision is paramount.</li>
+                    </ul>
+                    <p class="mb-3 text-slate-700"><strong>Common IGRT Modalities Used by RTTs:</strong></p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li><strong>kV Planar Imaging (Orthogonal Pairs):</strong> Two X-ray images taken from different angles (usually 90 degrees apart) using the Linac's On-Board Imager (OBI). These are compared to reference images (DRRs - Digitally Reconstructed Radiographs) from the treatment plan.</li>
+                        <li><strong>Cone-Beam Computed Tomography (CBCT):</strong> The OBI rotates around the patient, acquiring a 3D CT-like image set. This provides volumetric information and can be fused with the planning CT for precise alignment.</li>
+                        <li><strong>MV Planar Imaging (Portal Imaging):</strong> Uses the high-energy treatment beam itself to create an image via the Electronic Portal Imaging Device (EPID). Often used to verify beam placement and MLC shaping.</li>
+                        <li><strong>Surface Guidance (e.g., AlignRT®, Catalyst™):</strong> Uses optical or laser scanning to monitor the patient's external surface in real-time, ensuring they remain in the correct position.</li>
+                    </ul>
+                    <p class="text-slate-700 text-sm">RTTs are responsible for acquiring these images, comparing them to the plan, making necessary couch adjustments (often automated or with physicist/oncologist approval), and documenting the IGRT process.</p>
+                     <div class="interactive-question-block mt-6 bg-purple-100 p-3 rounded-md border border-purple-300" id="q_page9_1">
+                        <p class="question-text font-semibold text-slate-700 mb-2">Quick Check: Which IGRT modality provides a 3D volumetric image of the patient in the treatment position, allowing for soft tissue visualization and comparison with the planning CT?</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page9_1_ans" value="A" class="mr-2 accent-purple-600"> MV Planar Imaging (EPID)</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page9_1_ans" value="B" class="mr-2 accent-purple-600"> kV Planar Imaging (Orthogonal Pairs)</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page9_1_ans" value="C" class="mr-2 accent-purple-600"> Cone-Beam Computed Tomography (CBCT)</label>
+                        <div class="explanation-text text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">The correct answer is C. CBCT provides a 3D image set that can be fused with the planning CT for accurate volumetric alignment, especially useful for soft tissue targets.</div>
+                    </div>
+                    <button class="check-page-answers-button mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswer('q_page9_1', 'C')">Check Answer</button>
+                </div>
+
+              
+                <div id="lesson-page-10" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 10: Common EBRT Techniques - Part 1</h3>
+                    <p class="mb-3 text-slate-700">Several advanced EBRT techniques allow for highly precise radiation delivery.</p>
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">3D Conformal Radiation Therapy (3D-CRT)</h4>
+                        <p class="text-sm text-slate-600 mb-2">In 3D-CRT, radiation beams are shaped by MLCs to match the 3-dimensional shape of the tumor, based on CT images. Multiple beams are typically used from different angles.
+                        <br><strong>Rationale:</strong> Allows for higher doses to the tumor while reducing exposure to surrounding normal tissues compared to older 2D techniques.
+                        <br><strong>Typical Uses:</strong> Still used for various sites, especially when complex dose sculpting isn't paramount or for simpler palliative cases.</p>
+                    </div>
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Intensity-Modulated Radiation Therapy (IMRT)</h4>
+                        <p class="text-sm text-slate-600 mb-2">IMRT is an advanced form of 3D-CRT that allows the intensity of each radiation beam to be varied (modulated) across the beam's profile. This is achieved by complex MLC movements while the beam is on, or by using multiple small segments within each beam.
+                        <br><strong>Rationale:</strong> Enables even more precise conformity of the high-dose region to complex tumor shapes, especially those near critical organs. Allows for "dose painting" – delivering different dose levels to different parts of the target.
+                        <br><strong>Typical Uses:</strong> Head and neck cancers, prostate cancer, gynecological cancers, and other sites where sparing nearby sensitive structures is crucial.</p>
+                    </div>
+                     <div class="interactive-question-block mt-6 bg-white p-3 rounded-md border border-slate-300" id="q_page10_1">
+                        <p class="question-text font-semibold text-slate-700 mb-2">Quick Check: What is the primary advantage of IMRT over 3D-CRT?</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page10_1_ans" value="A" class="mr-2 accent-purple-600"> It uses fewer radiation beams.</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page10_1_ans" value="B" class="mr-2 accent-purple-600"> It allows for varying the intensity of radiation within each beam for better dose conformity.</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page10_1_ans" value="C" class="mr-2 accent-purple-600"> It does not require the use of MLCs.</label>
+                        <div class="explanation-text text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">The correct answer is B. IMRT's key feature is modulating the intensity within each beam, allowing for superior dose shaping around complex targets and better sparing of normal tissues.</div>
+                    </div>
+                    <button class="check-page-answers-button mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswer('q_page10_1', 'B')">Check Answer</button>
+                </div>
+
+               
+                <div id="lesson-page-11" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 11: Common EBRT Techniques - Part 2</h3>
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Volumetric Modulated Arc Therapy (VMAT / RapidArc™ / VERO™)</h4>
+                        <p class="text-sm text-slate-600 mb-2">VMAT is an advanced form of IMRT where radiation is delivered as the gantry rotates (one or more arcs) around the patient. During rotation, the MLCs, dose rate, and gantry speed can all change continuously.
+                        <br><strong>Rationale:</strong> Can deliver highly conformal dose distributions, often with shorter treatment times compared to conventional IMRT.
+                        <br><strong>Typical Uses:</strong> Similar to IMRT, for complex tumor shapes near critical structures; widely used for many cancer sites.</p>
+                    </div>
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Stereotactic Body Radiation Therapy (SBRT) & Stereotactic Radiosurgery (SRS)</h4>
+                        <p class="text-sm text-slate-600 mb-2">These are highly precise techniques that deliver very high doses of radiation to small, well-defined tumors in a few treatment fractions (typically 1 to 5).
+                            <ul class="list-disc list-inside text-slate-600 space-y-1 text-xs ml-4 my-1">
+                                <li><strong>SRS:</strong> Typically refers to treatment of intracranial (brain) or spinal lesions. Often delivered in a single fraction.</li>
+                                <li><strong>SBRT (or SABR - Stereotactic Ablative Body Radiotherapy):</strong> Refers to treatment of extracranial (outside the brain) tumors, such as in the lung, liver, spine, or prostate.</li>
+                            </ul>
+                        <strong>Rationale:</strong> Aims to achieve tumor ablation with extreme precision, requiring meticulous immobilization, IGRT, and often motion management techniques.
+                        <br><strong>Typical Uses:</strong> Small primary tumors (e.g., early-stage lung cancer), metastases (e.g., brain, liver, lung, bone), certain benign conditions.</p>
+                    </div>
+                     <div class="interactive-question-block mt-6 bg-white p-3 rounded-md border border-slate-300" id="q_page11_1">
+                        <p class="question-text font-semibold text-slate-700 mb-2">Quick Check: Which technique is characterized by delivering very high doses of radiation in 1 to 5 fractions to small, well-defined tumors?</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page11_1_ans" value="A" class="mr-2 accent-purple-600"> 3D-CRT</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page11_1_ans" value="B" class="mr-2 accent-purple-600"> Conventional IMRT (many fractions)</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page11_1_ans" value="C" class="mr-2 accent-purple-600"> SBRT/SRS</label>
+                        <div class="explanation-text text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">The correct answer is C. SBRT/SRS are specialized techniques using very high doses per fraction, delivered in a small number of treatments.</div>
+                    </div>
+                    <button class="check-page-answers-button mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswer('q_page11_1', 'C')">Check Answer</button>
+                </div>
+
+               
+                <div id="lesson-page-12" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 12: Other EBRT Modalities & Considerations</h3>
+                    <p class="mb-3 text-slate-700">While Linac-based photon therapies (3D-CRT, IMRT, VMAT, SBRT/SRS) are very common, other EBRT approaches exist:</p>
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Proton Therapy</h4>
+                        <p class="text-sm text-slate-600 mb-2">Uses beams of protons (positively charged particles) instead of X-rays. Protons deposit most of their energy at a specific depth in tissue (the Bragg peak), with very little dose beyond that point.
+                        <br><strong>Advantage:</strong> Can potentially reduce dose to healthy tissues located distal to (behind) the tumor, which is particularly beneficial for pediatric patients or tumors near critical organs.
+                        <br><strong>Considerations:</strong> More complex and expensive; availability is limited compared to photon therapy.</p>
+                    </div>
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Electron Beam Therapy</h4>
+                        <p class="text-sm text-slate-600 mb-2">Uses beams of electrons, which are also produced by Linacs. Electrons have a limited range in tissue, depositing their dose superficially.
+                        <br><strong>Advantage:</strong> Useful for treating tumors or lesions on or near the skin surface (e.g., skin cancers, keloids, some lymph nodes) while sparing deeper tissues.
+                        <br><strong>Considerations:</strong> Custom "cutouts" or applicators are often used to shape the electron field.</p>
+                    </div>
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Total Body Irradiation (TBI)</h4>
+                        <p class="text-sm text-slate-600 mb-2">A technique where the entire body is irradiated, typically at a low dose rate over one or more fractions.
+                        <br><strong>Rationale:</strong> Often used as part of a conditioning regimen before bone marrow or stem cell transplantation to eliminate remaining cancer cells and suppress the immune system.
+                        <br><strong>Considerations:</strong> Requires specialized setup and dosimetry to ensure dose homogeneity across the body.</p>
+                    </div>
+                </div>
+                
+               
+                 <div id="lesson-page-13" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 13: Introduction to Brachytherapy (A Different Approach)</h3>
+                    <p class="mb-3 text-slate-700">While this lesson focuses primarily on External Beam Radiation Therapy (EBRT), it's important to be aware of another major category of radiation treatment: <span class="font-semibold">Brachytherapy</span>.</p>
+                    <p class="mb-3 text-slate-700"><strong>What is Brachytherapy?</strong></p>
+                    <p class="text-sm text-slate-700 mb-2">Derived from the Greek word "brachys" meaning "short distance," brachytherapy involves placing radioactive sources directly <span class="font-semibold">inside or very close to the tumor</span>. This allows a high dose of radiation to be delivered to the target while rapidly decreasing the dose to surrounding healthy tissues due to the short distance.</p>
+                    
+                    <p class="mb-3 text-slate-700"><strong>Key Differences from EBRT:</strong></p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li><strong>Source Location:</strong> EBRT uses external machines; brachytherapy uses internal sources.</li>
+                        <li><strong>Dose Delivery:</strong> Brachytherapy delivers dose from within, leading to a very steep dose fall-off.</li>
+                    </ul>
+
+                    <p class="mb-3 text-slate-700"><strong>Common Types of Brachytherapy:</strong></p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li><strong>Low-Dose Rate (LDR):</strong> Radioactive sources (like seeds) are implanted permanently or temporarily and deliver radiation over hours or days. (e.g., prostate seed implants).</li>
+                        <li><strong>High-Dose Rate (HDR):</strong> A highly radioactive source is temporarily placed inside or near the tumor for a few minutes at a time using an afterloader machine. This may be repeated over several fractions. (e.g., gynecological, breast, prostate HDR).</li>
+                        <li><strong>Intracavitary:</strong> Sources placed in body cavities (e.g., uterus, vagina).</li>
+                        <li><strong>Interstitial:</strong> Sources placed directly into tissues (e.g., prostate, breast).</li>
+                        <li><strong>Surface/Plaque:</strong> Sources placed on the surface of the area to be treated (e.g., eye plaques).</li>
+                    </ul>
+                     <p class="text-slate-700 text-sm">While RTTs may not be directly involved in all aspects of brachytherapy (roles can vary by institution and specific procedures often involve specialized teams including physicists, dosimetrists, oncologists, and nurses), understanding its existence and basic principles is important for a comprehensive view of radiation oncology.</p>
+                </div>
+
+
+                <div id="lesson-page-14" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 14: Conclusion & Next Steps (Activities)</h3>
+                    <p class="mb-3 text-slate-700">Congratulations on completing this introduction to radiation therapy modalities, equipment, and terminology! You've covered a lot of ground, from basic radiation principles and essential vocabulary to the intricacies of the linear accelerator, patient setup, and various external beam treatment techniques.</p>
+                    <p class="mb-3 text-slate-700"><strong>Key Takeaways:</strong></p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li>Radiation therapy is a precise and complex field aimed at treating cancer effectively while minimizing harm to healthy tissue.</li>
+                        <li>A strong grasp of medical and RT-specific terminology is essential for clear communication and understanding.</li>
+                        <li>The Linear Accelerator is a sophisticated machine with multiple components working together to deliver treatment.</li>
+                        <li>Patient simulation, immobilization, and IGRT are critical for treatment accuracy and reproducibility.</li>
+                        <li>Various EBRT techniques (3D-CRT, IMRT, VMAT, SBRT/SRS) offer different ways to conform dose to the tumor.</li>
+                    </ul>
+                    <p class="mb-3 text-slate-700">This foundational knowledge will serve you well as you continue your journey to becoming a skilled and compassionate Radiation Therapist.</p>
+                    
+                    <h4 class="text-lg font-medium text-purple-600 mt-6 mb-3">Next Steps: Interactive Activities</h4>
+                    <p class="text-slate-700 mb-4">To further solidify your understanding, please proceed to the following interactive activities:</p>
+                    <div class="activity-links-container space-y-3">
+                        <a href="rt_modality_match_activity.html" class="block w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white font-medium py-3 px-5 rounded-lg text-center transition-colors duration-150">
+                            Activity 1: Match the Modality/Equipment
+                        </a>
+                        <a href="rt_terminology_challenge.html" class="block w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white font-medium py-3 px-5 rounded-lg text-center transition-colors duration-150">
+                            Activity 2: Terminology Challenge
+                        </a>
+                        <a href="rt_linac_label_activity.html" class="block w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white font-medium py-3 px-5 rounded-lg text-center transition-colors duration-150">
+                            Activity 3: Linac Components Labeling
+                        </a>
+                    </div>
+                </div>
+
+                <div class="lesson-navigation-bar text-center mt-6">
+                    <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled aria-label="Go to Previous Lesson Page" class="bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors disabled:bg-slate-300 text-sm">Previous Page</button>
+                    <span class="page-indicator mx-2 sm:mx-4 text-sm text-slate-600" id="lessonPageIndicator">Page 1 of 14</span>
+                    <button id="nextLessonPage" onclick="changeLessonPage(1)" aria-label="Go to Next Lesson Page" class="bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors text-sm">Next Page</button>
+                </div>
+            </div>
+
+            <div class="print-button-container text-center mt-8">
+                <button onclick="window.print()" class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-6 rounded-lg text-sm transition-colors">Print Lesson</button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-slate-800 text-slate-300 py-6 mt-auto text-center">
+        <div class="container mx-auto px-6">
+            <p class="text-sm">&copy; <span id="currentYear"></span> Radiation Therapy E-Workbook. RTApps All Rights Reserved.</p>
+            <p class="text-xs mt-1">RT Modalities, Equipment & Terminology Lesson</p>
+        </div>
+    </footer>
+
+    <script>
+        let currentLessonPage = 1;
+        const totalLessonPages = 14; 
+        const lessonPages = document.querySelectorAll('.lesson-page');
+        const prevLessonButton = document.getElementById('prevLessonPage');
+        const nextLessonButton = document.getElementById('nextLessonPage');
+        const lessonPageIndicator = document.getElementById('lessonPageIndicator');
+
+        const correctAnswers = {
+            'q_page3_1': 'B', // Terminology - hypogastric
+            'q_page4_1': 'C', // Terminology - mets
+            'q_page6_1': 'C', // Linac - MLCs
+            'q_page8_1': 'B', // Immobilization - mask
+            'q_page9_1': 'C', // IGRT - CBCT
+            'q_page10_1': 'B', // EBRT Tech - IMRT advantage
+            'q_page11_1': 'C'  // EBRT Tech - SBRT/SRS
+        };
+
+        function displayLessonPage() {
+            lessonPages.forEach((page, index) => {
+                page.style.display = (index === currentLessonPage - 1) ? 'block' : 'none';
+            });
+            prevLessonButton.disabled = currentLessonPage === 1;
+            nextLessonButton.disabled = currentLessonPage === totalLessonPages;
+            lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
+        }
+
+        function changeLessonPage(direction) {
+            currentLessonPage += direction;
+            displayLessonPage();
+        }
+
+        function checkPageAnswer(questionBlockId, correctAnswerValue) {
+            const questionBlock = document.getElementById(questionBlockId);
+            if (!questionBlock) return;
+
+            const selectedRadio = questionBlock.querySelector(`input[name="${questionBlockId}_ans"]:checked`);
+            const explanationDiv = questionBlock.querySelector('.explanation-text');
+            
+            questionBlock.classList.remove('correct-answer-feedback', 'incorrect-answer-feedback');
+            questionBlock.querySelectorAll('label').forEach(label => {
+                label.classList.remove('font-semibold', 'text-green-700', 'text-red-700');
+                const indicator = label.querySelector('.correct-indicator, .incorrect-indicator');
+                if(indicator) indicator.remove();
+            });
+            if (explanationDiv) explanationDiv.style.display = 'none';
+
+            if (selectedRadio) {
+                const userAnswer = selectedRadio.value;
+                const userSelectedLabel = selectedRadio.parentElement;
+
+                if (userAnswer === correctAnswerValue) {
+                    questionBlock.classList.add('correct-answer-feedback');
+                    userSelectedLabel.classList.add('font-semibold', 'text-green-700');
+                    const indicator = document.createElement('span');
+                    indicator.className = 'correct-indicator';
+                    userSelectedLabel.appendChild(indicator);
+                } else {
+                    questionBlock.classList.add('incorrect-answer-feedback');
+                    userSelectedLabel.classList.add('font-semibold', 'text-red-700');
+                    const indicator = document.createElement('span');
+                    indicator.className = 'incorrect-indicator';
+                    userSelectedLabel.appendChild(indicator);
+                    
+                    const correctRadio = questionBlock.querySelector(`input[name="${questionBlockId}_ans"][value="${correctAnswerValue}"]`);
+                    if (correctRadio && correctRadio.parentElement) {
+                        correctRadio.parentElement.classList.add('font-semibold', 'text-green-700');
+                         const correctIndicator = document.createElement('span');
+                         correctIndicator.className = 'correct-indicator';
+                         correctRadio.parentElement.appendChild(correctIndicator);
+                    }
+                }
+            } else { 
+                questionBlock.classList.add('incorrect-answer-feedback');
+                const correctRadio = questionBlock.querySelector(`input[name="${questionBlockId}_ans"][value="${correctAnswerValue}"]`);
+                if (correctRadio && correctRadio.parentElement) {
+                    correctRadio.parentElement.classList.add('font-semibold', 'text-green-700');
+                    const correctIndicator = document.createElement('span');
+                    correctIndicator.className = 'correct-indicator';
+                    correctRadio.parentElement.appendChild(correctIndicator);
+                }
+            }
+            if (explanationDiv) explanationDiv.style.display = 'block';
+        }
+        
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        displayLessonPage();
+    </script>
+
+</body>
+</html>

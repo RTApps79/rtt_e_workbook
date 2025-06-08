@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foundations of Patient Care in Radiation Therapy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Feedback styles consistent with other updated lessons */
+        .selected-option { background-color: #e0f2fe; /* Tailwind sky-100 */ border-color: #38bdf8; /* Tailwind sky-400 */ }
+        .correct-answer-feedback { background-color: #dcfce7 !important; /* Tailwind green-100 */ border-left: 4px solid #22c55e !important; /* Tailwind green-500 */ }
+        .incorrect-answer-feedback { background-color: #fee2e2 !important; /* Tailwind red-100 */ border-left: 4px solid #ef4444 !important; /* Tailwind red-500 */ }
+        .correct-indicator::after { content: '✔ Correct'; color: #16a34a; /* Tailwind green-600 */ font-weight: bold; margin-left: 10px; }
+        .incorrect-indicator::after { content: '✖ Incorrect'; color: #dc2626; /* Tailwind red-600 */ font-weight: bold; margin-left: 10px; }
+        .correct-option-text { font-weight: bold; color: #15803d; /* Tailwind green-700 */ }
+
+        .highlight { /* Tailwind purple theme for highlight */
+            background-color: #ede9fe; /* purple-100 */
+            color: #5b21b6; /* purple-700 */
+            padding: 0.1em 0.3em;
+            border-radius: 0.25rem;
+            font-weight: 500;
+        }
+        .note { /* Tailwind slate theme for note */
+            font-size: 0.9em; font-style: italic; color: #4b5563; /* slate-600 */
+            background-color: #f3f4f6; /* slate-100 */
+            padding: 10px; border-left: 3px solid #6b7280; /* slate-500 */
+            margin: 15px 0; border-radius: 4px;
+        }
+         .activity-link-button { /* Green button for activities */
+            display: inline-block; background-color: #22c55e; /* green-500 */
+            color: white; padding: 12px 25px; text-align: center;
+            text-decoration: none; border-radius: 0.375rem; /* rounded-lg */
+            font-size: 1.1em; font-weight: 500; /* medium */
+            margin-top: 15px; transition: background-color 0.2s;
+        }
+        .activity-link-button:hover { background-color: #16a34a; /* green-600 */ }
+
+        /* Print Styles */
+        @media print {
+            body { background-color: #fff; margin: 10px; padding: 0; font-size: 10pt; }
+            .main-content-wrapper, .flip-lesson-container { box-shadow: none !important; border: none !important; width: 100%; max-width: 100%; padding: 5px; margin-bottom: 15px;}
+            .lesson-navigation-bar, .check-page-answers-button, .nav-links-header, .print-button-container, .activity-link-button { display: none !important; }
+            .lesson-page { page-break-inside: avoid; border: 1px solid #eee !important; }
+            .interactive-question-block {background: #fff !important; border: 1px solid #ccc !important; }
+            h1, h2, h3, h4 { color: #000 !important; border-color: #000 !important; margin-bottom: 10px; padding-bottom: 3px;}
+            .explanation-text { display: none !important; }
+            a {text-decoration: none; color: #000 !important;}
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 flex flex-col min-h-screen">
+
+    <header class="bg-white shadow-md sticky top-0 z-50 nav-links-header">
+        <div class="container mx-auto px-6 py-3 flex flex-col sm:flex-row justify-between items-center">
+            <h1 class="text-xl font-bold text-purple-700 mb-2 sm:mb-0">Foundations of Patient Care</h1>
+            <div class="flex flex-wrap justify-center sm:justify-end space-x-2">
+                <a href="index.html" class="text-xs sm:text-sm bg-purple-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-purple-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to Patient Care Menu
+                </a>
+                <a href="../index.html" class="text-xs sm:text-sm bg-slate-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-slate-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to Main Workbook
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto max-w-4xl px-4 sm:px-6 py-8 flex-grow main-content-wrapper">
+        <div class="bg-white p-6 sm:p-8 rounded-xl shadow-xl">
+            <h1 class="text-3xl font-bold text-purple-700 mb-6 text-center border-b-2 border-purple-300 pb-4">Foundations of Patient Care in Radiation Therapy</h1>
+
+            <div class="flip-lesson-container bg-purple-50 p-4 sm:p-6 rounded-lg shadow-md mb-8 border border-purple-200">
+                <h2 class="text-2xl font-semibold text-purple-600 mb-4">Interactive Lesson</h2>
+
+                <div id="lesson-page-1" class="lesson-page active bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[480px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 1: The Compassionate & Competent Therapist</h3>
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Purpose: Why This Matters</h4>
+                        <p class="text-sm text-slate-600">This lesson introduces fundamental patient care skills crucial for Radiation Therapists, focusing on safety, communication, and basic clinical procedures to ensure a positive treatment experience.</p>
+                    </div>
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Task: What You Will Do</h4>
+                        <p class="text-sm text-slate-600">Learn about patient identification, communication, vital signs, safe patient handling, oxygen administration, infection control, and BLS/AED overview.</p>
+                    </div>
+                    <div class="p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Criteria for Success</h4>
+                        <p class="text-sm text-slate-600">Understand steps for patient ID, vital signs importance, safe transfer principles, O2 basics, universal precautions, and BLS/AED components.</p>
+                    </div>
+                    <p class="mt-4 text-slate-700 text-sm">Your care significantly impacts the patient's experience.</p>
+                </div>
+
+                <div id="lesson-page-2" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[480px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 2: Patient Identification, Instruction & Communication</h3>
+                    <p class="text-slate-700">Accurate patient identification and clear communication are paramount.</p>
+                    <h4 class="text-lg font-medium text-purple-600 my-2">Accurate Patient Identification:</h4>
+                    <ul class="list-disc list-inside text-slate-600 space-y-1 text-sm mb-4">
+                        <li>Always use at least <span class="highlight">two patient identifiers</span> (e.g., full name, DOB, MRN).</li>
+                        <li>Actively involve the patient: ask them to state their name and DOB.</li>
+                    </ul>
+                    <h4 class="text-lg font-medium text-purple-600 my-2">Clear Communication:</h4>
+                    <ul class="list-disc list-inside text-slate-600 space-y-1 text-sm mb-4">
+                        <li>Introduce yourself clearly (name and title).</li>
+                        <li>Explain procedures in simple terms.</li>
+                        <li>Verify understanding and encourage questions. Practice active listening.</li>
+                    </ul>
+                    <div class="interactive-question-block mt-6 bg-purple-50 p-3 rounded-md border border-purple-200" id="q_page2_1">
+                        <p class="question-text font-semibold text-slate-700 mb-2">Quick Check: Minimum patient identifiers to use?</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-100 cursor-pointer"><input type="radio" name="q_page2_1_ans" value="A" class="mr-2 accent-purple-600"> One</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-100 cursor-pointer"><input type="radio" name="q_page2_1_ans" value="B" class="mr-2 accent-purple-600"> Two</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-100 cursor-pointer"><input type="radio" name="q_page2_1_ans" value="C" class="mr-2 accent-purple-600"> Three</label>
+                        <div class="explanation-text text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">Correct! Two identifiers are standard.</div>
+                    </div>
+                    <button class="check-page-answers-button mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswer('q_page2_1', 'B')">Check Answer</button>
+                </div>
+                
+                <div id="lesson-page-3" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[480px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 3: Measuring & Understanding Vital Signs</h3>
+                    <p class="text-slate-700">Vital signs indicate essential body functions.</p>
+                    <h4 class="text-lg font-medium text-purple-600 my-2">Key Vital Signs:</h4>
+                     <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li><strong>Weight:</strong> Document accurately; crucial for some calculations.</li>
+                        <li><strong>Temperature:</strong> Oral normal: 97.0-99.0°F (36.1-37.2°C). Fever can indicate infection.</li>
+                        <li><strong>Pulse (Heart Rate):</strong> Normal adult: 60-100 bpm. Note rate, rhythm, strength.</li>
+                        <li><strong>Respiration Rate:</strong> Normal adult: 12-20 breaths/min. Note rate, depth, effort.</li>
+                        <li><strong>Blood Pressure:</strong> Normal adult: <120/80 mmHg. Use correct cuff size.</li>
+                    </ul>
+                    <p class="note">Report significant deviations. Clean equipment properly.</p>
+                    <div class="interactive-question-block mt-6 bg-purple-50 p-3 rounded-md border border-purple-200" id="q_page3_1">
+                        <p class="question-text font-semibold text-slate-700 mb-2">Quick Check: Which instrument is used with a stethoscope for BP?</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-100 cursor-pointer"><input type="radio" name="q_page3_1_ans" value="A" class="mr-2 accent-purple-600"> Thermometer</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-100 cursor-pointer"><input type="radio" name="q_page3_1_ans" value="B" class="mr-2 accent-purple-600"> Sphygmomanometer</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-100 cursor-pointer"><input type="radio" name="q_page3_1_ans" value="C" class="mr-2 accent-purple-600"> Pulse Oximeter</label>
+                        <div class="explanation-text text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">Correct! Sphygmomanometer (BP cuff) and stethoscope.</div>
+                    </div>
+                    <button class="check-page-answers-button mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswer('q_page3_1', 'B')">Check Answer</button>
+                </div>
+
+                <div id="lesson-page-4" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[480px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 4: Oxygen Administration Basics</h3>
+                    <p class="text-slate-700">RTTs should understand basic oxygen (O2) administration.</p>
+                    <h4 class="text-lg font-medium text-purple-600 my-2">Procedure Overview:</h4>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li>Patient ID, instruction, communication.</li>
+                        <li>Equipment: Nasal cannula/mask, O2 source with flowmeter.</li>
+                        <li>Adjust to prescribed flow rate.</li>
+                        <li>Monitor patient response (respirations, comfort).</li>
+                        <li>Clean equipment; observe universal precautions.</li>
+                    </ul>
+                    <h4 class="text-lg font-medium text-purple-600 my-2">Oxygen Safety:</h4>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm"><li>O2 supports combustion: No smoking/open flames. Secure cylinders. Check connections.</li></ul>
+                </div>
+
+                <div id="lesson-page-5" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[480px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 5: Safe Patient Transfers & Body Mechanics</h3>
+                    <p class="text-slate-700">Safe transfers protect both patient and therapist.</p>
+                    <h4 class="text-lg font-medium text-purple-600 my-2">Key Transfer Steps:</h4>
+                     <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li>Greet, ID, introduce self, explain transfer, assess patient's ability.</li>
+                        <li>Ensure safe environment (lock wheels, clear path).</li>
+                        <li>Use proper body mechanics.</li>
+                        <li>Support patient during move (wheelchair, stretcher, couch).</li>
+                    </ul>
+                    <h4 class="text-lg font-medium text-purple-600 my-2">Proper Body Mechanics:</h4>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm">
+                        <li>Wide base, back straight, bend knees/hips, use legs, keep load close, pivot feet (no twisting), ask for help.</li>
+                    </ul>
+                </div>
+                
+                <div id="lesson-page-6" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[480px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 6: Infection Control: Universal Precautions</h3>
+                    <p class="text-slate-700"><span class="highlight">Universal (Standard) Precautions</span> assume all body fluids are potentially infectious.</p>
+                    <h4 class="text-lg font-medium text-purple-600 my-2">Key Practices:</h4>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li><strong>Hand Hygiene:</strong> Most important! Wash or sanitize before/after patient contact, etc.</li>
+                        <li><strong>PPE:</strong> Use gloves, gowns, masks, eye protection as needed.</li>
+                        <li><strong>Safe Sharps Handling:</strong> Dispose in puncture-resistant containers.</li>
+                        <li><strong>Cleaning/Disinfection:</strong> Equipment and surfaces between patients.</li>
+                        <li><strong>Respiratory Hygiene/Cough Etiquette.</strong></li>
+                    </ul>
+                </div>
+
+                <div id="lesson-page-7" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[480px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 7: Emergency Preparedness: BLS & AED</h3>
+                    <p class="text-slate-700">RTTs must be prepared for medical emergencies.</p>
+                    <h4 class="text-lg font-medium text-purple-600 my-2">Basic Life Support (BLS):</h4>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li>Certification is typically required.</li>
+                        <li>Core Sequence: C-A-B (Compressions, Airway, Breathing).</li>
+                        <li>Early recognition and action are key.</li>
+                    </ul>
+                    <h4 class="text-lg font-medium text-purple-600 my-2">Automated External Defibrillator (AED):</h4>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm">
+                        <li>Portable device that analyzes heart rhythm and can deliver a shock.</li>
+                        <li>Know AED locations and use as per BLS protocols.</li>
+                    </ul>
+                    <p class="note">This is an overview; comprehensive hands-on training is mandatory.</p>
+                    <div class="interactive-question-block mt-6 bg-purple-50 p-3 rounded-md border border-purple-200" id="q_page7_1">
+                        <p class="question-text font-semibold text-slate-700 mb-2">Quick Check: What does AED stand for?</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-100 cursor-pointer"><input type="radio" name="q_page7_1_ans" value="A" class="mr-2 accent-purple-600"> Advanced Emergency Device</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-100 cursor-pointer"><input type="radio" name="q_page7_1_ans" value="B" class="mr-2 accent-purple-600"> Automated External Defibrillator</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-100 cursor-pointer"><input type="radio" name="q_page7_1_ans" value="C" class="mr-2 accent-purple-600"> Assisted Electrical Diagnosis</label>
+                        <div class="explanation-text text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">Correct! AED stands for Automated External Defibrillator.</div>
+                    </div>
+                    <button class="check-page-answers-button mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswer('q_page7_1', 'B')">Check Answer</button>
+                </div>
+
+                <div id="lesson-page-8" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[480px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 8: Summary & Next Steps</h3>
+                    <p class="text-slate-700">This lesson covered essential patient care foundations:</p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li>Patient ID & Communication</li>
+                        <li>Vital Signs Assessment</li>
+                        <li>O2 Administration Basics</li>
+                        <li>Safe Patient Transfers</li>
+                        <li>Universal Precautions</li>
+                        <li>BLS/AED Awareness</li>
+                    </ul>
+                    <p class="text-slate-700">Mastering these skills is critical for safe and compassionate care.</p>
+                    <h4 class="text-lg font-medium text-purple-600 mt-6 mb-2">Activity Suggestion:</h4>
+                    <p class="text-slate-700">Apply this knowledge in the "Patient Care Skills Interactive Challenge"!</p>
+                    <div class="mt-6 text-center">
+                        <a href="patient_care_skills_activity.html" class="activity-link-button">
+                            Go to Patient Care Skills Activity
+                        </a>
+                    </div>
+                </div>
+
+                <div class="lesson-navigation-bar text-center mt-6">
+                    <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled class="bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors disabled:bg-slate-300 text-sm">Previous Page</button>
+                    <button id="backToMenuButton" onclick="goBackToPatientCareMenu()" style="display:none;" class="bg-slate-500 text-white py-2 px-4 rounded-lg hover:bg-slate-600 transition-colors text-sm">Back to Patient Care Menu</button>
+                    <span class="page-indicator mx-2 sm:mx-4 text-sm text-slate-600" id="lessonPageIndicator">Page 1 of 8</span>
+                    <button id="nextLessonPage" onclick="changeLessonPage(1)" class="bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors text-sm">Next Page</button>
+                </div>
+            </div>
+
+            <div class="print-button-container text-center mt-8">
+                <button onclick="window.print()" class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-6 rounded-lg text-sm transition-colors">Print Lesson</button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-slate-800 text-slate-300 py-6 mt-auto text-center">
+        <div class="container mx-auto px-6">
+            <p class="text-sm">&copy; <span id="currentYear"></span> RTApps. All Rights Reserved.</p>
+            <p class="text-xs mt-1">Foundations of Patient Care Lesson</p>
+        </div>
+    </footer>
+
+    <script>
+        let currentLessonPage = 1;
+        const totalLessonPages = 8; 
+        const lessonPages = document.querySelectorAll('.lesson-page');
+        const prevLessonButton = document.getElementById('prevLessonPage');
+        const nextLessonButton = document.getElementById('nextLessonPage');
+        const backToMenuButton = document.getElementById('backToMenuButton');
+        const lessonPageIndicator = document.getElementById('lessonPageIndicator');
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        const lessonCorrectAnswers = {
+            'q_page2_1': 'B',
+            'q_page3_1': 'B',
+            'q_page7_1': 'B'
+        };
+
+        function displayLessonPage() {
+            lessonPages.forEach((page, index) => {
+                page.style.display = (index === currentLessonPage - 1) ? 'block' : 'none';
+            });
+            prevLessonButton.disabled = currentLessonPage === 1;
+            if (currentLessonPage === totalLessonPages) {
+                nextLessonButton.style.display = 'none';
+                if (backToMenuButton) backToMenuButton.style.display = 'inline-block';
+            } else {
+                nextLessonButton.style.display = 'inline-block';
+                if (backToMenuButton) backToMenuButton.style.display = 'none';
+            }
+            lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
+        }
+
+        function changeLessonPage(direction) {
+            currentLessonPage += direction;
+            displayLessonPage();
+        }
+
+        function goBackToPatientCareMenu() {
+            window.location.href = 'index.html'; 
+        }
+
+        function checkPageAnswer(questionBlockId, correctAnswerValue) {
+            const questionBlock = document.getElementById(questionBlockId);
+            if (!questionBlock) return;
+            const selectedRadio = questionBlock.querySelector(`input[name="${questionBlockId}_ans"]:checked`);
+            const explanationDiv = questionBlock.querySelector('.explanation-text');
+            
+            questionBlock.classList.remove('correct-answer-feedback', 'incorrect-answer-feedback');
+            questionBlock.querySelectorAll('label').forEach(label => {
+                label.classList.remove('font-semibold', 'text-green-700', 'text-red-700');
+                const indicator = label.querySelector('.correct-indicator, .incorrect-indicator');
+                if(indicator) indicator.remove();
+            });
+            if (explanationDiv) explanationDiv.style.display = 'none';
+
+            if (selectedRadio) {
+                const userAnswer = selectedRadio.value;
+                const userSelectedLabel = selectedRadio.parentElement;
+                if (userAnswer === correctAnswerValue) {
+                    questionBlock.classList.add('correct-answer-feedback');
+                    userSelectedLabel.classList.add('font-semibold', 'text-green-700');
+                    const indicator = document.createElement('span');
+                    indicator.className = 'correct-indicator';
+                    userSelectedLabel.appendChild(indicator);
+                } else {
+                    questionBlock.classList.add('incorrect-answer-feedback');
+                    userSelectedLabel.classList.add('font-semibold', 'text-red-700');
+                    const indicator = document.createElement('span');
+                    indicator.className = 'incorrect-indicator';
+                    userSelectedLabel.appendChild(indicator);
+                    const correctRadio = questionBlock.querySelector(`input[name="${questionBlockId}_ans"][value="${correctAnswerValue}"]`);
+                    if (correctRadio && correctRadio.parentElement) {
+                        correctRadio.parentElement.classList.add('font-semibold', 'text-green-700');
+                        const correctIndicator = document.createElement('span');
+                        correctIndicator.className = 'correct-indicator';
+                        correctRadio.parentElement.appendChild(correctIndicator);
+                    }
+                }
+            } else { 
+                questionBlock.classList.add('incorrect-answer-feedback');
+                const correctRadio = questionBlock.querySelector(`input[name="${questionBlockId}_ans"][value="${correctAnswerValue}"]`);
+                if (correctRadio && correctRadio.parentElement) {
+                    correctRadio.parentElement.classList.add('font-semibold', 'text-green-700');
+                     const correctIndicator = document.createElement('span');
+                     correctIndicator.className = 'correct-indicator';
+                     correctRadio.parentElement.appendChild(correctIndicator);
+                }
+            }
+            if (explanationDiv) explanationDiv.style.display = 'block';
+        }
+        
+        displayLessonPage();
+    </script>
+</body>
+</html>

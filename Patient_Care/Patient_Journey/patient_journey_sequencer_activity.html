@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity: Patient Journey Sequencer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Badge Area - Green Theme for Completion Certificate */
+        #badge-section { margin-top: 30px; padding: 20px; background-color: #fff; border: 1px solid #ccc; text-align: center; display: none; }
+        #badge-input input { padding: 8px; margin-right: 10px; border: 1px solid #ccc; border-radius: 4px; }
+        .badge {
+            width: 350px; height: 250px; border: 10px solid #28a745; /* Green border */
+            background-color: #e8f8f0; /* Light Green background */
+            margin: 20px auto; padding: 30px; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; box-shadow: 3px 3px 8px rgba(0,0,0,0.2);
+            font-family: 'Georgia', serif; text-align: center;
+        }
+        .badge h4 { color: #155724; font-size: 1.5em; margin: 0; } /* Dark Green title */
+        .badge .awardee { font-size: 1.3em; font-weight: bold; color: #218838; /* Darker Green name */
+            margin: 15px 0; border-bottom: 1px dashed #218838; padding-bottom: 5px; }
+        .badge .reason { font-size: 1.1em; margin: 10px 0; }
+        .badge .logo { font-size: 0.8em; margin-top: 15px; font-weight: bold; color: #155724; } /* Dark Green logo */
+        
+        /* Activity Specific Styles */
+        #start-screen-activity { background-color: #e7f3ff; border: 1px solid #b3d7ff; padding: 15px 25px; border-radius: 8px; margin-bottom: 30px; }
+        #start-screen-activity h3 { color: #004085; margin-top: 15px; border-bottom: 1px solid #b3d7ff; padding-bottom: 5px; font-size:1.2rem; }
+        #start-activity-btn { background-color: #28a745; font-size: 1.2em; padding: 12px 25px; display: block; margin: 25px auto 10px auto; }
+        #start-activity-btn:hover { background-color: #218838; }
+
+        #sequencer-area { display: flex; flex-direction: column; align-items: center; }
+        #source-stages { padding: 10px; background-color: #e9ecef; border-radius: 5px; margin-bottom: 20px; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; border: 1px solid #ced4da;}
+        .stage-item { 
+            padding: 10px 15px; background-color: #60a5fa; /* Tailwind blue-400 */ 
+            color: white; border-radius: 0.375rem; /* rounded-md */ cursor: grab; 
+            text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); user-select: none;
+            font-size: 0.9rem;
+        }
+        .stage-item:active { cursor: grabbing; background-color: #3b82f6; } /* Tailwind blue-500 */
+        
+        #drop-zones { display: flex; flex-direction: column; width: 100%; max-width: 500px; }
+        .drop-zone { 
+            border: 2px dashed #93c5fd; /* Tailwind blue-300 */ 
+            padding: 15px 10px; margin-bottom: 10px; border-radius: 0.375rem; /* rounded-md */
+            background-color: #eff6ff; /* Tailwind blue-50 */ min-height: 60px; 
+            text-align: left; display: flex; align-items: center; 
+            /* justify-content: center; */ /* Changed for step number */
+        }
+        .drop-zone .step-number {
+            font-weight: bold; color: #a78bfa; /* purple-400 */ margin-right: 10px; font-size: 1.1em;
+        }
+        .drop-zone.over { background-color: #bfdbfe; /* Tailwind blue-200 */ border-style: solid; }
+        .drop-zone .stage-item { background-color: #2563eb; /* Tailwind blue-600 */ cursor: auto; margin-left: 5px;} 
+        .drop-zone .stage-item.incorrect-placement { background-color: #ef4444; color:white; border: 2px solid #dc2626; } 
+        .drop-zone .stage-item.correct-placement { background-color: #22c55e; color:white; border: 2px solid #16a34a; } 
+
+        #activity-results { text-align: center; margin-top: 20px; display: none; }
+        #activity-results p {font-size: 1.2em; font-weight:bold; color: #0056b3;}
+
+        /* Print Styles */
+        @media print {
+            body { background-color: #fff !important; color: #000 !important; padding-bottom: 0 !important; font-size: 10pt; }
+            .main-content-wrapper { box-shadow: none !important; border: none !important; width: 100% !important; max-width: 100% !important; padding: 5px !important; margin:0 !important;}
+            .nav-links-header, .post-activity-nav, #start-screen-activity button, #sequencer-area button, footer, #badge-input button:not(#printCertificateButton), #activity-results > p:not(#activity-score), .print-button-container { display: none !important; }
+            h1, h2, h3, h4 { color: #000 !important; border-color: #000 !important; margin-bottom: 10px; padding-bottom: 3px;}
+            a {text-decoration: none; color: #000 !important;}
+            
+            #badge-section, #badge-section * { visibility: visible; }
+            .badge { visibility: visible; position: absolute; left: 0; top: 0; width: 90%; height: auto; margin: 5%; padding: 20px; box-shadow: none; border: 5px solid #000 !important; color: #000 !important; background: #fff !important; }
+            .badge h4, .badge .awardee, .badge .logo, .badge .reason, .badge .score { color: #000 !important; text-shadow: none;}
+            .badge .awardee { border-bottom: 1px dashed #000 !important; }
+             #start-screen-activity, #sequencer-area > *:not(#drop-zones), #drop-zones .step-number, #activity-results p { display: none !important; }
+             #drop-zones .stage-item { visibility: visible !important; background-color: #eee !important; color: #000 !important; border: 1px solid #ccc !important;}
+             #drop-zones .stage-item.correct-placement { background-color: #dfd !important; border: 1px solid green !important;}
+             #drop-zones .stage-item.incorrect-placement { background-color: #fdd !important; border: 1px solid red !important;}
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 flex flex-col min-h-screen">
+
+    <header class="bg-white shadow-md sticky top-0 z-50 nav-links-header">
+        <div class="container mx-auto px-6 py-3 flex flex-col sm:flex-row justify-between items-center">
+            <h1 class="text-xl font-bold text-purple-700 mb-2 sm:mb-0">Patient Journey Sequencer Activity</h1>
+            <div class="flex flex-wrap justify-center sm:justify-end space-x-2">
+                <a href="patient_journey_lesson.html#lesson-page-8" class="text-xs sm:text-sm bg-purple-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-purple-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to Patient Journey Lesson
+                </a>
+                <a href="index.html" class="text-xs sm:text-sm bg-slate-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-slate-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to Orientation/Patient Care Menu
+                </a>
+                 <a href="../index.html" class="text-xs sm:text-sm bg-slate-400 text-white font-medium py-2 px-3 rounded-lg hover:bg-slate-500 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Main Workbook
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto max-w-3xl px-4 sm:px-6 py-8 flex-grow main-content-wrapper">
+        <div class="bg-white p-6 sm:p-8 rounded-xl shadow-xl">
+            <h1 class="text-3xl font-bold text-purple-700 mb-6 text-center border-b-2 border-purple-300 pb-4">Activity: Patient Journey Sequencer 🚶‍♀️➡️🚶‍♂️</h1>
+
+            <div id="start-screen-activity" class="bg-purple-50 p-4 sm:p-6 rounded-lg shadow-md mb-8 border border-purple-200">
+                <h2 class="text-2xl font-semibold text-purple-600 mb-4">Order the Stages!</h2>
+                 <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                    <h3 class="text-lg font-medium text-purple-700 mb-1">Purpose</h3>
+                    <p class="text-sm text-slate-600">This activity will test your understanding of the typical chronological order of a patient's journey through the radiation therapy process, as outlined in the lesson.</p>
+                </div>
+                <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                    <h3 class="text-lg font-medium text-purple-700 mb-1">Task</h3>
+                    <p class="text-sm text-slate-600">Drag each stage of the patient journey from the "Stages to Place" box and drop it into the correctly numbered slot in the "Patient Workflow" timeline below. Arrange all stages in the correct sequence from first to last.</p>
+                </div>
+                 <div class="p-3 bg-purple-100 rounded-md border border-purple-200">
+                    <h3 class="text-lg font-medium text-purple-700 mb-1">Criteria for Success</h3>
+                    <p class="text-sm text-slate-600">Successful completion involves placing all stages in the correct chronological order. You'll receive feedback on your placements after clicking "Check Sequence". If all stages are correctly placed, you can generate a certificate of completion.</p>
+                </div>
+                <button id="start-activity-btn" onclick="startSequencerActivity()" class="mt-6 bg-green-500 hover:bg-green-600 text-white font-medium py-3 px-5 rounded-lg text-base transition-colors duration-150 block mx-auto">Start Sequencing Challenge</button>
+            </div>
+
+            <div id="sequencer-area" style="display: none;" class="bg-purple-50 p-4 sm:p-6 rounded-lg shadow-md border border-purple-200">
+                 <h2 class="text-2xl font-semibold text-purple-600 mb-4 text-center">Drag Stages to the Correct Order</h2>
+                <div id="source-stages" class="p-3 bg-slate-200 rounded-md">
+                    </div>
+                <h3 class="text-xl font-semibold text-purple-700 mt-6 mb-3 text-center">Patient Workflow Timeline</h3>
+                <div id="drop-zones">
+                    </div>
+                <button type="button" id="checkSequenceBtn" onclick="checkSequence()" class="block mx-auto mt-6 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg text-base transition-colors">Check Sequence</button>
+                <div id="activity-results" class="mt-6 text-center">
+                    <p id="activity-score" class="text-xl font-semibold"></p>
+                </div>
+            </div>
+            
+            <div id="badge-section" class="mt-8"> <h3 class="text-xl font-semibold text-green-700 mb-4 text-center">Activity Completed!</h3>
+                <div id="badge-input" class="text-center mb-4">
+                    <label for="userNameForCertificate" class="block text-sm font-medium text-slate-700 mb-1">Enter Your Name for Certificate:</label>
+                    <input type="text" id="userNameForCertificate" placeholder="Your Name Here" class="mt-1 inline-block max-w-xs px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
+                    <button onclick="generateCertificate()" class="ml-2 bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg text-sm transition-colors">Generate Certificate</button>
+                </div>
+                <div class="badge" id="printableCertificate" style="display:none;"> <h4>Certificate of Completion</h4>
+                    <p class="awardee" id="certificateNameDisplay"></p>
+                    <p class="reason">Has successfully sequenced the Patient's Journey in Radiation Therapy.</p>
+                    <p class="logo">RTApps Learning</p>
+                </div>
+                <button id="printCertificateButton" onclick="window.print()" style="display:none;" class="block mx-auto mt-4 bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg text-sm transition-colors">Print Certificate</button>
+                 <div id="certificate-error-message" class="text-red-500 text-xs mt-2 text-center" style="display:none;">Please enter your name to generate the certificate.</div>
+            </div>
+
+            <div class="post-activity-nav" id="end-nav" style="display: none;">
+                <h3 class="text-xl font-semibold text-slate-700 mb-4">What's Next?</h3>
+                <button class="menu" onclick="window.location.href='index.html'">Back to Patient Care/Orientation Menu</button> 
+                <button class="repeat" onclick="startSequencerActivity()">Try Again</button>
+                <button onclick="window.location.href='patient_journey_lesson.html#lesson-page-8'">Back to Patient Journey Lesson</button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-slate-800 text-slate-300 py-6 mt-auto text-center">
+        <div class="container mx-auto px-6">
+            <p class="text-sm">&copy; <span id="currentYear"></span> RTApps. All Rights Reserved.</p>
+            <p class="text-xs mt-1">Patient Journey Sequencer Activity</p>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        const journeyStages = [
+            { id: "stage_consult", text: "Consultation", order: 1 },
+            { id: "stage_sim", text: "Simulation", order: 2 },
+            { id: "stage_dosi", text: "Dosimetry Planning", order: 3 },
+            { id: "stage_tx", text: "Treatment Delivery", order: 4 },
+            { id: "stage_monitor", text: "On-Treatment Monitoring", order: 5 },
+            { id: "stage_fu", text: "Follow-Up", order: 6 }
+        ];
+
+        let draggedItem = null;
+        let activityCompletedOnce = false;
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function startSequencerActivity() {
+            activityCompletedOnce = false;
+            document.getElementById('start-screen-activity').style.display = 'none';
+            document.getElementById('sequencer-area').style.display = 'flex';
+            document.getElementById('activity-results').style.display = 'none';
+            document.getElementById('badge-section').style.display = 'none';
+             document.getElementById('printableCertificate').style.display = 'none';
+            document.getElementById('printCertificateButton').style.display = 'none';
+            document.getElementById('certificate-input-section').style.display = 'block'; // Show input for name
+            document.getElementById('end-nav').style.display = 'none';
+            const checkButton = document.getElementById('checkSequenceBtn');
+            if(checkButton) checkButton.disabled = false;
+            renderSequencer();
+        }
+
+        function renderSequencer() {
+            const sourceContainer = document.getElementById('source-stages');
+            const dropZoneContainer = document.getElementById('drop-zones');
+            
+            sourceContainer.innerHTML = ''; 
+            dropZoneContainer.innerHTML = ''; 
+
+            const shuffledStages = [...journeyStages].sort(() => 0.5 - Math.random());
+
+            shuffledStages.forEach(stage => {
+                const stageDiv = document.createElement('div');
+                stageDiv.id = stage.id;
+                stageDiv.textContent = stage.text;
+                stageDiv.className = 'stage-item p-2 m-1 bg-blue-400 text-white rounded shadow cursor-grab text-sm'; // Tailwind classes
+                stageDiv.draggable = true;
+                stageDiv.addEventListener('dragstart', dragStart);
+                sourceContainer.appendChild(stageDiv);
+            });
+
+            for (let i = 1; i <= journeyStages.length; i++) {
+                const dropZoneDiv = document.createElement('div');
+                dropZoneDiv.className = 'drop-zone p-4 mb-2 border-2 border-dashed border-purple-300 rounded bg-purple-100 min-h-[60px] flex items-center'; // Tailwind classes
+                dropZoneDiv.dataset.order = i;
+                dropZoneDiv.innerHTML = `<span class="step-number text-purple-600 font-bold mr-3">Step ${i}:</span>`;
+                dropZoneDiv.addEventListener('dragover', dragOver);
+                dropZoneDiv.addEventListener('dragleave', dragLeave);
+                dropZoneDiv.addEventListener('drop', drop);
+                dropZoneContainer.appendChild(dropZoneDiv);
+            }
+        }
+
+        function dragStart(event) {
+            draggedItem = event.target;
+            event.dataTransfer.setData('text/plain', event.target.id);
+            event.dataTransfer.effectAllowed = 'move';
+        }
+
+        function dragOver(event) {
+            event.preventDefault();
+            event.dataTransfer.dropEffect = 'move';
+            const targetZone = event.target.closest('.drop-zone');
+            if (targetZone) {
+                targetZone.classList.add('over', 'border-solid', 'bg-purple-200');
+            }
+        }
+
+        function dragLeave(event) {
+            const targetZone = event.target.closest('.drop-zone');
+            if (targetZone) {
+                targetZone.classList.remove('over', 'border-solid', 'bg-purple-200');
+            }
+        }
+
+        function drop(event) {
+            event.preventDefault();
+            const targetZone = event.target.closest('.drop-zone');
+            if (draggedItem && targetZone) {
+                targetZone.classList.remove('over', 'border-solid', 'bg-purple-200');
+                // Clear previous item if one exists and return it to source
+                if (targetZone.querySelector('.stage-item')) {
+                    document.getElementById('source-stages').appendChild(targetZone.querySelector('.stage-item'));
+                }
+                targetZone.appendChild(draggedItem); 
+                draggedItem.classList.remove('bg-blue-400');
+                draggedItem.classList.add('bg-purple-600', 'text-sm'); // Style for placed item
+            }
+            draggedItem = null;
+        }
+
+        function checkSequence() {
+            let correctPlacements = 0;
+            const dropZones = document.querySelectorAll('.drop-zone');
+            let allZonesFilled = true;
+
+            dropZones.forEach(zone => {
+                const placedItemElement = zone.querySelector('.stage-item');
+                if (placedItemElement) {
+                    const stageData = journeyStages.find(s => s.id === placedItemElement.id);
+                    const expectedOrder = parseInt(zone.dataset.order);
+                    
+                    placedItemElement.classList.remove('correct-placement', 'incorrect-placement', 'bg-purple-600'); // Clear previous visual feedback
+                    if (stageData && stageData.order === expectedOrder) {
+                        correctPlacements++;
+                        placedItemElement.classList.add('correct-placement');
+                    } else {
+                        placedItemElement.classList.add('incorrect-placement');
+                    }
+                } else {
+                    allZonesFilled = false;
+                }
+            });
+            
+            const resultsP = document.getElementById('activity-score');
+            if (!allZonesFilled) {
+                 resultsP.textContent = "Please place all stages into the timeline before checking.";
+                 resultsP.className = "text-orange-500 font-semibold";
+            } else {
+                if (correctPlacements === journeyStages.length) {
+                    resultsP.textContent = `Congratulations! All ${correctPlacements} stages are in the correct order!`;
+                    resultsP.className = "text-green-600 font-semibold";
+                    document.getElementById('badge-section').style.display = 'block'; 
+                } else {
+                    resultsP.textContent = `You placed ${correctPlacements} out of ${journeyStages.length} stages correctly. Try to fix the incorrect ones (marked in red).`;
+                    resultsP.className = "text-red-600 font-semibold";
+                    document.getElementById('badge-section').style.display = 'none';
+                }
+                const checkButton = document.getElementById('checkSequenceBtn');
+                if(checkButton && correctPlacements === journeyStages.length) checkButton.disabled = true;
+            }
+            document.getElementById('activity-results').style.display = 'block';
+            document.getElementById('end-nav').style.display = 'block'; // Show nav after first check
+            activityCompletedOnce = true;
+        }
+
+        function generateCertificate() {
+            const nameInput = document.getElementById('userNameForCertificate');
+            const name = nameInput.value.trim();
+            const errorMessageDiv = document.getElementById('certificate-error-message');
+            
+            if (name === "") {
+                nameInput.classList.add('border-red-500');
+                errorMessageDiv.style.display = 'block';
+                return;
+            }
+            nameInput.classList.remove('border-red-500');
+            errorMessageDiv.style.display = 'none';
+
+            document.getElementById('certificateNameDisplay').textContent = name;
+            document.getElementById('printableCertificate').style.display = 'flex';
+            document.getElementById('printCertificateButton').style.display = 'inline-block';
+        }
+
+    </script>
+</body>
+</html>

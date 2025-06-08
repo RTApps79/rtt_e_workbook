@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sources of Radiation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .selected-option {
+            background-color: #e0f2fe; /* Tailwind sky-100 */
+            border-color: #38bdf8; /* Tailwind sky-400 */
+        }
+        .correct-answer-feedback {
+            background-color: #dcfce7 !important; /* Tailwind green-100 */
+            border-left-color: #22c55e !important; /* Tailwind green-500 */
+        }
+        .incorrect-answer-feedback {
+            background-color: #fee2e2 !important; /* Tailwind red-100 */
+            border-left-color: #ef4444 !important; /* Tailwind red-500 */
+        }
+        .correct-indicator::after {
+            content: '✔ Correct';
+            color: #16a34a; /* Tailwind green-600 */
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .incorrect-indicator::after {
+            content: '✖ Incorrect';
+            color: #dc2626; /* Tailwind red-600 */
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .correct-option-text {
+            font-weight: bold;
+            color: #15803d; /* Tailwind green-700 */
+        }
+        .external-link-icon::after {
+            content: ' ↗';
+            font-size: 0.8em;
+        }
+
+        /* Print Styles */
+        @media print {
+            body { background-color: #fff; margin: 10px; padding: 0; font-size: 10pt; }
+            .main-content-wrapper, .flip-lesson-container { box-shadow: none !important; border: none !important; width: 100%; max-width: 100%; padding: 5px; margin-bottom: 15px;}
+            .lesson-navigation-bar, .check-page-answers-button, .nav-links-header, .print-button-container { display: none !important; }
+            .lesson-page { page-break-inside: avoid; border: 1px solid #eee !important; }
+            .interactive-question-block {background: #fff !important; border: 1px solid #ccc !important; }
+            h1, h2, h3, h4 { color: #000 !important; border-color: #000 !important; margin-bottom: 10px; padding-bottom: 3px;}
+            .explanation-text { display: none !important; }
+            .external-link-icon::after { content: '';} 
+            a {text-decoration: none; color: #000 !important;}
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 flex flex-col min-h-screen">
+
+    <header class="bg-white shadow-md sticky top-0 z-50 nav-links-header">
+        <div class="container mx-auto px-6 py-3 flex flex-col sm:flex-row justify-between items-center">
+            <h1 class="text-xl font-bold text-purple-700 mb-2 sm:mb-0">Sources of Radiation</h1>
+            <div class="flex flex-wrap justify-center sm:justify-end space-x-2">
+                {/* Assuming this lesson is in a subfolder of Radiation_Physics */}
+                <a href="../index.html" class="text-xs sm:text-sm bg-purple-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-purple-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to Radiation Physics
+                </a>
+                <a href="../../index.html" class="text-xs sm:text-sm bg-slate-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-slate-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to Main Workbook
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto max-w-4xl px-4 sm:px-6 py-8 flex-grow main-content-wrapper">
+        <div class="bg-white p-6 sm:p-8 rounded-xl shadow-xl">
+            <h1 class="text-3xl font-bold text-purple-700 mb-6 text-center border-b-2 border-purple-300 pb-4">Understanding Our Radiant World: Sources of Radiation</h1>
+
+            <div class="flip-lesson-container bg-purple-50 p-4 sm:p-6 rounded-lg shadow-md mb-8 border border-purple-200">
+                <h2 class="text-2xl font-semibold text-purple-600 mb-4">Interactive Lesson Overview</h2>
+
+                <div id="lesson-page-1" class="lesson-page active bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[450px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 1: Purpose, Task & Criteria (TILT Framework)</h3>
+                    <p class="mb-3 text-slate-700">Welcome! Radiation is all around us, originating from both natural processes and human activities. This lesson will guide you through the different sources of ionizing radiation that contribute to our overall exposure.</p>
+                    
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Purpose: Why This Matters</h4>
+                        <p class="text-sm text-slate-600">As a radiation therapist, a solid understanding of where radiation comes from is foundational. This knowledge helps in:
+                            <ul class="list-disc list-inside text-slate-600 space-y-1 text-xs ml-4 my-1">
+                                <li>Contextualizing medical radiation doses for patients.</li>
+                                <li>Appreciating the principles of radiation protection (ALARA).</li>
+                                <li>Understanding the origins of the therapeutic radiation you will administer.</li>
+                                <li>Communicating confidently about radiation with patients and the public.</li>
+                            </ul>
+                        </p>
+                    </div>
+
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Task: What You Will Do</h4>
+                        <p class="text-sm text-slate-600">In this lesson, you will navigate through pages that explain:
+                            <ul class="list-disc list-inside text-slate-600 space-y-1 text-sm ml-4">
+                                <li>The basic definition of radiation and the difference between ionizing and non-ionizing types.</li>
+                                <li>The various components of natural background radiation (cosmic, terrestrial, internal, radon).</li>
+                                <li>Common sources of man-made radiation, with an emphasis on medical applications.</li>
+                                <li>How these different sources compare in terms of average public exposure.</li>
+                                <li>You will answer "Quick Check" questions to test your comprehension along the way.</li>
+                            </ul>
+                        </p>
+                    </div>
+
+                    <div class="p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Criteria for Success: How You'll Know You've Learned</h4>
+                        <p class="text-sm text-slate-600">Upon completing this lesson, you will be able to:
+                            <ul class="list-disc list-inside text-slate-600 space-y-1 text-sm ml-4">
+                                <li>Clearly distinguish between natural and man-made sources of ionizing radiation.</li>
+                                <li>List and describe the four main components of natural background radiation.</li>
+                                <li>Identify medical procedures as the primary source of man-made radiation exposure to the public.</li>
+                                <li>Name at least two other categories of man-made radiation sources.</li>
+                                <li>Explain the ALARA principle in the context of radiation exposure.</li>
+                            </ul>
+                        </p>
+                    </div>
+                </div>
+
+                <div id="lesson-page-2" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 2: What is Radiation? Ionizing vs. Non-Ionizing</h3>
+                    <p class="mb-3 text-slate-700"><strong>Radiation</strong> is energy that travels through space or matter in the form of waves or particles. It exists across a wide spectrum of energies.</p>
+                    <p class="mb-3 text-slate-700">A key distinction is made based on the radiation's energy and its ability to interact with atoms:</p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-2 text-sm mb-4">
+                        <li>
+                            <span class="font-semibold">Non-ionizing Radiation:</span> This type of radiation has lower energy levels. It has enough energy to excite atoms (make them vibrate or move electrons to higher energy levels within the atom) but <span class="font-semibold">not enough energy to remove electrons</span> completely from an atom or molecule (i.e., it cannot ionize).
+                            <br><span class="text-xs text-slate-500">Examples: Radio waves, microwaves, infrared light, visible light, and ultraviolet (UV) light (lower-energy UV).</span>
+                        </li>
+                        <li>
+                            <span class="font-semibold">Ionizing Radiation:</span> This type of radiation carries enough energy to <span class="font-semibold">remove tightly bound electrons from atoms or molecules</span>, creating charged particles called ions. This ionization process is what can cause damage to living tissue, including DNA, which is why it's used in radiation therapy to target cancer cells, but also why protection is crucial.
+                            <br><span class="text-xs text-slate-500">Examples: X-rays, gamma rays, alpha particles, beta particles, neutrons, and high-energy UV light.</span>
+                        </li>
+                    </ul>
+                    <p class="mb-3 text-slate-700">The electromagnetic spectrum illustrates this range, with ionizing radiation like X-rays and gamma rays having much shorter wavelengths and higher frequencies (and thus higher energy) than non-ionizing forms like radio waves.</p>
+                    <img src="https://placehold.co/600x250/E9D5FF/4C1D95?text=Electromagnetic+Spectrum+Diagram+(Ionizing+vs+Non-Ionizing)" alt="Electromagnetic Spectrum" class="mx-auto my-4 rounded-md shadow-md" onerror="this.onerror=null; this.src='https://placehold.co/600x250/E9D5FF/4C1D95?text=Spectrum+Placeholder';">
+                    <p class="text-slate-700 text-sm">This lesson will focus on the sources of <span class="font-semibold">ionizing radiation</span>.</p>
+                </div>
+
+                <div id="lesson-page-3" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 3: Natural Background Radiation - Cosmic Sources</h3>
+                    <p class="mb-3 text-slate-700">We are all constantly exposed to <span class="font-semibold">natural background radiation</span>, which originates from various sources in our environment. One major component is cosmic radiation.</p>
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Cosmic Radiation</h4>
+                        <p class="text-sm text-slate-600">
+                            Cosmic rays are highly energetic particles that originate from the sun (solar cosmic rays) and from outside our solar system, in deep space (galactic cosmic rays). These particles include protons, alpha particles, and heavier atomic nuclei, as well as secondary particles produced when primary cosmic rays interact with the Earth's atmosphere.
+                            <ul class="list-disc list-inside text-slate-600 space-y-1 text-xs ml-4 my-1">
+                                <li>The Earth's atmosphere and magnetic field act as shields, absorbing or deflecting a significant portion of this incoming radiation.</li>
+                                <li>The dose from cosmic radiation <span class="font-semibold">increases with altitude</span>. At higher elevations (e.g., in mountainous regions or during air travel), there is less atmospheric shielding, leading to greater exposure. For example, a person living in Denver, Colorado (the "Mile High City") receives about twice the cosmic radiation dose as someone at sea level.</li>
+                                <li>Exposure also varies slightly with latitude (higher at poles, lower at equator) due to the Earth's magnetic field.</li>
+                                <li>Solar activity, like solar flares, can temporarily increase the intensity of cosmic radiation reaching Earth.</li>
+                            </ul>
+                        </p>
+                    </div>
+                    <img src="https://placehold.co/500x250/E0E7FF/4338CA?text=Cosmic+Rays+Illustration" alt="Cosmic Rays Illustration" class="mx-auto my-4 rounded-md shadow-md" onerror="this.onerror=null; this.src='https://placehold.co/500x250/E0E7FF/4338CA?text=Cosmic+Placeholder';">
+                    <div class="interactive-question-block mt-6 bg-white p-3 rounded-md border border-slate-300" id="q_page3_1">
+                        <p class="question-text font-semibold text-slate-700 mb-2">Quick Check: Why does cosmic radiation exposure increase when flying in an airplane at high altitudes?</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page3_1_ans" value="A" class="mr-2 accent-purple-600"> Airplanes are made of materials that attract radiation.</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page3_1_ans" value="B" class="mr-2 accent-purple-600"> There is less atmospheric shielding at higher altitudes.</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page3_1_ans" value="C" class="mr-2 accent-purple-600"> The sun is closer to the airplane.</label>
+                        <div class="explanation-text text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">The correct answer is B. The Earth's atmosphere absorbs a significant amount of cosmic radiation. At higher altitudes, there's less atmosphere above, leading to increased exposure.</div>
+                    </div>
+                    <button class="check-page-answers-button mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswer('q_page3_1', 'B')">Check Answer</button>
+                </div>
+
+                <div id="lesson-page-4" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 4: Natural Background Radiation - Terrestrial Sources</h3>
+                    <p class="mb-3 text-slate-700">Another significant component of natural background radiation comes from the Earth itself.</p>
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Terrestrial Radiation</h4>
+                        <p class="text-sm text-slate-600">
+                            This type of radiation originates from radioactive materials (radionuclides) that have been present in the Earth's crust since its formation. These radionuclides are found in varying concentrations in soil, rocks, and minerals.
+                            <ul class="list-disc list-inside text-slate-600 space-y-1 text-xs ml-4 my-1">
+                                <li>The primary radionuclides contributing to terrestrial radiation are isotopes of <span class="font-semibold">uranium (U)</span>, <span class="font-semibold">thorium (Th)</span>, and <span class="font-semibold">potassium (K)</span>, particularly Potassium-40 (<sup>40</sup>K).</li>
+                                <li>These elements undergo radioactive decay, emitting gamma rays, alpha particles, and beta particles. Gamma rays from these sources are the main contributor to external exposure from terrestrial radiation.</li>
+                                <li>The concentration of these radioactive elements varies significantly depending on local geology. For example, areas rich in granite or certain shales may have higher background radiation levels.</li>
+                                <li>Building materials derived from the earth, such as brick, concrete, stone, and drywall, can also contain these naturally occurring radioactive materials and contribute to indoor radiation exposure.</li>
+                            </ul>
+                        </p>
+                    </div>
+                    <img src="https://placehold.co/500x250/E0E7FF/4338CA?text=Terrestrial+Radiation+Sources" alt="Terrestrial Radiation Illustration" class="mx-auto my-4 rounded-md shadow-md" onerror="this.onerror=null; this.src='https://placehold.co/500x250/E0E7FF/4338CA?text=Terrestrial+Placeholder';">
+                    <div class="interactive-question-block mt-6 bg-white p-3 rounded-md border border-slate-300" id="q_page4_1">
+                        <p class="question-text font-semibold text-slate-700 mb-2">Quick Check: Which of the following is a common naturally occurring radionuclide found in the Earth's crust that contributes to terrestrial radiation?</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page4_1_ans" value="A" class="mr-2 accent-purple-600"> Cobalt-60</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page4_1_ans" value="B" class="mr-2 accent-purple-600"> Iodine-131</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page4_1_ans" value="C" class="mr-2 accent-purple-600"> Potassium-40</label>
+                        <div class="explanation-text text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">The correct answer is C. Potassium-40 is a naturally occurring radioactive isotope of potassium found in soil, rocks, and even our bodies. Cobalt-60 and Iodine-131 are primarily man-made.</div>
+                    </div>
+                    <button class="check-page-answers-button mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswer('q_page4_1', 'C')">Check Answer</button>
+                </div>
+
+                <div id="lesson-page-5" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 5: Natural Background Radiation - Internal Sources & Radon</h3>
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Internal Radiation Sources</h4>
+                        <p class="text-sm text-slate-600">
+                            Our bodies naturally contain small amounts of radioactive materials. These radionuclides are taken in through the food we eat, the water we drink, and the air we breathe.
+                            <ul class="list-disc list-inside text-slate-600 space-y-1 text-xs ml-4 my-1">
+                                <li>The most significant contributor to internal radiation dose is <span class="font-semibold">Potassium-40 (<sup>40</sup>K)</span>. Potassium is an essential element for human life, and a small fraction of all potassium is naturally radioactive <sup>40</sup>K.</li>
+                                <li>Other naturally occurring radionuclides that contribute to internal dose include <span class="font-semibold">Carbon-14 (<sup>14</sup>C)</span> and isotopes from the uranium and thorium decay series, such as Polonium-210 (<sup>210</sup>Po) and Lead-210 (<sup>210</sup>Pb).</li>
+                            </ul>
+                        </p>
+                    </div>
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">Radon and Thoron</h4>
+                        <p class="text-sm text-slate-600">
+                            <span class="font-semibold">Radon (specifically Radon-222, <sup>222</sup>Rn)</span> is a colorless, odorless, radioactive gas. It is formed from the natural radioactive decay of uranium, which is found in varying amounts in nearly all soils and rocks. Thoron (Radon-220, <sup>220</sup>Rn) is a similar radioactive gas produced from the decay of thorium.
+                            <ul class="list-disc list-inside text-slate-600 space-y-1 text-xs ml-4 my-1">
+                                <li>Radon gas can move from the ground into the air and seep into homes and other buildings through cracks in foundations, walls, or floors.</li>
+                                <li>Once inside, radon can accumulate, especially in poorly ventilated areas like basements.</li>
+                                <li>When radon and its short-lived decay products (often called radon daughters or progeny) are inhaled, they can deposit in the lungs and irradiate sensitive lung tissue. This exposure increases the risk of developing lung cancer.</li>
+                                <li><span class="font-semibold">Radon is typically the largest single source of natural background radiation exposure for the average person.</span></li>
+                                <li>Radon levels can vary greatly from one location to another and even from one house to the next. Testing is the only way to know the radon level in a specific building.</li>
+                            </ul>
+                        </p>
+                    </div>
+                     <div class="interactive-question-block mt-6 bg-white p-3 rounded-md border border-slate-300" id="q_page5_1">
+                        <p class="question-text font-semibold text-slate-700 mb-2">Quick Check: What is the primary health concern associated with exposure to radon gas?</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page5_1_ans" value="A" class="mr-2 accent-purple-600"> Skin irritation</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page5_1_ans" value="B" class="mr-2 accent-purple-600"> Increased risk of lung cancer</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page5_1_ans" value="C" class="mr-2 accent-purple-600"> Thyroid disorders</label>
+                        <div class="explanation-text text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">The correct answer is B. Inhaling radon and its decay products irradiates lung tissue, increasing the risk of lung cancer.</div>
+                    </div>
+                    <button class="check-page-answers-button mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswer('q_page5_1', 'B')">Check Answer</button>
+                </div>
+
+                <div id="lesson-page-6" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 6: Man-Made Radiation - Medical Applications (Diagnostic)</h3>
+                    <p class="mb-3 text-slate-700">Man-made (or artificial) sources of radiation are those created by human activities. <span class="font-semibold">Medical procedures are by far the largest contributor to man-made radiation exposure for the general population.</span></p>
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">1. Diagnostic X-rays</h4>
+                        <p class="text-sm text-slate-600">
+                            X-rays are a form of electromagnetic radiation used to create images of the inside of the body.
+                            <ul class="list-disc list-inside text-slate-600 space-y-1 text-xs ml-4 my-1">
+                                <li><strong>Conventional Radiography:</strong> Includes common procedures like chest X-rays, dental X-rays, and bone X-rays to detect fractures or disease. Mammography is a specialized X-ray of the breast.</li>
+                                <li><strong>Computed Tomography (CT) Scans:</strong> A CT scanner takes multiple X-ray images from different angles around the body. A computer then processes these images to create detailed cross-sectional (slice-like) views. While providing excellent diagnostic information, CT scans typically deliver a higher radiation dose than a single conventional X-ray. The increasing use of CT scans is a major reason for the rise in medical radiation exposure.</li>
+                                <li><strong>Fluoroscopy:</strong> Produces a continuous, real-time X-ray image, like an X-ray "movie." It's used to observe movement or to guide medical procedures, such as barium studies for the gastrointestinal tract or catheter placement during angiography.</li>
+                            </ul>
+                        </p>
+                    </div>
+                     <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">2. Diagnostic Nuclear Medicine</h4>
+                        <p class="text-sm text-slate-600">
+                            This field uses small amounts of radioactive materials, called <span class="font-semibold">radiopharmaceuticals</span> or radiotracers, which are typically injected, swallowed, or inhaled. These substances are designed to accumulate in specific organs or tissues.
+                            <ul class="list-disc list-inside text-slate-600 space-y-1 text-xs ml-4 my-1">
+                                <li>A special camera (e.g., gamma camera for SPECT scans, or a PET scanner) detects the radiation emitted from the radiopharmaceutical within the body.</li>
+                                <li>This information is used to create images that show how organs or tissues are functioning, or to detect disease. Examples include bone scans, thyroid scans, cardiac stress tests, and PET scans (often used in oncology for staging and monitoring treatment response).</li>
+                            </ul>
+                        </p>
+                    </div>
+                    <div class="interactive-question-block mt-6 bg-white p-3 rounded-md border border-slate-300" id="q_page6_1">
+                        <p class="question-text font-semibold text-slate-700 mb-2">Quick Check: Which of these diagnostic medical procedures generally involves administering a radioactive substance to the patient?</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page6_1_ans" value="A" class="mr-2 accent-purple-600"> Standard Chest X-ray</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page6_1_ans" value="B" class="mr-2 accent-purple-600"> Computed Tomography (CT) Scan</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page6_1_ans" value="C" class="mr-2 accent-purple-600"> Nuclear Medicine PET Scan</label>
+                        <div class="explanation-text text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">The correct answer is C. Nuclear medicine procedures, like PET scans, involve administering radiopharmaceuticals to the patient. X-rays and CT scans use external radiation sources.</div>
+                    </div>
+                    <button class="check-page-answers-button mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswer('q_page6_1', 'C')">Check Answer</button>
+                </div>
+
+                <div id="lesson-page-7" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 7: Man-Made Radiation - Medical Applications (Therapeutic)</h3>
+                    <p class="mb-3 text-slate-700">In addition to diagnostic uses, radiation is a cornerstone of cancer treatment.</p>
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">1. Radiation Therapy (Radiotherapy)</h4>
+                        <p class="text-sm text-slate-600">
+                            This is your field! Radiation therapy uses high doses of ionizing radiation to kill cancer cells and shrink tumors.
+                            <ul class="list-disc list-inside text-slate-600 space-y-1 text-xs ml-4 my-1">
+                                <li><strong>External Beam Radiation Therapy (EBRT):</strong> Radiation is delivered from a machine outside the body (e.g., a Linear Accelerator or Linac). This is the most common form of radiation therapy.</li>
+                                <li><strong>Brachytherapy:</strong> Radioactive sources are placed directly inside or very close to the tumor.</li>
+                            </ul>
+                            While the goal is to target the tumor, some radiation dose to surrounding healthy tissues is unavoidable. The planning and delivery processes are designed to maximize the tumor dose while minimizing healthy tissue exposure. Occupational exposure for healthcare workers involved in these procedures is also a key consideration for radiation protection.
+                        </p>
+                    </div>
+                     <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">2. Therapeutic Nuclear Medicine</h4>
+                        <p class="text-sm text-slate-600">
+                            As mentioned previously, some nuclear medicine procedures are therapeutic. These involve administering larger doses of specific radiopharmaceuticals that target and destroy diseased cells.
+                            <ul class="list-disc list-inside text-slate-600 space-y-1 text-xs ml-4 my-1">
+                                <li>Examples include Iodine-131 for thyroid cancer or hyperthyroidism, and newer targeted radionuclide therapies for cancers like prostate cancer or neuroendocrine tumors.</li>
+                                <li>Patients receiving these treatments may themselves become temporarily radioactive, requiring specific radiation safety precautions for themselves and those around them.</li>
+                            </ul>
+                        </p>
+                    </div>
+                    <p class="mb-3 text-slate-700">It's important to remember that while medical uses of radiation contribute to population dose, these procedures are performed because the <span class="font-semibold">benefit to the patient (e.g., diagnosis or treatment of disease) outweighs the potential risk</span> from the radiation exposure when used appropriately.</p>
+                </div>
+
+                <div id="lesson-page-8" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 8: Man-Made Radiation - Industrial, Consumer & Other</h3>
+                    <p class="mb-3 text-slate-700">Beyond medical uses, various other human activities and products involve radiation sources, though their contribution to the general public's average dose is typically much smaller.</p>
+                    <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">1. Industrial Uses</h4>
+                        <p class="text-sm text-slate-600">
+                            <ul class="list-disc list-inside text-slate-600 space-y-1 text-xs ml-4 my-1">
+                                <li><strong>Industrial Radiography:</strong> X-rays or gamma rays are used for non-destructive testing (NDT) to inspect welds, pipes, and structures for internal flaws.</li>
+                                <li><strong>Gauges:</strong> Devices containing radioactive sources are used to measure thickness, density, or levels in manufacturing processes (e.g., paper, plastics, beverages).</li>
+                                <li><strong>Sterilization:</strong> Large irradiators using Cobalt-60 or electron beams sterilize medical supplies, some food products, and mail.</li>
+                                <li><strong>Well Logging:</strong> Radioactive sources are used in the oil and gas industry to analyze geological formations down boreholes.</li>
+                            </ul>
+                        Radiation protection for workers in these industries is strictly regulated.
+                        </p>
+                    </div>
+                     <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">2. Consumer Products</h4>
+                        <p class="text-sm text-slate-600">
+                            A few consumer products historically or currently contain small amounts of radioactive material, generally posing negligible risk:
+                            <ul class="list-disc list-inside text-slate-600 space-y-1 text-xs ml-4 my-1">
+                                <li><strong>Ionization Smoke Detectors:</strong> Contain a tiny, shielded source of Americium-241.</li>
+                                <li><strong>Some Ceramics and Glassware:</strong> Older Fiestaware (orange-red) used uranium in its glaze. Some antique glassware used uranium for coloration.</li>
+                                <li><strong>Luminous Watches/Dials (Older):</strong> Used radium or tritium paint. Modern tritium watches use sealed gas tubes.</li>
+                                <li><strong>Building Materials:</strong> Some natural stone like granite can emit low levels of radiation.</li>
+                                <li><strong>Tobacco Products:</strong> Tobacco plants can absorb naturally occurring radioactive elements (Polonium-210, Lead-210) from soil and fertilizers.</li>
+                            </ul>
+                        </p>
+                    </div>
+                    <div class="interactive-question-block mt-6 bg-white p-3 rounded-md border border-slate-300" id="q_page8_1">
+                        <p class="question-text font-semibold text-slate-700 mb-2">Quick Check: Which of the following is an example of an industrial use of radiation?</p>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page8_1_ans" value="A" class="mr-2 accent-purple-600"> Using a microwave oven to heat food.</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page8_1_ans" value="B" class="mr-2 accent-purple-600"> Non-destructive testing of pipeline welds using X-rays.</label>
+                        <label class="block mb-1 p-2 rounded hover:bg-purple-200 cursor-pointer"><input type="radio" name="q_page8_1_ans" value="C" class="mr-2 accent-purple-600"> Watching television.</label>
+                        <div class="explanation-text text-sm text-slate-600 mt-2 p-2 bg-purple-50 rounded" style="display:none;">The correct answer is B. Industrial radiography is a common non-destructive testing method using ionizing radiation. Microwaves and television signals are non-ionizing.</div>
+                    </div>
+                    <button class="check-page-answers-button mt-3 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm" onclick="checkPageAnswer('q_page8_1', 'B')">Check Answer</button>
+                </div>
+                
+                <div id="lesson-page-9" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 9: Man-Made Radiation - Nuclear Power & Fallout</h3>
+                     <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">1. Nuclear Power Generation</h4>
+                        <p class="text-sm text-slate-600">
+                            Nuclear power plants use controlled nuclear fission (splitting of heavy atoms like uranium) to produce heat, which generates steam to drive turbines and produce electricity.
+                            <ul class="list-disc list-inside text-slate-600 space-y-1 text-xs ml-4 my-1">
+                                <li>During normal operation, nuclear power plants release very small, controlled amounts of radioactive materials into the environment. These releases are strictly monitored and regulated to ensure they are well below levels that would pose a risk to public health.</li>
+                                <li>The average radiation dose to the public from normally operating nuclear power plants is extremely low, contributing a very minor fraction to overall man-made radiation exposure.</li>
+                                <li>Accidents at nuclear power plants (e.g., Chernobyl, Fukushima) can release larger amounts of radioactive material, but these are rare events with extensive safety systems designed to prevent them.</li>
+                            </ul>
+                        </p>
+                    </div>
+                     <div class="mb-4 p-3 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-1">2. Atmospheric Fallout</h4>
+                        <p class="text-sm text-slate-600">
+                            This refers to radioactive particles that were dispersed into the atmosphere from nuclear weapons testing conducted primarily between the 1940s and early 1960s.
+                            <ul class="list-disc list-inside text-slate-600 space-y-1 text-xs ml-4 my-1">
+                                <li>These tests released various radionuclides (e.g., Strontium-90, Cesium-137) into the upper atmosphere, which then gradually settled back to Earth (fallout), distributing globally.</li>
+                                <li>The Comprehensive Nuclear-Test-Ban Treaty has significantly reduced atmospheric testing.</li>
+                                <li>The contribution of fallout to current background radiation levels has decreased substantially over the decades due to radioactive decay and environmental dispersion. It now represents a very small component of the average person's annual radiation dose.</li>
+                            </ul>
+                        </p>
+                    </div>
+                    <p class="text-slate-700 text-sm">While these sources are often subjects of public discussion, their contribution to the average individual's annual radiation dose is generally much smaller than that from natural background radiation and medical procedures.</p>
+                </div>
+
+                <div id="lesson-page-10" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 10: Comparing Exposures & The ALARA Principle</h3>
+                    <p class="mb-3 text-slate-700">Understanding the relative contributions of different radiation sources helps put radiation exposure into perspective. According to organizations like the U.S. Nuclear Regulatory Commission (NRC) and the National Council on Radiation Protection and Measurements (NCRP), the average person in the United States receives an annual total effective dose of about <span class="font-semibold">6.2 millisieverts (mSv)</span> or 620 millirem (mrem).</p>
+                    <p class="mb-3 text-slate-700">This total is roughly divided as follows:</p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                        <li><strong>~50% from Natural Background Radiation (~3.1 mSv):</strong>
+                            <ul class="list-disc list-inside text-slate-600 space-y-1 text-xs ml-6">
+                                <li>Radon and Thoron: Largest component (~2.28 mSv)</li>
+                                <li>Internal (from food/water): (~0.29 mSv)</li>
+                                <li>Terrestrial (from ground): (~0.21 mSv)</li>
+                                <li>Cosmic (from space): (~0.33 mSv)</li>
+                            </ul>
+                        </li>
+                        <li><strong>~50% from Man-Made Sources (~3.1 mSv):</strong>
+                             <ul class="list-disc list-inside text-slate-600 space-y-1 text-xs ml-6">
+                                <li>Medical Procedures: Largest component by far (~3.0 mSv, with CT scans being a major part)</li>
+                                <li>Consumer Products: (~0.05 mSv)</li>
+                                <li>Industrial/Occupational/Nuclear Fuel Cycle: (Very small for general public, ~0.001 mSv)</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <img src="https://placehold.co/600x350/E9D5FF/4C1D95?text=Pie+Chart:+Typical+U.S.+Radiation+Exposure+Sources" alt="Pie Chart of Radiation Exposure Sources" class="mx-auto my-4 rounded-md shadow-md" onerror="this.onerror=null; this.src='https://placehold.co/600x350/E9D5FF/4C1D95?text=Exposure+Sources+Chart';">
+                    <p class="text-xs text-center text-slate-500 mb-4">(Note: These are average values and can vary significantly per individual.)</p>
+
+                    <h4 class="text-lg font-medium text-purple-600 mb-2">The ALARA Principle</h4>
+                    <p class="mb-3 text-slate-700">Given that exposure to ionizing radiation carries some risk (though often very small at low doses), the guiding philosophy in radiation protection is **ALARA**: <span class="font-semibold">As Low As Reasonably Achievable</span>.</p>
+                    <p class="text-sm text-slate-700">This means that every reasonable effort should be made to maintain exposures to ionizing radiation as far below the dose limits as is practical, consistent with the purpose for which the activity is undertaken, while taking into account economic and social factors. For medical exposures, this means ensuring that the procedure is justified (benefits outweigh risks) and optimized (lowest dose necessary for diagnostic or therapeutic outcome).</p>
+                    <p class="text-slate-700 text-sm">As a Radiation Therapist, you will be a key advocate and practitioner of ALARA principles daily.</p>
+                </div>
+
+                <div id="lesson-page-11" class="lesson-page bg-white p-4 sm:p-5 rounded-md border border-purple-200 min-h-[400px]">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">Page 11: Conclusion & Key Takeaways</h3>
+                    <p class="mb-3 text-slate-700">We've journeyed through the various origins of ionizing radiation, from the vastness of space to the ground beneath our feet, and from within our own bodies to the advanced technologies used in medicine and industry.</p>
+                    <p class="mb-3 text-slate-700"><strong>Key Takeaways from this Lesson:</strong></p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-2 text-sm mb-4">
+                        <li>Ionizing radiation, which has enough energy to remove electrons from atoms, comes from both <span class="font-semibold">natural</span> and <span class="font-semibold">man-made</span> sources.</li>
+                        <li><strong>Natural background radiation</strong> is unavoidable and includes cosmic rays, terrestrial radiation (from soil/rocks), internal radionuclides (like Potassium-40), and radon gas (typically the largest natural contributor).</li>
+                        <li><strong>Man-made radiation</strong> exposure for the general public is dominated by <span class="font-semibold">medical procedures</span> (especially CT scans and nuclear medicine). Other sources include some consumer products, industrial applications, and negligible amounts from normally operating nuclear power plants.</li>
+                        <li>The average annual radiation dose for an individual in the U.S. is roughly split between natural and man-made sources.</li>
+                        <li>The **ALARA (As Low As Reasonably Achievable)** principle is fundamental in radiation protection, guiding practices to minimize unnecessary exposure while maximizing the benefits of radiation use, particularly in medicine.</li>
+                    </ul>
+                    <p class="mb-3 text-slate-700">As a radiation therapist, this understanding of radiation sources forms a critical part of your knowledge base, enabling you to work safely, educate patients effectively, and appreciate the context of the powerful therapeutic tool you will be using.</p>
+                    <div class="mt-6 p-4 bg-purple-100 rounded-md border border-purple-200">
+                        <h4 class="text-lg font-medium text-purple-600 mb-2">Looking Ahead:</h4>
+                        <p class="text-sm text-slate-700">Building on this, future lessons will explore how radiation interacts with matter, how its effects are measured, and the detailed principles and practices of radiation protection and safety in a clinical setting.</p>
+                    </div>
+                </div>
+
+                <div class="lesson-navigation-bar text-center mt-6">
+                    <button id="prevLessonPage" onclick="showSection(currentLessonPage - 1)" disabled aria-label="Go to Previous Lesson Page" class="bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors disabled:bg-slate-300 text-sm">Previous Page</button>
+                    <span class="page-indicator mx-2 sm:mx-4 text-sm text-slate-600" id="lessonPageIndicator">Page 1 of 11</span>
+                    <button id="nextLessonPage" onclick="showSection(currentLessonPage + 1)" aria-label="Go to Next Lesson Page" class="bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors text-sm">Next Page</button>
+                </div>
+            </div>
+
+            <div class="print-button-container text-center mt-8">
+                <button onclick="window.print()" class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-6 rounded-lg text-sm transition-colors">Print Lesson</button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-slate-800 text-slate-300 py-6 mt-auto text-center">
+        <div class="container mx-auto px-6">
+            <p class="text-sm">&copy; <span id="currentYear"></span> Radiation Therapy E-Workbook. RTApps All Rights Reserved.</p>
+            <p class="text-xs mt-1">Sources of Radiation Lesson</p>
+        </div>
+    </footer>
+
+    <script>
+        let currentLessonPage = 1;
+        const totalLessonPages = 11; 
+        const lessonPages = []; 
+        for (let i = 1; i <= totalLessonPages; i++) {
+            const pageElement = document.getElementById(`lesson-page-${i}`);
+            if (pageElement) { // Ensure element exists before pushing
+                lessonPages.push(pageElement);
+            } else {
+                console.error(`Lesson page element lesson-page-${i} not found.`);
+            }
+        }
+
+        const prevLessonButton = document.getElementById('prevLessonPage');
+        const nextLessonButton = document.getElementById('nextLessonPage');
+        const lessonPageIndicator = document.getElementById('lessonPageIndicator');
+
+        const correctAnswers = {
+            'q_page3_1': 'B',
+            'q_page4_1': 'C',
+            'q_page5_1': 'B',
+            'q_page6_1': 'C',
+            'q_page8_1': 'B' // Assuming a question might be added to page 8 in future
+        };
+
+        function showSection(pageNumber) {
+            if (pageNumber < 1 || pageNumber > totalLessonPages) return;
+            currentLessonPage = pageNumber;
+            
+            lessonPages.forEach((page, index) => {
+                if (page) { 
+                    page.style.display = (index === currentLessonPage - 1) ? 'block' : 'none';
+                    if (index === currentLessonPage - 1) {
+                        page.classList.add('active');
+                    } else {
+                        page.classList.remove('active');
+                    }
+                }
+            });
+            if (prevLessonButton) prevLessonButton.disabled = currentLessonPage === 1;
+            if (nextLessonButton) nextLessonButton.disabled = currentLessonPage === totalLessonPages;
+            if (lessonPageIndicator) lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
+        }
+        
+        showSection(1); // Initial display
+
+        function checkPageAnswer(questionBlockId, correctAnswerValue) {
+            const questionBlock = document.getElementById(questionBlockId);
+            if (!questionBlock) return;
+
+            const selectedRadio = questionBlock.querySelector(`input[name="${questionBlockId}_ans"]:checked`);
+            const explanationDiv = questionBlock.querySelector('.explanation-text');
+            
+            questionBlock.classList.remove('correct-answer-feedback', 'incorrect-answer-feedback');
+            questionBlock.querySelectorAll('label').forEach(label => {
+                label.classList.remove('font-semibold', 'text-green-700', 'text-red-700');
+                const indicator = label.querySelector('.correct-indicator, .incorrect-indicator');
+                if(indicator) indicator.remove();
+            });
+            if (explanationDiv) explanationDiv.style.display = 'none';
+
+            if (selectedRadio) {
+                const userAnswer = selectedRadio.value;
+                const userSelectedLabel = selectedRadio.parentElement;
+
+                if (userAnswer === correctAnswerValue) {
+                    questionBlock.classList.add('correct-answer-feedback');
+                    userSelectedLabel.classList.add('font-semibold', 'text-green-700');
+                    const indicator = document.createElement('span');
+                    indicator.className = 'correct-indicator';
+                    userSelectedLabel.appendChild(indicator);
+                } else {
+                    questionBlock.classList.add('incorrect-answer-feedback');
+                    userSelectedLabel.classList.add('font-semibold', 'text-red-700');
+                    const indicator = document.createElement('span');
+                    indicator.className = 'incorrect-indicator';
+                    userSelectedLabel.appendChild(indicator);
+                    
+                    const correctRadio = questionBlock.querySelector(`input[name="${questionBlockId}_ans"][value="${correctAnswerValue}"]`);
+                    if (correctRadio && correctRadio.parentElement) {
+                        correctRadio.parentElement.classList.add('font-semibold', 'text-green-700');
+                         const correctIndicator = document.createElement('span');
+                         correctIndicator.className = 'correct-indicator';
+                         correctRadio.parentElement.appendChild(correctIndicator);
+                    }
+                }
+            } else { 
+                questionBlock.classList.add('incorrect-answer-feedback');
+                const correctRadio = questionBlock.querySelector(`input[name="${questionBlockId}_ans"][value="${correctAnswerValue}"]`);
+                if (correctRadio && correctRadio.parentElement) {
+                    correctRadio.parentElement.classList.add('font-semibold', 'text-green-700');
+                    const correctIndicator = document.createElement('span');
+                    correctIndicator.className = 'correct-indicator';
+                    correctRadio.parentElement.appendChild(correctIndicator);
+                }
+            }
+            if (explanationDiv) explanationDiv.style.display = 'block';
+        }
+        
+        const currentYearElem = document.getElementById('currentYear');
+        if (currentYearElem) {
+            currentYearElem.textContent = new Date().getFullYear();
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity: Linac Components Labeling</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .draggable-label {
+            cursor: grab;
+            user-select: none; /* Prevent text selection during drag */
+        }
+        .drop-zone {
+            border: 2px dashed #cbd5e1; /* Tailwind slate-300 */
+            transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: absolute; /* For positioning over the image */
+        }
+        .drop-zone.hover {
+            background-color: #e0f2fe; /* Tailwind sky-100 */
+            border-color: #38bdf8; /* Tailwind sky-400 */
+        }
+        .drop-zone.correct {
+            background-color: #dcfce7; /* Tailwind green-100 */
+            border-color: #22c55e; /* Tailwind green-500 */
+            border-style: solid;
+        }
+        .drop-zone.incorrect {
+            background-color: #fee2e2; /* Tailwind red-100 */
+            border-color: #ef4444; /* Tailwind red-500 */
+            border-style: solid;
+        }
+        .image-container {
+            position: relative; /* For absolute positioning of drop zones */
+            max-width: 600px; /* Adjust as needed based on image size */
+            margin: auto;
+        }
+        .image-container img {
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 0.5rem; /* Tailwind rounded-lg */
+        }
+        .image-citation {
+            display: block !important; 
+            color: #4b5563 !important; /* Tailwind gray-600 */
+        }
+
+        /* Print Styles */
+        @media print {
+            body { background-color: #fff; margin: 10px; padding: 0; font-size: 10pt; }
+            .main-content-wrapper { box-shadow: none !important; border: none !important; width: 100%; max-width: 100%; padding: 5px; margin-bottom: 15px;}
+            .nav-links-header, #start-screen-container, #game-controls, #post-activity-navigation, footer { display: none !important; }
+            h1, h2, h3, h4 { color: #000 !important; border-color: #000 !important; margin-bottom: 10px; padding-bottom: 3px;}
+            .image-citation { display: block !important; color: #555 !important; }
+            .draggable-label, .drop-zone { border: 1px solid #ccc !important; background-color: #f0f0f0 !important;}
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 flex flex-col min-h-screen">
+
+    <header class="bg-white shadow-md sticky top-0 z-50 nav-links-header">
+        <div class="container mx-auto px-6 py-3 flex flex-col sm:flex-row justify-between items-center">
+            <h1 class="text-xl font-bold text-purple-700 mb-2 sm:mb-0">Linac Components Labeling</h1>
+            <div class="flex flex-wrap justify-center sm:justify-end space-x-2">
+                <a href="./index.html#lesson-page-14" class="text-xs sm:text-sm bg-purple-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-purple-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to Modalities Lesson
+                </a>
+                <a href="../index.html" class="text-xs sm:text-sm bg-purple-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-purple-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to Clinical Practice
+                </a>
+                <a href="../../index.html" class="text-xs sm:text-sm bg-slate-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-slate-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to Main Workbook
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto max-w-4xl px-4 sm:px-6 py-8 flex-grow main-content-wrapper">
+        <div class="bg-white p-6 sm:p-8 rounded-xl shadow-xl">
+            <h1 class="text-3xl font-bold text-purple-700 mb-8 text-center border-b-2 border-purple-300 pb-4">Activity: Linac Components Labeling Game</h1>
+
+            <div id="start-screen-container" class="bg-purple-50 p-6 rounded-lg shadow-md mb-8 border border-purple-200">
+                <h2 class="text-2xl font-semibold text-purple-600 mb-4">Before You Begin...</h2>
+                <h3 class="text-xl font-medium text-purple-700 mb-2">Purpose</h3>
+                <p class="text-slate-700 mb-4 text-sm">This activity will help you identify and correctly label the major external components of a clinical Linear Accelerator (Linac) gantry head and its associated imaging systems.</p>
+                <h3 class="text-xl font-medium text-purple-700 mb-2">Task</h3>
+                <p class="text-slate-700 mb-4 text-sm">You will see an image of a Linac gantry. Drag the provided labels and drop them onto the correct corresponding areas on the image. After placing all labels, click "Check Answers" to see your score.</p>
+                <h3 class="text-xl font-medium text-purple-700 mb-2">Criteria for Success</h3>
+                <p class="text-slate-700 mb-4 text-sm">Successful completion means correctly placing all (or most) of the labels on the Linac components. Aim for 100% accuracy!</p>
+                <button id="start-game-button" class="w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-lg text-lg transition-colors duration-300 block mx-auto">Start Labeling Game</button>
+            </div>
+
+            <div id="game-area-container" style="display: none;" class="bg-purple-50 p-4 sm:p-6 rounded-lg shadow-md border border-purple-200">
+                <p class="text-center text-slate-700 mb-4">Drag the labels on the left to their correct positions on the Linac image.</p>
+                <div class="flex flex-col md:flex-row gap-6">
+                   
+                    <div id="labels-container" class="md:w-1/4 space-y-3 flex flex-col items-center md:items-start">
+                        <div id="label-gantry" draggable="true" class="draggable-label bg-sky-500 text-white p-2 rounded-md shadow-md text-sm w-full text-center">Gantry</div>
+                        <div id="label-head" draggable="true" class="draggable-label bg-sky-500 text-white p-2 rounded-md shadow-md text-sm w-full text-center">Treatment Head</div>
+                        <div id="label-obi1" draggable="true" class="draggable-label bg-sky-500 text-white p-2 rounded-md shadow-md text-sm w-full text-center">OBI Arm 1 (kV Source/Detector)</div>
+                        <div id="label-obi2" draggable="true" class="draggable-label bg-sky-500 text-white p-2 rounded-md shadow-md text-sm w-full text-center">OBI Arm 2 (kV Source/Detector)</div>
+                        <div id="label-epid" draggable="true" class="draggable-label bg-sky-500 text-white p-2 rounded-md shadow-md text-sm w-full text-center">EPID (MV Imager)</div>
+                    </div>
+
+                    
+                    <div class="md:w-3/4 image-container">
+                       
+                        <img src="https://www.iaea.org/sites/default/files/styles/original_image_size/public/medical-linear-accelerator.jpg?itok=kXues4AQ" alt="Linear Accelerator Gantry Head" id="linac-image"
+                             onerror="this.onerror=null; this.src='https://www.iaea.org/sites/default/files/styles/original_image_size/public/medical-linear-accelerator.jpg?itok=kXues4AQ'; this.alt='Linac Image Placeholder - Ensure image_94eb13.png is in the correct folder.';">
+                        
+                        <div id="dropzone-gantry" class="drop-zone" data-correct-label="gantry" style="top: 2%; left: 55%; width: 20%; height: 10%;"></div>
+                        <div id="dropzone-head" class="drop-zone" data-correct-label="head" style="top: 15%; left: 40%; width: 10%; height: 10%;"></div>
+                        <div id="dropzone-obi1" class="drop-zone" data-correct-label="obi1" style="top: 30%; left: 5%; width: 25%; height: 10%;"></div>
+                        <div id="dropzone-obi2" class="drop-zone" data-correct-label="obi2" style="top: 33%; left: 55%; width: 25%; height: 10%;"></div>
+                        <div id="dropzone-epid" class="drop-zone" data-correct-label="epid" style="top: 55%; left: 35%; width: 20%; height: 10%;"></div>
+                    </div>
+                </div>
+                 <p class="text-xs text-center text-slate-500 mt-3 image-citation">
+                    Image Source: Adapted from 
+                    <a href="https://oncologymedicalphysics.com/introduction-to-clinical-linear-accelerators/" target="_blank" rel="noopener noreferrer" class="text-purple-600 hover:underline">
+                        Oncology Medical Physics
+                    </a>
+                </p>
+
+                <div id="game-controls" class="text-center mt-6 space-x-3">
+                    <button id="check-answers-button" class="py-2 px-5 rounded-lg text-white font-medium transition-colors duration-150 bg-blue-500 hover:bg-blue-600 text-md">Check Answers</button>
+                    <button id="reset-game-button" class="py-2 px-5 rounded-lg text-white font-medium transition-colors duration-150 bg-slate-500 hover:bg-slate-600 text-md">Reset Game</button>
+                </div>
+                <div id="feedback-area" class="mt-4 text-center font-semibold min-h-[2em]"></div>
+            </div>
+            
+            <div id="post-activity-navigation" style="display: none;" class="text-center mt-10 pt-6 border-t border-slate-200">
+                <h3 class="text-xl font-semibold text-slate-700 mb-4">Activity Complete! What's Next?</h3>
+                <div class="flex flex-col sm:flex-row justify-center items-center space-y-3 sm:space-y-0 sm:space-x-4">
+                     <button onclick="window.location.href='../index.html'" class="w-full sm:w-auto bg-slate-500 hover:bg-slate-600 text-white font-medium py-2 px-4 rounded-lg text-sm transition-colors">Back to Clinical Practice Menu</button>
+                    <button onclick="document.getElementById('start-game-button').click();" class="w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg text-sm transition-colors">Play Again</button>
+                    <a href="./index.html#lesson-page-14" class="w-full sm:w-auto bg-purple-500 hover:bg-purple-600 text-white font-medium py-2 px-4 rounded-lg text-sm transition-colors text-center inline-block">Back to Modalities Lesson</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-slate-800 text-slate-300 py-6 mt-auto text-center">
+        <div class="container mx-auto px-6">
+            <p class="text-sm">&copy; <span id="currentYear"></span> Radiation Therapy E-Workbook. RTApps All Rights Reserved.</p>
+            <p class="text-xs mt-1">Linac Components Labeling Game</p>
+        </div>
+    </footer>
+
+    <script>
+        const startGameButton = document.getElementById('start-game-button');
+        const startScreenContainer = document.getElementById('start-screen-container');
+        const gameAreaContainer = document.getElementById('game-area-container');
+        const labelsContainer = document.getElementById('labels-container');
+        const dropZones = document.querySelectorAll('.drop-zone');
+        const checkAnswersButton = document.getElementById('check-answers-button');
+        const resetGameButton = document.getElementById('reset-game-button');
+        const feedbackArea = document.getElementById('feedback-area');
+        const postActivityNavigation = document.getElementById('post-activity-navigation');
+        const linacImage = document.getElementById('linac-image');
+
+        let draggedLabel = null;
+        let correctPlacements = 0;
+        const totalLabels = 5; // Gantry, Head, OBI1, OBI2, EPID
+
+        const initialLabelStates = [];
+
+        function initializeGame() {
+            startScreenContainer.style.display = 'none';
+            gameAreaContainer.style.display = 'block';
+            postActivityNavigation.style.display = 'none';
+            feedbackArea.textContent = '';
+            correctPlacements = 0;
+            
+            // Store initial state of labels if not already stored
+            if (initialLabelStates.length === 0) {
+                document.querySelectorAll('.draggable-label').forEach(label => {
+                    initialLabelStates.push({id: label.id, text: label.textContent, parent: labelsContainer});
+                });
+            } else { // Reset labels to their initial positions and appearance
+                 document.querySelectorAll('.draggable-label').forEach(label => {
+                    labelsContainer.appendChild(label); // Move back to labels container
+                    label.classList.remove('opacity-50', 'cursor-not-allowed', 'bg-green-500', 'bg-red-500');
+                    label.classList.add('bg-sky-500');
+                    label.draggable = true;
+                 });
+            }
+            
+            dropZones.forEach(zone => {
+                zone.innerHTML = ''; // Clear any previous labels
+                zone.classList.remove('correct', 'incorrect', 'opacity-75');
+                zone.dataset.currentLabelId = ''; // Clear stored label
+            });
+            checkAnswersButton.disabled = false;
+        }
+
+        startGameButton.addEventListener('click', initializeGame);
+
+        document.querySelectorAll('.draggable-label').forEach(label => {
+            label.addEventListener('dragstart', (event) => {
+                draggedLabel = event.target;
+                event.dataTransfer.setData('text/plain', event.target.id);
+                setTimeout(() => { // Make it disappear from original spot
+                    event.target.classList.add('opacity-50');
+                }, 0);
+            });
+
+            label.addEventListener('dragend', (event) => {
+                // If not dropped on a valid zone, it might snap back or stay faded
+                // For simplicity, we'll handle visibility on drop.
+                // If it wasn't dropped on a zone, it should reappear
+                if (!event.target.parentElement.classList.contains('drop-zone')) {
+                     event.target.classList.remove('opacity-50');
+                }
+            });
+        });
+
+        dropZones.forEach(zone => {
+            zone.addEventListener('dragover', (event) => {
+                event.preventDefault(); // Necessary to allow dropping
+                zone.classList.add('hover');
+            });
+
+            zone.addEventListener('dragleave', () => {
+                zone.classList.remove('hover');
+            });
+
+            zone.addEventListener('drop', (event) => {
+                event.preventDefault();
+                zone.classList.remove('hover');
+                if (draggedLabel && zone.children.length === 0) { // Allow drop only if zone is empty
+                    const droppedLabelId = draggedLabel.id;
+                    zone.appendChild(draggedLabel);
+                    draggedLabel.classList.remove('opacity-50');
+                    draggedLabel.classList.add('cursor-default'); // Change cursor as it's placed
+                    draggedLabel.draggable = false; // Make it non-draggable once placed
+                    zone.dataset.currentLabelId = droppedLabelId; // Store which label is in this zone
+                    draggedLabel = null;
+                } else if (draggedLabel) {
+                    // If zone is not empty, snap back the currently dragged label
+                     draggedLabel.classList.remove('opacity-50');
+                     labelsContainer.appendChild(draggedLabel); // Or its original parent
+                }
+            });
+        });
+
+        checkAnswersButton.addEventListener('click', () => {
+            correctPlacements = 0;
+            let allZonesFilled = true;
+            dropZones.forEach(zone => {
+                zone.classList.remove('correct', 'incorrect');
+                const correctLabelBaseId = zone.dataset.correctLabel; // e.g., "gantry"
+                const currentLabelId = zone.dataset.currentLabelId; // e.g., "label-gantry"
+                
+                if (!currentLabelId) {
+                    allZonesFilled = false; // Mark if any zone is empty
+                }
+
+                if (currentLabelId && currentLabelId === `label-${correctLabelBaseId}`) {
+                    zone.classList.add('correct');
+                    correctPlacements++;
+                } else if (currentLabelId) {
+                    zone.classList.add('incorrect');
+                }
+            });
+
+            if (!allZonesFilled && correctPlacements < totalLabels) {
+                 feedbackArea.textContent = `Please place all labels before checking. You have placed ${document.querySelectorAll('.drop-zone > .draggable-label').length} of ${totalLabels}.`;
+                 feedbackArea.className = 'mt-4 text-center font-semibold min-h-[2em] text-orange-600';
+                 return;
+            }
+
+            feedbackArea.textContent = `You correctly labeled ${correctPlacements} out of ${totalLabels} components.`;
+            if (correctPlacements === totalLabels) {
+                feedbackArea.className = 'mt-4 text-center font-semibold min-h-[2em] text-green-600';
+                postActivityNavigation.style.display = 'block';
+                checkAnswersButton.disabled = true;
+            } else {
+                feedbackArea.className = 'mt-4 text-center font-semibold min-h-[2em] text-red-600';
+            }
+        });
+
+        resetGameButton.addEventListener('click', () => {
+            // Move all labels back to the labels container and reset styles
+            document.querySelectorAll('.drop-zone > .draggable-label').forEach(label => {
+                labelsContainer.appendChild(label);
+                label.classList.remove('opacity-50', 'cursor-default');
+                label.classList.add('cursor-grab');
+                label.draggable = true;
+            });
+            initializeGame(); // Re-initialize to clear zones and score
+        });
+        
+        // Adjust drop zone positions dynamically based on image size after it loads
+        window.addEventListener('load', () => {
+            const image = document.getElementById('linac-image');
+            const imageContainer = document.querySelector('.image-container');
+            
+            function positionDropZones() {
+                if (!image.complete || image.naturalWidth === 0) { // Image not loaded yet
+                    return;
+                }
+                const containerWidth = imageContainer.offsetWidth;
+                const containerHeight = imageContainer.offsetHeight;
+
+                dropZones.forEach(zone => {
+                    // Example: zone.style.top = (parseFloat(zone.style.top) / 100) * containerHeight + 'px';
+                    // This needs careful implementation if you want dynamic % to px based on actual image.
+                    // For simplicity with Tailwind, absolute positioning with % usually works relative to the parent.
+                    // The current CSS uses absolute % positioning, which should be fine if image-container has a defined size or max-width.
+                });
+            }
+            
+            if (image.complete) {
+                positionDropZones();
+            } else {
+                image.addEventListener('load', positionDropZones);
+            }
+            window.addEventListener('resize', positionDropZones); // Reposition on resize
+        });
+
+
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

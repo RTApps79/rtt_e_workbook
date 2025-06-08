@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity: Spot the Violation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Game Specific Styles - Retained and adapted where Tailwind is less direct */
+        .scenario .content { /* Style for the scenario text display */
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.8;
+        }
+        .clickable.correct { /* Style for correctly identified violations */
+            /* Tailwind classes will be primarily used, but this can be a fallback or for specific overrides if needed */
+        }
+        .clickable.incorrect { /* Style for incorrectly identified non-violations */
+            text-decoration: line-through; /* Kept as it's a specific text effect */
+        }
+
+        /* Print Styles for Badge */
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+            }
+            body * {
+                visibility: hidden;
+            }
+            #printableBadge, #printableBadge * {
+                visibility: visible;
+            }
+            #printableBadge {
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                width: 90vw;
+                height: auto;
+                margin: 0;
+                padding: 20px;
+                box-shadow: none;
+                border: 10px solid #3B82F6 !important; /* Tailwind blue-500 */
+                color: #000 !important;
+                background-color: #DBEAFE !important; /* Tailwind blue-100 */
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            #printableBadge h4, #printableBadge .awardee-name, #printableBadge .badge-logo-print, #printableBadge .badge-score-print, #printableBadge .completion-date-print { /* Added completion-date-print */
+                color: #1E40AF !important; /* Tailwind blue-800 */
+            }
+            #printableBadge .awardee-name {
+                border-bottom: 1px dashed #1D4ED8 !important; /* Tailwind blue-700 */
+            }
+            .nav-links-header, #start-screen-container, #game-area-container, #results-area-container > h2, #results-area-container > .rubric-table,
+            #badge-input-section, #post-activity-navigation, footer, #printBadgeButtonTrigger {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 flex flex-col min-h-screen">
+
+    <header class="bg-white shadow-md sticky top-0 z-50 nav-links-header">
+        <div class="container mx-auto px-6 py-3 flex flex-col sm:flex-row justify-between items-center">
+            <h1 class="text-xl font-bold text-purple-700 mb-2 sm:mb-0">Activity: Spot the Violation</h1>
+            <div class="flex flex-wrap justify-center sm:justify-end space-x-2">
+                <a href="./index.html#lesson-page-10" class="text-xs sm:text-sm bg-purple-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-purple-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to HIPAA Lesson
+                </a>
+                <a href="../Ethics/" class="text-xs sm:text-sm bg-purple-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-purple-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to Ethics Module
+                </a>
+                <a href="../../index.html" class="text-xs sm:text-sm bg-slate-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-slate-600 transition-colors duration-300 mb-1 sm:mb-0">
+                    &larr; Back to Main Workbook
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto max-w-3xl px-4 sm:px-6 py-8 flex-grow">
+        <div class="bg-white p-6 sm:p-8 rounded-xl shadow-xl">
+            <h1 class="text-3xl font-bold text-purple-700 mb-8 text-center border-b-2 border-purple-300 pb-4">Activity: Spot the Violation</h1>
+
+            <div id="start-screen-container" class="bg-purple-50 p-6 rounded-lg shadow-md mb-8 border border-purple-200">
+                <h2 class="text-2xl font-semibold text-purple-600 mb-4">Before You Begin...</h2>
+                <h3 class="text-xl font-medium text-purple-700 mb-2">Purpose</h3>
+                <p class="text-slate-700 mb-4 text-sm">This game will help you practice identifying potential HIPAA violations and unprofessional conduct in digital communications. It's designed to make you think critically about how you share information and interact online as a healthcare professional.</p>
+                <h3 class="text-xl font-medium text-purple-700 mb-2">How to Play (Task)</h3>
+                <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-4">
+                    <li>You will see five different scenarios (social media posts, texts, etc.).</li>
+                    <li>In each scenario, some parts of the text are <span class="font-semibold text-yellow-600 bg-yellow-100 px-1 rounded border border-yellow-300">highlighted like this</span>.</li>
+                    <li>Click ONLY on the highlighted parts you believe are violations.</li>
+                    <li>You'll get instant feedback explaining if your choice was correct or incorrect.</li>
+                    <li>Once you've found all the violations in a scenario, the "Next Scenario" button will become active. If a scenario has no violations, the button will be active immediately.</li>
+                    <li>Click "Next Scenario" to continue until all five are complete.</li>
+                </ul>
+                <h3 class="text-xl font-medium text-purple-700 mb-2">Scoring & Badge (Criteria)</h3>
+                <ul class="list-disc list-inside text-slate-700 space-y-1 text-sm mb-6">
+                    <li>You score points for correctly identifying violations.</li>
+                    <li>You lose a small number of points for incorrectly clicking on non-violations.</li>
+                    <li>Your final score will be shown as a percentage.</li>
+                    <li>Achieve a score of <span class="font-bold text-green-600">75% or higher</span> to earn a printable "HIPAA Awareness Award" badge!</li>
+                </ul>
+                <button id="start-game-button" onclick="startGame()" class="w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-lg text-lg transition-colors duration-300 block mx-auto">Start the Game!</button>
+            </div>
+
+            <div id="game-area-container" style="display: none;" class="bg-purple-50 p-6 rounded-lg shadow-md mb-8 border border-purple-200">
+                <div id="score-board" class="text-right font-bold text-purple-600 mb-4 text-lg">Score: 0 / 0 | Violations Found: 0 / 0</div>
+                <div id="scenario-container" class="mb-4">
+                    {/* Scenario content will be injected here by JavaScript */}
+                </div>
+                <div id="feedback-box" class="p-3 rounded-md font-semibold text-center min-h-[3em] mb-4"></div>
+                <button id="next-button" onclick="loadNextScenario()" disabled class="w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg text-sm transition-colors block mx-auto disabled:bg-slate-300 disabled:cursor-not-allowed">Next Scenario</button>
+            </div>
+
+            <div id="results-area-container" style="display: none;" class="text-center">
+                <h2 class="text-2xl font-semibold text-purple-600 mb-4">Activity Results</h2>
+                <p id="final-score" class="text-3xl font-bold text-purple-700 mb-6"></p>
+                <h3 class="text-xl font-medium text-purple-700 mb-3">Scoring Rubric</h3>
+                <div class="overflow-x-auto">
+                    <table class="rubric-table w-full text-sm text-left text-slate-500 rounded-lg shadow-md">
+                        <thead class="text-xs text-white uppercase bg-purple-600">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">Score Range</th>
+                                <th scope="col" class="px-6 py-3">Level</th>
+                                <th scope="col" class="px-6 py-3">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr id="rubric-expert" class="bg-white border-b hover:bg-purple-50">
+                                <td class="px-6 py-4 font-medium text-slate-900">90-100%</td>
+                                <td class="px-6 py-4">Expert</td>
+                                <td class="px-6 py-4">Excellent identification of violations.</td>
+                            </tr>
+                            <tr id="rubric-proficient" class="bg-purple-50 border-b hover:bg-purple-100">
+                                <td class="px-6 py-4 font-medium text-slate-900">75-89%</td>
+                                <td class="px-6 py-4">Proficient</td>
+                                <td class="px-6 py-4">Good identification, minor errors.</td>
+                            </tr>
+                            <tr id="rubric-developing" class="bg-white border-b hover:bg-purple-50">
+                                <td class="px-6 py-4 font-medium text-slate-900">60-74%</td>
+                                <td class="px-6 py-4">Developing</td>
+                                <td class="px-6 py-4">Identifies obvious violations, needs review.</td>
+                            </tr>
+                            <tr id="rubric-novice" class="bg-purple-50 hover:bg-purple-100">
+                                <td class="px-6 py-4 font-medium text-slate-900">Below 60%</td>
+                                <td class="px-6 py-4">Novice</td>
+                                <td class="px-6 py-4">Needs thorough review.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="badge-section" style="display: none;" class="mt-10 p-6 bg-blue-50 rounded-lg shadow-md text-center border border-blue-200">
+                    <h3 class="text-xl font-semibold text-blue-600 mb-4">Congratulations! You've Earned a Badge!</h3>
+                    <div id="badge-input-section" class="mb-4">
+                        <label for="userNameForBadge" class="block text-sm font-medium text-slate-700 mb-1">Enter Your Name for Badge:</label>
+                        <input type="text" id="userNameForBadge" placeholder="Your Name Here" class="mt-1 block w-full sm:w-auto sm:inline-block max-w-xs px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        <button onclick="generateBadge()" class="mt-2 sm:mt-0 sm:ml-2 bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg text-sm transition-colors">Generate Badge</button>
+                    </div>
+                    <div id="printableBadge" style="display:none;" class="w-full max-w-md h-auto border-8 border-blue-500 bg-blue-100 mx-auto p-6 sm:p-8 flex flex-col justify-center items-center shadow-lg font-serif text-center rounded-lg">
+                        <h4 class="text-blue-700 text-2xl sm:text-3xl font-bold mb-2 sm:mb-4">HIPAA Awareness Award</h4>
+                        <p class="awardee-name text-blue-600 text-xl sm:text-2xl font-semibold my-3 sm:my-5 border-b-2 border-dashed border-blue-600 pb-1 sm:pb-2" id="badgeNameDisplay"></p>
+                        <p class="reason-text text-slate-700 text-md sm:text-lg my-2 sm:my-3">For demonstrating proficiency in identifying potential HIPAA violations.</p>
+                        <p class="badge-score-print text-slate-600 text-sm my-1" id="badgeScoreDisplay"></p>
+                        <p class="completion-date-print text-slate-600 text-xs my-1" id="badgeDateDisplay"></p>
+                        <p class="badge-logo-print text-blue-700 text-sm font-bold mt-3 sm:mt-4">RTApps Learning</p>
+                    </div>
+                    <button id="printBadgeButtonTrigger" onclick="window.print()" style="display:none;" class="mt-4 bg-sky-500 hover:bg-sky-600 text-white font-medium py-2 px-4 rounded-lg text-sm transition-colors">Print Badge</button>
+                    <div id="print-error-message" class="text-red-500 text-xs mt-2" style="display:none;">Please enter your name to generate the badge.</div>
+                </div>
+            </div>
+
+            <div id="post-activity-navigation" style="display: none;" class="text-center mt-10 pt-6 border-t border-slate-200">
+                <h3 class="text-xl font-semibold text-slate-700 mb-4">What's Next?</h3>
+                <div class="flex flex-col sm:flex-row justify-center items-center space-y-3 sm:space-y-0 sm:space-x-4">
+                    <button onclick="window.location.href='../Ethics/" class="w-full sm:w-auto bg-slate-500 hover:bg-slate-600 text-white font-medium py-2 px-4 rounded-lg text-sm transition-colors">Back to Ethics Menu</button>
+                    <button onclick="window.location.reload()" class="w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg text-sm transition-colors">Try Game Again</button>
+                    <button onclick="window.location.href='index.html#lesson-page-10'" class="w-full sm:w-auto bg-purple-500 hover:bg-purple-600 text-white font-medium py-2 px-4 rounded-lg text-sm transition-colors">Other HIPAA Activities</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-slate-800 text-slate-300 py-6 mt-auto text-center">
+        <div class="container mx-auto px-6">
+            <p class="text-sm">&copy; <span id="currentYear"></span> Radiation Therapy E-Workbook. RTApps All Rights Reserved.</p>
+            <p class="text-xs mt-1">HIPAA Spot the Violation Game</p>
+        </div>
+    </footer>
+
+    <script>
+        const scenarios = [
+            { title: "Scenario 1: Facebook Post", content: `Rough day! Treated <span class="clickable" data-violation="true" data-feedback="PHI! Name/Initials.">Mr. S</span> with <span class="clickable" data-violation="true" data-feedback="PHI! Condition.">rare lung cancer</span> on <span class="clickable" data-violation="true" data-feedback="PHI! Location detail.">Linac 2</span>. <span class="clickable" data-violation="false" data-feedback="General, not PHI.">#RTTLife</span>`},
+            { title: "Scenario 2: Text Message", content: `RTT1: <span class="clickable" data-violation="true" data-feedback="PHI! Identifiable person.">News anchor</span> in today! RTT2: <span class="clickable" data-violation="true" data-feedback="PHI! Asking condition.">For a brain?</span>`},
+            { title: "Scenario 3: Internal Email", content: `<span class="clickable" data-violation="false" data-feedback="OK for TPO.">Move John P. (10/15/65)?</span> He needs <span class="clickable" data-violation="false" data-feedback="OK for TPO.">transport.</span>`},
+            { title: "Scenario 4: Instagram Story", content: `(Image: Console with <span class="clickable" data-violation="true" data-feedback="PHI! Visible name/ID.">'Pat_Name: Sm_th, J'</span>) <span class="clickable" data-violation="false" data-feedback="General text.">Another day!</span>`},
+            { title: "Scenario 5: WhatsApp Group", content: `Patient in <span class="clickable" data-violation="true" data-feedback="PHI! Location detail.">Room 3</span> for <span class="clickable" data-violation="true" data-feedback="PHI! Treatment area.">head & neck</span> is <span class="clickable" data-violation="true" data-feedback="Unprofessional & PHI risk.">driving me crazy.</span>`}
+        ];
+        let currentScenarioIndex = -1, score = 0, totalPossibleClicks = 0, correctViolationsFound = 0;
+        let totalActualViolationsInGame = 0;
+        scenarios.forEach(s => { totalActualViolationsInGame += (s.content.match(/data-violation="true"/g) || []).length; });
+
+        const scenarioContainer = document.getElementById('scenario-container');
+        const feedbackBox = document.getElementById('feedback-box');
+        const scoreBoard = document.getElementById('score-board');
+        const nextButton = document.getElementById('next-button');
+        
+        const startScreenContainer = document.getElementById('start-screen-container');
+        const gameAreaContainer = document.getElementById('game-area-container');
+        const resultsAreaContainer = document.getElementById('results-area-container');
+        const postActivityNavigation = document.getElementById('post-activity-navigation');
+        const badgeSection = document.getElementById('badge-section');
+        const printErrorMessage = document.getElementById('print-error-message');
+        let finalScoreValue = 0; // Ensure finalScoreValue is accessible in generateBadge
+
+
+        function startGame() {
+            startScreenContainer.style.display = 'none';
+            gameAreaContainer.style.display = 'block';
+            resultsAreaContainer.style.display = 'none';
+            postActivityNavigation.style.display = 'none';
+            badgeSection.style.display = 'none'; 
+            currentScenarioIndex = -1;
+            totalPossibleClicks = 0;
+            correctViolationsFound = 0;
+            updateScoreDisplay();
+            loadNextScenario();
+        }
+
+        function updateScoreDisplay() {
+            scoreBoard.textContent = `Violations Found: ${correctViolationsFound} / ${totalActualViolationsInGame} | Clicks: ${totalPossibleClicks}`;
+        }
+
+        function handleSpanClick(event) {
+            const span = event.target;
+            if (!span.classList.contains('clickable') || span.classList.contains('disabled')) return;
+
+            totalPossibleClicks++;
+            const isViolation = span.dataset.violation === "true";
+            span.classList.add('disabled');
+
+            if (isViolation) {
+                span.classList.remove('bg-yellow-100', 'border-yellow-300', 'hover:bg-yellow-200', 'text-yellow-800');
+                span.classList.add('bg-green-200', 'border-green-400', 'text-green-800', 'font-semibold');
+                feedbackBox.textContent = span.dataset.feedback + " (Correct!)";
+                feedbackBox.className = 'p-3 rounded-md font-semibold text-center min-h-[3em] mb-4 bg-green-100 text-green-700 border border-green-300';
+                correctViolationsFound++;
+            } else {
+                span.classList.remove('bg-yellow-100', 'border-yellow-300', 'hover:bg-yellow-200', 'text-yellow-800');
+                span.classList.add('bg-red-200', 'border-red-400', 'text-red-800', 'line-through');
+                feedbackBox.textContent = span.dataset.feedback + " (Incorrect - Not a violation)";
+                feedbackBox.className = 'p-3 rounded-md font-semibold text-center min-h-[3em] mb-4 bg-red-100 text-red-700 border border-red-300';
+            }
+            updateScoreDisplay();
+            checkScenarioComplete();
+        }
+
+        function checkScenarioComplete() {
+            const currentScenarioDiv = scenarioContainer.querySelector('.scenario-content-wrapper');
+            if (!currentScenarioDiv) return;
+            const allViolationSpansInScenario = currentScenarioDiv.querySelectorAll('.clickable[data-violation="true"]');
+            let allActualViolationsIdentified = true;
+            if (allViolationSpansInScenario.length > 0) {
+                allViolationSpansInScenario.forEach(vSpan => {
+                    if (!vSpan.classList.contains('disabled') || !vSpan.classList.contains('bg-green-200')) { 
+                        allActualViolationsIdentified = false;
+                    }
+                });
+            }
+            if (allActualViolationsIdentified) { 
+                nextButton.disabled = false;
+                nextButton.classList.remove('disabled:bg-slate-300', 'disabled:cursor-not-allowed');
+            }
+        }
+
+        function loadNextScenario() {
+            currentScenarioIndex++;
+            feedbackBox.textContent = "";
+            feedbackBox.className = 'p-3 rounded-md font-semibold text-center min-h-[3em] mb-4'; 
+            
+            if (currentScenarioIndex < scenarios.length) {
+                const scenario = scenarios[currentScenarioIndex];
+                scenarioContainer.innerHTML = `
+                    <div class="scenario bg-white p-4 rounded-lg shadow border border-slate-200 mb-4">
+                        <div class="scenario-title text-lg font-semibold text-purple-700 mb-2">${scenario.title}</div>
+                        <div class="content scenario-content-wrapper bg-slate-50 p-3 rounded border border-slate-200 text-sm">${scenario.content}</div>
+                    </div>`;
+                const clickableSpans = scenarioContainer.querySelectorAll('.clickable');
+                clickableSpans.forEach(span => {
+                    span.setAttribute('role', 'button');
+                    span.setAttribute('tabindex', '0');
+                    span.classList.add('bg-yellow-100', 'border-yellow-300', 'text-yellow-800', 'px-1', 'py-0.5', 'rounded', 'cursor-pointer', 'transition-all', 'duration-150', 'hover:bg-yellow-200', 'focus:outline-none', 'focus:ring-2', 'focus:ring-yellow-400');
+                    span.addEventListener('click', handleSpanClick);
+                    span.addEventListener('keydown', (e) => { 
+                        if (e.key === 'Enter' || e.key === ' ') { 
+                            handleSpanClick(e); 
+                            e.preventDefault(); 
+                        } 
+                    });
+                });
+
+                const currentScenarioHasViolations = scenarios[currentScenarioIndex].content.includes('data-violation="true"');
+                if (!currentScenarioHasViolations) {
+                    nextButton.disabled = false;
+                    nextButton.classList.remove('disabled:bg-slate-300', 'disabled:cursor-not-allowed');
+                } else {
+                    nextButton.disabled = true;
+                    nextButton.classList.add('disabled:bg-slate-300', 'disabled:cursor-not-allowed');
+                }
+                updateScoreDisplay();
+            } else {
+                endGame();
+            }
+        }
+
+        function endGame() {
+            gameAreaContainer.style.display = 'none';
+            resultsAreaContainer.style.display = 'block';
+            postActivityNavigation.style.display = 'block';
+
+            let incorrectSelections = totalPossibleClicks - correctViolationsFound; 
+            let missedViolations = totalActualViolationsInGame - correctViolationsFound;
+
+            let calculatedScore = 100;
+            calculatedScore -= (missedViolations * 15); 
+            calculatedScore -= (incorrectSelections * 5); 
+            
+            finalScoreValue = Math.max(0, Math.round(calculatedScore));
+
+            document.getElementById('final-score').textContent = `Your Final Score: ${finalScoreValue}%`;
+            
+            document.querySelectorAll('.rubric-table tbody tr').forEach(row => row.classList.remove('bg-purple-200', 'font-semibold'));
+            if (finalScoreValue >= 90) document.getElementById('rubric-expert').classList.add('bg-purple-200', 'font-semibold');
+            else if (finalScoreValue >= 75) document.getElementById('rubric-proficient').classList.add('bg-purple-200', 'font-semibold');
+            else if (finalScoreValue >= 60) document.getElementById('rubric-developing').classList.add('bg-purple-200', 'font-semibold');
+            else document.getElementById('rubric-novice').classList.add('bg-purple-200', 'font-semibold');
+            
+            if (finalScoreValue >= 75) {
+                badgeSection.style.display = 'block';
+            }
+        }
+
+        function generateBadge() {
+            const nameInput = document.getElementById('userNameForBadge');
+            const name = nameInput.value.trim();
+            
+            if (name === "") {
+                nameInput.classList.add('border-red-500');
+                printErrorMessage.textContent = "Please enter your name to generate the badge.";
+                printErrorMessage.style.display = 'block';
+                return;
+            }
+            nameInput.classList.remove('border-red-500');
+            printErrorMessage.style.display = 'none';
+
+            // Get and format the current date
+            const today = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const formattedDate = today.toLocaleDateString(undefined, options);
+
+            document.getElementById('badgeNameDisplay').textContent = name;
+            document.getElementById('badgeScoreDisplay').textContent = `Achieved with a score of ${finalScoreValue}%`;
+            document.getElementById('badgeDateDisplay').textContent = "Completed on: " + formattedDate; // Set the date
+            document.getElementById('printableBadge').style.display = 'flex';
+            document.getElementById('printBadgeButtonTrigger').style.display = 'inline-block';
+        }
+        
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>
