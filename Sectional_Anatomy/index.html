@@ -110,35 +110,39 @@
 
   <script src="https://unpkg.com/dwv@0.34.2/dist/dwv.min.js"></script>
   <script>
-    // Initialize the DWV app
-    var app = new dwv.App();
+  // Init the DWV app
+  var app = new dwv.App();
 
-    app.init({
-      containerDivId: "dwv",
-      tools: {
-        Scroll: {},
-        ZoomAndPan: {},
-        WindowLevel: {}
-      },
-      fitToWindow: true
-    });
+  app.init({
+    containerDivId: "dwv",
+    tools: {
+      Scroll: {},
+      ZoomAndPan: {},
+      WindowLevel: {}
+    },
+    fitToWindow: true
+  });
 
-    const dicomZipUrl = "../mediastinal_lymph_node_seg/case_0002.zip";
+  const dicomZipUrl = "../mediastinal_lymph_node_seg/case_0002.zip";
 
-    app.addEventListener("ready", function () {
-      document.getElementById("status").textContent = "Loading DICOM ZIP...";
-      app.loadURLs([dicomZipUrl]);
-    });
+  // Add console debug logs
+  app.addEventListener("ready", function () {
+    console.log("DWV is ready.");
+    document.getElementById("status").textContent = "Loading DICOM ZIP...";
+    console.log("Loading from:", dicomZipUrl);
+    app.loadURLs([dicomZipUrl]);
+  });
 
-    app.addEventListener("load", function () {
-      document.getElementById("status").textContent = "DICOM images loaded.";
-    });
+  app.addEventListener("load", function () {
+    console.log("DICOM data loaded successfully.");
+    document.getElementById("status").textContent = "DICOM images loaded.";
+  });
 
-    app.addEventListener("error", function (event) {
-      console.error("DWV Error: ", event.error);
-      document.getElementById("status").textContent = "Error loading DICOM files.";
-      alert("Error loading DICOM files: " + event.error);
-    });
-  </script>
+  app.addEventListener("error", function (event) {
+    console.error("DWV Error: ", event.error);
+    document.getElementById("status").textContent = "Error loading DICOM files.";
+    alert("Error loading DICOM files: " + event.error);
+  });
+</script>
 </body>
 </html>
