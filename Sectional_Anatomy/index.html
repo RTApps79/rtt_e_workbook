@@ -1,135 +1,144 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cross-sectional Anatomy Module</title>
-    <link rel="stylesheet" href="https://unpkg.com/dwv@0.34.2/dist/dwv.min.css">
-    <link rel="icon" type="image/x-icon" href="favicon-32x32.png">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 20px;
-            background-color: #f4f4f4;
-            color: #333;
-        }
-        .container {
-            display: flex;
-            flex-wrap: wrap; /* Allows wrapping on smaller screens */
-            gap: 20px;
-            max-width: 1200px;
-            margin: auto;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        .anatomy-content {
-            flex: 2; /* Takes 2 parts of space */
-            min-width: 300px; /* Minimum width before wrapping */
-        }
-        .dicom-viewer-container {
-            flex: 3; /* Takes 3 parts of space */
-            min-width: 400px; /* Minimum width before wrapping */
-            background-color: #000; /* Black background for viewer */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 4px;
-            overflow: hidden; /* Important for viewer */
-            position: relative; /* For viewer tools */
-        }
-        #dwv {
-            width: 100%;
-            height: 100%;
-            min-height: 500px; /* Ensure viewer has minimum height */
-        }
-        /* Style for DWV tools - optional, DWV comes with its own styling */
-        .toolbar {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            z-index: 10;
-            background-color: rgba(255,255,255,0.8);
-            padding: 5px;
-            border-radius: 5px;
-            display: flex;
-            gap: 5px;
-        }
-        .toolbar button {
-            padding: 8px 12px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .toolbar button:hover {
-            background-color: #0056b3;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cross-sectional Anatomy Module</title>
+  <link rel="stylesheet" href="https://unpkg.com/dwv@0.34.2/dist/dwv.min.css">
+  <link rel="icon" type="image/x-icon" href="favicon-32x32.png">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 20px;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      max-width: 1200px;
+      margin: auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .anatomy-content {
+      flex: 2;
+      min-width: 300px;
+    }
+    .dicom-viewer-container {
+      flex: 3;
+      min-width: 400px;
+      background-color: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+    }
+    #dwv {
+      width: 100%;
+      height: 100%;
+      min-height: 500px;
+    }
+    .toolbar {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 10;
+      background-color: rgba(255,255,255,0.8);
+      padding: 5px;
+      border-radius: 5px;
+      display: flex;
+      gap: 5px;
+    }
+    .toolbar button {
+      padding: 8px 12px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .toolbar button:hover {
+      background-color: #0056b3;
+    }
+    #status {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(255, 255, 255, 0.8);
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="anatomy-content">
-            <h1>Cross-sectional Anatomy: Abdomen (Axial View)</h1>
-            <p>
-                This module explores the axial cross-sections of the abdomen, focusing on key anatomical structures visible in medical imaging. Use the DICOM viewer on the right to navigate through the slices and identify the labeled structures.
-            </p>
-            <h3>Key Structures to Identify:</h3>
-            <ul>
-                <li><strong>Liver:</strong> Largest organ in the abdomen, typically on the right side.</li>
-                <li><strong>Spleen:</strong> Located in the upper left abdomen, posterior to the stomach.</li>
-                <li><strong>Kidneys:</strong> Paired organs, retroperitoneal, usually visible on either side of the spine.</li>
-                <li><strong>Aorta:</strong> Large artery running anterior to the spine.</li>
-                <li><strong>IVC (Inferior Vena Cava):</strong> Large vein, typically to the right of the aorta.</li>
-                <li><strong>Vertebral Body:</strong> The bony part of the spine.</li>
-            </ul>
-        </div>
-
-        <div class="dicom-viewer-container">
-            <div id="dwv"></div>
-            <div class="toolbar">
-                <button onclick="app.setTool('Scroll');">Scroll</button>
-                <button onclick="app.setTool('ZoomAndPan');">Zoom</button>
-                <button onclick="app.setTool('WindowLevel');">Window/Level</button>
-                <p id="status" style="text-align:center; color: green;"></p>
-            </div>
-        </div>
+  <div class="container">
+    <div class="anatomy-content">
+      <h1>Cross-sectional Anatomy: Abdomen (Axial View)</h1>
+      <p>
+        This module explores the axial cross-sections of the abdomen, focusing on key anatomical structures visible in medical imaging. Use the DICOM viewer on the right to navigate through the slices and identify the labeled structures.
+      </p>
+      <h3>Key Structures to Identify:</h3>
+      <ul>
+        <li><strong>Liver:</strong> Largest organ in the abdomen, typically on the right side.</li>
+        <li><strong>Spleen:</strong> Located in the upper left abdomen, posterior to the stomach.</li>
+        <li><strong>Kidneys:</strong> Paired organs, retroperitoneal, usually visible on either side of the spine.</li>
+        <li><strong>Aorta:</strong> Large artery running anterior to the spine.</li>
+        <li><strong>IVC (Inferior Vena Cava):</strong> Large vein, typically to the right of the aorta.</li>
+        <li><strong>Vertebral Body:</strong> The bony part of the spine.</li>
+      </ul>
     </div>
 
-   <script src="https://unpkg.com/dwv@0.34.2/dist/dwv.min.js"></script>
-    <script>
-        // Init the DWV app
-        var app = new dwv.App();
+    <div class="dicom-viewer-container">
+      <div id="dwv"></div>
+      <div class="toolbar">
+        <button onclick="app.setTool('Scroll');">Scroll</button>
+        <button onclick="app.setTool('ZoomAndPan');">Zoom</button>
+        <button onclick="app.setTool('WindowLevel');">Window/Level</button>
+      </div>
+      <p id="status">Initializing...</p>
+    </div>
+  </div>
 
-        // Setup the app
-        app.init({
-    containerDivId: "dwv",
-    tools: {
+  <script src="https://unpkg.com/dwv@0.34.2/dist/dwv.min.js"></script>
+  <script>
+    // Initialize the DWV app
+    var app = new dwv.App();
+
+    app.init({
+      containerDivId: "dwv",
+      tools: {
         Scroll: {},
         ZoomAndPan: {},
         WindowLevel: {}
-    },
-    fitToWindow: true
-});
-
-
-        // This base URL must point to the folder containing the DICOM files
-        // relative to this HTML file's location.
-       const dicomZipUrl = "../mediastinal_lymph_node_seg/case_0002.zip";
-
-        // Ensure the DWV app is ready before loading
-        app.addEventListener("ready", function () {
-        document.getElementById("status").textContent = "Loading DICOM ZIP...";
-        app.loadURLs([dicomZipUrl]);
+      },
+      fitToWindow: true
     });
 
-        // Error handling
-       app.addEventListener("error", function (event) {
-        console.error("DWV Error: ", event.error);
-        alert("Error loading DICOM files: " + event.error);
+    const dicomZipUrl = "../mediastinal_lymph_node_seg/case_0002.zip";
+
+    app.addEventListener("ready", function () {
+      document.getElementById("status").textContent = "Loading DICOM ZIP...";
+      app.loadURLs([dicomZipUrl]);
     });
+
+    app.addEventListener("load", function () {
+      document.getElementById("status").textContent = "DICOM images loaded.";
+    });
+
+    app.addEventListener("error", function (event) {
+      console.error("DWV Error: ", event.error);
+      document.getElementById("status").textContent = "Error loading DICOM files.";
+      alert("Error loading DICOM files: " + event.error);
+    });
+  </script>
 </body>
 </html>
