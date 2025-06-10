@@ -94,6 +94,7 @@
                 <button onclick="app.setTool('Scroll');">Scroll</button>
                 <button onclick="app.setTool('ZoomAndPan');">Zoom</button>
                 <button onclick="app.setTool('WindowLevel');">Window/Level</button>
+                <p id="status" style="text-align:center; color: green;"></p>
             </div>
         </div>
     </div>
@@ -117,39 +118,18 @@
 
         // This base URL must point to the folder containing the DICOM files
         // relative to this HTML file's location.
-       const baseUrl = "../mediastinal_lymph_node_seg/case_0002/1.3.6.1.4.1.14519.5.2.1.261678860176247915184009743234524088493/CT_1.3.6.1.4.1.14519.5.2.1.273140215471692254985762569203840578735/";
-
-
-        // CORRECTED: The array now contains ONLY the filenames.
-        const fileNames = [
-            "004377ce-4119-4f33-92b8-0c844311656c.dcm", "01d8e3d5-a4bc-4296-bf51-f825ea192421.dcm",
-            "021602f0-cdef-4744-9782-1680a909cea7.dcm", "0482e6fd-6a15-4a30-bae1-1fb4389c5e45.dcm",
-            "04d88adb-f544-4cdc-93e8-f492cdb257ba.dcm", "07d6c13e-e175-40f1-8cfe-5b4fafe6c215.dcm",
-            "0a2b893c-b80e-4b43-acbb-6662c0b93426.dcm", "0e485030-48f4-42a7-9c87-d94d0a4698f7.dcm",
-            "114c59cf-e98d-4fba-b908-302bd908cace.dcm", "11ddb19f-0383-46e8-838d-821cb9031ce5.dcm",
-            "12d48743-9abf-43e5-ab82-538ff501659e.dcm", "15914e10-332b-4310-95e7-ac4aba8d974e.dcm",
-            "174b74ce-5fb5-4903-885d-65a383ca5047.dcm", "1a6262a2-75e9-4d0d-95a9-bd3bff2a0e15.dcm",
-            "1e2a73a5-c4e4-4de2-ba17-35b3d57a24d3.dcm", "1e78b2d7-b474-4807-9f05-45b8c52ebba4.dcm",
-            "21aaed35-3e41-4c0d-80e5-489d52a21f52.dcm", "22499a1d-3149-41e1-8277-315f54201294.dcm",
-            "234b62f9-086b-4a5f-96ed-7dcda58997b4.dcm", "244a5186-e50d-4ad3-a098-4e185b7dc3de.dcm",
-            "2b6c340a-2eff-4dc9-b3cd-b55e61027072.dcm", "2ce32a15-d7d9-401e-80c1-01157efa113d.dcm"
-            // The rest of the file names would follow here...
-        ];
-
-        // This line now correctly combines the base URL and the filename.
-        const dicomUrls = fileNames.map(file => baseUrl + file);
+       const dicomZipUrl = "../mediastinal_lymph_node_seg/case_0002.zip";
 
         // Ensure the DWV app is ready before loading
         app.addEventListener("ready", function () {
-            console.log("DWV app is ready to load files.");
-            app.loadURLs(dicomUrls);
-        });
+        document.getElementById("status").textContent = "Loading DICOM ZIP...";
+        app.loadURLs([dicomZipUrl]);
+    });
 
         // Error handling
-        app.addEventListener("error", function (event) {
-            console.error("DWV Error: ", event.error);
-            alert("Error loading DICOM files: " + event.error);
-        });
-    </script>
+       app.addEventListener("error", function (event) {
+        console.error("DWV Error: ", event.error);
+        alert("Error loading DICOM files: " + event.error);
+    });
 </body>
 </html>
