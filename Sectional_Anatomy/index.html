@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cross-sectional Anatomy Module</title>
-   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dwv@0.34.2/dist/dwv.min.css" integrity="sha256-RmMH7lJvB0q3wXj1hT0qG0k0J2v1v701l0L0v701L0v1l0=" crossorigin="anonymous" type="text/css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dwv@0.34.2/dist/dwv.min.css" integrity="sha256-b0X2/p0wF+gDDdO/2r3szzsT2Jd0J5uELzIPlbJt3QM=" crossorigin="anonymous" type="text/css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -84,10 +84,7 @@
                 <li><strong>Aorta:</strong> Large artery running anterior to the spine.</li>
                 <li><strong>IVC (Inferior Vena Cava):</strong> Large vein, typically to the right of the aorta.</li>
                 <li><strong>Vertebral Body:</strong> The bony part of the spine.</li>
-                </ul>
-            <p>
-                Consider adding labeled diagrams or annotated static images here to complement the interactive viewer.
-            </p>
+            </ul>
         </div>
 
         <div class="dicom-viewer-container">
@@ -96,11 +93,11 @@
                 <button onclick="app.setTool('Scroll');">Scroll</button>
                 <button onclick="app.setTool('ZoomAndPan');">Zoom</button>
                 <button onclick="app.setTool('WindowLevel');">Window/Level</button>
-                </div>
+            </div>
         </div>
     </div>
 
-   <script src="https://cdn.jsdelivr.net/npm/dwv@0.34.2/dist/dwv.min.js" integrity="sha256-ooXDNjDDAQbOrvrODD+CkNCXnyc10LgvjKNR4K+J8js=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dwv@0.34.2/dist/dwv.min.js" integrity="sha256-4Oovx4/9vAmdLssyEwWqY18B+k46VbT5lHwN8xHMBkI=" crossorigin="anonymous"></script>
     <script>
         // Init the DWV app
         var app = new dwv.App();
@@ -108,25 +105,18 @@
         // Setup the app
         app.init({
             "containerDivId": "dwv",
-            "tools": ["Scroll", "ZoomAndPan", "WindowLevel"], // Enable tools
-            "fitToWindow": true, // Fit image to viewer size
-            "commands": ["reset"], // Add reset command if needed
-            "gui": ["tool", "zoom", "windowlevel", "scroll"], // Enable GUI for selected tools
-            "onload": function(event) {
-                // You can add code here to run after the viewer is loaded
-                console.log("DWV Viewer loaded.");
-            }
+            "tools": ["Scroll", "ZoomAndPan", "WindowLevel"],
+            "fitToWindow": true,
         });
 
-        // Define the URLs of your DICOM files
-        // IMPORTANT: Replace with the actual paths to your DICOM files within the repo.
-        // For example, if you have a study folder 'CT_Abdomen_Study/' inside 'dicom_data/',
-        // and files are 'image000.dcm', 'image001.dcm', etc.
-        // You might need to list ALL files in the series here.
-        // For a full study, you'd usually load a ZIP of the study or use a DICOMweb server.
-        // This example lists individual files.
-        var dicomUrls = [
-             "mediastinal_lymph_node_seg/case_0002/1.3.6.1.4.1.14519.5.2.1.261678860176247915184009743234524088493/CT_1.3.6.1.4.1.14519.5.2.1.273140215471692254985762569203840578735/004377ce-4119-4f33-92b8-0c844311656c.dcm",
+        // --- CORRECTED: Refactored DICOM URL list for better maintainability ---
+
+        // IMPORTANT: This base URL must point to the folder containing the DICOM files
+        // in your repository. It is relative to this HTML file.
+        const baseUrl = "mediastinal_lymph_node_seg/case_0002/1.3.6.1.4.1.14519.5.2.1.261678860176247915184009743234524088493/CT_1.3.6.1.4.1.14519.5.2.1.273140215471692254985762569203840578735/";
+
+        const fileNames = [
+       "mediastinal_lymph_node_seg/case_0002/1.3.6.1.4.1.14519.5.2.1.261678860176247915184009743234524088493/CT_1.3.6.1.4.1.14519.5.2.1.273140215471692254985762569203840578735/004377ce-4119-4f33-92b8-0c844311656c.dcm",
     "mediastinal_lymph_node_seg/case_0002/1.3.6.1.4.1.14519.5.2.1.261678860176247915184009743234524088493/CT_1.3.6.1.4.1.14519.5.2.1.273140215471692254985762569203840578735/01d8e3d5-a4bc-4296-bf51-f825ea192421.dcm",
     "mediastinal_lymph_node_seg/case_0002/1.3.6.1.4.1.14519.5.2.1.261678860176247915184009743234524088493/CT_1.3.6.1.4.1.14519.5.2.1.273140215471692254985762569203840578735/021602f0-cdef-4744-9782-1680a909cea7.dcm",
     "mediastinal_lymph_node_seg/case_0002/1.3.6.1.4.1.14519.5.2.1.261678860176247915184009743234524088493/CT_1.3.6.1.4.1.14519.5.2.1.273140215471692254985762569203840578735/0482e6fd-6a15-4a30-bae1-1fb4389c5e45.dcm",
@@ -262,18 +252,20 @@
     "mediastinal_lymph_node_seg/case_0002/1.3.6.1.4.1.14519.5.2.1.261678860176247915184009743234524088493/CT_1.3.6.1.4.1.14519.5.2.1.273140215471692254985762569203840578735/ffc820e4-734a-4700-b81f-30375f864a67.dcm",
 ];
 
+
+        const dicomUrls = fileNames.map(file => baseUrl + file);
+
         // Ensure the DWV app is ready before loading
         app.addEventListener("ready", function () {
             console.log("DWV app is ready to load files.");
             app.loadURLs(dicomUrls);
         });
 
-        // Error handling (optional)
+        // Error handling
         app.addEventListener("error", function (event) {
             console.error("DWV Error: ", event.error);
             alert("Error loading DICOM files: " + event.error);
         });
-
     </script>
 </body>
 </html>
