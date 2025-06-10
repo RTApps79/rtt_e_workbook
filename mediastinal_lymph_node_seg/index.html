@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cross-sectional Anatomy Module</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dwv@0.34.2/dist/dwv.min.css" integrity="sha256-b0X2/p0wF+gDDdO/2r3szzsT2Jd0J5uELzIPlbJt3QM=" crossorigin="anonymous" type="text/css">
+    <link rel="stylesheet" href="https://unpkg.com/dwv@0.34.2/dist/dwv.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -96,18 +96,21 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/dwv@0.34.2/dist/dwv.min.js" integrity="sha256-4Oovx4/9vAmdLssyEwWqY18B+k46VbT5lHwN8xHMBkI=" crossorigin="anonymous"></script>
+     <script src="https://unpkg.com/dwv@0.34.2/dist/dwv.min.js"></script>
     <script>
         // Init the DWV app
         var app = new dwv.App();
 
         // Setup the app
         app.init({
-            "containerDivId": "dwv",
-            "tools": ["Scroll", "ZoomAndPan", "WindowLevel"],
-            "fitToWindow": true,
-        });
-
+    containerDivId: "dwv",
+    tools: {
+        Scroll: {},
+        ZoomAndPan: {},
+        WindowLevel: {}
+    },
+    fitToWindow: true
+});
         // This base URL is relative to the current index.html file
         const baseUrl = "case_0002/1.3.6.1.4.1.14519.5.2.1.261678860176247915184009743234524088493/CT_1.3.6.1.4.1.14519.5.2.1.273140215471692254985762569203840578735/";
 
