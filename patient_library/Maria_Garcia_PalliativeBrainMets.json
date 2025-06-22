@@ -23,11 +23,11 @@
     "vitalSignsSummary": "BP: 130/80, Wt: 65 kg (03/22/25)",
     "overallStage": "Stage IV"
   },
-  "treatmentPlan": {
+"treatmentPlan": {
     "radOnc": "Dr. Samuel Green",
     "medOnc": "Dr. David Roberts",
     "treatmentSite": "Whole Brain",
-    "intent": "Palliative (Symptom control, delay neurological progression)",
+    "intent": "Palliative - Emergency Treatment (Symptom control, delay neurological progression)", 
     "modality": "External Beam Radiation Therapy (EBRT)",
     "totalDose": "30 Gy",
     "fractionation": "10 fx",
@@ -40,8 +40,7 @@
       "Dexamethasone 4 mg PO BID (started 03/21/2025 for cerebral edema)"
     ]
   },
-  "radiationOncologyData": {
-    "ctSimulation": {
+     "ctSimulation": {
       "simulationDate": "03/25/2025",
       "setupInstructions": "Supine, neutral head position, thermoplastic mask for immobilization. SAD setup.",
       "immobilization": "Thermoplastic mask (head)",
@@ -66,7 +65,7 @@
       "hetero": "Yes",
       "norm": "Isocenter",
       "constraints": "Lens Max < 8 Gy; Optic Nrv Max < 25 Gy",
-      "planNotes": "Standard 10fx WBRT.",
+      "planNotes": "Standard 10fx WBRT. Emergency treatment for acute neurological symptoms.",
       "fieldDetails": [
         {
           "fieldName": "Right Lateral",
@@ -74,7 +73,8 @@
           "collimatorAngle": "0 (shaped)",
           "couchAngle": "0",
           "energy": "6MV",
-          "monitorUnits": "e.g., 150 MU"
+          "monitorUnits": "150 MU",
+          "ssd": "92.0 cm" 
         },
         {
           "fieldName": "Left Lateral",
@@ -82,7 +82,8 @@
           "collimatorAngle": "0 (shaped)",
           "couchAngle": "0",
           "energy": "6MV",
-          "monitorUnits": "e.g., 150 MU"
+          "monitorUnits": "150 MU",
+          "ssd": "92.0 cm" 
         }
       ]
     },
@@ -90,8 +91,7 @@
       "fractions": [
         { "fractionNumber": 1, "date": "2025-03-27", "machine": "LINAC3", "setupNotes":"KV imaging for setup verification. Tolerances met.", "sideEffects": "Headache improved from baseline.", "notes": "Patient tolerated first fraction well." }
       ]
-    }
-  },
+    },
   "imagingAndReports": [
     {
       "date": "08/01/2023",
@@ -147,7 +147,7 @@
       "imageUrls": [
         "https://raw.githubusercontent.com/cornerstonejs/cornerstone-wado-image-loader/master/examples/images/MR000000.dcm"
       ],
-      "ohifViewerUrl": "https://viewer.ohif.org/viewer?StudyInstanceUIDs=1.3.6.1.4.1.5962.99.1.3020871283.19690101000000.1629624997234956830" // Example OHIF link
+      "ohifViewerUrl": "https://viewer.ohif.org/viewer?StudyInstanceUIDs=1.3.6.1.4.1.5962.99.1.3020871283.19690101000000.1629624997234956830" 
     },
     {
       "description": "CT Simulation Head (03/25/2025)",
@@ -156,7 +156,7 @@
         "https://raw.githubusercontent.com/cornerstonejs/cornerstone-wado-image-loader/master/examples/images/CT000000.dcm",
         "https://raw.githubusercontent.com/cornerstonejs/cornerstone-wado-image-loader/master/examples/images/CT000001.dcm"
       ],
-      "ohifViewerUrl": "https://viewer.ohif.org/viewer?StudyInstanceUIDs=1.3.6.1.4.1.14519.5.2.1.7009.9007.298806137288633453246975630178" // Example OHIF link
+      "ohifViewerUrl": "https://viewer.ohif.org/viewer?StudyInstanceUIDs=1.3.6.1.4.1.14519.5.2.1.7009.9007.298806137288633453246975630178" 
     }
   ],
   "labResults": [
@@ -184,11 +184,11 @@
     { "date": "03/22/2025", "time": "10:00 AM", "type": "Rad Onc Consult (Urgent)", "location": "Radiation Oncology Clinic", "status": "Completed" },
     { "date": "03/25/2025", "time": "09:00 AM", "type": "CT Simulation WBRT", "location": "Radiation Oncology Sim Room", "status": "Completed" },
     { "date": "03/27/2025", "time": "11:00 AM", "type": "First Treatment (Fx 1/10)", "location": "Linear Accelerator #3", "status": "Completed" },
-    { "date": "03/27/2025 - 04/09/2025", "time": "Daily (M-F)", "type": "WBRT Treatment", "location": "Linear Accelerator #3", "status": "Completed" }, // Assuming it's completed based on progress note
+    { "date": "03/27/2025 - 04/09/2025", "time": "Daily (M-F)", "type": "WBRT Treatment", "location": "Linear Accelerator #3", "status": "Completed" }, 
     { "date": "04/01/2025", "time": "11:30 AM", "type": "On Treatment Visit (OTV)", "location": "Radiation Oncology Clinic", "status": "Completed" },
     { "date": "04/16/2025", "time": "02:00 PM", "type": "Post-WBRT Follow Up", "location": "Radiation Oncology Clinic", "status": "Scheduled" }
   ],
-  "cptCharges": [ // Plausible CPTs for WBRT
+  "cptCharges": [ 
     { "code": "77280", "description": "Simulation, Simple (WBRT)", "frequency": "Once" },
     { "code": "77332", "description": "Treatment device, Simple (Mask)", "frequency": "Once" },
     { "code": "77295", "description": "3D radiotherapy plan", "frequency": "Once" },
