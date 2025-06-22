@@ -19,6 +19,10 @@ const radOncSubTabs = [
 ];
 
 // --- Section Renderers ---
+
+// All render functions should be defined BEFORE showRadOncSubTab and showTab
+// to avoid "not defined" errors.
+
 function renderDemographics(data) {
   const d = data.demographics || {};
   return `
@@ -119,7 +123,7 @@ function renderTreatmentPlan(data) {
         <p><strong>Target Volume Summary:</strong> ${t.targetVolumeSummary || "N/A"}</p>
         <p><strong>Technique Summary:</strong> ${t.techniqueSummary || "N/A"}</p>
         <p><strong>Concurrent Chemotherapy:</strong> ${t.concurrentChemo || "None"}</p>
-        <p><strong>Detailed Concurrent Chemotherapy:</strong> ${t.detailedConcurrentChemo || "N/A"}</p>
+        <p><strong>Detailed Concurrent Chemotherapy:</strong> ${t.detailedConcurrentChemopathy || "N/A"}</p>
         ${medicationsHtml}
         ${therapistAlertsHtml}
       </div>
@@ -713,35 +717,41 @@ function renderPracticeFractionEntryForm(patientData) {
     `;
 }
 
+// initPracticeFractionFormHandlers needs to be outside any render function
+// so it can be accessed globally and re-initialized as needed.
 function initPracticeFractionFormHandlers() {
-  const sessionFractions = [];
+  const sessionFractions = []; // This will hold the submitted practice fractions for the session
+
+  // Helper function to refresh the table of entered fractions
   function refreshFractionTable() {
     const tbody = document.getElementById('practiceFractionSessionTable')?.querySelector('tbody');
     if (!tbody) return;
-    tbody.innerHTML = '';
+    tbody.innerHTML = ''; // Clear existing rows
     sessionFractions.forEach((entry, idx) => {
-      const row = tbody.insertCell(0).textContent = entry.fractionNumber + " / " + entry.totalFractions;
+      const row = tbody.insertRow();
+      row.insertCell(0).textContent = entry.fractionNumber + " / " + entry.totalFractions;
       row.insertCell(1).textContent = entry.date;
       row.insertCell(2).textContent = entry.machine;
-      row.insertCell(3).textContent = entry.fieldsAndMUs; // Simplified summary
-      row.insertCell(4).textContent = entry.dailyNotes; // Simplified notes
+      row.insertCell(3).textContent = entry.fieldsAndMUs; // This is the overall summary from the form
+      row.insertCell(4).textContent = entry.dailyNotes; // The main daily notes
       const removeCell = row.insertCell(5);
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.textContent = 'Remove';
       btn.onclick = () => {
-        sessionFractions.splice(idx, 1);
-        refreshFractionTable();
+        sessionFractions.splice(idx, 1); // Remove from array
+        refreshFractionTable(); // Re-render table
       };
       removeCell.appendChild(btn);
     });
   }
 
+  // Event listener for the "Add Practice Fraction Entry" button
   const addBtn = document.getElementById('addPracticeFractionBtn');
   if (addBtn) {
     addBtn.onclick = function() {
       const form = document.getElementById('practiceFractionForm');
-      // Validate required fields before proceeding
+      // Basic validation for required fields
       const requiredInputs = form.querySelectorAll('[required]');
       for (const input of requiredInputs) {
           if (!input.value) {
@@ -751,21 +761,22 @@ function initPracticeFractionFormHandlers() {
           }
       }
 
-
+      // Collect data from the per-field MU table
       const recordedFields = [];
       document.querySelectorAll('#dailyFieldEntryTable tbody tr').forEach(row => {
           recordedFields.push({
-              fieldName: row.cells[0].textContent,
-              plannedMu: row.cells[1].textContent, // Capture planned MU
-              deliveredMu: row.querySelector('.daily-mu-input').value,
-              notes: row.querySelector('.daily-field-notes').value,
+              fieldName: row.cells[0].textContent, // Field Name
+              plannedMu: row.cells[1].textContent, // Planned MU
+              deliveredMu: row.querySelector('.daily-mu-input').value, // Delivered MU
+              notes: row.querySelector('.daily-field-notes').value, // Field Notes
           });
       });
 
-      // Automatically calculate total MUs delivered from per-field entries
+      // Calculate total delivered MUs for the overall summary
       const totalDeliveredMUs = recordedFields.reduce((sum, field) => sum + (parseInt(field.deliveredMu) || 0), 0);
       let overallFieldsAndMUsSummary = document.getElementById('practiceFieldsAndMUs')?.value || '';
       if (totalDeliveredMUs > 0) {
+          // Append or update total delivered MUs in the overall summary
           if (!overallFieldsAndMUsSummary.includes("Total Delivered:")) {
             overallFieldsAndMUsSummary += ` (Total Delivered: ${totalDeliveredMUs} MU)`;
           } else {
@@ -773,10 +784,10 @@ function initPracticeFractionFormHandlers() {
           }
       }
 
-
+      // Create a session entry object with all collected data
       const sessionEntry = {
-        patientName: currentPatientData?.demographics?.name || 'N/A', // Added patient name
-        patientId: currentPatientData?.patientId || 'N/A', // Added patient ID
+        patientName: currentPatientData?.demographics?.name || 'N/A',
+        patientId: currentPatientData?.patientId || 'N/A',
         anatomicSite: currentPatientData?.treatmentPlan?.treatmentSite || 'N/A',
         diagnosis: currentPatientData?.diagnosis?.primary || 'N/A',
         prescription: currentPatientData?.treatmentPlan?.rtRxDetails || 'N/A',
@@ -790,9 +801,8 @@ function initPracticeFractionFormHandlers() {
         machine: document.getElementById('practiceMachine').value,
         therapistInitials: document.getElementById('practiceTherapistInitials').value,
         
-        // These can be derived or manually entered in the form
-        fieldsAndMUs: overallFieldsAndMUsSummary, // Now includes calculated total
-        energiesUsed: document.getElementById('practiceEnergiesUsed')?.value || '', // Can be auto-filled from plan fields, but left as input for flexibility
+        fieldsAndMUs: overallFieldsAndMUsSummary, // Overall summary, now including calculated total
+        energiesUsed: document.getElementById('practiceEnergiesUsed')?.value || '',
         
         setupVerification: document.getElementById('practiceSetupVerification')?.value || '',
         immobilizationDevicesChecked: document.getElementById('practiceImmobilizationDevicesChecked')?.value || '',
@@ -813,19 +823,22 @@ function initPracticeFractionFormHandlers() {
         instructionsGiven: document.getElementById('practiceInstructionsGiven')?.value || '',
         
         billingCodes: document.getElementById('practiceBillingCodes')?.value || '',
-        dailyNotes: document.getElementById('practiceDailyNotes')?.value || '',
+        dailyNotes: document.getElementById('practiceDailyNotes')?.value || '', // Main daily notes field
         
         fieldsDelivered: recordedFields // Detailed per-field data
       };
-      sessionFractions.push(sessionEntry);
-      refreshFractionTable();
-      form.reset();
-      // Pre-fill some fields for next entry if applicable (e.g., total fractions, immobilization)
+      sessionFractions.push(sessionEntry); // Add the new entry to the session array
+      refreshFractionTable(); // Update the table displaying session entries
+      form.reset(); // Clear the form for the next entry
+      
+      // Pre-fill some fields for the next entry for convenience
       document.getElementById('practiceFractionNumTotal').value = sessionEntry.totalFractions;
+      // Preserve immobilization device value as it's often consistent
       document.getElementById('practiceImmobilizationDevicesChecked').value = sessionEntry.immobilizationDevicesChecked;
     };
   }
 
+  // Event listener for the "Prepare Practice Submission Summary" button
   const prepareBtn = document.getElementById('preparePracticeSummaryBtn');
   if (prepareBtn) {
     prepareBtn.onclick = function() {
@@ -922,9 +935,9 @@ function showRadOncSubTab(subKey, data) {
       subContents.innerHTML = renderDosimetry(radOncData.dosimetry); 
       break;
     case 'treatmentDelivery': 
-      subContents.innerHTML = renderTreatmentDelivery(radOncData); 
+      subContents.innerHTML = renderTreatmentDelivery(radOncData); // This function call is correct now
       initPracticeFractionFormHandlers(); 
-      initFractionDetailToggles(); // Ensure this is called
+      initFractionDetailToggles(); 
       break;
     default: 
       subContents.innerHTML = "<p>No data.</p>"; 
@@ -1033,6 +1046,21 @@ function filterPatientsByDiagnosis() {
     if(tabsDiv) tabsDiv.innerHTML = '';
     if(tabContents) tabContents.innerHTML = `<p style="padding: 20px;">No matching patients found for "${searchValue}".</p>`;
   }
+}
+
+// --- Function for toggling details in Treatment Delivery Records ---
+// Needs to be outside any render function to be globally accessible
+function initFractionDetailToggles() {
+    document.querySelectorAll('.toggle-details-btn').forEach(button => {
+        button.onclick = function() {
+            const targetId = this.dataset.fractionId;
+            const detailsDiv = document.getElementById(targetId);
+            if (detailsDiv) {
+                detailsDiv.classList.toggle('fraction-details-hidden');
+                this.textContent = detailsDiv.classList.contains('fraction-details-hidden') ? 'Show All Details' : 'Hide Details';
+            }
+        };
+    });
 }
 
 // --- On Page Load ---
