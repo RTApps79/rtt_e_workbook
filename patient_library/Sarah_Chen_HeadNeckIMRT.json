@@ -21,9 +21,12 @@
     "tnmStage": "cT2 N1 M0",
     "overallStage": "Stage I (HPV-Positive Oropharynx)",
     "symptomsAtPresentation": "Persistent sore throat, feeling of lump in throat, palpable left neck node.",
+    "pathologyFindings": [
+      "Invasive Squamous Cell Carcinoma.",
+      "Immunohistochemistry: Strong, diffuse p16 positivity."
+    ],
     "relevantHistory": "Former smoker (quit 15 yrs ago), social EtOH.",
-    "baselineStatus": "ECOG 0 (Fully active)",
-    "vitalSignsSummary": "BP 125/75, Wt 68 kg (02/22/25)"
+    "baselineStatus": "ECOG 0 (Fully active)"
   },
   "treatmentPlan": {
     "radOnc": "Dr. James Miller",
@@ -31,11 +34,9 @@
     "treatmentSite": "Oropharynx + Neck Nodes",
     "intent": "Definitive (Curative)",
     "modality": "External Beam Radiation Therapy (EBRT) with concurrent Chemotherapy",
-    "totalDose": "70 Gy (SIB)", // For general tab, simplified from Rx
-    "fractionation": "35 fx", // For general tab, simplified from Rx
-    "rtRxDetails": "70 Gy / 35 fx (SIB to PTV_High), PTV_Int: 63Gy, PTV_Low: 56Gy", // From allPatientsPlanData & EMR context
+    "rtRxDetails": "70 Gy / 35 fx (SIB to PTV_High), PTV_Int: 63Gy, PTV_Low: 56Gy",
     "targetVolumeSummary": "PTV_High (GTV L Tonsil + L N1 node + margin), PTV_Intermediate (High-Risk Nodal Regions), PTV_Low (Elective Nodal Regions)",
-    "techniqueSummary": "IMRT",
+    "techniqueSummary": "IMRT (7-field)",
     "concurrentChemo": "Cisplatin",
     "detailedConcurrentChemo": "Cisplatin 100 mg/m^2 IV every 3 weeks (Cycles on Day 1, 22, 43) - Managed by Dr. Lisa Green",
     "medications": [
@@ -44,6 +45,11 @@
       "Magic Mouthwash PRN Mucositis",
       "Pain Medication (e.g., Oxycodone PRN severe throat pain)",
       "PEG tube placed pre-treatment for nutritional support"
+    ],
+    "therapistAlerts": [
+      "Assess for mucositis and skin reaction daily.",
+      "Verify PEG tube site is clean and dry.",
+      "High risk for dehydration; encourage fluid intake."
     ]
   },
   "radiationOncologyData": {
@@ -52,18 +58,23 @@
       "setupInstructions": "Supine in custom thermoplastic mask extending to shoulders, appropriate headrest, shoulders retracted down. SAD setup.",
       "immobilization": "Custom thermoplastic mask (Head & Neck)",
       "referenceMarks": "3-point mask marks aligned to room lasers. Isocenter at L0.0, L+1.0, V-3.0 from CT sim reference point.",
-      "scanner": "e.g., Philips Big Bore CT or similar", // Typical example
-      "sliceThickness": "2.5 mm", // From CT Sim modal data in Patient Library
-      "contrastUsed": "Contrast-enhanced IV", // From CT Sim modal data
+      "setupImages": [
+        { "type": "AP", "url": "https://placehold.co/250x200/EEE/31343C?text=AP+Setup+Photo" },
+        { "type": "Lateral", "url": "https://placehold.co/250x200/EEE/31343C?text=Lateral+Setup+Photo" }
+      ],
+      "scanner": "Philips Big Bore CT",
+      "sliceThickness": "2.5 mm",
+      "contrastUsed": "Contrast-enhanced IV",
       "ctNotes": "CT acquired for H&N IMRT planning. Fused with diagnostic PET/CT. Dental eval completed prior. Patient tolerated well. Mask fit confirmed."
     },
     "dosimetry": {
       "planId": "SC77889_HN",
+      "planStatus": "Final - Approved by Dr. James Miller",
       "rx": "70 Gy / 35 fx (SIB)",
       "technique": "IMRT",
       "energy": "6MV",
       "numberOfFieldsOrArcs": 7,
-      "gantryAngles": "Multiple Static (e.g., 0, 51, 102, 153, 204, 255, 306)", // Example for 7 fields
+      "gantryAngles": "0, 51, 102, 153, 204, 255, 306",
       "collAngles": "Variable per field",
       "couchAngles": "0",
       "isoCoords": "L0.0, L+1.0, V-3.0",
@@ -71,131 +82,84 @@
       "algorithm": "Collapsed Cone",
       "hetero": "Yes",
       "norm": "PTV High Mean 95%",
-      "constraints": "Spinal Cord Max < 45 Gy; Brainstem Max < 54 Gy; Parotid Mean < 26 Gy",
-      "planNotes": "Complex H&N IMRT with SIB.",
-      "fieldDetails": [ // Example structure for IMRT fields (MUs are placeholders)
-        { "fieldName": "Field 1 AP", "gantryAngle": "0", "collimatorAngle": "0", "couchAngle": "0", "energy": "6MV", "monitorUnits": "e.g., 80 MU" },
-        { "fieldName": "Field 2 RPO", "gantryAngle": "51", "collimatorAngle": "30", "couchAngle": "0", "energy": "6MV", "monitorUnits": "e.g., 95 MU" },
-        { "fieldName": "Field 3 RAO", "gantryAngle": "102", "collimatorAngle": "330", "couchAngle": "0", "energy": "6MV", "monitorUnits": "e.g., 90 MU" },
-        { "fieldName": "Field 4 PA", "gantryAngle": "180", "collimatorAngle": "0", "couchAngle": "0", "energy": "6MV", "monitorUnits": "e.g., 70 MU" },
-        { "fieldName": "Field 5 LAO", "gantryAngle": "204", "collimatorAngle": "30", "couchAngle": "0", "energy": "6MV", "monitorUnits": "e.g., 90 MU" },
-        { "fieldName": "Field 6 LPO", "gantryAngle": "255", "collimatorAngle": "330", "couchAngle": "0", "energy": "6MV", "monitorUnits": "e.g., 95 MU" },
-        { "fieldName": "Field 7 R/L Lat", "gantryAngle": "306", "collimatorAngle": "0", "couchAngle": "0", "energy": "6MV", "monitorUnits": "e.g., 80 MU" }
+      "constraints": "Spinal Cord Max < 45 Gy; Brainstem Max < 54 Gy; Parotid Mean < 26 Gy. All constraints met.",
+      "planNotes": "Complex H&N IMRT with SIB. Patient to receive weekly chemotherapy.",
+      "igrtProtocol": {
+        "frequency": "Daily",
+        "type": "CBCT",
+        "alignment": "Bony anatomy of C-Spine, then soft tissue check."
+      },
+      "qaChecks": [
+        { "date": "2025-02-28", "type": "Initial Chart Check", "by": "Physics Staff" },
+        { "date": "2025-02-28", "type": "Patient Specific QA", "by": "Physics Staff", "result": "Pass" }
+      ],
+      "fieldDetails": [
+        { "fieldName": "Field 1 AP", "fieldSize": "14.5x20.0 cm", "gantryAngle": "0", "collimatorAngle": "0", "couchAngle": "0", "energy": "6MV", "monitorUnits": 80, "ssd": "91.5 cm" },
+        { "fieldName": "Field 2 RPO", "fieldSize": "15.0x20.0 cm", "gantryAngle": "51", "collimatorAngle": "30", "couchAngle": "0", "energy": "6MV", "monitorUnits": 95, "ssd": "92.0 cm" },
+        { "fieldName": "Field 3 RAO", "fieldSize": "15.0x20.0 cm", "gantryAngle": "102", "collimatorAngle": "330", "couchAngle": "0", "energy": "6MV", "monitorUnits": 90, "ssd": "92.5 cm" },
+        { "fieldName": "Field 4 PA", "fieldSize": "14.5x20.0 cm", "gantryAngle": "180", "collimatorAngle": "0", "couchAngle": "0", "energy": "6MV", "monitorUnits": 70, "ssd": "91.0 cm" },
+        { "fieldName": "Field 5 LPO", "fieldSize": "15.0x20.0 cm", "gantryAngle": "204", "collimatorAngle": "30", "couchAngle": "0", "energy": "6MV", "monitorUnits": 90, "ssd": "92.5 cm" },
+        { "fieldName": "Field 6 LAO", "fieldSize": "15.0x20.0 cm", "gantryAngle": "255", "collimatorAngle": "330", "couchAngle": "0", "energy": "6MV", "monitorUnits": 95, "ssd": "92.0 cm" },
+        { "fieldName": "Field 7 L Lat", "fieldSize": "14.5x20.0 cm", "gantryAngle": "306", "collimatorAngle": "0", "couchAngle": "0", "energy": "6MV", "monitorUnits": 80, "ssd": "91.5 cm" }
       ]
     },
     "treatmentDelivery": {
       "fractions": [
-         // Example placeholder for daily records
-        { "fractionNumber": 1, "date": "2025-03-03", "machine": "LINAC1", "setupNotes":"CBCT daily, good match. Mask fit well.", "sideEffects": "Pre-medicated for chemo. No acute RT side effects.", "notes": "Cycle 1 Cisplatin given today." }
+        { 
+          "fractionNumber": 1, 
+          "date": "2025-03-03", 
+          "machine": "LINAC1", 
+          "setupNotes":"CBCT daily, good match. Mask fit well.", 
+          "sideEffects": "Pre-medicated for chemo. No acute RT side effects.", 
+          "notes": "Cycle 1 Cisplatin given today prior to RT.",
+          "recordedFields": [
+            {"fieldName": "Field 1 AP", "deliveredMu": 80, "notes": "OK"},
+            {"fieldName": "Field 2 RPO", "deliveredMu": 95, "notes": "OK"},
+            {"fieldName": "Field 3 RAO", "deliveredMu": 90, "notes": "OK"},
+            {"fieldName": "Field 4 PA", "deliveredMu": 70, "notes": "OK"},
+            {"fieldName": "Field 5 LPO", "deliveredMu": 90, "notes": "OK"},
+            {"fieldName": "Field 6 LAO", "deliveredMu": 95, "notes": "OK"},
+            {"fieldName": "Field 7 L Lat", "deliveredMu": 80, "notes": "OK"}
+          ]
+        },
+        { 
+          "fractionNumber": 15, 
+          "date": "2025-03-21", 
+          "machine": "LINAC1", 
+          "setupNotes":"CBCT daily. Shifts V:0, L:-0.2, L:0.1. Approved.", 
+          "sideEffects": "Moderate throat pain (Grade 2 mucositis). Using Magic Mouthwash. Skin Grade 1 erythema.", 
+          "notes": "Patient tolerating PEG feeds. OTV scheduled after treatment.",
+          "recordedFields": [
+            {"fieldName": "Field 1 AP", "deliveredMu": 80, "notes": "OK"},
+            {"fieldName": "Field 2 RPO", "deliveredMu": 95, "notes": "OK"},
+            {"fieldName": "Field 3 RAO", "deliveredMu": 90, "notes": "OK"},
+            {"fieldName": "Field 4 PA", "deliveredMu": 70, "notes": "OK"},
+            {"fieldName": "Field 5 LPO", "deliveredMu": 90, "notes": "OK"},
+            {"fieldName": "Field 6 LAO", "deliveredMu": 95, "notes": "OK"},
+            {"fieldName": "Field 7 L Lat", "deliveredMu": 80, "notes": "OK"}
+          ]
+        }
       ]
     }
   },
   "imagingAndReports": [
     {
-      "date": "01/20/2025", "type": "CT Neck w/ Contrast", "summary": "Asymmetric soft tissue fullness L tonsillar fossa. Enlarged L Level II nodes.", "modalId": "sc-ct-neck-modal",
+      "date": "02/10/2025", "type": "Biopsy Report", "summary": "Squamous Cell Carcinoma, p16 (HPV) Positive.",
       "reportDetails": {
-        "findings": "Asymmetric soft tissue fullness and enhancement noted in the left tonsillar fossa. Several enlarged lymph nodes identified in the left Level II region, the largest measuring 1.8 cm in short axis dimension with some central low density concerning for necrosis. Right neck appears unremarkable.",
-        "impression": "Findings suspicious for left oropharyngeal primary malignancy with associated cervical lymphadenopathy. PET/CT recommended for further evaluation and staging.",
-        "imageSrc": "https://placehold.co/600x400/EEE/31343C?text=CT+Neck+Image"
-      }
-    },
-    {
-      "date": "02/01/2025", "type": "PET/CT (Whole Body)", "summary": "Hypermetabolic L tonsillar mass (SUV 12.1) and L Level II nodes (SUV 9.5). No distant mets.", "modalId": "sc-pet-ct-modal",
-      "reportDetails": {
-        "findings": "Intense FDG uptake (SUVmax 12.1) corresponding to the soft tissue mass in the left tonsillar fossa/oropharynx. Intense uptake (SUVmax 9.5) in the enlarged left Level II cervical lymph nodes. No other suspicious FDG-avid foci identified in the head, neck, chest, abdomen, or pelvis.",
-        "impression": "Hypermetabolic primary oropharyngeal malignancy with ipsilateral cervical nodal metastases. No evidence of distant metastatic disease.",
-        "imageSrc": "https://placehold.co/600x400/DDD/525252?text=PET/CT+Image"
-      }
-    },
-    {
-      "date": "02/10/2025", "type": "Biopsy Report", "summary": "Squamous Cell Carcinoma, p16 (HPV) Positive.", "modalId": "sc-path-modal",
-      "reportDetails": {
-        "lab": "ANYTOWN HOSPITAL PATHOLOGY (Fictional Lab)",
-        "patientInfo": "Chen, Sarah | ID: 77889 | DOB: 11/20/1968",
-        "referringDoctor": "Dr. Emily White (ENT)",
-        "pathNum": "S-25-1001", "dateObtained": "02/10/2025",
-        "specimen": "Left Tonsil Biopsy",
+        "accessionNumber": "S-25-1001",
+        "specimenSource": "Left Tonsil Biopsy",
         "diagnosis": "SQUAMOUS CELL CARCINOMA, INVASIVE, HPV-RELATED (p16 POSITIVE).",
         "microscopicDescription": "Sections show fragments of squamous mucosa with underlying infiltration by nests and islands of atypical squamous cells with keratinization. Mitotic figures are present. Immunohistochemical stain for p16 shows strong, diffuse nuclear and cytoplasmic positivity in the tumor cells.",
         "comment": "The histologic features and p16 positivity are consistent with HPV-related invasive squamous cell carcinoma.",
-        "signedBy": "Dr. Path Fictional, 02/12/2025"
-      }
-    },
-    {
-      "date": "02/25/2025", "type": "CT Simulation (Head & Neck)", "summary": "Contrast-enhanced CT for IMRT planning, fused with PET/CT.", "modalId": "sc-ct-sim-modal",
-      "reportDetails": {
-        "procedure": "CT simulation for Head and Neck IMRT.",
-        "setup": "Patient positioned supine in custom thermoplastic mask extending to shoulders, with appropriate headrest. Shoulders retracted down.",
-        "scanParams": "Contrast-enhanced CT scan acquired from vertex through carina with 2.5 mm slice thickness.",
-        "fusion": "Diagnostic PET/CT (02/01/2025) fused with simulation CT dataset for target volume delineation. Dental evaluation previously completed.",
-        "notes": "Patient tolerated procedure well. Mask fit confirmed. Setup marks placed on mask. Data sent for IMRT planning.",
-        "imageSrc": "https://placehold.co/600x300/BBB/708090?text=H%26N+CT+Simulation"
+        "signedBy": "Dr. A. Pathologist, 02/12/2025"
       }
     }
   ],
-  "dicomImages": [
-    {
-      "description": "CT Neck (01/20/2025)", "seriesType": "CT",
-      "imageUrls": ["https://raw.githubusercontent.com/cornerstonejs/cornerstone-wado-image-loader/master/examples/images/CT000003.dcm"] // Placeholder
-    },
-    {
-      "description": "PET/CT (02/01/2025)", "seriesType": "PT", // Or "CT/PT"
-      "imageUrls": ["https://raw.githubusercontent.com/cornerstonejs/cornerstone-wado-image-loader/master/examples/images/PT000000.dcm"] // Placeholder
-    },
-    {
-      "description": "CT Simulation H&N (02/25/2025)", "seriesType": "CT",
-      "imageUrls": [
-        "https://raw.githubusercontent.com/cornerstonejs/cornerstone-wado-image-loader/master/examples/images/CT000000.dcm",
-        "https://raw.githubusercontent.com/cornerstonejs/cornerstone-wado-image-loader/master/examples/images/CT000001.dcm"
-      ] // Placeholder
-    }
-  ],
-  "labResults": [
-    { "date": "02/20/2025", "test": "CBC", "value": "WNL", "units": "", "range": "N/A", "notes": "Pre-Tx Baseline" },
-    { "date": "02/20/2025", "test": "CMP - Creatinine", "value": "0.8", "units": "mg/dL", "range": "0.6-1.2", "notes": "Baseline Renal Fxn (Req for Cisplatin)" },
-    { "date": "02/20/2025", "test": "CMP - Mg, K+", "value": "WNL", "units": "", "range": "N/A", "notes": "Baseline Electrolytes (Req for Cisplatin)" },
-    { "date": "03/03/2025", "test": "CBC (Day 1 Chemo)", "value": "WNL", "units": "", "range": "N/A", "notes": "Pre-Cisplatin #1" },
-    { "date": "03/10/2025", "test": "CBC - WBC (Week 2 RT)", "value": "3.5", "units": "x10^9/L", "range": "4-10", "notes": "Nadir expected, monitor" },
-    { "date": "03/10/2025", "test": "CMP - Mg (Week 2 RT)", "value": "1.7", "units": "mEq/L", "range": "1.8-2.2", "notes": "Monitor, Mg supplement needed" }
-  ],
-  "progressNotes": [
-    { "date": "02/15/2025", "author": "Dr. Emily White (ENT)", "type": "Consult Note", "summary": "Pt with sore throat, neck lump. Exam shows L tonsil mass, +L neck node. Biopsy performed -> SCCa, HPV+. PET/CT ordered. Referrals to Rad Onc/Med Onc." },
-    { "date": "02/22/2025", "author": "Dr. James Miller (Rad Onc)", "type": "Initial Consult", "summary": "Reviewed case T2N1M0 HPV+ SCCa L tonsil. Discussed definitive chemoradiation (IMRT 70Gy/35fx SIB + concurrent Cisplatin). Plan reviewed w/ Med Onc. Explained extensive side effects (mucositis, dermatitis, xerostomia, fatigue, chemo SEs). PEG tube strongly recommended. Pt agrees to plan. CT sim scheduled." },
-    { "date": "02/24/2025", "author": "Nutrition/Speech Path", "type": "Pre-Tx Eval", "summary": "PEG tube placed per recommendations. Swallowing exercises initiated. Nutritional plan discussed." },
-    { "date": "03/03/2025", "author": "Dr. Lisa Green (Med Onc)", "type": "Chemo Start Note", "summary": "Patient receives Cycle 1 Cisplatin 100mg/m2. Pre-hydration given. Labs reviewed (adequate renal fxn/electrolytes). Anti-emetics provided. Toxicity discussed." },
-    { "date": "03/17/2025", "author": "Dr. James Miller (Rad Onc)", "type": "OTV - Week 3", "summary": "Pt c/o moderate throat pain (Grade 2 mucositis), using Magic Mouthwash + PRN pain meds. Skin Grade 1 erythema. Tolerating PEG feeds. Labs show low Mg, supplement started. Continue RT/chemo. Supportive care emphasized." }
-  ],
-  "patientEducation": {
-    "goalsDiscussed": "Definitive treatment with curative intent.",
-    "sideEffectsReviewed": "Mucositis (mouth/throat sores), dermatitis (skin reaction), xerostomia (dry mouth), dysphagia (difficulty swallowing), taste changes, fatigue, nausea/vomiting (from chemo), low blood counts (from chemo), potential need for PEG tube, long-term risk of dental issues/neck fibrosis/hypothyroidism.",
-    "safetyConsiderations": "Oral hygiene protocol (soft brush, fluoride), skin care (moisturizers, avoid irritants), PEG tube care, hydration/nutrition goals, signs/symptoms to report urgently (fever, severe pain, inability to swallow).",
-    "patientResponsibilities": "Attend daily RT/weekly chemo, manage PEG feeds if needed, adhere to oral/skin care, maintain nutrition/hydration, attend weekly OTVs/labs.",
-    "medicationCompliance": "Importance of anti-nausea meds, pain meds as needed, use of Magic Mouthwash/other oral agents, any electrolyte supplements (e.g., Magnesium)."
-  },
-  "scheduling": [
-    { "date": "01/20/2025", "time": "10 AM", "type": "CT Neck", "location": "Radiology", "status": "Completed" },
-    { "date": "02/01/2025", "time": "1 PM", "type": "PET/CT", "location": "Nuclear Med", "status": "Completed" },
-    { "date": "02/10/2025", "time": "11 AM", "type": "ENT Biopsy", "location": "ENT Clinic", "status": "Completed" },
-    { "date": "02/22/2025", "time": "2 PM", "type": "Rad Onc Consult (Miller)", "location": "Rad Onc Clinic", "status": "Completed" },
-    { "date": "02/23/2025", "time": "10 AM", "type": "Med Onc Consult (Green)", "location": "Oncology Clinic", "status": "Completed" },
-    { "date": "02/24/2025", "time": "9 AM", "type": "PEG Tube Placement", "location": "Interventional Radiology", "status": "Completed" },
-    { "date": "02/25/2025", "time": "1 PM", "type": "CT Simulation H&N", "location": "Rad Onc Sim", "status": "Completed" },
-    { "date": "03/03/2025", "time": "8 AM", "type": "Chemo Cycle 1 (Day 1/43)", "location": "Infusion Center", "status": "Completed" },
-    { "date": "03/03/2025 - 04/18/2025", "time": "Daily (M-F) ~11AM", "type": "IMRT Treatment (1/35)", "location": "LINAC 1", "status": "Ongoing" },
-    { "date": "Weekly (e.g., 03/10)", "time": "~11:30AM (Post-RT)", "type": "OTV w/ Labs", "location": "Rad Onc Clinic", "status": "Scheduled" },
-    { "date": "03/24/2025 (Day 22)", "time": "8 AM", "type": "Chemo Cycle 2", "location": "Infusion Center", "status": "Scheduled" },
-    { "date": "04/14/2025 (Day 43)", "time": "8 AM", "type": "Chemo Cycle 3", "location": "Infusion Center", "status": "Scheduled" }
-  ],
-  "cptCharges": [
-    { "code": "77290", "description": "Simulation, Complex (CT for IMRT H&N)", "frequency": "Once" },
-    { "code": "77334", "description": "Treatment device, Complex (H&N Mask)", "frequency": "Once" },
-    { "code": "77301", "description": "IMRT planning", "frequency": "Once" },
-    { "code": "77338", "description": "MLC device for IMRT", "frequency": "Once" },
-    { "code": "77300", "description": "Basic radiation dosimetry calculation", "frequency": "Per plan" },
-    { "code": "77385 / 77386", "description": "IMRT delivery (Simple/Complex)", "frequency": "Daily" },
-    { "code": "77387", "description": "Image Guided RT (IGRT)", "frequency": "Daily/Weekly" },
-    { "code": "77427", "description": "Radiation treatment management, 5 treatments", "frequency": "Weekly" },
-    { "code": "96413 / 96415", "description": "Chemotherapy administration, IV infusion", "frequency": "Per Chemo Day" }
-  ],
+  "dicomImages": [],
+  "labResults": [],
+  "progressNotes": [],
+  "patientEducation": {},
+  "scheduling": [],
+  "cptCharges": [],
   "diagnosisSearch": "Head and Neck Cancer"
 }
