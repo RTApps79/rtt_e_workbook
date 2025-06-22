@@ -20,38 +20,45 @@
     "datePathologicDiagnosis": "03/20/2025 (MRI Brain confirming mets, primary dx 08/15/2023)",
     "symptomsAtPresentation": "Worsening headaches, new onset left-sided weakness, cognitive changes.",
     "baselineStatus": "ECOG 2 (Ambulatory and capable of self-care but unable to carry out work activities. Up >50% of waking hours)",
-    "vitalSignsSummary": "BP: 130/80, Wt: 65 kg (03/22/25)",
-    "overallStage": "Stage IV"
+    "overallStage": "Stage IV",
+    "pathologyFindings": [
+      "Biopsy of right upper lobe lung mass confirms Adenocarcinoma.",
+      "Molecular testing: EGFR exon 19 deletion positive."
+    ]
   },
-"treatmentPlan": {
+  "treatmentPlan": {
     "radOnc": "Dr. Samuel Green",
     "medOnc": "Dr. David Roberts",
     "treatmentSite": "Whole Brain",
-    "intent": "Palliative - Emergency Treatment (Symptom control, delay neurological progression)", 
+    "intent": "Palliative (Symptom control, delay neurological progression)",
     "modality": "External Beam Radiation Therapy (EBRT)",
-    "totalDose": "30 Gy",
-    "fractionation": "10 fx",
-    "rtRxDetails": "30 Gy / 10 fx",
+    "rtRxDetails": "30 Gy in 10 fractions (3 Gy/fx)",
     "targetVolumeSummary": "Whole Brain (PTV_WB)",
     "techniqueSummary": "3D-CRT (Opposed Laterals)",
-    "concurrentChemo": "None",
-    "detailedConcurrentChemo": "None during RT. Systemic: Pembrolizumab (managed by Med Onc).",
+    "concurrentChemo": "None during RT. Systemic: Pembrolizumab (managed by Med Onc).",
     "medications": [
       "Dexamethasone 4 mg PO BID (started 03/21/2025 for cerebral edema)"
+    ],
+    "therapistAlerts": [
+      "Patient is DNR/DNI.",
+      "Fall risk; assist with all transfers to and from treatment table.",
+      "Patient may be fatigued from high disease burden."
     ]
   },
-     "ctSimulation": {
+  "radiationOncologyData": {
+    "ctSimulation": {
       "simulationDate": "03/25/2025",
-      "setupInstructions": "Supine, neutral head position, thermoplastic mask for immobilization. SAD setup.",
+      "setupInstructions": "Supine, neutral head position, custom thermoplastic mask for immobilization. SAD setup.",
       "immobilization": "Thermoplastic mask (head)",
-      "referenceMarks": "Mask marks aligned to room lasers at external auditory meatus (EAM) or nasion/vertex. Isocenter at L0.0, L0.0, V+2.0 from reference.",
-      "scanner": "e.g., Philips Brilliance Big Bore CT",
-      "sliceThickness": "2.5 mm - 3.0 mm",
-      "contrastUsed": "Non-contrast",
-      "ctNotes": "Non-contrast CT head acquired in treatment position with thermoplastic mask for WBRT planning."
+      "referenceMarks": "Mask marks aligned to room lasers at external auditory meatus (EAM). Isocenter at L0.0, L0.0, V+2.0 from reference.",
+      "setupImages": [
+        { "type": "AP", "url": "https://placehold.co/200x150/EEE/31343C?text=AP+Setup+Photo" },
+        { "type": "Lateral", "url": "https://placehold.co/200x150/EEE/31343C?text=Lateral+Setup+Photo" }
+      ]
     },
     "dosimetry": {
       "planId": "MG11223_WBRT",
+      "planStatus": "Final - Approved by Dr. Samuel Green",
       "rx": "30 Gy / 10 fx",
       "technique": "3D-CRT",
       "energy": "6MV",
@@ -64,138 +71,49 @@
       "algorithm": "XVMC",
       "hetero": "Yes",
       "norm": "Isocenter",
-      "constraints": "Lens Max < 8 Gy; Optic Nrv Max < 25 Gy",
-      "planNotes": "Standard 10fx WBRT. Emergency treatment for acute neurological symptoms.",
+      "constraints": "Lens Max < 8 Gy; Optic Nrv Max < 25 Gy. All constraints met.",
+      "planNotes": "Standard palliative 10-fraction WBRT. Hippocampal avoidance not indicated given palliative intent and extent of disease.",
+      "igrtProtocol": {
+        "frequency": "Daily",
+        "type": "kV Imaging (Orthogonal Pair)",
+        "alignment": "Bony anatomy (match to DRRs)"
+      },
+      "qaChecks": [
+        { "date": "2025-03-26", "type": "Initial Chart Check", "by": "Physics Staff" }
+      ],
       "fieldDetails": [
         {
           "fieldName": "Right Lateral",
-          "gantryAngle": "90",
-          "collimatorAngle": "0 (shaped)",
-          "couchAngle": "0",
-          "energy": "6MV",
-          "monitorUnits": "150 MU",
-          "ssd": "92.0 cm" 
-        },
-        {
-          "fieldName": "Left Lateral",
+          "fieldSize": "22.5 x 18.0 cm",
           "gantryAngle": "270",
           "collimatorAngle": "0 (shaped)",
           "couchAngle": "0",
           "energy": "6MV",
-          "monitorUnits": "150 MU",
-          "ssd": "92.0 cm" 
+          "monitorUnits": 152,
+          "ssd": "89.0 cm"
+        },
+        {
+          "fieldName": "Left Lateral",
+          "fieldSize": "22.5 x 18.0 cm",
+          "gantryAngle": "90",
+          "collimatorAngle": "0 (shaped)",
+          "couchAngle": "0",
+          "energy": "6MV",
+          "monitorUnits": 152,
+          "ssd": "89.0 cm"
         }
       ]
     },
     "treatmentDelivery": {
-      "fractions": [
-        { "fractionNumber": 1, "date": "2025-03-27", "machine": "LINAC3", "setupNotes":"KV imaging for setup verification. Tolerances met.", "sideEffects": "Headache improved from baseline.", "notes": "Patient tolerated first fraction well." }
-      ]
-    },
-  "imagingAndReports": [
-    {
-      "date": "08/01/2023",
-      "type": "CT Chest w/ Contrast",
-      "summary": "Large RUL mass with mediastinal adenopathy. Suspicious for malignancy.",
-      "modalId": "mg-ct-chest-dx-modal",
-      "reportDetails": {
-        "findings": "Large mass measuring approximately 5 cm in the right upper lobe. Associated mediastinal and right hilar adenopathy. Findings suspicious for malignancy.",
-        "impression": "Right upper lobe mass with regional adenopathy concerning for primary lung cancer.",
-        "imageSrc": "https://placehold.co/600x400/EEE/31343C?text=Diagnostic+CT+Chest"
-      }
-    },
-    {
-      "date": "08/20/2023",
-      "type": "PET/CT",
-      "summary": "Hypermetabolic RUL mass, mediastinal nodes, and single bone metastasis (T10). SUVmax 12.5 in primary.",
-      "modalId": "mg-pet-ct-dx-modal",
-      "reportDetails": {
-        "findings": "Intense FDG uptake within the right upper lobe mass (SUVmax 12.5). Hypermetabolic mediastinal lymph nodes (SUVmax 9.0) and right hilar nodes (SUVmax 8.5). Single focus of increased uptake in the T10 vertebral body (SUVmax 6.0).",
-        "impression": "Hypermetabolic primary lung malignancy with regional nodal involvement and likely solitary bone metastasis, consistent with Stage IV disease.",
-        "imageSrc": "https://placehold.co/600x400/DDD/525252?text=Diagnostic+PET/CT"
-      }
-    },
-    {
-      "date": "03/20/2025",
-      "type": "MRI Brain w/ & w/o Contrast",
-      "summary": "Multiple enhancing lesions throughout cerebral hemispheres and cerebellum, largest 2.5 cm in right parietal lobe with significant surrounding vasogenic edema. Findings consistent with metastatic disease.",
-      "modalId": "mg-mri-brain-modal",
-      "reportDetails": {
-        "findings": "Multiple enhancing lesions identified within both cerebral hemispheres and the cerebellum, consistent with metastatic disease. The largest lesion is in the right parietal lobe measuring 2.5 cm, with significant surrounding vasogenic edema. Smaller lesions measure up to 1 cm.",
-        "impression": "Extensive brain metastases.",
-        "imageSrc": "https://placehold.co/600x400/CCC/696969?text=MRI+Brain+Mets"
-      }
-    },
-    {
-      "date": "03/25/2025",
-      "type": "CT Simulation (Head)",
-      "summary": "Non-contrast CT head acquired in treatment position with thermoplastic mask for WBRT planning.",
-      "modalId": "mg-ct-sim-modal",
-      "reportDetails": {
-        "procedure": "CT simulation for Whole Brain Radiation Therapy (WBRT).",
-        "setup": "Patient positioned supine in thermoplastic mask, head neutral, arms down.",
-        "scanParams": "Non-contrast CT scan acquired from vertex through C2 with 3 mm slice thickness.",
-        "notes": "Patient tolerated procedure. Setup marks placed. Data sent for 3D-CRT planning.",
-        "imageSrc": "https://placehold.co/600x300/BBB/708090?text=CT+Simulation+WBRT"
-      }
+      "fractions": []
     }
-  ],
-  "dicomImages": [
-    {
-      "description": "MRI Brain Mets (03/20/2025)",
-      "seriesType": "MR",
-      "imageUrls": [
-        "https://raw.githubusercontent.com/cornerstonejs/cornerstone-wado-image-loader/master/examples/images/MR000000.dcm"
-      ],
-      "ohifViewerUrl": "https://viewer.ohif.org/viewer?StudyInstanceUIDs=1.3.6.1.4.1.5962.99.1.3020871283.19690101000000.1629624997234956830" 
-    },
-    {
-      "description": "CT Simulation Head (03/25/2025)",
-      "seriesType": "CT",
-      "imageUrls": [
-        "https://raw.githubusercontent.com/cornerstonejs/cornerstone-wado-image-loader/master/examples/images/CT000000.dcm",
-        "https://raw.githubusercontent.com/cornerstonejs/cornerstone-wado-image-loader/master/examples/images/CT000001.dcm"
-      ],
-      "ohifViewerUrl": "https://viewer.ohif.org/viewer?StudyInstanceUIDs=1.3.6.1.4.1.14519.5.2.1.7009.9007.298806137288633453246975630178" 
-    }
-  ],
-  "labResults": [
-    { "date": "03/21/2025", "test": "CBC - WBC", "value": "9.5", "units": "x10^9/L", "range": "4.0-10.0", "notes": "Pre-RT Baseline" },
-    { "date": "03/21/2025", "test": "CBC - Hgb", "value": "10.8", "units": "g/dL", "range": "12.0-16.0", "notes": "Low - Anemia of chronic disease" },
-    { "date": "03/21/2025", "test": "CMP - Glucose", "value": "145", "units": "mg/dL", "range": "70-100", "notes": "High - Steroid effect likely" },
-    { "date": "03/21/2025", "test": "CMP - Potassium", "value": "3.4", "units": "mEq/L", "range": "3.5-5.0", "notes": "Low - Monitor, consider supplement (steroid effect)" },
-    { "date": "03/28/2025", "test": "CMP - Glucose (During RT/Steroids)", "value": "160", "units": "mg/dL", "range": "70-100", "notes": "Continue monitoring, advise Med Onc" }
-  ],
-  "progressNotes": [
-    { "date": "03/21/2025", "author": "Dr. David Roberts (Med Onc)", "type": "Progress Note", "summary": "Pt called with severe HA and L arm weakness. Urgent MRI Brain ordered, shows multiple mets. Started Dexamethasone 4mg BID. Referred urgently to Radiation Oncology for palliative RT consult. Discussed goals of care. Continue Pembrolizumab for now." },
-    { "date": "03/22/2025", "author": "Dr. Samuel Green (Rad Onc)", "type": "Initial Consultation", "summary": "Pt seen urgently for symptomatic brain mets from known NSCLC. MRI confirms multiple lesions with edema. Pt reports slight improvement in HA on steroids, L weakness persists. Discussed palliative WBRT (30 Gy/10fx) vs SRS (not ideal due to number of mets). Goals: improve/stabilize neuro symptoms, QOL. Risks: fatigue, hair loss, potential cognitive effects (discussed in context of palliative goals). Plan: Proceed with WBRT sim today/tomorrow, start RT ASAP. Pt and family agree." },
-    { "date": "03/25/2025", "author": "Sarah Chen, RTT", "type": "Simulation Note", "summary": "CT Sim completed for WBRT. Aquaplast mask made. Patient positioned supine, neutral head position. Tolerated well. Plan to treat with opposed laterals." },
-    { "date": "04/01/2025", "author": "Dr. Samuel Green (Rad Onc)", "type": "On Treatment Visit (OTV) - Mid Tx", "summary": "Patient completed 5/10 fractions WBRT. Reports significant improvement in headache. Left arm weakness slightly better, able to hold a cup. Mild fatigue. Scalp showing early erythema, advised gentle shampoo. Continue Dexamethasone, plan taper after RT completion. Continue WBRT." }
-  ],
-  "patientEducation": {
-    "goalsDiscussed": "Palliative - improve headache and weakness, control brain disease, improve quality of life.",
-    "sideEffectsReviewed": "Fatigue (common, may worsen), hair loss (expected, likely permanent), skin redness/irritation on scalp (mild), short-term memory effects possible, steroid side effects (mood changes, increased appetite, high blood sugar, insomnia, fluid retention).",
-    "safetyConsiderations": "Scalp care (mild shampoo, avoid irritants), sun protection for scalp if hair loss occurs, managing fatigue, report worsening neurological symptoms (headache, weakness, seizures, confusion) immediately.",
-    "patientResponsibilities": "Attend daily RT appointments, take steroids as prescribed, report symptoms.",
-    "medicationCompliance": "Take Dexamethasone with food, adhere to prescribed dose/taper schedule. Continue Pembrolizumab as scheduled by Med Onc."
   },
-  "scheduling": [
-    { "date": "03/20/2025", "time": "03:00 PM", "type": "MRI Brain", "location": "Radiology Dept", "status": "Completed" },
-    { "date": "03/22/2025", "time": "10:00 AM", "type": "Rad Onc Consult (Urgent)", "location": "Radiation Oncology Clinic", "status": "Completed" },
-    { "date": "03/25/2025", "time": "09:00 AM", "type": "CT Simulation WBRT", "location": "Radiation Oncology Sim Room", "status": "Completed" },
-    { "date": "03/27/2025", "time": "11:00 AM", "type": "First Treatment (Fx 1/10)", "location": "Linear Accelerator #3", "status": "Completed" },
-    { "date": "03/27/2025 - 04/09/2025", "time": "Daily (M-F)", "type": "WBRT Treatment", "location": "Linear Accelerator #3", "status": "Completed" }, 
-    { "date": "04/01/2025", "time": "11:30 AM", "type": "On Treatment Visit (OTV)", "location": "Radiation Oncology Clinic", "status": "Completed" },
-    { "date": "04/16/2025", "time": "02:00 PM", "type": "Post-WBRT Follow Up", "location": "Radiation Oncology Clinic", "status": "Scheduled" }
-  ],
-  "cptCharges": [ 
-    { "code": "77280", "description": "Simulation, Simple (WBRT)", "frequency": "Once" },
-    { "code": "77332", "description": "Treatment device, Simple (Mask)", "frequency": "Once" },
-    { "code": "77295", "description": "3D radiotherapy plan", "frequency": "Once" },
-    { "code": "77300", "description": "Basic radiation dosimetry calculation", "frequency": "Per plan" },
-    { "code": "77407", "description": "Radiation treatment delivery, 3+ fields or complex (Opposed lats WBRT)", "frequency": "Daily (10x)" },
-    { "code": "77387", "description": "Image Guided RT (IGRT - if used, e.g. kV imaging)", "frequency": "Daily/Weekly" },
-    { "code": "77427", "description": "Radiation treatment management, 5 treatments", "frequency": "Weekly (x2 for 10 fx)" }
-  ],
+  "imagingAndReports": [],
+  "dicomImages": [],
+  "labResults": [],
+  "progressNotes": [],
+  "patientEducation": {},
+  "scheduling": [],
+  "cptCharges": [],
   "diagnosisSearch": "Brain Metastases"
 }
