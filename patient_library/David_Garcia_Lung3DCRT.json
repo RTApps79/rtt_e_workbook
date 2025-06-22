@@ -22,7 +22,7 @@
     "symptomsAtPresentation": "Persistent cough, mild shortness of breath on exertion.",
     "pathologyFindings": [
       "Biopsy of RLL mass confirms NSCLC, Adenocarcinoma type.",
-      "PD-L1 Expression: 55% (TPS)"
+      "Sputum cytology positive for malignant cells, consistent with NSCLC."
     ],
     "relevantHistory": "50 pack-year smoking history (active smoker), Hypertension.",
     "baselineStatus": "ECOG 1 (Restricted in physically strenuous activity but ambulatory)",
@@ -98,20 +98,8 @@
         { "fieldName": "L Lat", "fieldSize": "14.0 x 15.0 cm", "gantryAngle": "270", "collimatorAngle": "355", "couchAngle": "0", "energy": "6MV", "monitorUnits": 105, "ssd": "90.5 cm" }
       ],
       "imagingFields": [
-        {
-          "fieldName": "AP Verification",
-          "gantryAngle": "180",
-          "fieldSize": "10x10 cm",
-          "energy": "6MV",
-          "monitorUnits": 2
-        },
-        {
-          "fieldName": "Right Lateral Verification",
-          "gantryAngle": "270",
-          "fieldSize": "10x10 cm",
-          "energy": "6MV",
-          "monitorUnits": 2
-        }
+        { "fieldName": "AP Verification", "gantryAngle": "0", "fieldSize": "10x10 cm", "energy": "6MV", "monitorUnits": 2 },
+        { "fieldName": "Right Lateral Verification", "gantryAngle": "90", "fieldSize": "10x10 cm", "energy": "6MV", "monitorUnits": 2 }
       ]
     },
     "treatmentDelivery": {
@@ -135,15 +123,50 @@
   },
   "imagingAndReports": [
     {
+      "date": "03/01/2025", "type": "Sputum Cytology", "summary": "Positive for malignant cells, consistent with NSCLC.",
+      "reportDetails": { "specimenAdequacy": "Adequate for evaluation", "generalCategorization": "Positive for Malignant Cells", "interpretation": "Atypical cells present with features consistent with adenocarcinoma." }
+    },
+    {
       "date": "03/05/2025", "type": "Bronchoscopy Biopsy Report", "summary": "NSCLC - Adenocarcinoma.",
       "reportDetails": { "lab": "ANYTOWN HOSPITAL PATHOLOGY", "specimen": "Bronchoscopy Biopsy, Right Lower Lobe Mass", "diagnosis": "NON-SMALL CELL LUNG CARCINOMA, ADENOCARCINOMA." }
     }
   ],
   "dicomImages": [],
-  "labResults": [],
-  "progressNotes": [],
-  "patientEducation": {},
-  "scheduling": [],
-  "cptCharges": [],
+  "labResults": [
+    { "date": "03/15/2025", "test": "WBC", "value": "7.5", "units": "K/mcL", "notes": "Pre-ChemoRT Baseline" },
+    { "date": "03/15/2025", "test": "Hemoglobin", "value": "14.2", "units": "g/dL", "notes": "Pre-ChemoRT Baseline" },
+    { "date": "03/15/2025", "test": "Platelet count", "value": "275", "units": "K/mcL", "notes": "Pre-ChemoRT Baseline" },
+    { "date": "03/27/2025", "test": "WBC", "value": "7.2", "units": "K/mcL", "notes": "Pre-Chemo C1" },
+    { "date": "04/03/2025", "test": "WBC", "value": "4.1", "units": "K/mcL", "notes": "Weekly monitoring (Week 1)" },
+    { "date": "04/17/2025", "test": "WBC", "value": "2.8", "units": "K/mcL", "notes": "Weekly monitoring (Week 3) - monitor closely" },
+    { "date": "04/17/2025", "test": "Platelet count", "value": "110", "units": "K/mcL", "notes": "Weekly monitoring (Week 3) - monitor closely" }
+  ],
+  "progressNotes": [
+    { "date": "03/15/2025", "author": "Dr. Sarah Jenkins (Rad Onc)", "type": "Initial Consult", "summary": "Reviewed case cT3N1M0 NSCLC Adeno. Agreed w/ Med Onc plan for concurrent chemoRT. Discussed RT details (3D-CRT, 66Gy/33fx), motion management (4D/ITV), potential RT side effects (fatigue, cough, esophagitis, pneumonitis). Pt agrees. 4D Sim scheduled." },
+    { "date": "04/10/2025", "author": "Dr. Sarah Jenkins (Rad Onc)", "type": "OTV - Week 2", "summary": "Pt completed 10/33 fx. Mild fatigue. Intermittent cough, managed with Tessalon Perles. No esophagitis yet. Tolerating chemo/RT well. Continue plan." },
+    { "date": "04/24/2025", "author": "Dr. Sarah Jenkins (Rad Onc)", "type": "OTV - Week 4", "summary": "Pt c/o moderate throat/chest soreness when swallowing (Grade 2 esophagitis). Started Esomeprazole. Cough increased slightly. Fatigue moderate. Labs show low WBC/Plt, discussed w/ Med Onc re: chemo dose/schedule. Continue RT. Monitor closely." }
+  ],
+  "patientEducation": {
+    "goalsDiscussed": "Definitive treatment with curative intent using concurrent chemoradiation.",
+    "sideEffectsReviewed": "Fatigue (very common), cough, shortness of breath, esophagitis (difficulty/pain swallowing), skin irritation/redness in treatment area, nausea/vomiting (chemo), diarrhea (chemo), low blood counts (chemo - risk of infection/bleeding).",
+    "safetyConsiderations": "Reporting fever/chills, significant pain, worsening SOB, difficulty swallowing. Skin care instructions (mild soap, moisturizers). Importance of hydration and nutrition.",
+    "patientResponsibilities": "Attend daily RT/weekly chemo, weekly labs, report symptoms promptly, maintain nutrition/hydration.",
+    "medicationCompliance": "Importance of anti-nausea meds with chemo, PRN meds for cough/esophagitis."
+  },
+  "scheduling": [
+    { "date": "03/15/2025", "type": "Rad Onc Consult", "location": "Rad Onc Clinic", "status": "Completed" },
+    { "date": "03/20/2025", "type": "4D-CT Simulation Thorax", "location": "Rad Onc Sim", "status": "Completed" },
+    { "date": "03/27/2025", "type": "Chemo Cycle 1 / Fx 1", "location": "Infusion Center / Rad Onc", "status": "Completed" },
+    { "date": "04/03/2025", "type": "Chemo C2 / OTV", "location": "Infusion Center / Rad Onc", "status": "Scheduled" }
+  ],
+  "cptCharges": [
+    { "code": "77290", "description": "Simulation, Complex (4D-CT Thorax)", "frequency": "Once" },
+    { "code": "77334", "description": "Treatment device, Complex (BodyFix)", "frequency": "Once" },
+    { "code": "77295", "description": "3D radiotherapy plan, including dose-volume histograms", "frequency": "Once" },
+    { "code": "77412", "description": "Radiation treatment delivery, complex", "frequency": "Daily" },
+    { "code": "77387", "description": "Image Guided RT (IGRT)", "frequency": "Daily" },
+    { "code": "77427", "description": "Radiation treatment management, 5 treatments", "frequency": "Weekly" },
+    { "code": "96409", "description": "Chemotherapy administration, IV", "frequency": "Weekly" }
+  ],
   "diagnosisSearch": "Lung Cancer"
 }
