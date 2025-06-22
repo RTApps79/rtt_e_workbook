@@ -176,3 +176,58 @@ input[type="text"]:focus, select:focus {
     height: 75vh;
     background-color: #000;
 }
+/* --- Print-Specific Styles --- */
+@media print {
+  /* Hide elements that shouldn't be printed */
+  body > h1,
+  .patient-selection-area,
+  #emr-tabs,
+  #radOnc-subtabs,
+  .practice-section,
+  #emr-modal-overlay,
+  button,
+  input[type="file"] {
+    display: none !important;
+  }
+
+  /* Ensure the main container and content are visible and fill the page */
+  body, .emr-container {
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+    border: none;
+    background: none;
+  }
+
+  #radOnc-subtab-contents {
+    display: block !important;
+    width: 100%;
+    padding: 0;
+  }
+
+  /* Reset section styles for clean printing */
+  .section {
+    page-break-inside: avoid; /* Try to keep sections from splitting across pages */
+    box-shadow: none;
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+  }
+  
+  .section-header {
+      background-color: #e0e0e0 !important;
+      color: #000 !important;
+      -webkit-print-color-adjust: exact; /* Force background color printing in Chrome/Safari */
+      color-adjust: exact; /* Standard */
+  }
+
+  /* Make sure text is black for readability */
+  * {
+    color: #000 !important;
+    background: transparent !important;
+  }
+  
+  /* Ensure images are reasonably sized for printing */
+  .setup-photo-container img {
+      max-width: 300px !important;
+  }
+}
