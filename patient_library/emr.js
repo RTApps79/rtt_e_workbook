@@ -366,36 +366,28 @@ window.loadDicomSeries = function(seriesIdx) {
   });
 };
 
-// ==================================================================
-// === CT SIMULATION RENDERER (UPDATED with Separate Uploaders & Print Button) ===
-// ==================================================================
 function renderCTSimulation(ct) {
-  ct = ct || {}; // Ensure ct is an object
-  
-  // Find the AP and Lateral images from the patient's JSON data
+  ct = ct || {};
   const apImage = ct.setupImages?.find(img => img.type === 'AP');
   const latImage = ct.setupImages?.find(img => img.type === 'Lateral');
 
-  // HTML for the Official Setup Photos section with individual uploaders
+  // ** CHANGE IS HERE: Removed inline styles from the <img> tag **
   const officialPhotosHtml = `
     <div class="section">
       <div class="section-header">Official Setup Photos</div>
       <div class="section-content" style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start;">
-        
         <div class="setup-photo-container">
           <strong>AP View</strong>
-          <img id="apImagePreview" src="${apImage?.url || 'https://placehold.co/200x150?text=AP+Photo'}" alt="AP Setup Photo">
+          <img id="apImagePreview" src="${apImage?.url || 'https://placehold.co/250x200?text=AP+Photo'}" alt="AP Setup Photo">
           <label for="apImageUploader" class="button-like-label">Upload AP Image</label>
           <input type="file" id="apImageUploader" accept="image/*" style="display: none;">
         </div>
-        
         <div class="setup-photo-container">
           <strong>Lateral View</strong>
-          <img id="latImagePreview" src="${latImage?.url || 'https://placehold.co/200x150?text=Lateral+Photo'}" alt="Lateral Setup Photo">
+          <img id="latImagePreview" src="${latImage?.url || 'https://placehold.co/250x200?text=Lateral+Photo'}" alt="Lateral Setup Photo">
           <label for="latImageUploader" class="button-like-label">Upload Lateral Image</label>
           <input type="file" id="latImageUploader" accept="image/*" style="display: none;">
         </div>
-
       </div>
     </div>
   `;
@@ -411,7 +403,6 @@ function renderCTSimulation(ct) {
     <p><strong>CT Notes:</strong> ${ct.ctNotes || ""}</p>
   `;
 
-  // Main details section with the new Print button
   const detailsSection = `
     <div class="section">
       <div class="section-header">
@@ -424,7 +415,6 @@ function renderCTSimulation(ct) {
 
   return officialPhotosHtml + detailsSection;
 }
-
 
 function renderDosimetry(dos) {
   if (!dos) return `
@@ -467,27 +457,13 @@ function renderDosimetry(dos) {
           <table>
             <thead>
               <tr>
-                <th>Field Name</th>
-                <th>Field Size</th>
-                <th>Gantry Angle</th>
-                <th>Coll. Angle</th>
-                <th>Couch Angle</th>
-                <th>Energy</th>
-                <th>MU</th>
-                <th>SSD (cm)</th>
+                <th>Field Name</th><th>Field Size</th><th>Gantry Angle</th><th>Coll. Angle</th><th>Couch Angle</th><th>Energy</th><th>MU</th><th>SSD (cm)</th>
               </tr>
             </thead>
             <tbody>
               ${dos.fieldDetails.map(f =>
                 `<tr>
-                    <td>${f.fieldName || ""}</td>
-                    <td>${f.fieldSize || "N/A"}</td>
-                    <td>${f.gantryAngle || ""}</td>
-                    <td>${f.collimatorAngle || ""}</td>
-                    <td>${f.couchAngle || ""}</td>
-                    <td>${f.energy || ""}</td>
-                    <td>${f.monitorUnits || ""}</td>
-                    <td>${f.ssd || "N/A"}</td>
+                    <td>${f.fieldName || ""}</td><td>${f.fieldSize || "N/A"}</td><td>${f.gantryAngle || ""}</td><td>${f.collimatorAngle || ""}</td><td>${f.couchAngle || ""}</td><td>${f.energy || ""}</td><td>${f.monitorUnits || ""}</td><td>${f.ssd || "N/A"}</td>
                 </tr>`
               ).join("")}
             </tbody>
@@ -502,17 +478,11 @@ function renderDosimetry(dos) {
 function renderPracticeFractionEntryForm(patientData) {
     const dos = patientData?.radiationOncologyData?.dosimetry;
     let fieldEntryHtml = '<p>No fields defined in dosimetry plan.</p>';
-
     if (dos && dos.fieldDetails && dos.fieldDetails.length > 0) {
         fieldEntryHtml = `
             <table id="dailyFieldEntryTable" class="practice-table">
                 <thead>
-                    <tr>
-                        <th>Field Name</th>
-                        <th>Planned MU</th>
-                        <th>Delivered MU</th>
-                        <th>Field Notes</th>
-                    </tr>
+                    <tr><th>Field Name</th><th>Planned MU</th><th>Delivered MU</th><th>Field Notes</th></tr>
                 </thead>
                 <tbody>
                     ${dos.fieldDetails.map(field => `
@@ -527,25 +497,13 @@ function renderPracticeFractionEntryForm(patientData) {
             </table>
         `;
     }
-
     return `
     <div class="practice-section">
       <h3 style="margin-bottom: 1em;">Practice Daily Treatment Entry</h3>
       <form id="practiceFractionForm" autocomplete="off" onsubmit="return false;">
         <div class="practice-form-grid-simple">
-            <fieldset class="practice-fieldset">
-                <legend>Session Info</legend>
-                <label for="practiceTreatmentDate">Treatment Date</label>
-                <input type="date" id="practiceTreatmentDate" required>
-                <label for="practiceTherapistInitials">Therapist(s)</label>
-                <input type="text" id="practiceTherapistInitials" required>
-                <label for="practiceGeneralSideEffects">Overall Patient Assessment / Side Effects</label>
-                <textarea id="practiceGeneralSideEffects" rows="2"></textarea>
-            </fieldset>
-            <fieldset class="practice-fieldset">
-                <legend>Per-Field Delivery Record</legend>
-                ${fieldEntryHtml}
-            </fieldset>
+            <fieldset class="practice-fieldset"><legend>Session Info</legend><label for="practiceTreatmentDate">Treatment Date</label><input type="date" id="practiceTreatmentDate" required><label for="practiceTherapistInitials">Therapist(s)</label><input type="text" id="practiceTherapistInitials" required><label for="practiceGeneralSideEffects">Overall Patient Assessment / Side Effects</label><textarea id="practiceGeneralSideEffects" rows="2"></textarea></fieldset>
+            <fieldset class="practice-fieldset"><legend>Per-Field Delivery Record</legend>${fieldEntryHtml}</fieldset>
         </div>
         <button type="button" id="addPracticeFractionBtn">Add Practice Fraction Entry</button>
       </form>
@@ -562,47 +520,21 @@ function initPracticeFractionFormHandlers() {
         addBtn.onclick = function() {
             const recordedFields = [];
             const fieldRows = document.querySelectorAll('#dailyFieldEntryTable tbody tr');
-
             fieldRows.forEach(row => {
                 const fieldName = row.cells[0].textContent;
                 const deliveredMu = row.querySelector('.daily-mu-input').value;
                 const fieldNotes = row.querySelector('.daily-field-notes').value;
-
-                recordedFields.push({
-                    fieldName: fieldName,
-                    deliveredMu: deliveredMu,
-                    notes: fieldNotes,
-                });
+                recordedFields.push({fieldName: fieldName, deliveredMu: deliveredMu, notes: fieldNotes});
             });
-
             const sessionEntry = {
                 date: document.getElementById('practiceTreatmentDate').value,
                 therapist: document.getElementById('practiceTherapistInitials').value,
                 assessment: document.getElementById('practiceGeneralSideEffects').value,
                 fields: recordedFields
             };
-            
             console.log("Practice Fraction Entry Added:", sessionEntry);
             const outputDiv = document.getElementById('practiceFractionsEntered');
-            
-            let summaryHtml = `
-              <div class="entry-summary">
-                <p><strong>Date:</strong> ${sessionEntry.date} | <strong>Therapist:</strong> ${sessionEntry.therapist}</p>
-                <p><strong>Assessment:</strong> ${sessionEntry.assessment || 'N/A'}</p>
-                <table>
-                  <thead><tr><th>Field</th><th>MU Delivered</th><th>Notes</th></tr></thead>
-                  <tbody>
-                    ${sessionEntry.fields.map(f => `
-                      <tr>
-                        <td>${f.fieldName}</td>
-                        <td>${f.deliveredMu}</td>
-                        <td>${f.notes}</td>
-                      </tr>
-                    `).join('')}
-                  </tbody>
-                </table>
-              </div>
-            `;
+            let summaryHtml = `<div class="entry-summary"><p><strong>Date:</strong> ${sessionEntry.date} | <strong>Therapist:</strong> ${sessionEntry.therapist}</p><p><strong>Assessment:</strong> ${sessionEntry.assessment || 'N/A'}</p><table><thead><tr><th>Field</th><th>MU Delivered</th><th>Notes</th></tr></thead><tbody>${sessionEntry.fields.map(f => `<tr><td>${f.fieldName}</td><td>${f.deliveredMu}</td><td>${f.notes}</td></tr>`).join('')}</tbody></table></div>`;
             outputDiv.innerHTML += summaryHtml;
             document.getElementById('practiceFractionForm').reset();
         };
@@ -614,91 +546,37 @@ function renderTreatmentDelivery(data) {
   const td = data.treatmentDelivery || {};
   let fractionsSection = "";
   if (!td.fractions || !td.fractions.length) {
-    fractionsSection = `
-      <div class="section">
-        <div class="section-header">Treatment Delivery Records</div>
-        <div class="section-content"><p>No Treatment Delivery records for this patient.</p></div>
-      </div>
-    `;
+    fractionsSection = `<div class="section"><div class="section-header">Treatment Delivery Records</div><div class="section-content"><p>No Treatment Delivery records for this patient.</p></div></div>`;
   } else {
-    fractionsSection = `
-      <div class="section">
-        <div class="section-header">Treatment Delivery Records</div>
-        <div class="section-content">
-          <table>
-            <thead>
-              <tr><th>Fraction #</th><th>Date</th><th>Machine</th><th>Setup Notes</th><th>Side Effects</th><th>Notes</th></tr>
-            </thead>
-            <tbody>
-              ${td.fractions.map(fx => `
-                <tr>
-                  <td>${fx.fractionNumber}</td>
-                  <td>${fx.date}</td>
-                  <td>${fx.machine}</td>
-                  <td>${fx.setupNotes || ""}</td>
-                  <td>${fx.sideEffects || ""}</td>
-                  <td>${fx.notes || ""}</td>
-                </tr>
-              `).join("")}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    `;
+    fractionsSection = `<div class="section"><div class="section-header">Treatment Delivery Records</div><div class="section-content"><table><thead><tr><th>Fraction #</th><th>Date</th><th>Machine</th><th>Setup Notes</th><th>Side Effects</th><th>Notes</th></tr></thead><tbody>${td.fractions.map(fx => `<tr><td>${fx.fractionNumber}</td><td>${fx.date}</td><td>${fx.machine}</td><td>${fx.setupNotes || ""}</td><td>${fx.sideEffects || ""}</td><td>${fx.notes || ""}</td></tr>`).join("")}</tbody></table></div></div>`;
   }
-  let formSection = `
-    <div class="section">
-      <div class="section-header">Practice Daily Treatment Entry</div>
-      <div class="section-content">${renderPracticeFractionEntryForm(currentPatientData)}</div>
-    </div>
-  `;
+  let formSection = `<div class="section"><div class="section-header">Practice Daily Treatment Entry</div><div class="section-content">${renderPracticeFractionEntryForm(currentPatientData)}</div></div>`;
   return dosimetryHtml + fractionsSection + formSection;
 }
 
-// ==================================================================
-// === RAD ONC SUB-TAB HANDLER (UPDATED with new listeners) ===
-// ==================================================================
 function showRadOncSubTab(subKey, data) {
   const subContents = document.getElementById('radOnc-subtab-contents');
   if (!subContents) return;
   const radOncData = data.radiationOncologyData || {}; 
-  
-  // A helper function to handle the logic for a single file uploader
   const handleImageUpload = (event, previewElementId) => {
       const previewElement = document.getElementById(previewElementId);
       if (!previewElement) return;
-      
       const file = event.target.files[0];
       if (file) {
           const reader = new FileReader();
-          reader.onload = function(e) {
-              previewElement.src = e.target.result;
-          }
+          reader.onload = function(e) { previewElement.src = e.target.result; }
           reader.readAsDataURL(file);
       }
   };
-
   switch (subKey) {
     case 'ctsim': 
       subContents.innerHTML = renderCTSimulation(radOncData.ctSimulation);
-      
-      // Attach listeners for the new separate uploaders
       const apUploader = document.getElementById('apImageUploader');
       const latUploader = document.getElementById('latImageUploader');
-      if (apUploader) {
-        apUploader.addEventListener('change', (event) => handleImageUpload(event, 'apImagePreview'));
-      }
-      if (latUploader) {
-        latUploader.addEventListener('change', (event) => handleImageUpload(event, 'latImagePreview'));
-      }
-
-      // Attach listener for the new print button
+      if (apUploader) { apUploader.addEventListener('change', (event) => handleImageUpload(event, 'apImagePreview')); }
+      if (latUploader) { latUploader.addEventListener('change', (event) => handleImageUpload(event, 'latImagePreview')); }
       const printBtn = document.getElementById('printCtsimBtn');
-      if (printBtn) {
-        printBtn.addEventListener('click', () => {
-          window.print();
-        });
-      }
+      if (printBtn) { printBtn.addEventListener('click', () => { window.print(); }); }
       break;
     case 'dosimetry': 
       subContents.innerHTML = renderDosimetry(radOncData.dosimetry); 
@@ -714,13 +592,9 @@ function showRadOncSubTab(subKey, data) {
 }
 
 function renderRadOncSubTabs(activeKey, data) {
-  return `<div id="radOnc-subtabs" class="tab-bar" style="margin-bottom:1em;">
-    ${radOncSubTabs.map(sub =>
-      `<button class="tab-button ${sub.key===activeKey?" active":""}" id="radOnc-subtab-btn-${sub.key}">${sub.label}</button>`
-    ).join("")}
-    </div>
-    <div id="radOnc-subtab-contents"></div>`;
+  return `<div id="radOnc-subtabs" class="tab-bar" style="margin-bottom:1em;">${radOncSubTabs.map(sub =>`<button class="tab-button ${sub.key===activeKey?" active":""}" id="radOnc-subtab-btn-${sub.key}">${sub.label}</button>`).join("")}</div><div id="radOnc-subtab-contents"></div>`;
 }
+
 function showTab(tabKey, data) {
   const tabContents = document.getElementById('emr-tab-contents');
   if (!tabContents) return;
@@ -755,6 +629,7 @@ function showTab(tabKey, data) {
     default: tabContents.innerHTML = "<p>No data.</p>"; break;
   }
 }
+
 let currentPatientData = null;
 function loadAndDisplayPatient(fileName) {
   fetch(fileName)
@@ -765,14 +640,10 @@ function loadAndDisplayPatient(fileName) {
     .then(data => {
       currentPatientData = data;
       const tabsDiv = document.getElementById('emr-tabs');
-      tabsDiv.innerHTML = emrTabs.map(
-        (tab, i) => `<button class="tab-button${i===0?" active":""}" id="emr-tab-btn-${tab.key}">${tab.label}</button>`
-      ).join("");
+      tabsDiv.innerHTML = emrTabs.map((tab, i) => `<button class="tab-button${i===0?" active":""}" id="emr-tab-btn-${tab.key}">${tab.label}</button>`).join("");
       emrTabs.forEach((tab) => {
         const tabBtn = document.getElementById(`emr-tab-btn-${tab.key}`);
-        if(tabBtn) {
-          tabBtn.onclick = () => showTab(tab.key, data);
-        }
+        if(tabBtn) { tabBtn.onclick = () => showTab(tab.key, data); }
       });
       showTab(emrTabs[0].key, data);
     })
@@ -781,6 +652,7 @@ function loadAndDisplayPatient(fileName) {
         document.getElementById('emr-tab-contents').innerHTML = `<div class="section"><div class="section-header" style="background-color: #d9534f;">Error</div><div class="section-content"><p>Could not load patient file: ${fileName}. Please check the console for details.</p></div></div>`;
     });
 }
+
 function populatePatientDropdown(filteredPatients = patients) {
   const select = document.getElementById('patientSelect');
   if (!select) return;
@@ -797,8 +669,9 @@ function populatePatientDropdown(filteredPatients = patients) {
     opt.value = p.file;
     opt.textContent = p.name;
     select.appendChild(opt);
-});
+  });
 }
+
 function filterPatientsByDiagnosis() {
   const searchValue = document.getElementById('diagnosisSearch').value.trim().toLowerCase();
   const tabContents = document.getElementById('emr-tab-contents');
@@ -809,9 +682,7 @@ function filterPatientsByDiagnosis() {
     if (patients.length > 0) loadAndDisplayPatient(patients[0].file);
     return;
   }
-  const filtered = patients.filter(p =>
-    p.diagnosisSearch && p.diagnosisSearch.toLowerCase().includes(searchValue)
-  );
+  const filtered = patients.filter(p => p.diagnosisSearch && p.diagnosisSearch.toLowerCase().includes(searchValue));
   populatePatientDropdown(filtered);
   if (filtered.length > 0) {
       loadAndDisplayPatient(filtered[0].file);
@@ -820,6 +691,7 @@ function filterPatientsByDiagnosis() {
       if(tabContents) tabContents.innerHTML = `<p style="padding: 20px;">No matching patients found for "${searchValue}".</p>`;
   }
 }
+
 document.addEventListener('DOMContentLoaded', () => {
     const modalCloseBtn = document.getElementById('emr-modal-close');
     if (modalCloseBtn) {
@@ -828,10 +700,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (overlay) overlay.style.display = 'none';
             const viewer = document.getElementById('dicom-viewer');
             if (viewer) {
-                try {
-                    cornerstone.disable(viewer);
-                } catch(e) { /* Ignore error if already disabled */ }
-                viewer.innerHTML = ""; // Clear content
+                try { cornerstone.disable(viewer); } catch(e) { /* Ignore */ }
+                viewer.innerHTML = "";
             }
         };
     }
@@ -845,11 +715,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     const patientSelect = document.getElementById('patientSelect');
     if (patientSelect) {
-        patientSelect.addEventListener('change', function() {
-            if (this.value) {
-                loadAndDisplayPatient(this.value);
-            }
-        });
+        patientSelect.addEventListener('change', function() { if (this.value) { loadAndDisplayPatient(this.value); } });
     }
     const diagnosisSearch = document.getElementById('diagnosisSearch');
     if (diagnosisSearch) {
