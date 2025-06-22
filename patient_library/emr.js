@@ -811,76 +811,59 @@ function initPracticeFractionFormHandlers() {
 }
 
 function renderTreatmentDelivery(data) {
-  const dosimetryHtml = renderDosimetry(data.dosimetry);
-  const td = data.treatmentDelivery || {};
-  let fractionsSection = ""; // 
-  if (!td.fractions || !td.fractions.length) { // 
-    fractionsSection = `<div class="section"><div class="section-header">Treatment Delivery Records</div><div class="section-content"><p>No Treatment Delivery records for this patient.</p></div></div>`; // 
+  const dosimetryHtml = renderDosimetry(data.radiationOncologyData.dosimetry); // Corrected path
+  const td = data.radiationOncologyData.treatmentDelivery || {}; // Corrected path
+
+  let fractionsSection = "";
+  if (!td.fractions || !td.fractions.length) {
+    fractionsSection = `<div class="section"><div class="section-header">Treatment Delivery Records</div><div class="section-content"><p>No Treatment Delivery records for this patient.</p></div></div>`; //
   } else {
     fractionsSection = `<div class="section"><div class="section-header">Treatment Delivery Records</div><div class="section-content">
-      <table>
-        <thead>
-          <tr>
-            <th>Fraction #</th>
-            <th>Date</th>
-            <th>Machine</th>
-            <th>Fields & MUs</th>
-            <th>Energies Used</th>
-            <th>Setup Verification</th>
-            <th>Immobilization Devices</th>
-            <th>Setup Adjustments</th>
-            <th>Organ/Target Checks</th>
-            <th>Imaging Type</th>
-            <th>IGRT Match Quality</th>
-            <th>Shifts Applied</th>
-            <th>IGRT Approved By</th>
-            <th>IGRT Notes</th>
-            <th>Patient Tolerance</th>
-            <th>General Side Effects</th>
-            <th>Site-Specific Side Effects</th>
-            <th>Pain Assessment</th>
-            <th>Patient Concerns</th>
-            <th>Instructions Given</th>
-            <th>Therapist(s)</th>
-            <th>Billing Codes</th>
-            <th>Daily Notes</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${td.fractions.map(fx => `
-            <tr>
-              <td>${fx.fractionNumber || ""} / ${fx.totalFractions || ""}</td>
-              <td>${fx.date || ""}</td>
-              <td>${fx.machine || ""}</td>
-              <td>${fx.fieldsAndMUs || ""}</td>
-              <td>${fx.energiesUsed || ""}</td>
-              <td>${fx.setupVerification || ""}</td>
-              <td>${fx.immobilizationDevicesChecked || ""}</td>
-              <td>${fx.setupAdjustments || ""}</td>
-              <td>${fx.organTargetChecks || ""}</td>
-              <td>${fx.imagingType || ""}</td>
-              <td>${fx.igrtMatchQuality || ""}</td>
-              <td>${fx.shiftsApplied || ""}</td>
-              <td>${fx.igrtApprovedBy || ""}</td>
-              <td>${fx.igrtVerificationNotes || ""}</td>
-              <td>${fx.patientTolerance || ""}</td>
-              <td>${fx.generalSideEffects || ""}</td>
-              <td>${fx.siteSpecificSideEffects || ""}</td>
-              <td>${fx.painAssessment || ""}</td>
-              <td>${fx.patientConcerns || ""}</td>
-              <td>${fx.instructionsGiven || ""}</td>
-              <td>${fx.therapistInitials || ""}</td>
-              <td>${fx.billingCodes || ""}</td>
-              <td>${fx.dailyNotes || ""}</td>
-            </tr>
-          `).join("")}
-        </tbody>
-      </table>
-    </div></div>`; // 
+      <div class="fractions-container"> ${td.fractions.map(fx => `
+        <div class="fraction-card">
+            <h4>Fraction ${fx.fractionNumber || ""} / ${fx.totalFractions || ""} - ${fx.date || ""}</h4>
+            <p><strong>Machine:</strong> ${fx.machine || ""}</p>
+            <p><strong>Therapist(s):</strong> ${fx.therapistInitials || ""}</p>
+            <p><strong>Overall MUs:</strong> ${fx.fieldsAndMUs ? fx.fieldsAndMUs.match(/Total:\s*(\d+)/)?.[1] || fx.fieldsAndMUs : "N/A"}</p>
+            
+            <h5>Image Guidance (IGRT)</h5>
+            <p><strong>Type:</strong> ${fx.imagingType || ""}, <strong>Match:</strong> ${fx.igrtMatchQuality || ""}</p>
+            <p><strong>Shifts Applied:</strong> ${fx.shiftsApplied || "None"}</p>
+            <p><strong>IGRT Notes:</strong> ${fx.igrtVerificationNotes || "N/A"}</p>
+            
+            <h5>Patient Assessment</h5>
+            <p><strong>Tolerance:</strong> ${fx.patientTolerance || ""}</p>
+            <p><strong>Side Effects:</strong> ${[fx.generalSideEffects, fx.siteSpecificSideEffects].filter(Boolean).join(', ') || "None reported."}</p>
+            <p><strong>Concerns:</strong> ${fx.patientConcerns || "None"}</p>
+            <p><strong>Pain:</strong> ${fx.painAssessment || "N/A"}</p>
+            
+            <h5>Daily Notes</h5>
+            <p>${fx.dailyNotes || "No specific notes for today."}</p>
+
+            <button class="toggle-details-btn" data-fraction-id="fraction-${fx.fractionNumber}">Show All Details</button>
+            <div id="fraction-${fx.fractionNumber}" class="fraction-details-hidden">
+                <h6>Detailed Delivery Data</h6>
+                <p><strong>Energies Used:</strong> ${fx.energiesUsed || "N/A"}</p>
+                <p><strong>Setup Verification:</strong> ${fx.setupVerification || "N/A"}</p>
+                <p><strong>Immobilization Devices Checked:</strong> ${fx.immobilizationDevicesChecked || "N/A"}</p>
+                <p><strong>Setup Adjustments:</strong> ${fx.setupAdjustments || "N/A"}</p>
+                <p><strong>Organ/Target Checks:</strong> ${fx.organTargetChecks || "N/A"}</p>
+                <p><strong>IGRT Approved By:</strong> ${fx.igrtApprovedBy || "N/A"}</p>
+                <p><strong>Instructions Given:</strong> ${fx.instructionsGiven || "N/A"}</p>
+                <p><strong>Billing Codes:</strong> ${fx.billingCodes || "N/A"}</p>
+
+                <h6>Per-Field MU (Planned vs. Delivered) - *Note: This data is not stored per fraction in JSON yet.*</h6>
+                <p>Consider updating your JSON structure if you want to store and display *actual delivered* MUs per field for past fractions. Currently, this displays the overall 'Fields & MUs' summary. The practice form captures detailed per-field MU.</p>
+            </div>
+        </div>
+      `).join("")}
+      </div>
+    </div></div>`;
   }
-  let formSection = `<div class="section"><div class="section-header">Practice Daily Treatment Entry</div><div class="section-content">${renderPracticeFractionEntryForm(currentPatientData)}</div></div>`; // 
-  return dosimetryHtml + fractionsSection + formSection; // 
+  let formSection = `<div class="section"><div class="section-header">Practice Daily Treatment Entry</div><div class="section-content">${renderPracticeFractionEntryForm(currentPatientData)}</div></div>`; //
+  return dosimetryHtml + fractionsSection + formSection; //
 }
+
 
 function showRadOncSubTab(subKey, data) {
   const subContents = document.getElementById('radOnc-subtab-contents');
