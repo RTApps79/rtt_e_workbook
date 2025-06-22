@@ -452,7 +452,8 @@ function renderDosimetry(dos) {
   let mainInfo = `
     <div class="section">
       <div class="section-header">Dosimetry/Physics Plan</div>
-      <div class="section-content dosimetry-grid"> <p><strong>Plan ID:</strong> ${dos.planId || ""}</p>
+      <div class="section-content dosimetry-grid">
+        <p><strong>Plan ID:</strong> ${dos.planId || ""}</p>
         <p><strong>Plan Status:</strong> ${dos.planStatus || "N/A"}</p>
         <p><strong>Rx:</strong> ${dos.rx || ""}</p>
         <p><strong>Technique:</strong> ${dos.technique || ""}</p>
@@ -509,7 +510,8 @@ function renderDosimetry(dos) {
       <div class="section">
         <div class="section-header">Treatment Fields and Monitor Units (MUs)</div>
         <div class="section-content">
-          <table border="1" class="data-table"> <thead>
+          <table border="1" class="data-table">
+            <thead>
               <tr>
                 <th>Field Name</th><th>Field Size</th><th>Gantry Angle</th><th>Coll. Angle</th><th>Couch Angle</th><th>Energy</th><th>MU</th><th>SSD (cm)</th>
               </tr>
@@ -534,7 +536,8 @@ function renderDosimetry(dos) {
       <div class="section">
         <div class="section-header">Verification Imaging Fields</div>
         <div class="section-content">
-          <table border="1" class="data-table"> <thead>
+          <table border="1" class="data-table">
+            <thead>
               <tr>
                 <th>Field Name</th><th>Gantry Angle</th><th>Field Size</th><th>Energy</th><th>MU</th>
             </tr>
@@ -559,16 +562,20 @@ function renderDosimetry(dos) {
   return mainInfo + igrtProtocolHtml + qaChecksHtml + fieldsTable + imagingFieldsTable;
 }
 
+// Function to render the practice daily treatment entry form
 function renderPracticeFractionEntryForm(patientData) {
-    const dos = patientData?.radiationOncologyData?.dosimetry;
-    let fieldEntryHtml = '<p>No fields defined in dosimetry plan.</p>';
-    if (dos && dos.fieldDetails && dos.fieldDetails.length > 0) {
+    const dosimetry = patientData?.radiationOncologyData?.dosimetry || {};
+    const treatmentPlan = patientData?.treatmentPlan || {};
+
+    let fieldEntryHtml = '<p>No fields defined in dosimetry plan to record daily MUs.</p>';
+    if (dosimetry.fieldDetails && dosimetry.fieldDetails.length > 0) {
         fieldEntryHtml = `
-            <table id="dailyFieldEntryTable" class="practice-table" border="1"> <thead>
+            <table id="dailyFieldEntryTable" class="practice-table data-table" border="1">
+                <thead>
                     <tr><th>Field Name</th><th>Planned MU</th><th>Delivered MU</th><th>Field Notes</th></tr>
                 </thead>
                 <tbody>
-                    ${dos.fieldDetails.map(field => `
+                    ${dosimetry.fieldDetails.map(field => `
                         <tr>
                             <td>${field.fieldName}</td>
                             <td>${field.monitorUnits}</td>
@@ -580,90 +587,110 @@ function renderPracticeFractionEntryForm(patientData) {
             </table>
         `;
     }
+
     return `
     <div class="practice-section">
       <h3 style="margin-bottom: 1em;">Practice Daily Treatment Entry</h3>
       <form id="practiceFractionForm" autocomplete="off" onsubmit="return false;">
-        <div class="practice-form-grid">
+        <div class="form-columns">
             <fieldset class="practice-fieldset">
-                <legend>Session Info</legend>
+                <legend>Patient & Treatment Info</legend>
+                <p><strong>Patient Name:</strong> ${patientData?.demographics?.name || 'N/A'}</p>
+                <p><strong>MRN:</strong> ${patientData?.patientId || 'N/A'}</p>
+                <p><strong>Anatomic Site:</strong> ${treatmentPlan.treatmentSite || 'N/A'}</p>
+                <p><strong>Diagnosis:</strong> ${patientData?.diagnosis?.primary || 'N/A'}</p>
+                <p><strong>Prescription:</strong> ${treatmentPlan.rtRxDetails || 'N/A'}</p>
+                <p><strong>Technique:</strong> ${treatmentPlan.techniqueSummary || 'N/A'}</p>
+                <p><strong>Modality:</strong> ${treatmentPlan.modality || 'N/A'}</p>
+                <p><strong>Energy:</strong> ${dosimetry.energy || 'N/A'}</p>
+
                 <label for="practiceFractionNumCurrent">Fraction #</label>
                 <input type="number" id="practiceFractionNumCurrent" min="1" required>
                 <label for="practiceFractionNumTotal">Total Fractions</label>
-                <input type="number" id="practiceFractionNumTotal" min="1" required>
+                <input type="number" id="practiceFractionNumTotal" min="1" required value="${dosimetry.rx ? dosimetry.rx.split(' ')[2] : ''}">
                 <label for="practiceTreatmentDate">Treatment Date</label>
-                <input type="date" id="practiceTreatmentDate" required>
+                <input type="date" id="practiceTreatmentDate" required value="${new Date().toISOString().split('T')[0]}">
                 <label for="practiceMachine">Machine</label>
                 <select id="practiceMachine" required>
-                    <option value="">-- Select Machine --</option>
-                    <option value="LINAC 1">LINAC 1</option>
-                    <option value="LINAC 2">LINAC 2</option>
-                    <option value="LINAC 3">LINAC 3</option>
-                    <option value="LINAC 4">LINAC 4</option>
-                    <option value="Proton Gantry 1">Proton Gantry 1</option>
-                    <option value="Orthovoltage Unit">Orthovoltage Unit</option>
-                    <option value="Other">Other</option>
+                  <option value="">-- Select Machine --</option>
+                  <option value="LINAC 1">LINAC 1</option>
+                  <option value="LINAC 2">LINAC 2</option>
+                  <option value="LINAC 3">LINAC 3</option>
+                  <option value="LINAC 4">LINAC 4</option>
+                  <option value="Proton Gantry 1">Proton Gantry 1</option>
+                  <option value="Orthovoltage Unit">Orthovoltage Unit</option>
+                  <option value="Other">Other</option>
                 </select>
-                <label for="practiceTherapistInitials">Therapist(s)</label>
-                <input type="text" id="practiceTherapistInitials" required>
+                <label for="practiceTherapistInitials">Therapist(s) Initials</label>
+                <input type="text" id="practiceTherapistInitials" required placeholder="e.g., JG, RS">
             </fieldset>
+
             <fieldset class="practice-fieldset">
-                <legend>Treatment Delivery & Organ Checks</legend>
-                <label for="practiceFieldsAndMUs">Fields & MUs (Overall)</label>
-                <textarea id="practiceFieldsAndMUs" rows="2"></textarea>
-                <label for="practiceEnergiesUsed">Energies Used</label>
-                <input type="text" id="practiceEnergiesUsed">
+                <legend>Setup, Delivery & IGRT</legend>
                 <label for="practiceSetupVerification">Setup Verification</label>
                 <select id="practiceSetupVerification">
-                    <option value="Tolerances Met">Tolerances Met</option>
-                    <option value="Adjustments Made">Adjustments Made</option>
+                  <option value="Tolerances Met">Tolerances Met</option>
+                  <option value="Adjustments Made">Adjustments Made</option>
                 </select>
-                <label for="practiceImmobilizationDevicesChecked">Immobilization Devices</label>
-                <input type="text" id="practiceImmobilizationDevicesChecked">
+                <label for="practiceImmobilizationDevicesChecked">Immobilization Devices Checked</label>
+                <input type="text" id="practiceImmobilizationDevicesChecked" placeholder="e.g., BodyFix bag, Belly board" value="${patientData?.radiationOncologyData?.ctSimulation?.immobilization || ''}">
                 <label for="practiceSetupAdjustments">Setup Adjustments</label>
-                <textarea id="practiceSetupAdjustments" rows="2"></textarea>
+                <textarea id="practiceSetupAdjustments" rows="2" placeholder="Describe any repositioning"></textarea>
                 <label for="practiceOrganTargetChecks">Organ/Target Checks</label>
-                <textarea id="practiceOrganTargetChecks" rows="2"></textarea>
-            </fieldset>
-            <fieldset class="practice-fieldset">
-                <legend>Image Guidance (IGRT) & Assessment</legend>
+                <textarea id="practiceOrganTargetChecks" rows="2" placeholder="e.g., CBCT reviewed, bowel position"></textarea>
+                
                 <label for="practiceImagingType">Imaging Type</label>
                 <select id="practiceImagingType">
-                    <option value="None">None</option><option value="kV Pair">kV Pair (Orthogonal)</option><option value="MV Portal">MV Portal Image</option><option value="CBCT">Cone Beam CT (CBCT)</option><option value="ExacTrac">ExacTrac</option><option value="Surface Guidance">Surface Guidance (AlignRT)</option><option value="Other">Other</option>
+                  <option value="None">None</option>
+                  <option value="kV Pair">kV Pair (Orthogonal)</option>
+                  <option value="MV Portal">MV Portal Image</option>
+                  <option value="CBCT">Cone Beam CT (CBCT)</option>
+                  <option value="ExacTrac">ExacTrac</option>
+                  <option value="Surface Guidance">Surface Guidance (AlignRT)</option>
+                  <option value="Other">Other</option>
                 </select>
-                <label for="practiceIgrtMatchQuality">Match Quality</label>
+                <label for="practiceIgrtMatchQuality">IGRT Match Quality</label>
                 <select id="practiceIgrtMatchQuality">
-                    <option value="">-- Select --</option>
-                    <option value="Good - No Shifts">Good - No Shifts Required</option>
-                    <option value="Good - Shifts Applied">Good - Shifts Applied</option>
-                    <option value="Fair - Minor Deviations">Fair - Minor Deviations Noted</option>
-                    <option value="Poor - Action Taken">Poor - Action Taken</option>
+                  <option value="">-- Select --</option>
+                  <option value="Good - No Shifts">Good - No Shifts Required</option>
+                  <option value="Good - Shifts Applied">Good - Shifts Applied</option>
+                  <option value="Fair - Minor Deviations">Fair - Minor Deviations Noted</option>
+                  <option value="Poor - Action Taken">Poor - Action Taken</option>
                 </select>
                 <label for="practiceShiftsApplied">Shifts Applied (V,L,L)</label>
-                <input type="text" id="practiceShiftsApplied" placeholder="e.g., V:0.1, L:0, L:-0.2">
-                <label for="practiceIgrtApprovedBy">IGRT Approved By</label>
-                <input type="text" id="practiceIgrtApprovedBy">
-                <label for="practiceIgrtVerificationNotes">IGRT Notes</label>
-                <textarea id="practiceIgrtVerificationNotes" rows="2"></textarea>
+                <input type="text" id="practiceShiftsApplied" placeholder="e.g., V:0.1, L:0, S:-0.2">
+                <label for="practiceIgrtApprovedBy">IGRT Approved By (Initials/Role)</label>
+                <input type="text" id="practiceIgrtApprovedBy" placeholder="e.g., RE (Physician), Physics">
+                <label for="practiceIgrtVerificationNotes">IGRT Verification Notes</label>
+                <textarea id="practiceIgrtVerificationNotes" rows="2" placeholder="Notes about image review/shifts"></textarea>
+            </fieldset>
+
+            <fieldset class="practice-fieldset">
+                <legend>Patient Assessment & Notes</legend>
                 <label for="practicePatientTolerance">Patient Tolerance</label>
                 <select id="practicePatientTolerance">
-                    <option value="Good">Good</option><option value="Fair">Fair</option><option value="Poor">Poor</option>
+                  <option value="Good">Good</option>
+                  <option value="Fair">Fair</option>
+                  <option value="Poor">Poor</option>
                 </select>
                 <label for="practiceGeneralSideEffects">General Side Effects</label>
-                <textarea id="practiceGeneralSideEffects" rows="2"></textarea>
+                <textarea id="practiceGeneralSideEffects" rows="2" placeholder="e.g., Fatigue, nausea"></textarea>
                 <label for="practiceSiteSpecificSideEffects">Site-Specific Side Effects</label>
-                <textarea id="practiceSiteSpecificSideEffects" rows="2"></textarea>
+                <textarea id="practiceSiteSpecificSideEffects" rows="2" placeholder="e.g., Abdominal discomfort, skin reaction"></textarea>
                 <label for="practicePainAssessment">Pain Assessment</label>
-                <input type="text" id="practicePainAssessment">
+                <input type="text" id="practicePainAssessment" placeholder="e.g., 0/10, Mild">
                 <label for="practicePatientConcerns">Patient Concerns</label>
-                <textarea id="practicePatientConcerns" rows="2"></textarea>
+                <textarea id="practicePatientConcerns" rows="2" placeholder="Any questions or worries"></textarea>
                 <label for="practiceInstructionsGiven">Instructions Given</label>
-                <textarea id="practiceInstructionsGiven" rows="2"></textarea>
-                <label for="practiceBillingCodes">Billing Codes</label>
-                <input type="text" id="practiceBillingCodes">
+                <textarea id="practiceInstructionsGiven" rows="2" placeholder="e.g., Continue hydration, skin care"></textarea>
+                <label for="practiceBillingCodes">Billing Codes (comma-separated)</label>
+                <input type="text" id="practiceBillingCodes" placeholder="e.g., 77401, 77014">
+                <label for="practiceDailyNotes">Therapist Daily Notes</label>
+                <textarea id="practiceDailyNotes" rows="3" placeholder="Any other observations"></textarea>
             </fieldset>
+            
             <fieldset class="practice-fieldset full-width">
-                <legend>Per-Field Delivery Record</legend>
+                <legend>Per-Field Delivery Record (MUs)</legend>
                 ${fieldEntryHtml}
             </fieldset>
         </div>
@@ -671,7 +698,7 @@ function renderPracticeFractionEntryForm(patientData) {
       </form>
       <hr>
       <h4>Practice Fractions Entered This Session</h4>
-      <table id="practiceFractionSessionTable" class="practice-table" border="1" style="width:100%;max-width:900px;">
+      <table id="practiceFractionSessionTable" class="practice-table data-table" border="1" style="width:100%;max-width:900px;">
         <thead><tr>
           <th>Fraction</th><th>Date</th><th>Machine</th><th>Fields/MU Summary</th><th>Notes</th><th>Remove</th>
         </tr></thead>
@@ -715,45 +742,88 @@ function initPracticeFractionFormHandlers() {
   if (addBtn) {
     addBtn.onclick = function() {
       const form = document.getElementById('practiceFractionForm');
+      // Validate required fields before proceeding
+      const requiredInputs = form.querySelectorAll('[required]');
+      for (const input of requiredInputs) {
+          if (!input.value) {
+              alert(`Please fill out the required field: ${input.labels ? input.labels[0].textContent : input.id}`);
+              input.focus();
+              return; // Stop the function if a required field is empty
+          }
+      }
+
+
       const recordedFields = [];
       document.querySelectorAll('#dailyFieldEntryTable tbody tr').forEach(row => {
           recordedFields.push({
               fieldName: row.cells[0].textContent,
+              plannedMu: row.cells[1].textContent, // Capture planned MU
               deliveredMu: row.querySelector('.daily-mu-input').value,
               notes: row.querySelector('.daily-field-notes').value,
           });
       });
 
+      // Automatically calculate total MUs delivered from per-field entries
+      const totalDeliveredMUs = recordedFields.reduce((sum, field) => sum + (parseInt(field.deliveredMu) || 0), 0);
+      let overallFieldsAndMUsSummary = document.getElementById('practiceFieldsAndMUs')?.value || '';
+      if (totalDeliveredMUs > 0) {
+          if (!overallFieldsAndMUsSummary.includes("Total Delivered:")) {
+            overallFieldsAndMUsSummary += ` (Total Delivered: ${totalDeliveredMUs} MU)`;
+          } else {
+            overallFieldsAndMUsSummary = overallFieldsAndMUsSummary.replace(/Total Delivered: \d+ MU/, `Total Delivered: ${totalDeliveredMUs} MU`);
+          }
+      }
+
+
       const sessionEntry = {
+        patientName: currentPatientData?.demographics?.name || 'N/A', // Added patient name
+        patientId: currentPatientData?.patientId || 'N/A', // Added patient ID
+        anatomicSite: currentPatientData?.treatmentPlan?.treatmentSite || 'N/A',
+        diagnosis: currentPatientData?.diagnosis?.primary || 'N/A',
+        prescription: currentPatientData?.treatmentPlan?.rtRxDetails || 'N/A',
+        treatmentTechnique: currentPatientData?.treatmentPlan?.techniqueSummary || 'N/A',
+        modality: currentPatientData?.treatmentPlan?.modality || 'N/A',
+        energy: currentPatientData?.radiationOncologyData?.dosimetry?.energy || 'N/A',
+        
         fractionNumber: document.getElementById('practiceFractionNumCurrent').value,
         totalFractions: document.getElementById('practiceFractionNumTotal').value,
         date: document.getElementById('practiceTreatmentDate').value,
         machine: document.getElementById('practiceMachine').value,
-        fieldsAndMUs: document.getElementById('practiceFieldsAndMUs')?.value || '',
-        energiesUsed: document.getElementById('practiceEnergiesUsed')?.value || '',
+        therapistInitials: document.getElementById('practiceTherapistInitials').value,
+        
+        // These can be derived or manually entered in the form
+        fieldsAndMUs: overallFieldsAndMUsSummary, // Now includes calculated total
+        energiesUsed: document.getElementById('practiceEnergiesUsed')?.value || '', // Can be auto-filled from plan fields, but left as input for flexibility
+        
         setupVerification: document.getElementById('practiceSetupVerification')?.value || '',
         immobilizationDevicesChecked: document.getElementById('practiceImmobilizationDevicesChecked')?.value || '',
         setupAdjustments: document.getElementById('practiceSetupAdjustments')?.value || '',
         organTargetChecks: document.getElementById('practiceOrganTargetChecks')?.value || '',
+        
         imagingType: document.getElementById('practiceImagingType').value,
         igrtMatchQuality: document.getElementById('practiceIgrtMatchQuality').value,
         shiftsApplied: document.getElementById('practiceShiftsApplied').value,
         igrtApprovedBy: document.getElementById('practiceIgrtApprovedBy').value,
         igrtVerificationNotes: document.getElementById('practiceIgrtVerificationNotes')?.value || '',
+        
         patientTolerance: document.getElementById('practicePatientTolerance').value,
         generalSideEffects: document.getElementById('practiceGeneralSideEffects').value,
         siteSpecificSideEffects: document.getElementById('practiceSiteSpecificSideEffects')?.value || '',
         painAssessment: document.getElementById('practicePainAssessment')?.value || '',
         patientConcerns: document.getElementById('practicePatientConcerns')?.value || '',
         instructionsGiven: document.getElementById('practiceInstructionsGiven')?.value || '',
-        therapistInitials: document.getElementById('practiceTherapistInitials').value,
+        
         billingCodes: document.getElementById('practiceBillingCodes')?.value || '',
         dailyNotes: document.getElementById('practiceDailyNotes')?.value || '',
-        fieldsDelivered: recordedFields
+        
+        fieldsDelivered: recordedFields // Detailed per-field data
       };
       sessionFractions.push(sessionEntry);
       refreshFractionTable();
       form.reset();
+      // Pre-fill some fields for next entry if applicable (e.g., total fractions, immobilization)
+      document.getElementById('practiceFractionNumTotal').value = sessionEntry.totalFractions;
+      document.getElementById('practiceImmobilizationDevicesChecked').value = sessionEntry.immobilizationDevicesChecked;
     };
   }
 
@@ -764,236 +834,50 @@ function initPracticeFractionFormHandlers() {
         alert("Please add at least one practice fraction entry before preparing the summary.");
         return;
       }
-      let summary = "Practice Daily Radiation Treatment Record\n";
-      summary += "=========================================\n\n";
-      summary += `Patient: ${currentPatientData?.demographics?.name || 'N/A'} (ID: ${currentPatientData?.patientId || 'N/A'})\n\n`;
-
+      let summary = "==========================================================\n";
+      summary += "          DAILY RADIATION TREATMENT RECORD SUMMARY        \n";
+      summary += "==========================================================\n\n";
+      
       sessionFractions.forEach((fx, idx) => {
-        summary += "-------------------------------\n";
-        summary += `Fraction ${fx.fractionNumber} / ${fx.totalFractions}\n`;
-        summary += `Date: ${fx.date}\n`;
-        summary += `Machine: ${fx.machine}\n`;
-        summary += `Therapist(s): ${fx.therapistInitials}\n`;
+        summary += `--- RECORD FOR FRACTION ${fx.fractionNumber} / ${fx.totalFractions} ---\n`;
+        summary += `Date: ${fx.date} | Machine: ${fx.machine} | Therapist(s): ${fx.therapistInitials}\n`;
+        summary += `Patient: ${fx.patientName} (MRN: ${fx.patientId})\n`;
+        summary += `Anatomic Site: ${fx.anatomicSite} | Diagnosis: ${fx.diagnosis}\n`;
+        summary += `Prescription: ${fx.prescription} | Technique: ${fx.treatmentTechnique} | Modality: ${fx.modality} | Energy: ${fx.energy}\n\n`;
+
+        summary += `--- Treatment Delivery ---\n`;
         summary += `Fields & MUs (Overall): ${fx.fieldsAndMUs}\n`;
         summary += `Energies Used: ${fx.energiesUsed}\n`;
-        summary += `Setup Verification: ${fx.setupVerification}\n`;
-        summary += `Immobilization Devices: ${fx.immobilizationDevicesChecked}\n`;
-        summary += `Setup Adjustments: ${fx.setupAdjustments}\n`;
-        summary += `Organ/Target Checks: ${fx.organTargetChecks}\n`;
-        summary += `Imaging Type: ${fx.imagingType}\n`;
-        summary += `IGRT Match Quality: ${fx.igrtMatchQuality}\n`;
-        summary += `Shifts Applied: ${fx.shiftsApplied}\n`;
-        summary += `IGRT Approved By: ${fx.igrtApprovedBy}\n`;
-        summary += `IGRT Notes: ${fx.igrtVerificationNotes}\n`;
-        summary += `Patient Tolerance: ${fx.patientTolerance}\n`;
-        summary += `General Side Effects: ${fx.generalSideEffects}\n`;
-        summary += `Site-Specific Side Effects: ${fx.siteSpecificSideEffects}\n`;
-        summary += `Pain Assessment: ${fx.painAssessment}\n`;
-        summary += `Patient Concerns: ${fx.patientConcerns}\n`;
-        summary += `Instructions Given: ${fx.instructionsGiven}\n`;
-        summary += `Billing Codes: ${fx.billingCodes}\n`;
         
         if (fx.fieldsDelivered && fx.fieldsDelivered.length > 0) {
-            summary += "\n--- Per-Field Delivery ---\n";
+            summary += `Per-Field Delivered MUs:\n`;
             fx.fieldsDelivered.forEach(field => {
-                summary += `Field: ${field.fieldName}, Delivered MU: ${field.deliveredMu || 'N/A'}, Notes: ${field.notes || 'N/A'}\n`;
+                summary += `  - ${field.fieldName}: Planned ${field.plannedMu} MU, Delivered ${field.deliveredMu || 'N/A'} MU. Notes: ${field.notes || 'N/A'}\n`;
             });
         }
-        summary += `Daily Notes: ${fx.dailyNotes}\n`;
-        summary += "-------------------------------\n";
-      });
-      document.getElementById('practiceSubmissionSummary').value = summary;
-      document.getElementById('practiceSubmissionOutput').style.display = 'block';
-    };
-  }
-}
-
-function renderTreatmentDelivery(data) {
-  const dosimetryHtml = renderDosimetry(data.radiationOncologyData.dosimetry);
-  const td = data.radiationOncologyData.treatmentDelivery || {};
-
-  let fractionsSection = "";
-  if (!td.fractions || !td.fractions.length) {
-    fractionsSection = `<div class="section"><div class="section-header">Treatment Delivery Records</div><div class="section-content"><p>No Treatment Delivery records for this patient.</p></div></div>`;
-  } else {
-    fractionsSection = `<div class="section"><div class="section-header">Treatment Delivery Records</div><div class="section-content">
-      <div class="fractions-container"> ${td.fractions.map(fx => `
-        <div class="fraction-card">
-            <h4>Fraction ${fx.fractionNumber || ""} / ${fx.totalFractions || ""} - ${fx.date || ""}</h4>
-            <p><strong>Machine:</strong> ${fx.machine || ""}</p>
-            <p><strong>Therapist(s):</strong> ${fx.therapistInitials || ""}</p>
-            <p><strong>Overall MUs:</strong> ${fx.fieldsAndMUs ? fx.fieldsAndMUs.match(/Total:\s*(\d+)/)?.[1] || fx.fieldsAndMUs : "N/A"}</p>
-            
-            <h5>Image Guidance (IGRT)</h5>
-            <p><strong>Type:</strong> ${fx.imagingType || ""}, <strong>Match:</strong> ${fx.igrtMatchQuality || ""}</p>
-            <p><strong>Shifts Applied:</strong> ${fx.shiftsApplied || "None"}</p>
-            <p><strong>IGRT Notes:</strong> ${fx.igrtVerificationNotes || "N/A"}</p>
-            
-            <h5>Patient Assessment</h5>
-            <p><strong>Tolerance:</strong> ${fx.patientTolerance || ""}</p>
-            <p><strong>Side Effects:</strong> ${[fx.generalSideEffects, fx.siteSpecificSideEffects].filter(Boolean).join(', ') || "None reported."}</p>
-            <p><strong>Concerns:</strong> ${fx.patientConcerns || "None"}</p>
-            <p><strong>Pain:</strong> ${fx.painAssessment || "N/A"}</p>
-            
-            <h5>Daily Notes</h5>
-            <p>${fx.dailyNotes || "No specific notes for today."}</p>
-
-            <button class="toggle-details-btn" data-fraction-id="fraction-${fx.fractionNumber}">Show All Details</button>
-            <div id="fraction-${fx.fractionNumber}" class="fraction-details-hidden">
-                <h6>Detailed Delivery Data</h6>
-                <p><strong>Energies Used:</strong> ${fx.energiesUsed || "N/A"}</p>
-                <p><strong>Setup Verification:</strong> ${fx.setupVerification || "N/A"}</p>
-                <p><strong>Immobilization Devices Checked:</strong> ${fx.immobilizationDevicesChecked || "N/A"}</p>
-                <p><strong>Setup Adjustments:</strong> ${fx.setupAdjustments || "N/A"}</p>
-                <p><strong>Organ/Target Checks:</strong> ${fx.organTargetChecks || "N/A"}</p>
-                <p><strong>IGRT Approved By:</strong> ${fx.igrtApprovedBy || "N/A"}</p>
-                <p><strong>Instructions Given:</strong> ${fx.instructionsGiven || "N/A"}</p>
-                <p><strong>Billing Codes:</strong> ${fx.billingCodes || "N/A"}</p>
-
-                <h6>Per-Field MU (Planned vs. Delivered) - *Note: This data is not stored per fraction in JSON yet.*</h6>
-                <p>Consider updating your JSON structure if you want to store and display *actual delivered* MUs per field for past fractions. Currently, this displays the overall 'Fields & MUs' summary. The practice form captures detailed per-field MU.</p>
-            </div>
-        </div>
-      `).join("")}
-      </div>
-    </div></div>`;
-  }
-  let formSection = `<div class="section"><div class="section-header">Practice Daily Treatment Entry</div><div class="section-content">${renderPracticeFractionEntryForm(currentPatientData)}</div></div>`;
-  return dosimetryHtml + fractionsSection + formSection;
-}
-
-// You will also need to add event listeners for the new "Show All Details" buttons
-// This should be called after renderTreatmentDelivery is executed, likely in showRadOncSubTab
-function initFractionDetailToggles() {
-    document.querySelectorAll('.toggle-details-btn').forEach(button => {
-        button.onclick = function() {
-            const targetId = this.dataset.fractionId;
-            const detailsDiv = document.getElementById(targetId);
-            if (detailsDiv) {
-                detailsDiv.classList.toggle('fraction-details-hidden');
-                this.textContent = detailsDiv.classList.contains('fraction-details-hidden') ? 'Show All Details' : 'Hide Details';
-            }
-        };
-    });
-}
-
-// --- Practice Fraction Form Logic ---
-// We must re-attach handlers after every render of the Treatment Delivery subtab!
-function initPracticeFractionFormHandlers() {
-  const sessionFractions = [];
-  function refreshFractionTable() {
-    const tbody = document.getElementById('practiceFractionSessionTable')?.querySelector('tbody');
-    if (!tbody) return;
-    tbody.innerHTML = '';
-    sessionFractions.forEach((entry, idx) => {
-      const row = tbody.insertRow();
-      row.insertCell(0).textContent = entry.fractionNumber + " / " + entry.totalFractions;
-      row.insertCell(1).textContent = entry.date;
-      row.insertCell(2).textContent = entry.machine;
-      row.insertCell(3).textContent = entry.fieldsAndMUs; // Simplified summary
-      row.insertCell(4).textContent = entry.dailyNotes; // Simplified notes
-      const removeCell = row.insertCell(5);
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.textContent = 'Remove';
-      btn.onclick = () => {
-        sessionFractions.splice(idx, 1);
-        refreshFractionTable();
-      };
-      removeCell.appendChild(btn);
-    });
-  }
-
-  const addBtn = document.getElementById('addPracticeFractionBtn');
-  if (addBtn) {
-    addBtn.onclick = function() {
-      const form = document.getElementById('practiceFractionForm');
-      const recordedFields = [];
-      document.querySelectorAll('#dailyFieldEntryTable tbody tr').forEach(row => {
-          recordedFields.push({
-              fieldName: row.cells[0].textContent,
-              deliveredMu: row.querySelector('.daily-mu-input').value,
-              notes: row.querySelector('.daily-field-notes').value,
-          });
-      });
-
-      const sessionEntry = {
-        fractionNumber: document.getElementById('practiceFractionNumCurrent').value,
-        totalFractions: document.getElementById('practiceFractionNumTotal').value,
-        date: document.getElementById('practiceTreatmentDate').value,
-        machine: document.getElementById('practiceMachine').value,
-        fieldsAndMUs: document.getElementById('practiceFieldsAndMUs')?.value || '',
-        energiesUsed: document.getElementById('practiceEnergiesUsed')?.value || '',
-        setupVerification: document.getElementById('practiceSetupVerification')?.value || '',
-        immobilizationDevicesChecked: document.getElementById('practiceImmobilizationDevicesChecked')?.value || '',
-        setupAdjustments: document.getElementById('practiceSetupAdjustments')?.value || '',
-        organTargetChecks: document.getElementById('practiceOrganTargetChecks')?.value || '',
-        imagingType: document.getElementById('practiceImagingType').value,
-        igrtMatchQuality: document.getElementById('practiceIgrtMatchQuality').value,
-        shiftsApplied: document.getElementById('practiceShiftsApplied').value,
-        igrtApprovedBy: document.getElementById('practiceIgrtApprovedBy').value,
-        igrtVerificationNotes: document.getElementById('practiceIgrtVerificationNotes')?.value || '',
-        patientTolerance: document.getElementById('practicePatientTolerance').value,
-        generalSideEffects: document.getElementById('practiceGeneralSideEffects').value,
-        siteSpecificSideEffects: document.getElementById('practiceSiteSpecificSideEffects')?.value || '',
-        painAssessment: document.getElementById('practicePainAssessment')?.value || '',
-        patientConcerns: document.getElementById('practicePatientConcerns')?.value || '',
-        instructionsGiven: document.getElementById('practiceInstructionsGiven')?.value || '',
-        therapistInitials: document.getElementById('practiceTherapistInitials').value,
-        billingCodes: document.getElementById('practiceBillingCodes')?.value || '',
-        dailyNotes: document.getElementById('practiceDailyNotes')?.value || '',
-        fieldsDelivered: recordedFields
-      };
-      sessionFractions.push(sessionEntry);
-      refreshFractionTable();
-      form.reset();
-    };
-  }
-
-  const prepareBtn = document.getElementById('preparePracticeSummaryBtn');
-  if (prepareBtn) {
-    prepareBtn.onclick = function() {
-      if (!sessionFractions.length) {
-        alert("Please add at least one practice fraction entry before preparing the summary.");
-        return;
-      }
-      let summary = "Practice Daily Radiation Treatment Record\n";
-      summary += "=========================================\n\n";
-      summary += `Patient: ${currentPatientData?.demographics?.name || 'N/A'} (ID: ${currentPatientData?.patientId || 'N/A'})\n\n`;
-
-      sessionFractions.forEach((fx, idx) => {
-        summary += "-------------------------------\n";
-        summary += `Fraction ${fx.fractionNumber} / ${fx.totalFractions}\n`;
-        summary += `Date: ${fx.date}\n`;
-        summary += `Machine: ${fx.machine}\n`;
-        summary += `Therapist(s): ${fx.therapistInitials}\n`;
-        summary += `Fields & MUs (Overall): ${fx.fieldsAndMUs}\n`;
-        summary += `Energies Used: ${fx.energiesUsed}\n`;
         summary += `Setup Verification: ${fx.setupVerification}\n`;
         summary += `Immobilization Devices: ${fx.immobilizationDevicesChecked}\n`;
-        summary += `Setup Adjustments: ${fx.setupAdjustments}\n`;
-        summary += `Organ/Target Checks: ${fx.organTargetChecks}\n`;
+        summary += `Setup Adjustments: ${fx.setupAdjustments || 'None'}\n`;
+        summary += `Organ/Target Checks: ${fx.organTargetChecks || 'N/A'}\n\n`;
+
+        summary += `--- Image Guidance (IGRT) ---\n`;
         summary += `Imaging Type: ${fx.imagingType}\n`;
-        summary += `IGRT Match Quality: ${fx.igrtMatchQuality}\n`;
-        summary += `Shifts Applied: ${fx.shiftsApplied}\n`;
-        summary += `IGRT Approved By: ${fx.igrtApprovedBy}\n`;
-        summary += `IGRT Notes: ${fx.igrtVerificationNotes}\n`;
-        summary += `Patient Tolerance: ${fx.patientTolerance}\n`;
-        summary += `General Side Effects: ${fx.generalSideEffects}\n`;
-        summary += `Site-Specific Side Effects: ${fx.siteSpecificSideEffects}\n`;
-        summary += `Pain Assessment: ${fx.painAssessment}\n`;
-        summary += `Patient Concerns: ${fx.patientConcerns}\n`;
-        summary += `Instructions Given: ${fx.instructionsGiven}\n`;
-        summary += `Billing Codes: ${fx.billingCodes}\n`;
-        
-        if (fx.fieldsDelivered && fx.fieldsDelivered.length > 0) {
-            summary += "\n--- Per-Field Delivery ---\n";
-            fx.fieldsDelivered.forEach(field => {
-                summary += `Field: ${field.fieldName}, Delivered MU: ${field.deliveredMu || 'N/A'}, Notes: ${field.notes || 'N/A'}\n`;
-            });
-        }
-        summary += `Daily Notes: ${fx.dailyNotes}\n`;
-        summary += "-------------------------------\n";
+        summary += `Match Quality: ${fx.igrtMatchQuality}\n`;
+        summary += `Shifts Applied: ${fx.shiftsApplied || 'None'}\n`;
+        summary += `Approved By: ${fx.igrtApprovedBy || 'N/A'}\n`;
+        summary += `IGRT Notes: ${fx.igrtVerificationNotes || 'N/A'}\n\n`;
+
+        summary += `--- Patient Assessment ---\n`;
+        summary += `Tolerance: ${fx.patientTolerance}\n`;
+        summary += `Side Effects: ${[fx.generalSideEffects, fx.siteSpecificSideEffects].filter(Boolean).join(', ') || "None reported."}\n`;
+        summary += `Pain Assessment: ${fx.painAssessment || 'N/A'}\n`;
+        summary += `Patient Concerns: ${fx.patientConcerns || 'None'}\n`;
+        summary += `Instructions Given: ${fx.instructionsGiven || 'N/A'}\n\n`;
+
+        summary += `--- Daily Notes & Billing ---\n`;
+        summary += `Therapist Daily Notes: ${fx.dailyNotes || 'No specific notes for today.'}\n`;
+        summary += `Billing Codes: ${fx.billingCodes || 'N/A'}\n`;
+        summary += "==========================================================\n\n";
       });
       document.getElementById('practiceSubmissionSummary').value = summary;
       document.getElementById('practiceSubmissionOutput').style.display = 'block';
