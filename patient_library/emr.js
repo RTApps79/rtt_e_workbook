@@ -366,7 +366,9 @@ window.loadDicomSeries = function(seriesIdx) {
   });
 };
 
-// --- RadOnc Renderers ---
+// ==================================================================
+// === CT SIMULATION RENDERER (UPDATED) ===
+// ==================================================================
 function renderCTSimulation(ct) {
   let content = "";
   if (!ct) {
@@ -383,11 +385,25 @@ function renderCTSimulation(ct) {
       <p><strong>CT Notes:</strong> ${ct.ctNotes || ""}</p>
     `;
   }
+  
+  // Add the new practice upload section
+  const uploadSection = `
+    <div class="section" style="margin-top: 25px;">
+        <div class="section-header">Practice Setup Photo Upload</div>
+        <div class="section-content">
+            <p>Use this tool to practice uploading patient setup photos. Images are for this session only and will not be saved.</p>
+            <input type="file" id="setupImageUploader" accept="image/*" multiple>
+            <div id="imagePreviewContainer" style="margin-top: 15px; display: flex; flex-wrap: wrap; gap: 10px;"></div>
+        </div>
+    </div>
+  `;
+
   return `
     <div class="section">
-      <div class="section-header">CT Simulation</div>
+      <div class="section-header">CT Simulation Details</div>
       <div class="section-content">${content}</div>
     </div>
+    ${uploadSection}
   `;
 }
 
@@ -464,9 +480,6 @@ function renderDosimetry(dos) {
   return mainInfo + fieldsTable;
 }
 
-// ==================================================================
-// === REVISED Practice Daily Entry Form and Logic ===
-// ==================================================================
 function renderPracticeFractionEntryForm(patientData) {
     const dos = patientData?.radiationOncologyData?.dosimetry;
     let fieldEntryHtml = '<p>No fields defined in dosimetry plan.</p>';
@@ -550,8 +563,6 @@ function initPracticeFractionFormHandlers() {
                 fields: recordedFields
             };
             
-            // For this demo, we'll just log the collected data.
-            // A real app would save this to the patient's record.
             console.log("Practice Fraction Entry Added:", sessionEntry);
             const outputDiv = document.getElementById('practiceFractionsEntered');
             
@@ -625,16 +636,9 @@ function renderTreatmentDelivery(data) {
   return dosimetryHtml + fractionsSection + formSection;
 }
 
-// --- Radiation Oncology Tabs ---
-function renderRadOncSubTabs(activeKey, data) {
-  return `<div id="radOnc-subtabs" class="tab-bar" style="margin-bottom:1em;">
-    ${radOncSubTabs.map(sub =>
-      `<button class="tab-button ${sub.key===activeKey?" active":""}" id="radOnc-subtab-btn-${sub.key}">${sub.label}</button>`
-    ).join("")}
-    </div>
-    <div id="radOnc-subtab-contents"></div>`;
-}
-
+// ==================================================================
+// === RAD ONC SUB-TAB HANDLER (UPDATED) ===
+// ==================================================================
 function showRadOncSubTab(subKey, data) {
   const subContents = document.getElementById('radOnc-subtab-contents');
   if (!subContents) return;
@@ -642,6 +646,39 @@ function showRadOncSubTab(subKey, data) {
   switch (subKey) {
     case 'ctsim': 
       subContents.innerHTML = renderCTSimulation(radOncData.ctSimulation); 
+      // Add event listener for the new file uploader
+      const uploader = document.getElementById('setupImageUploader');
+      if (uploader) {
+        uploader.addEventListener('change', event => {
+          const previewContainer = document.getElementById('imagePreviewContainer');
+          previewContainer.innerHTML = ''; // Clear previous previews
+          const files = event.target.files;
+          for (const file of files) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+              const previewWrapper = document.createElement('div');
+              previewWrapper.style.border = '1px solid #ddd';
+              previewWrapper.style.padding = '5px';
+              previewWrapper.style.textAlign = 'center';
+
+              const img = document.createElement('img');
+              img.src = e.target.result;
+              img.style.maxWidth = '150px';
+              img.style.maxHeight = '150px';
+              img.style.display = 'block';
+
+              const fileName = document.createElement('span');
+              fileName.textContent = file.name;
+              fileName.style.fontSize = '12px';
+              
+              previewWrapper.appendChild(img);
+              previewWrapper.appendChild(fileName);
+              previewContainer.appendChild(previewWrapper);
+            }
+            reader.readAsDataURL(file);
+          }
+        });
+      }
       break;
     case 'dosimetry': 
       subContents.innerHTML = renderDosimetry(radOncData.dosimetry); 
@@ -654,6 +691,15 @@ function showRadOncSubTab(subKey, data) {
       subContents.innerHTML = "<p>No data.</p>"; 
       break;
   }
+}
+
+function renderRadOncSubTabs(activeKey, data) {
+  return `<div id="radOnc-subtabs" class="tab-bar" style="margin-bottom:1em;">
+    ${radOncSubTabs.map(sub =>
+      `<button class="tab-button ${sub.key===activeKey?" active":""}" id="radOnc-subtab-btn-${sub.key}">${sub.label}</button>`
+    ).join("")}
+    </div>
+    <div id="radOnc-subtab-contents"></div>`;
 }
 
 // --- Main Tab Switch Logic ---
@@ -739,7 +785,7 @@ function populatePatientDropdown(filteredPatients = patients) {
     opt.value = p.file;
     opt.textContent = p.name;
     select.appendChild(opt);
-  });
+});
 }
 
 function filterPatientsByDiagnosis() {
