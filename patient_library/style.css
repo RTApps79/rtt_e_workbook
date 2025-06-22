@@ -1,7 +1,155 @@
 /* --- ARCADE THEME & VARIABLES --- */
 :root {
     --arcade-bg: #0d0d0d;           /* Near-black background */
-    --arcade-container-bg: #1a1a1a; /* Dark gray for containers */
+    --arcade-container-bg: #1a1a1a;/* --- COSMIC THEME & VARIABLES --- */
+:root {
+    --bg-gradient-start: #2a2a72; /* Deep Indigo/Purple */
+    --bg-gradient-end: #0097a7;   /* Dark Teal/Cyan */
+    --text-primary: #00e5ff;     /* Electric Cyan for Headers */
+    --text-secondary: #cfd8dc;   /* Light Gray/Blue for body text */
+    --accent-glow: #ff4081;      /* Vibrant Magenta for active states/glow */
+    --container-bg: rgba(10, 25, 47, 0.75); /* Semi-transparent navy blue */
+    --border-color: rgba(0, 229, 255, 0.5); /* Semi-transparent cyan */
+}
+
+/* --- GENERAL & TYPOGRAPHY --- */
+body {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 17px; /* Slightly larger for a more spacious feel */
+    line-height: 1.7;
+    margin: 0; /* Remove margin for full-screen background */
+    background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+    background-attachment: fixed;
+    color: var(--text-secondary);
+}
+
+.lesson-content {
+    background: none; /* The main container will be transparent */
+    border: none;
+    box-shadow: none;
+    padding: 20px;
+    max-width: none;
+}
+
+h1, h2, h3, h4 {
+    color: var(--text-primary);
+    font-weight: 700;
+    text-shadow: 0 0 8px rgba(0, 229, 255, 0.7);
+}
+
+h1 {
+    font-size: 3.5rem;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--border-color);
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+strong, .data-label {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+/* --- LAYOUT & CONTAINERS --- */
+.emr-container {
+    background-color: var(--container-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0 0 25px rgba(0, 229, 255, 0.2);
+    /* Frosted glass effect */
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    margin: 20px;
+    overflow: hidden;
+}
+
+.section-header {
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 15px 25px;
+    margin: 0;
+    border: none;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 1.3em;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 0 5px var(--accent-glow);
+}
+
+.tab-content { padding: 25px; }
+.tab-content hr { display: none; }
+
+/* --- TABS & INTERACTIVITY --- */
+.tab-bar {
+    background-color: rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.tab-button {
+    padding: 15px 20px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    border-bottom: 4px solid transparent;
+    font-size: 1.1em;
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: all 0.25s ease-in-out;
+    flex-grow: 1;
+    text-align: center;
+}
+
+.tab-button.active {
+    background-color: var(--container-bg);
+    border-bottom-color: var(--accent-glow);
+    color: #fff;
+    text-shadow: 0 0 8px var(--accent-glow);
+}
+
+.tab-button:hover:not(.active) {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+/* --- FORM & MODAL STYLES --- */
+label {
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--text-primary);
+    font-size: 0.9em;
+}
+input, select, textarea {
+    background-color: rgba(0, 0, 0, 0.3);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    padding: 12px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1em;
+}
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--accent-glow);
+    box-shadow: 0 0 15px var(--accent-glow);
+    color: #fff;
+}
+
+/* Modal Styling */
+.modal-overlay { display: flex; } /* Ensure flex is used for centering */
+.modal-content {
+    background-color: var(--container-bg);
+    border: 1px solid var(--accent-glow);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 0 30px rgba(255, 64, 129, 0.5);
+}
+.close-button {
+    color: var(--text-secondary);
+    text-shadow: 0 0 5px #000;
+}
+.close-button:hover {
+    color: #fff;
+} /* Dark gray for containers */
     --arcade-text: #e0e0e0;         /* Off-white text for readability */
     --arcade-glow-cyan: #00ffff;
     --arcade-glow-magenta: #ff00ff;
