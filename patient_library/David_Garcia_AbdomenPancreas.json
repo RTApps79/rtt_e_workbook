@@ -1,0 +1,146 @@
+{
+  "patientId": "22334",
+  "demographics": {
+    "name": "David Garcia",
+    "dob": "1959-04-11",
+    "gender": "Male",
+    "address": "67 Oak Circle, Anytown, USA",
+    "phone": "555-2233",
+    "insurance": "Cigna",
+    "referringPhysician": "Dr. Mark Johnson (Medical Oncology)",
+    "emergencyContact": "Not specified in record"
+  },
+  "diagnosis": {
+    "primary": "Pancreatic Adenocarcinoma",
+    "location": "Head of Pancreas",
+    "datePathologicDiagnosis": "02/01/2025 (EUS-guided Biopsy)",
+    "tumorSize": "~3 cm",
+    "vascularInvolvement": "Abuts SMV (<180 degrees), no SMA involvement.",
+    "clinicalStage": "Borderline Resectable",
+    "symptomsAtPresentation": "Painless jaundice, dark urine, mild back pain, weight loss.",
+    "priorProcedures": "ERCP with biliary stent placement (02/05/2025)",
+    "baselineStatus": "ECOG 1",
+    "priorTreatmentSummary": "Completed 4 cycles FOLFIRINOX (induction)"
+  },
+  "treatmentPlan": {
+    "radOnc": "Dr. Robert Evans",
+    "medOnc": "Dr. Mark Johnson",
+    "surgOnc": "Dr. Laura Chen",
+    "treatmentSite": "Pancreas Head",
+    "intent": "Neoadjuvant (Pre-operative)",
+    "modality": "External Beam Radiation Therapy (EBRT) with concurrent Chemotherapy (following induction chemo)",
+    "totalDose": "50.4 Gy",
+    "fractionation": "28 fx",
+    "rtRxDetails": "50.4 Gy / 28 fx",
+    "targetVolumeSummary": "PTV encompassing pancreatic head tumor + margin, potentially including draining nodal regions.",
+    "techniqueSummary": "IMRT",
+    "concurrentChemo": "Capecitabine",
+    "detailedConcurrentChemo": "Capecitabine PO BID during radiation (Managed by Dr. Johnson)",
+    "medications": [
+      "Ondansetron PRN Nausea",
+      "Loperamide PRN Diarrhea",
+      "Pancreatic Enzymes (e.g., Creon) if needed for insufficiency"
+    ]
+  },
+  "radiationOncologyData": {
+    "ctSimulation": {
+      "simulationDate": "05/20/2025",
+      "setupInstructions": "Supine in BodyFix or VacLok bag, abdominal compression may be used. 4D-CT simulation to manage respiratory motion. SAD setup.",
+      "immobilization": "BodyFix or VacLok bag, abdominal compression.",
+      "referenceMarks": "3-point tattoos at isocenter projections (AP and bilateral laterals).",
+      "scanner": "e.g., Siemens Somatom go.Up",
+      "sliceThickness": "e.g., 2.5 mm",
+      "contrastUsed": "IV Contrast and oral contrast (for bowel delineation) likely used.",
+      "ctNotes": "4D-CT acquired with immobilization/compression. Motion assessed. Data acquired for IMRT planning. Fused with diagnostic CT."
+    },
+    "dosimetry": {
+      "planId": "DG22334_Panc",
+      "rx": "50.4 Gy / 28 fx",
+      "technique": "IMRT",
+      "energy": "6MV",
+      "numberOfFieldsOrArcs": 7,
+      "gantryAngles": "Multiple Static",
+      "collAngles": "Variable",
+      "couchAngles": "0",
+      "isoCoords": "L0.0, L+8.0, V-5.0",
+      "tps": "Eclipse",
+      "algorithm": "AcurosXB",
+      "hetero": "Yes",
+      "norm": "PTV Mean 95%",
+      "constraints": "Kidney Mean < 18 Gy; Stomach Max < 54 Gy; Bowel Max < 54 Gy",
+      "planNotes": "Neoadjuvant IMRT for borderline resectable pancreatic cancer.",
+      "fieldDetails": [
+        { "fieldName": "Field 1", "gantryAngle": "e.g., 0", "collimatorAngle": "e.g., 0", "couchAngle": "0", "energy": "6MV", "monitorUnits": "e.g., 60 MU" },
+        { "fieldName": "Field 2", "gantryAngle": "e.g., 51", "collimatorAngle": "e.g., 30", "couchAngle": "0", "energy": "6MV", "monitorUnits": "e.g., 75 MU" },
+        { "fieldName": "Field 3", "gantryAngle": "e.g., 102", "collimatorAngle": "e.g., 330", "couchAngle": "0", "energy": "6MV", "monitorUnits": "e.g., 70 MU" },
+        { "fieldName": "Field 4", "gantryAngle": "e.g., 153", "collimatorAngle": "e.g., 0", "couchAngle": "0", "energy": "6MV", "monitorUnits": "e.g., 65 MU" },
+        { "fieldName": "Field 5", "gantryAngle": "e.g., 204", "collimatorAngle": "e.g., 30", "couchAngle": "0", "energy": "6MV", "monitorUnits": "e.g., 70 MU" },
+        { "fieldName": "Field 6", "gantryAngle": "e.g., 255", "collimatorAngle": "e.g., 330", "couchAngle": "0", "energy": "6MV", "monitorUnits": "e.g., 75 MU" },
+        { "fieldName": "Field 7", "gantryAngle": "e.g., 306", "collimatorAngle": "e.g., 0", "couchAngle": "0", "energy": "6MV", "monitorUnits": "e.g., 60 MU" }
+      ]
+    },
+    "treatmentDelivery": {
+      "fractions": [
+        { "fractionNumber": 10, "date": "2025-06-02", "machine": "LINAC3", "setupNotes":"Daily CBCT for soft tissue alignment. Good visualization of target.", "sideEffects": "Mild fatigue. Occasional nausea managed w/ Ondansetron. No significant diarrhea yet.", "notes": "Tolerating concurrent chemoradiation well." }
+      ]
+    }
+  },
+  "imagingAndReports": [
+    { "date": "01/20/2025", "type": "CT Abdomen/Pelvis w/ Contrast (Pancreas Protocol)", "summary": "3cm hypodense mass head of pancreas, abutting SMV. Dilated biliary ducts.", "modalId": "dg_pancreas_ct1" },
+    { "date": "01/28/2025", "type": "CT Chest", "summary": "No evidence of metastatic disease.", "modalId": "dg_pancreas_ct_chest" },
+    { "date": "02/01/2025", "type": "EUS Biopsy Report", "summary": "Adenocarcinoma consistent with pancreatic primary.", "modalId": "dg_pancreas_biopsy" },
+    { "date": "05/15/2025", "type": "CT Abdomen/Pelvis w/ Contrast (Pancreas Protocol)", "summary": "Interval decrease in tumor size to 2.5cm. Continued abutment of SMV. Stable disease/slight response.", "modalId": "dg_pancreas_ct2" },
+    { "date": "05/20/2025", "type": "4D-CT Simulation (Abdomen)", "summary": "4D-CT acquired with immobilization/compression for IMRT planning.", "modalId": "dg_pancreas_sim" }
+  ],
+  "dicomImages": [
+    { "description": "Diagnostic Pancreas Protocol CT (01/20/2025)", "seriesType": "CT", "ohifViewerUrl": "https://viewer.ohif.org/viewer?StudyInstanceUIDs=1.3.6.1.4.1.14519.5.2.1.7009.9007.298806137288633453246975630178" },
+    { "description": "4D-CT Simulation (05/20/2025)", "seriesType": "CT", "ohifViewerUrl": "https://viewer.ohif.org/viewer?StudyInstanceUIDs=1.3.6.1.4.1.5962.99.1.2968617883.1314880426.1493322302363.3.0" }
+  ],
+  "labResults": [
+    { "date": "01/20/2025", "test": "CMP - Bilirubin Total", "value": "5.2", "units": "mg/dL", "notes": "High - Consistent with biliary obstruction." },
+    { "date": "01/20/2025", "test": "CMP - Alk Phos", "value": "450", "units": "U/L", "notes": "High - Consistent with biliary obstruction." },
+    { "date": "01/20/2025", "test": "CA 19-9", "value": "1250", "units": "U/mL", "range": "<37", "notes": "Elevated tumor marker." },
+    { "date": "02/10/2025", "test": "CMP - Bilirubin Total (Post-Stent)", "value": "1.5", "units": "mg/dL", "notes": "Improved after stenting." },
+    { "date": "05/18/2025", "test": "CBC (Pre-ChemoRT)", "value": "WNL", "units": "", "notes": "Recovered from induction chemo." },
+    { "date": "06/02/2025", "test": "CBC (During ChemoRT)", "value": "WBC 3.8, Plt 140k", "units": "", "notes": "Mild drop, expected Capecitabine effect." }
+  ],
+  "progressNotes": [
+    { "date": "02/10/2025", "author": "Dr. Mark Johnson (Med Onc)", "type": "Consult Note", "summary": "Pt w/ new dx borderline resectable panc ca. ECOG 1. Stent placed. Recommend neoadjuvant FOLFIRINOX x 4 cycles then reassess for chemoradiation vs surgery. Discussed risks/benefits. Pt agrees." },
+    { "date": "05/15/2025", "author": "Dr. Mark Johnson (Med Onc)", "type": "Post-Induction Note", "summary": "Pt completed 4 cycles FOLFIRINOX. Tolerated fairly well w/ dose reductions. Restaging CT shows stable/slight response, still borderline resectable. Tumor board discussion: Recommend neoadjuvant chemoradiation (Capecitabine + RT 50.4Gy). Refer back to Rad Onc. Plan for surgical eval post-CRT." },
+    { "date": "05/18/2025", "author": "Dr. Robert Evans (Rad Onc)", "type": "Consult Note (Post-Induction)", "summary": "Pt s/p FOLFIRINOX for borderline panc ca. Plan for neoadjuvant CRT: IMRT 50.4Gy/28fx w/ concurrent Capecitabine. Discussed rationale, procedure, side effects (nausea, fatigue, diarrhea, potential for more severe GI tox). Pt agrees. 4D Sim scheduled." },
+    { "date": "05/20/2025", "author": "Physics/Dosimetry", "type": "Planning Note", "summary": "IMRT plan completed using 4D-CT ITV approach. Dose constraints met for kidneys, spinal cord, stomach, small bowel. Plan approved by Dr. Evans." },
+    { "date": "06/02/2025", "author": "Dr. Robert Evans (Rad Onc)", "type": "OTV - Week 2", "summary": "Pt completed 10/28 fx concurrent ChemoRT. Mild fatigue. Occasional nausea managed w/ Ondansetron. No significant diarrhea yet. Tolerating well. Continue plan." }
+  ],
+  "patientEducation": {
+    "goalsDiscussed": "Neoadjuvant (pre-operative) therapy to shrink the tumor and increase the likelihood of a successful surgical resection.",
+    "sideEffectsReviewed": "Fatigue, nausea, diarrhea (from both chemo and RT), potential for dehydration. Skin care in the treatment area. Hand-foot syndrome (from Capecitabine).",
+    "safetyConsiderations": "Reporting fever, uncontrolled nausea/diarrhea, severe skin reaction, or significant pain. Importance of hydration and nutrition, potentially with supplements.",
+    "patientResponsibilities": "Attend daily RT, take oral Capecitabine as prescribed, weekly labs and OTVs, report symptoms promptly.",
+    "medicationCompliance": "Take Capecitabine with food as directed. Use anti-nausea/anti-diarrheal medications as needed."
+  },
+  "scheduling": [
+    { "date": "01/20/2025", "time": "9 AM", "type": "CT A/P Pancreas Protocol", "location": "Radiology", "status": "Completed" },
+    { "date": "02/01/2025", "time": "10 AM", "type": "EUS w/ Biopsy", "location": "Endoscopy Suite", "status": "Completed" },
+    { "date": "02/05/2025", "time": "1 PM", "type": "ERCP w/ Stent", "location": "Endoscopy Suite", "status": "Completed" },
+    { "date": "02/10/2025", "time": "11 AM", "type": "Med Onc Consult (Johnson)", "location": "Oncology Clinic", "status": "Completed" },
+    { "date": "~02/15/2025 - ~05/10/2025", "time": "q2wks", "type": "Induction Chemo (FOLFIRINOX)", "location": "Infusion Center", "status": "Completed" },
+    { "date": "05/15/2025", "time": "2 PM", "type": "Restaging CT A/P", "location": "Radiology", "status": "Completed" },
+    { "date": "05/18/2025", "time": "1 PM", "type": "Rad Onc Consult (Evans)", "location": "Rad Onc Clinic", "status": "Completed" },
+    { "date": "05/20/2025", "time": "9 AM", "type": "4D-CT Simulation Abdomen", "location": "Rad Onc Sim", "status": "Completed" },
+    { "date": "05/27/2025 - ~07/07/2025", "time": "Daily (M-F) ~11AM", "type": "IMRT Treatment (1/28)", "location": "LINAC 3", "status": "Ongoing" },
+    { "date": "Weekly (e.g., 06/02)", "time": "~11:30AM (Post-RT)", "type": "OTV w/ Labs", "location": "Rad Onc Clinic / Lab", "status": "Scheduled" },
+    { "date": "~08/15/2025", "time": "TBD", "type": "Post-CRT Restaging Scans", "location": "Radiology", "status": "To Be Scheduled" },
+    { "date": "~08/20/2025", "time": "TBD", "type": "Surgical Oncology Consult (Chen)", "location": "Surgical Clinic", "status": "To Be Scheduled" }
+  ],
+  "cptCharges": [
+    { "code": "77290", "description": "Simulation, Complex (4D-CT Abdomen)", "frequency": "Once" },
+    { "code": "77334", "description": "Treatment device, Complex (BodyFix/VacLok)", "frequency": "Once" },
+    { "code": "77301", "description": "IMRT planning", "frequency": "Once" },
+    { "code": "77338", "description": "MLC device for IMRT", "frequency": "Once" },
+    { "code": "77300", "description": "Basic radiation dosimetry calculation", "frequency": "Per plan" },
+    { "code": "77386", "description": "IMRT delivery, complex (Pancreas IMRT/VMAT)", "frequency": "Daily" },
+    { "code": "77387", "description": "Image Guided RT (IGRT)", "frequency": "Daily/Weekly" },
+    { "code": "77427", "description": "Radiation treatment management, 5 treatments", "frequency": "Weekly" }
+  ],
+  "diagnosisSearch": "Pancreatic Cancer"
+}

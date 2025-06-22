@@ -1,0 +1,125 @@
+{
+  "patientId": "SB-004",
+  "demographics": {
+    "name": "David Lee",
+    "dob": "1960-05-01",
+    "gender": "Male",
+    "address": "789 Oak Street, Anytown, USA",
+    "phone": "555-4567",
+    "insurance": "Anthem",
+    "referringPhysician": "Dr. Jennifer Wilson (Gastroenterology)",
+    "emergencyContact": "Karen Lee (Wife) - 555-7890",
+    "advanceDirectives": "Full Code (On File)",
+    "supportServices": "Nutrition consult post-operatively.",
+    "mobility": "Ambulatory without assistance."
+  },
+  "diagnosis": {
+    "primary": "Adenocarcinoma of the Jejunum",
+    "datePathologicDiagnosis": "06/05/2025 (Surgical Pathology)",
+    "pathologicStage": "IIB (T4, N0, M0)",
+    "symptomsAtPresentation": "Intermittent abdominal pain and bloating.",
+    "relevantHistory": "Crohn's disease.",
+    "priorTreatmentSummary": "Segmental resection of the jejunum with en bloc removal of regional lymph nodes performed on 06/01/2025."
+  },
+  "treatmentPlan": {
+    "radOnc": "Dr. Thomas Wilson",
+    "medOnc": "Dr. Evelyn Reed",
+    "surgOnc": "Dr. Karen Brown",
+    "treatmentSite": "Jejunal Bed + Regional Nodes",
+    "intent": "Adjuvant",
+    "modality": "Adjuvant Chemotherapy followed by Adjuvant External Beam Radiation Therapy (EBRT)",
+    "totalDose": "50 Gy",
+    "fractionation": "25 fx",
+    "rtRxDetails": "50 Gy / 25 fx (2.0 Gy/fx)",
+    "targetVolumeSummary": "PTV_JejunalBed",
+    "techniqueSummary": "IMRT",
+    "systemicChemo": "5-FU/LV",
+    "detailedSystemicChemo": "5-FU 500 mg/m² IV bolus 1 hour after Leucovorin 500 mg/m² IV weekly x 6 every 8 weeks for 4 cycles",
+    "medications": []
+  },
+  "radiationOncologyData": {
+    "ctSimulation": {
+      "simulationDate": "12/15/2025",
+      "setupInstructions": "Supine with leg immobilization and arms up on wingboard. SAD setup.",
+      "immobilization": "Vac-Lok bag, knee/foot sponges",
+      "referenceMarks": "3-point tattoos at isocenter projections (AP and bilateral laterals).",
+      "scanner": "Siemens Somatom Definition AS",
+      "sliceThickness": "3.0 mm",
+      "contrastUsed": "IV and Oral Contrast",
+      "ctNotes": "CT simulation for adjuvant abdominal radiation therapy post-chemotherapy."
+    },
+    "dosimetry": {
+      "planId": "DLSB004_SmlBwl",
+      "rx": "50 Gy / 25 fx",
+      "technique": "IMRT",
+      "energy": "6MV",
+      "numberOfFieldsOrArcs": 7,
+      "gantryAngles": "Multiple Static",
+      "collAngles": "Variable",
+      "couchAngles": "0",
+      "isoCoords": "Mid-Abdomen",
+      "tps": "RayStation",
+      "algorithm": "Monte Carlo",
+      "hetero": "Yes",
+      "norm": "PTV Mean 95%",
+      "constraints": "Kidney Mean < 15 Gy; Liver Mean < 25 Gy; Bowel Max < 50 Gy",
+      "planNotes": "Adjuvant RT post-resection and post-chemotherapy.",
+      "fieldDetails": [
+        { "fieldName": "Field 1", "gantryAngle": "25", "collimatorAngle": "10", "couchAngle": "0", "energy": "6MV", "monitorUnits": 115 },
+        { "fieldName": "Field 2", "gantryAngle": "75", "collimatorAngle": "345", "couchAngle": "0", "energy": "6MV", "monitorUnits": 130 },
+        { "fieldName": "Field 3", "gantryAngle": "125", "collimatorAngle": "330", "couchAngle": "0", "energy": "6MV", "monitorUnits": 125 },
+        { "fieldName": "Field 4", "gantryAngle": "180", "collimatorAngle": "0", "couchAngle": "0", "energy": "6MV", "monitorUnits": 90 },
+        { "fieldName": "Field 5", "gantryAngle": "235", "collimatorAngle": "30", "couchAngle": "0", "energy": "6MV", "monitorUnits": 125 },
+        { "fieldName": "Field 6", "gantryAngle": "285", "collimatorAngle": "15", "couchAngle": "0", "energy": "6MV", "monitorUnits": 130 },
+        { "fieldName": "Field 7", "gantryAngle": "335", "collimatorAngle": "350", "couchAngle": "0", "energy": "6MV", "monitorUnits": 115 }
+      ]
+    },
+    "treatmentDelivery": {
+      "fractions": [
+        { "fractionNumber": 1, "date": "2026-01-02", "machine": "LINAC3", "setupNotes":"Daily CBCT IGRT. Setup to surgical clips.", "sideEffects": "No acute side effects after first fraction.", "notes": "Patient tolerated treatment well." }
+      ]
+    }
+  },
+  "imagingAndReports": [
+    { "date": "05/25/2025", "type": "CT Abdomen/Pelvis", "summary": "Mass in the jejunum.", "modalId": "dl-ct-modal", "reportDetails": { "date": "05/25/2025", "findings": "A mass is identified in the jejunum, approximately 4 cm in size.", "impression": "Small bowel adenocarcinoma." } },
+    { "date": "06/05/2025", "type": "Pathology Report", "summary": "Adenocarcinoma of the Jejunum, Stage IIB (T4, N0, M0).", "modalId": "dl-path-modal", "reportDetails": { "specimen": "Jejunum Resection", "diagnosis": "Adenocarcinoma of the Jejunum, Stage IIB (T4, N0, M0)", "grade": "Moderately differentiated", "margins": "Negative", "lymphNodes": "10 regional lymph nodes examined, 0 positive for metastatic carcinoma." } },
+    { "date": "12/15/2025", "type": "CT Simulation", "summary": "Simulation for adjuvant radiation therapy.", "modalId": "dl-sim-modal", "reportDetails": { "date": "12/15/2025", "region": "Abdomen", "purpose": "Adjuvant radiation therapy planning.", "position": "Supine with leg immobilization." } }
+  ],
+  "dicomImages": [
+    { "description": "Diagnostic CT Abdomen/Pelvis (05/25/2025)", "seriesType": "CT", "ohifViewerUrl": "" },
+    { "description": "CT Simulation Abdomen (12/15/2025)", "seriesType": "CT", "ohifViewerUrl": "" }
+  ],
+  "labResults": [
+    { "date": "06/25/2025", "test": "CBC", "value": "WNL", "notes": "Baseline" },
+    { "date": "06/25/2025", "test": "CMP", "value": "WNL", "notes": "Baseline" },
+    { "date": "06/25/2025", "test": "CEA", "value": "1.8", "units": "ng/mL", "range": "<5.0", "notes": "Baseline" }
+  ],
+  "progressNotes": [
+    { "date": "07/05/2025", "author": "Dr. Karen Brown", "type": "Post-Op Note", "summary": "Post-operative visit - Tolerating diet well. Path reviewed, discussed need for adjuvant therapy." },
+    { "date": "07/01/2025", "author": "Dr. Evelyn Reed", "type": "Chemo Start Note", "summary": "Started adjuvant chemotherapy with 5-FU/LV." },
+    { "date": "01/02/2026", "author": "Dr. Thomas Wilson", "type": "RT Start Note", "summary": "Started adjuvant radiation therapy." }
+  ],
+  "patientEducation": {
+    "goalsDiscussed": "Adjuvant (post-operative) radiation therapy to reduce the risk of cancer recurrence in the surgical bed.",
+    "sideEffectsReviewed": "Acute: Nausea, diarrhea, fatigue, and potential for skin irritation in the treatment area.",
+    "safetyConsiderations": "Following a low-residue diet to help manage diarrhea. Importance of hydration and nutrition, especially with prior surgery and chemotherapy.",
+    "patientResponsibilities": "Attend daily RT appointments, report side effects to the team.",
+    "medicationCompliance": "Use supportive medications for nausea and diarrhea as prescribed."
+  },
+  "scheduling": [
+    { "date": "05/25/2025", "time": "11:00 AM", "type": "CT Abdomen/Pelvis", "location": "Radiology Dept", "status": "Completed" },
+    { "date": "06/05/2025", "time": "10:00 AM", "type": "Surgical Consultation", "location": "Surgical Oncology Clinic", "status": "Completed" },
+    { "date": "06/01/2025", "time": "9:00 AM", "type": "Surgery: Jejunectomy", "location": "Operating Room 4", "status": "Completed" },
+    { "date": "07/01/2025", "time": "1:00 PM", "type": "Medical Oncology Consultation", "location": "Oncology Clinic", "status": "Completed" },
+    { "date": "12/15/2025", "time": "3:00 PM", "type": "Radiation Oncology Simulation", "location": "Radiation Oncology Sim Room", "status": "Completed" },
+    { "date": "01/02/2026", "time": "11:00 AM", "type": "Radiation Therapy Treatment", "location": "Radiation Oncology", "status": "Scheduled" }
+  ],
+  "cptCharges": [
+    { "code": "44120", "description": "Resection of small intestine, with anastomosis", "frequency": "Once" },
+    { "code": "96413", "description": "Chemotherapy administration, IV infusion", "frequency": "Per Cycle" },
+    { "code": "77290", "description": "Radiation therapy simulation; complex", "frequency": "Once" },
+    { "code": "77407", "description": "Radiation treatment delivery, single treatment area, complex", "frequency": "Per Fraction" },
+    { "code": "77427", "description": "Radiation treatment management, 5 treatments", "frequency": "Weekly" }
+  ],
+  "diagnosisSearch": "Small Bowel Adenocarcinoma"
+}

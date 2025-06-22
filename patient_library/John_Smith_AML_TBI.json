@@ -1,0 +1,124 @@
+{
+  "patientId": "67890",
+  "demographics": {
+    "name": "John Smith",
+    "dob": "1978-06-15",
+    "gender": "Male",
+    "ageAtDiagnosis": "46",
+    "address": "123 Oak Ave, Metroville, USA",
+    "phone": "555-6789",
+    "insurance": "Aetna PPO",
+    "referringPhysician": "Dr. Sarah Collins (Hematology/Oncology)",
+    "emergencyContact": "Mary Smith (Wife), 555-6780",
+    "advanceDirectives": "Full Code (On File)",
+    "supportServices": "BMT Coordinator, Social Work, Psychology, and Nutrition consults placed.",
+    "mobility": "Ambulatory without assistance."
+  },
+  "diagnosis": {
+    "primary": "Acute Myeloid Leukemia (AML), NOS",
+    "datePathologicDiagnosis": "01/10/2025",
+    "cytogenetics": "Normal Karyotype (46, XY)",
+    "molecular": "NPM1 wild-type, FLT3-ITD negative, CEBPA wild-type (Intermediate Risk per ELN 2017/2022)",
+    "presentingSymptoms": "Fatigue, easy bruising, fevers for 1 week.",
+    "boneMarrowFindings": "Hypercellular marrow (90%) with 65% myeloblasts. Auer rods present.",
+    "status": "In Complete Remission (CR) after induction and consolidation chemotherapy.",
+    "reasonForCurrentTreatment": "Myeloablative conditioning regimen prior to planned Matched Unrelated Donor (MUD) Allogeneic Hematopoietic Cell Transplant (HCT)."
+  },
+  "treatmentPlan": {
+    "radOnc": "Dr. David Lee",
+    "transplantPhysician": "Dr. Robert Evans (BMT Service)",
+    "hemeOnc": "Dr. Sarah Collins",
+    "treatmentSite": "Total Body",
+    "intent": "Myeloablative Conditioning for HCT",
+    "modality": "Total Body Irradiation (TBI) + Cyclophosphamide",
+    "totalDose": "12 Gy",
+    "fractionation": "6 fx (BID)",
+    "rtRxDetails": "12 Gy / 6 fx (2 Gy/fx, BID for 3 days)",
+    "priorSystemicChemo": "7+3 Induction (Daunorubicin/Cytarabine), 1x HiDAC Consolidation.",
+    "concurrentChemo": "Cyclophosphamide (60 mg/kg/day IV x 2 days)",
+    "medications": [
+      "High-dose antiemetics", "Hydration", "Infection Prophylaxis (antiviral, antifungal, PJP)", "GVHD Prophylaxis (e.g., Tacrolimus/Methotrexate)", "Mucositis care", "Transfusion support PRN"
+    ]
+  },
+  "radiationOncologyData": {
+    "ctSimulation": {
+      "simulationDate": "04/10/2025",
+      "setupInstructions": "Patient positioned standing in TBI frame or lateral decubitus on cart with specific setup jig. Extended SSD.",
+      "immobilization": "TBI frame/cart, custom positioning aids.",
+      "referenceMarks": "Alignment to room lasers and diodes placement points.",
+      "scanner": "CT scanner with large bore for TBI simulation.",
+      "sliceThickness": "5.0 mm",
+      "contrastUsed": "Non-contrast",
+      "ctNotes": "CT scan acquired for dose calculation, organ localization, and planning of lung shielding blocks."
+    },
+    "dosimetry": {
+      "planId": "JS67890_TBI",
+      "rx": "12 Gy / 6 fx (BID)",
+      "technique": "TBI",
+      "energy": "6MV",
+      "numberOfFieldsOrArcs": 2,
+      "gantryAngles": "90, 270 (Lateral Fields)",
+      "collAngles": "Open",
+      "couchAngles": "Patient standing or lateral decubitus",
+      "isoCoords": "Midplane Abdomen",
+      "tps": "Manual Calculation & Verification",
+      "algorithm": "Manual/Measured Data",
+      "hetero": "No",
+      "norm": "Midplane Abdomen",
+      "constraints": "Lung Dose < 8 Gy (with blocks)",
+      "planNotes": "Myeloablative TBI for HCT. In-vivo dosimetry with diodes required for all fractions to verify dose.",
+      "fieldDetails": [
+        { "fieldName": "Right Lateral", "gantryAngle": "90", "collimatorAngle": "Open", "couchAngle": "Patient standing/lying on side", "energy": "6MV", "monitorUnits": "Calculated based on dose rate and time" },
+        { "fieldName": "Left Lateral", "gantryAngle": "270", "collimatorAngle": "Open", "couchAngle": "Patient standing/lying on side", "energy": "6MV", "monitorUnits": "Calculated based on dose rate and time" }
+      ]
+    },
+    "treatmentDelivery": {
+      "fractions": [
+        { "fractionNumber": "1 & 2 (Day -4)", "date": "2025-04-15", "machine": "LINAC 2 (TBI Setup)", "setupNotes":"Patient setup in TBI frame. Diode placement verified. Lung blocks in place.", "sideEffects": "Some nausea managed with IV antiemetics. Fatigue.", "notes": "Completed first day of BID TBI." }
+      ]
+    }
+  },
+  "imagingAndReports": [
+    { "date": "01/10/2025", "type": "Bone Marrow Biopsy (Diagnosis)", "summary": "Hypercellular marrow (90%) with 65% myeloblasts. Confirms AML.", "modalId": "bm-biopsy-dx-js", "reportDetails": { "diagnosis": "Acute Myeloid Leukemia (AML)", "microscopicDescription": "Aspirate smears show ~65% myeloblasts, some with Auer rods. Biopsy core shows hypercellular marrow (90%) extensively replaced by immature myeloid cells. Flow cytometry confirms myeloid lineage (CD13+, CD33+, CD117+, MPO+). Cytogenetics: 46,XY (Normal Karyotype). Molecular: NPM1 wild-type, FLT3-ITD negative." } },
+    { "date": "04/05/2025", "type": "Bone Marrow Biopsy (Post-Consolidation)", "summary": "Normocellular marrow consistent with morphological Complete Remission (CR).", "modalId": "bm-biopsy-cr-js", "reportDetails": { "diagnosis": "Normocellular marrow with trilineage hematopoiesis, consistent with morphological Complete Remission (CR).", "microscopicDescription": "Aspirate smears show less than 5% blasts. Biopsy core is normocellular for age (~50%) with maturing myeloid, erythroid, and megakaryocytic elements. No morphologic evidence of residual leukemia. Flow cytometry MRD negative (<0.1%)." } }
+  ],
+  "dicomImages": [
+    { "description": "CT Simulation for TBI (04/10/2025)", "seriesType": "CT", "ohifViewerUrl": "" }
+  ],
+  "labResults": [
+    { "date": "01/08/2025", "test": "Initial CBC", "value": "WBC: 3.2, Hgb: 8.5, Plt: 45K, Blasts: 55%", "notes": "Pancytopenia with circulating blasts" },
+    { "date": "04/08/2025", "test": "Post-Consolidation CBC", "value": "WBC: 4.8, Hgb: 12.1, Plt: 180K", "notes": "Counts recovered, in CR" }
+  ],
+  "progressNotes": [
+    { "date": "01/10/2025", "author": "Dr. Sarah Collins (Heme/Onc)", "type": "Initial Consult", "summary": "46 yo M presents with fatigue, bruising, fever. Labs show pancytopenia with circulating blasts. BM biopsy confirms AML, intermediate risk. Discussed diagnosis, prognosis, standard 7+3 induction chemotherapy plan. Patient understands and agrees. Admit for induction." },
+    { "date": "02/15/2025", "author": "Dr. Sarah Collins (Heme/Onc)", "type": "Progress Note", "summary": "Post-induction BM shows CR. Patient recovered counts well. Discussed consolidation options. Plan for 1 cycle of HiDAC consolidation followed by consideration for allogeneic HCT given intermediate risk." },
+    { "date": "03/25/2025", "author": "Dr. Robert Evans (BMT)", "type": "BMT Consult Note", "summary": "Pt seen for allo-HCT consult. Intermediate risk AML in CR1 post 7+3 and 1x HiDAC. Good performance status. Recommends proceeding with MUD allo-HCT for best chance of long-term cure. Standard myeloablative conditioning with Cy/TBI planned. Discussed risks/benefits/alternatives including RIC vs MAC, GVHD, infection risk. Patient wishes to proceed. MUD search initiated." },
+    { "date": "04/08/2025", "author": "Dr. David Lee (Rad Onc)", "type": "TBI Consult Note", "summary": "Pt referred by BMT for TBI planning as part of Cy/TBI conditioning for MUD allo-HCT. Reviewed HCT plan, discussed TBI procedure, dose (12Gy/6fx BID), schedule, and potential acute (nausea, fatigue, mucositis, parotitis, diarrhea) and late (cataracts, secondary malignancy, infertility, endocrine dysfunction, pneumonitis) side effects. Patient understands and consents to TBI. CT Simulation scheduled. Discussed lung/kidney shielding." }
+  ],
+  "patientEducation": {
+    "goalsDiscussed": "Myeloablative conditioning to eliminate any remaining leukemia cells and suppress the immune system to allow for a new donor stem cell graft.",
+    "sideEffectsReviewed": "Acute: High likelihood of severe nausea/vomiting, diarrhea, fatigue, mucositis (mouth sores), parotitis (salivary gland swelling), skin redness, and temporary hair loss. Late: High risk of cataracts, infertility, and hormone deficiencies (hypothyroidism, etc.). Small but significant risk of lung damage (pneumonitis) and developing a secondary cancer years later.",
+    "safetyConsiderations": "Treatment is performed in a specialized setup. In-vivo dosimeters (diodes) will be placed on the skin to verify dose. Lung shields will be used to reduce dose to the lungs.",
+    "patientResponsibilities": "Remain still during treatment. Report all symptoms immediately. Maintain strict hygiene to prevent infection during immunosuppression.",
+    "medicationCompliance": "Strict adherence to all pre-medications (especially anti-nausea) and post-transplant medications (GVHD prophylaxis, etc.)."
+  },
+  "scheduling": [
+    { "date": "01/10/2025", "time": "PM", "type": "Admission for Induction Chemotherapy", "location": "Inpatient Oncology", "status": "Completed" },
+    { "date": "03/25/2025", "time": "1 PM", "type": "BMT Consult (Evans)", "location": "BMT Clinic", "status": "Completed" },
+    { "date": "04/08/2025", "time": "10 AM", "type": "Rad Onc Consult for TBI (Lee)", "location": "Rad Onc Clinic", "status": "Completed" },
+    { "date": "04/10/2025", "time": "2 PM", "type": "CT Simulation for TBI", "location": "Rad Onc Sim", "status": "Completed" },
+    { "date": "04/15/2025 - 04/17/2025", "time": "AM/PM", "type": "TBI Treatments (6 Fx)", "location": "LINAC 2 (TBI Setup)", "status": "Scheduled" },
+    { "date": "04/18/2025 - 04/19/2025", "time": "Varies", "type": "Cyclophosphamide Infusions", "location": "Inpatient BMT Unit", "status": "Scheduled" },
+    { "date": "04/20/2025", "time": "PM", "type": "HCT - Stem Cell Infusion (Day 0)", "location": "Inpatient BMT Unit", "status": "Scheduled" }
+  ],
+  "cptCharges": [
+    { "code": "77290", "description": "Therapeutic radiology simulation-aided field setting; complex", "frequency": "Once (TBI Sim)" },
+    { "code": "77301", "description": "IMRT treatment planning", "frequency": "Once (Often used for TBI planning)" },
+    { "code": "77499", "description": "Unlisted procedure, therapeutic radiology treatment delivery (Commonly used for TBI)", "frequency": "Per TBI Fraction" },
+    { "code": "77336", "description": "Continuing medical physics consultation...per week", "frequency": "Weekly during TBI" },
+    { "code": "77427", "description": "Radiation treatment management, 5 treatments", "frequency": "Weekly (During TBI week)" },
+    { "code": "38241", "description": "Hematopoietic progenitor cell (HPC); allogeneic transplantation per donor", "frequency": "Once (Day 0)" },
+    { "code": "96413", "description": "Chemotherapy administration, IV infusion; first hour", "frequency": "Per Chemo Session" }
+  ],
+  "diagnosisSearch": "Acute Myeloid Leukemia (AML)"
+}

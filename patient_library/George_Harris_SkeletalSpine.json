@@ -1,0 +1,136 @@
+{
+  "patientId": "88991",
+  "demographics": {
+    "name": "George Harris",
+    "dob": "1958-10-05",
+    "gender": "Male",
+    "address": "44 Tree Lane, Anytown, USA",
+    "phone": "555-8899",
+    "insurance": "Humana",
+    "referringPhysician": "Dr. Samuel Adams (Medical Oncology)",
+    "emergencyContact": "Not specified in record"
+  },
+  "diagnosis": {
+    "primary": "Metastatic Castration-Resistant Prostate Cancer (mCRPC)",
+    "location": "L3 Vertebral Body",
+    "datePathologicDiagnosis": "11/15/2024 (Bone Scan showing mets)",
+    "priorTreatmentSummary": "History of Prostate Cancer, previously treated with Radical Prostatectomy (2020), Salvage Pelvic RT (2022), and ongoing ADT.",
+    "symptomsAtPresentation": "Severe low back pain (8/10), localized to L3 region, worse with movement."
+  },
+  "treatmentPlan": {
+    "radOnc": "Dr. Laura Fisher",
+    "medOnc": "Dr. Samuel Adams",
+    "treatmentSite": "L3 Spine",
+    "intent": "Palliative (Pain control, prevention of fracture/cord compression)",
+    "modality": "External Beam Radiation Therapy (EBRT)",
+    "totalDose": "30 Gy",
+    "fractionation": "10 fx",
+    "rtRxDetails": "30 Gy / 10 fx",
+    "targetVolumeSummary": "PTV encompassing L3 vertebral body + small margin (PTV_L3).",
+    "techniqueSummary": "3D-CRT (AP/PA)",
+    "concurrentChemo": "Androgen Deprivation Therapy (ADT)",
+    "medications": [
+      "Continue Androgen Deprivation Therapy (ADT)",
+      "Oxycodone PRN pain",
+      "Dexamethasone (Considered but not started)",
+      "Anti-emetics PRN (low risk with spine RT)"
+    ]
+  },
+  "radiationOncologyData": {
+    "ctSimulation": {
+      "simulationDate": "03/28/2025",
+      "setupInstructions": "Supine with knee sponge and ankle immobilization for comfort and stability. SAD setup.",
+      "immobilization": "VacLok bag, knee sponge, ankle immobilization.",
+      "referenceMarks": "3-point tattoos at isocenter projections (AP and bilateral laterals).",
+      "scanner": "Philips Big Bore CT",
+      "sliceThickness": "3.0 mm",
+      "contrastUsed": "Non-contrast",
+      "ctNotes": "Non-contrast CT acquired supine. Scan range includes L1-L5. Fused with diagnostic MRI for target delineation."
+    },
+    "dosimetry": {
+      "planId": "GH88991_Spine",
+      "rx": "30 Gy / 10 fx",
+      "technique": "3D-CRT",
+      "energy": "6MV",
+      "numberOfFieldsOrArcs": 2,
+      "gantryAngles": "0, 180",
+      "collAngles": "0",
+      "couchAngles": "0",
+      "isoCoords": "Midline, L3",
+      "tps": "Eclipse",
+      "algorithm": "AAA",
+      "hetero": "Yes",
+      "norm": "Isocenter",
+      "constraints": "Spinal Cord Max < 25 Gy",
+      "planNotes": "Palliative spine RT for pain.",
+      "fieldDetails": [
+        {
+          "fieldName": "AP Spine",
+          "gantryAngle": "0",
+          "collimatorAngle": "0",
+          "couchAngle": "0",
+          "energy": "6MV",
+          "monitorUnits": 165
+        },
+        {
+          "fieldName": "PA Spine",
+          "gantryAngle": "180",
+          "collimatorAngle": "0",
+          "couchAngle": "0",
+          "energy": "6MV",
+          "monitorUnits": 170
+        }
+      ]
+    },
+    "treatmentDelivery": {
+      "fractions": [
+        { "fractionNumber": 5, "date": "2025-04-04", "machine": "LINAC3", "setupNotes":"kV pair imaging for daily setup. Matched to L3 vertebral body.", "sideEffects": "Slight improvement in back pain (6/10). No acute side effects.", "notes": "Tolerating RT well." },
+        { "fractionNumber": 10, "date": "2025-04-11", "machine": "LINAC3", "setupNotes":"Final fraction setup verified.", "sideEffects": "Pain significantly improved (3/10).", "notes": "Completed palliative RT course. To follow up with Med Onc." }
+      ]
+    }
+  },
+  "imagingAndReports": [
+    { "date": "11/15/2024", "type": "Bone Scan", "summary": "Multiple areas of increased uptake consistent with widespread bone metastases, including lumbar spine, ribs, pelvis. Most intense uptake at L3." },
+    { "date": "03/20/2025", "type": "MRI Lumbar Spine w/ & w/o Contrast", "summary": "Large enhancing lesion replacing majority of L3 vertebral body, mild posterior bulging without frank cord compression. Correlates with area of maximal pain." },
+    { "date": "03/28/2025", "type": "CT Simulation (Spine)", "summary": "Non-contrast CT acquired supine. Scan includes L1-L5. Fused with diagnostic MRI." }
+  ],
+  "dicomImages": [
+    { "description": "MRI Lumbar Spine (03/20/2025)", "seriesType": "MR", "ohifViewerUrl": "" },
+    { "description": "CT Simulation Spine (03/28/2025)", "seriesType": "CT", "ohifViewerUrl": "" }
+  ],
+  "labResults": [
+    { "date": "03/15/2025", "test": "PSA", "value": "55.2", "units": "ng/mL", "range": "<4.0", "notes": "Consistent with mCRPC" },
+    { "date": "03/25/2025", "test": "CBC", "value": "WNL", "notes": "Pre-RT Baseline" },
+    { "date": "03/25/2025", "test": "CMP - Alk Phos", "value": "250", "units": "U/L", "range": "40-130", "notes": "High - common w/ bone mets" }
+  ],
+  "progressNotes": [
+    { "date": "03/18/2025", "author": "Dr. Samuel Adams (Med Onc)", "type": "Progress Note", "summary": "Pt with mCRPC on ADT presents with worsening LBP (8/10). Pain localized to L-spine. Recent PSA rising, bone scan showed extensive mets. Order urgent MRI L-spine to assess L3 met, rule out cord compression. Start scheduled Oxycodone. Refer to Rad Onc for palliative RT consult." },
+    { "date": "03/22/2025", "author": "Dr. Laura Fisher (Rad Onc)", "type": "Initial Consult", "summary": "Pt w/ mCRPC referred for palliative RT to painful L3 metastasis. MRI reviewed, shows large L3 lesion without cord compression. Discussed palliative RT options (30/10 vs 20/5 vs 8/1). Plan for 30Gy/10fx via 3D-CRT AP/PA fields. Explained goals (pain relief), procedure, low risk side effects (mild fatigue, transient pain flare, low nausea risk). Pt agrees. CT sim scheduled." },
+    { "date": "04/04/2025", "author": "Dr. Laura Fisher (Rad Onc)", "type": "OTV - Mid Treatment", "summary": "Pt completed 5/10 fx. Reports slight improvement in back pain (6/10). No acute side effects noted. Tolerating RT well. Continue current plan." },
+    { "date": "04/11/2025", "author": "Dr. Laura Fisher (Rad Onc)", "type": "OTV - End of Treatment", "summary": "Completed 10/10 fx palliative RT to L3 spine. Pain significantly improved (3/10). Continue pain meds as needed, discuss taper w/ Med Onc. Follow up with Med Onc regarding systemic therapy options. Rad Onc F/U PRN." }
+  ],
+  "patientEducation": {
+    "goalsDiscussed": "Palliative treatment to relieve pain in the lower back, improve mobility, and prevent a potential fracture or spinal cord compression.",
+    "sideEffectsReviewed": "Potential for a temporary 'pain flare' where pain might briefly worsen before improving. Mild fatigue. Low risk of nausea or skin reaction with this technique.",
+    "safetyConsiderations": "Report any new or worsening weakness, numbness, or loss of bowel/bladder control immediately.",
+    "patientResponsibilities": "Attend daily RT appointments, report pain levels and any new symptoms.",
+    "medicationCompliance": "Continue pain medication as prescribed and discuss tapering with primary oncology team as pain improves."
+  },
+  "scheduling": [
+    { "date": "03/20/2025", "time": "9 AM", "type": "MRI Lumbar Spine", "location": "Radiology", "status": "Completed" },
+    { "date": "03/22/2025", "time": "11 AM", "type": "Rad Onc Consult (Fisher)", "location": "Rad Onc Clinic", "status": "Completed" },
+    { "date": "03/28/2025", "time": "2 PM", "type": "CT Simulation Spine", "location": "Rad Onc Sim", "status": "Completed" },
+    { "date": "03/31/2025 - 04/11/2025", "time": "Daily (M-F) ~9 AM", "type": "3D-CRT Treatment (1/10)", "location": "LINAC 3", "status": "Completed" },
+    { "date": "Weekly (e.g., 04/04)", "time": "~9:30 AM (Post-RT)", "type": "OTV", "location": "Rad Onc Clinic", "status": "Completed" },
+    { "date": "~04/20/2025", "time": "10 AM", "type": "Med Onc Follow Up", "location": "Oncology Clinic", "status": "Scheduled" }
+  ],
+  "cptCharges": [
+    { "code": "77280 / 77285", "description": "Simulation, Simple / Intermediate (Spine)", "frequency": "Once" },
+    { "code": "77332 / 77333", "description": "Treatment device, Simple / Intermediate", "frequency": "Once" },
+    { "code": "77295", "description": "3D radiotherapy plan", "frequency": "Once" },
+    { "code": "77300", "description": "Basic radiation dosimetry calculation", "frequency": "Per plan" },
+    { "code": "77402 / 77407", "description": "Radiation treatment delivery, 2 fields / 3+ fields", "frequency": "Daily" },
+    { "code": "77427", "description": "Radiation treatment management, 5 treatments", "frequency": "Weekly (x2 for 10fx)" }
+  ],
+  "diagnosisSearch": "Metastatic Spine Cancer"
+}

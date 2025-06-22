@@ -1,0 +1,167 @@
+{
+  "patientId": "33445",
+  "demographics": {
+    "name": "Linda Jones",
+    "dob": "1962-08-25",
+    "gender": "Female",
+    "address": "55 River Bend Rd, Anytown, USA",
+    "phone": "555-3344",
+    "insurance": "Cigna",
+    "referringPhysician": "Dr. Paul Allen (Medical Oncology)",
+    "emergencyContact": "Not specified",
+    "advanceDirectives": "Not specified",
+    "supportServices": "Not specified",
+    "mobility": "Assumed ambulatory (ECOG 1)"
+  },
+  "diagnosis": {
+    "primary": "Non-Small Cell Lung Cancer (NSCLC) - Squamous Cell Carcinoma",
+    "location": "Left Hilum involving mediastinal nodes",
+    "datePathologicDiagnosis": "02/18/2025 (EBUS Biopsy)",
+    "tnmStage": "cT2b N2 M0",
+    "overallStage": "Stage IIIA",
+    "symptomsAtPresentation": "Persistent cough, shortness of breath on exertion, unintentional weight loss (10 lbs/2 mo).",
+    "relevantHistory": "50 pack-year smoking history (currently smokes 0.5 ppd), Hypertension.",
+    "baselineStatus": "ECOG 1 (Restricted in strenuous activity, ambulatory)",
+    "pftSummary": "FEV1 75% predicted, DLCO 70% predicted. Considered borderline operable but chemoradiation preferred approach for N2 disease."
+  },
+  "treatmentPlan": {
+    "radOnc": "Dr. Sarah Jenkins",
+    "medOnc": "Dr. Paul Allen",
+    "treatmentSite": "Left Hilum + Mediastinum",
+    "intent": "Definitive (Curative)",
+    "modality": "External Beam Radiation Therapy (EBRT) with concurrent Chemotherapy",
+    "totalDose": "60 Gy",
+    "fractionation": "30 fx",
+    "rtRxDetails": "60 Gy / 30 fx",
+    "targetVolumeSummary": "PTV encompassing primary tumor and involved nodes (PTV_Primary+Nodes)",
+    "techniqueSummary": "VMAT",
+    "concurrentChemo": "Carboplatin/Paclitaxel",
+    "detailedConcurrentChemo": "Carboplatin/Paclitaxel weekly (Managed by Dr. Allen)",
+    "potentialConsolidationTherapy": "Durvalumab (immunotherapy) after chemoradiation completion (Managed by Dr. Allen)",
+    "medications": [
+      "Ondansetron/Prochlorperazine PRN Nausea/Vomiting (Chemo related)",
+      "Esomeprazole PRN/Scheduled for esophagitis",
+      "Cough Syrup PRN",
+      "Monitor for pneumonitis symptoms"
+    ]
+  },
+  "radiationOncologyData": {
+    "ctSimulation": {
+      "simulationDate": "03/01/2025",
+      "setupInstructions": "Supine in BodyFix vacuum bag with arms up on wingboard. Respiratory motion managed with 4D-CT. SAD setup.",
+      "immobilization": "BodyFix vacuum bag, Wingboard (Arms Up).",
+      "referenceMarks": "3-point tattoos at isocenter projections (AP and bilateral laterals).",
+      "scanner": "e.g., Canon Aquilion Exceed LB",
+      "sliceThickness": "e.g., 2.5 mm",
+      "contrastUsed": "IV Contrast likely used for delineation.",
+      "ctNotes": "4D-CT acquired for VMAT planning. Fused with diagnostic PET/CT. ITV approach to be used for target delineation to account for motion."
+    },
+    "dosimetry": {
+      "planId": "LJ33445_Lung",
+      "rx": "60 Gy / 30 fx",
+      "technique": "VMAT",
+      "energy": "6MV FFF",
+      "numberOfFieldsOrArcs": 2,
+      "gantryAngles": "Multiple (Full or partial arcs)",
+      "collAngles": "Variable",
+      "couchAngles": "0",
+      "isoCoords": "L-2.0, L-1.0, V+0.0",
+      "tps": "RayStation",
+      "algorithm": "Monte Carlo",
+      "hetero": "Yes",
+      "norm": "PTV Mean 95%",
+      "constraints": "Spinal Cord Max < 45 Gy; Heart V30 < 40%; Total Lung V20 < 30%",
+      "planNotes": "VMAT for locally advanced lung, motion managed.",
+      "fieldDetails": [
+        {
+          "fieldName": "Arc 1 (CW)",
+          "gantryAngle": "e.g., 181-179",
+          "collimatorAngle": "e.g., 30",
+          "couchAngle": "0",
+          "energy": "6MV FFF",
+          "monitorUnits": "e.g., 450 MU"
+        },
+        {
+          "fieldName": "Arc 2 (CCW)",
+          "gantryAngle": "e.g., 179-181",
+          "collimatorAngle": "e.g., 330",
+          "couchAngle": "0",
+          "energy": "6MV FFF",
+          "monitorUnits": "e.g., 440 MU"
+        }
+      ]
+    },
+    "treatmentDelivery": {
+      "fractions": [
+        { "fractionNumber": 1, "date": "2025-03-05", "machine": "e.g., LINAC1", "setupNotes":"Daily CBCT for soft tissue alignment. Tolerances met.", "sideEffects": "No acute side effects after first fraction.", "notes": "Patient tolerated first treatment and concurrent chemotherapy well. Smoking cessation resources provided again." }
+      ]
+    }
+  },
+  "imagingAndReports": [
+    {
+      "date": "01/20/2025", "type": "CT Neck w/ Contrast", "summary": "Large L hilar mass encasing pulmonary artery branch. Significant mediastinal adenopathy (Stations 4L, 7).", "modalId": "lj-ct-neck-modal",
+      "reportDetails": { "imageSrc": "https://placehold.co/600x400/EEE/31343C?text=CT+Image+Placeholder", "fullSummary": "Large L hilar mass encasing pulmonary artery branch. Significant mediastinal adenopathy (Stations 4L, 7). Recommend PET/CT and biopsy." }
+    },
+    {
+      "date": "02/05/2025", "type": "PET/CT (Whole Body)", "summary": "Hypermetabolic L hilar mass (SUV 14.5). Hypermetabolic mediastinal nodes (SUV 10.2 at 4L, 9.8 at 7). No distant mets.", "modalId": "lj-pet-ct-modal",
+      "reportDetails": { "imageSrc": "https://placehold.co/600x400/DDD/525252?text=PET/CT+Image+Placeholder", "fullSummary": "Hypermetabolic L hilar mass (SUV 14.5). Hypermetabolic mediastinal nodes (SUV 10.2 at 4L, 9.8 at 7). No distant mets." }
+    },
+    {
+      "date": "02/18/2025", "type": "EBUS Biopsy Report", "summary": "Squamous Cell Carcinoma identified in Station 7 lymph node sample.", "modalId": "lj-path-modal",
+      "reportDetails": { "fullSummary": "Pathology confirms Squamous Cell Carcinoma identified in Station 7 lymph node sample." }
+    },
+    {
+      "date": "03/01/2025", "type": "4D-CT Simulation (Thorax)", "summary": "4D-CT acquired in BodyFix bag. Motion assessed. Data acquired for VMAT planning, fused with diagnostic PET/CT.", "modalId": "lj-ct-sim-modal",
+      "reportDetails": { "imageSrc": "https://placehold.co/600x300/BBB/708090?text=4D-CT+Sim+Placeholder", "fullSummary": "4D-CT acquired in BodyFix bag. Motion assessed. Data acquired for VMAT planning, fused with diagnostic PET/CT." }
+    }
+  ],
+  "dicomImages": [
+    { "description": "Diagnostic PET/CT (02/05/2025)", "seriesType": "PT", "ohifViewerUrl": "https://viewer.ohif.org/viewer?StudyInstanceUIDs=1.3.6.1.4.1.14519.5.2.1.7009.9007.298806137288633453246975630178" },
+    { "description": "4D-CT Simulation (03/01/2025)", "seriesType": "CT", "ohifViewerUrl": "https://viewer.ohif.org/viewer?StudyInstanceUIDs=1.3.6.1.4.1.5962.99.1.2968617883.1314880426.1493322302363.3.0" }
+  ],
+  "labResults": [
+    { "date": "02/25/2025", "test": "CBC", "value": "WNL", "units": "", "range": "N/A", "notes": "Pre-ChemoRT Baseline" },
+    { "date": "02/25/2025", "test": "CMP", "value": "WNL", "units": "", "range": "N/A", "notes": "Pre-ChemoRT Baseline" },
+    { "date": "03/05/2025", "test": "CBC (Day 1 Chemo)", "value": "WNL", "units": "", "range": "N/A", "notes": "Pre-Carbo/Taxol #1" },
+    { "date": "03/12/2025", "test": "CBC (Week 2 RT)", "value": "WBC 3.1, Plt 120", "units": "", "range": "Varies", "notes": "Nadir expected, monitor closely. Hold chemo? Discuss w/ Med Onc." }
+  ],
+  "progressNotes": [
+    { "date": "02/20/2025", "author": "Dr. Paul Allen (Med Onc)", "type": "Consult Note", "summary": "Pt w/ newly diagnosed Stage IIIA NSCLC (SCCa, T2bN2M0). ECOG 1. Discussed treatment options, recommended concurrent chemoradiation (Carbo/Taxol + RT) followed by consolidation Durvalumab per PACIFIC trial data. Reviewed chemo toxicities. Pt agrees. Refer to Rad Onc." },
+    { "date": "02/27/2025", "author": "Dr. Sarah Jenkins (Rad Onc)", "type": "Initial Consult", "summary": "Pt w/ Stage IIIA NSCLC for concurrent ChemoRT. Reviewed case w/ Dr. Allen. Plan for VMAT to 60Gy/30fx to primary and involved nodes. Discussed RT toxicities (esophagitis, pneumonitis, fatigue). Pt agrees. 4D Sim scheduled." },
+    { "date": "03/05/2025", "author": "Nursing", "type": "Chemo Teach Note", "summary": "Patient educated on weekly Carbo/Taxol regimen, side effect management (nausea, fatigue, neuropathy, hair loss), when to call clinic." },
+    { "date": "03/12/2025", "author": "Dr. Paul Allen (Med Onc)", "type": "On Treatment Check", "summary": "Patient c/o fatigue. Labs today show Gr 2 neutropenia, Gr 1 thrombocytopenia. Hold chemotherapy this week. Plan for G-CSF support if counts do not recover. Continue RT. Recheck CBC next week." },
+    { "date": "03/19/2025", "author": "Dr. Sarah Jenkins (Rad Onc)", "type": "OTV - Week 3", "summary": "RT ongoing. Pt reports moderate fatigue. Starting to develop sore throat (Grade 1 esophagitis), started Esomeprazole. Discussed chemo hold w/ Dr. Allen. Continue RT. Monitor symptoms." }
+  ],
+  "patientEducation": {
+    "goalsDiscussed": "Definitive (curative) treatment with concurrent chemoradiation followed by immunotherapy.",
+    "sideEffectsReviewed": "Fatigue (very common), esophagitis (difficulty/pain swallowing), pneumonitis (cough, shortness of breath - less common but serious), skin irritation/redness in treatment area, nausea/vomiting (chemo), hair loss (chemo), low blood counts (chemo - risk of infection/bleeding), neuropathy (chemo).",
+    "safetyConsiderations": "Reporting fever/chills, worsening SOB, chest pain, difficulty swallowing. Skin care instructions (mild soap, moisturizers). Importance of hydration and nutrition. Reporting signs of infection.",
+    "patientResponsibilities": "Attend daily RT/weekly chemo, weekly labs, report symptoms promptly, maintain nutrition/hydration. Smoking cessation strongly advised.",
+    "medicationCompliance": "Importance of anti-nausea meds with chemo, use of Esomeprazole/cough syrup as needed. Adherence to chemo schedule and supportive meds."
+  },
+  "scheduling": [
+    { "date": "01/20/2025", "time": "1 PM", "type": "CT Chest", "location": "Radiology", "status": "Completed" },
+    { "date": "02/05/2025", "time": "10 AM", "type": "PET/CT", "location": "Nuclear Med", "status": "Completed" },
+    { "date": "02/18/2025", "time": "9 AM", "type": "EBUS Biopsy", "location": "Pulmonary Lab", "status": "Completed" },
+    { "date": "02/20/2025", "time": "11 AM", "type": "Med Onc Consult (Allen)", "location": "Oncology Clinic", "status": "Completed" },
+    { "date": "02/27/2025", "time": "1 PM", "type": "Rad Onc Consult (Jenkins)", "location": "Rad Onc Clinic", "status": "Completed" },
+    { "date": "03/01/2025", "time": "2 PM", "type": "4D-CT Simulation Thorax", "location": "Rad Onc Sim", "status": "Completed" },
+    { "date": "03/05/2025 - 04/15/2025", "time": "Weekly (Wed) 8AM", "type": "Chemotherapy (Carbo/Taxol)", "location": "Infusion Center", "status": "Ongoing (w/ holds)" },
+    { "date": "03/05/2025 - 04/15/2025", "time": "Daily (M-F) ~10AM", "type": "VMAT Treatment (1/30)", "location": "LINAC 2", "status": "Ongoing" },
+    { "date": "Weekly (e.g., 03/12)", "time": "~10:30AM (Post-RT)", "type": "OTV w/ Labs", "location": "Rad Onc Clinic / Lab", "status": "Scheduled" },
+    { "date": "~05/15/2025", "time": "TBD", "type": "Post-ChemoRT Restaging Scans", "location": "Radiology", "status": "To Be Scheduled" },
+    { "date": "~06/01/2025", "time": "TBD", "type": "Med Onc Appt (Discuss Immunotherapy)", "location": "Oncology Clinic", "status": "To Be Scheduled" }
+  ],
+  "cptCharges": [
+    { "code": "77290", "description": "Simulation, Complex (4D-CT Thorax)", "frequency": "Once" },
+    { "code": "77334", "description": "Treatment device, Complex (BodyFix)", "frequency": "Once" },
+    { "code": "77301", "description": "IMRT planning", "frequency": "Once" },
+    { "code": "77338", "description": "MLC device for IMRT", "frequency": "Once" },
+    { "code": "77300", "description": "Basic radiation dosimetry calculation", "frequency": "Per plan" },
+    { "code": "77386", "description": "IMRT delivery, complex (VMAT)", "frequency": "Daily" },
+    { "code": "77387", "description": "Image Guided RT (IGRT)", "frequency": "Daily/Weekly" },
+    { "code": "77427", "description": "Radiation treatment management, 5 treatments", "frequency": "Weekly" },
+    { "code": "96409 / 96411", "description": "Chemotherapy administration, IV push/infusion", "frequency": "Per Chemo Day" }
+  ],
+  "diagnosisSearch": "Lung Cancer"
+}

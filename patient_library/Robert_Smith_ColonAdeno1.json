@@ -1,0 +1,121 @@
+{
+  "patientId": "CC-002",
+  "demographics": {
+    "name": "Robert Smith",
+    "dob": "1955-07-22",
+    "gender": "Male",
+    "address": "456 Oak Avenue, Anytown, USA",
+    "phone": "555-5678",
+    "insurance": "BlueCross BlueShield",
+    "referringPhysician": "Dr. Karen Baker (Gastroenterology)",
+    "emergencyContact": "Linda Smith (Wife) - 555-8765",
+    "advanceDirectives": "Full Code (On File)",
+    "supportServices": "Chemo education and ostomy care resources provided, if applicable.",
+    "mobility": "Ambulatory without assistance."
+  },
+  "diagnosis": {
+    "primary": "Adenocarcinoma of the Sigmoid Colon",
+    "datePathologicDiagnosis": "03/15/2025 (Surgical Pathology)",
+    "pathologicStage": "IIIB (T3, N2a, M0)",
+    "symptomsAtPresentation": "Change in bowel habits and rectal bleeding.",
+    "relevantHistory": "Hypertension.",
+    "priorTreatmentSummary": "Laparoscopic sigmoid colectomy with en bloc removal of regional lymph nodes performed on 03/10/2025."
+  },
+  "treatmentPlan": {
+    "radOnc": "Dr. Emily Carter",
+    "medOnc": "Dr. David Green",
+    "surgOnc": "Dr. Susan Brown",
+    "treatmentSite": "Pelvis",
+    "intent": "Adjuvant",
+    "modality": "Adjuvant Chemotherapy followed by Adjuvant External Beam Radiation Therapy (EBRT)",
+    "totalDose": "50.4 Gy",
+    "fractionation": "28 fx",
+    "rtRxDetails": "50.4 Gy / 28 fx (1.8 Gy/fx)",
+    "targetVolumeSummary": "PTV_Pelvis targeting the primary tumor bed and regional lymph nodes.",
+    "techniqueSummary": "3D-CRT (4-field Box)",
+    "systemicChemo": "CAPEOX (Capecitabine/Oxaliplatin)",
+    "medications": []
+  },
+  "radiationOncologyData": {
+    "ctSimulation": {
+      "simulationDate": "07/01/2025",
+      "setupInstructions": "Supine in Vac-Lok bag with knee and ankle immobilization. Full bladder / empty rectum protocol followed. SAD setup.",
+      "immobilization": "Vac-Lok bag",
+      "referenceMarks": "3-point tattoos at isocenter projections (AP and bilateral laterals).",
+      "scanner": "GE Discovery RT",
+      "sliceThickness": "3.0 mm",
+      "contrastUsed": "IV and Oral Contrast",
+      "ctNotes": "CT simulation for adjuvant pelvic radiation therapy post-chemotherapy."
+    },
+    "dosimetry": {
+      "planId": "RSCC002_Colon",
+      "rx": "50.4 Gy / 28 fx",
+      "technique": "3D-CRT",
+      "energy": "10MV",
+      "numberOfFieldsOrArcs": 4,
+      "gantryAngles": "0, 180, 90, 270",
+      "collAngles": "0",
+      "couchAngles": "0",
+      "isoCoords": "Mid-Pelvis",
+      "tps": "Monaco",
+      "algorithm": "XVMC",
+      "hetero": "Yes",
+      "norm": "Isocenter",
+      "constraints": "Fem Head Max < 45 Gy; Bladder V45Gy < 30%; Bowel Max < 50 Gy",
+      "planNotes": "Adjuvant pelvic RT post-chemo for Stage IIIB colon ca. Note: RT not standard per NCCN for this indication but proceeding per MD order.",
+      "fieldDetails": [
+        { "fieldName": "AP Pelvis", "gantryAngle": "0", "collimatorAngle": "0", "couchAngle": "0", "energy": "10MV", "monitorUnits": 140 },
+        { "fieldName": "PA Pelvis", "gantryAngle": "180", "collimatorAngle": "0", "couchAngle": "0", "energy": "10MV", "monitorUnits": 145 },
+        { "fieldName": "R Lat Pelvis", "gantryAngle": "90", "collimatorAngle": "0", "couchAngle": "0", "energy": "10MV", "monitorUnits": 180 },
+        { "fieldName": "L Lat Pelvis", "gantryAngle": "270", "collimatorAngle": "0", "couchAngle": "0", "energy": "10MV", "monitorUnits": 180 }
+      ]
+    },
+    "treatmentDelivery": {
+      "fractions": [
+        { "fractionNumber": 1, "date": "2025-07-15", "machine": "LINAC2", "setupNotes":"Daily kV imaging for setup verification.", "sideEffects": "No acute side effects reported after first fraction.", "notes": "Patient tolerated treatment well." }
+      ]
+    }
+  },
+  "imagingAndReports": [
+    { "date": "02/28/2025", "type": "CT Abdomen/Pelvis", "summary": "Mass in the sigmoid colon.", "modalId": "rs-ct-modal" },
+    { "date": "03/15/2025", "type": "Pathology Report", "summary": "Adenocarcinoma of the Sigmoid Colon, Stage IIIB (T3, N2a, M0).", "modalId": "rs-path-modal", "reportDetails": { "specimen": "Sigmoid Colon Resection", "diagnosis": "Adenocarcinoma of the Sigmoid Colon, Stage IIIB (T3, N2a, M0)", "grade": "Moderately differentiated", "margins": "Negative", "lymphNodes": "15 regional lymph nodes examined, 5 positive for metastatic carcinoma." } },
+    { "date": "07/01/2025", "type": "CT Simulation", "summary": "Simulation for adjuvant radiation therapy.", "modalId": "rs-sim-modal", "reportDetails": { "date": "07/01/2025", "region": "Pelvis", "purpose": "Adjuvant radiation therapy planning.", "immobilization": "Supine with Vac-Lok bag." } }
+  ],
+  "dicomImages": [
+    { "description": "Diagnostic CT Abdomen/Pelvis (02/28/2025)", "seriesType": "CT", "ohifViewerUrl": "" },
+    { "description": "CT Simulation Pelvis (07/01/2025)", "seriesType": "CT", "ohifViewerUrl": "" }
+  ],
+  "labResults": [
+    { "date": "03/05/2025", "test": "CBC", "value": "WNL", "notes": "Baseline" },
+    { "date": "03/05/2025", "test": "CMP", "value": "WNL", "notes": "Baseline" },
+    { "date": "03/05/2025", "test": "CEA", "value": "3.2", "units": "ng/mL", "range": "<5.0", "notes": "Baseline" }
+  ],
+  "progressNotes": [
+    { "date": "03/20/2025", "author": "Dr. Susan Brown", "type": "Post-Op Note", "summary": "Post-operative visit - Recovering well from sigmoid colectomy. Final path shows T3N2a disease. Refer to Medical and Radiation Oncology for adjuvant therapy consideration." },
+    { "date": "04/01/2025", "author": "Dr. David Green", "type": "Chemo Start Note", "summary": "Started adjuvant chemotherapy with CAPEOX." },
+    { "date": "07/15/2025", "author": "Dr. Emily Carter", "type": "RT Start Note", "summary": "Started adjuvant radiation therapy post-chemo." }
+  ],
+  "patientEducation": {
+    "goalsDiscussed": "Adjuvant (post-operative) therapy to reduce the risk of cancer recurrence.",
+    "sideEffectsReviewed": "Acute radiation side effects: Diarrhea, fatigue, bladder irritation (frequency/urgency), and skin reaction in the treatment area. Side effects from chemotherapy reviewed by Med Onc.",
+    "safetyConsiderations": "Following a low-residue diet to help manage diarrhea. Importance of hydration. Reporting uncontrolled GI symptoms or significant skin breakdown.",
+    "patientResponsibilities": "Attend daily RT appointments, report side effects.",
+    "medicationCompliance": "Use supportive medications for diarrhea as instructed."
+  },
+  "scheduling": [
+    { "date": "02/28/2025", "time": "9:00 AM", "type": "CT Abdomen/Pelvis", "location": "Radiology Dept", "status": "Completed" },
+    { "date": "03/10/2025", "time": "8:00 AM", "type": "Surgery: Sigmoid Colectomy", "location": "Operating Room 2", "status": "Completed" },
+    { "date": "03/15/2025", "time": "10:00 AM", "type": "Surgical Consultation", "location": "Colorectal Surgery Clinic", "status": "Completed" },
+    { "date": "04/01/2025", "time": "11:00 AM", "type": "Medical Oncology Consultation", "location": "Oncology Clinic", "status": "Completed" },
+    { "date": "07/01/2025", "time": "2:00 PM", "type": "Radiation Oncology Simulation", "location": "Radiation Oncology Sim Room", "status": "Completed" },
+    { "date": "07/15/2025", "time": "10:00 AM", "type": "Radiation Therapy Treatment", "location": "Radiation Oncology", "status": "Scheduled" }
+  ],
+  "cptCharges": [
+    { "code": "44140", "description": "Sigmoid colectomy", "frequency": "Once" },
+    { "code": "96413", "description": "Chemotherapy administration, IV infusion", "frequency": "Per Cycle" },
+    { "code": "77290", "description": "Radiation therapy simulation; complex", "frequency": "Once" },
+    { "code": "77407", "description": "Radiation treatment delivery, single treatment area, complex", "frequency": "Per Fraction" },
+    { "code": "77427", "description": "Radiation treatment management, 5 treatments", "frequency": "Weekly" }
+  ],
+  "diagnosisSearch": "Colon Cancer"
+}

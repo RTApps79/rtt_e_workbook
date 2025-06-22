@@ -1,0 +1,137 @@
+{
+  "patientId": "REHN01",
+  "demographics": {
+    "name": "Brenda Smith",
+    "dob": "1962-09-01",
+    "gender": "Female",
+    "ageAtDiagnosis": "62 years old",
+    "address": "33 River St, Anytown, USA",
+    "phone": "555-3301",
+    "insurance": "Medicare + AARP",
+    "referringPhysician": "Dr. Charles Davis (Head & Neck Surgery)",
+    "emergencyContact": "John Smith (Husband) - 555-3302",
+    "advanceDirectives": "Full Code (On File)",
+    "supportServices": "Prophylactic PEG tube placed. Nutrition, Speech/Swallow, and Pain Service consults obtained.",
+    "mobility": "Ambulatory without assistance."
+  },
+  "diagnosis": {
+    "primary": "Recurrent Squamous Cell Carcinoma (SCCa)",
+    "location": "Left Base of Tongue / Oropharynx (within prior radiation field)",
+    "datePathologicDiagnosis": "02/20/2025 (Biopsy)",
+    "priorHistory": "Original Diagnosis: SCCa Left Tonsil (HPV-positive), Stage II (T2N1M0) - Diagnosed 2015. Treated with definitive IMRT (70 Gy) and concurrent Cisplatin, completed 2016.",
+    "currentStage": "rT2 N0 M0 (Recurrent)",
+    "symptomsAtPresentation": "Worsening throat pain, dysphagia.",
+    "relevantHistory": "30 pack-year smoking history (quit at original diagnosis in 2015)."
+  },
+  "treatmentPlan": {
+    "radOnc": "Dr. Maria Garcia",
+    "hnSurg": "Dr. Charles Davis",
+    "medOnc": "Dr. Lisa Green",
+    "treatmentSite": "Left Base of Tongue/Oropharynx",
+    "intent": "Definitive (Curative Intent Re-irradiation)",
+    "modality": "External Beam Radiation Therapy (EBRT) - Re-irradiation",
+    "totalDose": "66 Gy(RBE)",
+    "fractionation": "33 fx",
+    "rtRxDetails": "66 Gy(RBE) / 33 fx (2 Gy(RBE)/fx)",
+    "targetVolumeSummary": "PTV_Recurrence (GTV from PET/MRI + CTV margin)",
+    "techniqueSummary": "Intensity-Modulated Proton Therapy (IMPT)",
+    "concurrentChemo": "None (Considered but deferred due to high potential toxicity)",
+    "medications": [
+      "Prophylactic PEG tube placed",
+      "Aggressive pain management anticipated (e.g., long-acting opioids)",
+      "Magic mouthwash, topical agents for severe mucositis",
+      "Anti-emetics"
+    ]
+  },
+  "radiationOncologyData": {
+    "ctSimulation": {
+      "simulationDate": "03/10/2025",
+      "setupInstructions": "Supine in custom thermoplastic mask with bite block for reproducibility. SAD setup.",
+      "immobilization": "Custom thermoplastic mask (Head & Neck)",
+      "referenceMarks": "Mask marks aligned to room lasers.",
+      "scanner": "Philips Big Bore CT",
+      "sliceThickness": "1.5 mm",
+      "contrastUsed": "IV Contrast",
+      "ctNotes": "CT fused with current PET/MRI and prior planning CT for cumulative dose assessment and re-irradiation planning."
+    },
+    "dosimetry": {
+      "planId": "BSREHN01_ReRT",
+      "rx": "66 Gy(RBE) / 33 fx",
+      "technique": "IMPT",
+      "energy": "Protons (variable)",
+      "numberOfFieldsOrArcs": "Multiple (3-4 fields)",
+      "gantryAngles": "Multiple",
+      "collAngles": "N/A",
+      "couchAngles": "0",
+      "isoCoords": "H&N Iso",
+      "tps": "Eclipse",
+      "algorithm": "Monte Carlo",
+      "hetero": "Yes",
+      "norm": "Target Coverage",
+      "constraints": "Spinal Cord Max (Cumulative) < 50 Gy(RBE); Brainstem Max (Cumulative) < 60 Gy(RBE); Mandible Max < 70 Gy(RBE)",
+      "planNotes": "Proton re-irradiation to maximize OAR sparing. Strict adherence to cumulative dose limits based on prior RT records.",
+      "fieldDetails": [
+        { "fieldName": "Left Posterior Oblique", "gantryAngle": "225", "couchAngle": "0", "energy": "Variable", "monitorUnits": "Variable" },
+        { "fieldName": "Right Posterior Oblique", "gantryAngle": "135", "couchAngle": "0", "energy": "Variable", "monitorUnits": "Variable" },
+        { "fieldName": "Left Anterior Oblique", "gantryAngle": "300", "couchAngle": "0", "energy": "Variable", "monitorUnits": "Variable" }
+      ]
+    },
+    "treatmentDelivery": {
+      "fractions": [
+        { "fractionNumber": 10, "date": "2025-04-01", "machine": "Proton Gantry 1", "setupNotes":"Daily IGRT. Setup stable.", "sideEffects": "Developing significant mucositis (Grade 2-3) and pain.", "notes": "Patient relying on PEG tube for nutrition. Pain management regimen adjusted." }
+      ]
+    }
+  },
+  "imagingAndReports": [
+    { "date": "02/10/2025", "type": "PET/CT", "summary": "Intensely FDG-avid soft tissue thickening and ulceration at left base of tongue (SUV 13.5). No other sites of disease.", "modalId": "bs-pet-recurrence", "reportDetails": { "findings": "New intensely hypermetabolic focus within the left base of tongue / oropharyngeal region, corresponding to soft tissue thickening and ulceration on CT component (SUV max 13.5). This was not present on prior scans. No abnormal FDG uptake in cervical lymph nodes or distant sites.", "impression": "Findings highly suspicious for recurrent malignancy in the left base of tongue/oropharynx. No evidence of regional nodal or distant metastatic disease." } },
+    { "date": "02/15/2025", "type": "MRI Head/Neck w/ Contrast", "summary": "Confirms enhancing infiltrative mass at left base of tongue/oropharynx, approx 2.5 cm.", "modalId": "bs-mri-recurrence", "reportDetails": { "findings": "Enhancing, infiltrative soft tissue mass identified at the left base of tongue extending into the lateral oropharyngeal wall, measuring approximately 2.5 x 2.0 cm. This appears distinct from expected post-radiation fibrosis seen more superiorly in the tonsillar fossa. No suspicious cervical adenopathy.", "impression": "Enhancing mass at left base of tongue/oropharynx concerning for recurrent tumor." } },
+    { "date": "02/20/2025", "type": "Pathology Report (Biopsy)", "summary": "Recurrent Squamous Cell Carcinoma.", "modalId": "bs-path-recurrence", "reportDetails": { "lab": "Anytown Surgical Pathology (Fictional Lab)", "patientInfo": "Smith, Brenda | ID: REHN01 | DOB: 09/01/1962", "referringDoctor": "Dr. Charles Davis (H&N Surgery)", "pathNum": "S-25-9101", "dateObtained": "02/20/2025", "specimen": "Left Base of Tongue Biopsy", "diagnosis": "SQUAMOUS CELL CARCINOMA, MODERATELY DIFFERENTIATED, INVASIVE.", "microscopicDescription": "Sections show fragments of squamous mucosa with underlying infiltration by nests and cords of atypical squamous cells with keratinization and intercellular bridges. Mitotic figures are present. Findings are consistent with recurrent squamous cell carcinoma.", "comment": "Recurrent squamous cell carcinoma identified in biopsy specimen.", "signedBy": "Dr. B. Fictional, 02/22/2025" } },
+    { "date": "03/05/2025", "type": "Prior RT Records Review", "summary": "IMRT 70Gy/35fx completed 2016. DVHs for critical structures obtained.", "modalId": "bs-prior-rt", "reportDetails": { "treatmentSite": "Left Tonsil / Oropharynx / Bilateral Neck", "technique": "IMRT", "totalDose": "70 Gy in 35 fractions (2 Gy/fx)", "concurrentChemo": "Cisplatin", "oarDoses": "Spinal Cord Max: 44.5 Gy; Brainstem Max: 52.1 Gy; Mandible (Left) Max: 68.2 Gy; Parotid Gland (Right) Mean: 24 Gy", "notes": "Patient completed treatment course. Tolerated with expected Grade 3 mucositis, managed supportively." } },
+    { "date": "03/10/2025", "type": "CT Simulation (Head/Neck)", "summary": "CT fused with PET/MRI and prior planning CT for re-irradiation planning.", "modalId": "bs-ct-sim", "reportDetails": { "procedure": "CT simulation for re-irradiation of Head & Neck with proton therapy.", "setup": "Patient positioned supine in custom thermoplastic mask. Bite block used.", "scanParams": "Contrast-enhanced CT scan acquired from vertex through upper thorax with 2.0 mm slice thickness.", "fusion": "Diagnostic PET/CT (02/10/2025) and MRI (02/15/2025) fused with simulation CT dataset. Prior simulation CT/plan (if available) also fused for cumulative dose assessment.", "notes": "Patient tolerated procedure. Setup reproducible. Data sent for IMPT re-irradiation planning, emphasizing OAR constraints." } }
+  ],
+  "dicomImages": [
+    { "description": "Recurrence PET/CT (02/10/2025)", "seriesType": "PT", "ohifViewerUrl": "" },
+    { "description": "CT Simulation for Re-irradiation (03/10/2025)", "seriesType": "CT", "ohifViewerUrl": "" }
+  ],
+  "labResults": [
+    { "date": "03/05/2025", "test": "CBC", "value": "WNL", "notes": "Pre-ReRT Baseline" },
+    { "date": "03/05/2025", "test": "CMP", "value": "WNL", "notes": "Pre-ReRT Baseline" },
+    { "date": "03/05/2025", "test": "Albumin/Prealbumin", "value": "WNL", "notes": "Baseline nutritional status" }
+  ],
+  "progressNotes": [
+    { "date": "02/25/2025", "author": "Dr. Charles Davis (H&N Surgery)", "type": "Consult Note", "summary": "Pt referred for worsening throat pain 9 years post-CRT for tonsil SCCa. Exam suspicious for recurrence base of tongue. PET/MRI confirm. Biopsy performed -> recurrent SCCa. Discussed surgical salvage (high morbidity) vs re-irradiation. Refer to Rad Onc/Med Onc." },
+    { "date": "03/07/2025", "author": "Dr. Maria Garcia (Rad Onc)", "type": "Initial Consult", "summary": "Pt w/ recurrent SCCa L BOT/oropharynx s/p prior 70Gy IMRT. Reviewed case, prior RT records. Discussed re-irradiation options. Strong recommendation for proton therapy (IMPT) to maximize chance of delivering curative dose while respecting OAR tolerance. Plan 66-70Gy(RBE). Discussed high risk of severe acute toxicity (mucositis, dysphagia requiring PEG) and late toxicity (fibrosis, necrosis risk). Pt understands and wishes to proceed. PEG tube recommended pre-treatment." },
+    { "date": "03/12/2025", "author": "Nutrition/Speech Path", "type": "Pre-Tx Eval", "summary": "PEG tube placed. Swallowing exercises reviewed. High calorie/protein supplement recommendations provided." },
+    { "date": "03/18/2025", "author": "Physics/Dosimetry", "type": "Re-Irradiation Plan Note", "summary": "IMPT plan finalized. Cumulative dose constraints met for spinal cord, brainstem. Plan achieves target coverage. Approved by Dr. Garcia." },
+    { "date": "04/01/2025", "author": "Dr. Maria Garcia (Rad Onc)", "type": "OTV - Week 2", "summary": "Pt completed 10 fx re-irradiation. Developing significant mucositis (Grade 2-3), pain managed with opioids. Using PEG for nutrition primarily. Tolerating setup. Continue RT with close monitoring/supportive care." }
+  ],
+  "patientEducation": {
+    "goalsDiscussed": "Definitive re-irradiation with curative intent, acknowledging the high risks involved.",
+    "sideEffectsReviewed": "High likelihood of severe acute side effects: severe mouth/throat sores (mucositis), significant pain, severe difficulty swallowing requiring PEG tube for nutrition, major fatigue, and severe skin reaction. High risk of late complications: soft tissue or bone necrosis, chronic swallowing difficulty (dysphagia), severe dry mouth (xerostomia), and damage to nerves or spinal cord.",
+    "safetyConsiderations": "Aggressive pain management, meticulous oral and PEG tube care, monitoring for signs of infection or necrosis.",
+    "patientResponsibilities": "Attend daily RT and frequent supportive care appointments. Communicate any changes in symptoms immediately. Maintain nutrition via PEG tube as directed.",
+    "medicationCompliance": "Strict adherence to pain management regimen and any other supportive medications."
+  },
+  "scheduling": [
+    { "date": "02/10/2025", "time": "9 AM", "type": "PET/CT", "location": "Radiology", "status": "Completed" },
+    { "date": "02/15/2025", "time": "11 AM", "type": "MRI Head/Neck", "location": "Radiology", "status": "Completed" },
+    { "date": "02/20/2025", "time": "10 AM", "type": "Biopsy Base of Tongue", "location": "ENT Clinic", "status": "Completed" },
+    { "date": "02/25/2025", "time": "1 PM", "type": "H&N Surgery Consult (Davis)", "location": "Surgical Clinic", "status": "Completed" },
+    { "date": "03/07/2025", "time": "10 AM", "type": "Rad Onc Consult (Garcia)", "location": "Rad Onc Clinic", "status": "Completed" },
+    { "date": "03/12/2025", "time": "8 AM", "type": "PEG Tube Placement", "location": "Interventional Radiology", "status": "Completed" },
+    { "date": "03/15/2025", "time": "1 PM", "type": "CT Simulation Head/Neck", "location": "Rad Onc Sim", "status": "Completed" },
+    { "date": "03/20/2025 - ~05/08/2025", "time": "Daily (M-F) ~9 AM", "type": "IMPT Treatment (1/35)", "location": "Proton Therapy Center", "status": "Ongoing" },
+    { "date": "Weekly (often 2x/wk)", "time": "Varies", "type": "OTV / Nursing Check", "location": "Rad Onc Clinic", "status": "Scheduled" }
+  ],
+  "cptCharges": [
+    { "code": "77290", "description": "Simulation, Complex (Re-irradiation)", "frequency": "Once" },
+    { "code": "77334", "description": "Treatment device, Complex (Mask)", "frequency": "Once" },
+    { "code": "77301", "description": "IMRT plan (Proton)", "frequency": "Once" },
+    { "code": "77321", "description": "Special teletherapy port plan, particles", "frequency": "Once" },
+    { "code": "77370", "description": "Special medical radiation physics consultation (for complex re-irradiation planning)", "frequency": "Once" },
+    { "code": "77525", "description": "Proton treatment delivery, complex", "frequency": "Daily" },
+    { "code": "77387", "description": "Image Guidance RT (IGRT)", "frequency": "Daily" },
+    { "code": "77427", "description": "Radiation treatment management, 5 treatments", "frequency": "Weekly" }
+  ],
+  "diagnosisSearch": "Recurrent Head and Neck Cancer"
+}

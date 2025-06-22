@@ -1,0 +1,112 @@
+{
+  "patientId": "MSCC-001",
+  "demographics": {
+    "name": "John Doe",
+    "dob": "1960-06-12",
+    "gender": "Male",
+    "address": "987 Elm Street, Anytown, USA",
+    "phone": "555-0123",
+    "insurance": "Medicare",
+    "referringPhysician": "Dr. William Brown (Neurology)",
+    "emergencyContact": "Mary Doe (Wife) - 555-3210",
+    "advanceDirectives": "DNR (Do Not Resuscitate)",
+    "supportServices": "Inpatient admission, physical therapy consult placed.",
+    "mobility": "Impaired; requires assistance for transfers due to lower extremity weakness."
+  },
+  "diagnosis": {
+    "primary": "Malignant Spinal Cord Compression at T10-T11",
+    "datePathologicDiagnosis": "04/13/2025 (on imaging)",
+    "likelyPrimary": "Poorly differentiated carcinoma of the lung (pending confirmation)",
+    "stage": "Metastatic",
+    "symptomsAtPresentation": "Progressive lower extremity weakness, back pain, and difficulty walking.",
+    "relevantHistory": "History of poorly differentiated carcinoma of the lung (presumed)."
+  },
+  "treatmentPlan": {
+    "radOnc": "Dr. Robert Green",
+    "treatmentSite": "T9-T12 Spine",
+    "intent": "Palliative (Emergent)",
+    "modality": "External Beam Radiation Therapy (EBRT)",
+    "totalDose": "30 Gy",
+    "fractionation": "10 fx",
+    "rtRxDetails": "30 Gy / 10 fx (3 Gy/fx)",
+    "targetVolumeSummary": "PTV_T9-T12",
+    "techniqueSummary": "3D-CRT (AP/PA)",
+    "concurrentChemo": "None (focus on steroids and RT)",
+    "medications": [
+      "Dexamethasone 10 mg IV bolus followed by 4 mg PO Q6H"
+    ]
+  },
+  "radiationOncologyData": {
+    "ctSimulation": {
+      "simulationDate": "04/13/2025",
+      "setupInstructions": "Supine in Vac-Lok bag as tolerated due to pain. Arms at side. SAD setup.",
+      "immobilization": "Vac-Lok bag",
+      "referenceMarks": "3-point tattoos at isocenter projections (AP and bilateral laterals).",
+      "scanner": "GE Discovery RT",
+      "sliceThickness": "3.0 mm",
+      "contrastUsed": "Non-contrast",
+      "ctNotes": "Emergent CT simulation performed for rapid 3D-CRT planning. Fused with diagnostic MRI."
+    },
+    "dosimetry": {
+      "planId": "JDMSCC001_Spine",
+      "rx": "30 Gy / 10 fx",
+      "technique": "3D-CRT",
+      "energy": "6MV",
+      "numberOfFieldsOrArcs": 2,
+      "gantryAngles": "0, 180",
+      "collAngles": "0",
+      "couchAngles": "0",
+      "isoCoords": "Mid-T10/11",
+      "tps": "Eclipse",
+      "algorithm": "AAA",
+      "hetero": "Yes",
+      "norm": "Isocenter",
+      "constraints": "Spinal Cord Max < 25 Gy",
+      "planNotes": "Emergent palliative RT for MSCC.",
+      "fieldDetails": [
+        { "fieldName": "AP Spine", "gantryAngle": "0", "collimatorAngle": "0", "couchAngle": "0", "energy": "6MV", "monitorUnits": 160 },
+        { "fieldName": "PA Spine", "gantryAngle": "180", "collimatorAngle": "0", "couchAngle": "0", "energy": "6MV", "monitorUnits": 165 }
+      ]
+    },
+    "treatmentDelivery": {
+      "fractions": [
+        { "fractionNumber": 1, "date": "2025-04-13", "machine": "LINAC1", "setupNotes":"Patient transferred carefully to table. Setup verified with MV imaging.", "sideEffects": "No acute side effects from RT. Neurologic status stable post-steroids and first treatment.", "notes": "First fraction delivered emergently on the evening of simulation." }
+      ]
+    }
+  },
+  "imagingAndReports": [
+    { "date": "04/13/2025", "type": "MRI Spine (Thoracic)", "summary": "Confirmed spinal cord compression at T10-T11.", "modalId": "jd-mri-modal", "reportDetails": { "date": "04/13/2025", "findings": "Significant spinal cord compression is noted at the T10-T11 level due to metastatic disease involving the vertebral bodies and epidural space.", "impression": "Malignant Spinal Cord Compression." } },
+    { "date": "Pending", "type": "CT Chest", "summary": "To confirm primary lung cancer and staging." }
+  ],
+  "dicomImages": [
+    { "description": "Diagnostic MRI Spine (04/13/2025)", "seriesType": "MR", "ohifViewerUrl": "" },
+    { "description": "CT Simulation Spine (04/13/2025)", "seriesType": "CT", "ohifViewerUrl": "" }
+  ],
+  "labResults": [
+    { "date": "04/13/2025", "test": "Labs", "value": "Pending", "notes": "Drawn in Emergency Department." }
+  ],
+  "progressNotes": [
+    { "date": "04/13/2025", "author": "ED Physician", "type": "ED Note", "summary": "Patient presented to ED with neurological deficits. MRI confirmed MSCC. Started on high-dose steroids. Radiation oncology consultation initiated emergently." },
+    { "date": "04/13/2025", "author": "Dr. Robert Green", "type": "RT Start Note", "summary": "Radiation therapy simulation completed and first fraction delivered on an emergent basis to decompress the spinal cord." }
+  ],
+  "patientEducation": {
+    "goalsDiscussed": "Emergency palliative radiation to relieve pressure on the spinal cord, with the goals of preventing permanent paralysis, restoring neurologic function, and relieving pain.",
+    "sideEffectsReviewed": "Acute: Fatigue, potential for temporary worsening of pain ('pain flare'), low risk of nausea or skin reaction. Importance of steroid side effects (high blood sugar, insomnia, mood changes) was also reviewed.",
+    "safetyConsiderations": "Log-rolling and careful transfers to protect the spine. Immediately report any worsening of weakness, numbness, or loss of bowel/bladder control.",
+    "patientResponsibilities": "Remain as still as possible during treatment, report all symptoms.",
+    "medicationCompliance": "Strict adherence to the steroid regimen is critical."
+  },
+  "scheduling": [
+    { "date": "04/13/2025", "time": "AM", "type": "MRI Spine (Thoracic)", "location": "Radiology Dept", "status": "Completed" },
+    { "date": "04/13/2025", "time": "PM", "type": "Radiation Oncology Consultation", "location": "Radiation Oncology Clinic", "status": "Completed" },
+    { "date": "04/13/2025", "time": "PM", "type": "Radiation Therapy Simulation", "location": "Radiation Oncology Sim Room", "status": "Completed" },
+    { "date": "04/13/2025", "time": "Evening", "type": "Radiation Therapy Treatment #1", "location": "Radiation Oncology", "status": "Completed" },
+    { "date": "04/14/2025", "time": "Morning", "type": "Radiation Therapy Treatment #2", "location": "Radiation Oncology", "status": "Scheduled" }
+  ],
+  "cptCharges": [
+    { "code": "77290", "description": "Radiation therapy simulation; complex", "frequency": "Once" },
+    { "code": "77402", "description": "Radiation treatment delivery, >1 MeV; 2 separate treatment areas", "frequency": "Per Fraction" },
+    { "code": "77427", "description": "Radiation treatment management, 5 treatments", "frequency": "Weekly" }
+  ],
+  "diagnosisSearch": "Malignant Spinal Cord Compression"
+}

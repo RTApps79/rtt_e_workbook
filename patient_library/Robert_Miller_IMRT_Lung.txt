@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EMR Example: Robert Miller (Thorax - Multifield non-IMRT SBRT)</title> <style> /* --- Styles identical to previous example --- */
+        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 20px; max-width: 900px; margin-left: auto; margin-right: auto; } h1, h2, h3, h4 { color: #333; } h1 { border-bottom: 2px solid #0056b3; padding-bottom: 10px; color: #0056b3; margin-bottom: 25px; } h2 { margin-top: 35px; color: #444; border-bottom: 1px solid #ccc; padding-bottom: 8px; margin-bottom: 20px; } h3 { margin-top: 30px; color: #555; margin-bottom: 15px; } h4 { margin-top: 25px; color: #004085; border-bottom: 1px dotted #ccc; padding-bottom: 3px; margin-bottom: 10px; } ul { margin-left: 20px; list-style-type: disc; margin-bottom: 15px; } li { margin-bottom: 10px; } strong { font-weight: bold; color: #004085; } p { margin-bottom: 15px; } .lesson-content { padding: 20px; border: 1px solid #ddd; background-color: #fdfdfd; border-radius: 5px; } .emr-container { border: 1px solid #ccc; border-radius: 5px; overflow: hidden; margin-top: 20px; margin-bottom: 30px; } .tab-bar { background-color: #f0f0f0; display: flex; flex-wrap: wrap; } .tab-button { padding: 10px 15px; border: none; background-color: transparent; cursor: pointer; border-bottom: 3px solid transparent; margin-right: 2px; font-size: 0.95em; } .tab-button.active { background-color: #e0e0e0; border-bottom: 3px solid #4CAF50; font-weight: bold; } .tab-button:hover:not(.active) { background-color: #e9e9e9; } .tab-content { padding: 20px; border-top: 1px solid #ccc; } .hidden { display: none; } .data-label { font-weight: bold; margin-right: 8px; color: #333; } .section-header { background-color: #e0f7fa; padding: 8px 12px; margin: -20px -20px 15px -20px; border-bottom: 1px solid #ccc; font-size: 1.1em; font-weight: bold; color: #006064; } .tab-content hr { border: 0; height: 1px; background-color: #ddd; margin-top: 25px; margin-bottom: 20px; } table { width: 100%; border-collapse: collapse; margin-bottom: 15px; } th, td { border: 1px solid #ddd; padding: 10px; text-align: left; font-size: 0.9em; } th { background-color: #f2f2f2; font-weight: bold; } td a { color: #007bff; text-decoration: none; cursor: pointer; } td a:hover { text-decoration: underline; } .disclaimer { font-style: italic; color: #666; margin-top: 15px; font-size: 0.9em; }
+        /* --- Modal Styling --- */
+        .modal-overlay { position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000; display: none; justify-content: center; align-items: center; }
+        .modal-content { background-color: #fff; padding: 20px 30px; border-radius: 5px; max-width: 80%; max-height: 80%; overflow-y: auto; position: relative; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+        .close-button { position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 1.8em; line-height: 1; cursor: pointer; color: #666; }
+        .close-button:hover { color: #000; }
+        .modal-content h3 { margin-top: 0; color: #0056b3; border-bottom: 1px solid #ccc; padding-bottom: 10px; }
+        .modal-content hr { border: 0; height: 1px; background-color: #eee; margin: 15px 0; }
+        .modal-content p { margin-bottom: 10px; line-height: 1.5; }
+        .modal-content img { max-width: 100%; height: auto; display: block; margin: 10px auto; }
+     </style>
+</head>
+<body>
+    <div class="lesson-content">
+        <h1>EMR Example: Robert Miller (Thorax - SBRT)</h1> <div class="emr-container">
+            <div class="tab-bar">
+                 <button class="tab-button active" onclick="showTab('demographics_rm')">Demographics</button>
+                 <button class="tab-button" onclick="showTab('diagnosis_rm')">Diagnosis & Staging</button>
+                 <button class="tab-button" onclick="showTab('treatment_rm')">Treatment Plans</button>
+                 <button class="tab-button" onclick="showTab('imaging_rm')">Imaging & Reports</button>
+                 <button class="tab-button" onclick="showTab('labs_rm')">Lab Results</button>
+                 <button class="tab-button" onclick="showTab('notes_rm')">Progress Notes</button>
+                 <button class="tab-button" onclick="showTab('pteducation_rm')">Patient Education</button>
+                 <button class="tab-button" onclick="showTab('scheduling_rm')">Scheduling</button>
+                 <button class="tab-button" onclick="showTab('cpt_rm')">CPT Charges</button>
+            </div>
+
+            <div id="demographics_rm" class="tab-content">
+                 <h3 class="section-header">Patient Demographics</h3>
+                 <p><span class="data-label">Patient Name:</span> Robert Miller</p> <p><span class="data-label">Patient ID:</span> 99112</p> <p><span class="data-label">DOB:</span> 03/15/1955</p> <p><span class="data-label">Gender:</span> Male</p> <p><span class="data-label">Address:</span> 12 Valley Road, Anytown, USA</p> <p><span class="data-label">Phone:</span> 555-9911</p> <p><span class="data-label">Insurance:</span> Medicare + AARP Supplemental</p> <p><span class="data-label">Referring Physician:</span> Dr. Susan Davis (Pulmonology)</p> <p><span class="data-label">Advance Directives:</span> Full Code (On File)</p>
+                 <p><span class="data-label">Support Services:</span> Smoking cessation resources provided.</p>
+                 <p><span class="data-label">Mobility:</span> Ambulatory, uses cane occasionally.</p>
+                 <hr> <h4>Demographics Tab Explanation</h4> <ul><li><strong>Purpose:</strong> Basic patient ID and admin info.</li><li><strong>Importance:</strong> Patient ID, communication, billing.</li></ul>
+            </div>
+
+            <div id="diagnosis_rm" class="tab-content hidden">
+                 <h3 class="section-header">Diagnosis & Staging</h3>
+                 <p><span class="data-label">Primary Diagnosis:</span> Non-Small Cell Lung Cancer (NSCLC) - Adenocarcinoma</p> <p><span class="data-label">Location:</span> Right Upper Lobe (RUL)</p> <p><span class="data-label">Date of Diagnosis:</span> 01/25/2025 (CT-guided Biopsy)</p> <p><span class="data-label">TNM Stage (AJCC 8th Ed):</span> cT2a N0 M0</p> <p><span class="data-label">Overall Stage:</span> Stage IB</p> <p><span class="data-label">Symptoms at Presentation:</span> Incidental finding on chest X-ray for pre-op clearance (knee surgery). Denies cough, SOB, chest pain.</p> <p><span class="data-label">Relevant History:</span> 40 pack-year smoking history (quit 5 yrs ago), Mild COPD.</p> <p><span class="data-label">Baseline Neurological Status:</span> N/A</p>
+                 <p><span class="data-label">Vital Signs Summary (01/30/25):</span> BP 140/85, Wt 88 kg</p> <p><span class="data-label">Emergency Plan (Seizures):</span> N/A</p>
+                 <p><span class="data-label">Performance Status (ECOG):</span> 1 (Restricted in physically strenuous activity but ambulatory)</p> <p><span class="data-label">Pulmonary Function Tests (PFTs):</span> FEV1 65% predicted, DLCO 60% predicted. Medically inoperable based on PFTs/comorbidities.</p> <hr> <h4>Diagnosis & Staging Tab Explanation</h4> <ul><li><strong>Purpose:</strong> Details lung cancer type, location, early stage, and reason for non-surgical approach.</li><li><strong>Importance:</strong> Early stage (IB) NSCLC. Patient deemed medically inoperable due to pulmonary function, making definitive radiation therapy the primary treatment option. SBRT is a standard option for medically inoperable early stage NSCLC. ECOG status indicates reasonable fitness for treatment.</li></ul>
+            </div>
+
+            <div id="treatment_rm" class="tab-content hidden">
+                 <h3 class="section-header">Treatment Plans</h3>
+                 <p><span class="data-label">Radiation Oncologist:</span> Dr. Kevin Black</p> <p><span class="data-label">Treatment Intent:</span> Definitive (Curative)</p> <p><span class="data-label">Planned Modality:</span> Stereotactic Body Radiation Therapy (SBRT)</p> <p><span class="data-label">Treatment Technique:</span> VMAT / Multiple Coplanar/Non-coplanar Arcs</p> <p><span class="data-label">Target Volume:</span> PTV encompassing RUL primary tumor with margin based on ITV from 4D-CT.</p> <p><span class="data-label">Total Dose:</span> 54 Gy</p> <p><span class="data-label">Fractionation:</span> 18 Gy/fraction, 3 fractions (QOD or similar)</p> <p><span class="data-label">Immobilization:</span> BodyFix vacuum bag, Wingboard (Arms Up).</p> <p><span class="data-label">Motion Management:</span> 4D-CT simulation to assess respiratory motion, Internal Target Volume (ITV) approach used for PTV expansion.</p> <p><span class="data-label">Medications:</span>
+                     <ul>
+                         <li>Albuterol Inhaler PRN</li> <li>Cough Syrup (e.g., Tessalon Perles) PRN radiation-induced cough</li> <li>Consideration for Esomeprazole PRN esophagitis</li> <li>Consideration for short course of steroids if radiation pneumonitis develops</li>
+                     </ul>
+                 </p>
+                 <hr> <h4>Treatment Plans Tab Explanation</h4> <ul><li><strong>Purpose:</strong> Outlines definitive SBRT plan for medically inoperable early-stage lung cancer.</li><li><strong>Importance:</strong> Details curative intent, modality (SBRT offers high local control with short course), technique (VMAT common), target (tumor focus), high dose per fraction SBRT regimen. Highlights critical need for robust immobilization and motion management (4D-CT/ITV/Gating). Supportive meds target potential SBRT side effects (cough, fatigue, chest wall pain, pneumonitis).</li></ul>
+            </div>
+
+            <div id="imaging_rm" class="tab-content hidden">
+                 <h3 class="section-header">Imaging & Reports</h3>
+                 <table>
+                     <thead><tr><th>Date</th><th>Type</th><th>Report Summary</th><th>Link</th></tr></thead>
+                     <tbody>
+                         <tr><td>12/15/2024</td><td>Chest X-Ray</td><td>3 cm opacity RUL, recommend CT chest.</td><td><a href="#" onclick="openModal('rm-cxr-modal'); return false;">View</a></td></tr> <tr><td>01/10/2025</td><td>CT Chest w/ Contrast</td><td>3.2 cm spiculated mass RUL, concerning for malignancy. No definite mediastinal adenopathy.</td><td><a href="#" onclick="openModal('rm-ct-chest-modal'); return false;">View</a></td></tr> <tr><td>01/20/2025</td><td>PET/CT (Whole Body)</td><td>Hypermetabolic RUL mass (SUV 8.9). No FDG-avid nodal or distant metastatic disease.</td><td><a href="#" onclick="openModal('rm-pet-ct-modal'); return false;">View</a></td></tr> <tr><td>01/25/2025</td><td>CT-Guided Biopsy Report</td><td>NSCLC - Adenocarcinoma.</td><td><a href="#" onclick="openModal('rm-path-modal'); return false;">View Full Report</a></td></tr> <tr><td>02/10/2025</td><td>4D-CT Simulation (Thorax)</td><td>CT acquired with respiratory tracking (4D). Tumor motion assessed (~1.2 cm sup-inf). Immobilized in BodyFix bag. Data acquired for SBRT planning.</td><td><a href="#" onclick="openModal('rm-4dct-sim-modal'); return false;">View</a></td></tr> </tbody>
+                 </table>
+                  <hr> <h4>Imaging & Reports Tab Explanation</h4> <ul><li><strong>Purpose:</strong> Shows diagnostic pathway (CXR, CT, PET/CT) identifying and staging the lung tumor. Includes pathology confirmation via biopsy and specialized 4D-CT Sim.</li><li><strong>Importance:</strong> PET/CT confirms localized disease (N0 M0). Biopsy confirms adenocarcinoma histology. 4D-CT Sim is crucial for assessing tumor motion due to breathing, essential for accurate SBRT planning.</li></ul>
+            </div>
+
+            <div id="labs_rm" class="tab-content hidden">
+                 <h3 class="section-header">Lab Results</h3>
+                 <p>No concurrent chemotherapy planned. Labs primarily for baseline assessment.</p>
+                 <table>
+                     <thead><tr><th>Date</th><th>Test</th><th>Result</th><th>Range</th><th>Notes</th></tr></thead>
+                     <tbody>
+                         <tr><td>02/05/2025</td><td>CBC</td><td>WNL</td><td>N/A</td><td>Pre-RT Baseline</td></tr> <tr><td>02/05/2025</td><td>CMP</td><td>WNL</td><td>N/A</td><td>Pre-RT Baseline</td></tr> </tbody>
+                 </table>
+                 <hr> <h4>Lab Results Tab Explanation</h4> <ul><li><strong>Purpose:</strong> Baseline labs before starting radiation.</li><li><strong>Importance:</strong> Confirms no major contraindications to starting RT. Extensive monitoring less critical than with concurrent chemo, but checks may occur if patient develops issues.</li></ul>
+            </div>
+
+            <div id="notes_rm" class="tab-content hidden">
+                 <h3 class="section-header">Progress Notes</h3>
+                 <table>
+                     <thead><tr><th>Date</th><th>Author</th><th>Note Type</th><th>Summary</th></tr></thead>
+                     <tbody>
+                         <tr><td>01/15/2025</td><td>Dr. Susan Davis (Pulm)</td><td>Consult Note</td><td>Pt referred for RUL mass on CT. PET/CT confirms FDG-avid lesion, N0M0. PFTs show FEV1 65%, DLCO 60%. Discussed w/ Thoracic Surgery - pt high risk for lobectomy due to PFTs. Refer to Rad Onc for definitive RT options (conventional vs SBRT).</td></tr> <tr><td>01/30/2025</td><td>Dr. Kevin Black (Rad Onc)</td><td>Initial Consult</td><td>Pt w/ Stage IB NSCLC, medically inoperable. Discussed definitive RT options. SBRT (54Gy/3fx) recommended given early stage and inoperability. Explained procedure, higher dose/fraction, potential side effects (fatigue, cough, chest wall pain, pneumonitis risk). Pt agrees. 4D Sim scheduled.</td></tr> <tr><td>02/10/2025</td><td>Physics/Dosimetry</td><td>Planning Note</td><td>SBRT VMAT plan completed using 4D-CT ITV approach. Dose constraints met for spinal cord, heart, esophagus, contralateral lung, brachial plexus. Plan approved by Dr. Black.</td></tr> <tr><td>02/17/2025</td><td>Dr. Kevin Black (Rad Onc)</td><td>On Treatment Check (Post Fx 1/3)</td><td>Pt completed Fx 1 SBRT yesterday. Reports mild fatigue today. No significant cough, pain or SOB. Tolerating well. Continue SBRT as planned next treatment day.</td></tr> <tr><td>02/21/2025</td><td>Dr. Kevin Black (Rad Onc)</td><td>On Treatment Check (Post Fx 2/3)</td><td>Completed Fx 2 SBRT yesterday. Mild fatigue persists. Minimal dry cough. No chest wall pain. Tolerating well. Final fraction scheduled.</td></tr> </tbody>
+                 </table>
+                 <hr> <h4>Progress Notes Tab Explanation</h4> <ul><li><strong>Purpose:</strong> Documents decision-making for non-surgical approach, RT consultation outlining SBRT plan, planning approval, and on-treatment monitoring during the short course.</li><li><strong>Importance:</strong> Shows rationale for RT as primary treatment and choice of SBRT. Details discussion of SBRT plan. Tracks expected side effects during the brief, high-dose treatment course.</li></ul>
+            </div>
+
+            <div id="pteducation_rm" class="tab-content hidden">
+                <h3 class="section-header">Patient Education</h3>
+                <p><span class="data-label">Treatment Goals Discussed:</span> Definitive treatment with curative intent using SBRT.</p>
+                <p><span class="data-label">Potential Side Effects Reviewed:</span> Fatigue (common), cough, shortness of breath, chest wall soreness/pain (can occur weeks/months later), skin irritation (less common with SBRT), radiation pneumonitis (inflammation of lung, risk discussed), potential for rib fracture (rare, long term).</p>
+                <p><span class="data-label">Safety Considerations:</span> Importance of attending all scheduled treatments, reporting symptoms like worsening cough, shortness of breath, fever, or significant pain promptly.</p>
+                <p><span class="data-label">Patient Responsibilities:</span> Attend appointments, report symptoms, maintain usual activity as tolerated.</p>
+                <p><span class="data-label">Medication Compliance Instructions:</span> Use PRN cough syrup as needed. Follow up instructions regarding any potential steroid use if pneumonitis develops.</p>
+                <hr> <h4>Patient Education Tab Explanation</h4>
+                <ul>
+                    <li><strong>Purpose:</strong> Groups key information provided to the patient regarding their Thorax SBRT plan.</li>
+                    <li><strong>Importance:</strong> Ensures patient understanding of curative goals with SBRT, potential acute and late side effects (including pneumonitis and chest wall pain specific to thoracic SBRT), and the importance of symptom reporting during and after the short treatment course.</li>
+                </ul>
+            </div>
+            <div id="scheduling_rm" class="tab-content hidden">
+                 <h3 class="section-header">Scheduling & Appointments</h3>
+                 <table>
+                     <thead><tr><th>Date</th><th>Time</th><th>Appointment Type</th><th>Location</th><th>Status</th></tr></thead>
+                     <tbody>
+                         <tr><td>01/10/2025</td><td>9 AM</td><td>CT Chest</td><td>Radiology</td><td>Completed</td></tr> <tr><td>01/20/2025</td><td>2 PM</td><td>PET/CT</td><td>Nuclear Med</td><td>Completed</td></tr> <tr><td>01/25/2025</td><td>11 AM</td><td>CT Biopsy Lung</td><td>Interventional Rad</td><td>Completed</td></tr> <tr><td>01/30/2025</td><td>3 PM</td><td>Rad Onc Consult (Black)</td><td>Rad Onc Clinic</td><td>Completed</td></tr> <tr><td>02/10/2025</td><td>10 AM</td><td>4D-CT Simulation Thorax</td><td>Rad Onc Sim</td><td>Completed</td></tr> <tr><td>02/16/2025</td><td>~2 PM</td><td>SBRT Treatment (1/3)</td><td>LINAC 2 (SBRT)</td><td>Completed</td></tr> <tr><td>02/18/2025</td><td>~2 PM</td><td>SBRT Treatment (2/3)</td><td>LINAC 2 (SBRT)</td><td>Completed</td></tr> <tr><td>02/20/2025</td><td>~2 PM</td><td>SBRT Treatment (3/3)</td><td>LINAC 2 (SBRT)</td><td>Completed</td></tr> <tr><td>Weekly (e.g., 02/21)</td><td>~2:30 PM (Post-RT)</td><td>OTV / Post Tx Check</td><td>Rad Onc Clinic</td><td>Scheduled</td></tr> </tbody>
+                 </table>
+                 <hr> <h4>Scheduling Tab Explanation</h4> <ul><li><strong>Purpose:</strong> Manages diagnostic, consultation, simulation, and SBRT appointments for a short, hypofractionated course.</li><li><strong>Importance:</strong> Coordinates the condensed SBRT schedule, including specialized simulation and physician checks around treatment days.</li></ul>
+            </div>
+
+            <div id="cpt_rm" class="tab-content hidden">
+                 <h3 class="section-header">CPT Charges (Examples)</h3>
+                 <p class="disclaimer">Disclaimer: Examples only. Actual codes vary based on technique/documentation.</p> <table>
+                     <thead><tr><th>Example CPT Code</th><th>Description</th><th>Frequency</th></tr></thead>
+                     <tbody>
+                         <tr><td>77290</td><td>Simulation, Complex (4D-CT Thorax)</td><td>Once</td></tr> <tr><td>77334</td><td>Treatment device, Complex (BodyFix/VacLok)</td><td>Once</td></tr> <tr><td>77301</td><td>IMRT planning (often used for SBRT)</td><td>Once</td></tr> <tr><td>77373</td><td>Stereotactic body radiotherapy delivery</td><td>Per Fraction (3x)</td></tr> <tr><td>77387</td><td>Image Guided RT (IGRT)</td><td>Per Fraction (3x)</td></tr> <tr><td>77427</td><td>Radiation treatment management, 5 treatments</td><td>Once (for course <= 5 fx)</td></tr> </tbody>
+                 </table>
+                 <hr> <h4>CPT Charges Tab Explanation</h4> <ul><li><strong>Purpose:</strong> Illustrative CPT codes for Thorax SBRT.</li><li><strong>Importance:</strong> Shows codes for complex simulation (4D), immobilization, IMRT-style planning, the specific SBRT delivery code (77373), mandatory IGRT, and single weekly management code for the short course.</li></ul>
+            </div>
+
+        </div>
+
+        <div id="rm-cxr-modal" class="modal-overlay"> <div class="modal-content">
+            <button class="close-button" onclick="closeModal('rm-cxr-modal')" title="Close">×</button>
+            <h3>Chest X-Ray Report (12/15/2024)</h3>
+            <p><strong>Findings:</strong> Frontal and lateral views demonstrate a 3 cm opacity within the right upper lobe. No pleural effusion or pneumothorax. Heart size normal.</p>
+            <p><strong>Impression:</strong> Right upper lobe opacity, suspicious for malignancy. Recommend CT chest for further evaluation.</p>
+            <img src="https://placehold.co/600x400/EEE/31343C?text=Chest+X-Ray+Image" alt="Chest X-Ray Placeholder">
+        </div></div>
+        <div id="rm-ct-chest-modal" class="modal-overlay"> <div class="modal-content">
+            <button class="close-button" onclick="closeModal('rm-ct-chest-modal')" title="Close">×</button>
+            <h3>CT Chest Report (01/10/2025)</h3>
+            <p><strong>Findings:</strong> A 3.2 cm spiculated mass is identified in the posterior segment of the right upper lobe. No definite mediastinal or hilar adenopathy exceeding 1 cm short axis. Small apical scarring noted bilaterally. Mild centrilobular emphysema.</p>
+            <p><strong>Impression:</strong> Right upper lobe mass highly suspicious for primary lung malignancy. No evidence of nodal involvement based on size criteria.</p>
+            <img src="https://placehold.co/600x400/DDD/525252?text=CT+Chest+Image" alt="CT Chest Placeholder">
+        </div></div>
+        <div id="rm-pet-ct-modal" class="modal-overlay"> <div class="modal-content">
+            <button class="close-button" onclick="closeModal('rm-pet-ct-modal')" title="Close">×</button>
+            <h3>PET/CT Report (01/20/2025)</h3>
+            <p><strong>Findings:</strong> Intense FDG uptake corresponding to the 3.2 cm right upper lobe mass (SUVmax 8.9). No FDG-avid lymph nodes identified in the mediastinum or hila. No suspicious FDG uptake elsewhere to suggest distant metastatic disease.</p>
+            <p><strong>Impression:</strong> Hypermetabolic right upper lobe mass consistent with primary malignancy. No evidence of regional nodal or distant metastatic disease (Stage I based on PET/CT).</p>
+            <img src="https://placehold.co/600x400/CCC/696969?text=PET/CT+Image" alt="PET CT Placeholder">
+        </div></div>
+         <div id="rm-path-modal" class="modal-overlay">
+            <div class="modal-content">
+                <button class="close-button" onclick="closeModal('rm-path-modal')" title="Close">×</button>
+                <h3>ANATOMIC PATHOLOGY REPORT</h3>
+                <p><strong>Laboratory:</strong> ANYTOWN HOSPITAL PATHOLOGY (Fictional Lab)</p><hr>
+                <p><strong>Patient:</strong> Miller, Robert | <strong>ID:</strong> 99112 | <strong>DOB:</strong> 03/15/1955</p>
+                <p><strong>Referring Doctor:</strong> Dr. Susan Davis (Pulmonology)</p>
+                <p><strong>Pathology #:</strong> S-25-0987 | <strong>Date Obtained:</strong> 01/25/2025</p><hr>
+                <p><strong>SPECIMEN:</strong> CT-Guided Core Biopsy, Right Upper Lobe Lung Mass</p><hr>
+                <p><strong>DIAGNOSIS:</strong> NON-SMALL CELL LUNG CARCINOMA, FAVOR ADENOCARCINOMA.</p><hr>
+                <p><strong>MICROSCOPIC DESCRIPTION:</strong> Sections show core biopsy fragments containing nests and glandular structures formed by atypical epithelial cells with enlarged nuclei, prominent nucleoli, and moderate amounts of cytoplasm infiltrating a desmoplastic stroma. Immunohistochemical stains are pending for definitive subtyping.</p><hr>
+                <p><strong>COMMENT:</strong> Findings are diagnostic of non-small cell lung carcinoma. Features favor adenocarcinoma morphology. Awaiting molecular testing results if ordered separately.</p><hr>
+                <p><em>Electronically signed by Dr. Path Fictional, 01/27/2025</em></p>
+            </div>
+        </div>
+         <div id="rm-4dct-sim-modal" class="modal-overlay"> <div class="modal-content">
+            <button class="close-button" onclick="closeModal('rm-4dct-sim-modal')" title="Close">×</button>
+            <h3>4D-CT Simulation Details (02/10/2025)</h3>
+            <p><strong>Procedure:</strong> 4D CT simulation for Thorax SBRT.</p>
+            <p><strong>Setup:</strong> Patient positioned supine on wingboard with arms up, immobilized in BodyFix vacuum bag. Respiratory motion assessed using Varian RPM system.</p>
+            <p><strong>Scan Parameters:</strong> 4D CT dataset acquired from lung apices through adrenal glands using 2.5 mm slice thickness. Average intensity projection (AIP) and maximum intensity projection (MIP) reconstructions generated.</p>
+            <p><strong>Motion Assessment:</strong> Tumor motion measured approximately 1.2 cm in superior-inferior dimension, 0.4 cm anterior-posterior, 0.3 cm lateral.</p>
+            <p><strong>Notes:</strong> Patient tolerated procedure. Tattoos placed. Data sent for SBRT planning using ITV approach.</p>
+            <img src="https://placehold.co/600x300/BBB/708090?text=4D-CT+Simulation+Thorax" alt="4D-CT Sim Thorax Placeholder">
+        </div></div>
+        <script> /* --- Script identical to previous example, using '_rm' --- */
+        function showTab(tabId) { let container = document.getElementById(tabId)?.closest('.emr-container'); if (!container) return; let tabContents = container.getElementsByClassName("tab-content"); for (let i = 0; i < tabContents.length; i++) { if (tabContents[i].classList.contains('tab-content')) {tabContents[i].classList.add("hidden");} } let tabButtons = container.getElementsByClassName("tab-button"); for (let i = 0; i < tabButtons.length; i++) { tabButtons[i].classList.remove("active"); } const selectedTabContent = document.getElementById(tabId); if (selectedTabContent) { selectedTabContent.classList.remove("hidden"); } const activeButton = container.querySelector(`.tab-button[onclick="showTab('${tabId}')"]`); if (activeButton) { activeButton.classList.add("active"); } }
+        document.addEventListener('DOMContentLoaded', (event) => { const defaultTabId = 'demographics_rm'; const defaultTabContent = document.getElementById(defaultTabId); let container = defaultTabContent?.closest('.emr-container'); if (defaultTabContent && container) { defaultTabContent.classList.remove('hidden'); let tabContents = container.getElementsByClassName("tab-content"); for (let i = 0; i < tabContents.length; i++) { if (tabContents[i].id !== defaultTabId && tabContents[i].classList.contains('tab-content')) { tabContents[i].classList.add("hidden"); } } const defaultActiveButton = container.querySelector(`.tab-button[onclick="showTab('${defaultTabId}')"]`); if (defaultActiveButton) { defaultActiveButton.classList.add('active'); } } const modals = document.getElementsByClassName('modal-overlay'); for (let i = 0; i < modals.length; i++) { modals[i].style.display = 'none'; } });
+         // --- Modal Functions ---
+         function openModal(modalId) { const modal = document.getElementById(modalId); if (modal) { modal.style.display = 'flex'; } else { console.error("Modal not found:", modalId); } }
+         function closeModal(modalId) { const modal = document.getElementById(modalId); if (modal) { modal.style.display = 'none'; } else { console.error("Modal not found:", modalId); } }
+         window.addEventListener('click', function(event) { const modals = document.getElementsByClassName('modal-overlay'); for (let i = 0; i < modals.length; i++) { if (event.target == modals[i]) { modals[i].style.display = 'none'; } } });
+         // --- End Modal Functions ---
+       </script>
+    </div>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CT Simulation Data Entry Form - Robert Miller</title>
+    <style>
+          body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+
+        .form-section, .ct-order-display {
+            margin-bottom: 25px;
+            padding: 15px 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        h1, h2, legend {
+            color: #333;
+        }
+
+         h1 {
+            text-align: center;
+            color: #0056b3;
+            border-bottom: 2px solid #0056b3;
+            padding-bottom: 10px;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+         h2 {
+             font-size: 20px;
+             text-align: left;
+             border-bottom: 1px solid #ccc;
+             padding-bottom: 5px;
+             margin-top: 25px;
+             margin-bottom: 15px;
+         }
+         .ct-order-display h2 {
+             text-align: center;
+             margin-bottom: 10px;
+             font-size: 20px;
+             border-bottom: 1px solid #0056b3;
+             padding-bottom: 6px;
+         }
+
+         .ct-order-display p {
+             margin: 3px 0;
+             line-height: 1.4;
+             font-size: 0.9em;
+             font-family: monospace;
+             white-space: normal;
+         }
+         .ct-order-display strong {
+             font-weight: bold;
+             margin-right: 3px;
+             display: inline-block;
+         }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+
+        textarea {
+            min-height: 60px;
+            resize: vertical;
+        }
+
+        fieldset {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #fdfdfd;
+        }
+
+        legend {
+            font-weight: bold;
+            font-size: 1.1em;
+            padding: 0 10px;
+            color: #0056b3;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+            font-size: 0.95em;
+        }
+
+
+        button {
+            margin-top: 10px;
+            padding: 12px 20px;
+            background-color: #0056b3;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: block;
+            width: 100%;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+
+        button:hover {
+            background-color: #003d82;
+        }
+         button#submitBtn {
+             background-color: #28a745; /* Green */
+         }
+         button#submitBtn:hover {
+             background-color: #218838;
+         }
+
+        #feedback {
+            margin-top: 20px;
+            color: red;
+            font-weight: bold;
+        }
+
+        #simulation-record {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f0f0f0;
+        }
+         .ct-order-display {
+            background-color: #eef;
+            border: 1px solid #ccd;
+            font-family: monospace;
+        }
+
+        #record-actions {
+            margin-top: 10px;
+            text-align: right;
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .ct-order-display, .ct-order-display *,
+            #simulation-record, #simulation-record * {
+                visibility: visible;
+            }
+            .ct-order-display, #simulation-record {
+                position: relative;
+                width: 100%;
+                margin: 10px 0;
+            }
+             .form-section, button, #feedback, #record-actions, h1 {
+                display: none;
+                visibility: hidden;
+             }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="ct-order-display form-section">
+        <h2>CT SIMULATION ORDER</h2>
+        <p><strong>PATIENT:</strong> Robert Miller | <strong>MRN:</strong> 99112 | <strong>DOB:</strong> 1955-03-15 | <strong>PHYSICIAN:</strong> Dr. Kevin Black</p> <p><strong>DIAGNOSIS:</strong> NSCLC Stage IB (RUL) | <strong>SITE:</strong> Thorax | <strong>INTENT:</strong> Definitive (SBRT)</p> <p><strong>POSITION:</strong> Supine, Head First, Arms Up (Wingboard) | <strong>IMMOB:</strong> BodyFix Vac-Lok bag, +/- Abd Compression</p> <p><strong>SCAN:</strong> Lung Apices to Adrenals | <strong>SLICE:</strong> 2.5mm | <strong>4D:</strong> Yes | <strong>BREATH:</strong> Free Breathing w/ Motion Tracking</p> <p><strong>CONTRAST:</strong> IV: No | Oral: No | Rectal: No | <strong>PREP:</strong> N/A</p>
+        <p><strong>MARKS:</strong> Tattoos (Ant, Lat R/L) | <strong>REF PT:</strong> Tattoos | <strong>FID VIS:</strong> N/A | <strong>PHOTOS:</strong> Yes</p>
+        <p><strong>INSTRUCTIONS:</strong> Ensure VacLok holds form. Monitor respiratory trace. Obtain AIP/MIP reconstructions.</p>
+    </div>
+    <h1>Patient Information</h1>
+
+    <div class="form-section">
+        <table>
+            <tr>
+                <th>Field</th>
+                <th>Value</th>
+             </tr>
+            <tr>
+                <td>Patient Name:</td>
+                <td><input type="text" id="patient_name" value="Robert Miller"></td> </tr>
+            <tr>
+                 <td>Patient ID:</td>
+                <td><input type="text" id="patient_id" value="99112"></td> </tr>
+            <tr>
+                <td>Date of Birth:</td>
+                 <td><input type="date" id="patient_dob" value="1955-03-15"></td> </tr>
+        </table>
+    </div>
+
+    <h1>CT Simulation Parameters</h1>
+
+    <div class="form-section">
+        <table>
+            <tr>
+                 <th>Parameter</th>
+                <th>Value</th>
+            </tr>
+            <tr>
+                <td>Simulation Date:</td>
+                <td><input type="date" id="sim_date" value="2025-02-10"></td> </tr>
+            <tr>
+                <td>Immobilization Device:</td>
+                <td>
+                    <select id="immobilization">
+                         <option value="">-- Select --</option>
+                         <option value="mask">Thermoplastic Mask</option>
+                        <option value="prone_cradle">Prone Breast Cradle</option>
+                        <option value="vac_bag" selected>Vac-Lok Bag</option> <option value="wing_board">Wing Board</option> <option value="belly_board">Belly Board</option>
+                        <option value="other">Other (Specify: e.g., Vac Bag + Wingboard)</option>
+                    </select>
+                </td>
+             </tr>
+            <tr>
+                <td>Patient Orientation:</td>
+                <td>
+                    <select id="patient_orientation">
+                         <option value="">-- Select --</option>
+                         <option value="hfs" selected>Head First Supine</option> <option value="hfp">Head First Prone</option>
+                        <option value="ffs">Feet First Supine</option>
+                        <option value="ffp">Feet First Prone</option>
+                         <option value="other">Other</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                 <td>Scan Range:</td>
+                <td><input type="text" id="scan_range" placeholder="e.g., Vertex to C2" value="Lung Apices to Adrenals"></td> </tr>
+            <tr>
+                <td>Slice Thickness (mm):</td>
+                 <td><input type="number" id="slice_thickness" step="0.1" placeholder="e.g., 3.0" value="2.5"></td> </tr>
+            <tr>
+                <td>Contrast:</td>
+                <td>
+                     <select id="contrast">
+                        <option value="">-- Select --</option>
+                        <option value="none" selected>None</option> <option value="iv">IV Contrast</option>
+                        <option value="oral">Oral Contrast</option>
+                         <option value="both">IV and Oral</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Scan Protocol:</td>
+                <td>
+                    <select id="scan_protocol">
+                        <option value="">-- Select --</option>
+                        <option value="brain">Brain</option>
+                        <option value="hn">Head and Neck</option>
+                         <option value="chest" selected>Chest</option> <option value="abdomen_pelvis">Abdomen & Pelvis</option>
+                        <option value="spine">Spine</option>
+                        <option value="extremity">Extremity</option>
+                         <option value="other">Other (Specify: e.g., Chest SBRT 4D)</option>
+                    </select>
+                </td>
+            </tr>
+
+            </table>
+    </div>
+
+     <button id="submitBtn" onclick="collectAndValidateData()">Submit Parameters</button>
+
+    <div id="feedback"></div>
+
+    <div id="simulation-record" style="display: none;">
+        <h2>Simulation Record</h2>
+        <div id="record-content"></div>
+        <div id="record-actions">
+            <button onclick="printRecord()">Print</button>
+            <button onclick="emailRecord()">Email Record</button>
+        </div>
+    </div>
+
+    <script>
+        function collectAndValidateData() {
+             // Patient Information
+            const patientName = document.getElementById('patient_name').value;
+            const patientId = document.getElementById('patient_id').value;
+            const patientDob = document.getElementById('patient_dob').value;
+
+            // CT Simulation Parameters
+            const simDate = document.getElementById('sim_date').value;
+            const immobilization = document.getElementById('immobilization').value;
+            const patientOrientation = document.getElementById('patient_orientation').value;
+            const scanRange = document.getElementById('scan_range').value;
+            const sliceThickness = document.getElementById('slice_thickness').value;
+            const contrast = document.getElementById('contrast').value;
+            const scanProtocol = document.getElementById('scan_protocol').value;
+
+            // Basic Validation (Removed Rationale Check)
+            if (!patientName || !patientId || !patientDob || !simDate || !immobilization || !patientOrientation || !scanRange || !sliceThickness || !contrast || !scanProtocol) {
+                document.getElementById('feedback').textContent = "Please fill out all fields.";
+                return;
+            }
+
+            // Store Data
+            const simulationData = { patientName, patientId, patientDob, simDate, immobilization, patientOrientation, scanRange, sliceThickness, contrast, scanProtocol };
+            console.log(simulationData); // For demonstration
+
+            document.getElementById('feedback').textContent = "Simulation parameters recorded.";
+            displayRecord(simulationData);
+        }
+
+        function displayRecord(data) {
+            const recordContent = document.getElementById('record-content');
+            // Display Record (Removed Rationale)
+            recordContent.innerHTML = `
+                <p><strong>Patient Name:</strong> ${data.patientName}</p>
+                <p><strong>Patient ID:</strong> ${data.patientId}</p>
+                <p><strong>Date of Birth:</strong> ${data.patientDob}</p>
+                <hr>
+                <p><strong>Simulation Date:</strong> ${data.simDate}</p>
+                <p><strong>Immobilization Device:</strong> ${data.immobilization}</p>
+                <p><strong>Patient Orientation:</strong> ${data.patientOrientation}</p>
+                <p><strong>Scan Range:</strong> ${data.scanRange}</p>
+                <p><strong>Slice Thickness:</strong> ${data.sliceThickness} mm</p>
+                <p><strong>Contrast:</strong> ${data.contrast}</p>
+                <p><strong>Scan Protocol:</strong> ${data.scanProtocol}</p>
+            `;
+            document.getElementById('simulation-record').style.display = 'block';
+        }
+
+           function printRecord() {
+                const printWindow = window.open('', '_blank');
+                printWindow.document.write('<html><head><title>CT Simulation Record</title>');
+                const styles = document.querySelectorAll('style');
+                styles.forEach(style => printWindow.document.write(style.outerHTML));
+                printWindow.document.write('<style>@media print { body { background-color: #fff; } .form-section, button, #feedback, #record-actions, h1 { display: none; visibility: hidden; } .ct-order-display, #simulation-record { visibility: visible; position: relative; } }</style>');
+                printWindow.document.write('</head><body>');
+                const orderSection = document.querySelector('.ct-order-display');
+                if (orderSection) {
+                    printWindow.document.write('<div class="ct-order-display">');
+                    printWindow.document.write(orderSection.innerHTML);
+                    printWindow.document.write('</div>');
+                }
+                printWindow.document.write('<div id="simulation-record">');
+                printWindow.document.write(document.getElementById('simulation-record').innerHTML);
+                 printWindow.document.write('</div>');
+                printWindow.document.close();
+                setTimeout(() => { printWindow.print(); }, 500);
+            }
+
+
+        function emailRecord() {
+            const orderElement = document.querySelector('.ct-order-display');
+            let orderContent = "";
+            if (orderElement) {
+                 orderContent += orderElement.querySelector('h2').innerText + "\n--------------------\n";
+                 orderElement.querySelectorAll('p').forEach(p => {
+                     // Replace multiple spaces used for formatting with single spaces, keep pipes
+                     orderContent += p.innerText.replace(/\s+/g, ' ').replace(/ \| /g, ' | ') + "\n";
+                 });
+                 orderContent += "\n---\n\n"; // Separator
+            }
+
+            const recordContent = document.getElementById('record-content').innerText;
+            const subject = "CT Simulation Record for " + document.getElementById('patient_name').value;
+            // Body now only includes record details, not rationale
+            const body = orderContent + "Simulation Record Details:\n\n" + recordContent;
+            const mailtoLink = "mailto:?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+
+            window.location.href = mailtoLink;
+        }
+    </script>
+
+</body>
+
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radiation Oncology Daily Treatment Chart - Robert Miller</title>
+    <style>
+        /* Basic styling - Same as previous HTML example */
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 20px auto;
+            line-height: 1.6;
+        }
+        h1, h2, h3 {
+            color: #333;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+            margin-top: 25px;
+        }
+        h1 {
+             border-bottom: 2px solid #0056b3;
+             color: #0056b3;
+        }
+        .patient-info, .treatment-summary {
+            background-color: #eef;
+            padding: 15px;
+            border: 1px solid #ccd;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+         .treatment-summary ul { margin-left: 20px; padding-left: 0; list-style-type: disc; }
+         .treatment-summary li { margin-bottom: 2px; }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        select,
+        textarea {
+            padding: 8px;
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        textarea {
+            min-height: 60px;
+        }
+        .fraction-entry {
+            margin-bottom: 20px;
+            border: 1px solid #eee;
+            padding: 15px;
+            background-color: #fdfdfd;
+            border-radius: 5px;
+        }
+        .treatment-record {
+            margin-top: 20px;
+            border: 2px solid #ccc;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+        .treatment-record p {
+            margin: 5px 0;
+        }
+        button {
+            background-color: #0056b3;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #003d82;
+        }
+        #visit-reminder {
+            color: red;
+            font-weight: bold;
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #fee;
+            border: 1px solid red;
+            border-radius: 4px;
+            text-align: center;
+            display: none; /* Hidden by default */
+        }
+        .field-group {
+            border: 1px dashed #ddd;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        .field-group legend {
+            font-weight: bold;
+            color: #555;
+            padding: 0 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Radiation Oncology Daily Treatment Chart</h1>
+
+    <div class="patient-info">
+        <h2>Patient Information</h2>
+        <p><strong>Name:</strong> Robert Miller</p> <p><strong>DOB:</strong> 09/08/1955</p> <p><strong>Medical Record ID:</strong> 99001</p> <p><strong>Diagnosis:</strong> Non-Small Cell Lung Cancer (NSCLC), Stage IA (Medically Inoperable)</p> <p><strong>Radiation Oncologist:</strong> Dr. Evelyn Reed</p> </div>
+
+    <div class="treatment-summary">
+        <h2>Treatment Plan Summary</h2>
+        <p><strong>Treatment Intent:</strong> Definitive (Curative Intent)</p> <p><strong>Treatment Site:</strong> Thorax (Right Upper Lobe Lung Nodule)</p> <p><strong>Modality:</strong> Stereotactic Body Radiation Therapy (SBRT)</p> <p><strong>Technique:</strong> VMAT / Multiple Coplanar/Non-coplanar Arcs</p> <p><strong>Total Prescribed Dose:</strong> 54 Gy</p> <p><strong>Fractionation:</strong> 18 Gy / fraction (Every Other Day)</p> <p><strong>Number of Fractions:</strong> 3</p> <p><strong>Simulation CT Date:</strong> 01/15/2025</p> <p><strong>Setup Instructions/Immobilization:</strong> Supine, Arms up on Wingboard, BodyFix Vac-Lok bag, Abdominal Compression (if used)</p> <p><strong>Reference Marks:</strong> Tattoos (Ant, Lat R/L)</p> <p><strong>Beam Parameters (SBRT):</strong> 6/10 MV FFF Photons, Multiple VMAT arcs per plan</p> <p><strong>Isocenter/Laser Notes:</strong> Per plan, align to tattoos daily</p> <p><strong>Image Guidance (IGRT):</strong> Daily CBCT prior to treatment delivery, +/- 4D CBCT or Respiratory Gating</p> <p><strong>Concurrent Therapy:</strong> None</p> </div>
+
+    <h2>Add New Treatment Fraction</h2>
+    <div id="fractions-container">
+        </div>
+    <button onclick="addFractionEntry()">Add New Fraction Entry</button>
+
+    <h2>Recorded Treatments</h2>
+    <div id="treatment-records-container">
+        </div>
+
+    <h2>On Treatment Visit (OTV) Reminder</h2>
+    <p id="visit-reminder"></p>
+
+    <script>
+        let fractionCounter_RM = 0; // Unique counter for Robert Miller
+        let totalFractions_RM = 3; // Total fractions for Robert Miller (SBRT)
+        let startDate_RM = null;    // Start date for Robert Miller
+
+        // Billing codes relevant to Thorax SBRT
+        const billingCodes_RM = [
+            { code: "77373", description: "SBRT delivery, per fraction" },
+            { code: "77387", description: "Image guided radiation therapy (IGRT)" },
+            { code: "77334", description: "Treatment device, complex (VacLok, Wingboard)" },
+            { code: "77338", description: "MLC device for IMRT/SBRT" },
+            { code: "77290", description: "Simulation, Complex (w/ 4D CT if performed)" },
+            { code: "77301", description: "IMRT planning" }, // SBRT often uses IMRT/VMAT planning codes
+            { code: "77427", description: "Radiation treatment management, 5 treatments" }, // Typically billed once for SBRT course <= 5 fx
+        ];
+
+        // Function to add a new blank form for a fraction entry
+        function addFractionEntry() {
+            // Prevent adding more forms than total fractions
+            const currentForms = document.querySelectorAll('#fractions-container .fraction-entry').length;
+            const recordedForms = document.querySelectorAll('#treatment-records-container .treatment-record').length;
+            if (currentForms + recordedForms >= totalFractions_RM) {
+                alert(`Cannot add more than the total ${totalFractions_RM} fractions.`);
+                return;
+            }
+
+            fractionCounter_RM++; // Increment unique counter
+            const displayFractionNumber = recordedForms + currentForms + 1;
+
+            const container = document.getElementById('fractions-container');
+            const entry = document.createElement('div');
+            entry.classList.add('fraction-entry');
+            entry.id = `fraction-entry-rm-${fractionCounter_RM}`; // Unique ID
+
+            // Generate unique IDs for form elements
+            const fractionNumId = `fractionNumRM${fractionCounter_RM}`;
+            const treatmentDateId = `treatmentDateRM${fractionCounter_RM}`;
+            const machineId = `machineRM${fractionCounter_RM}`;
+            const imagingTypeId = `imagingTypeRM${fractionCounter_RM}`;
+            const igrtMatchQualityId = `igrtMatchQualityRM${fractionCounter_RM}`;
+            const shiftsAppliedId = `shiftsAppliedRM${fractionCounter_RM}`;
+            const igrtApprovedById = `igrtApprovedByRM${fractionCounter_RM}`;
+            const setupVerificationId = `setupVerificationRM${fractionCounter_RM}`;
+            const setupAdjustmentsId = `setupAdjustmentsRM${fractionCounter_RM}`;
+            const toleranceId = `toleranceRM${fractionCounter_RM}`;
+            // Side effects specific to Thorax SBRT
+            const sideEffectsCoughId = `sideEffectsCoughRM${fractionCounter_RM}`;
+            const sideEffectsDyspneaId = `sideEffectsDyspneaRM${fractionCounter_RM}`;
+            const sideEffectsChestWallPainId = `sideEffectsChestWallPainRM${fractionCounter_RM}`;
+            const sideEffectsFatigueId = `sideEffectsFatigueRM${fractionCounter_RM}`;
+            const sideEffectsSkinId = `sideEffectsSkinRM${fractionCounter_RM}`;
+            // End side effects
+            const patientConcernsId = `patientConcernsRM${fractionCounter_RM}`;
+            const instructionsGivenId = `instructionsGivenRM${fractionCounter_RM}`;
+            const therapistInitialsId = `therapistInitialsRM${fractionCounter_RM}`;
+            const billingCodeId = `billingCodeRM${fractionCounter_RM}`;
+            const dailyNotesId = `dailyNotesRM${fractionCounter_RM}`;
+
+            // HTML structure for the new fraction entry form
+            entry.innerHTML = `
+                <h3>Fraction <input type="number" id="${fractionNumId}" value="${displayFractionNumber}" style="width: 60px; display: inline-block;" readonly> / ${totalFractions_RM}</h3>
+
+                <label for="${treatmentDateId}">Treatment Date:</label>
+                <input type="date" id="${treatmentDateId}">
+
+                <label for="${machineId}">Treatment Machine:</label>
+                <select id="${machineId}">
+                    <option value="">-- Select Machine --</option>
+                    <option value="LINAC 1">LINAC 1</option>
+                    <option value="LINAC 2 (SBRT capable)">LINAC 2 (SBRT capable)</option>
+                    <option value="LINAC 3">LINAC 3</option>
+                    <option value="LINAC 4 (SBRT capable)">LINAC 4 (SBRT capable)</option>
+                </select>
+
+                <fieldset class="field-group">
+                    <legend>Image Guidance (IGRT)</legend>
+                    <label for="${imagingTypeId}">Imaging Type:</label>
+                    <select id="${imagingTypeId}">
+                        <option value="CBCT">CBCT</option>
+                        <option value="4D CBCT">4D CBCT</option>
+                        <option value="kV Pair (Orthogonal)">kV Pair (Orthogonal)</option>
+                        <option value="ExacTrac">ExacTrac</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <label for="${igrtMatchQualityId}">IGRT Match Quality:</label>
+                    <select id="${igrtMatchQualityId}">
+                        <option value="Good">Good</option>
+                        <option value="Fair">Fair</option>
+                        <option value="Adjustments Needed">Adjustments Needed</option>
+                    </select>
+                    <label for="${shiftsAppliedId}">Shifts Applied (X, Y, Z, Pitch, Roll, Yaw):</label>
+                    <input type="text" id="${shiftsAppliedId}" placeholder="e.g., X:0.1, Y:0.0, Z:-0.1, P:0.2...">
+                    <label for="${igrtApprovedById}">IGRT Approved By (Initials):</label>
+                    <input type="text" id="${igrtApprovedById}" style="width: 100px;">
+                </fieldset>
+
+                <fieldset class="field-group">
+                    <legend>Positioning & Immobilization</legend>
+                    <label for="${setupVerificationId}">Setup Verification:</label>
+                    <select id="${setupVerificationId}">
+                        <option value="Tolerances Met">Tolerances Met</option>
+                        <option value="Adjustments Made">Adjustments Made</option>
+                    </select>
+                    <label for="${setupAdjustmentsId}">Adjustments Made Description:</label>
+                    <textarea id="${setupAdjustmentsId}" rows="1" placeholder="Describe adjustments if any..."></textarea>
+                    <p>Immobilization Devices: Vac-Lok, Wingboard, Compression Checked & Correct</p>
+                </fieldset>
+
+                <fieldset class="field-group">
+                    <legend>Patient Assessment (Pre/Post Treatment)</legend>
+                    <label for="${toleranceId}">Tolerance:</label>
+                    <select id="${toleranceId}">
+                        <option value="Good">Good</option>
+                        <option value="Fair">Fair</option>
+                        <option value="Poor">Poor</option>
+                    </select>
+                    <label>Acute Side Effects:</label>
+                    <textarea id="${sideEffectsCoughId}" rows="1" placeholder="Cough: None, Mild, Mod, Severe..."></textarea>
+                    <textarea id="${sideEffectsDyspneaId}" rows="1" placeholder="Dyspnea: None, Mild, Mod, Severe..."></textarea>
+                    <textarea id="${sideEffectsChestWallPainId}" rows="1" placeholder="Chest Wall Pain: None, Mild, Mod..."></textarea>
+                    <textarea id="${sideEffectsFatigueId}" rows="1" placeholder="Fatigue: Mild, Moderate, Severe..."></textarea>
+                    <textarea id="${sideEffectsSkinId}" rows="1" placeholder="Skin Reaction: Grade (0-4)..."></textarea>
+
+                    <label for="${patientConcernsId}">Patient Concerns/Comments:</label>
+                    <textarea id="${patientConcernsId}" rows="2"></textarea>
+                    <label for="${instructionsGivenId}">Instructions Given:</label>
+                    <textarea id="${instructionsGivenId}" rows="2" placeholder="e.g., Activity level, symptom reporting..."></textarea>
+                </fieldset>
+
+                <label for="${therapistInitialsId}">Treatment Delivered By (Therapist Initials):</label>
+                <input type="text" id="${therapistInitialsId}" style="width: 150px;">
+
+                <label for="${billingCodeId}">Billing Code(s) Applied:</label>
+                 <select id="${billingCodeId}" multiple size="3">
+                    ${billingCodes_RM.map(code => `<option value="${code.code}">${code.code} - ${code.description}</option>`).join('')}
+                </select>
+                 <small>Hold Ctrl/Cmd to select multiple codes.</small>
+
+                <label for="${dailyNotesId}">Daily Notes/Observations:</label>
+                <textarea id="${dailyNotesId}" rows="3"></textarea>
+
+                <button onclick="recordTreatment_RM(${fractionCounter_RM})">Record This Treatment</button>
+            `;
+            container.appendChild(entry);
+            updateVisitReminder_RM(); // Update reminder check
+        }
+
+        // Function to record the treatment details
+        function recordTreatment_RM(entryCounter) {
+            // Gather data from the specific fraction entry form
+            const fractionNumInput = document.getElementById(`fractionNumRM${entryCounter}`);
+            const fractionNum = fractionNumInput ? fractionNumInput.value : 'Error';
+            const treatmentDate = document.getElementById(`treatmentDateRM${entryCounter}`).value;
+            const machineSelect = document.getElementById(`machineRM${entryCounter}`);
+            const machine = machineSelect ? machineSelect.value : 'N/A';
+            const imagingType = document.getElementById(`imagingTypeRM${entryCounter}`).value;
+            const igrtMatchQuality = document.getElementById(`igrtMatchQualityRM${entryCounter}`).value;
+            const shiftsApplied = document.getElementById(`shiftsAppliedRM${entryCounter}`).value;
+            const igrtApprovedBy = document.getElementById(`igrtApprovedByRM${entryCounter}`).value;
+            const setupVerification = document.getElementById(`setupVerificationRM${entryCounter}`).value;
+            const setupAdjustments = document.getElementById(`setupAdjustmentsRM${entryCounter}`).value;
+            const tolerance = document.getElementById(`toleranceRM${entryCounter}`).value;
+            const sideEffectsCough = document.getElementById(`sideEffectsCoughRM${entryCounter}`).value;
+            const sideEffectsDyspnea = document.getElementById(`sideEffectsDyspneaRM${entryCounter}`).value;
+            const sideEffectsChestWallPain = document.getElementById(`sideEffectsChestWallPainRM${entryCounter}`).value;
+            const sideEffectsFatigue = document.getElementById(`sideEffectsFatigueRM${entryCounter}`).value;
+            const sideEffectsSkin = document.getElementById(`sideEffectsSkinRM${entryCounter}`).value;
+            const patientConcerns = document.getElementById(`patientConcernsRM${entryCounter}`).value;
+            const instructionsGiven = document.getElementById(`instructionsGivenRM${entryCounter}`).value;
+            const therapistInitials = document.getElementById(`therapistInitialsRM${entryCounter}`).value;
+            const dailyNotes = document.getElementById(`dailyNotesRM${entryCounter}`).value;
+
+            // Get selected billing codes
+            const billingSelect = document.getElementById(`billingCodeRM${entryCounter}`);
+            const selectedBillingCodes = billingSelect ? Array.from(billingSelect.selectedOptions).map(option => option.value).join(', ') : 'N/A';
+
+            // Basic validation
+            if (!treatmentDate || !fractionNum || fractionNum === 'Error') {
+                alert("Please ensure Treatment Date and Fraction Number are present.");
+                return;
+            }
+            if (!machine) {
+                 alert("Please select a Treatment Machine.");
+                 return;
+            }
+
+            // Calculate elapsed days
+            let elapsedDays = 'N/A';
+            if (startDate_RM === null && treatmentDate) {
+                startDate_RM = new Date(treatmentDate);
+                elapsedDays = 0;
+            } else if (startDate_RM && treatmentDate) {
+                const currentDate = new Date(treatmentDate);
+                const timeDiff = currentDate.getTime() - startDate_RM.getTime();
+                elapsedDays = Math.max(0, Math.floor(timeDiff / (1000 * 3600 * 24)));
+            }
+
+            // Create the display element for the recorded treatment
+            const record = document.createElement('div');
+            record.classList.add('treatment-record');
+            // Updated innerHTML for Robert Miller (Thorax SBRT)
+            record.innerHTML = `
+                <h3>Treatment Record - Fraction ${fractionNum} / ${totalFractions_RM}</h3>
+                <p><strong>Date:</strong> ${treatmentDate || 'N/A'} | <strong>Elapsed Days:</strong> ${elapsedDays} | <strong>Machine:</strong> ${machine || 'N/A'}</p>
+                <p><strong>IGRT:</strong> ${imagingType} | <strong>Match:</strong> ${igrtMatchQuality} | <strong>Shifts:</strong> ${shiftsApplied || 'None'} | <strong>Approved:</strong> ${igrtApprovedBy || 'N/A'}</p>
+                <p><strong>Setup:</strong> ${setupVerification} ${setupAdjustments ? `(${setupAdjustments})` : ''} | Devices Checked</p>
+                <p><strong>Tolerance:</strong> ${tolerance}</p>
+                <p><strong>Side Effects (Cough):</strong> ${sideEffectsCough || 'None noted'}</p>
+                <p><strong>Side Effects (Dyspnea):</strong> ${sideEffectsDyspnea || 'None noted'}</p>
+                <p><strong>Side Effects (Chest Wall Pain):</strong> ${sideEffectsChestWallPain || 'None noted'}</p>
+                <p><strong>Side Effects (Fatigue):</strong> ${sideEffectsFatigue || 'None noted'}</p>
+                <p><strong>Side Effects (Skin):</strong> ${sideEffectsSkin || 'None noted'}</p>
+                <p><strong>Patient Concerns:</strong> ${patientConcerns || 'None'}</p>
+                <p><strong>Instructions:</strong> ${instructionsGiven || 'Standard'}</p>
+                <p><strong>Therapist(s):</strong> ${therapistInitials || 'N/A'}</p>
+                <p><strong>Billing Codes:</strong> ${selectedBillingCodes || 'None'}</p>
+                <p><strong>Daily Notes:</strong> ${dailyNotes || 'None'}</p>
+            `;
+
+            const recordsContainer = document.getElementById('treatment-records-container');
+            recordsContainer.insertBefore(record, recordsContainer.firstChild); // Insert at top
+
+            // Remove the entry form after recording
+            const entryForm = document.getElementById(`fraction-entry-rm-${entryCounter}`);
+            if (entryForm) {
+                entryForm.remove();
+            } else {
+                 console.error(`Could not find entry form with ID: fraction-entry-rm-${entryCounter}`);
+            }
+
+             // Check if all fractions are recorded
+             const recordedFractionsCount = document.querySelectorAll('#treatment-records-container .treatment-record').length;
+             if (recordedFractionsCount >= totalFractions_RM) {
+                 const addButton = document.querySelector('button[onclick="addFractionEntry()"]');
+                 if(addButton) addButton.disabled = true;
+             }
+             updateVisitReminder_RM(); // Update reminder after recording
+        }
+
+        // Function to update the OTV reminder
+        function updateVisitReminder_RM() {
+            const reminder = document.getElementById('visit-reminder');
+            const recordedFractionsCount = document.querySelectorAll('#treatment-records-container .treatment-record').length;
+
+            // Remind before/after each SBRT fraction or just weekly? For short course, maybe less frequent needed.
+            // Let's set it to remind weekly just in case (though course is short)
+            if (recordedFractionsCount > 0 && recordedFractionsCount % 5 === 0) { // This will only trigger at Fx 5, which won't happen here.
+                 // Alternative: Remind after first fraction?
+                 // if (recordedFractionsCount === 1) {
+                 // reminder.textContent = `REMINDER: Fraction 1 complete. Schedule OTV if needed.`;
+                 // reminder.style.display = 'block';
+                 //} else {
+                 reminder.style.display = 'none'; // Keep hidden for short course unless specifically triggered
+                 //}
+            } else {
+                reminder.style.display = 'none';
+            }
+        }
+
+         // Initialize the page
+         document.addEventListener('DOMContentLoaded', () => {
+             updateVisitReminder_RM();
+         });
+
+    </script>
+
+</body>
+</html>

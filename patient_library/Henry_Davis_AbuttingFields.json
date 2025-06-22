@@ -1,0 +1,135 @@
+{
+  "patientId": "99001",
+  "demographics": {
+    "name": "Henry Davis",
+    "dob": "1948-02-14",
+    "gender": "Male",
+    "address": "7 Farm Road, Anytown, USA",
+    "phone": "555-9900",
+    "insurance": "Medicare",
+    "referringPhysician": "Dr. Elizabeth Chen (Dermatology)",
+    "emergencyContact": "Not specified in record"
+  },
+  "diagnosis": {
+    "primary": "Squamous Cell Carcinoma (SCCa), Poorly Differentiated, with Perineural Invasion (PNI)",
+    "location": "Left Scalp (Vertex and Temporal region)",
+    "datePathologicDiagnosis": "02/15/2025 (Excisional Biopsy)",
+    "tumorSize": "Large area (~10 cm diameter)",
+    "priorTreatmentSummary": "Wide local excision with involved margins (02/15/2025).",
+    "symptomsAtPresentation": "Large, non-healing lesion on scalp."
+  },
+  "treatmentPlan": {
+    "radOnc": "Dr. Brian Carter",
+    "treatmentSite": "Left Scalp",
+    "intent": "Adjuvant (Post-operative)",
+    "modality": "External Beam Radiation Therapy (EBRT)",
+    "totalDose": "60 Gy",
+    "fractionation": "30 fx",
+    "rtRxDetails": "60 Gy / 30 fx (2 Gy/fx)",
+    "targetVolumeSummary": "PTV encompassing the post-operative scalp bed with generous margin (~2-3 cm) due to PNI/margins.",
+    "techniqueSummary": "Abutting Electron and Photon Fields",
+    "concurrentChemo": "None",
+    "medications": [
+      "Topical steroid cream PRN extensive dermatitis",
+      "Pain medication PRN scalp tenderness",
+      "Moisturizers"
+    ]
+  },
+  "radiationOncologyData": {
+    "ctSimulation": {
+      "simulationDate": "03/10/2025",
+      "setupInstructions": "Supine with head immobilized in a custom thermoplastic mask. SAD/SSD setup depending on field.",
+      "immobilization": "Thermoplastic mask (Head)",
+      "referenceMarks": "Mask marks aligned to room lasers for daily setup.",
+      "scanner": "Philips Big Bore CT",
+      "sliceThickness": "2.0 mm",
+      "contrastUsed": "IV Contrast (to evaluate for deep extension on sim scan)",
+      "ctNotes": "CT acquired for planning of complex abutting fields. Fused with diagnostic MRI. Wires placed to delineate surgical bed and margins."
+    },
+    "dosimetry": {
+      "planId": "HDA99001_Scalp",
+      "rx": "60 Gy / 30 fx",
+      "technique": "Abutting Fields (Photons + Electrons)",
+      "energy": "6MV / 9 MeV",
+      "numberOfFieldsOrArcs": 3,
+      "gantryAngles": "Multiple",
+      "collAngles": "Multiple",
+      "couchAngles": "0",
+      "isoCoords": "Scalp Surface/Depth (Multiple isocenters/setups)",
+      "tps": "Pinnacle",
+      "algorithm": "Collapsed Cone / eMC",
+      "hetero": "Yes",
+      "norm": "Varies by field (e.g., Isocenter for photons, Dmax for electrons)",
+      "constraints": "Brain Max < 45 Gy; Eye < 10 Gy",
+      "planNotes": "Complex abutting electron/photon fields post-op. Careful junction planning to avoid hot/cold spots.",
+      "fieldDetails": [
+        {
+          "fieldName": "Anterior Scalp Electron",
+          "gantryAngle": "0", "collimatorAngle": "15", "couchAngle": "0", "energy": "9 MeV", "monitorUnits": 310, "ssd": "100 cm"
+        },
+        {
+          "fieldName": "Posterior Scalp Electron",
+          "gantryAngle": "0", "collimatorAngle": "195", "couchAngle": "0", "energy": "9 MeV", "monitorUnits": 315, "ssd": "100 cm"
+        },
+        {
+          "fieldName": "Left Temporal Photon",
+          "gantryAngle": "90", "collimatorAngle": "0", "couchAngle": "0", "energy": "6MV", "monitorUnits": 180, "ssd": "91.5 cm"
+        }
+      ]
+    },
+    "treatmentDelivery": {
+      "fractions": [
+        {
+          "fractionNumber": 10,
+          "date": "2025-03-28",
+          "machine": "LINAC 2",
+          "setupNotes": "Daily setup to mask marks. kV imaging for photon field. Clinical check for electron fields. Bolus applied.",
+          "sideEffects": "Moderate erythema (Grade 1-2) across entire scalp field. Mild tenderness.",
+          "notes": "Patient managing skin care well with recommended creams."
+        }
+      ]
+    }
+  },
+  "imagingAndReports": [
+    { "date": "02/15/2025", "type": "Surgical Pathology Report", "summary": "~10cm area SCCa, poorly diff, extensive PNI. Margins involved focally." },
+    { "date": "03/01/2025", "type": "MRI Brain/Head w/ Contrast", "summary": "Post-operative changes L scalp. No definite intracranial extension or skull base involvement noted. Useful for defining deep extent for RT planning." },
+    { "date": "03/10/2025", "type": "CT Simulation (Head)", "summary": "CT acquired in thermoplastic mask. Wires outlining surgical bed/margins. Fused with MRI." }
+  ],
+  "dicomImages": [
+    { "description": "Planning CT Simulation (03/10/2025)", "seriesType": "CT", "ohifViewerUrl": "" },
+    { "description": "Diagnostic MRI Brain/Head (03/01/2025)", "seriesType": "MR", "ohifViewerUrl": "" }
+  ],
+  "labResults": [
+    { "date": "03/05/2025", "test": "CBC/CMP", "value": "WNL", "notes": "Pre-RT Baseline check" }
+  ],
+  "progressNotes": [
+    { "date": "02/20/2025", "author": "Dr. Elizabeth Chen (Derm)", "type": "Post-Op Note", "summary": "Pt s/p wide excision L scalp SCCa. Pathology shows extensive PNI and close/positive margins. High risk lesion. Urgent referral to Rad Onc for adjuvant RT." },
+    { "date": "03/05/2025", "author": "Dr. Brian Carter (Rad Onc)", "type": "Initial Consult", "summary": "Pt referred for adjuvant RT for high-risk L scalp SCCa s/p excision. Exam shows large post-op site vertex/temporal. Reviewed path/MRI. Plan for adjuvant RT to 60Gy/30fx. Discussed complex setup requiring abutting fields (likely electron/photon combo) to cover area while sparing brain. Explained SEs (severe skin rxn, hair loss, fatigue). Pt agrees. CT sim scheduled." },
+    { "date": "03/12/2025", "author": "Dr. Brian Carter (Rad Onc)", "type": "Treatment Plan Note", "summary": "Treatment plan finalized. Will use a combination of electron and photon fields to optimize coverage while minimizing dose to underlying brain tissue. Bolus will be used to increase the dose to the skin surface." },
+    { "date": "03/20/2025", "author": "RN Jane Doe", "type": "Treatment Visit", "summary": "Patient tolerated treatment well. Skin reaction is minimal at this point. Continue to monitor for any signs of discomfort." },
+    { "date": "04/10/2025", "author": "Dr. Brian Carter (Rad Onc)", "type": "Follow-up", "summary": "Patient completed the treatment course. Skin reaction is within expected limits. Will follow up in one month." }
+  ],
+  "patientEducation": {
+    "goalsDiscussed": "Adjuvant (post-operative) radiation to reduce the high risk of cancer recurrence on the scalp due to positive margins and perineural invasion.",
+    "sideEffectsReviewed": "A significant skin reaction over the large treated area is expected (severe redness, peeling, moist desquamation). Permanent hair loss in the treated area is certain. Fatigue. Low risk of long-term skin changes or other issues.",
+    "safetyConsiderations": "Meticulous scalp care (gentle washing, prescribed creams). Protecting the scalp from sun exposure indefinitely. Reporting any signs of skin infection.",
+    "patientResponsibilities": "Attend daily RT. Perform skin care as instructed. Maintain good hydration and nutrition.",
+    "medicationCompliance": "Use topical creams and pain medication as directed."
+  },
+  "scheduling": [
+    { "date": "02/15/2025", "time": "9:00 AM", "type": "Excisional Biopsy", "location": "Dermatology Clinic", "status": "Completed" },
+    { "date": "03/01/2025", "time": "11:00 AM", "type": "MRI Brain/Head", "location": "Radiology", "status": "Completed" },
+    { "date": "03/05/2025", "time": "2:00 PM", "type": "Radiation Oncology Consult", "location": "Radiation Oncology Clinic", "status": "Completed" },
+    { "date": "03/10/2025", "time": "10:00 AM", "type": "CT Simulation", "location": "Radiation Oncology Simulation", "status": "Completed" },
+    { "date": "03/15/2025 - 04/26/2025", "time": "Daily", "type": "Radiation Therapy", "location": "Radiation Oncology Treatment", "status": "Completed" },
+    { "date": "05/26/2025", "time": "11:00 AM", "type": "Follow-up", "location": "Radiation Oncology Clinic", "status": "Scheduled" }
+  ],
+  "cptCharges": [
+    { "code": "77290", "description": "Simulation, Complex", "frequency": "1" },
+    { "code": "77300", "description": "Basic radiation dosimetry calculation", "frequency": "1" },
+    { "code": "77401", "description": "Radiation treatment delivery, superficial and/or ortho voltage", "frequency": "30" },
+    { "code": "77417", "description": "Therapeutic radiology treatment planning; complex", "frequency": "1" },
+    { "code": "77427", "description": "Radiation treatment management", "frequency": "6" }
+  ],
+  "diagnosisSearch": "Skin Cancer (SCCa Scalp)"
+}

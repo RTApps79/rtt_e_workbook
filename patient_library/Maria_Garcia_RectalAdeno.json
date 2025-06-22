@@ -1,0 +1,120 @@
+{
+  "patientId": "RC-003",
+  "demographics": {
+    "name": "Maria Garcia",
+    "dob": "1970-11-10",
+    "gender": "Female",
+    "address": "789 Pine Street, Anytown, USA",
+    "phone": "555-9876",
+    "insurance": "Aetna",
+    "referringPhysician": "Dr. Susan Miller (Gastroenterology)",
+    "emergencyContact": "Jose Garcia (Husband) - 555-6789",
+    "advanceDirectives": "Full Code (On File)",
+    "supportServices": "Pre-operative ostomy education provided.",
+    "mobility": "Ambulatory without assistance."
+  },
+  "diagnosis": {
+    "primary": "Adenocarcinoma of the Rectum",
+    "datePathologicDiagnosis": "05/05/2025 (Surgical Pathology after neoadjuvant tx)",
+    "clinicalStage": "cT3 N0 M0 (Stage II)",
+    "symptomsAtPresentation": "Rectal bleeding and tenesmus.",
+    "relevantHistory": "No significant family history of colorectal cancer."
+  },
+  "treatmentPlan": {
+    "radOnc": "Dr. Linda White",
+    "medOnc": "Dr. Michael Chen",
+    "surgOnc": "Dr. James Miller",
+    "treatmentSite": "Rectum + Mesorectum",
+    "intent": "Neoadjuvant followed by Adjuvant",
+    "modality": "Neoadjuvant ChemoRT -> Surgery -> Adjuvant Chemotherapy",
+    "totalDose": "45 Gy",
+    "fractionation": "25 fx",
+    "rtRxDetails": "45 Gy / 25 fx (1.8 Gy/fx)",
+    "targetVolumeSummary": "PTV_Rectum",
+    "techniqueSummary": "3D-CRT (Prone)",
+    "systemicChemo": "Concurrent Capecitabine, Adjuvant FOLFOX",
+    "detailedConcurrentChemo": "Neoadjuvant: Capecitabine (825 mg/m² PO BID) during radiation. Adjuvant: FOLFOX for 6 months.",
+    "medications": []
+  },
+  "radiationOncologyData": {
+    "ctSimulation": {
+      "simulationDate": "04/25/2025",
+      "setupInstructions": "Patient positioned prone on a belly board to displace small bowel. SAD setup.",
+      "immobilization": "Prone pillow / Belly board",
+      "referenceMarks": "3-point tattoos at isocenter projections.",
+      "scanner": "GE Discovery RT",
+      "sliceThickness": "3.0 mm",
+      "contrastUsed": "IV and/or Oral Contrast",
+      "ctNotes": "CT simulation for neoadjuvant pelvic radiation therapy in the prone position."
+    },
+    "dosimetry": {
+      "planId": "MGRC003_Rectal",
+      "rx": "45 Gy / 25 fx",
+      "technique": "3D-CRT",
+      "energy": "10MV",
+      "numberOfFieldsOrArcs": 3,
+      "gantryAngles": "180, 90, 270",
+      "collAngles": "0",
+      "couchAngles": "180",
+      "isoCoords": "Mid-Rectum",
+      "tps": "Eclipse",
+      "algorithm": "AAA",
+      "hetero": "Yes",
+      "norm": "Isocenter",
+      "constraints": "Fem Head Max < 40 Gy; Bladder V40Gy < 50%; Bowel Max < 45 Gy",
+      "planNotes": "Neoadjuvant chemoRT, prone setup.",
+      "fieldDetails": [
+        { "fieldName": "PA", "gantryAngle": "180", "collimatorAngle": "0", "couchAngle": "180", "energy": "10MV", "monitorUnits": 190 },
+        { "fieldName": "R Lat", "gantryAngle": "90", "collimatorAngle": "0", "couchAngle": "180", "energy": "10MV", "monitorUnits": 145 },
+        { "fieldName": "L Lat", "gantryAngle": "270", "collimatorAngle": "0", "couchAngle": "180", "energy": "10MV", "monitorUnits": 145 }
+      ]
+    },
+    "treatmentDelivery": {
+      "fractions": [
+        { "fractionNumber": 1, "date": "2025-05-01", "machine": "LINAC3", "setupNotes":"Daily kV imaging. Patient setup prone on belly board. Tolerated well.", "sideEffects": "No acute side effects after first fraction.", "notes": "Patient started neoadjuvant chemoRT. Educated on oral chemotherapy schedule and side effects." }
+      ]
+    }
+  },
+  "imagingAndReports": [
+    { "date": "04/28/2025", "type": "MRI Pelvis", "summary": "4 cm mass in the rectum.", "modalId": "mg-mri-modal", "reportDetails": { "date": "04/28/2025", "findings": "A 4 cm mass is identified in the rectum, extending into the mesorectal fat.", "impression": "Rectal adenocarcinoma, cT3." } },
+    { "date": "05/05/2025", "type": "Surgical Pathology Report (Post-Neoadjuvant)", "summary": "Adenocarcinoma of the Rectum, Stage II (pT3, N0, M0)", "modalId": "mg-path-modal", "reportDetails": { "specimen": "Rectal Resection", "diagnosis": "Adenocarcinoma of the Rectum, Stage II (pT3, N0, M0)", "grade": "Moderately differentiated", "margins": "Negative", "lymphNodes": "12 regional lymph nodes examined, 0 positive for metastatic carcinoma." } },
+    { "date": "04/25/2025", "type": "CT Simulation", "summary": "Simulation for neoadjuvant radiation therapy.", "modalId": "mg-sim-modal", "reportDetails": { "date": "04/25/2025", "region": "Pelvis", "purpose": "Neoadjuvant radiation therapy planning.", "position": "Prone", "immobilization": "Prone pillow." } }
+  ],
+  "dicomImages": [
+    { "description": "Diagnostic MRI Pelvis (04/28/2025)", "seriesType": "MR", "ohifViewerUrl": "" },
+    { "description": "CT Simulation Pelvis (Prone) (04/25/2025)", "seriesType": "CT", "ohifViewerUrl": "" }
+  ],
+  "labResults": [
+    { "date": "04/25/2025", "test": "CBC", "value": "WNL", "notes": "Baseline" },
+    { "date": "04/25/2025", "test": "CMP", "value": "WNL", "notes": "Baseline" },
+    { "date": "04/25/2025", "test": "CEA", "value": "2.1", "units": "ng/mL", "range": "<5.0", "notes": "Baseline" }
+  ],
+  "progressNotes": [
+    { "date": "05/10/2025", "author": "Dr. Linda White", "type": "RT Start Note", "summary": "Started neoadjuvant chemoRT." },
+    { "date": "07/20/2025", "author": "Dr. James Miller", "type": "Post-Op Note", "summary": "Post-operative visit - Recovering well from LAR. Final pathology reviewed." },
+    { "date": "08/10/2025", "author": "Dr. Michael Chen", "type": "Chemo Start Note", "summary": "Started adjuvant chemotherapy with FOLFOX." }
+  ],
+  "patientEducation": {
+    "goalsDiscussed": "Neoadjuvant (pre-operative) chemoradiation to shrink the tumor, making surgery more effective and reducing the risk of local recurrence.",
+    "sideEffectsReviewed": "Acute: Diarrhea, fatigue, skin irritation in the pelvic/perineal area, bladder irritation. Side effects from oral chemotherapy (e.g., hand-foot syndrome, nausea).",
+    "safetyConsiderations": "Following a low-residue diet to manage diarrhea. Importance of hydration. Meticulous skin care for the treated area.",
+    "patientResponsibilities": "Attend daily RT. Take oral chemotherapy as prescribed. Report uncontrolled side effects.",
+    "medicationCompliance": "Adherence to oral chemo schedule. Use of supportive care medications for diarrhea."
+  },
+  "scheduling": [
+    { "date": "04/28/2025", "time": "11:00 AM", "type": "MRI Pelvis", "location": "Radiology Dept", "status": "Completed" },
+    { "date": "05/05/2025", "time": "9:00 AM", "type": "Surgical Consultation", "location": "Colorectal Surgery Clinic", "status": "Completed" },
+    { "date": "04/25/2025", "time": "1:00 PM", "type": "Radiation Oncology Simulation", "location": "Radiation Oncology Sim Room", "status": "Completed" },
+    { "date": "05/01/2025", "time": "10:00 AM", "type": "Radiation Therapy Treatment", "location": "Radiation Oncology", "status": "Scheduled" },
+    { "date": "07/15/2025", "time": "8:00 AM", "type": "Surgery: Low Anterior Resection", "location": "Operating Room 3", "status": "Completed" },
+    { "date": "08/10/2025", "time": "11:00 AM", "type": "Medical Oncology Consultation", "location": "Oncology Clinic", "status": "Completed" }
+  ],
+  "cptCharges": [
+    { "code": "45119", "description": "Low anterior resection", "frequency": "Once" },
+    { "code": "77290", "description": "Radiation therapy simulation; complex", "frequency": "Once" },
+    { "code": "77407", "description": "Radiation treatment delivery, single treatment area, complex", "frequency": "Per Fraction" },
+    { "code": "77427", "description": "Radiation treatment management, 5 treatments", "frequency": "Weekly" },
+    { "code": "96413", "description": "Chemotherapy administration, IV infusion", "frequency": "Per Cycle" }
+  ],
+  "diagnosisSearch": "Rectal Cancer"
+}

@@ -1,0 +1,135 @@
+{
+  "patientId": "44556",
+  "demographics": {
+    "name": "James Wilson",
+    "dob": "1950-07-15",
+    "gender": "Male",
+    "address": "88 Forest Drive, Anytown, USA",
+    "phone": "555-4456",
+    "insurance": "Medicare + Mutual of Omaha",
+    "referringPhysician": "Dr. Charles Brown (Urology)",
+    "emergencyContact": "Not specified in record"
+  },
+  "diagnosis": {
+    "primary": "Prostate Adenocarcinoma",
+    "datePathologicDiagnosis": "01/10/2025 (Prostate Biopsy)",
+    "gleasonScore": "4 + 3 = 7 (Grade Group 3)",
+    "psaAtDiagnosis": "12.5 ng/mL",
+    "clinicalStage": "cT2c N0 M0",
+    "riskGroup": "Favorable High Risk (NCCN)",
+    "symptomsAtPresentation": "Mild urinary frequency, nocturia x2. Found on screening PSA/DRE.",
+    "relevantHistory": "Hypertension, Benign Prostatic Hyperplasia (BPH)."
+  },
+  "treatmentPlan": {
+    "radOnc": "Dr. Maria Garcia",
+    "urologist": "Dr. Charles Brown",
+    "treatmentSite": "Prostate + Seminal Vesicles",
+    "intent": "Definitive (Curative)",
+    "modality": "External Beam Radiation Therapy (EBRT) with Androgen Deprivation Therapy (ADT)",
+    "totalDose": "79.2 Gy",
+    "fractionation": "44 fx",
+    "rtRxDetails": "79.2 Gy / 44 fx (1.8 Gy/fx)",
+    "targetVolumeSummary": "PTV encompassing Prostate gland + proximal Seminal Vesicles (PTV_ProstateSV).",
+    "techniqueSummary": "VMAT",
+    "concurrentChemo": "Androgen Deprivation Therapy (ADT)",
+    "detailedConcurrentChemo": "Leuprolide injection (e.g., 6-month depot) - Started 2 months prior to RT, planned for long-term (1.5-2 years).",
+    "medications": [
+      "Tamsulosin (for BPH symptoms)",
+      "ADT side effect management (hot flashes, etc.)",
+      "Bowel/bladder symptom management during RT (e.g., Loperamide PRN, encourage hydration)"
+    ]
+  },
+  "radiationOncologyData": {
+    "ctSimulation": {
+      "simulationDate": "03/10/2025",
+      "setupInstructions": "Supine in VacLok bag with ankle immobilization. Full bladder / empty rectum protocol followed. SAD setup.",
+      "immobilization": "VacLok bag, ankle immobilization.",
+      "referenceMarks": "3-point tattoos at isocenter projections (AP and bilateral laterals).",
+      "scanner": "Siemens Somatom Definition AS",
+      "sliceThickness": "2.5 mm",
+      "contrastUsed": "IV and/or rectal contrast may be used per institutional protocol but not specified here.",
+      "ctNotes": "CT acquired with full bladder/empty rectum protocol followed. Fiducials visualized. Scan fused with diagnostic MRI for VMAT planning."
+    },
+    "dosimetry": {
+      "planId": "JW44556_Pros",
+      "rx": "79.2 Gy / 44 fx",
+      "technique": "VMAT",
+      "energy": "6MV FFF",
+      "numberOfFieldsOrArcs": 2,
+      "gantryAngles": "181-179 CW, 179-181 CCW",
+      "collAngles": "0",
+      "couchAngles": "0",
+      "isoCoords": "L0.0, L+1.0, V-8.0",
+      "tps": "Monaco",
+      "algorithm": "XVMC",
+      "hetero": "Yes",
+      "norm": "PTV Mean 95%",
+      "constraints": "Rectum V70Gy < 20%; Bladder V75Gy < 15%; Fem Head Max < 50 Gy",
+      "planNotes": "Definitive VMAT with ADT. Daily IGRT to fiducial markers is required.",
+      "fieldDetails": [
+        { "fieldName": "Arc 1 CW", "gantryAngle": "181-179", "collimatorAngle": "0", "couchAngle": "0", "energy": "6MV FFF", "monitorUnits": 410 },
+        { "fieldName": "Arc 2 CCW", "gantryAngle": "179-181", "collimatorAngle": "0", "couchAngle": "0", "energy": "6MV FFF", "monitorUnits": 405 }
+      ]
+    },
+    "treatmentDelivery": {
+      "fractions": [
+        { "fractionNumber": 10, "date": "2025-03-28", "machine": "LINAC 2", "setupNotes":"Daily CBCT match to fiducial markers. Shifts applied as needed. Good bladder/rectum filling today.", "sideEffects": "Mild increase in urinary frequency noted.", "notes": "Patient managing ADT side effects (mild hot flashes). Continue to review bowel/bladder management." }
+      ]
+    }
+  },
+  "imagingAndReports": [
+    { "date": "01/10/2025", "type": "Prostate Biopsy Report", "summary": "AdenoCa Gleason 4+3=7 (GG3).", "modalId": "jw-biopsy-modal", "reportDetails": { /* Detailed biopsy modal content from EMR HTML */ } },
+    { "date": "01/20/2025", "type": "MRI Pelvis w/o Contrast", "summary": "Confirms T2c disease, capsule bulging bilaterally, no definite ECE. Seminal vesicles appear clear.", "modalId": "jw-mri-modal", "reportDetails": { /* Placeholder for modal content */ } },
+    { "date": "01/25/2025", "type": "Bone Scan", "summary": "No evidence of osseous metastatic disease.", "modalId": "jw-bonescan-modal", "reportDetails": { "imageSrc": "https://www.mdpi.com/diagnostics/diagnostics-12-02594/article_deploy/html/images/diagnostics-12-02594-g001.png"} },
+    { "date": "03/01/2025", "type": "Urology Procedure Note", "summary": "Placement of 3 gold fiducial markers in prostate under TRUS guidance.", "modalId": "jw-fiducial-note", "reportDetails": { /* Placeholder for modal content */ } },
+    { "date": "03/10/2025", "type": "CT Simulation (Pelvis - Supine)", "summary": "CT acquired with full bladder/empty rectum protocol. Fiducials visualized.", "modalId": "jw-ct-sim-modal", "reportDetails": { "imageSrc": "https://ackermancancercenter.com/wp-content/uploads/2022/08/prostate_proton.webp" } }
+  ],
+  "dicomImages": [
+    { "description": "Diagnostic MRI Pelvis (01/20/2025)", "seriesType": "MR", "ohifViewerUrl": "https://viewer.ohif.org/viewer?StudyInstanceUIDs=1.3.6.1.4.1.5962.99.1.3020871283.19690101000000.1629624997234956830" },
+    { "description": "CT Simulation Pelvis (03/10/2025)", "seriesType": "CT", "ohifViewerUrl": "https://viewer.ohif.org/viewer?StudyInstanceUIDs=1.3.6.1.4.1.14519.5.2.1.7009.9007.298806137288633453246975630178" }
+  ],
+  "labResults": [
+    { "date": "12/01/2024", "test": "PSA", "value": "12.5", "units": "ng/mL", "range": "<4.0", "notes": "Baseline at Diagnosis" },
+    { "date": "02/15/2025", "test": "Testosterone (Post ADT Start)", "value": "<20", "units": "ng/dL", "range": "Varies", "notes": "Confirms castration level achieved with ADT." },
+    { "date": "03/08/2025", "test": "CBC", "value": "WNL", "units": "", "range": "N/A", "notes": "Pre-RT Baseline" },
+    { "date": "03/08/2025", "test": "CMP", "value": "WNL", "units": "", "range": "N/A", "notes": "Pre-RT Baseline" }
+  ],
+  "progressNotes": [
+    { "date": "01/15/2025", "author": "Dr. Charles Brown (Urology)", "type": "Consult Note", "summary": "Pt referred for elevated PSA. Biopsy confirms Gleason 7 (4+3) AdenoCa. Staging T2c N0 M0. Discussed treatment options (Surgery vs RT+ADT). Given age/risk group, pt prefers RT+ADT. Plan to start Leuprolide injection, place fiducials, refer to Rad Onc." },
+    { "date": "02/20/2025", "author": "Dr. Maria Garcia (Rad Onc)", "type": "Initial Consult", "summary": "Pt w/ favorable high-risk prostate ca, started on ADT. Plan for definitive EBRT via VMAT to prostate/SVs to 79.2Gy/44fx. Discussed procedure, fiducials/IGRT, bowel/bladder prep, potential side effects (GU/GI toxicity acute & late, ED risk, fatigue). Pt agrees. CT sim scheduled after fiducial placement." },
+    { "date": "03/01/2025", "author": "Dr. Charles Brown (Urology)", "type": "Procedure Note", "summary": "Successful placement of 3 gold fiducial markers into prostate via TRUS guidance. No complications." },
+    { "date": "03/15/2025", "author": "Physics/Dosimetry", "type": "Planning Note", "summary": "VMAT plan completed, meets dose constraints for rectum, bladder, femoral heads. Plan approved by Dr. Garcia. Ready for treatment start." },
+    { "date": "03/28/2025", "author": "Dr. Maria Garcia (Rad Onc)", "type": "OTV - Week 2", "summary": "Pt completed 10/44 fx. Reports mild increase in urinary frequency, minimal rectal discomfort. Tolerating ADT side effects (mild hot flashes). Setup/IGRT consistent. Continue RT. Review bowel/bladder management." }
+  ],
+  "patientEducation": {
+    "goalsDiscussed": "Definitive (curative) treatment of high-risk prostate cancer.",
+    "sideEffectsReviewed": "Acute: GU symptoms (frequency, urgency, burning), GI symptoms (diarrhea, rectal irritation), fatigue. Late: Risk of chronic GU/GI issues, erectile dysfunction, low risk of secondary malignancy. ADT side effects (hot flashes, fatigue, loss of libido).",
+    "safetyConsiderations": "Importance of daily bladder/rectum prep for setup accuracy. Reporting significant changes in urinary or bowel habits.",
+    "patientResponsibilities": "Attend daily RT, follow bladder/rectum prep instructions, report side effects.",
+    "medicationCompliance": "Continue ADT as scheduled with Urology. Use Tamsulosin as needed for urinary symptoms."
+  },
+  "scheduling": [
+    { "date": "01/10/2025", "time": "9 AM", "type": "Prostate Biopsy", "location": "Urology Clinic", "status": "Completed" },
+    { "date": "01/20/2025", "time": "1 PM", "type": "MRI Pelvis", "location": "Radiology", "status": "Completed" },
+    { "date": "01/25/2025", "time": "10 AM", "type": "Bone Scan", "location": "Nuclear Med", "status": "Completed" },
+    { "date": "01/30/2025", "time": "11 AM", "type": "Urology Follow Up (Discuss Results/Plan)", "location": "Urology Clinic", "status": "Completed" },
+    { "date": "~02/01/2025", "time": "N/A", "type": "ADT Injection (Leuprolide) Start", "location": "Urology Clinic", "status": "Completed" },
+    { "date": "02/20/2025", "time": "2 PM", "type": "Rad Onc Consult (Garcia)", "location": "Rad Onc Clinic", "status": "Completed" },
+    { "date": "03/01/2025", "time": "10 AM", "type": "Fiducial Marker Placement", "location": "Urology Clinic", "status": "Completed" },
+    { "date": "03/10/2025", "time": "9 AM", "type": "CT Simulation Pelvis", "location": "Rad Onc Sim", "status": "Completed" },
+    { "date": "03/17/2025 - ~05/16/2025", "time": "Daily (M-F) ~1 PM", "type": "VMAT Treatment (1/44)", "location": "LINAC 2", "status": "Ongoing" },
+    { "date": "Weekly (e.g., 03/24)", "time": "~1:30 PM (Post-RT)", "type": "OTV", "location": "Rad Onc Clinic", "status": "Scheduled" }
+  ],
+  "cptCharges": [
+    { "code": "55876", "description": "Placement of interstitial device(s) for radiation therapy guidance (e.g., fiducial markers), prostate", "frequency": "Once (Urology Bill)" },
+    { "code": "77290", "description": "Simulation, Complex (Pelvis for IMRT/VMAT)", "frequency": "Once" },
+    { "code": "77334", "description": "Treatment device, Complex (VacLok)", "frequency": "Once" },
+    { "code": "77301", "description": "IMRT planning", "frequency": "Once" },
+    { "code": "77338", "description": "MLC device for IMRT", "frequency": "Once" },
+    { "code": "77300", "description": "Basic radiation dosimetry calculation", "frequency": "Per plan" },
+    { "code": "77386", "description": "IMRT delivery, complex (VMAT)", "frequency": "Daily" },
+    { "code": "77387", "description": "Image Guided RT (IGRT - CBCT/kV for fiducials)", "frequency": "Daily" },
+    { "code": "77427", "description": "Radiation treatment management, 5 treatments", "frequency": "Weekly" }
+  ],
+  "diagnosisSearch": "Prostate Cancer"
+}

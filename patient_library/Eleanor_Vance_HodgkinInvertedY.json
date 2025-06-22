@@ -1,0 +1,155 @@
+{
+  "patientId": "HL002",
+  "demographics": {
+    "name": "Eleanor Vance",
+    "dob": "1995-03-25",
+    "gender": "Female",
+    "age": "30 (at diagnosis)",
+    "address": "456 Pine Ave, Anytown, USA",
+    "phone": "555-0202",
+    "insurance": "Aetna",
+    "referringPhysician": "Dr. James Peterson (Hematology/Oncology)",
+    "emergencyContact": "Not specified in record"
+  },
+  "diagnosis": {
+    "primary": "Classic Hodgkin Lymphoma (CHL), Mixed Cellularity type",
+    "location": "Infradiaphragmatic Nodes",
+    "datePathologicDiagnosis": "02/05/2025 (Laparotomy with node biopsy, Para-aortic node)",
+    "sitesOfInvolvement": "Para-aortic nodes, Bilateral Iliac nodes (non-bulky)",
+    "symptomsAtPresentation": "Pelvic pain, Fatigue, No B symptoms",
+    "annArborStage": "IIA (Infradiaphragmatic)",
+    "riskGroup": "Early-stage, Unfavorable (due to >2 nodal sites)"
+  },
+  "treatmentPlan": {
+    "radOnc": "Dr. Lisa Ray",
+    "medOnc": "Dr. James Peterson",
+    "gynOnc": "Dr. Nancy Allen",
+    "treatmentSite": "Para-aortic/Iliac Nodes",
+    "intent": "Curative",
+    "modality": "Combined Modality Therapy (Chemotherapy -> Ovarian Transposition -> Radiation)",
+    "totalDose": "30 Gy",
+    "fractionation": "15 fx",
+    "rtRxDetails": "30 Gy / 15 fx (2.0 Gy/fx)",
+    "targetVolumeSummary": "PTV_ISRT_Pelvis encompassing initially involved nodal regions (Para-aortic, Bilateral Iliac)",
+    "techniqueSummary": "3D-CRT (AP/PA)",
+    "priorSystemicChemo": "ABVD x 4 cycles (Completed 06/15/2025) with Deauville Score 3 response",
+    "priorSurgery": "Laparoscopic Ovarian Transposition (06/22/2025)",
+    "medications": [
+      "Antidiarrheals PRN",
+      "Anti-nausea PRN",
+      "Monitor for cytopenias (pelvic radiation)"
+    ]
+  },
+  "radiationOncologyData": {
+    "ctSimulation": {
+      "simulationDate": "07/01/2025",
+      "setupInstructions": "Supine in Vac-Lok bag with knee/foot positioning device. Full bladder protocol. SAD setup.",
+      "immobilization": "Vac-Lok bag, knee/foot positioning device",
+      "referenceMarks": "3-point tattoos at isocenter.",
+      "scanner": "GE Revolution CT",
+      "sliceThickness": "2.5 mm",
+      "contrastUsed": "IV Contrast",
+      "ctNotes": "CT acquired supine for ISRT planning. Fused with diagnostic PET/CT. Ovarian transposition clips identified and contoured."
+    },
+    "dosimetry": {
+      "planId": "EVHL002_ISRT",
+      "rx": "30 Gy / 15 fx",
+      "technique": "3D-CRT",
+      "energy": "6MV",
+      "numberOfFieldsOrArcs": 2,
+      "gantryAngles": "0, 180",
+      "collAngles": "Shaped with MLCs",
+      "couchAngles": "0",
+      "isoCoords": "Mid-Pelvis",
+      "tps": "Eclipse",
+      "algorithm": "AAA",
+      "hetero": "Yes",
+      "norm": "Isocenter",
+      "constraints": "Bowel Max < 35 Gy; Ovary Dose minimized (< 5-10 Gy)",
+      "planNotes": "Consolidation pelvic ISRT post-chemo/transposition. Fields designed to cover para-aortic and iliac chains while minimizing dose to transposed ovaries.",
+      "fieldDetails": [
+        {
+          "fieldName": "AP Pelvis",
+          "gantryAngle": "0",
+          "collimatorAngle": "0",
+          "couchAngle": "0",
+          "energy": "6MV",
+          "monitorUnits": 160
+        },
+        {
+          "fieldName": "PA Pelvis",
+          "gantryAngle": "180",
+          "collimatorAngle": "0",
+          "couchAngle": "0",
+          "energy": "6MV",
+          "monitorUnits": 165
+        }
+      ]
+    },
+    "treatmentDelivery": {
+      "fractions": [
+        {
+          "fractionNumber": 5,
+          "date": "2025-07-15",
+          "machine": "LINAC1",
+          "setupNotes": "Daily kV imaging. Setup stable.",
+          "sideEffects": "Mild fatigue. ~3 loose stools/day, managing with diet.",
+          "notes": "Tolerating well. Bowel management reviewed."
+        }
+      ]
+    }
+  },
+  "imagingAndReports": [
+    { "date": "01/20/2025", "type": "CT Abdomen/Pelvis", "summary": "Bulky para-aortic adenopathy, bilateral iliac adenopathy noted." },
+    { "date": "01/25/2025", "type": "FDG-PET/CT (Staging)", "summary": "FDG-avid adenopathy corresponding to CT findings in para-aortic and iliac chains. No supradiaphragmatic or extranodal uptake. Deauville 5." },
+    { "date": "06/05/2025", "type": "FDG-PET/CT (Post-Chemo)", "summary": "Resolution of bulky disease. Mild residual FDG uptake in prior para-aortic nodal sites, less than liver uptake (Deauville Score 3)." },
+    { "date": "06/25/2025", "type": "CT Simulation (Abdomen/Pelvis)", "summary": "CT acquired supine in Vac-Lok for RT planning. Fused with diagnostic PET for target delineation." }
+  ],
+  "dicomImages": [
+    { "description": "Staging PET/CT (01/25/2025)", "seriesType": "PT", "ohifViewerUrl": "" },
+    { "description": "Post-Chemo PET/CT (06/05/2025)", "seriesType": "PT", "ohifViewerUrl": "" },
+    { "description": "CT Simulation (06/25/2025)", "seriesType": "CT", "ohifViewerUrl": "" }
+  ],
+  "labResults": [
+    { "date": "02/01/2025", "test": "CBC/CMP", "value": "WNL", "notes": "Baseline" },
+    { "date": "02/01/2025", "test": "ESR", "value": "45", "units": "mm/hr", "range": "<30", "notes": "Baseline, mildly elevated" },
+    { "date": "06/20/2025", "test": "CBC (Pre-RT)", "value": "WNL", "notes": "Counts recovered post-chemo" },
+    { "date": "06/20/2025", "test": "Pregnancy Test", "value": "Negative", "notes": "Required before pelvic RT" }
+  ],
+  "progressNotes": [
+    { "date": "02/06/2025", "author": "Dr. James Peterson (Med Onc)", "type": "Initial Consult", "summary": "29yo F w/ biopsy-proven MC-CHL after presenting with pelvic pain. Staging PET confirms Stage IIA disease below diaphragm. Discussed treatment: Plan for 4 cycles ABVD followed by RT assessment. Discussed fertility preservation options; patient declined ovarian cryopreservation but interested in transposition if RT needed." },
+    { "date": "06/16/2025", "author": "Dr. James Peterson (Med Onc)", "type": "Post-Chemo Visit", "summary": "Completed 4 cycles ABVD. Tolerated well. Post-chemo PET shows good partial response (Deauville 3). Recommend consolidation pelvic RT. Refer to Rad Onc and Gyn Onc for ovarian transposition consult." },
+    { "date": "06/20/2025", "author": "Dr. Nancy Allen (Gyn Onc)", "type": "Consult Note", "summary": "Patient referred for ovarian transposition prior to pelvic RT. Discussed procedure, risks/benefits. Patient wishes to proceed. Scheduled for laparoscopic transposition." },
+    { "date": "06/28/2025", "author": "Dr. Lisa Ray (Rad Onc)", "type": "Initial Consult", "summary": "Pt s/p ABVDx4 and ovarian transposition for Stage IIA infradiaphragmatic CHL, Deauville 3 response. Plan for adjuvant RT 30 Gy / 15 fx to involved sites (ISRT). Discussed Inverted Y field concept vs modern ISRT. Explained RT procedure, bowel/bladder prep, potential side effects (diarrhea, fatigue, bladder irritation, long-term fertility impact despite transposition). CT Sim scheduled." },
+    { "date": "07/15/2025", "author": "Dr. Lisa Ray (Rad Onc)", "type": "OTV - Week 1", "summary": "Completed 5/15 fx RT. Mild fatigue. ~3 loose stools/day, managing with diet. No urinary sx. Tolerating well. Setup verification images reviewed. Continue RT." }
+  ],
+  "patientEducation": {
+    "goalsDiscussed": "Curative-intent consolidation radiation therapy to treat the lymph node areas initially involved with Hodgkin Lymphoma.",
+    "sideEffectsReviewed": "Acute: Diarrhea, fatigue, bladder irritation (frequency/urgency), nausea, mild skin reaction. Late: Discussed long-term fertility impact and the goal of ovarian transposition to minimize this risk. Low risk of chronic bowel changes or secondary malignancy.",
+    "safetyConsiderations": "Following a low-residue diet if diarrhea occurs. Importance of hydration. Reporting uncontrolled diarrhea, significant bladder pain, or fever.",
+    "patientResponsibilities": "Attend daily RT, report side effects.",
+    "medicationCompliance": "Use anti-diarrheal or anti-nausea medications as needed."
+  },
+  "scheduling": [
+    { "date": "02/05/2025", "time": "8 AM", "type": "Laparotomy/Biopsy", "location": "Operating Room", "status": "Completed" },
+    { "date": "02/10/2025", "time": "10 AM", "type": "Med Onc Consult (Peterson)", "location": "Oncology Clinic", "status": "Completed" },
+    { "date": "02/15/2025 - 06/01/2025", "time": "q2wks", "type": "Chemotherapy (ABVD)", "location": "Infusion Center", "status": "Completed" },
+    { "date": "06/05/2025", "time": "1 PM", "type": "Post-Chemo PET/CT", "location": "Radiology", "status": "Completed" },
+    { "date": "06/20/2025", "time": "9 AM", "type": "Gyn Onc Consult (Allen)", "location": "Gyn Onc Clinic", "status": "Completed" },
+    { "date": "06/22/2025", "time": "8 AM", "type": "Laparoscopic Ovarian Transposition", "location": "Operating Room", "status": "Completed" },
+    { "date": "06/28/2025", "time": "11 AM", "type": "Rad Onc Consult (Ray)", "location": "Rad Onc Clinic", "status": "Completed" },
+    { "date": "07/01/2025", "time": "2 PM", "type": "CT Simulation Abdomen/Pelvis", "location": "Rad Onc Sim", "status": "Completed" },
+    { "date": "07/08/2025 - 07/26/2025", "time": "Daily (M-F) ~10AM", "type": "RT Treatment (1/15)", "location": "LINAC 1", "status": "Ongoing" },
+    { "date": "Weekly (e.g., 07/15)", "time": "~10:30AM (Post-RT)", "type": "OTV", "location": "Rad Onc Clinic", "status": "Scheduled" }
+  ],
+  "cptCharges": [
+    { "code": "77290", "description": "Simulation, Complex (Pelvis 3D)", "frequency": "Once" },
+    { "code": "77334", "description": "Treatment device, Complex (Vac-Lok)", "frequency": "Once" },
+    { "code": "77295", "description": "3D radiotherapy plan", "frequency": "Once" },
+    { "code": "77300", "description": "Basic radiation dosimetry calculation", "frequency": "Per plan" },
+    { "code": "77412", "description": "Radiation treatment delivery, complex", "frequency": "Daily" },
+    { "code": "77387", "description": "Image Guided RT (IGRT - CBCT/kV)", "frequency": "Daily/Weekly" },
+    { "code": "77427", "description": "Radiation treatment management, 5 treatments", "frequency": "Weekly (x3)" }
+  ],
+  "diagnosisSearch": "Hodgkin Lymphoma"
+}

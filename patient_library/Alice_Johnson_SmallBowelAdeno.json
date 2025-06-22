@@ -1,0 +1,123 @@
+{
+  "patientId": "SB-001",
+  "demographics": {
+    "name": "Alice Johnson",
+    "dob": "1968-03-15",
+    "gender": "Female",
+    "address": "123 Main Street, Anytown, USA",
+    "phone": "555-1234",
+    "insurance": "United Healthcare",
+    "referringPhysician": "Dr. Robert Jones (Gastroenterology)",
+    "emergencyContact": "Mark Johnson (Husband) - 555-4321",
+    "advanceDirectives": "Full Code (On File)",
+    "supportServices": "Nutrition consult placed post-Whipple procedure.",
+    "mobility": "Ambulatory without assistance."
+  },
+  "diagnosis": {
+    "primary": "Adenocarcinoma of the Duodenum",
+    "datePathologicDiagnosis": "04/05/2025 (Surgical Pathology)",
+    "pathologicStage": "IIA (T3, N0, M0)",
+    "symptomsAtPresentation": "Abdominal pain, nausea, and weight loss.",
+    "relevantHistory": "No significant prior medical history or family history of GI cancers.",
+    "priorTreatmentSummary": "Pancreaticoduodenectomy (Whipple procedure) performed on 04/20/2025."
+  },
+  "treatmentPlan": {
+    "radOnc": "Dr. Sarah Lee",
+    "medOnc": "Dr. Michael Chen",
+    "surgOnc": "Dr. Robert White",
+    "treatmentSite": "Duodenal Bed + Regional Nodes",
+    "intent": "Adjuvant",
+    "modality": "Adjuvant Chemotherapy followed by Adjuvant External Beam Radiation Therapy (EBRT)",
+    "totalDose": "45 Gy",
+    "fractionation": "25 fx",
+    "rtRxDetails": "45 Gy / 25 fx (1.8 Gy/fx)",
+    "targetVolumeSummary": "PTV_DuodenalBed",
+    "techniqueSummary": "IMRT",
+    "systemicChemo": "Capecitabine (1000 mg/m² PO BID for 14 days every 3 weeks) - Adjuvant",
+    "medications": []
+  },
+  "radiationOncologyData": {
+    "ctSimulation": {
+      "simulationDate": "11/01/2025",
+      "setupInstructions": "Supine in Vac-Lok bag with arms up on wingboard. Patient to follow full bladder / empty stomach protocol. SAD setup.",
+      "immobilization": "Vac-Lok bag, Wingboard",
+      "referenceMarks": "3-point tattoos at isocenter projections (AP and bilateral laterals).",
+      "scanner": "GE Discovery RT",
+      "sliceThickness": "2.5 mm",
+      "contrastUsed": "IV and Oral Contrast",
+      "ctNotes": "CT simulation for adjuvant radiation therapy to duodenal bed and regional nodes."
+    },
+    "dosimetry": {
+      "planId": "AJSB001_SmlBwl",
+      "rx": "45 Gy / 25 fx",
+      "technique": "IMRT",
+      "energy": "6MV",
+      "numberOfFieldsOrArcs": 5,
+      "gantryAngles": "Multiple Static",
+      "collAngles": "Variable",
+      "couchAngles": "0",
+      "isoCoords": "Upper Abdomen",
+      "tps": "Pinnacle",
+      "algorithm": "Collapsed Cone",
+      "hetero": "Yes",
+      "norm": "PTV Mean 95%",
+      "constraints": "Kidney Mean < 15 Gy; Liver Mean < 25 Gy; Stomach Max < 45 Gy",
+      "planNotes": "Adjuvant RT post-Whipple and adjuvant chemotherapy.",
+      "fieldDetails": [
+        { "fieldName": "Field 1", "gantryAngle": "25", "collimatorAngle": "10", "couchAngle": "0", "energy": "6MV", "monitorUnits": 120 },
+        { "fieldName": "Field 2", "gantryAngle": "75", "collimatorAngle": "345", "couchAngle": "0", "energy": "6MV", "monitorUnits": 135 },
+        { "fieldName": "Field 3", "gantryAngle": "180", "collimatorAngle": "0", "couchAngle": "0", "energy": "6MV", "monitorUnits": 100 },
+        { "fieldName": "Field 4", "gantryAngle": "225", "collimatorAngle": "15", "couchAngle": "0", "energy": "6MV", "monitorUnits": 135 },
+        { "fieldName": "Field 5", "gantryAngle": "335", "collimatorAngle": "350", "couchAngle": "0", "energy": "6MV", "monitorUnits": 120 }
+      ]
+    },
+    "treatmentDelivery": {
+      "fractions": [
+        { "fractionNumber": 1, "date": "2025-11-15", "machine": "LINAC2", "setupNotes":"Daily CBCT IGRT. Setup to surgical clips and nodal volumes.", "sideEffects": "No acute side effects after first fraction.", "notes": "Patient tolerated treatment well. Reviewed supportive care instructions for nausea." }
+      ]
+    }
+  },
+  "imagingAndReports": [
+    { "date": "03/25/2025", "type": "CT Abdomen/Pelvis", "summary": "3.5 cm mass in the duodenum.", "modalId": "aj_ct_modal" },
+    { "date": "04/05/2025", "type": "Pathology Report", "summary": "Adenocarcinoma of the Duodenum.", "modalId": "aj_path_modal" },
+    { "date": "11/01/2025", "type": "CT Simulation", "summary": "Simulation for adjuvant radiation therapy.", "modalId": "aj_sim_modal" }
+  ],
+  "dicomImages": [
+    { "description": "Diagnostic CT Abdomen/Pelvis (03/25/2025)", "seriesType": "CT", "ohifViewerUrl": "" },
+    { "description": "CT Simulation Abdomen (11/01/2025)", "seriesType": "CT", "ohifViewerUrl": "" }
+  ],
+  "labResults": [
+    { "date": "03/20/2025", "test": "CBC", "value": "WNL", "notes": "Baseline" },
+    { "date": "03/20/2025", "test": "CMP", "value": "WNL", "notes": "Baseline" },
+    { "date": "03/20/2025", "test": "CA 19-9", "value": "25", "units": "U/mL", "range": "<37" },
+    { "date": "03/20/2025", "test": "CEA", "value": "1.5", "units": "ng/mL", "range": "<5.0" }
+  ],
+  "progressNotes": [
+    { "date": "04/25/2025", "author": "Dr. Robert White", "type": "Post-Op Note", "summary": "Post-operative visit - Tolerating diet well. Surgical drains removed. Awaiting final pathology to guide adjuvant therapy." },
+    { "date": "05/15/2025", "author": "Dr. Michael Chen", "type": "Chemo Start Note", "summary": "Started adjuvant chemotherapy with Capecitabine. Patient educated on side effects and schedule." },
+    { "date": "11/15/2025", "author": "Dr. Sarah Lee", "type": "RT Start Note", "summary": "Started adjuvant radiation therapy. Tolerating initial setup and treatment without issue." }
+  ],
+  "patientEducation": {
+    "goalsDiscussed": "Adjuvant (post-operative and post-chemotherapy) radiation to reduce the risk of cancer recurrence in the surgical area and regional lymph nodes.",
+    "sideEffectsReviewed": "Acute: Fatigue, nausea, diarrhea, and potential for skin irritation in the treatment area. Explained that these are usually manageable with medication and diet.",
+    "safetyConsiderations": "Importance of hydration and nutrition. Reporting uncontrolled nausea/vomiting or diarrhea. Following a low-residue diet if GI side effects occur.",
+    "patientResponsibilities": "Attend daily RT appointments, report side effects to the team.",
+    "medicationCompliance": "Use supportive medications (anti-nausea, anti-diarrheal) as prescribed."
+  },
+  "scheduling": [
+    { "date": "03/25/2025", "time": "10:00 AM", "type": "CT Abdomen/Pelvis", "location": "Radiology Dept", "status": "Completed" },
+    { "date": "04/05/2025", "time": "11:00 AM", "type": "Surgical Consultation", "location": "Surgical Oncology Clinic", "status": "Completed" },
+    { "date": "04/20/2025", "time": "8:00 AM", "type": "Surgery: Whipple Procedure", "location": "Operating Room 1", "status": "Completed" },
+    { "date": "05/15/2025", "time": "9:00 AM", "type": "Medical Oncology Consultation", "location": "Oncology Clinic", "status": "Completed" },
+    { "date": "11/01/2025", "time": "1:00 PM", "type": "Radiation Oncology Simulation", "location": "Radiation Oncology Sim Room", "status": "Completed" },
+    { "date": "11/15/2025", "time": "9:00 AM", "type": "Radiation Therapy Treatment", "location": "Radiation Oncology", "status": "Scheduled" }
+  ],
+  "cptCharges": [
+    { "code": "48150", "description": "Pancreaticoduodenectomy (Whipple procedure)", "frequency": "Once" },
+    { "code": "96413", "description": "Chemotherapy administration, IV infusion", "frequency": "Per Cycle" },
+    { "code": "77290", "description": "Radiation therapy simulation; complex", "frequency": "Once" },
+    { "code": "77407", "description": "Radiation treatment delivery, single treatment area, complex", "frequency": "Per Fraction" },
+    { "code": "77427", "description": "Radiation treatment management, 5 treatments", "frequency": "Weekly" }
+  ],
+  "diagnosisSearch": "Small Bowel Adenocarcinoma"
+}

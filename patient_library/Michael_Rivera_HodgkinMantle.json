@@ -1,0 +1,131 @@
+{
+  "patientId": "HL001",
+  "demographics": {
+    "name": "Michael Rivera",
+    "dob": "1998-08-15",
+    "gender": "Male",
+    "age": "26 (at diagnosis)",
+    "address": "12 River St, Metro City, USA",
+    "phone": "555-0101",
+    "insurance": "BlueCross BlueShield",
+    "referringPhysician": "Dr. Sarah Bell (Hematology/Oncology)",
+    "emergencyContact": "Not specified in record"
+  },
+  "diagnosis": {
+    "primary": "Classic Hodgkin Lymphoma (CHL), Nodular Sclerosis type",
+    "datePathologicDiagnosis": "01/10/2025 (Excisional biopsy, Left Cervical Node)",
+    "sitesOfInvolvement": "Bilateral Cervical nodes, Supraclavicular nodes, Mediastinal nodes (non-bulky)",
+    "symptomsAtPresentation": "No B symptoms (Fever, Night Sweats, Weight Loss)",
+    "annArborStage": "IIA",
+    "riskGroup": "Favorable (GHSG criteria)"
+  },
+  "treatmentPlan": {
+    "radOnc": "Dr. Robert Jones",
+    "medOnc": "Dr. Sarah Bell",
+    "treatmentSite": "Neck/SCV/Mediastinum",
+    "intent": "Curative",
+    "modality": "Combined Modality Therapy (Chemotherapy followed by Radiation)",
+    "totalDose": "20 Gy",
+    "fractionation": "10 fx",
+    "rtRxDetails": "20 Gy / 10 fx (2.0 Gy/fx)",
+    "targetVolumeSummary": "PTV_ISRT encompassing initially involved nodal regions (cervical, supraclavicular, mediastinal)",
+    "techniqueSummary": "3D-CRT (AP/PA or Multi-field)",
+    "priorSystemicChemo": "ABVD x 2 cycles (Completed 03/15/2025) with Deauville Score 2 response",
+    "concurrentChemo": "None (post-chemo)",
+    "medications": [
+      "Topical cream PRN mild skin reaction",
+      "Mouthwash PRN mild mucositis/sore throat",
+      "Monitor for hypothyroidism post-RT"
+    ]
+  },
+  "radiationOncologyData": {
+    "ctSimulation": {
+      "simulationDate": "03/20/2025",
+      "setupInstructions": "Supine in Aquaplast mask with arms down or on wing board. SAD setup.",
+      "immobilization": "Aquaplast mask (shoulders included)",
+      "referenceMarks": "3-point tattoos at isocenter.",
+      "scanner": "Philips Big Bore CT",
+      "sliceThickness": "2.5 mm",
+      "contrastUsed": "IV Contrast",
+      "ctNotes": "CT acquired for ISRT planning. Fused with diagnostic PET/CT for target delineation."
+    },
+    "dosimetry": {
+      "planId": "MRHL001_ISRT",
+      "rx": "20 Gy / 10 fx",
+      "technique": "3D-CRT",
+      "energy": "6MV",
+      "numberOfFieldsOrArcs": 2,
+      "gantryAngles": "0, 180",
+      "collAngles": "Shaped with MLCs",
+      "couchAngles": "0",
+      "isoCoords": "Mid-Mediastinum",
+      "tps": "RayStation",
+      "algorithm": "Monte Carlo",
+      "hetero": "Yes",
+      "norm": "Isocenter",
+      "constraints": "Heart Mean < 5 Gy; Lung V20 < 15%",
+      "planNotes": "Consolidation ISRT post-chemo. The historical 'Mantle Field' is larger; modern ISRT is used here to reduce toxicity.",
+      "fieldDetails": [
+        { "fieldName": "AP Neck/Chest", "gantryAngle": "0", "collimatorAngle": "0", "couchAngle": "0", "energy": "6MV", "monitorUnits": 115 },
+        { "fieldName": "PA Neck/Chest", "gantryAngle": "180", "collimatorAngle": "0", "couchAngle": "0", "energy": "6MV", "monitorUnits": 120 }
+      ]
+    },
+    "treatmentDelivery": {
+      "fractions": [
+        { "fractionNumber": 5, "date": "2025-04-01", "machine": "LINAC2", "setupNotes":"Daily kV imaging, match to spine. Setup stable.", "sideEffects": "Mild throat soreness.", "notes": "Tolerating RT well." }
+      ]
+    }
+  },
+  "imagingAndReports": [
+    { "date": "01/05/2025", "type": "CT Neck/Chest", "summary": "Bilateral cervical, supraclavicular adenopathy. Mediastinal nodes upper limit normal size." },
+    { "date": "01/08/2025", "type": "FDG-PET/CT (Staging)", "summary": "FDG-avid nodes matching CT findings in neck/supraclavicular regions, plus FDG-avid mediastinal nodes. Deauville 5." },
+    { "date": "03/10/2025", "type": "FDG-PET/CT (Interim)", "summary": "Significant interval decrease in size/avidity of nodes. Residual uptake less than liver (Deauville Score 2)." },
+    { "date": "03/20/2025", "type": "CT Simulation (Neck/Chest)", "summary": "CT acquired supine in mask for RT planning. Fused with diagnostic PET for target delineation." }
+  ],
+  "dicomImages": [
+    { "description": "Staging PET/CT (01/08/2025)", "seriesType": "PT", "ohifViewerUrl": "" },
+    { "description": "Interim PET/CT (03/10/2025)", "seriesType": "PT", "ohifViewerUrl": "" },
+    { "description": "CT Simulation (03/20/2025)", "seriesType": "CT", "ohifViewerUrl": "" }
+  ],
+  "labResults": [
+    { "date": "01/10/2025", "test": "CBC/CMP", "value": "WNL", "notes": "Baseline" },
+    { "date": "01/10/2025", "test": "ESR", "value": "25", "units": "mm/hr", "range": "<30", "notes": "Baseline, not elevated (favorable)" },
+    { "date": "03/25/2025", "test": "CBC (Pre-RT)", "value": "WNL", "notes": "Counts recovered post-chemo" },
+    { "date": "03/25/2025", "test": "TSH (Pre-RT)", "value": "1.8", "units": "mIU/L", "range": "0.4-4.0", "notes": "Baseline thyroid function" }
+  ],
+  "progressNotes": [
+    { "date": "01/12/2025", "author": "Dr. Sarah Bell (Med Onc)", "type": "Initial Consult", "summary": "19yo M w/ biopsy-proven NS-CHL. Staging PET/CT confirms Stage IIA, non-bulky. Favorable risk factors. Discussed treatment options: standard is ABVD x 2 cycles followed by interim PET and likely 20 Gy ISRT. Explained rationale, goals, side effects. Pt agrees to proceed." },
+    { "date": "02/01/2025", "author": "Chemo RN", "type": "Chemo Teach", "summary": "Patient educated on ABVD regimen, schedule, side effect management (nausea, fatigue, hair loss, low risk lung tox from bleomycin), when to call clinic. Port access demonstrated." },
+    { "date": "03/16/2025", "author": "Dr. Sarah Bell (Med Onc)", "type": "Post-Chemo Visit", "summary": "Pt completed 2 cycles ABVD, tolerated well. Interim PET shows excellent response (Deauville 2). Refer to Rad Onc for consolidation RT." },
+    { "date": "03/18/2025", "author": "Dr. Robert Jones (Rad Onc)", "type": "Initial Consult", "summary": "Pt s/p ABVDx2 for Stage IIA favorable CHL, Deauville 2 response. Plan for adjuvant RT 20 Gy / 10 fx to involved sites (ISRT). Discussed Mantle field concept vs modern ISRT. Explained RT procedure, skin care, thyroid monitoring. CT Sim scheduled." },
+    { "date": "04/01/2025", "author": "Dr. Robert Jones (Rad Onc)", "type": "OTV - Week 1", "summary": "Completed 5/10 fx RT. Mild throat soreness. No significant skin reaction yet. Tolerating well. Setup verification images reviewed (KV/CBCT), minor adjustments made. Continue RT." }
+  ],
+  "patientEducation": {
+    "goalsDiscussed": "Curative-intent treatment. Consolidation radiation therapy after chemotherapy to maximize the chance of cure.",
+    "sideEffectsReviewed": "Acute: Fatigue, mild skin redness (like sunburn) in the neck/chest, sore throat (esophagitis/mucositis), potential taste changes. Late: Small long-term risk of hypothyroidism, heart disease, and secondary cancers, which are minimized by using modern, smaller radiation fields (ISRT).",
+    "safetyConsiderations": "Skin care (moisturizers, avoid sun exposure). Report severe sore throat, difficulty swallowing, or cough/shortness of breath.",
+    "patientResponsibilities": "Attend daily RT, report symptoms, follow up for thyroid checks in the long term.",
+    "medicationCompliance": "Use topical creams or mouthwash as recommended."
+  },
+  "scheduling": [
+    { "date": "01/10/2025", "time": "10 AM", "type": "Excisional Biopsy", "location": "Surgery Center", "status": "Completed" },
+    { "date": "01/12/2025", "time": "1 PM", "type": "Med Onc Consult (Bell)", "location": "Oncology Clinic", "status": "Completed" },
+    { "date": "01/15/2025", "time": "9 AM", "type": "Chemo Cycle 1 Start", "location": "Infusion Center", "status": "Completed" },
+    { "date": "03/01/2025", "time": "9 AM", "type": "Chemo Cycle 2 Start", "location": "Infusion Center", "status": "Completed" },
+    { "date": "03/10/2025", "time": "2 PM", "type": "Interim PET/CT", "location": "Radiology", "status": "Completed" },
+    { "date": "03/18/2025", "time": "10 AM", "type": "Rad Onc Consult (Jones)", "location": "Rad Onc Clinic", "status": "Completed" },
+    { "date": "03/20/2025", "time": "1 PM", "type": "CT Simulation Neck/Chest", "location": "Rad Onc Sim", "status": "Completed" },
+    { "date": "03/27/2025 - 04/07/2025", "time": "Daily (M-F) ~11AM", "type": "RT Treatment (1/10)", "location": "LINAC 2", "status": "Ongoing" },
+    { "date": "Weekly (e.g., 04/03)", "time": "~11:30AM (Post-RT)", "type": "OTV", "location": "Rad Onc Clinic", "status": "Scheduled" }
+  ],
+  "cptCharges": [
+    { "code": "77285 / 77290", "description": "Simulation, Intermediate / Complex", "frequency": "Once" },
+    { "code": "77333 / 77334", "description": "Treatment device, Intermediate / Complex (Mask)", "frequency": "Once" },
+    { "code": "77295", "description": "3D radiotherapy plan", "frequency": "Once" },
+    { "code": "77300", "description": "Basic radiation dosimetry calculation", "frequency": "Per plan" },
+    { "code": "77407 / 77412", "description": "Radiation treatment delivery, 3+ fields / complex", "frequency": "Daily" },
+    { "code": "77387", "description": "Image Guided RT (IGRT - CBCT/kV)", "frequency": "Daily/Weekly" },
+    { "code": "77427", "description": "Radiation treatment management, 5 treatments", "frequency": "Weekly (x2-3)" }
+  ],
+  "diagnosisSearch": "Hodgkin Lymphoma"
+}

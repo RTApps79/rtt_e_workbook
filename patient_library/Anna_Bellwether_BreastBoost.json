@@ -1,0 +1,123 @@
+{
+  "patientId": "55443",
+  "demographics": {
+    "name": "Anna Bellwether",
+    "dob": "1965-06-18",
+    "gender": "Female",
+    "address": "14 Park Lane, Anytown, USA",
+    "phone": "555-5544",
+    "insurance": "Humana",
+    "referringPhysician": "Dr. Angela Rossi (Rad Onc)",
+    "emergencyContact": "Not specified in record",
+    "advanceDirectives": "Not specified in record",
+    "supportServices": "Not specified in record",
+    "mobility": "Ambulatory"
+  },
+  "diagnosis": {
+    "primary": "Invasive Ductal Carcinoma (IDC) of the Right Breast",
+    "location": "Right Lumpectomy Cavity (Lateral Aspect)",
+    "datePathologicDiagnosis": "January 2025 (from prior history)",
+    "priorHistory": "Patient with pT1c pN0 M0, Stage IA, ER+/PR+/HER2- IDC, s/p Lumpectomy + SLNB (Jan 2025) and Adjuvant WBRT 42.56 Gy / 16 fx (completed Feb 2025).",
+    "currentIndication": "Sequential Boost to Lumpectomy Cavity"
+  },
+  "treatmentPlan": {
+    "radOnc": "Dr. Angela Rossi",
+    "medOnc": "N/A",
+    "treatmentSite": "Right Lumpectomy Cavity",
+    "intent": "Adjuvant Boost",
+    "modality": "External Beam Radiation Therapy (EBRT) - Electron Boost",
+    "totalDose": "10 Gy",
+    "fractionation": "5 fx",
+    "rtRxDetails": "10 Gy / 5 fx",
+    "targetVolumeSummary": "PTV_Boost (Lumpectomy Cavity + margin, defined on planning CT/prior imaging)",
+    "techniqueSummary": "Electrons (Direct en face field in lateral decubitus position)",
+    "concurrentChemo": "None",
+    "medications": [
+      "Continue Topical Steroid Cream/Aquaphor PRN skin reaction"
+    ]
+  },
+  "radiationOncologyData": {
+    "ctSimulation": {
+      "simulationDate": "2025-03-03",
+      "setupInstructions": "Patient positioned in left lateral decubitus position on a flat tabletop, with right arm abducted. This presents the lateral aspect of the right breast en face to the gantry. SSD setup.",
+      "immobilization": "Custom Vac-Lok bag molded to patient in lateral decubitus position for reproducible setup.",
+      "referenceMarks": "Using prior WBRT tattoos and new clinical markup on skin/bolus for lateral boost field placement. Isocenter placed on skin surface.",
+      "scanner": "N/A (Clinical setup verification, original supine CT used for contouring)",
+      "sliceThickness": "N/A",
+      "contrastUsed": "N/A",
+      "ctNotes": "Boost plan generated based on lumpectomy cavity contoured on original WBRT simulation CT from Feb 2025. Today's session for clinical setup verification in lateral decubitus position."
+    },
+    "dosimetry": {
+      "planId": "AB55443_Boost",
+      "rx": "10 Gy / 5 fx",
+      "technique": "Electrons",
+      "energy": "9 MeV",
+      "numberOfFieldsOrArcs": 1,
+      "gantryAngles": "0",
+      "collAngles": "0",
+      "couchAngles": "90",
+      "isoCoords": "Surface setup at center of boost field",
+      "tps": "Eclipse",
+      "algorithm": "eMC (Electron Monte Carlo)",
+      "hetero": "Yes",
+      "norm": "100% @ Dmax",
+      "constraints": "Skin Max < 110% of prescription",
+      "planNotes": "Sequential electron boost. Lateral decubitus position used for en face setup to lateral scar/cavity.",
+      "fieldDetails": [
+        {
+          "fieldName": "Direct Lateral Electron Boost",
+          "gantryAngle": "0",
+          "collimatorAngle": "0",
+          "couchAngle": "90",
+          "energy": "9 MeV",
+          "monitorUnits": "e.g., 255 MU",
+          "ssd": "100 cm"
+        }
+      ]
+    },
+    "treatmentDelivery": {
+      "fractions": [
+        { "fractionNumber": 3, "date": "2025-03-06", "machine": "LINAC 4 (Electron Mode)", "setupNotes":"Patient setup in L lateral decubitus position in custom Vac-Lok. Setup verified to field outline. SSD check performed.", "sideEffects": "Skin reaction stable/slightly improved from WBRT peak.", "notes": "Patient tolerating boost well." },
+        { "fractionNumber": 5, "date": "2025-03-10", "machine": "LINAC 4 (Electron Mode)", "setupNotes":"Final boost fraction setup verified.", "sideEffects": "Skin reaction resolving. No new issues.", "notes": "Completed final boost treatment. Total dose 52.56 Gy (WBRT+Boost)." }
+      ]
+    }
+  },
+  "imagingAndReports": [
+    { "date": "Feb 2025 (Prior)", "type": "CT Simulation (Breast)", "summary": "Original WBRT simulation scan (supine). Lumpectomy cavity identified and wired/contoured. Used for boost planning.", "modalId": "ab-ctsim-modal", "reportDetails": {} },
+    { "date": "Mar 2025", "type": "Boost Plan Verification Images (MV/kV)", "summary": "Images confirming accurate setup for boost field targeting lumpectomy cavity.", "modalId": "ab-verify-modal", "reportDetails": {} }
+  ],
+  "dicomImages": [
+    { "description": "Original WBRT CT Simulation (Feb 2025)", "seriesType": "CT", "ohifViewerUrl": "https://viewer.ohif.org/viewer?StudyInstanceUIDs=1.3.6.1.4.1.5962.99.1.2968617883.1314880426.1493322302363.3.0" }
+  ],
+  "labResults": [
+    { "date": "N/A", "test": "N/A", "value": "N/A", "units": "", "range": "", "notes": "No specific labs typically required for boost-only RT." }
+  ],
+  "progressNotes": [
+    { "date": "2025-02-28", "author": "Dr. Angela Rossi (Rad Onc)", "type": "End of WBRT Note", "summary": "Patient completed 16/16 fx WBRT (42.56 Gy). Tolerated well, Grade 1-2 dermatitis managed with topicals. Plan for sequential boost 10Gy/5fx starting next week. Due to lateral scar, will use lateral decubitus electron setup." },
+    { "date": "2025-03-03", "author": "RTT/Dosimetry", "type": "Boost Plan Note", "summary": "Electron boost plan generated targeting lumpectomy cavity based on prior CT sim contours. Lateral decubitus setup confirmed. Plan approved by Dr. Rossi." },
+    { "date": "2025-03-06", "author": "Dr. Angela Rossi (Rad Onc)", "type": "Boost Treatment Check", "summary": "Pt completed 3/5 boost fractions. Skin reaction stable/slightly improved from WBRT peak. No new issues. Continue boost." },
+    { "date": "2025-03-10", "author": "Dr. Angela Rossi (Rad Onc)", "type": "End of Boost Note", "summary": "Completed 5/5 boost fx (10 Gy). Total dose 52.56 Gy (WBRT+Boost). Skin reaction resolving. Follow up in 4-6 weeks. Start Letrozole as planned." }
+  ],
+  "patientEducation": {
+    "goalsDiscussed": "Adjuvant boost therapy to provide additional targeted dose to the area of highest recurrence risk (the lumpectomy cavity).",
+    "sideEffectsReviewed": "Continuation or slight worsening of skin reaction from WBRT (redness, dryness), which should then resolve. Fatigue. Minimal additional risk beyond the initial WBRT. Explained lateral decubitus setup for treatment.",
+    "safetyConsiderations": "Continue skin care as instructed for WBRT. Importance of holding still in the side-lying position during treatment.",
+    "patientResponsibilities": "Attend daily RT appointments for the boost week, continue skin care.",
+    "medicationCompliance": "Use topical creams as needed."
+  },
+  "scheduling": [
+    { "date": "2025-02-28", "time": "10:00 AM", "type": "Last WBRT Treatment (Fx 16/16)", "location": "LINAC 4", "status": "Completed" },
+    { "date": "2025-02-28", "time": "10:30 AM", "type": "End of WBRT Visit", "location": "Rad Onc Clinic", "status": "Completed" },
+    { "date": "2025-03-03", "time": "9:00 AM", "type": "Boost Simulation/Verification (Lateral Decubitus)", "location": "Rad Onc Sim/LINAC", "status": "Completed" },
+    { "date": "2025-03-04 - 2025-03-10", "time": "Daily (M-F) ~9:00 AM", "type": "Boost Treatment (1/5)", "location": "LINAC 4 (or Electron Room)", "status": "Completed" },
+    { "date": "2025-03-10", "time": "9:30 AM", "type": "End of Boost Visit", "location": "Rad Onc Clinic", "status": "Completed" },
+    { "date": "~Apr 21, 2025", "time": "10:00 AM", "type": "Post-RT Follow Up", "location": "Rad Onc Clinic", "status": "Scheduled" }
+  ],
+  "cptCharges": [
+    { "code": "77326 / 77327 / 77328", "description": "Brachytherapy isodose plan / Electron beam plan / Proton plan (Electron plan used here)", "frequency": "Once per boost plan" },
+    { "code": "77300", "description": "Basic radiation dosimetry calculation", "frequency": "Per boost plan" },
+    { "code": "77401 / 77402", "description": "Radiation treatment delivery, superficial / 2 fields (Electron delivery)", "frequency": "Daily (Boost Fx)" },
+    { "code": "77470", "description": "Special treatment procedure (May apply for boost planning/physics)", "frequency": "Once or per occurrence" }
+  ],
+  "diagnosisSearch": "Breast Cancer"
+}

@@ -1,0 +1,135 @@
+{
+  "patientId": "11223",
+  "demographics": {
+    "name": "Barbara Davis",
+    "dob": "1980-09-10",
+    "gender": "Female",
+    "address": "9 Lakeview Terrace, Anytown, USA",
+    "phone": "555-1123",
+    "insurance": "BlueCross BlueShield",
+    "referringPhysician": "Dr. Helen Carter (Breast Surgeon)",
+    "emergencyContact": "Not specified in record"
+  },
+  "diagnosis": {
+    "primary": "Invasive Ductal Carcinoma (IDC) of the Left Breast",
+    "location": "Central/Inner Quadrant",
+    "datePathologicDiagnosis": "01/05/2025 (Core Biopsy)",
+    "tumorSize": "3.5 cm",
+    "grade": "Nottingham Grade 3",
+    "receptorStatus": "ER Negative, PR Negative, HER2 Positive (IHC 3+)",
+    "lymphNodeStatus": "2/15 Nodes Positive (pN1a)",
+    "priorTreatmentSummary": "Lumpectomy + SLNB (01/25/2025) followed by Completion Axillary Lymph Node Dissection (ALND) (02/05/2025). Completed adjuvant AC-THP chemotherapy.",
+    "pathologicStage": "pT2 pN1a M0, Stage IIA"
+  },
+  "treatmentPlan": {
+    "radOnc": "Dr. Angela Rossi",
+    "medOnc": "Dr. Richard Lee",
+    "treatmentSite": "Left Breast + Supraclavicular (SCV) Nodes",
+    "intent": "Adjuvant (Post-lumpectomy/ALND, Post-chemotherapy)",
+    "modality": "External Beam Radiation Therapy (EBRT) - Breast + Regional Nodes",
+    "totalDose": "50 Gy + 10 Gy Boost",
+    "fractionation": "25 fx + 5 fx Boost",
+    "rtRxDetails": "50 Gy / 25 fx to Breast/SCV, followed by sequential Boost of 10 Gy / 5 fx to lumpectomy cavity",
+    "targetVolumeSummary": "PTV encompassing Left Breast + Left Supraclavicular Fossa (+/- Axillary levels).",
+    "techniqueSummary": "3D-CRT - Tangential Fields + Anterior Supraclavicular (SCV) Field",
+    "concurrentChemo": "Trastuzumab/Pertuzumab (HER2-targeted therapy)",
+    "medications": [
+      "Topical Steroid Cream/Aquaphor PRN skin reaction (Breast/Axilla/Neck)",
+      "Continue Trastuzumab/Pertuzumab infusions",
+      "Monitor for lymphedema - Lymphedema precautions reviewed."
+    ]
+  },
+  "radiationOncologyData": {
+    "ctSimulation": {
+      "simulationDate": "06/10/2025",
+      "setupInstructions": "Supine on breast board/wing board with both arms up. Head turned to contralateral side. SAD setup.",
+      "immobilization": "Breast board/Wing board",
+      "referenceMarks": "3-point tattoos at isocenter(s). Wires on surgical scars and breast borders for delineation.",
+      "scanner": "Philips Big Bore CT",
+      "sliceThickness": "2.5 mm",
+      "contrastUsed": "Non-contrast",
+      "ctNotes": "CT acquired post-chemotherapy for adjuvant 3D-CRT planning of breast and supraclavicular region. Split isocenter setup used."
+    },
+    "dosimetry": {
+      "planId": "BD11223_BrstSCV",
+      "rx": "50 Gy / 25 fx + Boost 10 Gy / 5 fx",
+      "technique": "3D-CRT",
+      "energy": "6MV",
+      "numberOfFieldsOrArcs": 3,
+      "gantryAngles": "Tangents: 300, 120; SCV: 15",
+      "collAngles": "Variable (to match tangent divergence and SCV)",
+      "couchAngles": "0",
+      "isoCoords": "Split Iso setup",
+      "tps": "Eclipse",
+      "algorithm": "AAA",
+      "hetero": "Yes",
+      "norm": "Isocenter",
+      "constraints": "Heart Mean < 5 Gy; Ips Lng V20Gy < 30%; Brachial Plex Max < 60 Gy",
+      "planNotes": "Breast + SCV 3D plan post-chemo. Fields matched at junction. Boost to be planned sequentially.",
+      "fieldDetails": [
+        { "fieldName": "L Medial Tangent", "gantryAngle": "300", "collimatorAngle": "345", "couchAngle": "0", "energy": "6MV", "monitorUnits": 210 },
+        { "fieldName": "L Lateral Tangent", "gantryAngle": "120", "collimatorAngle": "15", "couchAngle": "0", "energy": "6MV", "monitorUnits": 225 },
+        { "fieldName": "L Anterior SCV", "gantryAngle": "15", "collimatorAngle": "90", "couchAngle": "0", "energy": "6MV", "monitorUnits": 195 }
+      ]
+    },
+    "treatmentDelivery": {
+      "fractions": [
+        { "fractionNumber": 10, "date": "07/01/2025", "machine": "LINAC4", "setupNotes":"Daily kV imaging for setup verification. Match to chest wall and SCV alignment.", "sideEffects": "Mild erythema (Grade 1) in axilla and SCV regions.", "notes": "Patient tolerating well. Skin care instructions reinforced." }
+      ]
+    }
+  },
+  "imagingAndReports": [
+    { "date": "12/15/2024", "type": "Mammogram/Ultrasound", "summary": "3cm irregular mass L breast central, suspicious axillary node. BI-RADS 5." },
+    { "date": "01/05/2025", "type": "Core Biopsy Report", "summary": "Invasive Ductal Carcinoma, Grade 3. ER/PR neg, HER2 IHC 3+." },
+    { "date": "01/10/2025", "type": "Staging CT C/A/P & Bone Scan", "summary": "No evidence of distant metastatic disease. Confirmed suspicious L axillary nodes." },
+    { "date": "01/25/2025", "type": "Surgical Path (Lump+SLNB)", "summary": "3.5 cm IDC, Gr 3. Margins neg. 2/3 SN positive. ER/PR-, HER2+." },
+    { "date": "02/05/2025", "type": "Surgical Path (ALND)", "summary": "Additional 0/12 nodes positive. Total 2/15 nodes positive (pN1a)." },
+    { "date": "06/10/2025", "type": "CT Simulation (Breast+Nodes)", "summary": "CT acquired post-chemo for 3D-CRT planning of breast + SCV region." }
+  ],
+  "dicomImages": [
+    { "description": "Diagnostic Mammogram (12/15/2024)", "seriesType": "MG", "ohifViewerUrl": "" },
+    { "description": "CT Simulation Breast + Nodes (06/10/2025)", "seriesType": "CT", "ohifViewerUrl": "https://viewer.ohif.org/viewer?StudyInstanceUIDs=1.3.6.1.4.1.5962.99.1.2968617883.1314880426.1493322302363.3.0" }
+  ],
+  "labResults": [
+    { "date": "06/05/2025", "test": "CBC", "value": "WBC 5.5, Hgb 11.8, Plt 180k", "notes": "Counts recovering post-chemo. Adequate for RT." },
+    { "date": "06/05/2025", "test": "CMP", "value": "WNL", "notes": "Baseline pre-RT." },
+    { "date": "05/20/2025", "test": "ECHO", "value": "LVEF 60%", "range": ">55%", "notes": "Baseline cardiac function stable during Herceptin tx. OK to proceed with RT." }
+  ],
+  "progressNotes": [
+    { "date": "01/10/2025", "author": "Dr. Helen Carter (Surgeon)", "type": "Consult Note", "summary": "Pt w/ new dx L BC, HER2+. Biopsy confirms IDC Gr 3. Plan for Lumpectomy + SLNB. If SN+, will need ALND. Discussed neoadjuvant vs adjuvant chemo w/ Med Onc. Pt prefers surgery first." },
+    { "date": "02/10/2025", "author": "Dr. Richard Lee (Med Onc)", "type": "Consult Note", "summary": "Pt s/p Lump/ALND for pT2pN1a HER2+ BC. Recommend adjuvant AC-THP chemo x 6 cycles, followed by RT, continue HP for 1 yr total. Discussed chemo/HP toxicities. Pt agrees. Port placed. Start chemo next week." },
+    { "date": "06/08/2025", "author": "Dr. Richard Lee (Med Onc)", "type": "End of Chemo Note", "summary": "Pt completed 6 cycles AC-THP. Tolerated reasonably well w/ expected side effects. Continue HP infusions q3wks. Refer back to Rad Onc for adjuvant RT planning. Last ECHO LVEF stable." },
+    { "date": "06/15/2025", "author": "Dr. Angela Rossi (Rad Onc)", "type": "Initial Consult (Post-Chemo)", "summary": "Pt s/p Lump/ALND/Chemo for pT2pN1a HER2+ L BC. Plan for adjuvant RT to L Breast + SCV fossa to 50Gy/25fx followed by 10Gy/5fx boost. Discussed RT fields/setup, side effects (skin rxn, fatigue, lymphedema risk, low risk pneumonitis/cardiac). Pt agrees. CT sim scheduled. Continue HP during RT." },
+    { "date": "07/01/2025", "author": "Dr. Angela Rossi (Rad Onc)", "type": "OTV - Week 2", "summary": "Pt completed 10/25 fx. Mild erythema breast/axilla/neck (Gr 1). No lymphedema noted. Tolerating well. Continue RT. Skin care reviewed." }
+  ],
+  "patientEducation": {
+    "goalsDiscussed": "Adjuvant radiation to the breast and regional lymph nodes (supraclavicular) to reduce the risk of recurrence.",
+    "sideEffectsReviewed": "Acute: Skin reaction (redness, peeling, soreness) in breast, axilla, and lower neck; fatigue; potential mild esophagitis (sore throat). Late: Lymphedema risk (arm swelling), breast texture changes, low risk of cardiac/lung effects or brachial plexus injury.",
+    "safetyConsiderations": "Lymphedema precautions (avoid BP cuffs, needle sticks on left arm). Skin care (moisturizers, avoid irritants). Reporting arm/hand swelling, significant skin breakdown, or pain.",
+    "patientResponsibilities": "Attend daily RT, perform skin care, monitor for lymphedema, report symptoms.",
+    "medicationCompliance": "Continue HER2-targeted therapy (Trastuzumab/Pertuzumab) as scheduled."
+  },
+  "scheduling": [
+    { "date": "01/25/2025", "time": "8 AM", "type": "Surgery: Lumpectomy + SLNB", "location": "OR 5", "status": "Completed" },
+    { "date": "02/05/2025", "time": "10 AM", "type": "Surgery: ALND", "location": "OR 5", "status": "Completed" },
+    { "date": "02/10/2025", "time": "1 PM", "type": "Med Onc Consult (Lee)", "location": "Oncology Clinic", "status": "Completed" },
+    { "date": "~02/15/2025 - ~06/05/2025", "time": "q3wks", "type": "Adjuvant Chemotherapy (AC-THP)", "location": "Infusion Center", "status": "Completed" },
+    { "date": "Ongoing", "time": "q3wks", "type": "Trastuzumab/Pertuzumab", "location": "Infusion Center", "status": "Ongoing" },
+    { "date": "06/10/2025", "time": "11 AM", "type": "CT Simulation Breast+Nodes", "location": "Rad Onc Sim", "status": "Completed" },
+    { "date": "06/17/2025", "time": "9 AM", "type": "Rad Onc Consult Post-Chemo (Rossi)", "location": "Rad Onc Clinic", "status": "Completed" },
+    { "date": "06/20/2025 - ~07/24/2025", "time": "Daily (M-F) ~10AM", "type": "3D-CRT Treatment (1/25)", "location": "LINAC 4", "status": "Ongoing" },
+    { "date": "~07/25/2025 - ~07/31/2025", "time": "Daily (M-F) ~10AM", "type": "Boost Treatment (1/5)", "location": "LINAC 4", "status": "Scheduled" },
+    { "date": "Weekly (e.g., 06/27)", "time": "~10:30 AM (Post-RT)", "type": "OTV", "location": "Rad Onc Clinic", "status": "Scheduled" }
+  ],
+  "cptCharges": [
+    { "code": "77285 / 77290", "description": "Simulation, Intermediate / Complex (Breast + Nodes)", "frequency": "Once" },
+    { "code": "77333 / 77334", "description": "Treatment device, Intermediate / Complex", "frequency": "Once" },
+    { "code": "77295", "description": "3D radiotherapy plan", "frequency": "Once" },
+    { "code": "77300", "description": "Basic radiation dosimetry calculation", "frequency": "Per plan" },
+    { "code": "77407 / 77412", "description": "Radiation treatment delivery, 3+ fields / complex (Tangents + SCV field +/- PAB)", "frequency": "Daily" },
+    { "code": "77427", "description": "Radiation treatment management, 5 treatments", "frequency": "Weekly" },
+    { "code": "77470", "description": "Special treatment procedure (May apply for boost planning/delivery or complex setup)", "frequency": "Per boost/occurrence" },
+    { "code": "96416 / 96417", "description": "Chemo admin, Init/Addtl hr HER2 agent infusion", "frequency": "Per Infusion Day" }
+  ],
+  "diagnosisSearch": "Breast Cancer"
+}
