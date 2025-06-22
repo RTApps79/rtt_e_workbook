@@ -367,14 +367,14 @@ window.loadDicomSeries = function(seriesIdx) {
 };
 
 // ==================================================================
-// === CT SIMULATION RENDERER (UPDATED) ===
+// === CT SIMULATION RENDERER (UPDATED with Official Photo Display) ===
 // ==================================================================
 function renderCTSimulation(ct) {
-  let content = "";
+  let detailsContent = "";
   if (!ct) {
-    content = `<p>No CT Simulation data for this patient.</p>`;
+    detailsContent = `<p>No CT Simulation data for this patient.</p>`;
   } else {
-    content = `
+    detailsContent = `
       <p><strong>Simulation Date:</strong> ${ct.simulationDate || ""}</p>
       <p><strong>Setup Instructions:</strong> ${ct.setupInstructions || ""}</p>
       <p><strong>Immobilization:</strong> ${ct.immobilization || ""}</p>
@@ -386,7 +386,25 @@ function renderCTSimulation(ct) {
     `;
   }
   
-  // Add the new practice upload section
+  // New section for displaying official setup photos from the JSON
+  let officialPhotosHtml = '';
+  if (ct && ct.setupImages && ct.setupImages.length > 0) {
+    officialPhotosHtml = `
+      <div class="section" style="margin-top: 25px;">
+        <div class="section-header">Official Setup Photos</div>
+        <div class="section-content" style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start;">
+          ${ct.setupImages.map(img => `
+            <div style="text-align: center;">
+              <img src="${img.url || 'https://placehold.co/200x150?text=No+Image'}" alt="${img.type || 'Setup Photo'}" style="max-width: 200px; max-height: 150px; border: 1px solid #ccc;">
+              <p style="margin-top: 5px;"><strong>${img.type || 'Reference'} View</strong></p>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+  
+  // The practice upload section
   const uploadSection = `
     <div class="section" style="margin-top: 25px;">
         <div class="section-header">Practice Setup Photo Upload</div>
@@ -399,9 +417,10 @@ function renderCTSimulation(ct) {
   `;
 
   return `
+    ${officialPhotosHtml}
     <div class="section">
       <div class="section-header">CT Simulation Details</div>
-      <div class="section-content">${content}</div>
+      <div class="section-content">${detailsContent}</div>
     </div>
     ${uploadSection}
   `;
@@ -636,9 +655,6 @@ function renderTreatmentDelivery(data) {
   return dosimetryHtml + fractionsSection + formSection;
 }
 
-// ==================================================================
-// === RAD ONC SUB-TAB HANDLER (UPDATED) ===
-// ==================================================================
 function showRadOncSubTab(subKey, data) {
   const subContents = document.getElementById('radOnc-subtab-contents');
   if (!subContents) return;
@@ -646,12 +662,11 @@ function showRadOncSubTab(subKey, data) {
   switch (subKey) {
     case 'ctsim': 
       subContents.innerHTML = renderCTSimulation(radOncData.ctSimulation); 
-      // Add event listener for the new file uploader
       const uploader = document.getElementById('setupImageUploader');
       if (uploader) {
         uploader.addEventListener('change', event => {
           const previewContainer = document.getElementById('imagePreviewContainer');
-          previewContainer.innerHTML = ''; // Clear previous previews
+          previewContainer.innerHTML = ''; 
           const files = event.target.files;
           for (const file of files) {
             const reader = new FileReader();
@@ -660,17 +675,14 @@ function showRadOncSubTab(subKey, data) {
               previewWrapper.style.border = '1px solid #ddd';
               previewWrapper.style.padding = '5px';
               previewWrapper.style.textAlign = 'center';
-
               const img = document.createElement('img');
               img.src = e.target.result;
               img.style.maxWidth = '150px';
               img.style.maxHeight = '150px';
               img.style.display = 'block';
-
               const fileName = document.createElement('span');
               fileName.textContent = file.name;
               fileName.style.fontSize = '12px';
-              
               previewWrapper.appendChild(img);
               previewWrapper.appendChild(fileName);
               previewContainer.appendChild(previewWrapper);
@@ -693,6 +705,8 @@ function showRadOncSubTab(subKey, data) {
   }
 }
 
+// --- The rest of the file (showTab, loadAndDisplayPatient, etc.) is unchanged ---
+// ...
 function renderRadOncSubTabs(activeKey, data) {
   return `<div id="radOnc-subtabs" class="tab-bar" style="margin-bottom:1em;">
     ${radOncSubTabs.map(sub =>
@@ -701,16 +715,12 @@ function renderRadOncSubTabs(activeKey, data) {
     </div>
     <div id="radOnc-subtab-contents"></div>`;
 }
-
-// --- Main Tab Switch Logic ---
 function showTab(tabKey, data) {
   const tabContents = document.getElementById('emr-tab-contents');
   if (!tabContents) return;
-
   document.querySelectorAll('#emr-tabs .tab-button').forEach(btn => btn.classList.remove('active'));
   const activeTabButton = document.getElementById(`emr-tab-btn-${tabKey}`);
   if (activeTabButton) activeTabButton.classList.add('active');
-
   if (tabKey === "radOnc") {
     tabContents.innerHTML = renderRadOncSubTabs("ctsim", data);
     showRadOncSubTab("ctsim", data); 
@@ -726,7 +736,6 @@ function showTab(tabKey, data) {
     });
     return;
   }
-  
   switch (tabKey) {
     case 'demographics': tabContents.innerHTML = renderDemographics(data); break;
     case 'diagnosis': tabContents.innerHTML = renderDiagnosis(data); break;
@@ -740,8 +749,6 @@ function showTab(tabKey, data) {
     default: tabContents.innerHTML = "<p>No data.</p>"; break;
   }
 }
-
-// --- Patient Loader and Dropdown ---
 let currentPatientData = null;
 function loadAndDisplayPatient(fileName) {
   fetch(fileName)
@@ -768,7 +775,6 @@ function loadAndDisplayPatient(fileName) {
         document.getElementById('emr-tab-contents').innerHTML = `<div class="section"><div class="section-header" style="background-color: #d9534f;">Error</div><div class="section-content"><p>Could not load patient file: ${fileName}. Please check the console for details.</p></div></div>`;
     });
 }
-
 function populatePatientDropdown(filteredPatients = patients) {
   const select = document.getElementById('patientSelect');
   if (!select) return;
@@ -787,7 +793,6 @@ function populatePatientDropdown(filteredPatients = patients) {
     select.appendChild(opt);
 });
 }
-
 function filterPatientsByDiagnosis() {
   const searchValue = document.getElementById('diagnosisSearch').value.trim().toLowerCase();
   const tabContents = document.getElementById('emr-tab-contents');
@@ -809,8 +814,6 @@ function filterPatientsByDiagnosis() {
       if(tabContents) tabContents.innerHTML = `<p style="padding: 20px;">No matching patients found for "${searchValue}".</p>`;
   }
 }
-
-// --- On Page Load ---
 document.addEventListener('DOMContentLoaded', () => {
     const modalCloseBtn = document.getElementById('emr-modal-close');
     if (modalCloseBtn) {
@@ -826,7 +829,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
     }
-
     if (typeof patients !== 'undefined' && patients.length > 0) {
         populatePatientDropdown();
         loadAndDisplayPatient(patients[0].file);
@@ -835,7 +837,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const tabContents = document.getElementById('emr-tab-contents');
         if (tabContents) tabContents.innerHTML = `<p style="padding: 20px;">Patient list not found.</p>`;
     }
-
     const patientSelect = document.getElementById('patientSelect');
     if (patientSelect) {
         patientSelect.addEventListener('change', function() {
@@ -844,7 +845,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-
     const diagnosisSearch = document.getElementById('diagnosisSearch');
     if (diagnosisSearch) {
         diagnosisSearch.addEventListener('input', filterPatientsByDiagnosis);
