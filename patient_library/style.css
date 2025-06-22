@@ -1,370 +1,168 @@
-/* General Body and Container */
-body {
-    font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif; /* More professional font stack */
-    background: #f8f9fa; /* Light grey/off-white background */
-    color: #343a40; /* Darker text for readability */
-    line-height: 1.6;
-}
-
-header {
-    background: #2196F3; /* A more common 'medical blue' */
-    color: #ffffff;
-    padding: 18px 24px; /* Slightly more padding */
-    text-align: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* Subtle shadow for depth */
-}
-
-header h1 {
-    margin: 0;
-    font-size: 2em; /* Adjust as needed */
-    font-weight: 500; /* Slightly lighter than bold */
-}
-
-header div {
-    font-size: 1.1em;
-    opacity: 0.9;
-}
-
-.container {
-    display: flex;
-    flex-wrap: wrap; /* Already there, good */
-    gap: 25px; /* Slightly increased gap for more breathing room */
-    padding: 25px; /* More overall padding */
-    max-width: 1200px; /* Optional: constrain overall width */
-    margin: 0 auto; /* Center the container */
-}
-
-/* Panel Styling */
-.left-panel, .right-panel, .panel {
-    background: #ffffff;
-    border-radius: 8px; /* Slightly less rounded corners */
-    box-shadow: 0 2px 10px rgba(0,0,0,0.08); /* More noticeable but still soft shadow */
-    border: 1px solid #e0e0e0; /* A very light border */
-}
-
-.left-panel {
-    flex: 1 1 360px; /* Adjust min-width if needed */
-    min-width: 360px;
-    max-width: 450px; /* Allow more space */
-    padding: 20px;
-}
-
-.right-panel {
-    flex: 2 1 600px; /* Allow more space */
-    min-width: 500px; /* Keep this as a minimum */
-    padding: 30px; /* More padding for content */
-}
-
-h2 {
-    color: #1976D2; /* A slightly darker, more prominent blue */
-    font-size: 1.6em; /* Slightly larger heading */
-    margin: 0 0 20px 0; /* More space below headings */
-    padding-bottom: 8px; /* Space below heading before content */
-    border-bottom: 1px solid #eeeeee; /* Subtle separator */
-}
-
-h3 {
-    color: #424242; /* Darker grey for sub-headings */
-    font-size: 1.3em;
-    margin: 25px 0 15px 0; /* More vertical rhythm */
-}
-
-/* Console Area Specifics */
-#console-area {
-    background-color: #f0f4f7; /* Very light blue-grey for console background */
-    border: 1px solid #d4dce3; /* Slightly darker border */
-    padding: 15px;
-}
-
-#console-display {
-    background-color: #e3f2fd; /* Lightest blue for display */
-    border: 1px solid #90CAF9; /* Clearer blue border */
-    padding: 15px;
-    min-height: 100px; /* Increased height */
-    font-family: 'Source Code Pro', 'Courier New', Courier, monospace; /* A common coding font */
-    color: #1A237E; /* Deep blue for console text */
-    font-weight: normal; /* Less bold for a softer look */
-    font-size: 0.95em;
-    border-radius: 4px;
-}
-
-#console-parameters {
-    margin-bottom: 8px;
-    text-align: left;
-}
-
-#console-status {
-    font-size: 1.1em; /* Make status more prominent */
-    font-weight: 500;
-    text-align: right;
-}
-
-/* Buttons (General and Console) */
-.console-buttons {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); /* More flexible grid */
-    gap: 10px; /* Increased gap */
-    margin-top: 15px; /* More space from display */
-}
-
-.console-button {
-    padding: 12px 8px; /* More padding */
-    font-size: 0.95em;
-    background-color: #607D8B; /* Muted blue-grey */
-    color: white;
-    border: none; /* Flat design */
-    border-radius: 5px; /* Slightly more rounded */
-    cursor: pointer;
-    transition: background-color 0.2s ease, box-shadow 0.2s ease; /* Smooth transitions */
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.console-button:hover {
-    background-color: #78909C; /* Slightly lighter on hover */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-}
-
-.console-button.yellow {
-    background-color: #FFC107; /* Standard yellow */
-    color: #343a40; /* Darker text for contrast */
-}
-
-.console-button.yellow:hover {
-    background-color: #FFD54F; /* Lighter yellow on hover */
-}
-
-.btn {
-    background: #007BFF; /* Bootstrap primary blue */
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 22px; /* More generous padding */
-    margin: 8px 5px; /* Consistent margin */
-    font-size: 1em;
-    cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.1s ease;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.btn:hover {
-    background: #0056b3; /* Darker blue on hover */
-    transform: translateY(-1px); /* Slight lift effect */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-}
-
-/* QA Menu Buttons */
-.qa-menu-btn {
-    background: #E3F2FD; /* Light blue */
-    color: #1976D2; /* Darker blue text */
-    padding: 12px 15px;
-    font-size: 1.05em;
-    border-radius: 6px;
-    border: 1px solid #BBDEFB; /* Light blue border */
-    transition: background-color 0.2s ease, border-color 0.2s ease;
-}
-
-.qa-menu-btn:hover {
-    background: #BBDEFB; /* Darker light blue on hover */
-    border-color: #90CAF9;
-}
-
-/* Modal Styling */
-.modal-bg {
-    background: rgba(0,0,0,0.55); /* Slightly darker overlay */
-}
-
-.modal-game {
-    background: #ffffff;
-    border-radius: 12px; /* Consistent border-radius */
-    box-shadow: 0 8px 30px rgba(0,0,0,0.3); /* Stronger shadow for modal */
-    min-width: 380px; /* Slightly wider modal */
-    max-width: 500px; /* Larger max width */
-    padding: 30px 28px 25px 28px; /* More internal padding */
-    animation: popin 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Springy popin */
-}
-
-.close-modal {
-    color: #757575; /* Muted close button */
-    font-size: 1.4em; /* Larger close icon */
-    right: 18px; /* Adjusted position */
-    top: 15px;
-    transition: color 0.2s ease;
-}
-
-.close-modal:hover {
-    color: #424242; /* Darken on hover */
-}
-
-/* Troubleshooting & QA Simulation Specifics */
-.scenario {
-    background: #E8F5E9; /* Light green for scenario box */
-    border: 1px solid #81C784; /* Green border */
-    border-radius: 8px;
-    padding: 18px;
-    margin-bottom: 20px;
-    font-size: 1.08em;
-    color: #388E3C; /* Dark green text */
-    font-weight: 500;
-}
-
-.answers label {
-    display: flex; /* Use flexbox for alignment */
-    align-items: center; /* Vertically align radio button and text */
-    margin: 8px 0;
-    cursor: pointer;
-    font-size: 1em;
-    color: #424242;
-    transition: color 0.1s ease;
-}
-
-.answers label:hover {
-    color: #0056b3; /* Highlight text on hover */
-}
-
-.answers input[type="radio"] {
-    margin-right: 8px; /* Space between radio and text */
-    transform: scale(1.1); /* Slightly larger radio buttons */
-    accent-color: #2196F3; /* Custom color for checked radio */
-}
-
-.step {
-    font-weight: bold;
-    color: #1976D2; /* Consistent blue for step title */
-    margin-bottom: 8px; /* Space between step title and text */
-    display: block; /* Ensure step title is on its own line */
-}
-
-/* Output/LightRad Simulator */
-.qa-sim-result {
-    font-family: 'Source Code Pro', monospace;
-    font-size: 1.1em;
-    color: #388E3C; /* Green for pass */
-    background-color: #E8F5E9; /* Light green background */
-    border: 1px solid #C8E6C9;
-    padding: 8px 12px;
-    border-radius: 5px;
-    margin-bottom: 15px;
-    text-align: center;
-}
-
-.qa-log-row {
-    display: flex;
-    align-items: center;
-    gap: 12px; /* More space between elements */
-    margin-bottom: 12px;
-}
-
-.qa-log-row label {
-    min-width: 130px; /* Give labels more room */
-    font-weight: 500;
-    color: #555;
-}
-
-.qa-log-row input[type="number"], .qa-log-row input[type="text"] {
-    width: 80px; /* Wider input fields */
-    padding: 6px 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 1em;
-}
-
-.qa-log-row input::placeholder {
-    color: #aaa;
-}
-
-.tolerance {
-    font-size: 0.9em;
-    color: #757575;
-    margin-left: 0; /* Remove extra margin if flex handles it */
-}
-
-hr {
-    border: none;
-    border-top: 1px dashed #cccccc; /* Dashed line for subtle separation */
-    margin: 25px 0;
-}
-
-/* Stepwise QA Summary */
-.qa-stepwise-summary {
-    font-size: 0.98em; /* Slightly smaller for table details */
-}
-
-.qa-stepwise-summary table {
-    margin-top: 15px; /* Space from heading */
-    border: 1px solid #ddd; /* Clearer table border */
-}
-
-.qa-stepwise-summary th, .qa-stepwise-summary td {
-    padding: 10px 15px; /* More padding in table cells */
-    border: 1px solid #eee; /* Lighter internal borders */
-    text-align: left;
-}
-
-.qa-stepwise-summary th {
-    background-color: #f5f5f5; /* Light grey background for headers */
-    font-weight: 600;
-    color: #424242;
-}
-
-.qa-stepwise-summary tr.correct {
-    background: #e6ffe6; /* Lighter green for correct rows */
-}
-
-.qa-stepwise-summary tr.incorrect {
-    background: #ffe6e6; /* Lighter red for incorrect rows */
-}
-
-.pass {
-    color: #28a745; /* Standard green pass */
-    font-weight: bold;
-}
-
-.fail {
-    color: #dc3545; /* Standard red fail */
-    font-weight: bold;
-}
-
-.note {
-    background-color: #E0F2F7; /* Light blue for notes */
-    border-left: 5px solid #2196F3; /* Stronger blue border */
-    padding: 12px 18px;
-    border-radius: 5px;
-    color: #0D47A1; /* Dark blue text */
-    font-size: 0.95em;
-    margin-top: 20px;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .left-panel, .right-panel {
-        min-width: unset;
-        flex-basis: 100%; /* Stack panels on smaller screens */
+<style>
+    /* --- THEME & VARIABLES --- */
+    :root {
+        --primary-color: #004a7c;
+        --secondary-color: #007bff;
+        --accent-color: #17a2b8;
+        --background-color: #f8f9fa;
+        --container-bg-color: #ffffff;
+        --border-color: #dee2e6;
+        --text-color: #212529;
+        --text-muted-color: #6c757d;
+        --header-bg-color: #eef2f5;
+        --success-color: #28a745;
     }
-    .container {
-        padding: 15px;
-        gap: 15px;
-    }
-    .modal-game {
-        min-width: unset;
-        max-width: 95%; /* Adjust modal size */
-        margin: 0 15px;
-    }
-    .qa-log-row {
-        flex-direction: column; /* Stack log row elements */
-        align-items: flex-start;
-        gap: 5px;
-    }
-    .qa-log-row label {
-        min-width: unset;
-    }
-}
 
-@media (max-width: 500px) {
-  table, .demographics-table, .standard-table {
-    font-size: 0.95em;
-    max-width: 100vw;
-  }
-  th, td {
-    padding: 0.4em 0.3em;
-  }
-}
+    /* --- GENERAL & TYPOGRAPHY --- */
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        font-size: 16px;
+        line-height: 1.6;
+        margin: 20px;
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
+        background-color: var(--background-color);
+        color: var(--text-color);
+    }
+    h1, h2, h3, h4 {
+        color: var(--primary-color);
+        font-weight: 600;
+    }
+    h1 {
+        border-bottom: 2px solid var(--primary-color);
+        padding-bottom: 10px;
+        margin-bottom: 25px;
+        text-align: center;
+    }
+    h2 {
+        margin-top: 30px;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 8px;
+        margin-bottom: 20px;
+    }
+    strong {
+        font-weight: 600;
+        color: var(--primary-color);
+    }
+    .data-label {
+        font-weight: 500;
+        color: var(--text-muted-color);
+        margin-right: 8px;
+    }
+
+    /* --- LAYOUT & CONTAINERS --- */
+    .form-container, .lesson-content {
+        padding: 25px;
+        border: 1px solid var(--border-color);
+        background-color: var(--container-bg-color);
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        margin-bottom: 25px;
+    }
+    .emr-container {
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        overflow: hidden;
+        margin-top: 20px;
+        margin-bottom: 30px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    .section-header {
+        background-color: var(--header-bg-color);
+        padding: 10px 15px;
+        margin: -25px -25px 20px -25px;
+        border-bottom: 1px solid var(--border-color);
+        font-size: 1.1em;
+        font-weight: 600;
+        color: var(--primary-color);
+    }
+    .tab-content hr {
+        border: 0;
+        height: 1px;
+        background-color: var(--border-color);
+        margin: 30px 0;
+    }
+
+    /* --- TABS & INTERACTIVITY --- */
+    .tab-bar {
+        background-color: #f0f0f0;
+        display: flex;
+        flex-wrap: wrap;
+        border-bottom: 1px solid var(--border-color);
+    }
+    .tab-button {
+        padding: 12px 18px;
+        border: none;
+        background-color: transparent;
+        cursor: pointer;
+        border-bottom: 3px solid transparent;
+        margin-right: 2px;
+        font-size: 1em;
+        font-weight: 500;
+        color: var(--text-muted-color);
+        transition: all 0.2s ease-in-out;
+    }
+    .tab-button.active {
+        background-color: var(--container-bg-color);
+        border-bottom: 3px solid var(--accent-color);
+        font-weight: 600;
+        color: var(--primary-color);
+    }
+    .tab-button:hover:not(.active) {
+        background-color: var(--header-bg-color);
+        color: var(--primary-color);
+    }
+
+    /* --- FORMS & BUTTONS --- */
+    label {
+        display: block;
+        margin: 15px 0 5px;
+        font-weight: 600;
+        font-size: 0.9em;
+        color: var(--text-muted-color);
+    }
+    input[type="text"], input[type="number"], input[type="date"], select, textarea {
+        padding: 10px;
+        width: 100%;
+        box-sizing: border-box;
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        font-size: 1em;
+        transition: all 0.2s ease-in-out;
+    }
+    input[type="text"]:focus, input[type="number"]:focus, input[type="date"]:focus, select:focus, textarea:focus {
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+        outline: none;
+    }
+    .field-group {
+        border: 1px solid var(--header-bg-color);
+        padding: 10px 15px;
+        margin-top: 20px;
+        border-radius: 4px;
+    }
+    .field-group legend {
+        font-weight: 600;
+        color: var(--primary-color);
+        padding: 0 8px;
+        font-size: 1.05em;
+    }
+    button#submitBtn {
+        background-color: var(--success-color);
+        color: white;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 1.1em;
+        margin-top: 20px;
+        display: block;
+        width: 100%;
+        font-weight: 600;
+        transition: background-color 0.2s ease;
+    }
+    button#submitBtn:hover {
+        background-color: #218838;
+    }
+</style>
