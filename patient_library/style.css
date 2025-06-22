@@ -60,15 +60,16 @@ label {
     margin-right: 5px;
 }
 
-input[type="text"], select {
+input[type="text"], select, textarea { /* Added textarea */
     padding: 8px 10px;
     border: 1px solid var(--input-border);
     border-radius: 4px;
     font-size: 14px;
     font-family: Arial, Helvetica, sans-serif;
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
 }
 
-input[type="text"]:focus, select:focus {
+input[type="text"]:focus, select:focus, textarea:focus { /* Added textarea */
     outline: none;
     border-color: var(--input-focus-border);
     box-shadow: 0 0 5px rgba(0, 120, 212, 0.5);
@@ -131,8 +132,17 @@ input[type="text"]:focus, select:focus {
 
 /* --- Modal for DICOM Viewer --- */
 .modal-overlay {
-    display: flex; /* Kept for alignment */
+    display: flex;
     background: rgba(0, 0, 0, 0.6);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    display: none; /* Hidden by default */
 }
 
 .modal-content {
@@ -144,6 +154,7 @@ input[type="text"]:focus, select:focus {
     max-height: 90vh;
     display: flex;
     flex-direction: column;
+    overflow: hidden; /* Important for iframes/images */
 }
 
 .modal-header {
@@ -175,6 +186,9 @@ input[type="text"]:focus, select:focus {
     width: 85vw; /* Example size */
     height: 75vh;
     background-color: #000;
+    display: flex; /* For cornerstone to work */
+    justify-content: center;
+    align-items: center;
 }
 /* --- CT Simulation Setup Photo Styles --- */
 .setup-photo-container {
@@ -311,58 +325,151 @@ input[type="text"]:focus, select:focus {
 .data-table tbody tr:hover {
     background-color: #e9e9e9; /* Highlight row on hover */
 }
-/* --- Print-Specific Styles --- */
+/* --- Practice Form Specific Styles --- */
+.practice-section {
+    background-color: #e9f5ff; /* Light blue background for the practice area */
+    border: 1px solid #a7d9ff;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 30px;
+}
+
+.practice-section h3 {
+    color: var(--primary-blue);
+    margin-top: 0;
+    border-bottom: 1px solid #a7d9ff;
+    padding-bottom: 10px;
+}
+
+.practice-form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Responsive 2-column layout */
+    gap: 20px; /* Space between fieldsets */
+}
+
+.practice-fieldset {
+    border: 1px solid #cceeff;
+    border-radius: 6px;
+    padding: 15px;
+    background-color: #f0f8ff;
+    display: flex;
+    flex-direction: column; /* Stack labels and inputs */
+    gap: 10px; /* Space between form elements within a fieldset */
+}
+
+.practice-fieldset legend {
+    font-weight: bold;
+    color: var(--primary-blue);
+    padding: 0 10px;
+}
+
+.practice-fieldset.full-width {
+    grid-column: 1 / -1; /* Make this fieldset span all columns */
+}
+
+.practice-fieldset label {
+    margin-bottom: -5px; /* Pull label closer to input */
+    font-size: 0.9em;
+    color: #555;
+}
+
+.practice-fieldset input[type="text"],
+.practice-fieldset input[type="number"],
+.practice-fieldset input[type="date"],
+.practice-fieldset select,
+.practice-fieldset textarea {
+    width: calc(100% - 20px); /* Account for padding */
+    padding: 8px;
+    border: 1px solid var(--input-border);
+    border-radius: 4px;
+    font-size: 1em;
+}
+
+.practice-fieldset textarea {
+    resize: vertical; /* Allow vertical resizing */
+}
+
+#addPracticeFractionBtn, #preparePracticeSummaryBtn {
+    display: block; /* Make buttons block level */
+    width: auto; /* Adjust width as needed */
+    margin: 20px auto 0; /* Center buttons below the form */
+    padding: 10px 20px;
+    background-color: var(--primary-blue);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+#addPracticeFractionBtn:hover, #preparePracticeSummaryBtn:hover {
+    background-color: #004a80;
+}
+
+#practiceFractionSessionTable {
+    margin-top: 20px;
+}
+
+#practiceSubmissionOutput {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 15px;
+}
+
+.practice-summary-area {
+    width: calc(100% - 20px);
+    min-height: 300px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-family: 'Courier New', Courier, monospace; /* Monospace for code/text output */
+    font-size: 0.9em;
+    background-color: #fff;
+    resize: vertical;
+}
+
+/* Print-specific styles */
 @media print {
   /* Hide elements that shouldn't be printed */
   body > h1,
   .patient-selection-area,
   #emr-tabs,
   #radOnc-subtabs,
-  .practice-section,
+  .practice-section, /* Hide the practice form when printing */
   #emr-modal-overlay,
   button,
-  input[type="file"] {
+  input[type="file"],
+  .toggle-details-btn { /* Hide toggle buttons in print */
     display: none !important;
   }
 
-  /* Ensure the main container and content are visible and fill the page */
-  body, .emr-container {
-    margin: 0;
-    padding: 0;
-    box-shadow: none;
-    border: none;
-    background: none;
+  /* Ensure hidden details are visible when printing */
+  .fraction-details-hidden {
+      display: block !important;
+      border-top: none !important; /* Remove dashed line when printing */
+      padding-top: 0 !important;
   }
 
-  #radOnc-subtab-contents {
-    display: block !important;
-    width: 100%;
-    padding: 0;
+  /* Adjust card layout for printing */
+  .fractions-container {
+      display: block !important; /* Stack cards vertically for print */
+      gap: 0 !important;
+      padding: 0 !important;
   }
 
-  /* Reset section styles for clean printing */
-  .section {
-    page-break-inside: avoid; /* Try to keep sections from splitting across pages */
-    box-shadow: none;
-    border: 1px solid #ccc;
-    margin-bottom: 20px;
+  .fraction-card {
+      border: 1px solid #ccc !important;
+      box-shadow: none !important;
+      page-break-inside: avoid; /* Keep whole card on one page if possible */
+      margin-bottom: 15px; /* Space between printed cards */
+      background-color: #fff !important;
   }
-  
-  .section-header {
-      background-color: #e0e0e0 !important;
+
+  .fraction-card h4, .fraction-card h5 {
       color: #000 !important;
-      -webkit-print-color-adjust: exact; /* Force background color printing in Chrome/Safari */
-      color-adjust: exact; /* Standard */
-  }
-
-  /* Make sure text is black for readability */
-  * {
-    color: #000 !important;
-    background: transparent !important;
-  }
-  
-  /* Ensure images are reasonably sized for printing */
-  .setup-photo-container img {
-      max-width: 300px !important;
+      -webkit-print-color-adjust: exact;
+      color-adjust: exact;
   }
 }
