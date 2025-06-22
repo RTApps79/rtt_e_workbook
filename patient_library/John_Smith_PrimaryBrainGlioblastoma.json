@@ -14,15 +14,18 @@
     "mobility": "Ambulates independently, no assistive devices needed at baseline."
   },
   "diagnosis": {
-    "primary": "Glioblastoma (GBM), WHO Grade IV",
+    "primary": "Glioblastoma, WHO Grade IV",
     "location": "Right Temporal Lobe",
     "dateInitialSymptoms": "~February 10, 2025",
     "datePathologicDiagnosis": "03/16/2025 (Post-resection)",
     "symptomsAtPresentation": "New onset focal seizures (left arm twitching), persistent headache unresponsive to OTC meds, subtle personality changes reported by wife.",
     "baselineNeuroStatus": "ECOG 1 (Symptomatic but fully ambulatory)",
-    "vitalSignsSummary": "BP: 135/85, Wt: 85 kg, Ht: 180 cm (03/24/25)",
-    "emergencyPlanSeizures": "Continue Levetiracetam prophylaxis, family educated on seizure first aid.",
-    "relevantBiomarkers": "IDH-wildtype, MGMT promoter unmethylated (obtained from pathology report)",
+    "pathologyFindings": [
+      "High-grade astrocytic neoplasm.",
+      "Features include significant cellular pleomorphism, high mitotic activity, microvascular proliferation, and palisading necrosis.",
+      "Immunohistochemistry: GFAP positive, ATRX retained, IDH1 R132H negative.",
+      "Molecular: IDH-wildtype, MGMT promoter unmethylated."
+    ],
     "priorTreatmentSummary": "Maximal safe surgical resection (03/15/2025) by Dr. Robert White (Neurosurgery)"
   },
   "treatmentPlan": {
@@ -31,174 +34,124 @@
     "treatmentSite": "Right Temporal Lobe",
     "intent": "Adjuvant (Post-operative)",
     "modality": "External Beam Radiation Therapy (EBRT) with concurrent Temozolomide (TMZ)",
-    "totalDose": "60 Gy",
-    "fractionation": "30 fx",
-    "rtRxDetails": "60 Gy / 30 fx",
-    "targetVolumeSummary": "Post-operative tumor bed with margins",
-    "detailedTargetVol": "PTV_TumorBed",
-    "technique": "VMAT",
-    "prescribedVolumes": [
-      "GTV: Post-operative cavity + residual enhancement",
-      "CTV: GTV + margin (e.g., 1.5 cm)",
-      "PTV: CTV + margin (e.g., 0.5 cm)"
-    ],
-    "concurrentChemo": "Temozolomide",
-    "detailedConcurrentChemo": "Temozolomide 75 mg/m^2 PO Daily during radiation (Managed by Dr. Chen)",
+    "rtRxDetails": "60 Gy in 30 fractions (2 Gy/fx)",
+    "targetVolumeSummary": "Post-operative tumor bed with margins, treated via two VMAT arcs.",
+    "techniqueSummary": "Volumetric Modulated Arc Therapy (VMAT) used to deliver a highly conformal dose distribution, sparing critical structures.",
+    "concurrentChemo": "Temozolomide 75 mg/m^2 PO Daily during radiation (Managed by Dr. Chen)",
     "medications": [
       "Dexamethasone 2 mg PO BID (Tapering schedule planned)",
       "Levetiracetam 750 mg PO BID (for seizure prophylaxis)",
       "Ondansetron PRN Nausea (related to TMZ)"
+    ],
+    "therapistAlerts": [
+      "Monitor for seizure activity pre/post treatment.",
+      "Patient may experience mild confusion post-treatment; ensure he has his way home planned.",
+      "High risk for fatigue; encourage patient to rest as needed."
     ]
   },
-  "ctSimulation": {
-    "simulationDate": "03/28/2025",
-    "setupInstructions": "Supine, Aquaplast mask fabricated and applied. Patient aligned to room lasers using anterior and bilateral marks. SAD setup.",
-    "immobilization": "Custom Aquaplast thermoplastic mask",
-    "referenceMarks": "3-point skin marks for initial alignment, then 3-point marks on thermoplastic mask aligned to room lasers. Isocenter set at L-1.5, L+2.0, V+5.0 relative to CT sim reference point."
-  },
-  "dosimetry": {
-    "planId": "JS44556_GBM",
-    "rx": "60 Gy / 30 fx",
-    "technique": "VMAT",
-    "energy": "6MV FFF",
-    "fields": "2 Arcs",
-    "numFields": 2,
-    "gantryAngles": "181-179 CW, 179-181 CCW",
-    "collAngles": "30, 330",
-    "couchAngles": "0",
-    "isoCoords": "L-1.5, L+2.0, V+5.0",
-    "tps": "Eclipse",
-    "algorithm": "AcurosXB",
-    "hetero": "Yes",
-    "norm": "PTV Mean 95%",
-    "constraints": "Brainstem Max < 54 Gy; Chiasm Max < 54 Gy; R Optic Nrv Max < 54 Gy; L Optic Nrv Max < 54 Gy",
-    "planNotes": "Standard GBM chemoradiation."
-  },
-  "treatmentDelivery": {
-    "fractions": [
-      // Example: Uncomment and expand as actual treatments are delivered
-      // {
-      //   "fractionNumber": 1,
-      //   "date": "2025-04-02",
-      //   "machine": "LINAC2",
-      //   "setupNotes": "CBCT match to bony anatomy, no adjustments needed.",
-      //   "sideEffects": "None reported",
-      //   "notes": "Tolerated well."
-      // }
-    ]
+  "radiationOncologyData": {
+    "ctSimulation": {
+      "simulationDate": "03/28/2025",
+      "setupInstructions": "Supine, head neutral in custom Aquaplast mask indexed to table. Patient aligned to room lasers using anterior and bilateral marks on mask.",
+      "immobilization": "Custom Aquaplast thermoplastic mask",
+      "referenceMarks": "3-point marks on thermoplastic mask aligned to room lasers. Isocenter set at L-1.5, L+2.0, V+5.0 relative to CT sim reference point.",
+      "setupImages": ["JS44556_setup_ap.jpg", "JS44556_setup_lat.jpg"]
+    },
+    "dosimetry": {
+      "planId": "JS44556_GBM",
+      "planStatus": "Final - Approved by Dr. Evelyn Reed",
+      "rx": "60 Gy / 30 fx",
+      "technique": "VMAT",
+      "energy": "6MV FFF",
+      "numberOfFieldsOrArcs": 2,
+      "gantryAngles": "Arc 1: 181-179 CW, Arc 2: 179-181 CCW",
+      "collAngles": "30, 330",
+      "couchAngles": "0",
+      "isoCoords": "L-1.5, L+2.0, V+5.0",
+      "tps": "Eclipse",
+      "algorithm": "AcurosXB",
+      "hetero": "Yes",
+      "norm": "PTV Mean 99.5% receives 60Gy",
+      "constraints": "Brainstem Max < 54 Gy; Chiasm Max < 54 Gy; R Optic Nrv Max < 54 Gy; L Optic Nrv Max < 54 Gy. All constraints met.",
+      "planNotes": "Standard of care adjuvant chemoradiation for GBM.",
+      "igrtProtocol": {
+          "frequency": "Daily",
+          "type": "CBCT",
+          "alignment": "Bony anatomy of the skull"
+      },
+      "qaChecks": [
+          { "date": "2025-04-01", "type": "Initial Chart Check", "by": "Physics Staff" },
+          { "date": "2025-04-01", "type": "Patient Specific QA", "by": "Physics Staff", "result": "Pass (Gamma 99.7% @ 3%/2mm)"}
+      ],
+      "fieldDetails": [
+        { "fieldName": "Arc 1", "fieldSize": "Dynamic MLC", "gantryAngle": "181-179 CW", "collimatorAngle": "30", "couchAngle": "0", "energy": "6MV FFF", "monitorUnits": 348, "ssd": "Variable" },
+        { "fieldName": "Arc 2", "fieldSize": "Dynamic MLC", "gantryAngle": "179-181 CCW", "collimatorAngle": "330", "couchAngle": "0", "energy": "6MV FFF", "monitorUnits": 355, "ssd": "Variable" }
+      ]
+    },
+    "treatmentDelivery": {
+      "fractions": [
+        {
+          "fractionNumber": 1,
+          "date": "2025-04-02",
+          "machine": "LINAC2",
+          "setupNotes": "Daily CBCT performed, matched to bony anatomy. No adjustments needed. Patient tolerated procedure well.",
+          "sideEffects": "None reported.",
+          "notes": "First day of treatment. Patient anxious but cooperative. Reinforced education on side effect management.",
+          "recordedFields": [
+            { "fieldName": "Arc 1", "deliveredMu": 348, "notes": "Tolerance met" },
+            { "fieldName": "Arc 2", "deliveredMu": 355, "notes": "Tolerance met" }
+          ]
+        },
+        {
+          "fractionNumber": 2,
+          "date": "2025-04-03",
+          "machine": "LINAC2",
+          "setupNotes": "Daily CBCT. Shifts applied: Vrt: -0.1, Lng: 0.0, Lat: +0.2. Tolerances met post-shift.",
+          "sideEffects": "Reports mild headache, resolved with OTC analgesic.",
+          "notes": "Continue to monitor.",
+           "recordedFields": [
+            { "fieldName": "Arc 1", "deliveredMu": 348, "notes": "Tolerance met" },
+            { "fieldName": "Arc 2", "deliveredMu": 355, "notes": "Tolerance met" }
+          ]
+        }
+      ]
+    }
   },
   "imagingAndReports": [
     {
       "date": "02/25/2025",
       "type": "MRI Brain w/ & w/o Contrast (Pre-Op)",
       "summary": "Large (4.5 cm) heterogeneously enhancing mass in R temporal lobe, suspicious for HGG.",
-      "modalId": "js-mri-brain-preop-modal",
       "reportDetails": {
-        "imageSrc": "https://img.medscapestatic.com/pi/meds/ckb/81/15381tn.jpg",
         "fullSummary": "Large (4.5 cm) heterogeneously enhancing mass in the right temporal lobe with significant surrounding vasogenic edema and mass effect, causing midline shift of 4mm. Findings suspicious for high-grade glioma."
-      }
-    },
-    {
-      "date": "03/16/2025",
-      "type": "MRI Brain w/ & w/o Contrast (Post-Op Day 1)",
-      "summary": "Post-op changes, near-gross total resection achieved, residual enhancement noted.",
-      "modalId": "js-mri-brain-postop-modal",
-      "reportDetails": {
-        "imageSrc": "https://www.jkom.org/upload//thumbnails/jkm-39-1-75f5.gif",
-        "fullSummary": "Post-operative changes status-post right temporal craniotomy for tumor resection. Near-gross total resection achieved, with thin rim of residual enhancement along the posterior margin. Expected post-surgical edema."
       }
     },
     {
       "date": "03/16/2025",
       "type": "Surgical Pathology Report",
       "summary": "Glioblastoma, WHO Grade IV, IDH-wt, MGMT-unmethylated.",
-      "modalId": "js-path-modal",
-      "reportDetails": {}
+      "reportDetails": {
+        "accessionNumber": "S25-12345",
+        "specimenSource": "Right temporal lobe mass, resection",
+        "finalDiagnosis": "GLIOBLASTOMA, IDH-WILDTYPE (WHO GRADE 4).",
+        "microscopicDescription": "Sections show a hypercellular, diffusely infiltrating astrocytic glioma. Tumor cells exhibit marked nuclear pleomorphism and frequent, atypical mitotic figures. Microvascular proliferation and pseudopalisading necrosis are prominent. No pathogenic IDH1 R132H or IDH2 R172 mutations are identified by immunohistochemistry and sequencing. MGMT promoter methylation analysis is negative (unmethylated).",
+        "comment": "The histologic and molecular features are diagnostic of glioblastoma, IDH-wildtype, WHO Grade 4."
+      }
     },
     {
       "date": "03/28/2025",
       "type": "CT Simulation (Head)",
       "summary": "Non-contrast CT for RT planning, fused with post-op MRI.",
-      "modalId": "js-ct-sim-modal",
       "reportDetails": {
-        "imageSrc": "https://www.jlgh.org/JLGH/media/Journal-LGH-Media-Library/Past%20Issues/Volume%2015%20-%20Issue%201/Dziurzynski_Fig-8-IMRT-vs-pencil-beam-RGB-50.jpg",
-        "fullSummary": "Non-contrast CT head acquired in treatment position with thermoplastic mask immobilization for RT planning. Scan fused with post-op MRI for target delineation."
+        "fullSummary": "Non-contrast CT head acquired in treatment position with thermoplastic mask immobilization for RT planning. Scan fused with post-op MRI (03/16/2025) for target delineation."
       }
     }
   ],
-  "dicomImages": [
-    {
-      "description": "CT Simulation (Head - 03/28/2025)",
-      "seriesType": "CT",
-      "imageUrls": [
-        "https://raw.githubusercontent.com/cornerstonejs/cornerstone-wado-image-loader/master/examples/images/CT000000.dcm",
-        "https://raw.githubusercontent.com/cornerstonejs/cornerstone-wado-image-loader/master/examples/images/CT000001.dcm",
-        "https://raw.githubusercontent.com/cornerstonejs/cornerstone-wado-image-loader/master/examples/images/CT000002.dcm"
-      ]
-    },
-    {
-      "description": "MRI Brain Pre-Op (02/25/2025)",
-      "seriesType": "MR",
-      "imageUrls": [
-        "https://raw.githubusercontent.com/cornerstonejs/cornerstone-wado-image-loader/master/examples/images/MR000000.dcm"
-      ]
-    },
-    {
-      "description": "MRI Brain Post-Op (03/16/2025)",
-      "seriesType": "MR",
-      "imageUrls": [
-        "https://raw.githubusercontent.com/FNNDSC/data/master/dicom/adi_brain/1.3.6.1.4.1.5962.99.1.3020871283.19690101000000.1629624997234956830.dcm",
-        "https://raw.githubusercontent.com/FNNDSC/data/master/dicom/adi_brain/1.3.6.1.4.1.5962.99.1.3020871283.19690101000000.1629624997234956831.dcm"
-      ]
-    }
-  ],
-  "labResults": [
-    { "date": "03/27/2025", "test": "CBC - WBC", "value": "8.2", "units": "x10^9/L", "range": "4.0-10.0", "notes": "Pre-RT/TMZ Baseline" },
-    { "date": "03/27/2025", "test": "CBC - Hgb", "value": "13.5", "units": "g/dL", "range": "13.5-17.5", "notes": "Pre-RT/TMZ Baseline" },
-    { "date": "03/27/2025", "test": "CBC - Platelets", "value": "250k", "units": "x10^9/L", "range": "150-400", "notes": "Pre-RT/TMZ Baseline" },
-    { "date": "03/27/2025", "test": "CMP - Glucose", "value": "115", "units": "mg/dL", "range": "70-100", "notes": "Slightly High - Likely steroid effect" },
-    { "date": "03/27/2025", "test": "CMP - AST/ALT", "value": "WNL", "units": "", "range": "Varies", "notes": "Baseline Liver Function" },
-    { "date": "04/06/2025", "test": "CBC - WBC", "value": "4.5", "units": "x10^9/L", "range": "4.0-10.0", "notes": "Weekly check (TMZ effect)" },
-    { "date": "04/06/2025", "test": "CBC - Platelets", "value": "160k", "units": "x10^9/L", "range": "150-400", "notes": "Weekly check (TMZ effect) - Monitor" }
-  ],
-  "progressNotes": [
-    { "date": "02/26/2025", "author": "Dr. Alice Brown (Neurology)", "type": "Consult Note", "summary": "54M referred for new onset seizures and HA. MRI brain shows R temporal mass concerning for HGG. Referred to Neurosurgery (Dr. White) urgently. Started Levetiracetam 500mg BID." },
-    { "date": "03/05/2025", "author": "Dr. Robert White (NeuroSx)", "type": "Initial Consult", "summary": "Pt presents with R temporal mass, likely GBM. Discussed surgical options, risks/benefits of maximal safe resection. Patient wishes to proceed. Scheduled for craniotomy 03/15. Started Dexamethasone for edema." },
-    { "date": "03/17/2025", "author": "Dr. Robert White (NeuroSx)", "type": "Post-Op Note", "summary": "Pt underwent R temporal craniotomy, maximal safe resection of tumor. Path confirmed GBM, WHO Gr IV. Post-op course unremarkable. Plan for discharge home tomorrow. Referrals to Rad Onc (Dr. Reed) and Neuro Onc (Dr. Chen) for adjuvant therapy." },
-    { "date": "03/24/2025", "author": "Dr. Evelyn Reed (Rad Onc)", "type": "Initial Consultation", "summary": "Pt seen post-op for R temporal GBM. Reviewed imaging, pathology (IDH-wt, MGMT-unmethylated). Discussed standard of care adjuvant chemoradiation (EBRT 60Gy/30fx w/ concurrent TMZ). Explained goals, procedure, potential side effects (fatigue, hair loss, skin reaction, cognitive effects, chemo SEs). Pt understands and agrees. Plan for CT Sim this week, start RT/TMZ ASAP. Coordinated w/ Dr. Chen." },
-    { "date": "03/28/2025", "author": "Mark Evans, RTT", "type": "Simulation Note", "summary": "CT Sim completed for adjuvant brain RT. Aquaplast mask fabricated, patient immobilized supine. Tolerated well. Data sent for VMAT planning." },
-    { "date": "04/06/2025", "author": "Dr. Evelyn Reed (Rad Onc)", "type": "On Treatment Visit (OTV) - Week 1", "summary": "Patient completed 5/30 fractions RT with concurrent TMZ. Tolerating reasonably well. Mild fatigue reported. No significant nausea (taking ondansetron PRN). Scalp care reviewed. CBC today shows mild decrease in Plt/WBC, acceptable to continue. Continue current plan. Follow up weekly." }
-  ],
-  "patientEducation": {
-    "goalsDiscussed": "Adjuvant therapy to reduce risk of recurrence after surgery.",
-    "sideEffectsReviewed": "Fatigue, potential hair loss in treated area, skin redness/irritation, possible temporary worsening of neurological symptoms due to swelling, nausea/vomiting (from TMZ), lowered blood counts (from TMZ), potential long-term cognitive changes. Educated on reporting symptoms promptly.",
-    "safetyConsiderations": "Importance of scalp care (gentle washing, avoid irritants), sun protection for scalp, managing fatigue (rest periods).",
-    "patientResponsibilities": "Attend daily RT appointments, take concurrent TMZ as prescribed, attend weekly OTVs and lab draws, maintain adequate hydration and nutrition.",
-    "medicationCompliance": "Take Temozolomide on empty stomach or at bedtime to minimize nausea. Take anti-nausea medication proactively if needed. Adhere to Dexamethasone taper schedule. Continue Levetiracetam consistently."
-  },
-  "scheduling": [
-    { "date": "02/25/2025", "time": "02:00 PM", "type": "MRI Brain", "location": "Radiology Dept", "status": "Completed" },
-    { "date": "02/26/2025", "time": "11:00 AM", "type": "Neurology Consult (Dr. Brown)", "location": "Neurology Clinic", "status": "Completed" },
-    { "date": "03/05/2025", "time": "09:30 AM", "type": "Neurosurgery Consult (Dr. White)", "location": "Neurosurgery Clinic", "status": "Completed" },
-    { "date": "03/15/2025", "time": "08:00 AM", "type": "Surgery: Craniotomy", "location": "Operating Room 4", "status": "Completed" },
-    { "date": "03/16/2025", "time": "07:00 PM", "type": "MRI Brain Post-Op", "location": "Radiology Dept", "status": "Completed" },
-    { "date": "03/24/2025", "time": "01:00 PM", "type": "Rad Onc Consult (Dr. Reed)", "location": "Radiation Oncology Clinic", "status": "Completed" },
-    { "date": "03/24/2025", "time": "02:30 PM", "type": "Neuro Onc Consult (Dr. Chen)", "location": "Neuro-Oncology Clinic", "status": "Completed" },
-    { "date": "03/28/2025", "time": "10:00 AM", "type": "CT Simulation Brain RT", "location": "Radiation Oncology Sim Room", "status": "Completed" },
-    { "date": "04/02/2025", "time": "09:00 AM", "type": "First Treatment (Fx 1/30) + Chemo Start", "location": "Linear Accelerator #2 / Infusion Ctr", "status": "Completed" },
-    { "date": "04/02/2025 - ~05/13/2025", "time": "Daily (M-F) ~9:00 AM", "type": "EBRT Treatment", "location": "Linear Accelerator #2", "status": "Ongoing" },
-    { "date": "Weekly (e.g., 04/06, 04/13...)", "time": "~9:30 AM (Post-RT)", "type": "On Treatment Visit (OTV) w/ CBC", "location": "Radiation Oncology Clinic", "status": "Scheduled" },
-    { "date": "~06/15/2025", "time": "10:00 AM", "type": "Post-RT/TMZ Follow Up", "location": "Radiation Oncology Clinic", "status": "Scheduled" },
-    { "date": "~06/15/2025", "time": "11:00 AM", "type": "Neuro-Oncology Follow Up", "location": "Neuro-Oncology Clinic", "status": "Scheduled" }
-  ],
-  "cptCharges": [
-    { "code": "77290", "description": "Simulation, Complex (CT for VMAT planning)", "frequency": "Once per course" },
-    { "code": "77334", "description": "Treatment device, Complex (Thermoplastic Mask)", "frequency": "Once per course" },
-    { "code": "77301", "description": "IMRT planning", "frequency": "Once per course" },
-    { "code": "77338", "description": "MLC device for IMRT", "frequency": "Once per plan" },
-    { "code": "77300", "description": "Basic radiation dosimetry calculation", "frequency": "Per plan/calculation" },
-    { "code": "77386", "description": "Intensity modulated radiation treatment delivery, complex (VMAT delivery)", "frequency": "Per fraction (Daily)" },
-    { "code": "77387", "description": "Guidance for localization of target volume for delivery of radiation treatment (IGRT)", "frequency": "Per fraction or per week (payer dependent)" },
-    { "code": "77427", "description": "Radiation treatment management, 5 treatments", "frequency": "Weekly" }
-  ]
+  "dicomImages": [],
+  "labResults": [],
+  "progressNotes": [],
+  "patientEducation": {},
+  "scheduling": [],
+  "cptCharges": [],
+  "diagnosisSearch": "Glioblastoma"
 }
