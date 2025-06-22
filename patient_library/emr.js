@@ -367,64 +367,64 @@ window.loadDicomSeries = function(seriesIdx) {
 };
 
 // ==================================================================
-// === CT SIMULATION RENDERER (UPDATED with Official Photo Display) ===
+// === CT SIMULATION RENDERER (UPDATED with Separate Uploaders & Print Button) ===
 // ==================================================================
 function renderCTSimulation(ct) {
-  let detailsContent = "";
-  if (!ct) {
-    detailsContent = `<p>No CT Simulation data for this patient.</p>`;
-  } else {
-    detailsContent = `
-      <p><strong>Simulation Date:</strong> ${ct.simulationDate || ""}</p>
-      <p><strong>Setup Instructions:</strong> ${ct.setupInstructions || ""}</p>
-      <p><strong>Immobilization:</strong> ${ct.immobilization || ""}</p>
-      <p><strong>Reference Marks:</strong> ${ct.referenceMarks || ""}</p>
-      <p><strong>Scanner:</strong> ${ct.scanner || ""}</p>
-      <p><strong>Slice Thickness:</strong> ${ct.sliceThickness || ""}</p>
-      <p><strong>Contrast Used:</strong> ${ct.contrastUsed || ""}</p>
-      <p><strong>CT Notes:</strong> ${ct.ctNotes || ""}</p>
-    `;
-  }
+  ct = ct || {}; // Ensure ct is an object
   
-  // New section for displaying official setup photos from the JSON
-  let officialPhotosHtml = '';
-  if (ct && ct.setupImages && ct.setupImages.length > 0) {
-    officialPhotosHtml = `
-      <div class="section" style="margin-top: 25px;">
-        <div class="section-header">Official Setup Photos</div>
-        <div class="section-content" style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start;">
-          ${ct.setupImages.map(img => `
-            <div style="text-align: center;">
-              <img src="${img.url || 'https://placehold.co/200x150?text=No+Image'}" alt="${img.type || 'Setup Photo'}" style="max-width: 200px; max-height: 150px; border: 1px solid #ccc;">
-              <p style="margin-top: 5px;"><strong>${img.type || 'Reference'} View</strong></p>
-            </div>
-          `).join('')}
+  // Find the AP and Lateral images from the patient's JSON data
+  const apImage = ct.setupImages?.find(img => img.type === 'AP');
+  const latImage = ct.setupImages?.find(img => img.type === 'Lateral');
+
+  // HTML for the Official Setup Photos section with individual uploaders
+  const officialPhotosHtml = `
+    <div class="section">
+      <div class="section-header">Official Setup Photos</div>
+      <div class="section-content" style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start;">
+        
+        <div class="setup-photo-container">
+          <strong>AP View</strong>
+          <img id="apImagePreview" src="${apImage?.url || 'https://placehold.co/200x150?text=AP+Photo'}" alt="AP Setup Photo">
+          <label for="apImageUploader" class="button-like-label">Upload AP Image</label>
+          <input type="file" id="apImageUploader" accept="image/*" style="display: none;">
         </div>
+        
+        <div class="setup-photo-container">
+          <strong>Lateral View</strong>
+          <img id="latImagePreview" src="${latImage?.url || 'https://placehold.co/200x150?text=Lateral+Photo'}" alt="Lateral Setup Photo">
+          <label for="latImageUploader" class="button-like-label">Upload Lateral Image</label>
+          <input type="file" id="latImageUploader" accept="image/*" style="display: none;">
+        </div>
+
       </div>
-    `;
-  }
-  
-  // The practice upload section
-  const uploadSection = `
-    <div class="section" style="margin-top: 25px;">
-        <div class="section-header">Practice Setup Photo Upload</div>
-        <div class="section-content">
-            <p>Use this tool to practice uploading patient setup photos. Images are for this session only and will not be saved.</p>
-            <input type="file" id="setupImageUploader" accept="image/*" multiple>
-            <div id="imagePreviewContainer" style="margin-top: 15px; display: flex; flex-wrap: wrap; gap: 10px;"></div>
-        </div>
     </div>
   `;
 
-  return `
-    ${officialPhotosHtml}
+  const detailsContent = `
+    <p><strong>Simulation Date:</strong> ${ct.simulationDate || ""}</p>
+    <p><strong>Setup Instructions:</strong> ${ct.setupInstructions || ""}</p>
+    <p><strong>Immobilization:</strong> ${ct.immobilization || ""}</p>
+    <p><strong>Reference Marks:</strong> ${ct.referenceMarks || ""}</p>
+    <p><strong>Scanner:</strong> ${ct.scanner || ""}</p>
+    <p><strong>Slice Thickness:</strong> ${ct.sliceThickness || ""}</p>
+    <p><strong>Contrast Used:</strong> ${ct.contrastUsed || ""}</p>
+    <p><strong>CT Notes:</strong> ${ct.ctNotes || ""}</p>
+  `;
+
+  // Main details section with the new Print button
+  const detailsSection = `
     <div class="section">
-      <div class="section-header">CT Simulation Details</div>
+      <div class="section-header">
+        <span>CT Simulation Details</span>
+        <button id="printCtsimBtn" style="float: right; margin-top: -5px;">Print Summary</button>
+      </div>
       <div class="section-content">${detailsContent}</div>
     </div>
-    ${uploadSection}
   `;
+
+  return officialPhotosHtml + detailsSection;
 }
+
 
 function renderDosimetry(dos) {
   if (!dos) return `
@@ -655,40 +655,48 @@ function renderTreatmentDelivery(data) {
   return dosimetryHtml + fractionsSection + formSection;
 }
 
+// ==================================================================
+// === RAD ONC SUB-TAB HANDLER (UPDATED with new listeners) ===
+// ==================================================================
 function showRadOncSubTab(subKey, data) {
   const subContents = document.getElementById('radOnc-subtab-contents');
   if (!subContents) return;
   const radOncData = data.radiationOncologyData || {}; 
+  
+  // A helper function to handle the logic for a single file uploader
+  const handleImageUpload = (event, previewElementId) => {
+      const previewElement = document.getElementById(previewElementId);
+      if (!previewElement) return;
+      
+      const file = event.target.files[0];
+      if (file) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+              previewElement.src = e.target.result;
+          }
+          reader.readAsDataURL(file);
+      }
+  };
+
   switch (subKey) {
     case 'ctsim': 
-      subContents.innerHTML = renderCTSimulation(radOncData.ctSimulation); 
-      const uploader = document.getElementById('setupImageUploader');
-      if (uploader) {
-        uploader.addEventListener('change', event => {
-          const previewContainer = document.getElementById('imagePreviewContainer');
-          previewContainer.innerHTML = ''; 
-          const files = event.target.files;
-          for (const file of files) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-              const previewWrapper = document.createElement('div');
-              previewWrapper.style.border = '1px solid #ddd';
-              previewWrapper.style.padding = '5px';
-              previewWrapper.style.textAlign = 'center';
-              const img = document.createElement('img');
-              img.src = e.target.result;
-              img.style.maxWidth = '150px';
-              img.style.maxHeight = '150px';
-              img.style.display = 'block';
-              const fileName = document.createElement('span');
-              fileName.textContent = file.name;
-              fileName.style.fontSize = '12px';
-              previewWrapper.appendChild(img);
-              previewWrapper.appendChild(fileName);
-              previewContainer.appendChild(previewWrapper);
-            }
-            reader.readAsDataURL(file);
-          }
+      subContents.innerHTML = renderCTSimulation(radOncData.ctSimulation);
+      
+      // Attach listeners for the new separate uploaders
+      const apUploader = document.getElementById('apImageUploader');
+      const latUploader = document.getElementById('latImageUploader');
+      if (apUploader) {
+        apUploader.addEventListener('change', (event) => handleImageUpload(event, 'apImagePreview'));
+      }
+      if (latUploader) {
+        latUploader.addEventListener('change', (event) => handleImageUpload(event, 'latImagePreview'));
+      }
+
+      // Attach listener for the new print button
+      const printBtn = document.getElementById('printCtsimBtn');
+      if (printBtn) {
+        printBtn.addEventListener('click', () => {
+          window.print();
         });
       }
       break;
@@ -705,8 +713,6 @@ function showRadOncSubTab(subKey, data) {
   }
 }
 
-// --- The rest of the file (showTab, loadAndDisplayPatient, etc.) is unchanged ---
-// ...
 function renderRadOncSubTabs(activeKey, data) {
   return `<div id="radOnc-subtabs" class="tab-bar" style="margin-bottom:1em;">
     ${radOncSubTabs.map(sub =>
