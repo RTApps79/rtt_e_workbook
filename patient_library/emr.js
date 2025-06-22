@@ -46,8 +46,27 @@ function renderDemographics(data) {
   `;
 }
 
+// ==================================================================
+// === DIAGNOSIS RENDERER (UPDATED to correctly display Stage/Grade) ===
+// ==================================================================
 function renderDiagnosis(data) {
   const d = data.diagnosis || {};
+  
+  let stageAndGradeHtml = '';
+  if (d.overallStage) {
+    stageAndGradeHtml += `<p><strong>Overall Stage:</strong> ${d.overallStage}</p>`;
+  }
+  if (d.tnmStage) {
+    stageAndGradeHtml += `<p><strong>TNM Stage:</strong> ${d.tnmStage}</p>`;
+  }
+  if (d.whoGrade) { // For CNS Tumors
+    stageAndGradeHtml += `<p><strong>WHO Grade:</strong> ${d.whoGrade}</p>`;
+  }
+  if (d.pathologicStage) { // For DCIS
+    stageAndGradeHtml += `<p><strong>Pathologic Stage:</strong> ${d.pathologicStage}</p>`;
+  }
+
+
   let pathFindingsHtml = '';
   if (d.pathologyFindings && d.pathologyFindings.length > 0) {
     pathFindingsHtml = `
@@ -62,7 +81,7 @@ function renderDiagnosis(data) {
       <div class="section-header">Diagnosis & Staging</div>
       <div class="section-content">
         <p><strong>Primary Diagnosis:</strong> ${d.primary || "N/A"}</p>
-        <p><strong>Pathologic Stage:</strong> ${d.pathologicStage || "N/A"}</p>
+        ${stageAndGradeHtml}
         <p><strong>Date Pathologic Diagnosis:</strong> ${d.datePathologicDiagnosis || "N/A"}</p>
         <p><strong>Prior Treatment Summary:</strong> ${d.priorTreatmentSummary || "N/A"}</p>
         <p><strong>Symptoms at Presentation:</strong> ${d.symptomsAtPresentation || "N/A"}</p>
@@ -71,6 +90,7 @@ function renderDiagnosis(data) {
     </div>
   `;
 }
+
 
 function renderTreatmentPlan(data) {
   const t = data.treatmentPlan || {};
@@ -415,9 +435,6 @@ function renderCTSimulation(ct) {
   return officialPhotosHtml + detailsSection;
 }
 
-// ==================================================================
-// === DOSIMETRY RENDERER (UPDATED with Verification Fields Table) ===
-// ==================================================================
 function renderDosimetry(dos) {
   if (!dos) return `
     <div class="section">
@@ -475,7 +492,6 @@ function renderDosimetry(dos) {
     `;
   }
   
-  // New table for Verification Imaging Fields
   let imagingFieldsTable = "";
   if (dos.imagingFields && dos.imagingFields.length > 0) {
     imagingFieldsTable = `
