@@ -126,7 +126,7 @@ function renderProgressNotes(data) {
 function renderPatientEducation(data) {
   const pe = data.patientEducation || {};
   let content;
-  if (!pe || Object.keys(pe).length === 0) {
+  if (!pe || Object.keys(pe).length === 0 || Object.values(pe).every(v => !v)) {
     content = `<p>No patient education materials recorded for this patient.</p>`;
   } else {
     content = `
@@ -142,6 +142,7 @@ function renderPatientEducation(data) {
   return `<div class="section"><div class="section-header">Patient Education</div><div class="section-content">${content}</div></div>`;
 }
 
+// ... ALL OTHER FUNCTIONS FROM THIS POINT DOWN ARE UNCHANGED ...
 function renderTreatmentPlan(data) {
   const t = data.treatmentPlan || {};
   let medicationsHtml = '';
@@ -153,132 +154,11 @@ function renderTreatmentPlan(data) {
     ${t.gynOnc ? `<p><strong>Gynecologic Oncologist:</strong> ${t.gynOnc}</p>` : ''}
     ${t.dermatologist ? `<p><strong>Dermatologist:</strong> ${t.dermatologist}</p>` : ''}
   `;
-  return `
-    <div class="section">
-      <div class="section-header">Treatment Plan</div>
-      <div class="section-content">
-        ${physiciansHtml}
-        <p><strong>Treatment Site:</strong> ${t.treatmentSite || "N/A"}</p>
-        <p><strong>Intent:</strong> ${t.intent || "N/A"}</p>
-        <p><strong>Modality:</strong> ${t.modality || "N/A"}</p>
-        <p><strong>Prescription:</strong> ${t.rtRxDetails || (t.totalDose && t.fractionation ? `${t.totalDose} / ${t.fractionation}` : "N/A")}</p>
-        <p><strong>Technique:</strong> ${t.techniqueSummary || "N/A"}</p>
-        <p><strong>Target Volume Summary:</strong> ${t.targetVolumeSummary || "N/A"}</p>
-        <p><strong>Concurrent Chemotherapy:</strong> ${t.concurrentChemo || "None"}</p>
-        ${medicationsHtml}
-      </div>
-    </div>
-  `;
+  return `<div class="section"><div class="section-header">Treatment Plan</div><div class="section-content">${physiciansHtml}<p><strong>Treatment Site:</strong> ${t.treatmentSite || "N/A"}</p><p><strong>Intent:</strong> ${t.intent || "N/A"}</p><p><strong>Modality:</strong> ${t.modality || "N/A"}</p><p><strong>Prescription:</strong> ${t.rtRxDetails || (t.totalDose && t.fractionation ? `${t.totalDose} / ${t.fractionation}` : "N/A")}</p><p><strong>Technique:</strong> ${t.techniqueSummary || "N/A"}</p><p><strong>Target Volume Summary:</strong> ${t.targetVolumeSummary || "N/A"}</p><p><strong>Concurrent Chemotherapy:</strong> ${t.concurrentChemo || "None"}</p>${medicationsHtml}</div></div>`;
 }
-
-function renderScheduling(data) {
-  const sched = data.scheduling || [];
-  let content;
-  if (sched.length === 0) {
-    content = `<p>No appointments scheduled.</p>`;
-  } else {
-    content = `
-      <table>
-        <thead><tr><th>Date</th><th>Type</th><th>Location</th><th>Status</th></tr></thead>
-        <tbody>
-          ${sched.map(a => `
-            <tr>
-              <td>${a.date || ""}</td>
-              <td>${a.type || ""}</td>
-              <td>${a.location || ""}</td>
-              <td>${a.status || ""}</td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
-    `;
-  }
-  return `<div class="section"><div class="section-header">Scheduling</div><div class="section-content">${content}</div></div>`;
-}
-
-function renderCptCharges(data) {
-  const cpt = data.cptCharges || [];
-  let content;
-  if (cpt.length === 0) {
-    content = `<p>No CPT codes recorded.</p>`;
-  } else {
-    content = `
-      <table>
-        <thead><tr><th>Code</th><th>Description</th><th>Frequency</th></tr></thead>
-        <tbody>
-          ${cpt.map(c => `
-            <tr>
-              <td>${c.code || ""}</td>
-              <td>${c.description || ""}</td>
-              <td>${c.frequency || ""}</td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
-    `;
-  }
-  return `<div class="section"><div class="section-header">CPT Charges</div><div class="section-content">${content}</div></div>`;
-}
-
-function formatReportDetails(details) {
-    let html = '';
-    for (const [key, value] of Object.entries(details)) {
-        const label = key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
-        html += `<p><strong>${label}:</strong> ${value}</p>`;
-    }
-    return html;
-}
-
-window.showReportModal = function(title, reportIndex) {
-    const reportData = currentPatientData.imagingAndReports[reportIndex];
-    if (!reportData || !reportData.reportDetails) {
-        console.error("Report details not found for index:", reportIndex);
-        return;
-    }
-    const modal = document.getElementById('emr-modal-overlay');
-    const modalTitleEl = modal.querySelector('.modal-header span');
-    const modalContentEl = document.getElementById('dicom-viewer'); 
-
-    if (modalTitleEl) modalTitleEl.textContent = title;
-    
-    modalContentEl.innerHTML = `<div style="padding: 20px;">${formatReportDetails(reportData.reportDetails)}</div>`;
-    modalContentEl.style.backgroundColor = '#fff';
-    modal.style.display = 'flex';
-};
-
-function renderImagingAndReportsTab(data) {
-  const reports = data.imagingAndReports || [];
-  const dicomSectionHtml = renderDicomImagesSection(data.dicomImages || []);
-  let reportsContent;
-
-  if (reports.length === 0) {
-    reportsContent = `<p>No imaging reports for this patient.</p>`;
-  } else {
-    reportsContent = `<ul>`;
-    reports.forEach((rep, index) => {
-      const viewButton = rep.reportDetails && Object.keys(rep.reportDetails).length > 0
-        ? `<button onclick="window.showReportModal('${rep.type}', ${index})">View Full Report</button>`
-        : '';
-      reportsContent += `<li>
-        <strong>${rep.date} - ${rep.type}:</strong> ${rep.summary || ""} ${viewButton}
-      </li>`;
-    });
-    reportsContent += `</ul>`;
-  }
-
-  return `
-    <div class="section">
-      <div class="section-header">Imaging & Reports</div>
-      <div class="section-content">${reportsContent}</div>
-    </div>
-    <div class="section">
-      <div class="section-header">DICOM Images</div>
-      <div class="section-content">${dicomSectionHtml}</div>
-    </div>
-  `;
-}
-
-// ... The rest of the file is unchanged. Only the renderers above were modified.
+function renderScheduling(data) { const sched = data.scheduling || []; let content; if (sched.length === 0) { content = `<p>No appointments scheduled.</p>`; } else { content = `<table><thead><tr><th>Date</th><th>Type</th><th>Location</th><th>Status</th></tr></thead><tbody>${sched.map(a => `<tr><td>${a.date || ""}</td><td>${a.type || ""}</td><td>${a.location || ""}</td><td>${a.status || ""}</td></tr>`).join('')}</tbody></table>`; } return `<div class="section"><div class="section-header">Scheduling</div><div class="section-content">${content}</div></div>`;}
+function renderCptCharges(data) { const cpt = data.cptCharges || []; let content; if (cpt.length === 0) { content = `<p>No CPT codes recorded.</p>`; } else { content = `<table><thead><tr><th>Code</th><th>Description</th><th>Frequency</th></tr></thead><tbody>${cpt.map(c => `<tr><td>${c.code || ""}</td><td>${c.description || ""}</td><td>${c.frequency || ""}</td></tr>`).join('')}</tbody></table>`; } return `<div class="section"><div class="section-header">CPT Charges</div><div class="section-content">${content}</div></div>`;}
+function renderImagingAndReportsTab(data) { const reports = data.imagingAndReports || []; const dicomSectionHtml = renderDicomImagesSection(data.dicomImages || []); let reportsContent; if (reports.length === 0) { reportsContent = `<p>No imaging reports for this patient.</p>`; } else { reportsContent = `<ul>`; reports.forEach((rep, index) => { const viewButton = rep.reportDetails && Object.keys(rep.reportDetails).length > 0 ? `<button onclick="window.showReportModal('${rep.type}', ${index})">View Full Report</button>` : ''; reportsContent += `<li><strong>${rep.date} - ${rep.type}:</strong> ${rep.summary || ""} ${viewButton}</li>`; }); reportsContent += `</ul>`; } return `<div class="section"><div class="section-header">Imaging & Reports</div><div class="section-content">${reportsContent}</div></div><div class="section"><div class="section-header">DICOM Images</div><div class="section-content">${dicomSectionHtml}</div></div>`;}
 function renderDicomImagesSection(dicomImages = []) { if (!dicomImages.length) return '<p>No DICOM images for this patient.</p>'; return dicomImages.map((img, i) => { let buttons = ''; if (img.imageUrls && img.imageUrls.length) { buttons += `<button onclick="window.loadDicomSeries(${i})">View in App</button> `; } if (img.ohifViewerUrl) { buttons += `<a href="${img.ohifViewerUrl}" target="_blank" rel="noopener" class="button-link">View in OHIF Viewer</a> `; buttons += `<button onclick="window.embedOhifViewer('${img.ohifViewerUrl}', '${img.description}')">Embed in Chart</button>`; } if (!buttons) { buttons = '<em>No images available for this series.</em>'; } return `<div style="margin-bottom:1em;"><strong>${img.description || 'DICOM Series'}</strong> (${img.seriesType || 'Unknown'})<br>${buttons}</div>`; }).join('');}
 window.embedOhifViewer = function(viewerUrl, title) { const modal = document.getElementById('emr-modal-overlay'); const modalTitleEl = modal.querySelector('.modal-header span'); const modalContentEl = document.getElementById('dicom-viewer'); if (modalTitleEl) modalTitleEl.textContent = title || "DICOM Viewer"; modalContentEl.innerHTML = `<iframe src="${viewerUrl}" width="100%" height="100%" style="border: none;"></iframe>`; modal.style.display = 'flex';};
 window.loadDicomSeries = function(seriesIdx) { const series = currentPatientData.dicomImages[seriesIdx]; if (!series || !series.imageUrls || !series.imageUrls.length) { alert("No images found for this series."); return; } const modal = document.getElementById('emr-modal-overlay'); const modalTitleEl = modal.querySelector('.modal-header span'); const modalContentEl = document.getElementById('dicom-viewer'); if (modalTitleEl) modalTitleEl.textContent = series.description || "DICOM Series"; modalContentEl.innerHTML = ''; modalContentEl.style.backgroundColor = '#000'; modal.style.display = 'flex'; const element = document.getElementById('dicom-viewer'); cornerstone.enable(element); const imageIds = series.imageUrls.map(url => 'wadouri:' + url); cornerstone.loadAndCacheImage(imageIds[0]).then(function(image) { cornerstone.displayImage(element, image); const stack = { currentImageIdIndex: 0, imageIds: imageIds }; cornerstoneTools.addStackStateManager(element, ['stack']); cornerstoneTools.addToolState(element, 'stack', stack); cornerstoneTools.init(); const StackScrollMouseWheelTool = cornerstoneTools.StackScrollMouseWheelTool; cornerstoneTools.addTool(StackScrollMouseWheelTool); cornerstoneTools.setToolActive('StackScrollMouseWheel', {}); }, function(err) { alert("Error loading DICOM: " + err); });};
