@@ -575,23 +575,27 @@ function renderRadOncSubTabs(activeKey, data) {
 function showRadOncSubTab(subKey, data) {
   const subContents = document.getElementById('radOnc-subtab-contents');
   if (!subContents) return;
+
+  // Access the data from within the 'radiationOncologyData' object
+  const radOncData = data.radiationOncologyData || {}; 
+
   switch (subKey) {
-    case 'ctsim':
-      subContents.innerHTML = renderCTSimulation(data.ctSimulation);
+    case 'ctsim': 
+      subContents.innerHTML = renderCTSimulation(radOncData.ctSimulation); 
       break;
-    case 'dosimetry':
-      subContents.innerHTML = renderDosimetry(data.dosimetry);
+    case 'dosimetry': 
+      subContents.innerHTML = renderDosimetry(radOncData.dosimetry); 
       break;
-    case 'treatmentDelivery':
-      subContents.innerHTML = renderTreatmentDelivery(data);
-      initPracticeFractionFormHandlers(); // <<<<< Attach practice form handlers here!
+    case 'treatmentDelivery': 
+      // Your render function for this tab is more complex
+      // It expects the whole 'radOncData' object to get both dosimetry and delivery info
+      subContents.innerHTML = renderTreatmentDelivery(radOncData); 
       break;
-    default:
-      subContents.innerHTML = "<p>No data.</p>";
+    default: 
+      subContents.innerHTML = "<p>No data.</p>"; 
       break;
   }
 }
-
 // --- Main Tab Switch Logic ---
 function showTab(tabKey, data) {
   const tabContents = document.getElementById('emr-tab-contents');
