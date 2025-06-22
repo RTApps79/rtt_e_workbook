@@ -8,12 +8,17 @@
     "phone": "555-8877",
     "insurance": "Medicare",
     "referringPhysician": "Dr. Helen Carter (Breast Surgeon)",
-    "relevantAnatomy": "Large, pendulous breasts"
+    "relevantAnatomy": "Large, pendulous breasts",
+    "emergencyContact": "Not specified in record",
+    "advanceDirectives": "Full Code",
+    "supportServices": "Smoking cessation resources provided.",
+    "mobility": "Ambulatory"
   },
   "diagnosis": {
     "primary": "Ductal Carcinoma In Situ (DCIS), High Grade, with microinvasion (<1mm)",
     "location": "Left Breast, Lower Inner Quadrant (LIQ)",
     "datePathologicDiagnosis": "01/20/2025 (Stereotactic Biopsy)",
+    "symptomsAtPresentation": "Incidental finding on mammogram, denies symptoms.",
     "tumorSize": "~2.5 cm extent on imaging/path",
     "grade": "High Grade (Grade 3)",
     "receptorStatus": "ER Positive, PR Positive, HER2 Negative",
@@ -69,8 +74,8 @@
       "technique": "3D-CRT",
       "energy": "6MV",
       "numberOfFieldsOrArcs": 2,
-      "gantryAngles": "90, 270",
-      "collAngles": "Variable to match anatomy",
+      "gantryAngles": "270, 90",
+      "collAngles": "Variable",
       "couchAngles": "180",
       "isoCoords": "Setup dependent (prone)",
       "tps": "Pinnacle",
@@ -98,16 +103,45 @@
     },
     "treatmentDelivery": {
       "fractions": [
-        { "fractionNumber": 1, "date": "2025-03-06", "machine": "LINAC 1", "setupNotes": "Patient setup prone on breast board. Alignment verified with kV imaging. Setup good, no shifts.", "sideEffects": "None after Fx 1.", "notes": "Patient reports setup is comfortable.", "recordedFields": [{ "fieldName": "Medial Tangent (Prone)", "deliveredMu": 192, "notes": ""}, { "fieldName": "Lateral Tangent (Prone)", "deliveredMu": 197, "notes": ""}] },
-        { "fractionNumber": 5, "date": "2025-03-13", "machine": "LINAC 1", "setupNotes": "Patient setup prone on breast board. Alignment verified with kV imaging.", "sideEffects": "Minimal skin pinkness (Grade 1), mostly inferior aspect. No significant fatigue.", "notes": "Patient reports setup is comfortable.", "recordedFields": [{ "fieldName": "Medial Tangent (Prone)", "deliveredMu": 192, "notes": ""}, { "fieldName": "Lateral Tangent (Prone)", "deliveredMu": 197, "notes": ""}] }
+        { "fractionNumber": 5, "date": "2025-03-13", "machine": "LINAC 1", "setupNotes": "Patient setup prone on breast board. Alignment verified with kV imaging.", "sideEffects": "Minimal skin pinkness (Grade 1), mostly inferior aspect. No significant fatigue.", "notes": "Patient reports setup is comfortable.", "recordedFields": [{"fieldName": "Medial Tangent (Prone)","deliveredMu": 192,"notes": ""},{"fieldName": "Lateral Tangent (Prone)","deliveredMu": 197,"notes": ""}] }
       ]
     }
   },
-  "imagingAndReports": [],
-  "labResults": [],
-  "progressNotes": [],
-  "patientEducation": {},
-  "scheduling": [],
-  "cptCharges": [],
+  "imagingAndReports": [
+    { "date": "12/10/2024", "type": "Mammogram", "summary": "Suspicious pleomorphic calcifications L breast LIQ, BI-RADS 4c.", "reportDetails": {} },
+    { "date": "01/20/2025", "type": "Stereotactic Biopsy Report", "summary": "DCIS, High Grade, comedonecrosis present. Microinvasion cannot be excluded. ER+ noted.", "reportDetails": {} },
+    { "date": "02/15/2025", "type": "Surgical Pathology Report", "summary": "2.5cm DCIS, High Grade. Foci of microinvasion (<1mm). Margins negative (>2mm). 0/3 SN positive. ER/PR+, HER2-.", "reportDetails": {} },
+    { "date": "03/01/2025", "type": "CT Simulation (Breast - Prone)", "summary": "Non-contrast CT acquired in prone position on dedicated prone breast board.", "reportDetails": {} }
+  ],
+  "dicomImages": [
+    { "description": "CT Simulation Prone (03/01/2025)", "seriesType": "CT", "ohifViewerUrl": "https://viewer.ohif.org/viewer?StudyInstanceUIDs=1.3.6.1.4.1.5962.99.1.2968617883.1314880426.1493322302363.3.0" }
+  ],
+  "labResults": [
+    { "date": "02/28/2025", "test": "CBC", "value": "WNL", "notes": "Pre-RT Baseline" },
+    { "date": "02/28/2025", "test": "CMP", "value": "WNL", "notes": "Pre-RT Baseline" }
+  ],
+  "progressNotes": [
+    { "date": "02/27/2025", "author": "Dr. Angela Rossi (Rad Onc)", "type": "Initial Consult", "summary": "Pt w/ pTis(mi) pN0 L BC s/p BCS. Discussed adjuvant WBRT. Given pt's anatomy (large, pendulous breasts), discussed benefits of prone positioning (reduced skin fold dose, potential lung/heart sparing). Recommended prone WBRT 42.56Gy/16fx. Pt understands and agrees. Prone CT sim scheduled." },
+    { "date": "03/13/2025", "author": "Dr. Angela Rossi (Rad Onc)", "type": "OTV - Week 1", "summary": "Pt completed 5/16 fx in prone position. Reports setup is comfortable. Minimal skin pinkness (Grade 1), mostly inferior aspect. No significant fatigue. Continue RT." }
+  ],
+  "patientEducation": {
+    "goalsDiscussed": "Adjuvant therapy to reduce risk of local recurrence after lumpectomy.",
+    "sideEffectsReviewed": "Skin reaction (redness, dryness, peeling), fatigue, breast swelling/tenderness. Explained that prone position helps reduce skin reaction in the inframammary fold and minimizes lung/heart dose.",
+    "safetyConsiderations": "Skin care (gentle washing, moisturizers), managing fatigue, reporting significant skin breakdown or pain. Comfort and stillness in the prone position.",
+    "patientResponsibilities": "Attend daily RT, perform skin care, report symptoms.",
+    "medicationCompliance": "Use topical creams as directed. Follow instructions for starting endocrine therapy after RT."
+  },
+  "scheduling": [
+    { "date": "02/27/2025", "type": "Rad Onc Consult (Rossi)", "location": "Rad Onc Clinic", "status": "Completed" },
+    { "date": "03/01/2025", "type": "CT Simulation Breast (PRONE)", "location": "Rad Onc Sim", "status": "Completed" },
+    { "date": "03/06/2025 - 03/26/2025", "type": "3D-CRT Treatment Prone (16 fx)", "location": "LINAC 1", "status": "Ongoing" }
+  ],
+  "cptCharges": [
+    { "code": "77290", "description": "Simulation, Complex", "frequency": "Once" },
+    { "code": "77334", "description": "Treatment device, Complex (Prone breast board)", "frequency": "Once" },
+    { "code": "77295", "description": "3D radiotherapy plan", "frequency": "Once" },
+    { "code": "77407", "description": "Radiation treatment delivery, 2 fields, intermediate", "frequency": "Daily" },
+    { "code": "77427", "description": "Radiation treatment management, 5 treatments", "frequency": "Weekly" }
+  ],
   "diagnosisSearch": "Breast Cancer"
 }
