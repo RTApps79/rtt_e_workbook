@@ -415,6 +415,9 @@ function renderCTSimulation(ct) {
   return officialPhotosHtml + detailsSection;
 }
 
+// ==================================================================
+// === DOSIMETRY RENDERER (UPDATED with Verification Fields Table) ===
+// ==================================================================
 function renderDosimetry(dos) {
   if (!dos) return `
     <div class="section">
@@ -451,7 +454,7 @@ function renderDosimetry(dos) {
   if (dos.fieldDetails && dos.fieldDetails.length > 0) {
     fieldsTable = `
       <div class="section">
-        <div class="section-header">Fields and Monitor Units (MUs)</div>
+        <div class="section-header">Treatment Fields and Monitor Units (MUs)</div>
         <div class="section-content">
           <table>
             <thead>
@@ -471,26 +474,48 @@ function renderDosimetry(dos) {
       </div>
     `;
   }
-  return mainInfo + fieldsTable;
+  
+  // New table for Verification Imaging Fields
+  let imagingFieldsTable = "";
+  if (dos.imagingFields && dos.imagingFields.length > 0) {
+    imagingFieldsTable = `
+      <div class="section">
+        <div class="section-header">Verification Imaging Fields</div>
+        <div class="section-content">
+          <table>
+            <thead>
+              <tr>
+                <th>Field Name</th><th>Gantry Angle</th><th>Field Size</th><th>Energy</th><th>MU</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${dos.imagingFields.map(f =>
+                `<tr>
+                    <td>${f.fieldName || ""}</td>
+                    <td>${f.gantryAngle || ""}</td>
+                    <td>${f.fieldSize || "N/A"}</td>
+                    <td>${f.energy || ""}</td>
+                    <td>${f.monitorUnits || ""}</td>
+                </tr>`
+              ).join("")}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `;
+  }
+
+  return mainInfo + fieldsTable + imagingFieldsTable;
 }
 
-// ==================================================================
-// === REVISED Practice Daily Entry Form and Logic ===
-// ==================================================================
 function renderPracticeFractionEntryForm(patientData) {
     const dos = patientData?.radiationOncologyData?.dosimetry;
     let fieldEntryHtml = '<p>No fields defined in dosimetry plan.</p>';
-
     if (dos && dos.fieldDetails && dos.fieldDetails.length > 0) {
         fieldEntryHtml = `
             <table id="dailyFieldEntryTable" class="practice-table">
                 <thead>
-                    <tr>
-                        <th>Field Name</th>
-                        <th>Planned MU</th>
-                        <th>Delivered MU</th>
-                        <th>Field Notes</th>
-                    </tr>
+                    <tr><th>Field Name</th><th>Planned MU</th><th>Delivered MU</th><th>Field Notes</th></tr>
                 </thead>
                 <tbody>
                     ${dos.fieldDetails.map(field => `
@@ -505,7 +530,6 @@ function renderPracticeFractionEntryForm(patientData) {
             </table>
         `;
     }
-
     return `
     <div class="practice-section">
       <h3 style="margin-bottom: 1em;">Practice Daily Treatment Entry</h3>
@@ -518,40 +542,30 @@ function renderPracticeFractionEntryForm(patientData) {
                 <label for="practiceTherapistInitials">Therapist(s)</label>
                 <input type="text" id="practiceTherapistInitials" required>
             </fieldset>
-
             <fieldset class="practice-fieldset">
                 <legend>Image Guidance (IGRT)</legend>
                 <label for="practiceImagingType">Imaging Type</label>
                 <select id="practiceImagingType">
-                  <option value="None">None</option>
-                  <option value="kV Pair">kV Pair (Orthogonal)</option>
-                  <option value="MV Portal">MV Portal Image</option>
-                  <option value="CBCT">Cone Beam CT (CBCT)</option>
+                  <option value="None">None</option><option value="kV Pair">kV Pair (Orthogonal)</option><option value="MV Portal">MV Portal Image</option><option value="CBCT">Cone Beam CT (CBCT)</option>
                 </select>
                 <label for="practiceIgrtMatchQuality">Match Quality</label>
                 <select id="practiceIgrtMatchQuality">
-                  <option value="Good - No Shifts">Good - No Shifts</option>
-                  <option value="Good - Shifts Applied">Good - Shifts Applied</option>
-                  <option value="Poor - Action Taken">Poor - Action Taken</option>
+                  <option value="Good - No Shifts">Good - No Shifts</option><option value="Good - Shifts Applied">Good - Shifts Applied</option><option value="Poor - Action Taken">Poor - Action Taken</option>
                 </select>
                 <label for="practiceShiftsApplied">Shifts Applied (V,L,L)</label>
                 <input type="text" id="practiceShiftsApplied" placeholder="e.g., V:0.1, L:0, L:-0.2">
                 <label for="practiceIgrtApprovedBy">IGRT Approved By</label>
                 <input type="text" id="practiceIgrtApprovedBy">
             </fieldset>
-
             <fieldset class="practice-fieldset">
                 <legend>Patient Assessment</legend>
                 <label for="practicePatientTolerance">Patient Tolerance</label>
                 <select id="practicePatientTolerance">
-                  <option value="Good">Good</option>
-                  <option value="Fair">Fair</option>
-                  <option value="Poor">Poor</option>
+                  <option value="Good">Good</option><option value="Fair">Fair</option><option value="Poor">Poor</option>
                 </select>
                 <label for="practiceGeneralSideEffects">Side Effects / Comments</label>
                 <textarea id="practiceGeneralSideEffects" rows="2"></textarea>
             </fieldset>
-            
             <fieldset class="practice-fieldset full-width">
                 <legend>Per-Field Delivery Record</legend>
                 ${fieldEntryHtml}
@@ -570,18 +584,14 @@ function initPracticeFractionFormHandlers() {
     const addBtn = document.getElementById('addPracticeFractionBtn');
     if (addBtn) {
         addBtn.onclick = function() {
-            // --- Gather Per-Field Data ---
             const recordedFields = [];
-            const fieldRows = document.querySelectorAll('#dailyFieldEntryTable tbody tr');
-            fieldRows.forEach(row => {
+            document.querySelectorAll('#dailyFieldEntryTable tbody tr').forEach(row => {
                 recordedFields.push({
                     fieldName: row.cells[0].textContent,
                     deliveredMu: row.querySelector('.daily-mu-input').value,
                     notes: row.querySelector('.daily-field-notes').value,
                 });
             });
-
-            // --- Gather Session-Level Data ---
             const sessionEntry = {
                 date: document.getElementById('practiceTreatmentDate').value,
                 therapist: document.getElementById('practiceTherapistInitials').value,
@@ -593,39 +603,9 @@ function initPracticeFractionFormHandlers() {
                 assessment: document.getElementById('practiceGeneralSideEffects').value,
                 fields: recordedFields
             };
-            
             console.log("Practice Fraction Entry Added:", sessionEntry);
             const outputDiv = document.getElementById('practiceFractionsEntered');
-            
-            // --- Display Summary of Entry ---
-            let summaryHtml = `
-              <div class="entry-summary">
-                <p>
-                  <strong>Date:</strong> ${sessionEntry.date} | 
-                  <strong>Therapist:</strong> ${sessionEntry.therapist} |
-                  <strong>Tolerance:</strong> ${sessionEntry.patientTolerance}
-                </p>
-                <p>
-                  <strong>IGRT:</strong> ${sessionEntry.imagingType} | 
-                  <strong>Match:</strong> ${sessionEntry.matchQuality} | 
-                  <strong>Shifts:</strong> ${sessionEntry.shiftsApplied || 'N/A'} |
-                  <strong>Approved by:</strong> ${sessionEntry.igrtApprovedBy || 'N/A'}
-                </p>
-                <p><strong>Assessment:</strong> ${sessionEntry.assessment || 'N/A'}</p>
-                <table>
-                  <thead><tr><th>Field</th><th>MU Delivered</th><th>Notes</th></tr></thead>
-                  <tbody>
-                    ${sessionEntry.fields.map(f => `
-                      <tr>
-                        <td>${f.fieldName}</td>
-                        <td>${f.deliveredMu || 'N/A'}</td>
-                        <td>${f.notes || ''}</td>
-                      </tr>
-                    `).join('')}
-                  </tbody>
-                </table>
-              </div>
-            `;
+            let summaryHtml = `<div class="entry-summary"><p><strong>Date:</strong> ${sessionEntry.date} | <strong>Therapist:</strong> ${sessionEntry.therapist} | <strong>Tolerance:</strong> ${sessionEntry.patientTolerance}</p><p><strong>IGRT:</strong> ${sessionEntry.imagingType} | <strong>Match:</strong> ${sessionEntry.matchQuality} | <strong>Shifts:</strong> ${sessionEntry.shiftsApplied || 'N/A'} | <strong>Approved by:</strong> ${sessionEntry.igrtApprovedBy || 'N/A'}</p><p><strong>Assessment:</strong> ${sessionEntry.assessment || 'N/A'}</p><table><thead><tr><th>Field</th><th>MU Delivered</th><th>Notes</th></tr></thead><tbody>${sessionEntry.fields.map(f => `<tr><td>${f.fieldName}</td><td>${f.deliveredMu || 'N/A'}</td><td>${f.notes || ''}</td></tr>`).join('')}</tbody></table></div>`;
             outputDiv.innerHTML += summaryHtml;
             document.getElementById('practiceFractionForm').reset();
         };
@@ -681,131 +661,11 @@ function showRadOncSubTab(subKey, data) {
       break;
   }
 }
-
-// ... (The rest of the file from showTab down is unchanged)
-function renderRadOncSubTabs(activeKey, data) {
-  return `<div id="radOnc-subtabs" class="tab-bar" style="margin-bottom:1em;">${radOncSubTabs.map(sub =>`<button class="tab-button ${sub.key===activeKey?" active":""}" id="radOnc-subtab-btn-${sub.key}">${sub.label}</button>`).join("")}</div><div id="radOnc-subtab-contents"></div>`;
-}
-function showTab(tabKey, data) {
-  const tabContents = document.getElementById('emr-tab-contents');
-  if (!tabContents) return;
-  document.querySelectorAll('#emr-tabs .tab-button').forEach(btn => btn.classList.remove('active'));
-  const activeTabButton = document.getElementById(`emr-tab-btn-${tabKey}`);
-  if (activeTabButton) activeTabButton.classList.add('active');
-  if (tabKey === "radOnc") {
-    tabContents.innerHTML = renderRadOncSubTabs("ctsim", data);
-    showRadOncSubTab("ctsim", data); 
-    radOncSubTabs.forEach(sub => {
-      const subTabBtn = document.getElementById(`radOnc-subtab-btn-${sub.key}`);
-      if(subTabBtn) {
-        subTabBtn.onclick = () => {
-          document.querySelectorAll('#radOnc-subtabs .tab-button').forEach(s2 => s2.classList.remove("active"));
-          subTabBtn.classList.add("active");
-          showRadOncSubTab(sub.key, data);
-        };
-      }
-    });
-    return;
-  }
-  switch (tabKey) {
-    case 'demographics': tabContents.innerHTML = renderDemographics(data); break;
-    case 'diagnosis': tabContents.innerHTML = renderDiagnosis(data); break;
-    case 'treatmentPlan': tabContents.innerHTML = renderTreatmentPlan(data); break;
-    case 'imagingAndReports': tabContents.innerHTML = renderImagingAndReportsTab(data); break;
-    case 'labResults': tabContents.innerHTML = renderLabResults(data); break;
-    case 'progressNotes': tabContents.innerHTML = renderProgressNotes(data); break;
-    case 'patientEducation': tabContents.innerHTML = renderPatientEducation(data); break;
-    case 'scheduling': tabContents.innerHTML = renderScheduling(data); break;
-    case 'cptCharges': tabContents.innerHTML = renderCptCharges(data); break;
-    default: tabContents.innerHTML = "<p>No data.</p>"; break;
-  }
-}
+// ... (The rest of the file is unchanged)
+function renderRadOncSubTabs(activeKey, data) {return `<div id="radOnc-subtabs" class="tab-bar" style="margin-bottom:1em;">${radOncSubTabs.map(sub =>`<button class="tab-button ${sub.key===activeKey?" active":""}" id="radOnc-subtab-btn-${sub.key}">${sub.label}</button>`).join("")}</div><div id="radOnc-subtab-contents"></div>`;}
+function showTab(tabKey, data) {const tabContents = document.getElementById('emr-tab-contents'); if (!tabContents) return; document.querySelectorAll('#emr-tabs .tab-button').forEach(btn => btn.classList.remove('active')); const activeTabButton = document.getElementById(`emr-tab-btn-${tabKey}`); if (activeTabButton) activeTabButton.classList.add('active'); if (tabKey === "radOnc") {tabContents.innerHTML = renderRadOncSubTabs("ctsim", data); showRadOncSubTab("ctsim", data); radOncSubTabs.forEach(sub => {const subTabBtn = document.getElementById(`radOnc-subtab-btn-${sub.key}`); if(subTabBtn) {subTabBtn.onclick = () => {document.querySelectorAll('#radOnc-subtabs .tab-button').forEach(s2 => s2.classList.remove("active")); subTabBtn.classList.add("active"); showRadOncSubTab(sub.key, data);};}}); return;} switch (tabKey) {case 'demographics': tabContents.innerHTML = renderDemographics(data); break; case 'diagnosis': tabContents.innerHTML = renderDiagnosis(data); break; case 'treatmentPlan': tabContents.innerHTML = renderTreatmentPlan(data); break; case 'imagingAndReports': tabContents.innerHTML = renderImagingAndReportsTab(data); break; case 'labResults': tabContents.innerHTML = renderLabResults(data); break; case 'progressNotes': tabContents.innerHTML = renderProgressNotes(data); break; case 'patientEducation': tabContents.innerHTML = renderPatientEducation(data); break; case 'scheduling': tabContents.innerHTML = renderScheduling(data); break; case 'cptCharges': tabContents.innerHTML = renderCptCharges(data); break; default: tabContents.innerHTML = "<p>No data.</p>"; break;}}
 let currentPatientData = null;
-function loadAndDisplayPatient(fileName) {
-  fetch(fileName)
-    .then(resp => {
-        if (!resp.ok) throw new Error("Network response was not ok: " + resp.statusText);
-        return resp.json();
-    })
-    .then(data => {
-      currentPatientData = data;
-      const tabsDiv = document.getElementById('emr-tabs');
-      tabsDiv.innerHTML = emrTabs.map((tab, i) => `<button class="tab-button${i===0?" active":""}" id="emr-tab-btn-${tab.key}">${tab.label}</button>`).join("");
-      emrTabs.forEach((tab) => {
-        const tabBtn = document.getElementById(`emr-tab-btn-${tab.key}`);
-        if(tabBtn) { tabBtn.onclick = () => showTab(tab.key, data); }
-      });
-      showTab(emrTabs[0].key, data);
-    })
-    .catch(error => {
-        console.error('Error loading patient data:', error);
-        document.getElementById('emr-tab-contents').innerHTML = `<div class="section"><div class="section-header" style="background-color: #d9534f;">Error</div><div class="section-content"><p>Could not load patient file: ${fileName}. Please check the console for details.</p></div></div>`;
-    });
-}
-function populatePatientDropdown(filteredPatients = patients) {
-  const select = document.getElementById('patientSelect');
-  if (!select) return;
-  select.innerHTML = "";
-  if (filteredPatients.length === 0) {
-    const opt = document.createElement('option');
-    opt.value = "";
-    opt.textContent = "No patients found";
-    select.appendChild(opt);
-    return;
-  }
-  filteredPatients.forEach(p => {
-    const opt = document.createElement('option');
-    opt.value = p.file;
-    opt.textContent = p.name;
-    select.appendChild(opt);
-  });
-}
-function filterPatientsByDiagnosis() {
-  const searchValue = document.getElementById('diagnosisSearch').value.trim().toLowerCase();
-  const tabContents = document.getElementById('emr-tab-contents');
-  const tabsDiv = document.getElementById('emr-tabs');
-  
-  if (searchValue === "") {
-    populatePatientDropdown(patients);
-    if (patients.length > 0) loadAndDisplayPatient(patients[0].file);
-    return;
-  }
-  const filtered = patients.filter(p => p.diagnosisSearch && p.diagnosisSearch.toLowerCase().includes(searchValue));
-  populatePatientDropdown(filtered);
-  if (filtered.length > 0) {
-      loadAndDisplayPatient(filtered[0].file);
-  } else {
-      if(tabsDiv) tabsDiv.innerHTML = '';
-      if(tabContents) tabContents.innerHTML = `<p style="padding: 20px;">No matching patients found for "${searchValue}".</p>`;
-  }
-}
-document.addEventListener('DOMContentLoaded', () => {
-    const modalCloseBtn = document.getElementById('emr-modal-close');
-    if (modalCloseBtn) {
-        modalCloseBtn.onclick = function() {
-            const overlay = document.getElementById('emr-modal-overlay');
-            if (overlay) overlay.style.display = 'none';
-            const viewer = document.getElementById('dicom-viewer');
-            if (viewer) {
-                try { cornerstone.disable(viewer); } catch(e) { /* Ignore */ }
-                viewer.innerHTML = "";
-            }
-        };
-    }
-    if (typeof patients !== 'undefined' && patients.length > 0) {
-        populatePatientDropdown();
-        loadAndDisplayPatient(patients[0].file);
-    } else {
-        console.warn("`patients.js` or `patients` array is not defined.");
-        const tabContents = document.getElementById('emr-tab-contents');
-        if (tabContents) tabContents.innerHTML = `<p style="padding: 20px;">Patient list not found.</p>`;
-    }
-    const patientSelect = document.getElementById('patientSelect');
-    if (patientSelect) {
-        patientSelect.addEventListener('change', function() { if (this.value) { loadAndDisplayPatient(this.value); } });
-    }
-    const diagnosisSearch = document.getElementById('diagnosisSearch');
-    if (diagnosisSearch) {
-        diagnosisSearch.addEventListener('input', filterPatientsByDiagnosis);
-    }
-});
+function loadAndDisplayPatient(fileName) {fetch(fileName).then(resp => {if (!resp.ok) throw new Error("Network response was not ok: " + resp.statusText); return resp.json();}).then(data => {currentPatientData = data; const tabsDiv = document.getElementById('emr-tabs'); tabsDiv.innerHTML = emrTabs.map((tab, i) => `<button class="tab-button${i===0?" active":""}" id="emr-tab-btn-${tab.key}">${tab.label}</button>`).join(""); emrTabs.forEach((tab) => {const tabBtn = document.getElementById(`emr-tab-btn-${tab.key}`); if(tabBtn) { tabBtn.onclick = () => showTab(tab.key, data); }}); showTab(emrTabs[0].key, data);}).catch(error => {console.error('Error loading patient data:', error); document.getElementById('emr-tab-contents').innerHTML = `<div class="section"><div class="section-header" style="background-color: #d9534f;">Error</div><div class="section-content"><p>Could not load patient file: ${fileName}. Please check the console for details.</p></div></div>`;});}
+function populatePatientDropdown(filteredPatients = patients) {const select = document.getElementById('patientSelect'); if (!select) return; select.innerHTML = ""; if (filteredPatients.length === 0) {const opt = document.createElement('option'); opt.value = ""; opt.textContent = "No patients found"; select.appendChild(opt); return;} filteredPatients.forEach(p => {const opt = document.createElement('option'); opt.value = p.file; opt.textContent = p.name; select.appendChild(opt);});}
+function filterPatientsByDiagnosis() {const searchValue = document.getElementById('diagnosisSearch').value.trim().toLowerCase(); const tabContents = document.getElementById('emr-tab-contents'); const tabsDiv = document.getElementById('emr-tabs'); if (searchValue === "") {populatePatientDropdown(patients); if (patients.length > 0) loadAndDisplayPatient(patients[0].file); return;} const filtered = patients.filter(p => p.diagnosisSearch && p.diagnosisSearch.toLowerCase().includes(searchValue)); populatePatientDropdown(filtered); if (filtered.length > 0) {loadAndDisplayPatient(filtered[0].file);} else {if(tabsDiv) tabsDiv.innerHTML = ''; if(tabContents) tabContents.innerHTML = `<p style="padding: 20px;">No matching patients found for "${searchValue}".</p>`;}}
+document.addEventListener('DOMContentLoaded', () => {const modalCloseBtn = document.getElementById('emr-modal-close'); if (modalCloseBtn) {modalCloseBtn.onclick = function() {const overlay = document.getElementById('emr-modal-overlay'); if (overlay) overlay.style.display = 'none'; const viewer = document.getElementById('dicom-viewer'); if (viewer) {try { cornerstone.disable(viewer); } catch(e) { /* Ignore */ } viewer.innerHTML = "";}};} if (typeof patients !== 'undefined' && patients.length > 0) {populatePatientDropdown(); loadAndDisplayPatient(patients[0].file);} else {console.warn("`patients.js` or `patients` array is not defined."); const tabContents = document.getElementById('emr-tab-contents'); if (tabContents) tabContents.innerHTML = `<p style="padding: 20px;">Patient list not found.</p>`;} const patientSelect = document.getElementById('patientSelect'); if (patientSelect) {patientSelect.addEventListener('change', function() { if (this.value) { loadAndDisplayPatient(this.value); } });} const diagnosisSearch = document.getElementById('diagnosisSearch'); if (diagnosisSearch) {diagnosisSearch.addEventListener('input', filterPatientsByDiagnosis);}});
