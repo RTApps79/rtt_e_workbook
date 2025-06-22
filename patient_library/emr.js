@@ -712,7 +712,57 @@ function initPracticeFractionFormHandlers() {
       removeCell.appendChild(btn);
     });
   }
+function initFractionDetailToggles() {
+    document.querySelectorAll('.toggle-details-btn').forEach(button => {
+        button.onclick = function() {
+            const targetId = this.dataset.fractionId;
+            const detailsDiv = document.getElementById(targetId);
+            if (detailsDiv) {
+                detailsDiv.classList.toggle('fraction-details-hidden');
+                this.textContent = detailsDiv.classList.contains('fraction-details-hidden') ? 'Show All Details' : 'Hide Details';
+            }
+        };
+    });
+}
 
+// Update showRadOncSubTab to call the new initFractionDetailToggles
+function showRadOncSubTab(subKey, data) {
+  const subContents = document.getElementById('radOnc-subtab-contents');
+  if (!subContents) return;
+  const radOncData = data.radiationOncologyData || {}; // Corrected data access path
+  const handleImageUpload = (event, previewElementId) => { //
+      const previewElement = document.getElementById(previewElementId);
+      if (!previewElement) return; //
+      const file = event.target.files[0]; //
+      if (file) {
+          const reader = new FileReader(); //
+          reader.onload = function(e) { previewElement.src = e.target.result; } //
+          reader.readAsDataURL(file); //
+      }
+  };
+  switch (subKey) {
+    case 'ctsim':
+      subContents.innerHTML = renderCTSimulation(radOncData.ctSimulation); // Corrected data access path
+      const apUploader = document.getElementById('apImageUploader'); //
+      const latUploader = document.getElementById('latImageUploader'); //
+      if (apUploader) { apUploader.addEventListener('change', (event) => handleImageUpload(event, 'apImagePreview')); } //
+      if (latUploader) { latUploader.addEventListener('change', (event) => handleImageUpload(event, 'latImagePreview')); } //
+      const printBtn = document.getElementById('printCtsimBtn');
+      if (printBtn) { printBtn.addEventListener('click', () => { window.print(); }); } //
+      break;
+    case 'dosimetry':
+      subContents.innerHTML = renderDosimetry(radOncData.dosimetry); // Corrected data access path
+      break; //
+    case 'treatmentDelivery':
+      subContents.innerHTML = renderTreatmentDelivery(radOncData); // Corrected data access path
+      initPracticeFractionFormHandlers();
+      initFractionDetailToggles(); // Call this here!
+      break; //
+    default:
+      subContents.innerHTML = "<p>No data.</p>";
+      break; //
+  }
+}
   const addBtn = document.getElementById('addPracticeFractionBtn'); // 
   if (addBtn) { // 
     addBtn.onclick = function() {
