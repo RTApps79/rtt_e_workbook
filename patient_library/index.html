@@ -3,37 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Radiation Therapy Patient EMR Repository</title>
-   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
-  <!-- Core Cornerstone libraries for DICOM viewing -->
-  <script src="https://unpkg.com/cornerstone-core@2/dist/cornerstone.js"></script>
-  <script src="https://unpkg.com/cornerstone-math@0.1.8/dist/cornerstoneMath.js"></script>
-  <script src="https://unpkg.com/cornerstone-tools@4/dist/cornerstoneTools.js"></script>
-  <script src="https://unpkg.com/dicom-parser@1.8.12/dist/dicomParser.js"></script>
-  <script src="https://unpkg.com/cornerstone-wado-image-loader@4/dist/cornerstoneWADOImageLoader.js"></script>
+    <title>Patient EMR</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://unpkg.com/cornerstone-core@2/dist/cornerstone.js"></script>
+    <script src="https://unpkg.com/cornerstone-math@0.1.8/dist/cornerstoneMath.js"></script>
+    <script src="https://unpkg.com/cornerstone-tools@4/dist/cornerstoneTools.js"></script>
+    <script src="https://unpkg.com/dicom-parser@1.8.12/dist/dicomParser.js"></script>
+    <script src="https://unpkg.com/cornerstone-wado-image-loader@4/dist/cornerstoneWADOImageLoader.js"></script>
 </head>
 <body>
-  <h1>Patient EMR Repository</h1>
-  <div>
-    <label for="diagnosisSearch">Search by Diagnosis:</label>
-    <input type="text" id="diagnosisSearch" placeholder="e.g., lung, prostate">
-    <br>
-    <label for="patientSelect"><strong>Select Patient:</strong></label>
-    <select id="patientSelect"></select>
-  </div>
-  <div id="emr-tabs-container">
-    <div id="emr-tabs"></div>
-    <div id="emr-tab-contents"></div>
-    <div id="demographics-section"></div>
-  </div>
-  <!-- Modal for DICOM Viewer -->
-  <div id="emr-modal-overlay" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:100;background:rgba(0,0,0,0.7);justify-content:center;align-items:center;">
-    <div style="background:#fff;padding:1em;max-width:90vw;max-height:90vh;overflow:auto;position:relative;">
-      <button id="emr-modal-close" style="position:absolute;top:4px;right:4px;font-size:1.5em;">×</button>
-      <div id="dicom-viewer" style="width:80vw;height:70vh;"></div>
+
+  <h1>Patient Electronic Medical Record</h1>
+
+  <div class="emr-container">
+    
+    <div class="patient-selection-area">
+      <label for="diagnosisSearch">Search by Diagnosis:</label>
+      <input type="text" id="diagnosisSearch" placeholder="e.g., lung, prostate">
+      
+      <label for="patientSelect"><strong>Select Patient:</strong></label>
+      <select id="patientSelect">
+        </select>
+    </div>
+
+    <div id="emr-tabs-container">
+      <div class="tab-bar" id="emr-tabs">
+          </div>
+
+      <div id="emr-tab-contents">
+        
+        <div id="demographics-section" class="tab-content">
+          <div class="section">
+            <div class="section-header">
+              Patient Details
+            </div>
+            <div class="section-content">
+              <p><strong>Patient Name:</strong> <span id="patientName"></span></p>
+              <p><strong>Date of Birth:</strong> <span id="patientDOB"></span></p>
+              <p><strong>Gender:</strong> <span id="patientGender"></span></p>
+              <p><strong>MRN:</strong> <span id="patientMRN"></span></p>
+            </div>
+          </div>
+          <div class="section">
+            <div class="section-header">
+              Contact & Insurance
+            </div>
+            <div class="section-content">
+              <p><strong>Address:</strong> <span id="patientAddress"></span></p>
+              <p><strong>Phone:</strong> <span id="patientPhone"></span></p>
+              <p><strong>Insurance Provider:</strong> <span id="patientInsurance"></span></p>
+            </div>
+          </div>
+        </div>
+        
+        </div>
     </div>
   </div>
+
+  <div id="emr-modal-overlay" class="modal-overlay" style="display:none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span>DICOM Image Viewer</span>
+        <button id="emr-modal-close" class="close-button">&times;</button>
+      </div>
+      <div id="dicom-viewer"></div>
+    </div>
+  </div>
+
   <script src="patients.js"></script>
   <script src="emr.js"></script>
+
 </body>
 </html>
