@@ -8,7 +8,10 @@
     "phone": "555-2233",
     "insurance": "Cigna",
     "referringPhysician": "Dr. Mark Johnson (Medical Oncology)",
-    "emergencyContact": "Not specified in record"
+    "emergencyContact": "Jane Garcia (Wife) - 555-1234",
+    "advanceDirectives": "Healthcare Proxy: Jane Garcia",
+    "supportServices": "Nutritional Counseling, Social Work Referral",
+    "mobility": "Independent, Ambulatory"
   },
   "diagnosis": {
     "primary": "Pancreatic Adenocarcinoma",
@@ -17,7 +20,7 @@
     "datePathologicDiagnosis": "02/01/2025 (EUS-guided Biopsy)",
     "tumorSize": "~3 cm",
     "vascularInvolvement": "Abuts SMV (<180 degrees), no SMA involvement.",
-    "pathologicStage": "Borderline Resectable cT2 N0 M0  Stage IB",
+    "pathologicStage": "Borderline Resectable cT2 N0 M0 Stage IB",
     "symptomsAtPresentation": "Painless jaundice, dark urine, mild back pain, weight loss.",
     "pathologyFindings": [
       "EUS-guided biopsy of pancreatic head mass confirms Adenocarcinoma, moderately differentiated.",
@@ -35,35 +38,35 @@
     "intent": "Neoadjuvant (Pre-operative)",
     "modality": "External Beam Radiation Therapy (EBRT) with concurrent Chemotherapy (following induction chemo)",
     "rtRxDetails": "50.4 Gy in 28 fractions (1.8 Gy/fx)",
-    "targetVolumeSummary": "PTV encompassing pancreatic head tumor + margin, potentially including draining nodal regions.",
-    "techniqueSummary": "IMRT",
+    "targetVolumeSummary": "PTV encompassing pancreatic head tumor + margin, potentially including draining nodal regions. Includes peri-pancreatic lymphatics.",
+    "techniqueSummary": "IMRT with daily CBCT guidance",
     "concurrentChemo": "Capecitabine",
-    "detailedConcurrentChemo": "Capecitabine PO BID during radiation (Managed by Dr. Johnson)",
+    "detailedConcurrentChemo": "Capecitabine PO BID during radiation (Managed by Dr. Johnson). Start 1 day prior to RT.",
     "medications": [
       "Ondansetron PRN Nausea",
       "Loperamide PRN Diarrhea",
       "Pancreatic Enzymes (e.g., Creon) if needed for insufficiency"
     ],
     "therapistAlerts": [
-        "High risk for nausea and GI side effects.",
+        "High risk for nausea and GI side effects. Monitor daily.",
         "Assess hydration and nutrition status daily.",
-        "Patient taking oral chemotherapy (Capecitabine); reinforce compliance instructions."
+        "Patient taking oral chemotherapy (Capecitabine); reinforce compliance instructions and side effects."
     ]
   },
   "radiationOncologyData": {
     "ctSimulation": {
       "simulationDate": "05/20/2025",
-      "setupInstructions": "Supine in BodyFix or VacLok bag, abdominal compression may be used. 4D-CT simulation to manage respiratory motion. SAD setup.",
+      "setupInstructions": "Supine in BodyFix or VacLok bag, abdominal compression may be used. 4D-CT simulation to manage respiratory motion. SAD setup. Ensure bladder is full and consistent.",
       "immobilization": "BodyFix or VacLok bag, abdominal compression.",
-      "referenceMarks": "3-point tattoos at isocenter projections (AP and bilateral laterals).",
+      "referenceMarks": "3-point tattoos at isocenter projections (AP and bilateral laterals). Supplemental marks for visual setup on skin.",
       "setupImages": [
         { "type": "AP", "url": "https://placehold.co/250x200/EEE/31343C?text=AP+Setup+Photo" },
         { "type": "Lateral", "url": "https://placehold.co/250x200/EEE/31343C?text=Lateral+Setup+Photo" }
       ],
       "scanner": "Siemens Somatom go.Up",
       "sliceThickness": "2.5 mm",
-      "contrastUsed": "IV Contrast and oral contrast (for bowel delineation) likely used.",
-      "ctNotes": "4D-CT acquired with immobilization/compression. Motion assessed. Data acquired for IMRT planning. Fused with diagnostic CT."
+      "contrastUsed": "IV Contrast and oral contrast (for bowel delineation) likely used. Ensure no contraindications.",
+      "ctNotes": "4D-CT acquired with immobilization/compression. Motion assessed and deemed acceptable. Data acquired for IMRT planning. Fused with diagnostic CT abdomen/pelvis for target and OAR delineation. Isocenter placed at geometric center of PTV."
     },
     "dosimetry": {
       "planId": "DG22334_Panc",
@@ -76,20 +79,21 @@
       "collAngles": "Variable",
       "couchAngles": "0",
       "isoCoords": "L0.0, L+8.0, V-5.0",
-      "tps": "Eclipse",
+      "tps": "Eclipse 16.1",
       "algorithm": "AcurosXB",
       "hetero": "Yes",
       "norm": "PTV Mean 95%",
-      "constraints": "Kidney Mean < 18 Gy; Stomach Max < 54 Gy; Bowel Max < 54 Gy",
-      "planNotes": "Neoadjuvant IMRT for borderline resectable pancreatic cancer.",
+      "constraints": "Kidney Mean < 18 Gy; Stomach Max < 54 Gy; Bowel Max < 54 Gy; Spinal Cord Max < 45 Gy; Liver Mean < 30 Gy",
+      "planNotes": "Neoadjuvant IMRT for borderline resectable pancreatic cancer. Daily CBCT for IGRT. Avoidance of critical structures (kidneys, stomach, small bowel) was prioritized during optimization. Plan exhibits good coverage and conformity.",
       "igrtProtocol": {
         "frequency": "Daily",
         "type": "CBCT",
-        "alignment": "Soft tissue match to GTV/pancreas head."
+        "alignment": "Soft tissue match to GTV/pancreas head. Verify stomach and small bowel position relative to PTV."
       },
       "qaChecks": [
-        { "date": "2025-05-23", "type": "Initial Chart Check", "by": "Physics Staff" },
-        { "date": "2025-05-23", "type": "Patient Specific QA", "by": "Physics Staff", "result": "Pass" }
+        { "date": "2025-05-23", "type": "Initial Chart Check", "by": "Physics Staff", "result": "Pass" },
+        { "date": "2025-05-23", "type": "Patient Specific QA", "by": "Physics Staff", "result": "Pass" },
+        { "date": "2025-05-24", "type": "Weekly Plan Check", "by": "Dosimetrist", "result": "Pass" }
       ],
       "fieldDetails": [
         { "fieldName": "Field 1", "fieldSize": "12x14 cm", "gantryAngle": "0", "collimatorAngle": "0", "couchAngle": "0", "energy": "6MV", "monitorUnits": 62, "ssd": "88.5 cm"},
@@ -99,10 +103,92 @@
         { "fieldName": "Field 5", "fieldSize": "12x14 cm", "gantryAngle": "204", "collimatorAngle": "30", "couchAngle": "0", "energy": "6MV", "monitorUnits": 72, "ssd": "90.5 cm"},
         { "fieldName": "Field 6", "fieldSize": "12x14 cm", "gantryAngle": "255", "collimatorAngle": "330", "couchAngle": "0", "energy": "6MV", "monitorUnits": 77, "ssd": "89.5 cm"},
         { "fieldName": "Field 7", "fieldSize": "12x14 cm", "gantryAngle": "306", "collimatorAngle": "0", "couchAngle": "0", "energy": "6MV", "monitorUnits": 61, "ssd": "88.0 cm"}
+      ],
+      "imagingFields": [
+        { "fieldName": "CBCT", "gantryAngle": "Full Arc", "fieldSize": "N/A", "energy": "kV", "monitorUnits": "N/A" }
       ]
     },
     "treatmentDelivery": {
-      "fractions": []
+      "fractions": [
+        {
+          "fractionNumber": 1,
+          "totalFractions": 28,
+          "date": "2025-06-01",
+          "machine": "LINAC 2",
+          "fieldsAndMUs": "Field 1 (62 MU), Field 2 (78 MU), Field 3 (71 MU), Field 4 (66 MU), Field 5 (72 MU), Field 6 (77 MU), Field 7 (61 MU) - Total: 487 MU",
+          "energiesUsed": "6MV",
+          "setupVerification": "Tolerances Met",
+          "immobilizationDevicesChecked": "BodyFix bag, abdominal compression",
+          "setupAdjustments": "None",
+          "organTargetChecks": "CBCT reviewed, good alignment of pancreas/target. Bowel position acceptable.",
+          "imagingType": "CBCT",
+          "igrtMatchQuality": "Good - Shifts Applied",
+          "shiftsApplied": "V: -0.2 cm, L: 0.1 cm, S: 0 cm",
+          "igrtApprovedBy": "Dr. Evans (Physician)",
+          "igrtVerificationNotes": "Minor shifts for optimal target coverage.",
+          "patientTolerance": "Good",
+          "generalSideEffects": "Mild fatigue",
+          "siteSpecificSideEffects": "None reported today.",
+          "painAssessment": "0/10",
+          "patientConcerns": "None",
+          "instructionsGiven": "Continue oral chemo as prescribed. Maintain hydration.",
+          "therapistInitials": "JG, RS",
+          "billingCodes": "77401",
+          "dailyNotes": "Patient tolerated treatment well. No acute issues. CBCT match within protocol."
+        },
+        {
+          "fractionNumber": 2,
+          "totalFractions": 28,
+          "date": "2025-06-02",
+          "machine": "LINAC 2",
+          "fieldsAndMUs": "Field 1 (62 MU), Field 2 (78 MU), Field 3 (71 MU), Field 4 (66 MU), Field 5 (72 MU), Field 6 (77 MU), Field 7 (61 MU) - Total: 487 MU",
+          "energiesUsed": "6MV",
+          "setupVerification": "Tolerances Met",
+          "immobilizationDevicesChecked": "BodyFix bag, abdominal compression",
+          "setupAdjustments": "None",
+          "organTargetChecks": "CBCT reviewed, good alignment of pancreas/target. Bowel position acceptable.",
+          "imagingType": "CBCT",
+          "igrtMatchQuality": "Good - No Shifts",
+          "shiftsApplied": "None",
+          "igrtApprovedBy": "Physics (Auto-match)",
+          "igrtVerificationNotes": "No shifts needed today.",
+          "patientTolerance": "Good",
+          "generalSideEffects": "Mild fatigue",
+          "siteSpecificSideEffects": "No new GI symptoms.",
+          "painAssessment": "0/10",
+          "patientConcerns": "Concern about appetite.",
+          "instructionsGiven": "Encouraged small, frequent meals. Recommended nutritional supplement.",
+          "therapistInitials": "JG, RS",
+          "billingCodes": "77401",
+          "dailyNotes": "Patient cooperative. Discussed diet with patient. CBCT match excellent."
+        },
+        {
+          "fractionNumber": 3,
+          "totalFractions": 28,
+          "date": "2025-06-03",
+          "machine": "LINAC 2",
+          "fieldsAndMUs": "Field 1 (62 MU), Field 2 (78 MU), Field 3 (71 MU), Field 4 (66 MU), Field 5 (72 MU), Field 6 (77 MU), Field 7 (61 MU) - Total: 487 MU",
+          "energiesUsed": "6MV",
+          "setupVerification": "Tolerances Met",
+          "immobilizationDevicesChecked": "BodyFix bag, abdominal compression",
+          "setupAdjustments": "None",
+          "organTargetChecks": "CBCT reviewed, good alignment of pancreas/target. No significant bowel distension.",
+          "imagingType": "CBCT",
+          "igrtMatchQuality": "Good - Shifts Applied",
+          "shiftsApplied": "V: 0.1 cm, L: 0 cm, S: 0.1 cm",
+          "igrtApprovedBy": "Physics (Auto-match)",
+          "igrtVerificationNotes": "Small shift applied.",
+          "patientTolerance": "Good",
+          "generalSideEffects": "Mild fatigue, occasional mild heartburn.",
+          "siteSpecificSideEffects": "Reports mild abdominal discomfort after meals.",
+          "painAssessment": "1/10 (occasional)",
+          "patientConcerns": "Heartburn, energy levels.",
+          "instructionsGiven": "Recommended antacids for heartburn, continue small meals, rest as needed.",
+          "therapistInitials": "MP, KL",
+          "billingCodes": "77401",
+          "dailyNotes": "Patient remains active. Discussed symptom management. Plan adherence good."
+        }
+      ]
     }
   },
   "imagingAndReports": [
@@ -122,11 +208,46 @@
     },
     { "date": "05/15/2025", "type": "CT Abdomen/Pelvis w/ Contrast (Pancreas Protocol)", "summary": "Interval decrease in tumor size to 2.5cm. Continued abutment of SMV. Stable disease/slight response.", "reportDetails": {} }
   ],
-  "dicomImages": [],
-  "labResults": [],
-  "progressNotes": [],
-  "patientEducation": {},
-  "scheduling": [],
-  "cptCharges": [],
-  "diagnosisSearch": "Pancreatic Cancer"
+  "dicomImages": [
+    {
+      "description": "CT Sim Series",
+      "seriesType": "CT",
+      "imageUrls": [
+        "https://raw.githubusercontent.com/cornerstonejs/cornerstoneWebImageLoader/master/examples/dicom/CT_Image.dcm"
+      ],
+      "ohifViewerUrl": "https://viewer.ohif.org/viewer?url=https://raw.githubusercontent.com/cornerstonejs/cornerstoneWebImageLoader/master/examples/dicom/CT_Image.dcm"
+    }
+  ],
+  "labResults": [
+    { "date": "2025-01-15", "test": "CA 19-9", "value": "1250", "units": "U/mL", "notes": "Elevated, consistent with pancreatic cancer." },
+    { "date": "2025-05-10", "test": "CA 19-9", "value": "350", "units": "U/mL", "notes": "Significant decrease post-induction chemo." },
+    { "date": "2025-05-28", "test": "CBC", "value": "WBC 7.2, Hgb 13.1, Plt 280", "units": "K/uL, g/dL, K/uL", "notes": "Within normal limits prior to RT." },
+    { "date": "2025-06-05", "test": "CMP (Comprehensive Metabolic Panel)", "value": "Na 138, K 4.1, Cr 0.9, Alb 3.5, T.Bili 0.8", "units": "mEq/L, mEq/L, mg/dL, g/dL, mg/dL", "notes": "Stable electrolytes and liver function during RT." }
+  ],
+  "progressNotes": [
+    { "date": "2025-06-03", "type": "Oncology MD Note", "author": "Dr. Evans", "summary": "Patient seen for weekly on-treatment visit. Tolerating RT and concurrent Capecitabine well. Mild fatigue. No significant GI issues. Continue plan as prescribed." },
+    { "date": "2025-06-03", "type": "Nursing Note", "author": "RN Smith", "summary": "Patient reports continued good tolerance. Discussed skin care and diet. No new concerns. Encouraged small, frequent meals." },
+    { "date": "2025-06-10", "type": "Oncology MD Note", "author": "Dr. Evans", "summary": "Week 2 RT visit. Patient reports mild fatigue and occasional heartburn, managed with OTC antacids. Continues Capecitabine. Skin integrity good. Plan to continue RT as scheduled." },
+    { "date": "2025-06-10", "type": "Nursing Note", "author": "RN Chen", "summary": "Patient presented with mild fatigue and reported feeling 'a bit full' after meals. Reviewed dietary strategies. Skin remains clear, no erythema. Vitals stable." }
+  ],
+  "patientEducation": {
+    "goalsDiscussed": "Treatment intent (neoadjuvant), daily treatment process, importance of daily CBCTs for accurate targeting. Discussed overall treatment timeline including post-RT surgery.",
+    "sideEffectsReviewed": "Fatigue (common, rest as needed), skin irritation (use aquaphor/aloe, avoid harsh soaps), nausea/vomiting (medications available, small frequent meals), diarrhea (loperamide PRN). Explained signs of infection to report immediately.",
+    "safetyConsiderations": "Radiation safety protocols (remain still, hold breath if instructed), reporting new or worsening symptoms promptly (especially fever, severe pain, or bleeding). Avoiding sun exposure to treated area.",
+    "patientResponsibilities": "Compliance with Capecitabine (take with food, avoid antacids within 2 hours of dose), daily skin care, keeping all appointments (RT, MD, labs), maintaining hydration and nutrition, reporting all new symptoms.",
+    "medicationCompliance": "Reinforced importance of taking Capecitabine exactly as prescribed (dose, timing). Reviewed potential interactions with other medications and supplements. Provided written instructions and pharmacy contact."
+  },
+  "scheduling": [
+    { "date": "2025-06-23", "type": "Radiation Treatment (Fraction 4/28)", "location": "LINAC 2", "status": "Scheduled" },
+    { "date": "2025-06-24", "type": "Radiation Treatment (Fraction 5/28)", "location": "LINAC 2", "status": "Scheduled" },
+    { "date": "2025-06-25", "type": "Weekly MD Visit (Week 3)", "location": "Oncology Clinic, Room 3", "status": "Scheduled" },
+    { "date": "2025-07-02", "type": "CT Simulation (Repeat)", "location": "CT Sim Suite", "status": "Scheduled", "notes": "Planned re-simulation for adaptive planning." }
+  ],
+  "cptCharges": [
+    { "code": "77401", "description": "Radiation Therapy, SBRT/IMRT, 1 treatment area, 1-5 fractions", "frequency": "Daily (28 total)" },
+    { "code": "77014", "description": "CT Guidance for Radiation Therapy (CBCT)", "frequency": "Daily (28 total)" },
+    { "code": "99214", "description": "Office or other outpatient visit, established patient", "frequency": "Weekly (6 total)" },
+    { "code": "77290", "description": "Therapeutic radiology simulation-aided field setting", "frequency": "Once (Initial), once (Re-sim)" }
+  ],
+  "diagnosisSearch": "Pancreatic Cancer, Adenocarcinoma"
 }
