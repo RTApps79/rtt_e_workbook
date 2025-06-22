@@ -562,59 +562,6 @@ function renderDosimetry(dos) {
   return mainInfo + igrtProtocolHtml + qaChecksHtml + fieldsTable + imagingFieldsTable;
 }
 
-function renderTreatmentDelivery(data) {
-  const dosimetryHtml = renderDosimetry(data.radiationOncologyData.dosimetry);
-  const td = data.radiationOncologyData.treatmentDelivery || {};
-
-  let fractionsSection = "";
-  if (!td.fractions || !td.fractions.length) {
-    fractionsSection = `<div class="section"><div class="section-header">Treatment Delivery Records</div><div class="section-content"><p>No Treatment Delivery records for this patient.</p></div></div>`;
-  } else {
-    fractionsSection = `<div class="section"><div class="section-header">Treatment Delivery Records</div><div class="section-content">
-      <div class="fractions-container"> ${td.fractions.map(fx => `
-        <div class="fraction-card">
-            <h4>Fraction ${fx.fractionNumber || ""} / ${fx.totalFractions || ""} - ${fx.date || ""}</h4>
-            <p><strong>Machine:</strong> ${fx.machine || ""}</p>
-            <p><strong>Therapist(s):</strong> ${fx.therapistInitials || ""}</p>
-            <p><strong>Overall MUs:</strong> ${fx.fieldsAndMUs ? fx.fieldsAndMUs.match(/Total:\s*(\d+)/)?.[1] || fx.fieldsAndMUs : "N/A"}</p>
-            
-            <h5>Image Guidance (IGRT)</h5>
-            <p><strong>Type:</strong> ${fx.imagingType || ""}, <strong>Match:</strong> ${fx.igrtMatchQuality || ""}</p>
-            <p><strong>Shifts Applied:</strong> ${fx.shiftsApplied || "None"}</p>
-            <p><strong>IGRT Notes:</strong> ${fx.igrtVerificationNotes || "N/A"}</p>
-            
-            <h5>Patient Assessment</h5>
-            <p><strong>Tolerance:</strong> ${fx.patientTolerance || ""}</p>
-            <p><strong>Side Effects:</strong> ${[fx.generalSideEffects, fx.siteSpecificSideEffects].filter(Boolean).join(', ') || "None reported."}</p>
-            <p><strong>Concerns:</strong> ${fx.patientConcerns || "None"}</p>
-            <p><strong>Pain:</strong> ${fx.painAssessment || "N/A"}</p>
-            
-            <h5>Daily Notes</h5>
-            <p>${fx.dailyNotes || "No specific notes for today."}</p>
-
-            <button class="toggle-details-btn" data-fraction-id="fraction-${fx.fractionNumber}">Show All Details</button>
-            <div id="fraction-${fx.fractionNumber}" class="fraction-details-hidden">
-                <h6>Detailed Delivery Data</h6>
-                <p><strong>Energies Used:</strong> ${fx.energiesUsed || "N/A"}</p>
-                <p><strong>Setup Verification:</strong> ${fx.setupVerification || "N/A"}</p>
-                <p><strong>Immobilization Devices Checked:</strong> ${fx.immobilizationDevicesChecked || "N/A"}</p>
-                <p><strong>Setup Adjustments:</strong> ${fx.setupAdjustments || "N/A"}</p>
-                <p><strong>Organ/Target Checks:</strong> ${fx.organTargetChecks || "N/A"}</p>
-                <p><strong>IGRT Approved By:</strong> ${fx.igrtApprovedBy || "N/A"}</p>
-                <p><strong>Instructions Given:</strong> ${fx.instructionsGiven || "N/A"}</p>
-                <p><strong>Billing Codes:</strong> ${fx.billingCodes || "N/A"}</p>
-
-                <h6>Per-Field MU (Planned vs. Delivered) - *Note: This data is not stored per fraction in JSON yet.*</h6>
-                <p>Consider updating your JSON structure if you want to store and display *actual delivered* MUs per field for past fractions. Currently, this displays the overall 'Fields & MUs' summary. The practice form captures detailed per-field MU.</p>
-            </div>
-        </div>
-      `).join("")}
-      </div>
-    </div></div>`;
-  }
-  let formSection = `<div class="section"><div class="section-header">Practice Daily Treatment Entry</div><div class="section-content">${renderPracticeFractionEntryForm(currentPatientData)}</div></div>`;
-  return dosimetryHtml + fractionsSection + formSection;
-}
 // Function to render the practice daily treatment entry form
 function renderPracticeFractionEntryForm(patientData) {
     const dosimetry = patientData?.radiationOncologyData?.dosimetry || {};
@@ -773,8 +720,7 @@ function initPracticeFractionFormHandlers() {
     if (!tbody) return;
     tbody.innerHTML = '';
     sessionFractions.forEach((entry, idx) => {
-      const row = tbody.insertRow();
-      row.insertCell(0).textContent = entry.fractionNumber + " / " + entry.totalFractions;
+      const row = tbody.insertCell(0).textContent = entry.fractionNumber + " / " + entry.totalFractions;
       row.insertCell(1).textContent = entry.date;
       row.insertCell(2).textContent = entry.machine;
       row.insertCell(3).textContent = entry.fieldsAndMUs; // Simplified summary
