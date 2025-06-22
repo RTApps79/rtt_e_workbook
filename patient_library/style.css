@@ -1,145 +1,154 @@
-/* --- THEME & VARIABLES (Inspired by Workbook) --- */
+/* --- ARCADE THEME & VARIABLES --- */
 :root {
-    --primary-color: #0056b3;      /* Deep blue for major headers */
-    --accent-color: #007bff;       /* Vibrant blue for active elements/borders */
-    --background-color: #e9ecef;   /* Light gray page background */
-    --container-bg-color: #ffffff; /* White for content containers */
-    --border-color: #dee2e6;       /* A subtle gray for borders */
-    --text-color: #343a40;         /* A professional dark gray for text */
-    --text-muted-color: #6c757d;   /* A muted gray for secondary text */
-    --header-bg-color: #f8f9fa;    /* A very light gray for tab bars/headers */
+    --arcade-bg: #0d0d0d;           /* Near-black background */
+    --arcade-container-bg: #1a1a1a; /* Dark gray for containers */
+    --arcade-text: #e0e0e0;         /* Off-white text for readability */
+    --arcade-glow-cyan: #00ffff;
+    --arcade-glow-magenta: #ff00ff;
+    --arcade-glow-green: #00ff00;
+    --arcade-border: #444;
 }
 
 /* --- GENERAL & TYPOGRAPHY --- */
 body {
-    font-family: 'Lato', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    font-size: 16px;
-    line-height: 1.6;
-    margin: 20px;
-    background-color: var(--background-color);
-    color: var(--text-color);
+    font-family: 'Press Start 2P', cursive; /* The new pixel font! */
+    font-size: 16px; /* Larger base font size */
+    line-height: 1.8;
+    background-color: var(--arcade-bg);
+    color: var(--arcade-text);
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.7); /* Add slight shadow for depth */
 }
 
 h1, h2, h3, h4 {
-    color: var(--primary-color);
-    font-weight: 700; /* Bolder font weight */
+    color: var(--arcade-glow-cyan);
+    text-transform: uppercase; /* Classic arcade text style */
+    text-shadow: 0 0 5px var(--arcade-glow-cyan), 0 0 10px rgba(0, 255, 255, 0.5);
+    font-weight: normal; /* The font itself is bold */
 }
 
 h1 {
-    border-bottom: 2px solid var(--primary-color);
-    padding-bottom: 15px;
-    margin-bottom: 30px;
-    text-align: center;
-    font-size: 2.25rem;
+    font-size: 3rem;
+    padding-bottom: 20px;
+    border-bottom: 3px solid var(--arcade-glow-cyan);
+    margin-bottom: 40px;
 }
 
-h2 {
-    margin-top: 40px;
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 10px;
-    margin-bottom: 25px;
+h2 { font-size: 2rem; }
+h3 { font-size: 1.5rem; color: var(--arcade-glow-magenta); text-shadow: 0 0 5px var(--arcade-glow-magenta); }
+h4 { font-size: 1.2rem; }
+
+strong, .data-label {
+    color: var(--arcade-glow-green);
+    font-weight: normal;
 }
 
-strong {
-    font-weight: 700;
-    color: var(--primary-color);
-}
-
-.data-label {
-    font-weight: 500;
-    color: var(--text-muted-color);
-    margin-right: 8px;
-}
-
-/* --- LAYOUT & CONTAINERS --- */
+/* --- LAYOUT & CONTAINERS (FULL SCREEN) --- */
 .lesson-content, .emr-container, .form-container {
-    padding: 30px;
-    border: 1px solid var(--border-color);
-    background-color: var(--container-bg-color);
-    border-radius: 10px; /* Softer, larger radius */
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08); /* More prominent shadow */
-    margin-bottom: 30px;
+    max-width: none; /* REMOVE max-width to use full screen */
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box; /* Important for full-width padding */
+    border: 2px solid var(--arcade-border);
+    background-color: var(--arcade-container-bg);
+    border-radius: 0; /* Sharp corners */
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.5); /* Inset shadow for depth */
+    margin-bottom: 20px;
 }
 
-.emr-container {
-    padding: 0; /* Remove padding to allow tab bar to be flush */
-}
+.emr-container { padding: 0; }
+.tab-content { padding: 20px; }
 
-/* Style for section headers inside tabs to mimic workbook cards */
 .section-header {
-    background-color: var(--header-bg-color);
-    padding: 12px 20px;
-    margin: -30px -30px 25px -30px; /* Span full width of the container */
-    border-bottom: 1px solid var(--border-color);
-    border-left: 5px solid var(--accent-color); /* Accent border like workbook cards */
+    background-color: transparent;
+    padding: 15px;
+    margin: -20px -20px 20px -20px;
+    border-bottom: 2px solid var(--arcade-glow-magenta);
+    border-top: 2px solid var(--arcade-glow-magenta);
     font-size: 1.2em;
-    font-weight: 700;
-    color: var(--primary-color);
+    text-align: center;
 }
 
-.tab-content hr {
-    border: 0;
-    height: 1px;
-    background-color: #e9ecef; /* Match the body background */
-    margin: 30px 0;
-}
+.tab-content hr { display: none; } /* Hide the hr tags */
 
 /* --- TABS & INTERACTIVITY --- */
 .tab-bar {
-    background-color: var(--header-bg-color);
+    background-color: #000;
     display: flex;
     flex-wrap: wrap;
-    border-bottom: 1px solid var(--border-color);
-    border-radius: 10px 10px 0 0;
+    border-bottom: 2px solid var(--arcade-glow-cyan);
+    padding: 5px;
 }
 
 .tab-button {
-    padding: 14px 20px;
-    border: none;
-    background-color: transparent;
+    padding: 15px;
+    border: 2px solid var(--arcade-border);
+    background-color: var(--arcade-container-bg);
     cursor: pointer;
-    border-bottom: 4px solid transparent; /* Thicker border for more impact */
-    margin-right: 2px;
-    font-size: 1em;
-    font-weight: 500;
-    color: var(--text-muted-color);
-    transition: all 0.25s ease-in-out; /* Smooth transition for all properties */
-    transform: translateY(0);
+    border-bottom-width: 2px;
+    font-size: 1rem;
+    color: var(--arcade-text);
+    transition: all 0.2s linear;
+    flex-grow: 1; /* Make tabs fill the space */
+    text-align: center;
 }
 
 .tab-button.active {
-    background-color: var(--container-bg-color);
-    border-bottom-color: var(--accent-color);
-    font-weight: 700;
-    color: var(--primary-color);
+    background-color: var(--arcade-glow-magenta);
+    color: #000;
+    text-shadow: none;
+    border-color: var(--arcade-glow-magenta);
 }
 
 .tab-button:hover:not(.active) {
-    background-color: #fff;
-    color: var(--primary-color);
-    transform: translateY(-3px); /* "Lift" effect on hover */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    background-color: var(--arcade-glow-cyan);
+    color: #000;
+    text-shadow: none;
+    border-color: var(--arcade-glow-cyan);
 }
 
-.tab-content {
-    padding: 30px;
-}
-
-/* --- FORM & MODAL STYLES --- */
+/* --- FORMS & BUTTONS --- */
 label {
-    margin: 15px 0 5px;
-    font-weight: 700;
-    font-size: 0.9em;
-    color: var(--text-muted-color);
     text-transform: uppercase;
+    color: var(--arcade-glow-green);
+    text-shadow: 0 0 5px var(--arcade-glow-green);
 }
+
 input, select, textarea {
-    border-color: var(--border-color);
-    transition: all 0.25s ease-in-out;
+    background-color: #111;
+    color: var(--arcade-text);
+    border: 2px solid var(--arcade-border);
+    border-radius: 0;
+    padding: 15px;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1rem;
 }
 
 input:focus, select:focus, textarea:focus {
-    border-color: var(--accent-color);
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
     outline: none;
+    border-color: var(--arcade-glow-magenta);
+    box-shadow: 0 0 15px var(--arcade-glow-magenta);
 }
+
+button#submitBtn {
+    background-color: var(--arcade-glow-green);
+    color: #000;
+    padding: 20px;
+    font-family: 'Press Start 2P', cursive;
+    text-transform: uppercase;
+    font-size: 1.2rem;
+    border: none;
+    cursor: pointer;
+    text-shadow: none;
+    transition: all 0.1s linear;
+}
+
+button#submitBtn:hover {
+    background-color: #fff;
+    box-shadow: 0 0 20px var(--arcade-glow-green);
+}
+
+button#submitBtn:active {
+    background-color: #ccc;
+    transform: scale(0.98);
+}
+</style>
