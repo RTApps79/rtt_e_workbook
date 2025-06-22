@@ -1,302 +1,178 @@
-/* --- ARCADE THEME & VARIABLES --- */
+/* --- Professional EMR Theme --- */
+
+/* --- Global & Typography --- */
 :root {
-    --arcade-bg: #0d0d0d;           /* Near-black background */
-    --arcade-container-bg: #1a1a1a;/* --- COSMIC THEME & VARIABLES --- */
-:root {
-    --bg-gradient-start: #2a2a72; /* Deep Indigo/Purple */
-    --bg-gradient-end: #0097a7;   /* Dark Teal/Cyan */
-    --text-primary: #00e5ff;     /* Electric Cyan for Headers */
-    --text-secondary: #cfd8dc;   /* Light Gray/Blue for body text */
-    --accent-glow: #ff4081;      /* Vibrant Magenta for active states/glow */
-    --container-bg: rgba(10, 25, 47, 0.75); /* Semi-transparent navy blue */
-    --border-color: rgba(0, 229, 255, 0.5); /* Semi-transparent cyan */
+    --bg-color: #f0f0f0;             /* Light gray page background */
+    --container-bg: #ffffff;         /* White for content areas */
+    --primary-blue: #005a9e;          /* Professional blue for headers */
+    --border-color: #cccccc;         /* Standard gray for borders */
+    --text-dark: #333333;             /* Dark gray for body text */
+    --text-light: #ffffff;            /* White text for dark backgrounds */
+    --input-border: #a9a9a9;          /* Border color for form inputs */
+    --input-focus-border: #0078d4;   /* Blue highlight for focused inputs */
 }
 
-/* --- GENERAL & TYPOGRAPHY --- */
 body {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 17px; /* Slightly larger for a more spacious feel */
-    line-height: 1.7;
-    margin: 0; /* Remove margin for full-screen background */
-    background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
-    background-attachment: fixed;
-    color: var(--text-secondary);
-}
-
-.lesson-content {
-    background: none; /* The main container will be transparent */
-    border: none;
-    box-shadow: none;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0;
     padding: 20px;
-    max-width: none;
-}
-
-h1, h2, h3, h4 {
-    color: var(--text-primary);
-    font-weight: 700;
-    text-shadow: 0 0 8px rgba(0, 229, 255, 0.7);
+    background-color: var(--bg-color);
+    color: var(--text-dark);
 }
 
 h1 {
-    font-size: 3.5rem;
-    padding-bottom: 20px;
-    border-bottom: 2px solid var(--border-color);
-    margin-bottom: 40px;
+    font-size: 1.8rem;
+    color: var(--text-dark);
     text-align: center;
+    margin-bottom: 25px;
+    font-weight: 600;
 }
 
-strong, .data-label {
-    color: var(--text-primary);
-    font-weight: 500;
+strong, label {
+    font-weight: bold;
+    color: var(--text-dark);
 }
 
-/* --- LAYOUT & CONTAINERS --- */
+/* --- Layout & Main Container --- */
 .emr-container {
     background-color: var(--container-bg);
     border: 1px solid var(--border-color);
-    border-radius: 12px;
-    box-shadow: 0 0 25px rgba(0, 229, 255, 0.2);
-    /* Frosted glass effect */
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-    margin: 20px;
-    overflow: hidden;
-}
-
-.section-header {
-    background-color: rgba(0, 0, 0, 0.2);
-    padding: 15px 25px;
-    margin: 0;
-    border: none;
-    border-bottom: 1px solid var(--border-color);
-    font-size: 1.3em;
-    font-weight: 700;
-    color: #fff;
-    text-shadow: 0 0 5px var(--accent-glow);
-}
-
-.tab-content { padding: 25px; }
-.tab-content hr { display: none; }
-
-/* --- TABS & INTERACTIVITY --- */
-.tab-bar {
-    background-color: rgba(0, 0, 0, 0.2);
-    display: flex;
-    flex-wrap: wrap;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.tab-button {
-    padding: 15px 20px;
-    border: none;
-    background-color: transparent;
-    cursor: pointer;
-    border-bottom: 4px solid transparent;
-    font-size: 1.1em;
-    font-weight: 500;
-    color: var(--text-secondary);
-    transition: all 0.25s ease-in-out;
-    flex-grow: 1;
-    text-align: center;
-}
-
-.tab-button.active {
-    background-color: var(--container-bg);
-    border-bottom-color: var(--accent-glow);
-    color: #fff;
-    text-shadow: 0 0 8px var(--accent-glow);
-}
-
-.tab-button:hover:not(.active) {
-    background-color: rgba(255, 255, 255, 0.1);
-    color: #fff;
-}
-
-/* --- FORM & MODAL STYLES --- */
-label {
-    text-transform: uppercase;
-    font-weight: 700;
-    color: var(--text-primary);
-    font-size: 0.9em;
-}
-input, select, textarea {
-    background-color: rgba(0, 0, 0, 0.3);
-    color: var(--text-secondary);
-    border: 1px solid var(--border-color);
     border-radius: 5px;
-    padding: 12px;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 1em;
-}
-input:focus, select:focus, textarea:focus {
-    outline: none;
-    border-color: var(--accent-glow);
-    box-shadow: 0 0 15px var(--accent-glow);
-    color: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    max-width: 1200px; /* Adjust as needed */
+    margin: 0 auto;
+    overflow: hidden; /* To contain the border-radius of child elements */
 }
 
-/* Modal Styling */
-.modal-overlay { display: flex; } /* Ensure flex is used for centering */
-.modal-content {
-    background-color: var(--container-bg);
-    border: 1px solid var(--accent-glow);
-    backdrop-filter: blur(15px);
-    box-shadow: 0 0 30px rgba(255, 64, 129, 0.5);
-}
-.close-button {
-    color: var(--text-secondary);
-    text-shadow: 0 0 5px #000;
-}
-.close-button:hover {
-    color: #fff;
-} /* Dark gray for containers */
-    --arcade-text: #e0e0e0;         /* Off-white text for readability */
-    --arcade-glow-cyan: #00ffff;
-    --arcade-glow-magenta: #ff00ff;
-    --arcade-glow-green: #00ff00;
-    --arcade-border: #444;
-}
-
-/* --- GENERAL & TYPOGRAPHY --- */
-body {
-    font-family: 'Press Start 2P', cursive; /* The new pixel font! */
-    font-size: 16px; /* Larger base font size */
-    line-height: 1.8;
-    background-color: var(--arcade-bg);
-    color: var(--arcade-text);
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.7); /* Add slight shadow for depth */
-}
-
-h1, h2, h3, h4 {
-    color: var(--arcade-glow-cyan);
-    text-transform: uppercase; /* Classic arcade text style */
-    text-shadow: 0 0 5px var(--arcade-glow-cyan), 0 0 10px rgba(0, 255, 255, 0.5);
-    font-weight: normal; /* The font itself is bold */
-}
-
-h1 {
-    font-size: 3rem;
-    padding-bottom: 20px;
-    border-bottom: 3px solid var(--arcade-glow-cyan);
-    margin-bottom: 40px;
-}
-
-h2 { font-size: 2rem; }
-h3 { font-size: 1.5rem; color: var(--arcade-glow-magenta); text-shadow: 0 0 5px var(--arcade-glow-magenta); }
-h4 { font-size: 1.2rem; }
-
-strong, .data-label {
-    color: var(--arcade-glow-green);
-    font-weight: normal;
-}
-
-/* --- LAYOUT & CONTAINERS (FULL SCREEN) --- */
-.lesson-content, .emr-container, .form-container {
-    max-width: none; /* REMOVE max-width to use full screen */
-    width: 100%;
-    padding: 20px;
-    box-sizing: border-box; /* Important for full-width padding */
-    border: 2px solid var(--arcade-border);
-    background-color: var(--arcade-container-bg);
-    border-radius: 0; /* Sharp corners */
-    box-shadow: inset 0 0 15px rgba(0,0,0,0.5); /* Inset shadow for depth */
-    margin-bottom: 20px;
-}
-
-.emr-container { padding: 0; }
-.tab-content { padding: 20px; }
-
-.section-header {
-    background-color: transparent;
-    padding: 15px;
-    margin: -20px -20px 20px -20px;
-    border-bottom: 2px solid var(--arcade-glow-magenta);
-    border-top: 2px solid var(--arcade-glow-magenta);
-    font-size: 1.2em;
-    text-align: center;
-}
-
-.tab-content hr { display: none; } /* Hide the hr tags */
-
-/* --- TABS & INTERACTIVITY --- */
-.tab-bar {
-    background-color: #000;
+/* --- Patient Selection Area --- */
+.patient-selection-area {
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--border-color);
+    background-color: #f7f7f7;
     display: flex;
-    flex-wrap: wrap;
-    border-bottom: 2px solid var(--arcade-glow-cyan);
-    padding: 5px;
+    align-items: center;
+    gap: 15px;
+}
+
+label {
+    margin-right: 5px;
+}
+
+input[type="text"], select {
+    padding: 8px 10px;
+    border: 1px solid var(--input-border);
+    border-radius: 4px;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+input[type="text"]:focus, select:focus {
+    outline: none;
+    border-color: var(--input-focus-border);
+    box-shadow: 0 0 5px rgba(0, 120, 212, 0.5);
+}
+
+/* --- Tab Navigation --- */
+.tab-bar {
+    display: flex;
+    background-color: #e1e1e1;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .tab-button {
-    padding: 15px;
-    border: 2px solid var(--arcade-border);
-    background-color: var(--arcade-container-bg);
+    padding: 12px 20px;
+    border: none;
+    border-right: 1px solid var(--border-color);
+    background-color: transparent;
     cursor: pointer;
-    border-bottom-width: 2px;
-    font-size: 1rem;
-    color: var(--arcade-text);
-    transition: all 0.2s linear;
-    flex-grow: 1; /* Make tabs fill the space */
-    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--text-dark);
+    transition: background-color 0.2s ease;
+}
+
+.tab-button:hover {
+    background-color: #d0d0d0;
 }
 
 .tab-button.active {
-    background-color: var(--arcade-glow-magenta);
-    color: #000;
-    text-shadow: none;
-    border-color: var(--arcade-glow-magenta);
+    background-color: var(--primary-blue);
+    color: var(--text-light);
+    border-bottom: none;
 }
 
-.tab-button:hover:not(.active) {
-    background-color: var(--arcade-glow-cyan);
-    color: #000;
-    text-shadow: none;
-    border-color: var(--arcade-glow-cyan);
+/* --- Content Panes --- */
+.tab-content {
+    padding: 25px;
 }
 
-/* --- FORMS & BUTTONS --- */
-label {
-    text-transform: uppercase;
-    color: var(--arcade-glow-green);
-    text-shadow: 0 0 5px var(--arcade-glow-green);
+.section {
+    margin-bottom: 25px;
 }
 
-input, select, textarea {
-    background-color: #111;
-    color: var(--arcade-text);
-    border: 2px solid var(--arcade-border);
-    border-radius: 0;
-    padding: 15px;
-    font-family: 'Press Start 2P', cursive;
-    font-size: 1rem;
+.section-header {
+    background-color: var(--primary-blue);
+    color: var(--text-light);
+    padding: 10px 15px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border-radius: 4px 4px 0 0;
+    border-bottom: 1px solid var(--border-color);
 }
 
-input:focus, select:focus, textarea:focus {
-    outline: none;
-    border-color: var(--arcade-glow-magenta);
-    box-shadow: 0 0 15px var(--arcade-glow-magenta);
-}
-
-button#submitBtn {
-    background-color: var(--arcade-glow-green);
-    color: #000;
+.section-content {
     padding: 20px;
-    font-family: 'Press Start 2P', cursive;
-    text-transform: uppercase;
+    border: 1px solid var(--border-color);
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+}
+
+/* --- Modal for DICOM Viewer --- */
+.modal-overlay {
+    display: flex; /* Kept for alignment */
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.modal-content {
+    background: #fff;
+    padding: 0;
+    border: 1px solid #333;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    max-width: 90vw;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-header {
+    padding: 10px 15px;
+    background-color: var(--primary-blue);
+    color: var(--text-light);
     font-size: 1.2rem;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.close-button {
+    color: var(--text-light);
+    background: none;
     border: none;
+    font-size: 1.8rem;
+    font-weight: bold;
     cursor: pointer;
-    text-shadow: none;
-    transition: all 0.1s linear;
+    line-height: 1;
 }
 
-button#submitBtn:hover {
-    background-color: #fff;
-    box-shadow: 0 0 20px var(--arcade-glow-green);
+.close-button:hover {
+    color: #ffdddd;
 }
 
-button#submitBtn:active {
-    background-color: #ccc;
-    transform: scale(0.98);
+#dicom-viewer {
+    width: 85vw; /* Example size */
+    height: 75vh;
+    background-color: #000;
 }
-</style>
