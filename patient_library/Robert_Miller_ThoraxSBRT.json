@@ -20,6 +20,10 @@
     "tnmStage": "cT2a N0 M0",
     "overallStage": "Stage IB",
     "symptomsAtPresentation": "Incidental finding on chest X-ray for pre-op clearance (knee surgery). Denies cough, SOB, chest pain.",
+    "pathologyFindings": [
+      "CT-guided core biopsy confirms Non-Small Cell Lung Cancer, favoring Adenocarcinoma.",
+      "Specimen consists of tumor tissue only; no lymph node tissue identified."
+    ],
     "relevantHistory": "40 pack-year smoking history (quit 5 yrs ago), Mild COPD.",
     "baselineStatus": "ECOG 1 (Restricted in physically strenuous activity but ambulatory)",
     "pftSummary": "FEV1 65% predicted, DLCO 60% predicted. Medically inoperable based on PFTs/comorbidities."
@@ -30,9 +34,7 @@
     "treatmentSite": "Right Upper Lobe",
     "intent": "Definitive (Curative)",
     "modality": "Stereotactic Body Radiation Therapy (SBRT)",
-    "totalDose": "54 Gy",
-    "fractionation": "3 fx",
-    "rtRxDetails": "54 Gy / 3 fx",
+    "rtRxDetails": "54 Gy in 3 fractions (18 Gy/fx)",
     "targetVolumeSummary": "PTV encompassing RUL primary tumor with margin based on ITV from 4D-CT.",
     "techniqueSummary": "VMAT / Multiple Coplanar/Non-coplanar Arcs",
     "concurrentChemo": "None",
@@ -41,6 +43,11 @@
       "Cough Syrup (e.g., Tessalon Perles) PRN radiation-induced cough",
       "Consideration for Esomeprazole PRN esophagitis",
       "Consideration for short course of steroids if radiation pneumonitis develops"
+    ],
+    "therapistAlerts": [
+        "High dose per fraction; precision setup is critical.",
+        "Monitor for chest wall pain, especially in later follow-ups.",
+        "Ensure patient understands to report any new or worsening cough or shortness of breath."
     ]
   },
   "radiationOncologyData": {
@@ -49,61 +56,109 @@
       "setupInstructions": "Supine on wingboard with arms up, immobilized in BodyFix vacuum bag. Respiratory motion assessed using Varian RPM system. SAD setup.",
       "immobilization": "BodyFix vacuum bag, Wingboard (Arms Up).",
       "referenceMarks": "Tattoos placed for daily alignment.",
-      "scanner": "e.g., Siemens Somatom Definition AS",
+      "setupImages": [
+        { "type": "AP", "url": "https://placehold.co/250x200/EEE/31343C?text=AP+Setup+Photo" },
+        { "type": "Lateral", "url": "https://placehold.co/250x200/EEE/31343C?text=Lateral+Setup+Photo" }
+      ],
+      "scanner": "Siemens Somatom Definition AS",
       "sliceThickness": "2.5 mm",
       "contrastUsed": "Non-contrast",
       "ctNotes": "4D-CT dataset acquired from lung apices through adrenal glands. Tumor motion assessed (~1.2 cm sup-inf). Data sent for SBRT planning using ITV approach."
     },
     "dosimetry": {
       "planId": "RM99112_SBRT",
+      "planStatus": "Final - Approved by Dr. Kevin Black",
       "rx": "54 Gy / 3 fx",
       "technique": "VMAT",
-      "energy": "e.g., 10MV FFF",
+      "energy": "10MV FFF",
       "numberOfFieldsOrArcs": 2,
-      "gantryAngles": "e.g., 200-160 CW, 160-200 CCW (Coplanar or Non-coplanar)",
-      "collAngles": "e.g., 30, 330",
-      "couchAngles": "e.g., 0, 315, 45 (for non-coplanar arcs)",
-      "isoCoords": "e.g., L+5.0, P+8.0, S-2.0 (relative to reference)",
-      "tps": "e.g., Eclipse",
-      "algorithm": "e.g., AcurosXB",
+      "gantryAngles": "200-160 CW, 160-200 CCW",
+      "collAngles": "30, 330",
+      "couchAngles": "0",
+      "isoCoords": "L+5.0, P+8.0, S-2.0 (relative to reference)",
+      "tps": "Eclipse",
+      "algorithm": "AcurosXB",
       "hetero": "Yes",
-      "norm": "e.g., 95% of PTV covered by 100% of dose (54 Gy)",
+      "norm": "95% of PTV covered by 100% of dose (54 Gy)",
       "constraints": "Spinal cord, heart, esophagus, contralateral lung, brachial plexus dose constraints met.",
       "planNotes": "SBRT VMAT plan completed using 4D-CT ITV approach.",
+      "igrtProtocol": {
+        "frequency": "Daily, pre- and post-treatment imaging recommended",
+        "type": "CBCT",
+        "alignment": "Soft tissue match to GTV/ITV."
+      },
+      "qaChecks": [
+        { "date": "2025-02-14", "type": "Initial Chart Check", "by": "Physics Staff" },
+        { "date": "2025-02-14", "type": "Patient Specific SBRT QA", "by": "Physics Staff", "result": "Pass" }
+      ],
       "fieldDetails": [
-        { "fieldName": "Arc 1", "gantryAngle": "200-160 CW", "collimatorAngle": "30", "couchAngle": "0", "energy": "10MV FFF", "monitorUnits": "e.g., 2700 MU" },
-        { "fieldName": "Arc 2", "gantryAngle": "160-200 CCW", "collimatorAngle": "330", "couchAngle": "0", "energy": "10MV FFF", "monitorUnits": "e.g., 2850 MU" }
+        { "fieldName": "Arc 1", "fieldSize": "Dynamic MLC", "gantryAngle": "200-160 CW", "collimatorAngle": "30", "couchAngle": "0", "energy": "10MV FFF", "monitorUnits": 2750, "ssd": "Variable" },
+        { "fieldName": "Arc 2", "fieldSize": "Dynamic MLC", "gantryAngle": "160-200 CCW", "collimatorAngle": "330", "couchAngle": "0", "energy": "10MV FFF", "monitorUnits": 2810, "ssd": "Variable" }
       ]
     },
     "treatmentDelivery": {
       "fractions": [
-        { "fractionNumber": 1, "date": "2025-02-16", "machine": "LINAC 2 (SBRT)", "setupNotes": "Daily CBCT for IGRT. Matched to PTV.", "sideEffects": "Mild fatigue noted day after treatment.", "notes": "Completed Fx 1 SBRT. Tolerating well." },
-        { "fractionNumber": 2, "date": "2025-02-18", "machine": "LINAC 2 (SBRT)", "setupNotes": "Daily CBCT for IGRT. Setup consistent.", "sideEffects": "Mild fatigue persists. Minimal dry cough noted.", "notes": "Completed Fx 2 SBRT. Tolerating well." },
-        { "fractionNumber": 3, "date": "2025-02-20", "machine": "LINAC 2 (SBRT)", "setupNotes": "Daily CBCT for IGRT. Final fraction setup verified.", "sideEffects": "Fatigue remains mild.", "notes": "Final fraction of SBRT course completed." }
+        { 
+            "fractionNumber": 1, 
+            "date": "2025-02-16", 
+            "machine": "LINAC 2 (SBRT)", 
+            "setupNotes": "Daily CBCT for IGRT. Matched to PTV. Tolerances met.", 
+            "sideEffects": "Mild fatigue noted day after treatment.", 
+            "notes": "Completed Fx 1 SBRT. Tolerating well.",
+            "recordedFields": [
+                { "fieldName": "Arc 1", "deliveredMu": 2750, "notes": ""},
+                { "fieldName": "Arc 2", "deliveredMu": 2810, "notes": ""}
+            ]
+        },
+        { 
+            "fractionNumber": 2, 
+            "date": "2025-02-18", 
+            "machine": "LINAC 2 (SBRT)", 
+            "setupNotes": "Daily CBCT for IGRT. Setup consistent. No shifts needed.", 
+            "sideEffects": "Mild fatigue persists. Minimal dry cough noted.", 
+            "notes": "Completed Fx 2 SBRT. Tolerating well.",
+            "recordedFields": [
+                { "fieldName": "Arc 1", "deliveredMu": 2750, "notes": ""},
+                { "fieldName": "Arc 2", "deliveredMu": 2810, "notes": ""}
+            ]
+        },
+        { 
+            "fractionNumber": 3, 
+            "date": "2025-02-20", 
+            "machine": "LINAC 2 (SBRT)", 
+            "setupNotes": "Daily CBCT for IGRT. Final fraction setup verified.", 
+            "sideEffects": "Fatigue remains mild.", 
+            "notes": "Final fraction of SBRT course completed. Follow-up appointment scheduled.",
+            "recordedFields": [
+                { "fieldName": "Arc 1", "deliveredMu": 2750, "notes": ""},
+                { "fieldName": "Arc 2", "deliveredMu": 2810, "notes": ""}
+            ]
+        }
       ]
     }
   },
   "imagingAndReports": [
-    { "date": "12/15/2024", "type": "Chest X-Ray", "summary": "3 cm opacity RUL, recommend CT chest.", "modalId": "rm-cxr-modal", "reportDetails": { "findings": "Frontal and lateral views demonstrate a 3 cm opacity within the right upper lobe. No pleural effusion or pneumothorax. Heart size normal.", "impression": "Right upper lobe opacity, suspicious for malignancy. Recommend CT chest for further evaluation.", "imageSrc": "https://placehold.co/600x400/EEE/31343C?text=Chest+X-Ray+Image" } },
-    { "date": "01/10/2025", "type": "CT Chest w/ Contrast", "summary": "3.2 cm spiculated mass RUL, concerning for malignancy. No definite mediastinal adenopathy.", "modalId": "rm-ct-chest-modal", "reportDetails": { "findings": "A 3.2 cm spiculated mass is identified in the posterior segment of the right upper lobe. No definite mediastinal or hilar adenopathy exceeding 1 cm short axis. Small apical scarring noted bilaterally. Mild centrilobular emphysema.", "impression": "Right upper lobe mass highly suspicious for primary lung malignancy. No evidence of nodal involvement based on size criteria.", "imageSrc": "https://placehold.co/600x400/DDD/525252?text=CT+Chest+Image" } },
-    { "date": "01/20/2025", "type": "PET/CT (Whole Body)", "summary": "Hypermetabolic RUL mass (SUV 8.9). No FDG-avid nodal or distant metastatic disease.", "modalId": "rm-pet-ct-modal", "reportDetails": { "findings": "Intense FDG uptake corresponding to the 3.2 cm right upper lobe mass (SUVmax 8.9). No FDG-avid lymph nodes identified in the mediastinum or hila. No suspicious FDG uptake elsewhere to suggest distant metastatic disease.", "impression": "Hypermetabolic right upper lobe mass consistent with primary malignancy. No evidence of regional nodal or distant metastatic disease (Stage I based on PET/CT).", "imageSrc": "https://placehold.co/600x400/CCC/696969?text=PET/CT+Image" } },
-    { "date": "01/25/2025", "type": "CT-Guided Biopsy Report", "summary": "NSCLC - Adenocarcinoma.", "modalId": "rm-path-modal", "reportDetails": { "lab": "ANYTOWN HOSPITAL PATHOLOGY (Fictional Lab)", "patientInfo": "Miller, Robert | ID: 99112 | DOB: 03/15/1955", "referringDoctor": "Dr. Susan Davis (Pulmonology)", "pathNum": "S-25-0987", "dateObtained": "01/25/2025", "specimen": "CT-Guided Core Biopsy, Right Upper Lobe Lung Mass", "diagnosis": "NON-SMALL CELL LUNG CARCINOMA, FAVOR ADENOCARCINOMA.", "microscopicDescription": "Sections show core biopsy fragments containing nests and glandular structures formed by atypical epithelial cells with enlarged nuclei, prominent nucleoli, and moderate amounts of cytoplasm infiltrating a desmoplastic stroma. Immunohistochemical stains are pending for definitive subtyping.", "comment": "Findings are diagnostic of non-small cell lung carcinoma. Features favor adenocarcinoma morphology. Awaiting molecular testing results if ordered separately.", "signedBy": "Dr. Path Fictional, 01/27/2025" } },
-    { "date": "02/10/2025", "type": "4D-CT Simulation (Thorax)", "summary": "CT acquired with respiratory tracking (4D). Tumor motion assessed (~1.2 cm sup-inf).", "modalId": "rm-4dct-sim-modal", "reportDetails": { "procedure": "4D CT simulation for Thorax SBRT.", "setup": "Patient positioned supine on wingboard with arms up, immobilized in BodyFix vacuum bag. Respiratory motion assessed using Varian RPM system.", "scanParams": "4D CT dataset acquired from lung apices through adrenal glands using 2.5 mm slice thickness. Average intensity projection (AIP) and maximum intensity projection (MIP) reconstructions generated.", "motionAssessment": "Tumor motion measured approximately 1.2 cm in superior-inferior dimension, 0.4 cm anterior-posterior, 0.3 cm lateral.", "notes": "Patient tolerated procedure. Tattoos placed. Data sent for SBRT planning using ITV approach.", "imageSrc": "https://placehold.co/600x300/BBB/708090?text=4D-CT+Simulation+Thorax" } }
+    { 
+      "date": "01/25/2025", 
+      "type": "CT-Guided Biopsy Report", 
+      "summary": "NSCLC - Adenocarcinoma.", 
+      "reportDetails": { 
+        "accessionNumber": "S25-0987",
+        "specimenSource": "CT-Guided Core Biopsy, Right Upper Lobe Lung Mass",
+        "finalDiagnosis": "NON-SMALL CELL LUNG CARCINOMA, ADENOCARCINOMA.",
+        "microscopicDescription": "Sections show core biopsy fragments containing nests and glandular structures formed by atypical epithelial cells infiltrating a desmoplastic stroma.",
+        "comment": "Findings are diagnostic of adenocarcinoma. No lymph node tissue is present in this specimen. The findings, in correlation with PET/CT showing no FDG-avid nodes, support a clinical stage of N0. Molecular testing is pending."
+      } 
+    }
   ],
-  "dicomImages": [
-    { "description": "Diagnostic PET/CT (01/20/2025)", "seriesType": "PT", "ohifViewerUrl": "https://viewer.ohif.org/viewer?StudyInstanceUIDs=1.3.6.1.4.1.14519.5.2.1.7009.9007.298806137288633453246975630178" },
-    { "description": "4D-CT Simulation (02/10/2025)", "seriesType": "CT", "ohifViewerUrl": "https://viewer.ohif.org/viewer?StudyInstanceUIDs=1.3.6.1.4.1.5962.99.1.2968617883.1314880426.1493322302363.3.0" }
-  ],
+  "dicomImages": [],
   "labResults": [
-    { "date": "02/05/2025", "test": "CBC", "value": "WNL", "units": "", "range": "N/A", "notes": "Pre-RT Baseline" },
-    { "date": "02/05/2025", "test": "CMP", "value": "WNL", "units": "", "range": "N/A", "notes": "Pre-RT Baseline" }
+    { "date": "02/05/2025", "test": "CBC", "value": "WNL", "notes": "Pre-RT Baseline" },
+    { "date": "02/05/2025", "test": "CMP", "value": "WNL", "notes": "Pre-RT Baseline" }
   ],
   "progressNotes": [
-    { "date": "01/15/2025", "author": "Dr. Susan Davis (Pulm)", "type": "Consult Note", "summary": "Pt referred for RUL mass on CT. PET/CT confirms FDG-avid lesion, N0M0. PFTs show FEV1 65%, DLCO 60%. Discussed w/ Thoracic Surgery - pt high risk for lobectomy due to PFTs. Refer to Rad Onc for definitive RT options (conventional vs SBRT)." },
     { "date": "01/30/2025", "author": "Dr. Kevin Black (Rad Onc)", "type": "Initial Consult", "summary": "Pt w/ Stage IB NSCLC, medically inoperable. Discussed definitive RT options. SBRT (54Gy/3fx) recommended given early stage and inoperability. Explained procedure, higher dose/fraction, potential side effects (fatigue, cough, chest wall pain, pneumonitis risk). Pt agrees. 4D Sim scheduled." },
-    { "date": "02/10/2025", "author": "Physics/Dosimetry", "type": "Planning Note", "summary": "SBRT VMAT plan completed using 4D-CT ITV approach. Dose constraints met for spinal cord, heart, esophagus, contralateral lung, brachial plexus. Plan approved by Dr. Black." },
-    { "date": "02/17/2025", "author": "Dr. Kevin Black (Rad Onc)", "type": "On Treatment Check (Post Fx 1/3)", "summary": "Pt completed Fx 1 SBRT yesterday. Reports mild fatigue today. No significant cough, pain or SOB. Tolerating well. Continue SBRT as planned next treatment day." },
-    { "date": "02/21/2025", "author": "Dr. Kevin Black (Rad Onc)", "type": "On Treatment Check (Post Fx 2/3)", "summary": "Completed Fx 2 SBRT yesterday. Mild fatigue persists. Minimal dry cough. No chest wall pain. Tolerating well. Final fraction scheduled." }
+    { "date": "02/21/2025", "author": "Dr. Kevin Black (Rad Onc)", "type": "Post-Treatment Check", "summary": "Patient seen one day after completing SBRT course. Reports only mild fatigue. No acute chest wall pain or shortness of breath. Plan for follow-up CT scan in 3 months to assess response. Given strict instructions on when to call regarding potential delayed side effects like pneumonitis." }
   ],
   "patientEducation": {
     "goalsDiscussed": "Definitive treatment with curative intent using SBRT.",
@@ -113,15 +168,11 @@
     "medicationCompliance": "Use PRN cough syrup as needed. Follow up instructions regarding any potential steroid use if pneumonitis develops."
   },
   "scheduling": [
-    { "date": "01/10/2025", "time": "9 AM", "type": "CT Chest", "location": "Radiology", "status": "Completed" },
-    { "date": "01/20/2025", "time": "2 PM", "type": "PET/CT", "location": "Nuclear Med", "status": "Completed" },
-    { "date": "01/25/2025", "time": "11 AM", "type": "CT Biopsy Lung", "location": "Interventional Rad", "status": "Completed" },
-    { "date": "01/30/2025", "time": "3 PM", "type": "Rad Onc Consult (Black)", "location": "Rad Onc Clinic", "status": "Completed" },
-    { "date": "02/10/2025", "time": "10 AM", "type": "4D-CT Simulation Thorax", "location": "Rad Onc Sim", "status": "Completed" },
-    { "date": "02/16/2025", "time": "~2 PM", "type": "SBRT Treatment (1/3)", "location": "LINAC 2 (SBRT)", "status": "Completed" },
-    { "date": "02/18/2025", "time": "~2 PM", "type": "SBRT Treatment (2/3)", "location": "LINAC 2 (SBRT)", "status": "Completed" },
-    { "date": "02/20/2025", "time": "~2 PM", "type": "SBRT Treatment (3/3)", "location": "LINAC 2 (SBRT)", "status": "Completed" },
-    { "date": "Weekly (e.g., 02/21)", "time": "~2:30 PM (Post-RT)", "type": "OTV / Post Tx Check", "location": "Rad Onc Clinic", "status": "Scheduled" }
+    { "date": "01/30/2025", "type": "Rad Onc Consult", "location": "Rad Onc Clinic", "status": "Completed" },
+    { "date": "02/10/2025", "type": "4D-CT Simulation Thorax", "location": "Rad Onc Sim", "status": "Completed" },
+    { "date": "02/16/2025", "type": "SBRT Treatment (1/3)", "location": "LINAC 2 (SBRT)", "status": "Completed" },
+    { "date": "02/18/2025", "type": "SBRT Treatment (2/3)", "location": "LINAC 2 (SBRT)", "status": "Completed" },
+    { "date": "02/20/2025", "type": "SBRT Treatment (3/3)", "location": "LINAC 2 (SBRT)", "status": "Completed" }
   ],
   "cptCharges": [
     { "code": "77290", "description": "Simulation, Complex (4D-CT Thorax)", "frequency": "Once" },
@@ -131,5 +182,5 @@
     { "code": "77387", "description": "Image Guided RT (IGRT)", "frequency": "Per Fraction (3x)" },
     { "code": "77427", "description": "Radiation treatment management, 5 treatments", "frequency": "Once (for course <= 5 fx)" }
   ],
-  "diagnosisSearch": "Lung Cancer"
+  "diagnosisSearch": "Lung Cancer SBRT"
 }
