@@ -20,6 +20,7 @@ const radOncSubTabs = [
 
 // ============================================================================================
 // --- ALL CONTENT RENDERING FUNCTIONS (MUST BE DEFINED FIRST) ---
+// These functions generate the HTML content for each section/tab.
 // ============================================================================================
 
 function renderDemographics(data) {
@@ -708,7 +709,7 @@ function renderTreatmentDelivery(data) {
             
             <h5>Patient Assessment</h5>
             <p><strong>Tolerance:</strong> ${fx.patientTolerance || ""}</p>
-            <p><strong>Side Effects:</strong> ${[fx.generalSideEffects, fx.siteSpecificSideEffects].filter(Boolean).join(', ') || "None reported."}</p>
+            <p><b>Side Effects:</b> ${[fx.generalSideEffects, fx.siteSpecificSideEffects].filter(Boolean).join(', ') || "None reported."}</p>
             <p><strong>Concerns:</strong> ${fx.patientConcerns || "None"}</p>
             <p><strong>Pain:</strong> ${fx.painAssessment || "N/A"}</p>
             
@@ -737,190 +738,6 @@ function renderTreatmentDelivery(data) {
   }
   let formSection = `<div class="section"><div class="section-header">Practice Daily Treatment Entry</div><div class="section-content">${renderPracticeFractionEntryForm(currentPatientData)}</div></div>`;
   return dosimetryHtml + fractionsSection + formSection;
-}
-
-// ============================================================================================
-// --- HANDLER INITIALIZATION FUNCTIONS (These must be defined before showRadOncSubTab/showTab call them) ---
-// ============================================================================================
-
-// initPracticeFractionFormHandlers needs to be outside any render function
-// so it can be accessed globally and re-initialized as needed.
-function initPracticeFractionFormHandlers() {
-  const sessionFractions = []; // This will hold the submitted practice fractions for the session
-
-  // Helper function to refresh the table of entered fractions
-  function refreshFractionTable() {
-    const tbody = document.getElementById('practiceFractionSessionTable')?.querySelector('tbody');
-    if (!tbody) return;
-    tbody.innerHTML = ''; // Clear existing rows
-    sessionFractions.forEach((entry, idx) => {
-      const row = tbody.insertRow();
-      row.insertCell(0).textContent = entry.fractionNumber + " / " + entry.totalFractions;
-      row.insertCell(1).textContent = entry.date;
-      row.insertCell(2).textContent = entry.machine;
-      row.insertCell(3).textContent = entry.fieldsAndMUs; // This is the overall summary from the form
-      row.insertCell(4).textContent = entry.dailyNotes; // The main daily notes
-      const removeCell = row.insertCell(5);
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.textContent = 'Remove';
-      btn.onclick = () => {
-        sessionFractions.splice(idx, 1); // Remove from array
-        refreshFractionTable(); // Re-render table
-      };
-      removeCell.appendChild(btn);
-    });
-  }
-
-  // Event listener for the "Add Practice Fraction Entry" button
-  const addBtn = document.getElementById('addPracticeFractionBtn');
-  if (addBtn) {
-    addBtn.onclick = function() {
-      const form = document.getElementById('practiceFractionForm');
-      // Basic validation for required fields
-      const requiredInputs = form.querySelectorAll('[required]');
-      for (const input of requiredInputs) {
-          if (!input.value) {
-              alert(`Please fill out the required field: ${input.labels ? input.labels[0].textContent : input.id}`);
-              input.focus();
-              return; // Stop the function if a required field is empty
-          }
-      }
-
-      // Collect data from the per-field MU table
-      const recordedFields = [];
-      document.querySelectorAll('#dailyFieldEntryTable tbody tr').forEach(row => {
-          recordedFields.push({
-              fieldName: row.cells[0].textContent, // Field Name
-              plannedMu: row.cells[1].textContent, // Planned MU
-              deliveredMu: row.querySelector('.daily-mu-input').value, // Delivered MU
-              notes: row.querySelector('.daily-field-notes').value, // Field Notes
-          });
-      });
-
-      // Calculate total delivered MUs for the overall summary
-      const totalDeliveredMUs = recordedFields.reduce((sum, field) => sum + (parseInt(field.deliveredMu) || 0), 0);
-      let overallFieldsAndMUsSummary = document.getElementById('practiceFieldsAndMUs')?.value || '';
-      if (totalDeliveredMUs > 0) {
-          // Append or update total delivered MUs in the overall summary
-          if (!overallFieldsAndMUsSummary.includes("Total Delivered:")) {
-            overallFieldsAndMUsSummary += ` (Total Delivered: ${totalDeliveredMUs} MU)`;
-          } else {
-            overallFieldsAndMUsSummary = overallFieldsAndMUsSummary.replace(/Total Delivered: \d+ MU/, `Total Delivered: ${totalDeliveredMUs} MU`);
-          }
-      }
-
-      // Create a session entry object with all collected data
-      const sessionEntry = {
-        patientName: currentPatientData?.demographics?.name || 'N/A',
-        patientId: currentPatientData?.patientId || 'N/A',
-        anatomicSite: currentPatientData?.treatmentPlan?.treatmentSite || 'N/A',
-        diagnosis: currentPatientData?.diagnosis?.primary || 'N/A',
-        prescription: currentPatientData?.treatmentPlan?.rtRxDetails || 'N/A',
-        treatmentTechnique: currentPatientData?.treatmentPlan?.techniqueSummary || 'N/A',
-        modality: currentPatientData?.treatmentPlan?.modality || 'N/A',
-        energy: currentPatientData?.radiationOncologyData?.dosimetry?.energy || 'N/A',
-        
-        fractionNumber: document.getElementById('practiceFractionNumCurrent').value,
-        totalFractions: document.getElementById('practiceFractionNumTotal').value,
-        date: document.getElementById('practiceTreatmentDate').value,
-        machine: document.getElementById('practiceMachine').value,
-        therapistInitials: document.getElementById('practiceTherapistInitials').value,
-        
-        fieldsAndMUs: overallFieldsAndMUsSummary, // Overall summary, now including calculated total
-        energiesUsed: document.getElementById('practiceEnergiesUsed')?.value || '',
-        
-        setupVerification: document.getElementById('practiceSetupVerification')?.value || '',
-        immobilizationDevicesChecked: document.getElementById('practiceImmobilizationDevicesChecked')?.value || '',
-        setupAdjustments: document.getElementById('practiceSetupAdjustments')?.value || '',
-        organTargetChecks: document.getElementById('practiceOrganTargetChecks')?.value || '',
-        
-        imagingType: document.getElementById('practiceImagingType').value,
-        igrtMatchQuality: document.getElementById('practiceIgrtMatchQuality').value,
-        shiftsApplied: document.getElementById('practiceShiftsApplied').value,
-        igrtApprovedBy: document.getElementById('practiceIgrtApprovedBy').value,
-        igrtVerificationNotes: document.getElementById('practiceIgrtVerificationNotes')?.value || '',
-        
-        patientTolerance: document.getElementById('practicePatientTolerance').value,
-        generalSideEffects: document.getElementById('practiceGeneralSideEffects').value,
-        siteSpecificSideEffects: document.getElementById('practiceSiteSpecificSideEffects')?.value || '',
-        painAssessment: document.getElementById('practicePainAssessment')?.value || '',
-        patientConcerns: document.getElementById('practicePatientConcerns')?.value || '',
-        instructionsGiven: document.getElementById('practiceInstructionsGiven')?.value || '',
-        
-        billingCodes: document.getElementById('practiceBillingCodes')?.value || '',
-        dailyNotes: document.getElementById('practiceDailyNotes')?.value || '', // Main daily notes field
-        
-        fieldsDelivered: recordedFields // Detailed per-field data
-      };
-      sessionFractions.push(sessionEntry); // Add the new entry to the session array
-      refreshFractionTable(); // Update the table displaying session entries
-      form.reset(); // Clear the form for the next entry
-      
-      // Pre-fill some fields for the next entry for convenience
-      document.getElementById('practiceFractionNumTotal').value = sessionEntry.totalFractions;
-      // Preserve immobilization device value as it's often consistent
-      document.getElementById('practiceImmobilizationDevicesChecked').value = sessionEntry.immobilizationDevicesChecked;
-    };
-  }
-
-  // Event listener for the "Prepare Practice Submission Summary" button
-  const prepareBtn = document.getElementById('preparePracticeSummaryBtn');
-  if (prepareBtn) {
-    prepareBtn.onclick = function() {
-      if (!sessionFractions.length) {
-        alert("Please add at least one practice fraction entry before preparing the summary.");
-        return;
-      }
-      let summary = "==========================================================\n";
-      summary += "          DAILY RADIATION TREATMENT RECORD SUMMARY        \n";
-      summary += "==========================================================\n\n";
-      
-      sessionFractions.forEach((fx, idx) => {
-        summary += `--- RECORD FOR FRACTION ${fx.fractionNumber} / ${fx.totalFractions} ---\n`;
-        summary += `Date: ${fx.date} | Machine: ${fx.machine} | Therapist(s): ${fx.therapistInitials}\n`;
-        summary += `Patient: ${fx.patientName} (MRN: ${fx.patientId})\n`;
-        summary += `Anatomic Site: ${fx.anatomicSite} | Diagnosis: ${fx.diagnosis}\n`;
-        summary += `Prescription: ${fx.prescription} | Technique: ${fx.treatmentTechnique} | Modality: ${fx.modality} | Energy: ${fx.energy}\n\n`;
-
-        summary += `--- Treatment Delivery ---\n`;
-        summary += `Fields & MUs (Overall): ${fx.fieldsAndMUs}\n`;
-        summary += `Energies Used: ${fx.energiesUsed}\n`;
-        
-        if (fx.fieldsDelivered && fx.fieldsDelivered.length > 0) {
-            summary += `Per-Field Delivered MUs:\n`;
-            fx.fieldsDelivered.forEach(field => {
-                summary += `  - ${field.fieldName}: Planned ${field.plannedMu} MU, Delivered ${field.deliveredMu || 'N/A'} MU. Notes: ${field.notes || 'N/A'}\n`;
-            });
-        }
-        summary += `Setup Verification: ${fx.setupVerification}\n`;
-        summary += `Immobilization Devices: ${fx.immobilizationDevicesChecked}\n`;
-        summary += `Setup Adjustments: ${fx.setupAdjustments || 'None'}\n`;
-        summary += `Organ/Target Checks: ${fx.organTargetChecks || 'N/A'}\n\n`;
-
-        summary += `--- Image Guidance (IGRT) ---\n`;
-        summary += `Imaging Type: ${fx.imagingType}\n`;
-        summary += `Match Quality: ${fx.igrtMatchQuality}\n`;
-        summary += `Shifts Applied: ${fx.shiftsApplied || 'None'}\n`;
-        summary += `Approved By: ${fx.igrtApprovedBy || 'N/A'}\n`;
-        summary += `IGRT Notes: ${fx.igrtVerificationNotes || 'N/A'}\n\n`;
-
-        summary += `--- Patient Assessment ---\n`;
-        summary += `Tolerance: ${fx.patientTolerance}\n`;
-        summary += `Side Effects: ${[fx.generalSideEffects, fx.siteSpecificSideEffects].filter(Boolean).join(', ') || "None reported."}\n`;
-        summary += `Pain Assessment: ${fx.painAssessment || 'N/A'}\n`;
-        summary += `Patient Concerns: ${fx.patientConcerns || 'None'}\n`;
-        summary += `Instructions Given: ${fx.instructionsGiven || 'N/A'}\n\n`;
-
-        summary += `--- Daily Notes & Billing ---\n`;
-        summary += `Therapist Daily Notes: ${fx.dailyNotes || 'No specific notes for today.'}\n`;
-        summary += `Billing Codes: ${fx.billingCodes || 'N/A'}\n`;
-        summary += "==========================================================\n\n";
-      });
-      document.getElementById('practiceSubmissionSummary').value = summary;
-      document.getElementById('practiceSubmissionOutput').style.display = 'block';
-    };
-  }
 }
 
 // ============================================================================================
@@ -969,6 +786,8 @@ function showRadOncSubTab(subKey, data) {
       break;
     case 'treatmentDelivery': 
       subContents.innerHTML = renderTreatmentDelivery(radOncData); 
+      // These init functions MUST be called AFTER the content is rendered
+      // and their definitions must appear EARLIER in the file.
       initPracticeFractionFormHandlers(); 
       initFractionDetailToggles();
       break;
@@ -986,6 +805,7 @@ function showTab(tabKey, data) {
   if (activeTabButton) activeTabButton.classList.add('active');
 
   if (tabKey === "radOnc") {
+    // Render the sub-tab structure, then set up its event listeners and display default content
     tabContents.innerHTML = renderRadOncSubTabs("ctsim", data);
     radOncSubTabs.forEach(sub => {
       const subTabBtn = document.getElementById(`radOnc-subtab-btn-${sub.key}`);
@@ -1016,6 +836,8 @@ function showTab(tabKey, data) {
 
 // ============================================================================================
 // --- Patient Loader and Dropdown Logic ---
+// These functions handle fetching data and updating the patient selection UI.
+// They depend on `showTab` and `populatePatientDropdown`.
 // ============================================================================================
 let currentPatientData = null; // Global variable to hold the currently loaded patient data
 
@@ -1085,10 +907,11 @@ function filterPatientsByDiagnosis() {
 
 // ============================================================================================
 // --- DOM Content Loaded Event Listener (Starts the application) ---
+// This is the entry point, all functions called here must be defined earlier in the script.
 // ============================================================================================
 document.addEventListener('DOMContentLoaded', () => {
   // Modal close button functionality
-  const modalCloseBtn = document.getElementById('emr-modal-close');
+  const modalCloseBtn = document.getElementById('emr-modal-overlay')?.querySelector('.close-button'); // Corrected selector
   if (modalCloseBtn) {
     modalCloseBtn.onclick = function() {
       const overlay = document.getElementById('emr-modal-overlay');
