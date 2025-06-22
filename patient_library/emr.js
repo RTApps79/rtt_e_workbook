@@ -18,10 +18,9 @@ const radOncSubTabs = [
   { key: "treatmentDelivery", label: "Treatment Delivery" }
 ];
 
-// --- Section Renderers ---
-
-// All render functions should be defined BEFORE showRadOncSubTab and showTab
-// to avoid "not defined" errors.
+// ============================================================================================
+// --- Section Renderers (ALL RENDER FUNCTIONS MUST BE DEFINED HERE BEFORE BEING CALLED) ---
+// ============================================================================================
 
 function renderDemographics(data) {
   const d = data.demographics || {};
@@ -123,7 +122,7 @@ function renderTreatmentPlan(data) {
         <p><strong>Target Volume Summary:</strong> ${t.targetVolumeSummary || "N/A"}</p>
         <p><strong>Technique Summary:</strong> ${t.techniqueSummary || "N/A"}</p>
         <p><strong>Concurrent Chemotherapy:</strong> ${t.concurrentChemo || "None"}</p>
-        <p><strong>Detailed Concurrent Chemotherapy:</strong> ${t.detailedConcurrentChemopathy || "N/A"}</p>
+        <p><strong>Detailed Concurrent Chemotherapy:</strong> ${t.detailedConcurrentChemo || "N/A"}</p>
         ${medicationsHtml}
         ${therapistAlertsHtml}
       </div>
@@ -897,20 +896,29 @@ function initPracticeFractionFormHandlers() {
   }
 }
 
-// --- Radiation Oncology Tabs ---
-function renderRadOncSubTabs(activeKey, data) {
-  return `<div id="radOnc-subtabs" class="tab-bar" style="margin-bottom:1em;">
-    ${radOncSubTabs.map(sub =>
-      `<button class="tab-button ${sub.key===activeKey?" active":""}" id="radOnc-subtab-btn-${sub.key}">${sub.label}</button>`
-    ).join("")}
-    </div>
-    <div id="radOnc-subtab-contents"></div>`;
+// Function for toggling details in Treatment Delivery Records - needs to be accessible
+function initFractionDetailToggles() {
+    document.querySelectorAll('.toggle-details-btn').forEach(button => {
+        button.onclick = function() {
+            const targetId = this.dataset.fractionId;
+            const detailsDiv = document.getElementById(targetId);
+            if (detailsDiv) {
+                detailsDiv.classList.toggle('fraction-details-hidden');
+                this.textContent = detailsDiv.classList.contains('fraction-details-hidden') ? 'Show All Details' : 'Hide Details';
+            }
+        };
+    });
 }
+
+// ============================================================================================
+// --- Radiation Oncology Sub-Tab Logic (These call the render functions) ---
+// ============================================================================================
 
 function showRadOncSubTab(subKey, data) {
   const subContents = document.getElementById('radOnc-subtab-contents');
   if (!subContents) return;
-  const radOncData = data.radiationOncologyData || {};
+  const radOncData = data.radiationOncologyData || {}; // Correctly gets the radOncData object from the main patient data
+
   const handleImageUpload = (event, previewElementId) => {
       const previewElement = document.getElementById(previewElementId);
       if (!previewElement) return;
@@ -921,6 +929,7 @@ function showRadOncSubTab(subKey, data) {
           reader.readAsDataURL(file);
       }
   };
+
   switch (subKey) {
     case 'ctsim': 
       subContents.innerHTML = renderCTSimulation(radOncData.ctSimulation);
@@ -934,10 +943,12 @@ function showRadOncSubTab(subKey, data) {
     case 'dosimetry': 
       subContents.innerHTML = renderDosimetry(radOncData.dosimetry); 
       break;
-    case 'treatmentDelivery': 
-      subContents.innerHTML = renderTreatmentDelivery(radOncData); // This function call is correct now
-      initPracticeFractionFormHandlers(); 
-      initFractionDetailToggles(); 
+    case 'treatmentDelivery':
+      // This is the problematic call. 'renderTreatmentDelivery' expects 'radOncData' directly
+      // not the root 'data' object.
+      subContents.innerHTML = renderTreatmentDelivery(radOncData);
+      initPracticeFractionFormHandlers(); // Re-initialize handlers after content is rendered
+      initFractionDetailToggles(); // Re-initialize handlers for toggles
       break;
     default: 
       subContents.innerHTML = "<p>No data.</p>"; 
@@ -945,7 +956,10 @@ function showRadOncSubTab(subKey, data) {
   }
 }
 
-// --- Main Tab Switch Logic ---
+// ============================================================================================
+// --- Main Tab Switch Logic (These call the sub-tab logic) ---
+// ============================================================================================
+
 function showTab(tabKey, data) {
   const tabContents = document.getElementById('emr-tab-contents');
   if (!tabContents) return;
@@ -955,7 +969,7 @@ function showTab(tabKey, data) {
 
   if (tabKey === "radOnc") {
     tabContents.innerHTML = renderRadOncSubTabs("ctsim", data);
-    showRadOncSubTab("ctsim", data);
+    // After rendering the sub-tab structure, set up event listeners for sub-tab buttons
     radOncSubTabs.forEach(sub => {
       const subTabBtn = document.getElementById(`radOnc-subtab-btn-${sub.key}`);
       if(subTabBtn) {
@@ -966,6 +980,8 @@ function showTab(tabKey, data) {
         };
       }
     });
+    // And finally, display the default sub-tab content (ctsim)
+    showRadOncSubTab("ctsim", data); // This calls renderCTSimulation
     return;
   }
   switch (tabKey) {
@@ -982,8 +998,11 @@ function showTab(tabKey, data) {
   }
 }
 
-// --- Patient Loader and Dropdown ---
-let currentPatientData = null;
+// ============================================================================================
+// --- Patient Loader and Dropdown Logic ---
+// ============================================================================================
+let currentPatientData = null; // Global variable to hold the currently loaded patient data
+
 function loadAndDisplayPatient(fileName) {
   fetch(fileName)
     .then(resp => {
@@ -991,7 +1010,7 @@ function loadAndDisplayPatient(fileName) {
       return resp.json();
     })
     .then(data => {
-      currentPatientData = data;
+      currentPatientData = data; // Store loaded data globally
       const tabsDiv = document.getElementById('emr-tabs');
       tabsDiv.innerHTML = emrTabs.map(
         (tab, i) => `<button class="tab-button${i===0?" active":""}" id="emr-tab-btn-${tab.key}">${tab.label}</button>`
@@ -1002,7 +1021,7 @@ function loadAndDisplayPatient(fileName) {
           tabBtn.onclick = () => showTab(tab.key, data);
         }
       });
-      showTab(emrTabs[0].key, data);
+      showTab(emrTabs[0].key, data); // Display the first tab by default
     })
     .catch(error => {
       console.error('Error loading patient data:', error);
@@ -1013,7 +1032,7 @@ function loadAndDisplayPatient(fileName) {
 function populatePatientDropdown(filteredPatients = patients) {
   const select = document.getElementById('patientSelect');
   if (!select) return;
-  select.innerHTML = "";
+  select.innerHTML = ""; // Clear existing options
   if (filteredPatients.length === 0) {
     const opt = document.createElement('option');
     opt.value = "";
@@ -1048,23 +1067,11 @@ function filterPatientsByDiagnosis() {
   }
 }
 
-// --- Function for toggling details in Treatment Delivery Records ---
-// Needs to be outside any render function to be globally accessible
-function initFractionDetailToggles() {
-    document.querySelectorAll('.toggle-details-btn').forEach(button => {
-        button.onclick = function() {
-            const targetId = this.dataset.fractionId;
-            const detailsDiv = document.getElementById(targetId);
-            if (detailsDiv) {
-                detailsDiv.classList.toggle('fraction-details-hidden');
-                this.textContent = detailsDiv.classList.contains('fraction-details-hidden') ? 'Show All Details' : 'Hide Details';
-            }
-        };
-    });
-}
-
-// --- On Page Load ---
+// ============================================================================================
+// --- On Page Load (Event Listeners and Initial Setup) ---
+// ============================================================================================
 document.addEventListener('DOMContentLoaded', () => {
+  // Modal close button functionality
   const modalCloseBtn = document.getElementById('emr-modal-close');
   if (modalCloseBtn) {
     modalCloseBtn.onclick = function() {
@@ -1072,25 +1079,32 @@ document.addEventListener('DOMContentLoaded', () => {
       if (overlay) overlay.style.display = 'none';
       const viewer = document.getElementById('dicom-viewer');
       if (viewer) {
-        try { cornerstone.disable(viewer); } catch(e) { /* Ignore */ }
-        viewer.innerHTML = "";
+        try { cornerstone.disable(viewer); } catch(e) { /* Ignore if not enabled */ }
+        viewer.innerHTML = ""; // Clear viewer content
       }
     };
   }
+
+  // Initial patient dropdown population and display
+  // 'patients' array is assumed to be defined in patients.js
   if (typeof patients !== 'undefined' && patients.length > 0) {
     populatePatientDropdown();
-    loadAndDisplayPatient(patients[0].file);
+    loadAndDisplayPatient(patients[0].file); // Load the first patient by default
   } else {
-    console.warn("`patients.js` or `patients` array is not defined.");
+    console.warn("`patients.js` or `patients` array is not defined. Please ensure it's loaded and contains patient data.");
     const tabContents = document.getElementById('emr-tab-contents');
-    if (tabContents) tabContents.innerHTML = `<p style="padding: 20px;">Patient list not found.</p>`;
+    if (tabContents) tabContents.innerHTML = `<p style="padding: 20px;">Patient list not found or is empty. Please check 'patients.js'.</p>`;
   }
+
+  // Event listener for patient dropdown change
   const patientSelect = document.getElementById('patientSelect');
   if (patientSelect) {
     patientSelect.addEventListener('change', function() {
       if (this.value) { loadAndDisplayPatient(this.value); }
     });
   }
+
+  // Event listener for diagnosis search input
   const diagnosisSearch = document.getElementById('diagnosisSearch');
   if (diagnosisSearch) {
     diagnosisSearch.addEventListener('input', filterPatientsByDiagnosis);
