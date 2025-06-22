@@ -371,7 +371,6 @@ function renderCTSimulation(ct) {
   const apImage = ct.setupImages?.find(img => img.type === 'AP');
   const latImage = ct.setupImages?.find(img => img.type === 'Lateral');
 
-  // ** CHANGE IS HERE: Removed inline styles from the <img> tag **
   const officialPhotosHtml = `
     <div class="section">
       <div class="section-header">Official Setup Photos</div>
@@ -475,14 +474,23 @@ function renderDosimetry(dos) {
   return mainInfo + fieldsTable;
 }
 
+// ==================================================================
+// === REVISED Practice Daily Entry Form and Logic ===
+// ==================================================================
 function renderPracticeFractionEntryForm(patientData) {
     const dos = patientData?.radiationOncologyData?.dosimetry;
     let fieldEntryHtml = '<p>No fields defined in dosimetry plan.</p>';
+
     if (dos && dos.fieldDetails && dos.fieldDetails.length > 0) {
         fieldEntryHtml = `
             <table id="dailyFieldEntryTable" class="practice-table">
                 <thead>
-                    <tr><th>Field Name</th><th>Planned MU</th><th>Delivered MU</th><th>Field Notes</th></tr>
+                    <tr>
+                        <th>Field Name</th>
+                        <th>Planned MU</th>
+                        <th>Delivered MU</th>
+                        <th>Field Notes</th>
+                    </tr>
                 </thead>
                 <tbody>
                     ${dos.fieldDetails.map(field => `
@@ -497,13 +505,57 @@ function renderPracticeFractionEntryForm(patientData) {
             </table>
         `;
     }
+
     return `
     <div class="practice-section">
       <h3 style="margin-bottom: 1em;">Practice Daily Treatment Entry</h3>
       <form id="practiceFractionForm" autocomplete="off" onsubmit="return false;">
-        <div class="practice-form-grid-simple">
-            <fieldset class="practice-fieldset"><legend>Session Info</legend><label for="practiceTreatmentDate">Treatment Date</label><input type="date" id="practiceTreatmentDate" required><label for="practiceTherapistInitials">Therapist(s)</label><input type="text" id="practiceTherapistInitials" required><label for="practiceGeneralSideEffects">Overall Patient Assessment / Side Effects</label><textarea id="practiceGeneralSideEffects" rows="2"></textarea></fieldset>
-            <fieldset class="practice-fieldset"><legend>Per-Field Delivery Record</legend>${fieldEntryHtml}</fieldset>
+        <div class="practice-form-grid">
+            <fieldset class="practice-fieldset">
+                <legend>Session Info</legend>
+                <label for="practiceTreatmentDate">Treatment Date</label>
+                <input type="date" id="practiceTreatmentDate" required>
+                <label for="practiceTherapistInitials">Therapist(s)</label>
+                <input type="text" id="practiceTherapistInitials" required>
+            </fieldset>
+
+            <fieldset class="practice-fieldset">
+                <legend>Image Guidance (IGRT)</legend>
+                <label for="practiceImagingType">Imaging Type</label>
+                <select id="practiceImagingType">
+                  <option value="None">None</option>
+                  <option value="kV Pair">kV Pair (Orthogonal)</option>
+                  <option value="MV Portal">MV Portal Image</option>
+                  <option value="CBCT">Cone Beam CT (CBCT)</option>
+                </select>
+                <label for="practiceIgrtMatchQuality">Match Quality</label>
+                <select id="practiceIgrtMatchQuality">
+                  <option value="Good - No Shifts">Good - No Shifts</option>
+                  <option value="Good - Shifts Applied">Good - Shifts Applied</option>
+                  <option value="Poor - Action Taken">Poor - Action Taken</option>
+                </select>
+                <label for="practiceShiftsApplied">Shifts Applied (V,L,L)</label>
+                <input type="text" id="practiceShiftsApplied" placeholder="e.g., V:0.1, L:0, L:-0.2">
+                <label for="practiceIgrtApprovedBy">IGRT Approved By</label>
+                <input type="text" id="practiceIgrtApprovedBy">
+            </fieldset>
+
+            <fieldset class="practice-fieldset">
+                <legend>Patient Assessment</legend>
+                <label for="practicePatientTolerance">Patient Tolerance</label>
+                <select id="practicePatientTolerance">
+                  <option value="Good">Good</option>
+                  <option value="Fair">Fair</option>
+                  <option value="Poor">Poor</option>
+                </select>
+                <label for="practiceGeneralSideEffects">Side Effects / Comments</label>
+                <textarea id="practiceGeneralSideEffects" rows="2"></textarea>
+            </fieldset>
+            
+            <fieldset class="practice-fieldset full-width">
+                <legend>Per-Field Delivery Record</legend>
+                ${fieldEntryHtml}
+            </fieldset>
         </div>
         <button type="button" id="addPracticeFractionBtn">Add Practice Fraction Entry</button>
       </form>
@@ -518,23 +570,62 @@ function initPracticeFractionFormHandlers() {
     const addBtn = document.getElementById('addPracticeFractionBtn');
     if (addBtn) {
         addBtn.onclick = function() {
+            // --- Gather Per-Field Data ---
             const recordedFields = [];
             const fieldRows = document.querySelectorAll('#dailyFieldEntryTable tbody tr');
             fieldRows.forEach(row => {
-                const fieldName = row.cells[0].textContent;
-                const deliveredMu = row.querySelector('.daily-mu-input').value;
-                const fieldNotes = row.querySelector('.daily-field-notes').value;
-                recordedFields.push({fieldName: fieldName, deliveredMu: deliveredMu, notes: fieldNotes});
+                recordedFields.push({
+                    fieldName: row.cells[0].textContent,
+                    deliveredMu: row.querySelector('.daily-mu-input').value,
+                    notes: row.querySelector('.daily-field-notes').value,
+                });
             });
+
+            // --- Gather Session-Level Data ---
             const sessionEntry = {
                 date: document.getElementById('practiceTreatmentDate').value,
                 therapist: document.getElementById('practiceTherapistInitials').value,
+                imagingType: document.getElementById('practiceImagingType').value,
+                matchQuality: document.getElementById('practiceIgrtMatchQuality').value,
+                shiftsApplied: document.getElementById('practiceShiftsApplied').value,
+                igrtApprovedBy: document.getElementById('practiceIgrtApprovedBy').value,
+                patientTolerance: document.getElementById('practicePatientTolerance').value,
                 assessment: document.getElementById('practiceGeneralSideEffects').value,
                 fields: recordedFields
             };
+            
             console.log("Practice Fraction Entry Added:", sessionEntry);
             const outputDiv = document.getElementById('practiceFractionsEntered');
-            let summaryHtml = `<div class="entry-summary"><p><strong>Date:</strong> ${sessionEntry.date} | <strong>Therapist:</strong> ${sessionEntry.therapist}</p><p><strong>Assessment:</strong> ${sessionEntry.assessment || 'N/A'}</p><table><thead><tr><th>Field</th><th>MU Delivered</th><th>Notes</th></tr></thead><tbody>${sessionEntry.fields.map(f => `<tr><td>${f.fieldName}</td><td>${f.deliveredMu}</td><td>${f.notes}</td></tr>`).join('')}</tbody></table></div>`;
+            
+            // --- Display Summary of Entry ---
+            let summaryHtml = `
+              <div class="entry-summary">
+                <p>
+                  <strong>Date:</strong> ${sessionEntry.date} | 
+                  <strong>Therapist:</strong> ${sessionEntry.therapist} |
+                  <strong>Tolerance:</strong> ${sessionEntry.patientTolerance}
+                </p>
+                <p>
+                  <strong>IGRT:</strong> ${sessionEntry.imagingType} | 
+                  <strong>Match:</strong> ${sessionEntry.matchQuality} | 
+                  <strong>Shifts:</strong> ${sessionEntry.shiftsApplied || 'N/A'} |
+                  <strong>Approved by:</strong> ${sessionEntry.igrtApprovedBy || 'N/A'}
+                </p>
+                <p><strong>Assessment:</strong> ${sessionEntry.assessment || 'N/A'}</p>
+                <table>
+                  <thead><tr><th>Field</th><th>MU Delivered</th><th>Notes</th></tr></thead>
+                  <tbody>
+                    ${sessionEntry.fields.map(f => `
+                      <tr>
+                        <td>${f.fieldName}</td>
+                        <td>${f.deliveredMu || 'N/A'}</td>
+                        <td>${f.notes || ''}</td>
+                      </tr>
+                    `).join('')}
+                  </tbody>
+                </table>
+              </div>
+            `;
             outputDiv.innerHTML += summaryHtml;
             document.getElementById('practiceFractionForm').reset();
         };
@@ -591,10 +682,10 @@ function showRadOncSubTab(subKey, data) {
   }
 }
 
+// ... (The rest of the file from showTab down is unchanged)
 function renderRadOncSubTabs(activeKey, data) {
   return `<div id="radOnc-subtabs" class="tab-bar" style="margin-bottom:1em;">${radOncSubTabs.map(sub =>`<button class="tab-button ${sub.key===activeKey?" active":""}" id="radOnc-subtab-btn-${sub.key}">${sub.label}</button>`).join("")}</div><div id="radOnc-subtab-contents"></div>`;
 }
-
 function showTab(tabKey, data) {
   const tabContents = document.getElementById('emr-tab-contents');
   if (!tabContents) return;
@@ -629,7 +720,6 @@ function showTab(tabKey, data) {
     default: tabContents.innerHTML = "<p>No data.</p>"; break;
   }
 }
-
 let currentPatientData = null;
 function loadAndDisplayPatient(fileName) {
   fetch(fileName)
@@ -652,7 +742,6 @@ function loadAndDisplayPatient(fileName) {
         document.getElementById('emr-tab-contents').innerHTML = `<div class="section"><div class="section-header" style="background-color: #d9534f;">Error</div><div class="section-content"><p>Could not load patient file: ${fileName}. Please check the console for details.</p></div></div>`;
     });
 }
-
 function populatePatientDropdown(filteredPatients = patients) {
   const select = document.getElementById('patientSelect');
   if (!select) return;
@@ -671,7 +760,6 @@ function populatePatientDropdown(filteredPatients = patients) {
     select.appendChild(opt);
   });
 }
-
 function filterPatientsByDiagnosis() {
   const searchValue = document.getElementById('diagnosisSearch').value.trim().toLowerCase();
   const tabContents = document.getElementById('emr-tab-contents');
@@ -691,7 +779,6 @@ function filterPatientsByDiagnosis() {
       if(tabContents) tabContents.innerHTML = `<p style="padding: 20px;">No matching patients found for "${searchValue}".</p>`;
   }
 }
-
 document.addEventListener('DOMContentLoaded', () => {
     const modalCloseBtn = document.getElementById('emr-modal-close');
     if (modalCloseBtn) {
