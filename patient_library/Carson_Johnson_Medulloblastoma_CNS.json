@@ -23,11 +23,15 @@
       "Features consistent with classic medulloblastoma.",
       "Molecular: WNT-activated (CTNNB1 mutation positive)."
     ],
-    "priorTreatmentSummary": "Maximal safe surgical resection (05/08/2025) by Dr. David Chang (Neurosurgery)"
+    "priorTreatmentSummary": "Maximal safe surgical resection (05/08/2025) by Dr. David Chang (Neurosurgery)",
+    "vascularInvolvement": "No vascular involvement noted on imaging.",
+    "priorProcedures": "Initial diagnostic lumbar puncture (05/09/2025) which was negative for CSF dissemination. Surgical placement of ventriculoperitoneal shunt (05/08/2025) for hydrocephalus management.",
+    "baselineStatus": "Karnofsky Performance Status (KPS) 90 at baseline. Mild gait ataxia resolved post-surgery. No significant cognitive deficits."
   },
   "treatmentPlan": {
     "radOnc": "Dr. Emily Roberts",
     "neuroOnc": "Dr. Thomas Green",
+    "surgOnc": "Dr. David Chang",
     "treatmentSite": "Craniospinal Axis and Posterior Fossa",
     "intent": "Adjuvant (Post-operative)",
     "modality": "External Beam Radiation Therapy (EBRT) - Craniospinal Irradiation (CSI) with involved field boost.",
@@ -35,21 +39,27 @@
     "targetVolumeSummary": "Whole brain and spine (to bottom of thecal sac) for CSI; Posterior Fossa for boost.",
     "techniqueSummary": "3D-CRT with gapped abutting fields for craniospinal axis, followed by 3D-CRT for posterior fossa boost. Proton therapy considered but not available.",
     "concurrentChemo": "None (Vincristine omitted per NCCN guidelines for adults)",
+    "detailedConcurrentChemo": "N/A (no concurrent chemotherapy given for this treatment phase)",
     "medications": [
       "Dexamethasone 2 mg PO BID (Tapering schedule planned)",
-      "Ondansetron PRN Nausea"
+      "Ondansetron PRN Nausea",
+      "Prochlorperazine PRN Nausea"
     ],
     "therapistAlerts": [
       "Monitor for signs of fatigue and myelosuppression.",
-      "Encourage rest and adequate hydration."
-    ]
+      "Encourage rest and adequate hydration.",
+      "Monitor skin integrity along posterior neck/spine where fields abut for potential irritation.",
+      "Consideration for sedation during treatment delivery due to patient's age and need for precise immobilization, though not currently utilized."
+    ],
+    "gynOnc": "N/A",
+    "dermatologist": "N/A"
   },
   "radiationOncologyData": {
     "ctSimulation": {
       "simulationDate": "05/20/2025",
       "setupInstructions": "Prone, head neutral in custom Aquaplast mask indexed to table, arms abducted above head for craniospinal setup. Patient aligned to room lasers using anterior and bilateral marks.",
       "immobilization": "Custom Aquaplast thermoplastic mask, prone belly board, knee/ankle immobilization.",
-      "referenceMarks": "Tattoos placed per protocol. Isocenter for CSI set at...",
+      "referenceMarks": "Tattoos placed per protocol. Isocenter for CSI set at Cranial: V+0.0, L+0.0, S+10.0 relative to CT sim reference point. Spine fields aligned to specific vertebral bodies with appropriate superior/inferior gaps.",
       "setupImages": [
         { "type": "AP", "url": "https://placehold.co/250x200/EEE/31343C?text=AP+Setup+Photo" },
         { "type": "Lateral", "url": "https://placehold.co/250x200/EEE/31343C?text=Lateral+Setup+Photo" }
@@ -57,40 +67,42 @@
       "scanner": "Siemens Somatom CT",
       "sliceThickness": "3 mm",
       "contrastUsed": "Contrast-enhanced",
-      "ctNotes": "Contrast-enhanced CT acquired in treatment position for CSI and boost planning."
+      "ctNotes": "Contrast-enhanced CT acquired in treatment position for CSI and boost planning. Patient tolerated prone position well for duration of scan."
     },
     "dosimetry": {
       "planId": "DL88990_Medullo",
       "planStatus": "Final - Approved by Dr. Emily Roberts",
-      "rx": "CSI: 23.4 Gy / 13 fx; PFB Boost: 30.6 Gy / 17 fx (Total 54 Gy)",
+      "rx": "CSI: 23.4 Gy / 13 fx; PFB Boost: 30.6 Gy / 17 fx (Total 54 Gy to Posterior Fossa)",
       "technique": "3D-CRT (CSI with abutted fields, PFB boost with 3D fields)",
       "energy": "6MV",
       "numberOfFieldsOrArcs": "Multiple fields for CSI; multiple fields for boost",
-      "gantryAngles": "Field arrangements for craniospinal and posterior fossa fields per protocol.",
-      "collAngles": "Adjusted for field matching.",
+      "gantryAngles": "CSI: PA (180), Right Lat (270), Left Lat (90); PFB: AP (0), Right Lat (90), Left Lat (270).",
+      "collAngles": "Adjusted for field matching along spinal axis. Varies per field.",
       "couchAngles": "0",
-      "isoCoords": "CSI: setup dependent; PFB: specific to target.",
+      "isoCoords": "CSI: V+0.0, L+0.0, S+10.0 (Cranial); PFB: V+0.0, L+0.0, S-5.0 (Relative to PFB center).",
       "tps": "Pinnacle",
       "algorithm": "Collapsed Cone",
       "hetero": "Yes",
-      "norm": "CSI: Mid-plane; PFB: PTV mean",
-      "constraints": "Lens Max < 10 Gy; Optic Nerves Max < 35 Gy; Brainstem Max < 54 Gy; Spinal Cord Max < 45 Gy. All constraints met.",
-      "planNotes": "Standard risk medulloblastoma, WNT-activated. CSI to 23.4 Gy with involved field boost to posterior fossa to 54 Gy. Vincristine omitted for adult patient. Gapped abutting fields for craniospinal axis to prevent overlap and underdosing.",
+      "norm": "CSI: Mid-plane 100%; PFB: PTV Mean 99.5%",
+      "constraints": "Lens Max < 10 Gy; Optic Nerves Max < 35 Gy; Brainstem Max < 54 Gy; Spinal Cord Max < 45 Gy; Kidney V10Gy < 10%; Liver Mean < 20 Gy. All constraints met.",
+      "planNotes": "Standard risk medulloblastoma, WNT-activated. CSI to 23.4 Gy with involved field boost to posterior fossa to 54 Gy. Vincristine omitted for adult patient. Gapped abutting fields for craniospinal axis to prevent overlap and underdosing, verified by film and calculations. Patient stem cells not collected pre-RT as per discussion with Neuro-Oncology due to WNT-activated subtype and favorable prognosis.",
       "igrtProtocol": {
         "frequency": "Daily",
         "type": "kV Imaging (Orthogonal Pair) for CSI; CBCT for PFB boost",
-        "alignment": "CSI: Bony anatomy of the skull and spine; PFB: Bony anatomy of the skull with soft tissue where appropriate."
+        "alignment": "CSI: Bony anatomy of the skull and spine; PFB: Bony anatomy of the skull with soft tissue where appropriate. Shifts approved by R.T. on first day, and by physician weekly, otherwise therapist approved."
       },
       "qaChecks": [
-        { "date": "2025-05-27", "type": "Initial Chart Check", "by": "Physics Staff" },
-        { "date": "2025-05-27", "type": "Patient Specific QA", "by": "Physics Staff", "result": "Pass (Gamma 98.5% @ 3%/3mm)" }
+        { "date": "2025-05-27", "type": "Initial Chart Check", "by": "Physics Staff", "result": "Pass" },
+        { "date": "2025-05-27", "type": "Patient Specific QA", "by": "Physics Staff", "result": "Pass (Gamma 98.5% @ 3%/3mm)" },
+        { "date": "2025-05-27", "type": "Field Abutment Check (Film)", "by": "Physics Staff", "result": "Pass - Gap verified" }
       ],
       "fieldDetails": [
-        { "fieldName": "CSI - Brain", "fieldSize": "Dynamic MLC", "gantryAngle": "0", "collimatorAngle": "0", "couchAngle": "0", "energy": "6MV", "monitorUnits": 150, "ssd": "Variable" },
-        { "fieldName": "CSI - Upper Spine", "fieldSize": "Dynamic MLC", "gantryAngle": "0", "collimatorAngle": "0", "couchAngle": "0", "energy": "6MV", "monitorUnits": 145, "ssd": "Variable" },
-        { "fieldName": "CSI - Lower Spine", "fieldSize": "Dynamic MLC", "gantryAngle": "0", "collimatorAngle": "0", "couchAngle": "0", "energy": "6MV", "monitorUnits": 130, "ssd": "Variable" },
-        { "fieldName": "PFB - AP", "fieldSize": "Dynamic MLC", "gantryAngle": "180", "collimatorAngle": "0", "couchAngle": "0", "energy": "6MV", "monitorUnits": 200, "ssd": "Variable" },
-        { "fieldName": "PFB - L Lat", "fieldSize": "Dynamic MLC", "gantryAngle": "270", "collimatorAngle": "0", "couchAngle": "0", "energy": "6MV", "monitorUnits": 210, "ssd": "Variable" }
+        { "fieldName": "CSI - Brain (PA)", "fieldSize": "Dynamic MLC", "gantryAngle": "180", "collimatorAngle": "0", "couchAngle": "0", "energy": "6MV", "monitorUnits": 150, "ssd": "Variable" },
+        { "fieldName": "CSI - Upper Spine (PA)", "fieldSize": "Dynamic MLC", "gantryAngle": "180", "collimatorAngle": "0", "couchAngle": "0", "energy": "6MV", "monitorUnits": 145, "ssd": "Variable" },
+        { "fieldName": "CSI - Lower Spine (PA)", "fieldSize": "Dynamic MLC", "gantryAngle": "180", "collimatorAngle": "0", "couchAngle": "0", "energy": "6MV", "monitorUnits": 130, "ssd": "Variable" },
+        { "fieldName": "PFB - AP", "fieldSize": "Dynamic MLC", "gantryAngle": "0", "collimatorAngle": "0", "couchAngle": "0", "energy": "6MV", "monitorUnits": 200, "ssd": "Variable" },
+        { "fieldName": "PFB - L Lat", "fieldSize": "Dynamic MLC", "gantryAngle": "90", "collimatorAngle": "0", "couchAngle": "0", "energy": "6MV", "monitorUnits": 210, "ssd": "Variable" },
+        { "fieldName": "PFB - R Lat", "fieldSize": "Dynamic MLC", "gantryAngle": "270", "collimatorAngle": "0", "couchAngle": "0", "energy": "6MV", "monitorUnits": 205, "ssd": "Variable" }
       ],
       "imagingFields": [
         { "fieldName": "CSI AP kV", "gantryAngle": "180", "fieldSize": "20x20 cm", "energy": "kV", "monitorUnits": 1 },
@@ -102,53 +114,126 @@
       "fractions": [
         {
           "fractionNumber": 1,
+          "totalFractions": 30,
           "date": "2025-05-28",
           "machine": "LINAC1",
-          "setupNotes": "CSI setup verified with kV imaging. Fields abutted with gap, no adjustments needed.",
-          "sideEffects": "None reported",
-          "notes": "Tolerated well. Educated on potential side effects.",
+          "therapistInitials": "JL, KS",
+          "overallMUs": 425,
+          "setupVerification": "Tolerances Met",
+          "immobilizationDevicesChecked": "Aquaplast mask, belly board, knee/ankle immobilization",
+          "setupAdjustments": "None",
+          "organTargetChecks": "Field matching checked.",
+          "imagingType": "kV Pair",
+          "igrtMatchQuality": "Good - No Shifts Required",
+          "shiftsApplied": "None",
+          "igrtApprovedBy": "DR (Physician)",
+          "igrtVerificationNotes": "CSI field abutment verified. No shifts required on bony anatomy.",
+          "patientTolerance": "Good",
+          "generalSideEffects": "None reported.",
+          "siteSpecificSideEffects": "None.",
+          "painAssessment": "0/10.",
+          "patientConcerns": "None.",
+          "instructionsGiven": "Educated on potential side effects and importance of daily positioning.",
+          "billingCodes": "77418, 77387",
+          "dailyNotes": "Patient tolerated first treatment well. Confirmed understanding of treatment schedule. No signs of anxiety or discomfort.",
+          "energiesUsed": "6MV",
           "recordedFields": [
-            { "fieldName": "CSI - Brain", "deliveredMu": 150, "notes": "Tolerance met" },
-            { "fieldName": "CSI - Upper Spine", "deliveredMu": 145, "notes": "Tolerance met" },
-            { "fieldName": "CSI - Lower Spine", "deliveredMu": 130, "notes": "Tolerance met" }
+            { "fieldName": "CSI - Brain (PA)", "deliveredMu": 150, "notes": "Tolerance met" },
+            { "fieldName": "CSI - Upper Spine (PA)", "deliveredMu": 145, "notes": "Tolerance met" },
+            { "fieldName": "CSI - Lower Spine (PA)", "deliveredMu": 130, "notes": "Tolerance met" }
           ]
         },
         {
           "fractionNumber": 5,
+          "totalFractions": 30,
           "date": "2025-06-03",
           "machine": "LINAC1",
-          "setupNotes": "CSI setup. Shifts V:0.1, L:0, L:-0.1. Approved. Field matching checked.",
-          "sideEffects": "Mild fatigue reported.",
-          "notes": "Weekly OTV today. Labs reviewed. Cleared to continue.",
+          "therapistInitials": "JL, KS",
+          "overallMUs": 425,
+          "setupVerification": "Adjustments Made",
+          "immobilizationDevicesChecked": "Aquaplast mask, belly board, knee/ankle immobilization",
+          "setupAdjustments": "V:0.1 cm, L:0 cm, S:-0.1 cm shifts applied.",
+          "organTargetChecks": "Field matching checked.",
+          "imagingType": "kV Pair",
+          "igrtMatchQuality": "Good - Shifts Applied",
+          "shiftsApplied": "V:0.1, L:0, S:-0.1",
+          "igrtApprovedBy": "DR (Physician)",
+          "igrtVerificationNotes": "Minor shifts applied after kV imaging. Bony anatomy aligned.",
+          "patientTolerance": "Good",
+          "generalSideEffects": "Mild fatigue reported.",
+          "siteSpecificSideEffects": "None.",
+          "painAssessment": "1/10 (mild headache).",
+          "patientConcerns": "Asked about fatigue management.",
+          "instructionsGiven": "Encouraged rest periods, advised on maintaining hydration. Labs reviewed and cleared.",
+          "billingCodes": "77418, 77387",
+          "dailyNotes": "Weekly OTV today. Labs reviewed. Cleared to continue. Patient ambulating independently. No signs of distress during treatment.",
+          "energiesUsed": "6MV",
           "recordedFields": [
-            { "fieldName": "CSI - Brain", "deliveredMu": 150, "notes": "Tolerance met" },
-            { "fieldName": "CSI - Upper Spine", "deliveredMu": 145, "notes": "Tolerance met" },
-            { "fieldName": "CSI - Lower Spine", "deliveredMu": 130, "notes": "Tolerance met" }
+            { "fieldName": "CSI - Brain (PA)", "deliveredMu": 150, "notes": "Tolerance met" },
+            { "fieldName": "CSI - Upper Spine (PA)", "deliveredMu": 145, "notes": "Tolerance met" },
+            { "fieldName": "CSI - Lower Spine (PA)", "deliveredMu": 130, "notes": "Tolerance met" }
           ]
         },
         {
           "fractionNumber": 13,
+          "totalFractions": 30,
           "date": "2025-06-17",
           "machine": "LINAC1",
-          "setupNotes": "Last CSI fraction. Setup verified. Transition to PFB boost planned.",
-          "sideEffects": "Moderate fatigue, mild scalp irritation.",
-          "notes": "Completed CSI. Reviewed transition to PFB boost with patient. Labs okay.",
+          "therapistInitials": "JL, KS",
+          "overallMUs": 425,
+          "setupVerification": "Tolerances Met",
+          "immobilizationDevicesChecked": "Aquaplast mask, belly board, knee/ankle immobilization",
+          "setupAdjustments": "None.",
+          "organTargetChecks": "Final CSI field matching check.",
+          "imagingType": "kV Pair",
+          "igrtMatchQuality": "Good - No Shifts Required",
+          "shiftsApplied": "None",
+          "igrtApprovedBy": "DR (Physician)",
+          "igrtVerificationNotes": "CSI completion. Prepare for PFB boost tomorrow.",
+          "patientTolerance": "Fair",
+          "generalSideEffects": "Moderate fatigue, mild nausea.",
+          "siteSpecificSideEffects": "Mild scalp irritation in posterior region.",
+          "painAssessment": "2/10.",
+          "patientConcerns": "Concerned about increased fatigue and scalp sensitivity.",
+          "instructionsGiven": "Advised gentle scalp care, rest, and adequate nutrition. Transition to PFB boost explained.",
+          "billingCodes": "77418, 77387",
+          "dailyNotes": "Completed CSI today. Patient tolerated the full course well with expected fatigue. No issues with immobilization or setup. Next week will begin the posterior fossa boost. Explained field changes and daily CBCT imaging.",
+          "energiesUsed": "6MV",
           "recordedFields": [
-            { "fieldName": "CSI - Brain", "deliveredMu": 150, "notes": "Tolerance met" },
-            { "fieldName": "CSI - Upper Spine", "deliveredMu": 145, "notes": "Tolerance met" },
-            { "fieldName": "CSI - Lower Spine", "deliveredMu": 130, "notes": "Tolerance met" }
+            { "fieldName": "CSI - Brain (PA)", "deliveredMu": 150, "notes": "Tolerance met" },
+            { "fieldName": "CSI - Upper Spine (PA)", "deliveredMu": 145, "notes": "Tolerance met" },
+            { "fieldName": "CSI - Lower Spine (PA)", "deliveredMu": 130, "notes": "Tolerance met" }
           ]
         },
         {
           "fractionNumber": 14,
+          "totalFractions": 30,
           "date": "2025-06-18",
           "machine": "LINAC1",
-          "setupNotes": "First PFB boost fraction. CBCT match to bony anatomy, minor shifts. Approved.",
-          "sideEffects": "Continuing fatigue.",
-          "notes": "Tolerated boost setup well.",
+          "therapistInitials": "JL, KS",
+          "overallMUs": 615,
+          "setupVerification": "Adjustments Made",
+          "immobilizationDevicesChecked": "Aquaplast mask, headrest",
+          "setupAdjustments": "V:-0.2 cm, L:0.1 cm, S:0 cm shifts applied.",
+          "organTargetChecks": "CBCT reviewed, bony anatomy and soft tissue alignment.",
+          "imagingType": "CBCT",
+          "igrtMatchQuality": "Good - Shifts Applied",
+          "shiftsApplied": "V:-0.2, L:0.1, S:0",
+          "igrtApprovedBy": "DR (Physician)",
+          "igrtVerificationNotes": "First PFB boost fraction. CBCT shifts approved. Patient comfortable.",
+          "patientTolerance": "Fair",
+          "generalSideEffects": "Continuing fatigue.",
+          "siteSpecificSideEffects": "N/A.",
+          "painAssessment": "1/10.",
+          "patientConcerns": "Expressed relief about shorter treatment time per day for boost.",
+          "instructionsGiven": "Reinforced good nutrition and rest. Explained new field shapes. Advised to report any vision changes.",
+          "billingCodes": "77407, 77387",
+          "dailyNotes": "Tolerated boost setup well. Patient comfortable for treatment. Checked in with Neuro-Onc team about systemic therapy plan post-RT. No issues with compliance or motion.",
+          "energiesUsed": "6MV",
           "recordedFields": [
             { "fieldName": "PFB - AP", "deliveredMu": 200, "notes": "Tolerance met" },
-            { "fieldName": "PFB - L Lat", "deliveredMu": 210, "notes": "Tolerance met" }
+            { "fieldName": "PFB - L Lat", "deliveredMu": 210, "notes": "Tolerance met" },
+            { "fieldName": "PFB - R Lat", "deliveredMu": 205, "notes": "Tolerance met" }
           ]
         }
       ]
@@ -178,43 +263,75 @@
         "findings": "Post-surgical changes in the cerebellum consistent with resection. No enhancing residual tumor. Ventricular system stable. No hydrocephalus. CSF spaces appear clear.",
         "impression": "Post-operative MRI, no gross residual disease of cerebellar medulloblastoma."
       }
+    },
+    {
+      "date": "05/13/2025",
+      "type": "Spinal MRI",
+      "summary": "No evidence of spinal metastases or leptomeningeal dissemination.",
+      "reportDetails": {
+        "findings": "Cervical, thoracic, and lumbar spine MRI with and without contrast. No enhancing lesions or CSF signal abnormalities suggestive of metastatic disease.",
+        "impression": "Normal spinal MRI. No evidence of disease dissemination."
+      }
+    },
+    {
+      "date": "05/14/2025",
+      "type": "Cerebrospinal Fluid (CSF) Analysis Report",
+      "summary": "CSF cytology negative for malignant cells. Normal protein and glucose.",
+      "reportDetails": {
+        "collectionDate": "05/13/2025",
+        "procedure": "Lumbar Puncture",
+        "cellCount": "WBC: 2/uL (0% atypical cells), RBC: 0/uL",
+        "protein": "35 mg/dL (Normal: 15-45 mg/dL)",
+        "glucose": "60 mg/dL (Normal: 50-80 mg/dL)",
+        "cytology": "Negative for malignant cells. No evidence of leptomeningeal seeding."
+      }
     }
   ],
   "labResults": [
     { "date": "05/15/2025", "test": "CBC - WBC", "value": "7.8", "units": "x10^9/L", "notes": "Pre-RT Baseline" },
     { "date": "05/15/2025", "test": "CBC - Platelets", "value": "280k", "units": "x10^9/L", "notes": "Pre-RT Baseline" },
+    { "date": "05/15/2025", "test": "CBC - Hemoglobin", "value": "14.2", "units": "g/dL", "notes": "Pre-RT Baseline" },
+    { "date": "05/15/2025", "test": "Comprehensive Metabolic Panel (CMP)", "value": "WNL", "units": "N/A", "notes": "Pre-RT Baseline" },
     { "date": "06/03/2025", "test": "CBC - WBC", "value": "6.1", "units": "x10^9/L", "notes": "Weekly check (during CSI)" },
-    { "date": "06/03/2025", "test": "CBC - Platelets", "value": "220k", "units": "x10^9/L", "notes": "Weekly check (during CSI) - Monitor" }
+    { "date": "06/03/2025", "test": "CBC - Platelets", "value": "220k", "units": "x10^9/L", "notes": "Weekly check (during CSI) - Monitor" },
+    { "date": "06/03/2025", "test": "CBC - Hemoglobin", "value": "13.5", "units": "g/dL", "notes": "Weekly check (during CSI)" }
   ],
   "progressNotes": [
-    { "date": "05/15/2025", "author": "Dr. Emily Roberts (Rad Onc)", "type": "Initial Consultation", "summary": "Pt seen post-op for cerebellar Medulloblastoma. Reviewed imaging, pathology (WNT-activated, good prognosis). Discussed standard of care adjuvant craniospinal irradiation (CSI) with posterior fossa boost. Explained goals (reduce recurrence risk), procedure, potential side effects (fatigue, myelosuppression, hair loss). Pt understands and agrees. Plan for CT Sim with prone setup for CSI." },
-    { "date": "05/20/2025", "author": "Sarah Jones, RTT", "type": "Simulation Note", "summary": "CT Sim completed for adjuvant CSI + PFB boost. Aquaplast mask, belly board, knee/ankle immobilization fabricated. Patient immobilized prone. Tolerated well. Data sent for 3D-CRT planning with gapped abutting fields." },
-    { "date": "06/03/2025", "author": "Dr. Emily Roberts (Rad Onc)", "type": "On Treatment Visit (OTV) - Week 2", "summary": "Patient completed 5/13 fractions of CSI. Tolerating reasonably well. Mild fatigue reported. Scalp care reviewed. CBC today noted, acceptable to continue. Continue current plan. Will transition to PFB boost after CSI completion." },
-    { "date": "06/17/2025", "author": "Mark Evans, RTT", "type": "Weekly Review Note", "summary": "Completed 13/13 fractions of CSI today. Patient tolerated the full course well with expected fatigue. Next week will begin the posterior fossa boost. Explained field changes and daily CBCT imaging." }
+    { "date": "05/15/2025", "author": "Dr. Emily Roberts (Rad Onc)", "type": "Initial Consultation", "summary": "Pt seen post-op for cerebellar Medulloblastoma. Reviewed imaging, pathology (WNT-activated, good prognosis). Discussed standard of care adjuvant craniospinal irradiation (CSI) with posterior fossa boost. Explained goals (reduce recurrence risk), procedure, potential side effects (fatigue, myelosuppression, hair loss, potential long-term neurocognitive effects). Patient and parents understand and agree to proceed. Decision made to omit concurrent vincristine for adult patient as per NCCN guidelines. Plan for CT Sim with prone setup for CSI. Discussed potential for stem cell collection if future high-dose chemotherapy is needed, but deferred at this time given WNT-activated favorable prognosis. Sedation for daily treatments was discussed given the patient's age and the need for precise setup and motion management, but patient and parents opted to attempt treatment without it initially, with a plan to re-evaluate if motion becomes an issue.", "patientTolerance": "Good", "generalSideEffects": "None", "siteSpecificSideEffects": "None", "painAssessment": "0/10", "patientConcerns": "Parents inquired about prognosis and school reintegration.", "instructionsGiven": "Provided patient education materials on RT and Medulloblastoma." },
+    { "date": "05/20/2025", "author": "Sarah Jones, RTT", "type": "Simulation Note", "summary": "CT Sim completed for adjuvant CSI + PFB boost. Aquaplast mask, belly board, knee/ankle immobilization fabricated. Patient immobilized prone and tolerated well. Reference marks and tattoo placement per protocol. Data sent for 3D-CRT planning with gapped abutting fields. Imaging protocol for daily kV checks for CSI and weekly CBCT for PFB determined.", "patientTolerance": "Good", "generalSideEffects": "None", "siteSpecificSideEffects": "None", "painAssessment": "0/10", "patientConcerns": "None.", "instructionsGiven": "Reviewed daily treatment steps and setup consistency importance." },
+    { "date": "06/03/2025", "author": "Dr. Emily Roberts (Rad Onc)", "type": "On Treatment Visit (OTV) - Week 2", "summary": "Patient completed 5/13 fractions of CSI. Tolerating reasonably well. Mild fatigue reported. Scalp care reviewed. CBC today noted, acceptable to continue with plan. Continue current plan. Discussed preliminary lab results and general well-being. No new neurological deficits. Patient is able to hold still for daily treatments, no sedation needed so far.", "patientTolerance": "Good", "generalSideEffects": "Mild fatigue.", "siteSpecificSideEffects": "Mild skin erythema along posterior scalp/neck.", "painAssessment": "1/10 (managed with OTC analgesics).", "patientConcerns": "Asked about expected duration of fatigue.", "instructionsGiven": "Encouraged rest periods, advised on maintaining hydration and gentle skin care with non-irritating moisturizers. Labs reviewed and cleared." },
+    { "date": "06/17/2025", "author": "Mark Evans, RTT", "type": "Weekly Review Note", "summary": "Completed 13/13 fractions of CSI today. Patient tolerated the full course well with expected fatigue. Setup verified daily with kV imaging. Patient has maintained excellent compliance with immobilization, no issues with motion requiring sedation. Next week will begin the posterior fossa boost. Explained field changes and daily CBCT imaging for the boost phase. Reminded patient about Neuro-Onc follow-up.", "patientTolerance": "Fair", "generalSideEffects": "Moderate fatigue, mild nausea, mild scalp irritation.", "siteSpecificSideEffects": "Increased skin dryness in posterior scalp/neck.", "painAssessment": "2/10 (intermittent headache).", "patientConcerns": "Concerned about increased fatigue and scalp sensitivity. Inquired about hair regrowth.", "instructionsGiven": "Advised liberal use of scalp moisturizer, continued rest, and adequate nutrition. Explained that hair regrowth may take time. Transition to PFB boost explained again." },
+    { "date": "06/18/2025", "author": "Sarah Jones, RTT", "type": "Daily Treatment Note - Fx 14", "summary": "First PFB boost fraction delivered. CBCT match to bony anatomy with minor shifts (V:-0.2, L:0.1, S:0) applied. Patient tolerated setup well. No acute side effects noted during treatment. Reinforced importance of staying still for CBCT.", "patientTolerance": "Good",
+          "generalSideEffects": "Continuing fatigue.", "siteSpecificSideEffects": "N/A.", "painAssessment": "1/10.", "patientConcerns": "Expressed relief about shorter treatment time per day for boost.", "instructionsGiven": "Reinforced good nutrition and rest. Explained new field shapes. Advised to report any vision changes. Continued excellent cooperation with immobilization. Sedation not required.",
+          "energiesUsed": "6MV" }
   ],
   "patientEducation": {
-    "goalsDiscussed": "Adjuvant therapy to prevent recurrence after surgery and address microscopic disease spread along the central nervous system.",
-    "sideEffectsReviewed": "Fatigue, hair loss (scalp and spinal field), skin redness, lowered blood counts (myelosuppression), potential long-term neurocognitive effects.",
-    "safetyConsiderations": "Importance of proper positioning for daily treatment, skin care along radiation fields, monitoring for signs of infection (due to low blood counts), reporting any new neurological symptoms.",
-    "patientResponsibilities": "Attend daily RT, maintain good nutrition and hydration, attend weekly OTVs and lab draws.",
-    "medicationCompliance": "Adhere to Dexamethasone tapering schedule."
+    "goalsDiscussed": "Adjuvant therapy to prevent recurrence after surgery and address microscopic disease spread along the central nervous system. Emphasized high cure rates for WNT-activated medulloblastoma.",
+    "sideEffectsReviewed": "Fatigue (common and can be prolonged), hair loss (scalp and spinal field, potentially permanent in some areas), skin redness/dryness/peeling (dermatitis), nausea/vomiting (especially early in treatment), lowered blood counts (myelosuppression), potential long-term neurocognitive effects (memory, processing speed, attention), hearing loss (very low risk with proton therapy or careful photon planning), growth/endocrine issues (long-term monitoring needed), secondary malignancy (very low risk).",
+    "safetyConsiderations": "Importance of proper positioning for daily treatment for accuracy. Strict skin care along radiation fields (gentle washing, approved moisturizers, avoid sun exposure, harsh chemicals/friction). Monitoring for signs of infection (fever, chills, sore throat) due to low blood counts and reporting immediately. Reporting any new or worsening neurological symptoms (e.g., vision changes, weakness, balance issues). Discussion of sedation: while not currently used, it was discussed as an option to ensure patient stillness and treatment accuracy given the complexity of craniospinal fields, and will be re-evaluated if needed.",
+    "patientResponsibilities": "Attend daily RT appointments without missing fractions if possible. Perform skin care as instructed by therapists/nurses. Maintain good nutrition and hydration. Attend weekly OTVs with physician and nurses, and complete all scheduled lab draws. Report any new or worsening symptoms promptly.",
+    "medicationCompliance": "Adhere to Dexamethasone tapering schedule to minimize steroid side effects. Take Ondansetron/Prochlorperazine proactively for nausea as needed."
   },
   "scheduling": [
     { "date": "05/15/2025", "type": "Rad Onc Consult", "location": "Radiation Oncology Clinic", "status": "Completed" },
     { "date": "05/20/2025", "type": "CT Simulation CSI + PFB", "location": "Radiation Oncology Sim Room", "status": "Completed" },
     { "date": "05/28/2025", "type": "First Treatment (Fx 1/30)", "location": "Linear Accelerator #1", "status": "Completed" },
     { "date": "06/03/2025", "type": "On Treatment Visit (OTV)", "location": "Radiation Oncology Clinic", "status": "Completed" },
+    { "date": "06/10/2025", "type": "On Treatment Visit (OTV)", "location": "Radiation Oncology Clinic", "status": "Completed" },
     { "date": "06/17/2025", "type": "Last CSI Treatment (Fx 13/30)", "location": "Linear Accelerator #1", "status": "Completed" },
-    { "date": "06/18/2025", "type": "First PFB Boost Treatment (Fx 14/30)", "location": "Linear Accelerator #1", "status": "Completed" }
+    { "date": "06/18/2025", "type": "First PFB Boost Treatment (Fx 14/30)", "location": "Linear Accelerator #1", "status": "Completed" },
+    { "date": "06/24/2025", "type": "On Treatment Visit (OTV)", "location": "Radiation Oncology Clinic", "status": "Scheduled" },
+    { "date": "07/16/2025", "type": "End of Treatment (Fx 30/30)", "location": "Linear Accelerator #1", "status": "Scheduled" },
+    { "date": "08/20/2025", "type": "Post-RT Follow-up MRI Brain/Spine", "location": "Imaging Department", "status": "Scheduled" }
   ],
   "cptCharges": [
     { "code": "77290", "description": "Simulation, Complex (CT for CSI planning)", "frequency": "Once per course" },
     { "code": "77334", "description": "Treatment device, Complex (Thermoplastic Mask, Body Immobilization)", "frequency": "Once per course" },
     { "code": "77301", "description": "IMRT planning (for CSI, though 3D-CRT is used, planning complexity is similar)", "frequency": "Once per course" },
-    { "code": "77418", "description": "Radiation treatment delivery, complex (CSI fields)", "frequency": "Per fraction for CSI" },
-    { "code": "77407", "description": "Radiation treatment delivery, 2 fields, simple/intermediate (for PFB boost)", "frequency": "Per fraction for PFB boost" },
+    { "code": "77418", "description": "Radiation treatment delivery, complex (CSI fields)", "frequency": "13 fractions" },
+    { "code": "77407", "description": "Radiation treatment delivery, 2 fields, simple/intermediate (for PFB boost)", "frequency": "17 fractions" },
     { "code": "77387", "description": "Guidance for localization (IGRT - kV for CSI, CBCT for PFB)", "frequency": "Per fraction" },
-    { "code": "77427", "description": "Radiation treatment management, 5 treatments", "frequency": "Weekly" }
+    { "code": "77427", "description": "Radiation treatment management, 5 treatments", "frequency": "Weekly (6x)" }
   ],
   "diagnosisSearch": "Medulloblastoma"
 }
