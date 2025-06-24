@@ -362,6 +362,68 @@ window.loadDicomSeries = function(seriesIdx) {
   });
 };
 
+// --- FIX START ---
+// Function to show the report modal
+window.showReportModal = function(reportType, reportIndex) {
+  const modal = document.getElementById('emr-modal-overlay');
+  const modalTitleEl = modal.querySelector('.modal-header span');
+  const modalContentEl = document.getElementById('dicom-viewer'); // Re-using dicom-viewer as general content area
+
+  // Ensure currentPatientData is available and has imagingAndReports
+  if (!currentPatientData || !currentPatientData.imagingAndReports || reportIndex === undefined) {
+    console.error("Patient data or report index not found for modal display.");
+    return;
+  }
+
+  const report = currentPatientData.imagingAndReports[reportIndex];
+
+  if (!report || !report.reportDetails) {
+    console.error("Report details not found for the specified index:", reportIndex);
+    return;
+  }
+
+  // Set modal title
+  if (modalTitleEl) {
+    modalTitleEl.textContent = reportType + " Details";
+  }
+
+  // Generate HTML for report details
+  let detailsHtml = '<h3>' + (report.summary || reportType + ' Report') + '</h3>';
+  detailsHtml += '<table>';
+  for (const key in report.reportDetails) {
+    if (Object.hasOwnProperty.call(report.reportDetails, key)) {
+      let value = report.reportDetails[key];
+      // Format arrays into a readable list
+      if (Array.isArray(value)) {
+        value = '<ul>' + value.map(item => '<li>' + item + '</li>').join('') + '</ul>';
+      } else if (typeof value === 'object' && value !== null) {
+        // Handle nested objects, e.g., if there's a sub-object within reportDetails
+        let subObjectHtml = '<ul>';
+        for (const subKey in value) {
+            if (Object.hasOwnProperty.call(value, subKey)) {
+                subObjectHtml += '<li><strong>' + subKey.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()) + ':</strong> ' + value[subKey] + '</li>';
+            }
+        }
+        subObjectHtml += '</ul>';
+        value = subObjectHtml;
+      }
+
+      detailsHtml += '<tr><td><strong>' + key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()) + ':</strong></td><td>' + value + '</td></tr>';
+    }
+  }
+  detailsHtml += '</table>';
+
+
+  // Set modal content
+  modalContentEl.innerHTML = detailsHtml;
+  modalContentEl.style.backgroundColor = '#fff'; // Reset background for text content
+
+  // Display the modal
+  modal.style.display = 'flex';
+};
+// --- FIX END ---
+
+
 function renderCTSimulation(ct) {
   ct = ct || {};
   const apImage = ct.setupImages?.find(img => img.type === 'AP');
