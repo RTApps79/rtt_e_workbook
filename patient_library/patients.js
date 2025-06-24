@@ -1,6 +1,7 @@
 const patients = [
   { name: "John Smith (Primary Brain - Glioblastoma)", file: "John_Smith_PrimaryBrainGlioblastoma.json", diagnosis: "Glioblastoma" },
   { name: "Maria Garcia (Palliative Brain Mets)", file: "Maria_Garcia_PalliativeBrainMets.json", diagnosis: "Brain Metastases" },
+  { name: "Carson Johnson (Medulloblastoma)", file: "Carson_Johnson_Medulloblastoma_CNS.json", diagnosis: "Medulloblastoma" },
   { name: "Sarah Chen (Head and Neck - Multi-field IMRT)", file: "Sarah_Chen_HeadNeckIMRT.json", diagnosis: "Head and Neck Cancer" },
   { name: "David Garcia (Lung - 3D-CRT)", file: "David_Garcia_Lung3DCRT.json", diagnosis: "Lung Cancer" },
   { name: "Linda Jones (Thorax - IMRT/VMAT)", file: "Linda_Jones_ThoraxIMRT.json", diagnosis: "Lung Cancer" },
