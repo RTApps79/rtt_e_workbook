@@ -6,20 +6,24 @@
     "gender": "Female",
     "address": "123 Main Street, Anytown, USA",
     "phone": "555-1234",
-    "insurance": "United Healthcare",
+    "insurance": "United Healthcare - Policy #UHC-AJ-196831",
     "referringPhysician": "Dr. Robert Jones (Gastroenterology)",
     "emergencyContact": "Mark Johnson (Husband) - 555-4321",
-    "advanceDirectives": "Full Code (On File)",
-    "supportServices": "Nutrition consult placed post-Whipple procedure.",
-    "mobility": "Ambulatory without assistance."
+    "advanceDirectives": "Full Code (On File, verified 11/01/2025)",
+    "supportServices": "Nutrition consult placed post-Whipple procedure for managing pancreatic enzyme insufficiency. Social work consult for support during long treatment course. Palliative care team involved for symptom management during chemoradiation.",
+    "mobility": "Ambulatory without assistance. ECOG Performance Status 0-1 (1 during adjuvant therapy)."
   },
   "diagnosis": {
-    "primary": "Adenocarcinoma of the Duodenum",
-    "datePathologicDiagnosis": "04/05/2025 (Surgical Pathology)",
-    "pathologicStage": "IIA (T3, N0, M0)",
-    "symptomsAtPresentation": "Abdominal pain, nausea, and weight loss.",
-    "relevantHistory": "No significant prior medical history or family history of GI cancers.",
-    "priorTreatmentSummary": "Pancreaticoduodenectomy (Whipple procedure) performed on 04/20/2025."
+    "primary": "Adenocarcinoma of the Duodenum, Intestinal-type",
+    "datePathologicDiagnosis": "04/25/2025 (Surgical Pathology)",
+    "pathologicStage": "pT3 N0 M0, Stage IIA (AJCC 8th Edition)",
+    "symptomsAtPresentation": "Patient presented with a 3-month history of intermittent, crampy epigastric pain, nausea, early satiety, and an unintentional 15-pound weight loss.",
+    "pathologyFindings": [
+      "Surgical Pathology (Pancreaticoduodenectomy, 04/20/2025): Moderately differentiated adenocarcinoma of the duodenum, 3.5 cm. Tumor invades through the muscularis propria into the subserosal soft tissues (pT3). All surgical margins negative (>2mm). 0 of 18 regional lymph nodes positive for malignancy (pN0). Lymphovascular invasion present."
+    ],
+    "priorProcedures": "Pancreaticoduodenectomy (Whipple procedure) performed on 04/20/2025.",
+    "relevantHistory": "No significant prior medical history. No family history of GI cancers. No history of smoking or heavy alcohol use.",
+    "baselineStatus": "Patient has recovered well from Whipple procedure and has completed 6 cycles of adjuvant chemotherapy (Capecitabine). She experiences mild fatigue and occasional diarrhea, but her weight has stabilized with nutritional support and pancreatic enzymes. ECOG 1."
   },
   "treatmentPlan": {
     "radOnc": "Dr. Sarah Lee",
@@ -27,97 +31,96 @@
     "surgOnc": "Dr. Robert White",
     "treatmentSite": "Duodenal Bed + Regional Nodes",
     "intent": "Adjuvant",
-    "modality": "Adjuvant Chemotherapy followed by Adjuvant External Beam Radiation Therapy (EBRT)",
+    "modality": "Adjuvant Chemoradiation (Chemotherapy followed by concurrent Chemotherapy and Radiation)",
     "totalDose": "45 Gy",
     "fractionation": "25 fx",
-    "rtRxDetails": "45 Gy / 25 fx (1.8 Gy/fx)",
-    "targetVolumeSummary": "PTV_DuodenalBed",
-    "techniqueSummary": "IMRT",
-    "systemicChemo": "Capecitabine (1000 mg/m² PO BID for 14 days every 3 weeks) - Adjuvant",
-    "medications": []
+    "rtRxDetails": "45 Gy in 25 fractions (1.8 Gy/fx) to the tumor bed and at-risk regional nodes.",
+    "targetVolumeSummary": "The PTV encompasses the post-operative duodenal bed, pancreatic remnant, and regional nodal basins (pancreaticoduodenal, superior mesenteric) based on surgical clips and post-operative anatomy. Target volume designed to spare significant portions of the remaining small bowel, liver, and kidneys.",
+    "techniqueSummary": "Intensity-Modulated Radiation Therapy (IMRT) is used to deliver a conformal dose to the complex target volume in the upper abdomen while minimizing dose to the nearby kidneys, liver, stomach, and small bowel.",
+    "priorSystemicChemo": "6 cycles of adjuvant Capecitabine completed post-operatively.",
+    "concurrentChemo": "Capecitabine (as a radiosensitizer)",
+    "detailedConcurrentChemo": "Capecitabine 825 mg/m² PO BID, taken only on radiation treatment days.",
+    "medications": [
+      "Pancreatic Enzymes (e.g., Creon) with meals.",
+      "Ondansetron (Zofran) 8mg PO, taken 30 minutes prior to each radiation treatment for nausea prophylaxis.",
+      "Loperamide 2mg PO PRN for diarrhea.",
+      "Proton Pump Inhibitor (e.g., Pantoprazole) for gastric protection."
+    ],
+    "therapistAlerts": [
+      "Patient is receiving concurrent Capecitabine. High risk for nausea and diarrhea. Assess symptoms daily.",
+      "Verify patient has taken pre-treatment anti-nausea medication.",
+      "Daily IGRT with CBCT is critical for this upper abdominal site due to organ motion. Verify alignment to surgical clips.",
+      "Patient must follow empty stomach protocol for treatment. No food 3 hours prior.",
+      "Assess nutritional status and weight weekly. Report significant changes to RN/MD."
+    ]
   },
   "radiationOncologyData": {
     "ctSimulation": {
       "simulationDate": "11/01/2025",
-      "setupInstructions": "Supine in Vac-Lok bag with arms up on wingboard. Patient to follow full bladder / empty stomach protocol. SAD setup.",
-      "immobilization": "Vac-Lok bag, Wingboard",
+      "setupInstructions": "Supine in a custom Vac-Lok bag with both arms up on a wingboard. Patient to follow full bladder / empty stomach protocol (NPO 3 hours prior).",
+      "immobilization": "Vac-Lok bag (torso), Wingboard for arm support.",
       "referenceMarks": "3-point tattoos at isocenter projections (AP and bilateral laterals).",
       "scanner": "GE Discovery RT",
       "sliceThickness": "2.5 mm",
-      "contrastUsed": "IV and Oral Contrast",
-      "ctNotes": "CT simulation for adjuvant radiation therapy to duodenal bed and regional nodes."
+      "contrastUsed": "IV contrast for vessel delineation and Oral contrast (Omnipaque) to help delineate small bowel.",
+      "ctNotes": "CT simulation for adjuvant radiation therapy. Scan acquired with IV and oral contrast. Surgical clips from the Whipple procedure are well-visualized and will be used for targeting. Patient tolerated the simulation well."
     },
     "dosimetry": {
-      "planId": "AJSB001_SmlBwl",
+      "planId": "AJSB001_SmlBwl_IMRT",
+      "planStatus": "Final - Approved by Dr. Sarah Lee (11/08/2025)",
       "rx": "45 Gy / 25 fx",
       "technique": "IMRT",
       "energy": "6MV",
       "numberOfFieldsOrArcs": 5,
-      "gantryAngles": "Multiple Static",
-      "collAngles": "Variable",
-      "couchAngles": "0",
-      "isoCoords": "Upper Abdomen",
-      "tps": "Pinnacle",
+      "tps": "Pinnacle v16",
       "algorithm": "Collapsed Cone",
-      "hetero": "Yes",
-      "norm": "PTV Mean 95%",
-      "constraints": "Kidney Mean < 15 Gy; Liver Mean < 25 Gy; Stomach Max < 45 Gy",
-      "planNotes": "Adjuvant RT post-Whipple and adjuvant chemotherapy.",
+      "constraints": "Right Kidney Mean < 15 Gy (achieved 14.1 Gy); Left Kidney Mean < 15 Gy (achieved 10.5 Gy); Liver Mean < 25 Gy (achieved 22.0 Gy); Stomach Max < 45 Gy (achieved 44.5 Gy); Spinal Cord Max < 45 Gy (achieved 35 Gy).",
+      "planNotes": "Adjuvant IMRT to the post-Whipple duodenal bed and regional nodes with concurrent Capecitabine. Plan provides excellent target coverage while respecting dose constraints for all major organs at risk.",
+      "igrtProtocol": {
+        "frequency": "Daily",
+        "type": "Cone Beam CT (CBCT)",
+        "alignment": "Primary match to surgical clips in the tumor bed. Secondary check to bony anatomy (spine).",
+        "tolerances": "Translational: +/- 3mm"
+      },
+      "qaChecks": [
+        { "date": "2025-11-08", "type": "Initial Chart Check", "by": "Physics Staff (MW)", "result": "Pass" },
+        { "date": "2025-11-08", "type": "Patient Specific QA (IMRT)", "by": "Medical Physicist (SD)", "result": "Pass (Gamma 99.1% @ 3%/3mm)" }
+      ],
       "fieldDetails": [
-        { "fieldName": "Field 1", "gantryAngle": "25", "collimatorAngle": "10", "couchAngle": "0", "energy": "6MV", "monitorUnits": 120 },
-        { "fieldName": "Field 2", "gantryAngle": "75", "collimatorAngle": "345", "couchAngle": "0", "energy": "6MV", "monitorUnits": 135 },
-        { "fieldName": "Field 3", "gantryAngle": "180", "collimatorAngle": "0", "couchAngle": "0", "energy": "6MV", "monitorUnits": 100 },
-        { "fieldName": "Field 4", "gantryAngle": "225", "collimatorAngle": "15", "couchAngle": "0", "energy": "6MV", "monitorUnits": 135 },
-        { "fieldName": "Field 5", "gantryAngle": "335", "collimatorAngle": "350", "couchAngle": "0", "energy": "6MV", "monitorUnits": 120 }
+        { "fieldName": "Field 1 (AP)", "fieldSize": "18.0 x 15.0 cm MLC defined", "gantryAngle": "0", "collimatorAngle": "0", "couchAngle": "0", "energy": "6MV", "monitorUnits": 120, "ssd": "90.5 cm" },
+        { "fieldName": "Field 2 (RAO)", "fieldSize": "18.0 x 15.0 cm MLC defined", "gantryAngle": "50", "collimatorAngle": "340", "couchAngle": "0", "energy": "6MV", "monitorUnits": 135, "ssd": "91.2 cm" },
+        { "fieldName": "Field 3 (RPO)", "fieldSize": "18.0 x 15.0 cm MLC defined", "gantryAngle": "130", "collimatorAngle": "340", "couchAngle": "0", "energy": "6MV", "monitorUnits": 140, "ssd": "93.0 cm" },
+        { "fieldName": "Field 4 (LPO)", "fieldSize": "18.0 x 15.0 cm MLC defined", "gantryAngle": "230", "collimatorAngle": "20", "couchAngle": "0", "energy": "6MV", "monitorUnits": 138, "ssd": "92.8 cm" },
+        { "fieldName": "Field 5 (LAO)", "fieldSize": "18.0 x 15.0 cm MLC defined", "gantryAngle": "310", "collimatorAngle": "20", "couchAngle": "0", "energy": "6MV", "monitorUnits": 125, "ssd": "90.9 cm" }
       ]
     },
     "treatmentDelivery": {
       "fractions": [
-        { "fractionNumber": 1, "date": "2025-11-15", "machine": "LINAC2", "setupNotes":"Daily CBCT IGRT. Setup to surgical clips and nodal volumes.", "sideEffects": "No acute side effects after first fraction.", "notes": "Patient tolerated treatment well. Reviewed supportive care instructions for nausea." }
+        {
+          "fractionNumber": 1, "totalFractions": 25, "date": "2025-11-15", "machine": "LINAC2", "therapistInitials": "JL, KW",
+          "recordedFields": [{ "fieldName": "All Fields", "deliveredMu": 658 }],
+          "energiesUsed": "6MV", "setupVerification": "Tolerances Met", "immobilizationDevicesChecked": "Vac-Lok bag, Wingboard", "setupAdjustments": "None", "organTargetChecks": "CBCT reviewed. Excellent match to surgical clips.", "imagingType": "CBCT", "igrtMatchQuality": "Excellent", "igrtApprovedBy": "SL (Physician)",
+          "patientTolerance": "Good", "generalSideEffects": "None", "siteSpecificSideEffects": "None", "painAssessment": "0/10", "patientConcerns": "None", "instructionsGiven": "Reviewed supportive care instructions for nausea and diarrhea. Reminded to take concurrent chemo pill.", "billingCodes": "77386, 77387", "dailyNotes": "Patient tolerated first fraction well. Pre-medicated with Ondansetron."
+        },
+        {
+          "fractionNumber": 10, "totalFractions": 25, "date": "2025-11-28", "machine": "LINAC2", "therapistInitials": "JL, KW",
+          "recordedFields": [{ "fieldName": "All Fields", "deliveredMu": 658 }],
+          "energiesUsed": "6MV", "setupVerification": "Tolerances Met", "immobilizationDevicesChecked": "Vac-Lok bag, Wingboard", "setupAdjustments": "None", "organTargetChecks": "CBCT match consistent.", "imagingType": "CBCT", "igrtMatchQuality": "Good", "igrtApprovedBy": "Therapist",
+          "patientTolerance": "Good", "generalSideEffects": "Mild fatigue.", "siteSpecificSideEffects": "Occasional mild nausea, well-controlled with Ondansetron. 2-3 loose stools/day.", "painAssessment": "0/10", "patientConcerns": "Concerned about diarrhea.", "instructionsGiven": "Reinforced use of Loperamide and low-residue diet.", "billingCodes": "77386, 77387, 77427", "dailyNotes": "OTV today. Patient managing side effects well. No significant weight loss. Setup remains stable."
+        },
+        {
+          "fractionNumber": 25, "totalFractions": 25, "date": "2025-12-19", "machine": "LINAC2", "therapistInitials": "JL, KW",
+          "recordedFields": [{ "fieldName": "All Fields", "deliveredMu": 658 }],
+          "energiesUsed": "6MV", "setupVerification": "Tolerances Met", "immobilizationDevicesChecked": "Vac-Lok bag, Wingboard", "setupAdjustments": "None", "organTargetChecks": "Final CBCT reviewed.", "imagingType": "CBCT", "igrtMatchQuality": "Excellent", "igrtApprovedBy": "SL (Physician)",
+          "patientTolerance": "Good", "generalSideEffects": "Moderate fatigue.", "siteSpecificSideEffects": "Diarrhea controlled with Loperamide. No significant nausea.", "painAssessment": "0/10", "patientConcerns": "Relieved to be finished.", "instructionsGiven": "End-of-treatment instructions provided. Side effects will resolve over the next few weeks.", "billingCodes": "77386, 77387, 77427", "dailyNotes": "Final treatment delivered. Patient tolerated the full course of chemoradiation well. Follow-up appointments scheduled."
+        }
       ]
     }
   },
-  "imagingAndReports": [
-    { "date": "03/25/2025", "type": "CT Abdomen/Pelvis", "summary": "3.5 cm mass in the duodenum.", "modalId": "aj_ct_modal" },
-    { "date": "04/05/2025", "type": "Pathology Report", "summary": "Adenocarcinoma of the Duodenum.", "modalId": "aj_path_modal" },
-    { "date": "11/01/2025", "type": "CT Simulation", "summary": "Simulation for adjuvant radiation therapy.", "modalId": "aj_sim_modal" }
-  ],
-  "dicomImages": [
-    { "description": "Diagnostic CT Abdomen/Pelvis (03/25/2025)", "seriesType": "CT", "ohifViewerUrl": "" },
-    { "description": "CT Simulation Abdomen (11/01/2025)", "seriesType": "CT", "ohifViewerUrl": "" }
-  ],
-  "labResults": [
-    { "date": "03/20/2025", "test": "CBC", "value": "WNL", "notes": "Baseline" },
-    { "date": "03/20/2025", "test": "CMP", "value": "WNL", "notes": "Baseline" },
-    { "date": "03/20/2025", "test": "CA 19-9", "value": "25", "units": "U/mL", "range": "<37" },
-    { "date": "03/20/2025", "test": "CEA", "value": "1.5", "units": "ng/mL", "range": "<5.0" }
-  ],
   "progressNotes": [
-    { "date": "04/25/2025", "author": "Dr. Robert White", "type": "Post-Op Note", "summary": "Post-operative visit - Tolerating diet well. Surgical drains removed. Awaiting final pathology to guide adjuvant therapy." },
-    { "date": "05/15/2025", "author": "Dr. Michael Chen", "type": "Chemo Start Note", "summary": "Started adjuvant chemotherapy with Capecitabine. Patient educated on side effects and schedule." },
-    { "date": "11/15/2025", "author": "Dr. Sarah Lee", "type": "RT Start Note", "summary": "Started adjuvant radiation therapy. Tolerating initial setup and treatment without issue." }
-  ],
-  "patientEducation": {
-    "goalsDiscussed": "Adjuvant (post-operative and post-chemotherapy) radiation to reduce the risk of cancer recurrence in the surgical area and regional lymph nodes.",
-    "sideEffectsReviewed": "Acute: Fatigue, nausea, diarrhea, and potential for skin irritation in the treatment area. Explained that these are usually manageable with medication and diet.",
-    "safetyConsiderations": "Importance of hydration and nutrition. Reporting uncontrolled nausea/vomiting or diarrhea. Following a low-residue diet if GI side effects occur.",
-    "patientResponsibilities": "Attend daily RT appointments, report side effects to the team.",
-    "medicationCompliance": "Use supportive medications (anti-nausea, anti-diarrheal) as prescribed."
-  },
-  "scheduling": [
-    { "date": "03/25/2025", "time": "10:00 AM", "type": "CT Abdomen/Pelvis", "location": "Radiology Dept", "status": "Completed" },
-    { "date": "04/05/2025", "time": "11:00 AM", "type": "Surgical Consultation", "location": "Surgical Oncology Clinic", "status": "Completed" },
-    { "date": "04/20/2025", "time": "8:00 AM", "type": "Surgery: Whipple Procedure", "location": "Operating Room 1", "status": "Completed" },
-    { "date": "05/15/2025", "time": "9:00 AM", "type": "Medical Oncology Consultation", "location": "Oncology Clinic", "status": "Completed" },
-    { "date": "11/01/2025", "time": "1:00 PM", "type": "Radiation Oncology Simulation", "location": "Radiation Oncology Sim Room", "status": "Completed" },
-    { "date": "11/15/2025", "time": "9:00 AM", "type": "Radiation Therapy Treatment", "location": "Radiation Oncology", "status": "Scheduled" }
-  ],
-  "cptCharges": [
-    { "code": "48150", "description": "Pancreaticoduodenectomy (Whipple procedure)", "frequency": "Once" },
-    { "code": "96413", "description": "Chemotherapy administration, IV infusion", "frequency": "Per Cycle" },
-    { "code": "77290", "description": "Radiation therapy simulation; complex", "frequency": "Once" },
-    { "code": "77407", "description": "Radiation treatment delivery, single treatment area, complex", "frequency": "Per Fraction" },
-    { "code": "77427", "description": "Radiation treatment management, 5 treatments", "frequency": "Weekly" }
-  ],
-  "diagnosisSearch": "Small Bowel Adenocarcinoma"
+    { "date": "04/25/2025", "author": "Dr. Robert White (Surg Onc)", "type": "Post-Op Note", "summary": "Patient is 5 days post-op from pancreaticoduodenectomy. Recovery is proceeding as expected. Tolerating clear liquid diet. Final pathology confirms T3N0 adenocarcinoma of the duodenum with negative margins. Will refer to Medical Oncology for discussion of adjuvant therapy." },
+    { "date": "05/15/2025", "author": "Dr. Michael Chen (Med Onc)", "type": "Chemo Start Note", "summary": "Patient with resected Stage IIA duodenal adenocarcinoma. Given T3 status and LVI, she is at risk for recurrence. Plan for 6 cycles of adjuvant Capecitabine, to be followed by consolidative chemoradiation. Patient educated on side effects (hand-foot syndrome, diarrhea, fatigue) and schedule. She wishes to proceed." },
+    { "date": "10/25/2025", "author": "Dr. Michael Chen (Med Onc)", "type": "End of Chemo Note", "summary": "Alice has completed 6 cycles of adjuvant Capecitabine. She tolerated it well with only mild hand-foot syndrome and manageable diarrhea. Her performance status remains excellent. She is now ready to proceed with the radiation phase of her treatment. Referral sent to Dr. Lee." },
+    { "date": "11/05/2025", "author": "Dr. Sarah Lee (Rad Onc)", "type": "Initial Consult", "summary": "Patient with resected T3N0 duodenal adenocarcinoma, s/p adjuvant Capecitabine. Plan for adjuvant chemoradiation to the tumor bed and regional nodes to a dose of 45 Gy in 25 fractions with concurrent Capecitabine as a radiosensitizer. Discussed rationale, IMRT technique, and potential side effects (nausea, diarrhea, fatigue). Patient understands and agrees to proceed." }
+  ]
 }
