@@ -4,124 +4,147 @@
     "name": "Susan Walker",
     "dob": "1952-07-22",
     "gender": "Female",
-    "address": "88 Oak St, Anytown, USA",
+    "address": "88 Oak St, Anytown, USA, 12345",
     "phone": "555-4450",
     "insurance": "Medicare + Mutual of Omaha",
     "referringPhysician": "Dr. Elizabeth Chen (Dermatology)",
-    "emergencyContact": "Not specified in record"
+    "emergencyContact": "Thomas Walker (Son) - 555-4451 (Relationship: Son)",
+    "advanceDirectives": "Full Code (On File, verified 03/18/2025)",
+    "supportServices": "Provided with information on local cancer support resources. Skin care education provided by nursing staff.",
+    "mobility": "Independent, Ambulatory. ECOG Performance Status 0. No mobility limitations."
   },
   "diagnosis": {
     "primary": "Basal Cell Carcinoma (BCC), Nodular type",
     "location": "Left Nasal Ala",
+    "grade": "N/A (Not typically graded for BCC)",
     "datePathologicDiagnosis": "03/01/2025 (Shave Biopsy)",
     "tumorSize": "~1.2 cm clinical diameter",
-    "histologyDetails": "Margins involved on initial shave biopsy.",
-    "priorTreatmentSummary": "None. Patient declines Mohs surgery.",
-    "symptomsAtPresentation": "Non-healing lesion on left side of nose."
+    "pathologicStage": "cT1 N0 M0 (AJCC 8th Edition)",
+    "symptomsAtPresentation": "Patient noted a small, non-healing 'pimple' on the left side of her nose for approximately 6 months. It would occasionally bleed but did not cause pain.",
+    "pathologyFindings": [
+      "Shave Biopsy (03/01/2025): Nodular Basal Cell Carcinoma. The tumor is present at the deep and peripheral margins of the specimen."
+    ],
+    "priorTreatmentSummary": "None for this diagnosis. Patient was offered Mohs surgery by dermatology but declined due to anxiety about facial surgery and reconstruction, opting for a non-surgical approach.",
+    "baselineStatus": "ECOG 0 (Fully active). KPS 100. No other skin concerns. Patient is otherwise healthy."
   },
   "treatmentPlan": {
     "radOnc": "Dr. Angela Rossi",
-    "medOnc": "N/A",
+    "dermatologist": "Dr. Elizabeth Chen",
     "treatmentSite": "Left Nasal Ala",
     "intent": "Definitive (Curative)",
-    "modality": "External Beam Radiation Therapy (EBRT) - Electrons",
+    "modality": "External Beam Radiation Therapy (EBRT) using Electrons",
     "totalDose": "50 Gy",
     "fractionation": "20 fx",
-    "rtRxDetails": "50 Gy / 20 fx (2.5 Gy/fx)",
-    "targetVolumeSummary": "PTV_NasalAla (Clinical lesion + ~1.0-1.5 cm margin)",
-    "techniqueSummary": "Single Direct Electron Field",
+    "rtRxDetails": "50 Gy in 20 fractions (2.5 Gy/fx)",
+    "targetVolumeSummary": "The Clinical Target Volume (CTV) is defined as the visible lesion on the left nasal ala with a 1.0 cm margin. The Planning Target Volume (PTV) is the CTV with an additional 0.5 cm margin to account for setup uncertainties.",
+    "techniqueSummary": "A single, direct en-face electron field will be used. A custom cerrobend cutout will be fabricated to shape the beam precisely to the PTV. A 0.5 cm bolus will be placed over the treatment area to ensure full dose is delivered to the skin surface.",
     "concurrentChemo": "None",
     "medications": [
-      "Topical steroid cream PRN dermatitis",
-      "Aquaphor / Moisturizer"
+      "Aquaphor Ointment - Apply a thin layer to the treated area 2-3 times daily.",
+      "Hydrocortisone 1% Cream - May be used PRN for itching, if skin is not broken.",
+      "Silver Sulfadiazine Cream - To be used only if significant moist desquamation occurs, as directed by the nurse/physician."
+    ],
+    "therapistAlerts": [
+        "This is a clinical setup. Align daily to the skin marks outlining the field.",
+        "Ensure custom cutout is correctly oriented and seated in the applicator.",
+        "Ensure 0.5cm bolus is placed flat against the skin with no air gaps before treatment.",
+        "Patient may be anxious; provide reassurance and clear instructions daily.",
+        "Monitor for skin reaction daily. Report any signs of moist desquamation or significant discomfort to the nurse or physician."
     ]
   },
   "radiationOncologyData": {
     "ctSimulation": {
       "simulationDate": "03/20/2025",
-      "setupInstructions": "Supine with head immobilization. Clinical setup for direct electron field. SSD setup.",
-      "immobilization": "Headrest or other head immobilization device.",
-      "referenceMarks": "Field borders outlined on skin/mask. Daily alignment to these marks.",
+      "setupInstructions": "Supine on couch with head in a comfortable headrest. Patient is asked to remain still and breathe normally. This is a clinical setup (no CT scan).",
+      "immobilization": "Headrest and small pillows for comfort and to ensure a stable, reproducible head position.",
+      "referenceMarks": "The treatment field (a 2.5 cm circle encompassing the lesion and margin) was outlined directly on the patient's skin with a marker. Photos were taken for documentation. The source-to-skin distance (SSD) was set to 100 cm.",
       "scanner": "N/A (Clinical Setup)",
       "sliceThickness": "N/A",
       "contrastUsed": "N/A",
-      "ctNotes": "Clinical simulation performed. Target volume outlined on patient. Photos taken for documentation. Custom cutout and bolus created."
+      "ctNotes": "Clinical simulation was performed in the treatment room. The radiation oncologist, Dr. Rossi, identified and marked the clinical target volume. A custom 2.5 cm circular cerrobend block was fabricated. A 0.5 cm thick bolus was also created. Setup photos were taken and uploaded to the record and verify system."
     },
     "dosimetry": {
-      "planId": "SWE44550_Nose",
+      "planId": "SW44550_Nose_E",
+      "planStatus": "Final - Approved by Dr. Angela Rossi (03/21/2025)",
       "rx": "50 Gy / 20 fx",
-      "technique": "Electrons",
+      "technique": "Electrons - Single Direct Field",
       "energy": "9 MeV",
       "numberOfFieldsOrArcs": 1,
       "gantryAngles": "0",
       "collAngles": "0",
       "couchAngles": "0",
-      "isoCoords": "Surface setup",
+      "isoCoords": "N/A (SSD Setup)",
       "tps": "Eclipse",
       "algorithm": "eMC (Electron Monte Carlo)",
       "hetero": "Yes",
-      "norm": "100% @ Dmax",
-      "constraints": "Eye < 5 Gy (with internal shielding if needed)",
-      "planNotes": "Electron treatment with custom cerrobend cutout and 0.5cm bolus to ensure adequate surface dose.",
+      "norm": "100% of dose at Dmax (depth of maximum dose)",
+      "constraints": "Lens of the eye dose to be minimized. Dose to underlying nasal cartilage considered and deemed acceptable.",
+      "planNotes": "Definitive electron therapy for BCC of the left nasal ala. 9 MeV energy was chosen to adequately cover the depth of the lesion. A 0.5cm bolus is used to bring the high-dose region to the skin surface. A custom cerrobend cutout shapes the field.",
+      "qaChecks": [
+        { "date": "2025-03-21", "type": "Initial Chart Check", "by": "Physics Staff (JL)", "result": "Pass - Rx, MU calculation, and plan notes verified." },
+        { "date": "2025-03-21", "type": "Physics QA (Output Check)", "by": "Physics Staff (AK)", "result": "Pass - Electron output for 9 MeV verified and within tolerance." }
+      ],
       "fieldDetails": [
         {
-          "fieldName": "Direct L Nasal Ala",
+          "fieldName": "En-face L Nasal Ala",
+          "fieldSize": "6x6 applicator with 2.5cm cutout",
           "gantryAngle": "0",
           "collimatorAngle": "0",
           "couchAngle": "0",
           "energy": "9 MeV",
-          "monitorUnits": 320,
+          "monitorUnits": 315,
           "ssd": "100 cm"
         }
       ]
     },
     "treatmentDelivery": {
       "fractions": [
-        { "fractionNumber": 10, "date": "2025-04-01", "machine": "LINAC 1 (Electron Mode)", "setupNotes":"Patient aligned to clinical marks. Custom cutout and bolus in place. SSD verified.", "sideEffects": "Mild erythema (Grade 1) within treatment field.", "notes": "Patient tolerating well. Skin care reviewed." },
-        { "fractionNumber": 20, "date": "2025-04-15", "machine": "LINAC 1 (Electron Mode)", "setupNotes":"Final treatment setup verified.", "sideEffects": "Brisk erythema and focal moist desquamation (Grade 2).", "notes": "Completed final fraction. Instructed on skin care post-treatment. Managed with Silvadene cream." }
+        { "fractionNumber": 1, "totalFractions": 20, "date": "2025-03-24", "therapistInitials": "RS, TW", "machine": "LINAC 1", "recordedFields": [{ "fieldName": "En-face L Nasal Ala", "deliveredMu": 315 }], "setupVerification": "Tolerances Met", "immobilizationDevicesChecked": "Headrest", "imagingType": "None (Clinical Setup)", "igrtMatchQuality": "N/A", "igrtApprovedBy": "Therapist", "patientTolerance": "Good", "generalSideEffects": "None", "siteSpecificSideEffects": "None", "painAssessment": "0/10", "patientConcerns": "Slight anxiety about the procedure.", "instructionsGiven": "Reinforced skin care instructions: wash gently with mild soap and water, pat dry, apply thin layer of Aquaphor.", "dailyNotes": "First treatment delivered. Patient tolerated well. Setup verified with clinical marks and photos. Bolus and cutout placed correctly." },
+        { "fractionNumber": 5, "totalFractions": 20, "date": "2025-03-28", "therapistInitials": "RS, TW", "machine": "LINAC 1", "recordedFields": [{ "fieldName": "En-face L Nasal Ala", "deliveredMu": 315 }], "setupVerification": "Tolerances Met", "immobilizationDevicesChecked": "Headrest", "imagingType": "None (Clinical Setup)", "igrtMatchQuality": "N/A", "igrtApprovedBy": "Therapist", "patientTolerance": "Good", "generalSideEffects": "None", "siteSpecificSideEffects": "Faint pinkness (Grade 1 erythema) in the treatment field.", "painAssessment": "0/10", "patientConcerns": "None.", "instructionsGiven": "Continue with current skin care regimen. Avoid sun exposure.", "dailyNotes": "OTV today with Dr. Rossi. Patient is doing well. Setup is consistent. Skin reaction is as expected for this point in treatment." },
+        { "fractionNumber": 10, "totalFractions": 20, "date": "2025-04-04", "therapistInitials": "RS, TW", "machine": "LINAC 1", "recordedFields": [{ "fieldName": "En-face L Nasal Ala", "deliveredMu": 315 }], "setupVerification": "Tolerances Met", "immobilizationDevicesChecked": "Headrest", "imagingType": "None (Clinical Setup)", "igrtMatchQuality": "N/A", "igrtApprovedBy": "Therapist", "patientTolerance": "Good", "generalSideEffects": "None", "siteSpecificSideEffects": "Mild but definite erythema (Grade 1). Skin is slightly dry.", "painAssessment": "0/10", "patientConcerns": "Asked if the redness will get worse.", "instructionsGiven": "Explained that skin reaction will likely increase over the next two weeks. Continue diligent use of moisturizer. Report any pain or skin breakdown.", "dailyNotes": "Patient tolerating well. Skin care reviewed. Setup consistent." },
+        { "fractionNumber": 15, "totalFractions": 20, "date": "2025-04-11", "therapistInitials": "RS, TW", "machine": "LINAC 1", "recordedFields": [{ "fieldName": "En-face L Nasal Ala", "deliveredMu": 315 }], "setupVerification": "Tolerances Met", "immobilizationDevicesChecked": "Headrest", "imagingType": "None (Clinical Setup)", "igrtMatchQuality": "N/A", "igrtApprovedBy": "Therapist", "patientTolerance": "Good", "generalSideEffects": "None", "siteSpecificSideEffects": "Brisk erythema (Grade 2) with dry desquamation (flaking). Area is tender to touch.", "painAssessment": "1/10", "patientConcerns": "Skin is tender and peeling slightly.", "instructionsGiven": "Reassured this is normal. Continue Aquaphor. Avoid rubbing or scratching. Nurse provided sample of hydrocortisone cream for itching.", "dailyNotes": "OTV today. Dr. Rossi noted expected Grade 2 dermatitis. Plan to continue. Patient managing well." },
+        { "fractionNumber": 20, "totalFractions": 20, "date": "2025-04-18", "therapistInitials": "RS, TW", "machine": "LINAC 1", "recordedFields": [{ "fieldName": "En-face L Nasal Ala", "deliveredMu": 315 }], "setupVerification": "Tolerances Met", "immobilizationDevicesChecked": "Headrest", "imagingType": "None (Clinical Setup)", "igrtMatchQuality": "N/A", "igrtApprovedBy": "AR (Physician)", "patientTolerance": "Good", "generalSideEffects": "None", "siteSpecificSideEffects": "Brisk erythema with a small central area of moist desquamation (Grade 2).", "painAssessment": "1/10", "patientConcerns": "Relieved to be finished.", "instructionsGiven": "Provided end-of-treatment instructions. Skin will continue to react for 1-2 weeks before healing begins. Use Silvadene cream on moist area as directed by RN. Keep area clean and dry. Follow up in 4 weeks.", "dailyNotes": "Completed final fraction. Patient tolerated the full course well with an expected skin reaction. Confident in a good clinical and cosmetic outcome." }
       ]
     }
   },
   "imagingAndReports": [
-    { "date": "03/01/2025", "type": "Dermatology Biopsy Report", "summary": "Nodular Basal Cell Carcinoma, involving deep margin.", "modalId": "sw-biopsy-modal", "reportDetails": { /* Full path report details can be added here */ } },
-    { "date": "03/15/2025", "type": "Clinical Photos", "summary": "Document lesion appearance and size pre-treatment." },
-    { "date": "03/20/2025", "type": "Clinical Setup / Simulation Note", "summary": "Target volume outlined clinically. Head immobilization confirmed." }
+    { "date": "03/01/2025", "type": "Dermatology Biopsy Report", "summary": "Nodular Basal Cell Carcinoma, involving deep margin.", "reportDetails": { "accessionNumber": "P-25-1234", "specimenSource": "Shave Biopsy, Left Nasal Ala", "diagnosis": "Basal Cell Carcinoma, Nodular Type", "microscopicDescription": "The specimen shows nests of basaloid cells with peripheral palisading and stromal retraction. The features are consistent with nodular basal cell carcinoma.", "margins": "Tumor is present at the deep and peripheral margins of the shave biopsy specimen. Complete excision is not confirmed." } },
+    { "date": "03/15/2025", "type": "Clinical Photos", "summary": "Pre-treatment photos taken to document the 1.2 cm pearly papule on the left nasal ala." }
   ],
   "dicomImages": [
     { "description": "Clinical Setup Photo (03/20/2025)", "seriesType": "Photo", "ohifViewerUrl": "" }
   ],
   "labResults": [
-    { "date": "N/A", "test": "N/A", "value": "N/A", "units": "", "range": "", "notes": "Labs not indicated for localized skin RT." }
+    { "date": "N/A", "notes": "Labs not clinically indicated for localized, non-melanoma skin cancer radiation therapy." }
   ],
   "progressNotes": [
-    { "date": "03/05/2025", "author": "Dr. Elizabeth Chen (Derm)", "type": "Progress Note", "summary": "Pt with biopsy-proven BCC L nasal ala. Margins positive. Discussed tx options: Mohs vs RT. Pt prefers non-surgical approach. Refer to Rad Onc for consultation." },
-    { "date": "03/18/2025", "author": "Dr. Angela Rossi (Rad Onc)", "type": "Initial Consult", "summary": "Pt referred for definitive RT for BCC L nasal ala. Exam confirms ~1.2cm lesion. Discussed RT with electrons as non-surgical curative option. Plan for 50Gy/20fx via single 6/9 MeV electron field +/- bolus. Explained procedure, expected excellent cosmesis/cure rates, side effects (skin redness, peeling, low risk cartilage issue). Pt agrees. Clinical sim scheduled." },
-    { "date": "03/20/2025", "author": "Physics/Dosimetry", "type": "Electron Plan Note", "summary": "Clinical setup finalized. 9 MeV electron beam chosen for depth. Custom 3cm diameter cerrobend cutout fabricated. 0.5cm bolus applied. Plan approved." },
-    { "date": "04/01/2025", "author": "Dr. Angela Rossi (Rad Onc)", "type": "OTV - Week 2", "summary": "Pt completed 10/20 fx. Mild erythema (Gr 1) within treatment field. No pain or significant discomfort. Tolerating well. Continue RT. Skin care reviewed." },
-    { "date": "04/15/2025", "author": "Dr. Angela Rossi (Rad Onc)", "type": "OTV - End of Treatment", "summary": "Completed 20/20 fx. Brisk erythema and focal moist desquamation (Gr 2) noted. Managed with Silvadene cream. Expect healing over next few weeks. Follow up in 1 month." }
+    { "date": "03/05/2025", "author": "Dr. Elizabeth Chen (Derm)", "type": "Progress Note", "summary": "Patient seen for follow-up of a non-healing lesion on her left nose. Biopsy confirms Basal Cell Carcinoma. Margins are positive on the shave specimen. Discussed treatment options including Mohs surgery versus definitive radiation therapy. Patient expresses significant anxiety about surgery and potential for a cosmetically significant scar/graft. She wishes to pursue a non-surgical approach. Will refer to Radiation Oncology for consultation." },
+    { "date": "03/18/2025", "author": "Dr. Angela Rossi (Rad Onc)", "type": "Initial Consult", "summary": "68 y/o female with biopsy-proven BCC of the L nasal ala, referred by dermatology after declining Mohs surgery. Exam confirms ~1.2cm pearly lesion. Patient is an excellent candidate for definitive RT. We discussed treatment with electrons as a non-surgical curative option. Plan for 50 Gy in 20 fractions via a single 9 MeV electron field with bolus. Explained the procedure, expected excellent cure rates (>90%) and cosmesis, and side effects including a robust skin reaction (redness, peeling, moist desquamation) that will heal over several weeks. Patient understands and wishes to proceed. Clinical simulation scheduled." },
+    { "date": "04/04/2025", "author": "Dr. Angela Rossi (Rad Onc)", "type": "OTV - Week 2 (Fx 10)", "summary": "Patient has completed 10 of 20 fractions. She is tolerating treatment very well. Reports no pain or discomfort. Examination shows mild Grade 1 erythema confined to the treatment port. No desquamation. She is compliant with skin care instructions. Plan is to continue treatment as planned. No changes needed." },
+    { "date": "04/18/2025", "author": "Dr. Angela Rossi (Rad Onc)", "type": "End of Treatment Note", "summary": "Susan completed her course of 50 Gy in 20 fractions today. She developed an expected Grade 2 dermatitis with brisk erythema and a small area of central moist desquamation, which is being managed with Silvadene cream. The overall treatment was tolerated well. She is instructed to continue her skin care and was reminded that the reaction will worsen for a week or so before it begins to heal. She will follow up in clinic in 4 weeks to assess healing. Prognosis is excellent." }
   ],
   "patientEducation": {
-    "goalsDiscussed": "Definitive (curative) treatment of the skin cancer on the nose.",
-    "sideEffectsReviewed": "A skin reaction similar to a severe sunburn is expected, including redness, dryness, peeling, and possibly some blistering/moist desquamation towards the end of treatment. This will heal over several weeks. Long-term, there may be slight changes in skin color or texture.",
-    "safetyConsiderations": "Meticulous skin care as instructed (e.g., gentle washing, applying prescribed creams). Avoid sun exposure to the treated area during and after treatment.",
-    "patientResponsibilities": "Attend daily RT. Follow skin care instructions. Report any severe pain or signs of infection.",
-    "medicationCompliance": "Use topical creams as directed."
+    "goalsDiscussed": "To cure the basal cell carcinoma on the nose using radiation therapy as a non-surgical primary treatment, with the goal of an excellent cosmetic outcome.",
+    "sideEffectsReviewed": "Acute: A skin reaction similar to a severe sunburn is expected. This includes redness, dryness, and peeling, which will likely progress to some blistering or weeping (moist desquamation) near the end of treatment. This reaction is temporary and will heal over several weeks after treatment completion. Long-term: The treated skin may have a slightly different color (lighter or darker) or texture. There is a very low risk of nasal cartilage damage, though this is minimized with careful planning.",
+    "safetyConsiderations": "Meticulous skin care is essential. The treated area should be washed gently with a mild soap (like Dove or Cetaphil) and patted dry. Prescribed creams must be used as directed. It is critical to avoid sun exposure on the treated area during and for at least one year after treatment.",
+    "patientResponsibilities": "Attend all daily radiation appointments. Follow all skin care instructions provided by the nursing staff. Report any severe pain, significant blistering, or signs of infection (e.g., pus, increased swelling, fever) immediately.",
+    "medicationCompliance": "Consistently apply prescribed topical creams (Aquaphor, Silvadene, etc.) to manage the skin reaction and promote healing."
   },
   "scheduling": [
-    { "date": "03/01/2025", "time": "10 AM", "type": "Derm Biopsy", "location": "Dermatology Clinic", "status": "Completed" },
-    { "date": "03/18/2025", "time": "9 AM", "type": "Rad Onc Consult (Rossi)", "location": "Rad Onc Clinic", "status": "Completed" },
-    { "date": "03/20/2025", "time": "11 AM", "type": "Clinical Simulation Electrons", "location": "Rad Onc Sim", "status": "Completed" },
-    { "date": "03/24/2025 - 04/18/2025", "time": "Daily (M-F) ~2 PM", "type": "Electron Treatment (1/20)", "location": "LINAC 1 (Electron Mode)", "status": "Completed" },
-    { "date": "Weekly", "time": "~2:30 PM (Post-RT)", "type": "OTV", "location": "Rad Onc Clinic", "status": "Completed" },
-    { "date": "~05/18/2025", "time": "9 AM", "type": "Post-RT Follow Up", "location": "Rad Onc Clinic", "status": "Scheduled" }
+    { "date": "03/01/2025", "type": "Dermatology Biopsy", "location": "Dermatology Clinic", "status": "Completed" },
+    { "date": "03/18/2025", "type": "Radiation Oncology Consult", "location": "Rad Onc Clinic", "status": "Completed" },
+    { "date": "03/20/2025", "type": "Clinical Simulation (Electrons)", "location": "Rad Onc Sim Suite", "status": "Completed" },
+    { "date": "03/24/2025", "type": "RT Start (Fx 1/20)", "location": "LINAC 1", "status": "Completed" },
+    { "date": "04/18/2025", "type": "RT End (Fx 20/20)", "location": "LINAC 1", "status": "Completed" },
+    { "date": "05/16/2025", "type": "Post-RT Follow Up (Rad Onc)", "location": "Rad Onc Clinic", "status": "Scheduled" },
+    { "date": "07/18/2025", "type": "Post-RT Follow Up (Derm)", "location": "Dermatology Clinic", "status": "Scheduled" }
   ],
   "cptCharges": [
-    { "code": "77280", "description": "Simulation, Simple (Clinical setup)", "frequency": "Once" },
-    { "code": "77332 / 77333", "description": "Treatment device, Simple / Intermediate (Cutout, Bolus)", "frequency": "Once" },
-    { "code": "77300", "description": "Basic radiation dosimetry calculation", "frequency": "Per plan" },
-    { "code": "77331", "description": "Special physics consultation (May apply for electron planning)", "frequency": "Once" },
-    { "code": "77402 / 77407", "description": "Radiation treatment delivery, single / multiple areas", "frequency": "Daily" },
-    { "code": "77427", "description": "Radiation treatment management, 5 treatments", "frequency": "Weekly" }
+    { "code": "77280", "description": "Simulation, Simple (Clinical setup for single electron field)", "frequency": "Once" },
+    { "code": "77333", "description": "Treatment device, Intermediate (Custom cerrobend cutout and bolus)", "frequency": "Once" },
+    { "code": "77300", "description": "Basic radiation dosimetry calculation, single treatment area", "frequency": "Once" },
+    { "code": "77402", "description": "Radiation treatment delivery, single area, simple", "frequency": "20" },
+    { "code": "77427", "description": "Radiation treatment management, 5 treatments", "frequency": "4" }
   ],
-  "diagnosisSearch": "Skin Cancer (BCC)"
+  "diagnosisSearch": "Skin Cancer (BCC), Basal Cell Carcinoma, Electron, Nose"
 }
