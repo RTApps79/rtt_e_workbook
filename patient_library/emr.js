@@ -74,9 +74,16 @@ function renderDiagnosis(data) {
         <p><strong>Date Pathologic Diagnosis:</strong> ${d.datePathologicDiagnosis || "N/A"}</p>
         <p><strong>Symptoms at Presentation:</strong> ${d.symptomsAtPresentation || "N/A"}</p>
         ${pathFindingsHtml}
+        <p><strong>Relevant History:</strong> ${d.relevantHistory || "N/A"}</p>
         <p><strong>Prior Procedures:</strong> ${d.priorProcedures || "N/A"}</p>
         <p><strong>Baseline Status:</strong> ${d.baselineStatus || "N/A"}</p>
+        <p><strong>PFT Summary:</strong> ${d.pftSummary || "N/A"}</p>
+        <p><strong>Comorbidities:</strong> ${d.comorbidities || "N/A"}</p>
         <p><strong>Prior Treatment Summary:</strong> ${d.priorTreatmentSummary || "N/A"}</p>
+        ${d.hpvStatus ? `<p><strong>HPV Status:</strong> ${d.hpvStatus}</p>` : ''}
+        ${d.receptorStatus ? `<p><strong>Receptor Status:</strong> ${d.receptorStatus}</p>` : ''}
+        ${d.lymphNodeStatus ? `<p><strong>Lymph Node Status:</strong> ${d.lymphNodeStatus}</p>` : ''}
+        ${d.tnmStage ? `<p><strong>TNM Stage:</strong> ${d.tnmStage}</p>` : ''}
       </div>
     </div>
   `;
@@ -124,6 +131,7 @@ function renderTreatmentPlan(data) {
         <p><strong>Technique Summary:</strong> ${t.techniqueSummary || "N/A"}</p>
         <p><strong>Concurrent Chemotherapy:</strong> ${t.concurrentChemo || "None"}</p>
         <p><strong>Detailed Concurrent Chemotherapy:</strong> ${t.detailedConcurrentChemo || "N/A"}</p>
+        ${t.potentialConsolidationTherapy ? `<p><strong>Potential Consolidation Therapy:</strong> ${t.potentialConsolidationTherapy}</p>` : ''}
         ${medicationsHtml}
         ${therapistAlertsHtml}
       </div>
@@ -162,20 +170,55 @@ function renderLabResults(data) {
   `;
 }
 
+// Updated renderProgressNotes with toggles
 function renderProgressNotes(data) {
     const notes = data.progressNotes || [];
     let content;
     if (!notes.length) {
         content = `<p>No progress notes for this patient.</p>`;
     } else {
-        content = `<ul>`;
-        notes.forEach(note => {
-            content += `<li>
-                <strong>${note.date} (${note.type || 'Note'} by ${note.author || 'Unknown'}):</strong>
-                ${note.summary || ''}
-            </li>`;
+        content = `<div class="notes-container">`; // Use a container for styling if needed
+        notes.forEach((note, index) => {
+            const noteId = `progress-note-${index}`;
+            // Basic summary always visible
+            content += `
+            <div class="note-card">
+                <h4>${note.date} (${note.type || 'Note'} by ${note.author || 'Unknown'}):</h4>
+                <p><strong>Summary:</strong> ${note.summary || 'No summary provided.'}</p>
+                <button class="toggle-details-btn" data-fraction-id="${noteId}">Show All Details</button>
+                <div id="${noteId}" class="fraction-details-hidden">
+                    <h6>Detailed Observations</h6>
+                    <p><strong>Patient Tolerance:</strong> ${note.patientTolerance || 'N/A'}</p>
+                    <p><strong>General Side Effects:</strong> ${note.generalSideEffects || 'None reported.'}</p>
+                    <p><strong>Site-Specific Side Effects:</strong> ${note.siteSpecificSideEffects || 'None.'}</p>
+                    <p><strong>Pain Assessment:</strong> ${note.painAssessment || 'N/A'}</p>
+                    <p><strong>Patient Concerns:</strong> ${note.patientConcerns || 'None.'}</p>
+                    <p><strong>Instructions Given:</strong> ${note.instructionsGiven || 'N/A'}</p>
+                    <p><strong>Billing Codes:</strong> ${note.billingCodes || 'N/A'}</p>
+                    <p><strong>Daily Notes:</strong> ${note.dailyNotes || 'N/A'}</p>
+                    ${note.energiesUsed ? `<p><strong>Energies Used:</strong> ${note.energiesUsed}</p>` : ''}
+                    ${note.recordedFields && note.recordedFields.length > 0 ? `
+                        <h6>Per-Field Delivery Record (MUs)</h6>
+                        <table class="data-table" border="1">
+                            <thead>
+                                <tr><th>Field Name</th><th>Delivered MU</th><th>Notes</th></tr>
+                            </thead>
+                            <tbody>
+                                ${note.recordedFields.map(field => `
+                                    <tr>
+                                        <td>${field.fieldName || ""}</td>
+                                        <td>${field.deliveredMu || ""}</td>
+                                        <td>${field.notes || ""}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    ` : ''}
+                </div>
+            </div>
+            `;
         });
-        content += `</ul>`;
+        content += `</div>`;
     }
     return `
         <div class="section">
@@ -184,6 +227,7 @@ function renderProgressNotes(data) {
         </div>
     `;
 }
+
 
 function renderPatientEducation(data) {
   const pe = data.patientEducation || {};
@@ -362,7 +406,6 @@ window.loadDicomSeries = function(seriesIdx) {
   });
 };
 
-// --- FIX START ---
 // Function to show the report modal
 window.showReportModal = function(reportType, reportIndex) {
   const modal = document.getElementById('emr-modal-overlay');
@@ -389,7 +432,7 @@ window.showReportModal = function(reportType, reportIndex) {
 
   // Generate HTML for report details
   let detailsHtml = '<h3>' + (report.summary || reportType + ' Report') + '</h3>';
-  detailsHtml += '<table>';
+  detailsHtml += '<table class="modal-report-table">'; // Added a class for potential styling
   for (const key in report.reportDetails) {
     if (Object.hasOwnProperty.call(report.reportDetails, key)) {
       let value = report.reportDetails[key];
@@ -398,17 +441,19 @@ window.showReportModal = function(reportType, reportIndex) {
         value = '<ul>' + value.map(item => '<li>' + item + '</li>').join('') + '</ul>';
       } else if (typeof value === 'object' && value !== null) {
         // Handle nested objects, e.g., if there's a sub-object within reportDetails
-        let subObjectHtml = '<ul>';
+        let subObjectHtml = '';
         for (const subKey in value) {
             if (Object.hasOwnProperty.call(value, subKey)) {
-                subObjectHtml += '<li><strong>' + subKey.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()) + ':</strong> ' + value[subKey] + '</li>';
+                // Format sub-keys nicely (e.g., "accessionNumber" -> "Accession Number")
+                subObjectHtml += '<p><strong>' + subKey.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()) + ':</strong> ' + value[subKey] + '</p>';
             }
         }
-        subObjectHtml += '</ul>';
-        value = subObjectHtml;
+        value = subObjectHtml; // Use paragraph for nested object content for better readability than ul for some details
       }
 
-      detailsHtml += '<tr><td><strong>' + key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()) + ':</strong></td><td>' + value + '</td></tr>';
+      // Format keys nicely (e.g., "accessionNumber" -> "Accession Number")
+      const formattedKey = key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+      detailsHtml += '<tr><td><strong>' + formattedKey + ':</strong></td><td>' + value + '</td></tr>';
     }
   }
   detailsHtml += '</table>';
@@ -421,7 +466,6 @@ window.showReportModal = function(reportType, reportIndex) {
   // Display the modal
   modal.style.display = 'flex';
 };
-// --- FIX END ---
 
 
 function renderCTSimulation(ct) {
@@ -712,7 +756,7 @@ function renderPracticeFractionEntryForm(patientData) {
                 <label for="practiceIgrtMatchQuality">IGRT Match Quality</label>
                 <select id="practiceIgrtMatchQuality">
                   <option value="">-- Select --</option>
-                  <option value="Good - No Shifts">Good - No Shifts Required</option>
+                  <option value="Good - No Shifts">Good - No Shifts Required</s>
                   <option value="Good - Shifts Applied">Good - Shifts Applied</option>
                   <option value="Fair - Minor Deviations">Fair - Minor Deviations Noted</option>
                   <option value="Poor - Action Taken">Poor - Action Taken</option>
@@ -902,12 +946,22 @@ function showRadOncSubTab(subKey, data) {
       // Assuming initPracticeFractionFormHandlers is also defined elsewhere
       // and needs to be called after content render.
       initFractionDetailToggles(); 
+      initProgressNoteToggles(); // Initialize toggles for progress notes
       break;
     default: 
       subContents.innerHTML = "<p>No data.</p>"; 
       break;
   }
 }
+
+// Function to initialize the toggle functionality for progress note details
+function initProgressNoteToggles() {
+    document.querySelectorAll('.note-card .toggle-details-btn').forEach(button => {
+        button.removeEventListener('click', handleToggleDetails); // Reuse existing handler, but ensure it's not duplicated
+        button.addEventListener('click', handleToggleDetails);
+    });
+}
+
 
 function showTab(tabKey, data) {
   const tabContents = document.getElementById('emr-tab-contents');
@@ -938,7 +992,10 @@ function showTab(tabKey, data) {
     case 'treatmentPlan': tabContents.innerHTML = renderTreatmentPlan(data); break;
     case 'imagingAndReports': tabContents.innerHTML = renderImagingAndReportsTab(data); break;
     case 'labResults': tabContents.innerHTML = renderLabResults(data); break;
-    case 'progressNotes': tabContents.innerHTML = renderProgressNotes(data); break;
+    case 'progressNotes':
+      tabContents.innerHTML = renderProgressNotes(data);
+      initProgressNoteToggles(); // Initialize toggles after rendering progress notes
+      break;
     case 'patientEducation': tabContents.innerHTML = renderPatientEducation(data); break;
     case 'scheduling': tabContents.innerHTML = renderScheduling(data); break;
     case 'cptCharges': tabContents.innerHTML = renderCptCharges(data); break;
