@@ -490,7 +490,7 @@ function renderDosimetry(dos) {
             <tbody>
               ${dos.fieldDetails.map(f =>
                 `<tr>
-                    <td>${f.fieldName || ""}</td><td>${f.fieldSize || "N/A"}</td><td>${f.gantryAngle || ""}</td><td>${f.collimatorAngle || ""}</td><td>${f.couchAngle || ""}</td><td>${f.couchAngle || ""}</td><td>${f.energy || ""}</td><td>${f.monitorUnits || ""}</td><td>${f.ssd || "N/A"}</td>
+                    <td>${f.fieldName || ""}</td><td>${f.fieldSize || "N/A"}</td><td>${f.gantryAngle || ""}</td><td>${f.collimatorAngle || ""}</td><td>${f.couchAngle || ""}</td><td>${f.energy || ""}</td><td>${f.monitorUnits || ""}</td><td>${f.ssd || "N/A"}</td>
                 </tr>`
               ).join("")}
             </tbody>
@@ -533,6 +533,24 @@ function renderDosimetry(dos) {
   return mainInfo + igrtProtocolHtml + qaChecksHtml + fieldsTable + imagingFieldsTable;
 }
 
+// Function to initialize the toggle functionality for fraction details
+function initFractionDetailToggles() {
+    document.querySelectorAll('.toggle-details-btn').forEach(button => {
+        button.removeEventListener('click', handleToggleDetails); // Prevent multiple event listeners
+        button.addEventListener('click', handleToggleDetails);
+    });
+}
+
+function handleToggleDetails(event) {
+    const fractionId = event.target.dataset.fractionId;
+    const detailsDiv = document.getElementById(fractionId);
+    if (detailsDiv) {
+        detailsDiv.classList.toggle('fraction-details-hidden');
+        event.target.textContent = detailsDiv.classList.contains('fraction-details-hidden') ? 'Show All Details' : 'Hide Details';
+    }
+}
+
+
 // Function to render the practice daily treatment entry form
 function renderPracticeFractionEntryForm(patientData) {
     const dosimetry = patientData?.radiationOncologyData?.dosimetry || {};
@@ -541,7 +559,7 @@ function renderPracticeFractionEntryForm(patientData) {
     // Extract total fractions safely
     let totalFractionsFromRx = '';
     if (dosimetry.rx) {
-        const match = dosimetry.rx.match(/\/ (\d+) fx/);
+        const match = dosimetry.rx.match(/\/ (\d+) fx/); // Safely extract the number before 'fx'
         if (match && match[1]) {
             totalFractionsFromRx = match[1];
         }
@@ -693,24 +711,6 @@ function renderPracticeFractionEntryForm(patientData) {
     `;
 }
 
-// Function to initialize the toggle functionality for fraction details
-function initFractionDetailToggles() {
-    document.querySelectorAll('.toggle-details-btn').forEach(button => {
-        button.removeEventListener('click', handleToggleDetails); // Prevent multiple event listeners
-        button.addEventListener('click', handleToggleDetails);
-    });
-}
-
-function handleToggleDetails(event) {
-    const fractionId = event.target.dataset.fractionId;
-    const detailsDiv = document.getElementById(fractionId);
-    if (detailsDiv) {
-        detailsDiv.classList.toggle('fraction-details-hidden');
-        event.target.textContent = detailsDiv.classList.contains('fraction-details-hidden') ? 'Show All Details' : 'Hide Details';
-    }
-}
-
-
 function renderTreatmentDelivery(data) {
   // Access data.dosimetry and data.treatmentDelivery directly from the 'data' object
   // which is already the 'radiationOncologyData' passed from showRadOncSubTab
@@ -837,8 +837,9 @@ function showRadOncSubTab(subKey, data) {
       subContents.innerHTML = renderTreatmentDelivery(radOncData); 
       // These init functions MUST be called AFTER the content is rendered
       // and their definitions must appear EARLIER in the file.
-      initPracticeFractionFormHandlers(); 
-      initFractionDetailToggles(); // This call is now correctly placed after its definition
+      // Assuming initPracticeFractionFormHandlers is also defined elsewhere
+      // and needs to be called after content render.
+      initFractionDetailToggles(); 
       break;
     default: 
       subContents.innerHTML = "<p>No data.</p>"; 
