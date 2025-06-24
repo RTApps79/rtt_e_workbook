@@ -4,144 +4,396 @@
     "name": "Mary Peterson",
     "dob": "1973-05-01",
     "gender": "Female",
-    "address": "321 Maple Drive, Anytown, USA",
+    "address": "321 Maple Drive, Anytown, USA, 12345",
     "phone": "555-6677",
-    "insurance": "Aetna",
+    "insurance": "Aetna - Policy #AET-MP-67890",
     "referringPhysician": "Dr. Helen Carter (Breast Surgeon)",
-    "emergencyContact": "Not specified in record",
-    "advanceDirectives": "Full Code",
-    "supportServices": "Provided with info for local support groups.",
-    "mobility": "Ambulatory"
+    "emergencyContact": "John Peterson (Husband) - 555-6678 (Relationship: Spouse). Primary contact for medical updates.",
+    "advanceDirectives": "Full Code (On File, verified 02/22/2025 during initial consult. Patient has designated healthcare proxy for medical decisions.)",
+    "supportServices": "Provided with info for local breast cancer support groups. Referral to Oncology Social Worker for emotional support. Encouraged to join online breast cancer forums.",
+    "mobility": "Ambulatory without assistance. ECOG Performance Status 0. Full range of motion in shoulders and arms. No lymphedema at baseline."
   },
   "diagnosis": {
     "primary": "Invasive Ductal Carcinoma (IDC) of the Right Breast",
     "location": "Upper Outer Quadrant (UOQ)",
     "datePathologicDiagnosis": "01/15/2025 (Core Biopsy)",
     "tumorSize": "1.8 cm",
-    "grade": "Nottingham Grade 2",
-    "receptorStatus": "ER Positive (90%), PR Positive (70%), HER2 Negative",
-    "lymphNodeStatus": "0/2 Sentinel Nodes Positive (pN0(sn))",
-    "pathologicStage": "pT1c pN0(sn) M0, Stage IA",
-    "priorTreatmentSummary": "Lumpectomy + Sentinel Lymph Node Biopsy (02/10/2025) by Dr. Carter",
+    "grade": "Nottingham Grade 2/3 (Combined Score 6/9: Tubule formation 2, Nuclear pleomorphism 2, Mitotic count 2)",
+    "receptorStatus": "Estrogen Receptor (ER) Positive (90%), Progesterone Receptor (PR) Positive (70%), HER2 Negative (IHC Score 1+)",
+    "lymphNodeStatus": "0/2 Sentinel Nodes Positive (pN0(sn)) - Isolated Tumor Cells (ITCs) not detected in nodes.",
+    "tnmStage": "cT1c cN0 cM0 (Clinical stage based on imaging)",
+    "overallStage": "pT1c pN0(sn) M0, Stage IA (AJCC 8th Edition)",
+    "priorTreatmentSummary": "Lumpectomy + Sentinel Lymph Node Biopsy (02/10/2025) by Dr. Helen Carter. Surgical margins confirmed negative for invasive carcinoma. No prior chemotherapy.",
     "pathologyFindings": [
-        "Invasive Ductal Carcinoma, Nottingham Grade 2/3.",
-        "Tumor Size: 1.8 cm.",
-        "Margins: Uninvolved by invasive carcinoma (>2mm).",
-        "Sentinel Nodes: Negative for metastasis (0/2)."
-    ]
+        "Invasive Ductal Carcinoma, Nottingham Grade 2/3. Tumor consists of invasive malignant epithelial cells forming ducts and nests within fibrous stroma. Mitotic activity is moderate (5 mitoses/10 HPF).",
+        "Tumor Size: 1.8 cm (confirmed on excision).",
+        "Margins: Uninvolved by invasive carcinoma (>2mm). Closest margin is 3 mm (Superior). Ductal Carcinoma In Situ (DCIS) present at margins, but no invasive component.",
+        "Sentinel Nodes: Negative for metastasis (0/2 lymph nodes identified, both negative for carcinoma).",
+        "Receptor Status: ER Positive (90%), PR Positive (70%). HER2 Negative (IHC Score 1+, FISH not needed). Ki-67 proliferation index: 15% (Low-Intermediate).",
+        "Lymphovascular Invasion: Not identified."
+    ],
+    "relevantHistory": "No significant past medical history. No family history of breast or ovarian cancer (BRCA testing not indicated). Annual mammograms since age 40. Completed surgical recovery with no complications.",
+    "baselineStatus": "ECOG 0 (Fully active, able to carry out all normal activity without restriction). KPS 100. No lymphedema at baseline."
   },
   "treatmentPlan": {
     "radOnc": "Dr. Angela Rossi",
-    "medOnc": "N/A (Endocrine therapy managed by Surgeon)",
-    "treatmentSite": "Right Breast",
-    "intent": "Adjuvant (Post-lumpectomy)",
-    "modality": "External Beam Radiation Therapy (EBRT) - Whole Breast RT (WBRT)",
-    "rtRxDetails": "42.56 Gy in 16 fractions (2.66 Gy/fx)",
-    "targetVolumeSummary": "PTV encompassing the entire right breast tissue (PTV_Breast).",
-    "techniqueSummary": "3D-CRT - Tangential Fields",
+    "medOnc": "Dr. Mark Johnson (Medical Oncology - for endocrine therapy management)",
+    "surgOnc": "Dr. Helen Carter (Breast Surgeon)",
+    "gynOnc": "N/A",
+    "dermatologist": "N/A",
+    "treatmentSite": "Right Breast (Post-lumpectomy cavity and entire breast parenchyma)",
+    "intent": "Adjuvant (Post-lumpectomy radiation to reduce local recurrence risk, following breast-conserving surgery).",
+    "modality": "External Beam Radiation Therapy (EBRT) - Whole Breast Radiation Therapy (WBRT)",
+    "rtRxDetails": "42.56 Gy in 16 fractions (2.66 Gy/fx). Hypofractionated regimen.",
+    "targetVolumeSummary": "Planning Target Volume (PTV_Breast) encompassing the entire right breast tissue, including the lumpectomy cavity and surrounding glandular tissue, with appropriate setup margins. Excludes ribs, chest wall musculature, and deep structures. No regional nodal radiation planned given negative sentinel nodes.",
+    "techniqueSummary": "3D-CRT - Opposed Tangential Fields (Medial and Lateral tangential fields). Optimized for dose homogeneity within breast and minimal dose to heart and lungs. Field-in-field technique utilized for dose modulation and hot spot reduction.",
     "concurrentChemo": "None",
+    "detailedConcurrentChemo": "N/A (No concurrent systemic therapy with adjuvant WBRT for this patient).",
     "medications": [
-      "Topical Steroid Cream (e.g., Mometasone) or Aquaphor PRN skin reaction (dermatitis)",
-      "Adjuvant Endocrine Therapy (e.g., Tamoxifen or Aromatase Inhibitor) - To be managed by Med Onc or Surgeon"
+      "Topical Steroid Cream (e.g., Mometasone Furoate Cream 0.1%) PRN skin reaction (dermatitis), starting with Grade 1 erythema.",
+      "Aquaphor Healing Ointment (or similar bland moisturizer) liberally applied BID-TID to irradiated skin area.",
+      "Adjuvant Endocrine Therapy (e.g., Letrozole 2.5mg PO daily, started after RT completion) - To be managed by Dr. Mark Johnson (Med Onc) or Dr. Helen Carter (Surgeon). Discussion for 5-10 years of therapy.",
+      "Pain medication (e.g., Acetaminophen PRN discomfort/soreness)."
     ],
     "therapistAlerts": [
-        "Pay close attention to skin reaction in inframammary fold.",
-        "Ensure patient is using moisturizer as instructed.",
-        "Monitor for any signs of arm swelling (lymphedema), though risk is low."
-    ]
+        "Pay close attention to skin reaction in inframammary fold and axilla; these areas are prone to moist desquamation. Document skin grade daily/weekly.",
+        "Ensure patient is consistently using moisturizer as instructed by nursing/physician.",
+        "Monitor for any signs of arm swelling (lymphedema), though risk is low with negative sentinel nodes. Measure arm circumference weekly if concerned.",
+        "Ensure consistent and reproducible setup on breast board with comfortable arm position. Patient comfort is key for compliance with setup.",
+        "Verify internal heart/lung position on daily imaging to minimize exposure."
+    ],
+    "gynOnc": "N/A",
+    "dermatologist": "N/A"
   },
   "radiationOncologyData": {
     "ctSimulation": {
       "simulationDate": "02/25/2025",
-      "setupInstructions": "Supine on breast board, both arms abducted above head. SAD setup.",
-      "immobilization": "Supine Breast Board",
-      "referenceMarks": "Tattoos placed per protocol. Wires placed on surgical scar and palpable breast borders for delineation.",
+      "setupInstructions": "Supine on breast board (customized for incline) with both arms abducted above head and resting in arm supports. Head turned slightly left to open right breast field. Patient instructed to breathe normally. SAD setup. External fiducial wires placed on surgical scar and palpable breast borders (superior, inferior, medial, lateral) for delineation.",
+      "immobilization": "Supine Breast Board (e.g., CIVCO, Med-Tec), custom foam headrest, arms up arm supports.",
+      "referenceMarks": "3-point tattoos placed per protocol (anterior chest midline, bilateral lateral chest wall at level of isocenter). Wires placed on surgical scar and palpable breast borders for delineation during contouring. Isocenter placed at central axis of breast tangential fields. Coordinates recorded for daily setup.",
       "setupImages": [
-        { "type": "AP", "url": "https://placehold.co/250x200/EEE/31343C?text=AP+Setup+Photo" },
-        { "type": "Lateral", "url": "https://placehold.co/250x200/EEE/31343C?text=Lateral+Setup+Photo" }
+        { "type": "AP", "url": "https://placehold.co/250x200/EEE/31343C?text=AP+Setup+Photo_MP66778" },
+        { "type": "Lateral", "url": "https://placehold.co/250x200/EEE/31343C?text=Lateral+Setup+Photo_MP66778" }
       ],
-      "scanner": "GE Revolution CT",
-      "sliceThickness": "2.5 mm",
-      "contrastUsed": "Non-contrast",
-      "ctNotes": "Non-contrast CT acquired in treatment position for 3D-CRT planning."
+      "scanner": "GE Revolution CT (for high-resolution imaging and fast acquisition)",
+      "sliceThickness": "2.5 mm (Optimal for breast contouring and dose calculation)",
+      "contrastUsed": "Non-contrast (Standard for adjuvant breast WBRT to avoid unnecessary contrast and motion artifacts).",
+      "ctNotes": "Non-contrast CT acquired in treatment position for 3D-CRT planning. Patient comfortable on breast board. Able to maintain arm position. No artifacts noted. Good quality images for delineation of breast, lumpectomy cavity, and critical organs (heart, lungs). Fused with diagnostic MRI (if available) for lumpectomy cavity visualization."
     },
     "dosimetry": {
-      "planId": "MP66778_Brst",
-      "planStatus": "Final - Approved by Dr. Angela Rossi",
-      "rx": "42.56 Gy / 16 fx",
-      "technique": "3D-CRT",
-      "energy": "6MV",
+      "planId": "MP66778_Brst_Hypo",
+      "planStatus": "Final - Approved by Dr. Angela Rossi (02/28/2025)",
+      "rx": "42.56 Gy / 16 fx (2.66 Gy/fx daily)",
+      "technique": "3D-CRT (Opposed Tangential Fields with Field-in-Field dose modulation)",
+      "energy": "6MV (photon energy)",
       "numberOfFieldsOrArcs": 2,
-      "gantryAngles": "305, 125",
-      "collAngles": "340, 160",
-      "couchAngles": "0",
-      "isoCoords": "Setup dependent",
-      "tps": "Monaco",
-      "algorithm": "XVMC",
-      "hetero": "Yes",
-      "norm": "Central Axis",
-      "constraints": "Heart Max < 15 Gy; Ipsilateral Lung V20Gy < 15%. All constraints met.",
-      "planNotes": "Hypofractionated WBRT tangents.",
+      "gantryAngles": "305 (Medial Tangent), 125 (Lateral Tangent) - angles optimized based on patient contour to treat breast tissue effectively while sparing heart/lung.",
+      "collAngles": "340 (Medial), 160 (Lateral) - Collimator angles angled to define the field edge at the chest wall/midline.",
+      "couchAngles": "0 (Patient supine, breast board angle fixed to optimize chest wall angle)",
+      "isoCoords": "L+0.0, V-1.5, S+10.0 (Lateral, Anterior-Posterior, Superior-Inferior from CT sim reference point, typically set at breast mid-point)",
+      "tps": "Monaco 5.1 (Treatment Planning System)",
+      "algorithm": "XVMC (Monte Carlo based algorithm for accurate dose calculation through heterogeneous tissue)",
+      "hetero": "Yes (Full heterogeneity correction applied for lung/tissue interfaces)",
+      "norm": "Central Axis (100% at isocenter) or ICRU reference point within PTV. Prescription to deliver 42.56 Gy to 95% of PTV_Breast.",
+      "constraints": "Heart Mean < 3 Gy (achieved 1.2 Gy); Heart Max < 15 Gy (achieved 9.8 Gy); Ipsilateral Lung V20Gy < 15% (achieved 12.1%, Mean Lung Dose 7.5 Gy); Contralateral Breast/Lung V5Gy < 5% (achieved <1%); Rib Max < 47 Gy (achieved 40.0 Gy). All constraints met within acceptable clinical limits. No contralateral breast or lung dose concerns.",
+      "planNotes": "Hypofractionated WBRT tangents for adjuvant treatment. Plan optimized for dose homogeneity across breast and maximal sparing of heart and lungs. Field-in-Field segments designed to reduce hot spots. Daily kV imaging for IGRT.",
       "igrtProtocol": {
         "frequency": "Daily",
-        "type": "kV Imaging (Orthogonal Pair)",
-        "alignment": "Match to chest wall and surgical clips."
+        "type": "kV Imaging (Orthogonal Pair - AP & Lateral) or Optical Surface Monitoring System (OSMS)",
+        "alignment": "Primary match to chest wall and surgical clips (if visible and stable). Secondary match to bony anatomy (ribs/sternum) for gross positioning. Shifts approved by therapists within pre-set tolerance, physician approval for larger shifts.",
+        "tolerances": "Translational: +/- 3mm; Rotational: +/- 1 degree. Action taken for out-of-tolerance shifts (e.g., re-imaging, physician review)."
       },
       "qaChecks": [
-        { "date": "2025-02-28", "type": "Initial Chart Check", "by": "Physics Staff" }
+        { "date": "2025-02-28", "type": "Initial Chart Check", "by": "Physics Staff (JP)", "result": "Pass - Rx, volumes, constraints, and plan notes verified per protocol." },
+        { "date": "2025-02-28", "type": "Patient Specific QA (Phantom & IMRT QA)", "by": "Physics Staff (AK)", "result": "Pass (Gamma 99.0% @ 3%/2mm); Absolute dose match within 1.5%." },
+        { "date": "2025-02-29", "type": "Dry Run Verification", "by": "Lead Therapist (SD)", "result": "Pass - Machine parameters, field sequencing, and couch movements verified on LINAC. Patient setup on breast board confirmed." }
       ],
       "fieldDetails": [
-        { "fieldName": "Medial Tangent", "fieldSize": "10x18 cm", "gantryAngle": "305", "collimatorAngle": "340", "couchAngle": "0", "energy": "6MV", "monitorUnits": 182, "ssd": "90.5 cm" },
-        { "fieldName": "Lateral Tangent", "fieldSize": "10x18 cm", "gantryAngle": "125", "collimatorAngle": "160", "couchAngle": "0", "energy": "6MV", "monitorUnits": 188, "ssd": "89.5 cm" }
+        { "fieldName": "Medial Tangent", "fieldSize": "10x18 cm (MLC defined)", "gantryAngle": "305", "collimatorAngle": "340", "couchAngle": "0", "energy": "6MV", "monitorUnits": 182, "ssd": "90.5 cm (Calculated)" },
+        { "fieldName": "Lateral Tangent", "fieldSize": "10x18 cm (MLC defined)", "gantryAngle": "125", "collimatorAngle": "160", "couchAngle": "0", "energy": "6MV", "monitorUnits": 188, "ssd": "89.5 cm (Calculated)" }
       ],
       "imagingFields": [
-        { "fieldName": "AP Verification", "gantryAngle": "180", "fieldSize": "10x10 cm", "energy": "6MV", "monitorUnits": 2 },
-        { "fieldName": "Right Lateral Verification", "gantryAngle": "270", "fieldSize": "10x10 cm", "energy": "6MV", "monitorUnits": 2 }
+        { "fieldName": "AP Verification (kV)", "gantryAngle": "0", "fieldSize": "15x15 cm", "energy": "kV", "monitorUnits": "N/A" },
+        { "fieldName": "Lateral Verification (kV)", "gantryAngle": "270", "fieldSize": "15x15 cm", "energy": "kV", "monitorUnits": "N/A" }
       ]
     },
     "treatmentDelivery": {
       "fractions": [
-        { "fractionNumber": 1, "date": "2025-03-01", "machine": "LINAC4", "setupNotes":"kV pair imaging for setup verification. Matched to clips/chest wall.", "sideEffects": "None after Fx 1.", "notes": "Patient instructions for skin care reviewed.", "recordedFields": [ { "fieldName": "Medial Tangent", "deliveredMu": 182, "notes": ""}, { "fieldName": "Lateral Tangent", "deliveredMu": 188, "notes": ""} ] },
-        { "fractionNumber": 8, "date": "2025-03-10", "machine": "LINAC4", "setupNotes":"Setup consistent.", "sideEffects": "Mild skin pinkness (Grade 1 dermatitis) in inframammary fold.", "notes": "Advised liberal use of Aquaphor.", "recordedFields": [ { "fieldName": "Medial Tangent", "deliveredMu": 182, "notes": ""}, { "fieldName": "Lateral Tangent", "deliveredMu": 188, "notes": ""} ] },
-        { "fractionNumber": 16, "date": "2025-03-21", "machine": "LINAC4", "setupNotes":"Final treatment setup verified.", "sideEffects": "Moderate erythema/dry desquamation (Grade 2 dermatitis) noted.", "notes": "Completed 16/16 fx WBRT. Managed with Mometasone cream.", "recordedFields": [ { "fieldName": "Medial Tangent", "deliveredMu": 182, "notes": ""}, { "fieldName": "Lateral Tangent", "deliveredMu": 188, "notes": ""} ] }
+        {
+          "fractionNumber": 1,
+          "totalFractions": 16,
+          "date": "2025-03-01",
+          "machine": "LINAC4",
+          "therapistInitials": "JH, RM",
+          "overallMUs": 370,
+          "setupVerification": "Tolerances Met",
+          "immobilizationDevicesChecked": "Breast board, headrest, arm supports",
+          "setupAdjustments": "None (initial setup highly accurate based on kV imaging)",
+          "organTargetChecks": "kV pair imaging reviewed, matched to clips/chest wall. Rib/lung interface checked.",
+          "imagingType": "kV Pair",
+          "igrtMatchQuality": "Excellent - No Shifts Required",
+          "shiftsApplied": "None",
+          "igrtApprovedBy": "AR (Physician)",
+          "igrtVerificationNotes": "First treatment delivered. kV match excellent. Patient tolerated setup and treatment well. Physician approved.",
+          "patientTolerance": "Good",
+          "generalSideEffects": "No acute side effects noted after Fx 1.",
+          "siteSpecificSideEffects": "None.",
+          "painAssessment": "0/10.",
+          "patientConcerns": "Asked about daily treatment duration.",
+          "instructionsGiven": "Educated on daily RT, skin care protocol, and importance of reporting any new symptoms. Advised on maintaining arm position.",
+          "billingCodes": "77407, 77387",
+          "dailyNotes": "Patient comfortable during treatment. Confirmed understanding of skin care instructions. Treatment time 5 minutes per field, efficient setup.",
+          "energiesUsed": "6MV",
+          "recordedFields": [
+            { "fieldName": "Medial Tangent", "deliveredMu": 182, "notes": "OK" },
+            { "fieldName": "Lateral Tangent", "deliveredMu": 188, "notes": "OK" }
+          ]
+        },
+        {
+          "fractionNumber": 4,
+          "totalFractions": 16,
+          "date": "2025-03-04",
+          "machine": "LINAC4",
+          "therapistInitials": "JH, RM",
+          "overallMUs": 370,
+          "setupVerification": "Tolerances Met",
+          "immobilizationDevicesChecked": "Breast board, headrest, arm supports",
+          "setupAdjustments": "None",
+          "organTargetChecks": "kV imaging reviewed, good match. Breast contour consistent.",
+          "imagingType": "kV Pair",
+          "igrtMatchQuality": "Good - No Shifts Required",
+          "shiftsApplied": "None",
+          "igrtApprovedBy": "AR (Physician)",
+          "igrtVerificationNotes": "Routine kV, no shifts. Patient comfortable.",
+          "patientTolerance": "Good",
+          "generalSideEffects": "Mild fatigue.",
+          "siteSpecificSideEffects": "None.",
+          "painAssessment": "0/10.",
+          "patientConcerns": "Asked about sunscreen use in treated area.",
+          "instructionsGiven": "Advised to avoid sun exposure on treated skin. Liberal moisturizer application. Encouraged light activity.",
+          "billingCodes": "77407, 77387",
+          "dailyNotes": "Patient continues to tolerate treatments well. No skin changes yet. Confirmed use of Aquaphor. OTV next week." ,
+          "energiesUsed": "6MV",
+          "recordedFields": [
+            { "fieldName": "Medial Tangent", "deliveredMu": 182, "notes": "OK" },
+            { "fieldName": "Lateral Tangent", "deliveredMu": 188, "notes": "OK" }
+          ]
+        },
+        {
+          "fractionNumber": 8,
+          "totalFractions": 16,
+          "date": "2025-03-10",
+          "machine": "LINAC4",
+          "therapistInitials": "SW, KL",
+          "overallMUs": 370,
+          "setupVerification": "Tolerances Met",
+          "immobilizationDevicesChecked": "Breast board, headrest, arm supports",
+          "setupAdjustments": "None",
+          "organTargetChecks": "kV imaging reviewed, good match. Breast tissue position stable.",
+          "imagingType": "kV Pair",
+          "igrtMatchQuality": "Good - No Shifts Required",
+          "shiftsApplied": "None",
+          "igrtApprovedBy": "AR (Physician)",
+          "igrtVerificationNotes": "Setup consistent. Dr. Rossi performed OTV today. Skin shows first signs of reaction.",
+          "patientTolerance": "Good",
+          "generalSideEffects": "Mild fatigue persists.",
+          "siteSpecificSideEffects": "Mild skin pinkness (Grade 1 dermatitis) in inframammary fold.",
+          "painAssessment": "0/10.",
+          "patientConcerns": "Noticed skin becoming pink. Asked if this is normal.",
+          "instructionsGiven": "Advised liberal use of Aquaphor. Reassured her that pinkness is normal and expected. Reinforce no harsh soaps.",
+          "billingCodes": "77407, 77387, 77427",
+          "dailyNotes": "OTV today. Patient tolerating well. Skin care discussed. Encouraged continued activity and rest as needed. Labs not required for this course." ,
+          "energiesUsed": "6MV",
+          "recordedFields": [
+            { "fieldName": "Medial Tangent", "deliveredMu": 182, "notes": "OK" },
+            { "fieldName": "Lateral Tangent", "deliveredMu": 188, "notes": "OK" }
+          ]
+        },
+        {
+          "fractionNumber": 12,
+          "totalFractions": 16,
+          "date": "2025-03-14",
+          "machine": "LINAC4",
+          "therapistInitials": "JH, RM",
+          "overallMUs": 370,
+          "setupVerification": "Tolerances Met",
+          "immobilizationDevicesChecked": "Breast board, headrest, arm supports",
+          "setupAdjustments": "None.",
+          "organTargetChecks": "kV imaging reviewed, good match. Breast contour consistent.",
+          "imagingType": "kV Pair",
+          "igrtMatchQuality": "Good - No Shifts Required",
+          "shiftsApplied": "None",
+          "igrtApprovedBy": "AR (Physician)",
+          "igrtVerificationNotes": "Setup consistent. Patient comfortable.",
+          "patientTolerance": "Fair",
+          "generalSideEffects": "Moderate fatigue. Mild itching in treated area.",
+          "siteSpecificSideEffects": "Skin redness (Grade 1 erythema) across entire breast field. Inframammary fold more pronounced.",
+          "painAssessment": "1/10 (mild itching).",
+          "patientConcerns": "Increased itching and redness. Asked about Mometasone cream.",
+          "instructionsGiven": "Advised to use Mometasone cream as prescribed by Dr. Rossi. Continued Aquaphor. Avoid scratching.",
+          "billingCodes": "77407, 77387",
+          "dailyNotes": "Patient tolerating well overall. Managing skin reaction with creams. No signs of infection. Last OTV next week.",
+          "energiesUsed": "6MV",
+          "recordedFields": [
+            { "fieldName": "Medial Tangent", "deliveredMu": 182, "notes": "OK" },
+            { "fieldName": "Lateral Tangent", "deliveredMu": 188, "notes": "OK" }
+          ]
+        },
+        {
+          "fractionNumber": 16,
+          "totalFractions": 16,
+          "date": "2025-03-21",
+          "machine": "LINAC4",
+          "therapistInitials": "SW, KL",
+          "overallMUs": 370,
+          "setupVerification": "Tolerances Met",
+          "immobilizationDevicesChecked": "Breast board, headrest, arm supports",
+          "setupAdjustments": "None.",
+          "organTargetChecks": "Final kV imaging. Perfect match to clips/chest wall. Breast contour stable.",
+          "imagingType": "kV Pair",
+          "igrtMatchQuality": "Excellent - No Shifts Required",
+          "shiftsApplied": "None",
+          "igrtApprovedBy": "AR (Physician)",
+          "igrtVerificationNotes": "Final fraction verification. Perfect setup. Patient very relieved. Physician approved. Treatment time 10 minutes.",
+          "patientTolerance": "Good",
+          "generalSideEffects": "Fatigue mild to moderate. Skin discomfort (itching, tenderness).",
+          "siteSpecificSideEffects": "Moderate erythema/dry desquamation (Grade 2 dermatitis) noted, especially in inframammary fold and axilla. Some areas of moist desquamation starting in fold (Grade 3).",
+          "painAssessment": "2/10 (managed with Mometasone cream).",
+          "patientConcerns": "Relieved to finish. Asked about skin healing timeline and when she can stop using creams.",
+          "instructionsGiven": "Reinforced continued skin care with Mometasone and Aquaphor for several weeks. Advised on gentle washing. Provided contact info for urgent concerns. Scheduled follow-up appointment with Dr. Rossi. Reminded to start Letrozole." ,
+          "billingCodes": "77407, 77387, 77427",
+          "dailyNotes": "Completed 16/16 fx WBRT. Patient very relieved. Provided completion certificate. Instructions on continued skin care and symptom management emphasized. Patient to start Letrozole soon. Discussed post-RT plan for monitoring and follow-up imaging."
+        }
       ]
     }
   },
   "imagingAndReports": [
-    { "date": "01/15/2025", "type": "Stereotactic Biopsy Report", "summary": "Invasive Ductal Carcinoma, Grade 2. ER/PR+, HER2-.", "reportDetails": { "diagnosis": "Invasive Ductal Carcinoma, Nottingham Grade 2/3.", "receptorStatus": "Estrogen Receptor (ER): Positive (90%, strong intensity). Progesterone Receptor (PR): Positive (70%, moderate intensity). HER2: Negative (IHC Score 1+). Ki-67: 15%." } },
-    { "date": "02/10/2025", "type": "Surgical Pathology Report", "summary": "1.8 cm IDC, Gr 2. Margins negative (>2mm). 0/2 SN positive. ER/PR+, HER2-.", "reportDetails": { "accession": "SP-25-12345", "procedure": "Right Breast Lumpectomy and Sentinel Lymph Node Biopsy", "finalDiagnosis": "INVASIVE DUCTAL CARCINOMA, RIGHT BREAST (UOQ)", "tumorSize": "1.8 cm", "histologicGrade": "Nottingham Grade 2/3 (Score 6/9)", "margins": "Uninvolved. Closest margin (Superior) is 3 mm.", "sentinelNodes": "Negative for metastasis (0/2)" } }
+    {
+      "date": "01/15/2025",
+      "type": "Core Biopsy Report (Stereotactic)",
+      "summary": "Invasive Ductal Carcinoma, Grade 2. ER/PR+, HER2-.",
+      "reportDetails": {
+        "lab": "ANYTOWN PATHOLOGY SERVICES",
+        "accessionNumber": "BX-25-001",
+        "specimenSource": "Stereotactic Core Biopsy, Right Breast, UOQ (Coordinates: X: +2.5cm, Y: +1.0cm, Z: +3.0cm from nipple)",
+        "diagnosis": "INVASIVE DUCTAL CARCINOMA, NOTTINGHAM GRADE 2/3.",
+        "microscopicDescription": "Multiple core biopsy fragments show infiltration by malignant epithelial cells forming irregular ducts and solid nests. Nuclear pleomorphism is moderate, mitotic figures are present. Associated desmoplastic stromal reaction. Immunostains for ER (90% positive), PR (70% positive), HER2 (1+). Ki-67 proliferation index is 15%. No associated DCIS seen in biopsy.",
+        "grossDescription": "Received in formalin, 5 core biopsy fragments, up to 1.2 cm each. Labeled 'Right Breast UOQ lesion'. Entirely submitted.",
+        "comment": "Invasive ductal carcinoma. This biopsy provides diagnostic tissue and receptor status. Correlation with definitive excision specimen is recommended.",
+        "signedBy": "Dr. A. Pathologist, 01/17/2025"
+      }
+    },
+    {
+      "date": "02/10/2025",
+      "type": "Surgical Pathology Report",
+      "summary": "1.8 cm IDC, Gr 2. Margins negative (>2mm). 0/2 SN positive. ER/PR+, HER2-.",
+      "reportDetails": {
+        "lab": "ANYTOWN HOSPITAL PATHOLOGY",
+        "accessionNumber": "SP-25-12345",
+        "procedure": "Right Breast Lumpectomy and Sentinel Lymph Node Biopsy",
+        "finalDiagnosis": "INVASIVE DUCTAL CARCINOMA, RIGHT BREAST (UOQ).",
+        "tumorSize": "1.8 cm (confirmed largest dimension of invasive component).",
+        "histologicGrade": "Nottingham Grade 2/3 (Score 6/9: Tubule formation 2, Nuclear pleomorphism 2, Mitotic count 2).",
+        "margins": "Uninvolved by invasive carcinoma. Closest margin (Superior) is 3 mm from invasive component. Ductal Carcinoma In Situ (DCIS) present at superior margin (closest to 1mm).",
+        "sentinelNodes": "Negative for metastasis (0/2 sentinel lymph nodes submitted for evaluation). Lymph nodes show benign reactive hyperplasia. No isolated tumor cells detected.",
+        "receptorStatus": "ER Positive (90%), PR Positive (70%), HER2 Negative (IHC Score 1+). Ki-67: 15%. (Consistent with core biopsy findings).",
+        "lymphovascularInvasion": "Not identified.",
+        "perineuralInvasion": "Not identified.",
+        "comment": "Invasive ductal carcinoma, low-intermediate grade. Negative sentinel lymph nodes and clear margins confirm pT1c pN0(sn) M0 Stage IA disease. Adjuvant radiation recommended per NCCN guidelines. Endocrine therapy indicated.",
+        "signedBy": "Dr. P. SurgeonPath, 02/13/2025",
+        "reviewedBy": "Dr. Helen Carter (Breast Surgeon)"
+      }
+    },
+    {
+      "date": "02/12/2025",
+      "type": "Post-operative Mammogram",
+      "summary": "Post-lumpectomy changes in R breast UOQ. No suspicious residual lesion identified.",
+      "reportDetails": {
+        "accessionNumber": "MG-25-001",
+        "protocol": "Mammogram Right Breast Diagnostic",
+        "findings": "Architectural distortion and skin thickening noted in the right breast UOQ, consistent with recent lumpectomy. Surgical clips are present in the lumpectomy cavity. No suspicious residual mass or microcalcifications identified within or adjacent to the surgical bed. No new suspicious findings in remaining breast tissue. Regional lymph nodes appear normal in size.",
+        "impression": "Post-lumpectomy changes. No mammographic evidence of residual or recurrent malignancy in the right breast.",
+        "signedBy": "Dr. M. Radiologist, 02/12/2025"
+      }
+    },
+    {
+      "date": "02/18/2025",
+      "type": "Breast MRI",
+      "summary": "Post-lumpectomy changes with residual non-mass enhancement consistent with DCIS at superior margin. No residual invasive disease.",
+      "reportDetails": {
+        "accessionNumber": "MRI-Breast-25-001",
+        "protocol": "MRI Breast with and without contrast",
+        "findings": "Right breast shows changes related to recent lumpectomy in the UOQ. Surgical clips seen. Post-contrast imaging shows faint, diffuse non-mass enhancement superior to the cavity, correlating with the known DCIS at the superior margin on pathology. No residual enhancing invasive mass. No suspicious findings in the contralateral breast. No axillary lymphadenopathy.",
+        "impression": "Post-lumpectomy changes. Residual non-mass enhancement consistent with DCIS at superior margin. No residual invasive disease. Imaging confirms lumpectomy cavity for RT planning.",
+        "signedBy": "Dr. N. Radiologist, 02/19/2025"
+      }
+    }
   ],
-  "dicomImages": [],
+  "dicomImages": [
+    {
+      "description": "CT Simulation (Right Breast - 02/25/2025)",
+      "seriesType": "CT",
+      "imageUrls": [
+        "https://raw.githubusercontent.com/cornerstonejs/cornerstone-wado-image-loader/master/examples/images/CT000000.dcm"
+      ],
+      "ohifViewerUrl": "https://viewer.ohif.org/viewer/latest",
+      "accessionNumber": "CT-20250225-BREAST"
+    },
+    {
+      "description": "Diagnostic Mammogram (02/12/2025)",
+      "seriesType": "Mammogram",
+      "imageUrls": [],
+      "ohifViewerUrl": "https://viewer.ohif.org/viewer/latest?studyUIDs=1.3.6.1.4.1.14519.5.2.1.7009.2403.87413977531778187841398713296249117865"
+    }
+  ],
   "labResults": [
-    { "date": "02/20/2025", "test": "CBC", "value": "WNL", "notes": "Pre-RT Baseline" },
-    { "date": "02/20/2025", "test": "CMP", "value": "WNL", "notes": "Pre-RT Baseline" }
+    { "date": "02/20/2025", "test": "CBC - WBC", "value": "7.8", "units": "K/mcL", "notes": "Pre-RT Baseline" },
+    { "date": "02/20/2025", "test": "CBC - Hemoglobin", "value": "13.9", "units": "g/dL", "notes": "Pre-RT Baseline" },
+    { "date": "02/20/2025", "test": "CBC - Platelet count", "value": "285", "units": "K/mcL", "notes": "Pre-RT Baseline" },
+    { "date": "02/20/2025", "test": "Comprehensive Metabolic Panel (CMP)", "value": "WNL", "units": "N/A", "notes": "Pre-RT Baseline." }
   ],
   "progressNotes": [
-    { "date": "02/15/2025", "author": "Dr. Helen Carter (Surgeon)", "type": "Post-Op Note", "summary": "Pt underwent R lumpectomy + SLNB. Path results: pT1c pN0(sn) IDC, margins neg. Pt recovering well. Refer to Rad Onc for adjuvant WBRT. Start Adjuvant AI (Letrozole) after RT completion." },
-    { "date": "02/22/2025", "author": "Dr. Angela Rossi (Rad Onc)", "type": "Initial Consult", "summary": "Pt s/p lumpectomy/SLNB for Stage IA ER+ breast cancer. Discussed benefits of adjuvant WBRT to reduce local recurrence risk. Recommended hypofractionated regimen (42.56Gy/16fx) via tangential fields. Explained procedure, skin care, potential side effects (dermatitis, fatigue, breast changes). Pt agrees. CT sim scheduled." },
-    { "date": "03/10/2025", "author": "Dr. Angela Rossi (Rad Onc)", "type": "OTV - Week 2", "summary": "Pt completed 8/16 fx. Tolerating well. Grade 1 dermatitis in inframammary fold, advised liberal use of Aquaphor. No significant fatigue. Continue RT." },
-    { "date": "03/21/2025", "author": "Dr. Angela Rossi (Rad Onc)", "type": "OTV - End of Treatment", "summary": "Completed 16/16 fx WBRT. Moderate erythema/dry desquamation (Grade 2 dermatitis) noted, managed with Mometasone cream. Fatigue mild. Plan for follow-up in 4-6 weeks. Reinforce importance of starting Letrozole with surgeon/med onc." }
+    { "date": "02/15/2025", "author": "Dr. Helen Carter (Surgeon)", "type": "Post-Op Note", "summary": "Pt underwent R lumpectomy + SLNB. Path results: pT1c pN0(sn) IDC, Nottingham Grade 2/3. Margins negative (>2mm invasive, DCIS at superior margin). Pt recovering well, incision healing. Discussed adjuvant treatment plan. Refer to Rad Onc for adjuvant WBRT. Plan to start Adjuvant Aromatase Inhibitor (Letrozole) 2.5mg PO daily after RT completion for 5-10 years. Patient agreeable to plan.", "patientTolerance": "Good", "generalSideEffects": "Mild surgical site soreness.", "siteSpecificSideEffects": "Incision site healing well.", "painAssessment": "2/10 (managed with OTC pain relievers).", "patientConcerns": "Asked about timing for starting hormone therapy and hair thinning.", "instructionsGiven": "Advised hormone therapy typically starts after RT. Reassured hair thinning not common with AI." },
+    { "date": "02/22/2025", "author": "Dr. Angela Rossi (Rad Onc)", "type": "Initial Consult", "summary": "Pt s/p lumpectomy/SLNB for Stage IA ER+ breast cancer. Reviewed all pathology and imaging. Discussed benefits of adjuvant WBRT to reduce local recurrence risk, especially with DCIS at margin. Recommended hypofractionated regimen (42.56Gy/16fx) via tangential fields. Explained procedure, daily setup, skin care (importance of Aquaphor/creams), potential side effects (dermatitis, fatigue, breast swelling/tenderness, long-term breast changes). Patient understands risks/benefits and agrees. CT sim scheduled. Confirmed no prior radiation. Patient to continue current medications.", "patientTolerance": "Good", "generalSideEffects": "None", "siteSpecificSideEffects": "Surgical site healing well.", "painAssessment": "0/10.", "patientConcerns": "Concerned about skin changes and impact on appearance. Asked about duration of side effects.", "instructionsGiven": "Provided Breast RT patient education booklet. Advised on gentle skin care starting immediately. Reassured that skin changes are temporary but breast changes can be long-term." },
+    { "date": "02/25/2025", "author": "Radiation Therapist Lead", "type": "Simulation Note", "summary": "CT Sim completed for R Breast WBRT. Patient supine on breast board with arms up. External wires placed accurately. Patient very cooperative and comfortable. Images sent to dosimetry for 3D-CRT tangential planning. Fused with diagnostic MRI. Patient denies any discomfort in setup. Skin marks placed for daily alignment.", "patientTolerance": "Good", "generalSideEffects": "None.", "siteSpecificSideEffects": "None.", "painAssessment": "0/10.", "patientConcerns": "None.", "instructionsGiven": "Reviewed daily treatment process and importance of stillness. Advised no lotions on skin prior to treatment unless approved." },
+    { "date": "03/01/2025", "author": "Radiation Therapist", "type": "Daily Treatment Note - Fx 1", "summary": "First treatment delivered. kV pair imaging for setup verification. Matched to clips/chest wall. No adjustments needed. Patient tolerated well. Treatment time 5 minutes per field. Reviewed skin care. Patient states feeling good.", "patientTolerance": "Good", "generalSideEffects": "None after Fx 1.", "siteSpecificSideEffects": "None.", "painAssessment": "0/10.", "patientConcerns": "None.", "instructionsGiven": "Reinforced daily RT attendance and importance of skin care from Day 1." },
+    { "date": "03/04/2025", "author": "Radiation Therapist", "type": "Daily Treatment Note - Fx 4", "summary": "Treatment delivered. kV pair imaging for setup verification. Setup consistent. No shifts. Patient reports feeling good, no new side effects. Skin intact. Reminder for OTV next week.", "patientTolerance": "Good", "generalSideEffects": "Mild fatigue.", "siteSpecificSideEffects": "None.", "painAssessment": "0/10.", "patientConcerns": "None.", "instructionsGiven": "Advised on rest and continued hydration. Reviewed skin care." },
+    { "date": "03/10/2025", "author": "Dr. Angela Rossi (Rad Onc)", "type": "On Treatment Visit (OTV) - Week 2", "summary": "Patient completed 8/16 fx. Tolerating well. Mild fatigue (2/10). Grade 1 dermatitis in inframammary fold, advised liberal use of Aquaphor. No significant breast tenderness or swelling. Continue RT. Reinforce skin care. Labs not required for this course. Discussed range of motion exercises for shoulder. Patient reports no lymphedema. Encouraged light activity. No concerns.", "patientTolerance": "Good", "generalSideEffects": "Mild fatigue.", "siteSpecificSideEffects": "Mild skin pinkness (Grade 1 dermatitis) in inframammary fold.", "painAssessment": "0/10.", "patientConcerns": "Noticed skin becoming pink. Asked if this is normal and what to expect.", "instructionsGiven": "Reassured her that pinkness is normal and expected. Advised liberal application of Aquaphor. Reinforce no harsh soaps or deodorants in treated area. Discussed importance of good arm/shoulder mobility exercises." },
+    { "date": "03/14/2025", "author": "Radiation Therapist", "type": "Daily Treatment Note - Fx 12", "summary": "Treatment delivered. Setup consistent. Patient reports increasing redness in breast. Denies pain. Advised to continue Mometasone and Aquaphor. Last OTV next week. Patient cooperative.", "patientTolerance": "Fair", "generalSideEffects": "Moderate fatigue. Mild itching in treated area.", "siteSpecificSideEffects": "Skin redness (Grade 1 erythema) across entire breast field. Inframammary fold more pronounced.", "painAssessment": "1/10 (mild itching).", "patientConcerns": "Expressed increased itching and redness. Asked if treatment could be extended to allow skin to heal.", "instructionsGiven": "Reassured patient that skin reaction is normal and peaks toward end/post-treatment. Advised to continue using Mometasone cream as prescribed by Dr. Rossi and to continue Aquaphor. Avoid scratching." },
+    { "date": "03/21/2025", "author": "Radiation Therapist", "type": "Daily Treatment Note - Fx 16", "summary": "Final treatment delivered. Final setup verified. Patient was very relieved. Completed 16/16 fx WBRT. Moderate erythema/dry desquamation (Grade 2 dermatitis) noted, managed with Mometasone cream. Fatigue mild. Provided completion certificate and reviewed follow-up instructions for Dr. Rossi. Emphasized continued skin care and starting Letrozole.", "patientTolerance": "Good", "generalSideEffects": "Fatigue mild to moderate. Skin discomfort (itching, tenderness).", "siteSpecificSideEffects": "Moderate erythema/dry desquamation (Grade 2 dermatitis) noted, especially in inframammary fold and axilla. Some areas of moist desquamation starting in fold (Grade 3).",
+          "painAssessment": "2/10 (managed with Mometasone cream).", "patientConcerns": "Relieved to finish. Asked about skin healing timeline and when she can stop using creams. Inquired about long-term breast changes.", "instructionsGiven": "Reinforced continued skin care with Mometasone and Aquaphor for several weeks. Advised on gentle washing. Provided contact info for urgent concerns. Scheduled follow-up appointment with Dr. Rossi. Reminded to start Letrozole and follow up with Med Onc for this." }
   ],
   "patientEducation": {
-    "goalsDiscussed": "Adjuvant therapy to reduce risk of local recurrence after lumpectomy.",
-    "sideEffectsReviewed": "Skin reaction (redness, dryness, peeling, itching - most common), fatigue, breast swelling/tenderness, potential long-term changes in breast appearance/texture, very low risk of other issues (e.g., rib fracture, lung/heart exposure).",
-    "safetyConsiderations": "Importance of skin care (gentle washing, approved moisturizers, avoid irritants/sun exposure), managing fatigue (rest periods), reporting significant skin breakdown or pain.",
-    "patientResponsibilities": "Attend daily RT appointments, perform skin care as instructed, attend weekly OTVs, report symptoms.",
-    "medicationCompliance": "Use prescribed topical creams as directed. Follow instructions for starting endocrine therapy after RT."
+    "goalsDiscussed": "Adjuvant Whole Breast Radiation Therapy (WBRT) aims to reduce the risk of local recurrence after lumpectomy for early-stage breast cancer. This hypofractionated regimen delivers the radiation in fewer, larger doses over a shorter time period, which is proven to be as effective and safe as longer courses. The goal is to eradicate any microscopic cancer cells that might remain after surgery.",
+    "sideEffectsReviewed": "Common & Expected: Skin reaction (dermatitis) in the treated breast and underarm area, progressing from pinkness/redness (erythema) to dryness (dry desquamation) and potentially peeling or moist areas (moist desquamation), especially in skin folds. Itching and tenderness are common. Fatigue (mild to moderate, can persist for weeks after treatment). Breast swelling/tenderness, breast heaviness. Potential long-term changes in breast appearance/texture (firmness, slight size change, darkening of skin). Rare: Rib pain/fracture (very low risk), pneumonitis (lung inflammation, very low risk due to heart/lung sparing), heart changes (extremely low risk with modern techniques for left-sided lesions, even lower for right-sided), arm swelling (lymphedema - very low risk with negative sentinel nodes).",
+    "safetyConsiderations": "Critical: Importance of consistent daily setup and maintaining immobility during treatment to ensure precise radiation delivery. Strict skin care (gentle washing with mild soap, applying prescribed topical creams/ointments like Aquaphor or Mometasone liberally, avoiding harsh products, perfumes, deodorants in the treated area, avoiding sun exposure). Reporting any significant skin breakdown, severe pain, fever/chills (signs of infection), or new arm swelling promptly. Maintaining good hydration and nutrition.",
+    "patientResponsibilities": "Attend all daily RT appointments (Monday-Friday). Perform skin care as instructed by therapists and nurses. Maintain good arm/shoulder range of motion exercises. Attend weekly On-Treatment Visits (OTVs) with physician and nurses. Report any new or worsening symptoms, especially skin reaction, fatigue, or breast pain. Initiate adjuvant endocrine therapy (e.g., Letrozole) as instructed by your medical oncologist/surgeon after RT completion.",
+    "medicationCompliance": "Use prescribed topical creams (Mometasone) and bland moisturizers (Aquaphor) as directed for skin reaction. Take Acetaminophen or other OTC pain relievers as needed for discomfort. Adhere to the schedule for starting adjuvant endocrine therapy after RT, as this is crucial for long-term breast cancer control."
   },
   "scheduling": [
-    { "date": "01/15/2025", "type": "Stereotactic Biopsy", "location": "Breast Center", "status": "Completed" },
-    { "date": "02/10/2025", "type": "Surgery: Lumpectomy + SLNB", "location": "Operating Room 2", "status": "Completed" },
-    { "date": "02/22/2025", "type": "Rad Onc Consult (Rossi)", "location": "Rad Onc Clinic", "status": "Completed" },
-    { "date": "02/25/2025", "type": "CT Simulation Breast", "location": "Rad Onc Sim", "status": "Completed" },
-    { "date": "03/01/2025 - 03/21/2025", "type": "3D-CRT Treatment (16 fx)", "location": "LINAC 4", "status": "Completed" }
+    { "date": "01/15/2025", "type": "Stereotactic Core Biopsy (Right Breast)", "location": "Breast Center - Imaging Suite", "status": "Completed" },
+    { "date": "02/10/2025", "type": "Surgery: Right Breast Lumpectomy + Sentinel Lymph Node Biopsy", "location": "Operating Room 2", "status": "Completed" },
+    { "date": "02/12/2025", "type": "Post-operative Mammogram", "location": "Imaging Department", "status": "Completed" },
+    { "date": "02/18/2025", "type": "Breast MRI (Post-op for RT planning)", "location": "Imaging Department", "status": "Completed" },
+    { "date": "02/22/2025", "type": "Rad Onc Consult (Dr. Rossi)", "location": "Radiation Oncology Clinic - Exam Room 3", "status": "Completed" },
+    { "date": "02/25/2025", "type": "CT Simulation Right Breast RT", "location": "Radiation Oncology Sim Room", "status": "Completed" },
+    { "date": "03/01/2025", "type": "First Treatment (Fx 1/16)", "location": "Linear Accelerator #4", "status": "Completed" },
+    { "date": "03/04/2025", "type": "On Treatment Visit (OTV) - Week 1 (Informal check)", "location": "Radiation Oncology Clinic - Nurse Station", "status": "Completed" },
+    { "date": "03/10/2025", "type": "On Treatment Visit (OTV) - Week 2", "location": "Radiation Oncology Clinic - Exam Room 1", "status": "Completed" },
+    { "date": "03/14/2025", "type": "On Treatment Visit (OTV) - Week 3 (Informal check)", "location": "Radiation Oncology Clinic - Nurse Station", "status": "Completed" },
+    { "date": "03/21/2025", "type": "End of Treatment (Fx 16/16)", "location": "Linear Accelerator #4", "status": "Completed" },
+    { "date": "04/18/2025", "type": "Post-RT Follow-up (Rad Onc)", "location": "Radiation Oncology Clinic - Exam Room 3", "status": "Scheduled" },
+    { "date": "05/01/2025", "type": "Follow-up with Breast Surgeon (Dr. Carter)", "location": "Breast Surgery Clinic", "status": "Scheduled" },
+    { "date": "09/20/2025", "type": "Annual Mammogram (Post-RT)", "location": "Imaging Department", "status": "Scheduled" }
   ],
   "cptCharges": [
-    { "code": "77285", "description": "Simulation, Intermediate", "frequency": "Once" },
-    { "code": "77332", "description": "Treatment device, Simple (Breast board)", "frequency": "Once" },
-    { "code": "77295", "description": "3D radiotherapy plan", "frequency": "Once" },
-    { "code": "77407", "description": "Radiation treatment delivery, 2 fields, simple/intermediate", "frequency": "Daily" },
-    { "code": "77427", "description": "Radiation treatment management, 5 treatments", "frequency": "Weekly (4x)" }
+    { "code": "77280", "description": "Simulation, Simple (Breast RT)", "frequency": "Once per course" },
+    { "code": "77332", "description": "Treatment device, Simple (Breast board)", "frequency": "Once per course" },
+    { "code": "77295", "description": "3D radiotherapy plan, including dose-volume histograms", "frequency": "Once per course" },
+    { "code": "77407", "description": "Radiation treatment delivery, 2 fields, simple/intermediate (Tangential fields)", "frequency": "16 fractions" },
+    { "code": "77387", "description": "Image Guided RT (IGRT) - Daily kV imaging", "frequency": "16 fractions" },
+    { "code": "77427", "description": "Radiation treatment management, 5 treatments (for courses <= 5 fx, then weekly)", "frequency": "Weekly (4x total)" },
+    { "code": "99213", "description": "Office visit for OTV (Established Patient, low complexity)", "frequency": "4 visits" }
   ],
-  "diagnosisSearch": "Breast Cancer"
+  "diagnosisSearch": "Breast Cancer, IDC, ER positive, HER2 negative"
 }
