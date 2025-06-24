@@ -4,169 +4,500 @@
     "name": "David Garcia",
     "dob": "1958-06-10",
     "gender": "Male",
-    "address": "321 Maple Drive, Metro City, USA",
+    "address": "321 Maple Drive, Metro City, USA, 10001",
     "phone": "555-5566",
-    "insurance": "Cigna PPO",
+    "insurance": "Cigna PPO - Policy #CIG-DG-98765",
     "referringPhysician": "Dr. Alan Rickman (Medical Oncology)",
-    "emergencyContact": "Maria Garcia (Wife) - 555-5567",
-    "advanceDirectives": "Full Code (On File)",
-    "supportServices": "Referred to Pulmonary Rehab post-treatment.",
-    "mobility": "Ambulatory without assistance."
+    "emergencyContact": "Maria Garcia (Wife) - 555-5567 (Relationship: Spouse). Primary contact for medical updates.",
+    "advanceDirectives": "Full Code (On File, verified 03/10/2025 with patient and spouse during initial consult. Advance care planning discussions initiated.)",
+    "supportServices": "Referred to Pulmonary Rehab post-treatment for lung function optimization. Social Work consult for smoking cessation resources and patient coping strategies. Referred to American Lung Association support groups.",
+    "mobility": "Ambulatory without assistance. ECOG Performance Status 1 at baseline. Able to climb one flight of stairs without significant dyspnea."
   },
   "diagnosis": {
     "primary": "Non-Small Cell Lung Cancer (NSCLC) - Adenocarcinoma",
     "location": "Right Lower Lobe (RLL)",
     "datePathologicDiagnosis": "03/05/2025 (Bronchoscopy Biopsy)",
     "tnmStage": "cT3 N1 M0",
-    "overallStage": "Stage IIIA",
-    "symptomsAtPresentation": "Persistent cough, mild shortness of breath on exertion.",
+    "overallStage": "Stage IIIA (AJCC 8th Edition)",
+    "grade": "Moderately Differentiated Adenocarcinoma (Grade 2)",
+    "tumorSize": "4.2 cm (largest dimension of primary mass on diagnostic CT)",
+    "vascularInvolvement": "No direct vascular invasion of major pulmonary vessels by primary tumor. N1 nodes show microscopic extension, no overt gross vascular encasement.",
+    "pathologicStage": "pT3 pN1 M0 (Clinical staging based on pre-treatment imaging and biopsy; definitive pathologic stage pending post-treatment evaluation)",
+    "symptomsAtPresentation": "Persistent productive cough (worse in mornings), mild shortness of breath on exertion (e.g., walking up slight incline), occasional dull ache in right chest. No hemoptysis or significant weight loss (stable weight for 3 months).",
     "pathologyFindings": [
-      "Biopsy of RLL mass confirms NSCLC, Adenocarcinoma type.",
-      "Sputum cytology positive for malignant cells, consistent with NSCLC."
+      "Bronchoscopy Biopsy of RLL mass confirms NSCLC, Adenocarcinoma type. Biopsy shows invasive malignant glandular structures with associated desmoplasia.",
+      "Sputum cytology positive for malignant cells, consistent with NSCLC, Adenocarcinoma morphology.",
+      "Immunohistochemistry: TTF-1 positive, Napsin A positive, consistent with lung primary.",
+      "Molecular: EGFR Wildtype, ALK Negative, ROS1 Negative, PD-L1 TPS <1% (all tested on biopsy specimen, results finalized 03/12/2025)."
     ],
-    "relevantHistory": "50 pack-year smoking history (active smoker), Hypertension.",
-    "baselineStatus": "ECOG 1 (Restricted in physically strenuous activity but ambulatory)",
-    "pftSummary": "FEV1 70% predicted, DLCO 65% predicted. Borderline surgical candidate, patient declined surgery."
+    "relevantHistory": "50 pack-year smoking history (active smoker, currently smoking ~1 pack/day). History of Hypertension (managed with Lisinopril). No prior history of cancer. Patient is a construction worker, concerned about fatigue during treatment.",
+    "baselineStatus": "ECOG 1 (Restricted in physically strenuous activity but ambulatory and able to perform light work). KPS 80.",
+    "pftSummary": "FEV1 70% predicted, FVC 80% predicted, DLCO 65% predicted. Mild obstructive ventilatory defect with reduced diffusion capacity. Deemed borderline surgical candidate by Thoracic Surgery due to pulmonary function and patient preference to avoid surgery. Recommended for definitive concurrent chemoradiation.",
+    "comorbidities": "Hypertension, Chronic Obstructive Pulmonary Disease (COPD - mild), Nicotine Dependence."
   },
   "treatmentPlan": {
     "radOnc": "Dr. Sarah Jenkins",
     "medOnc": "Dr. Alan Rickman",
-    "treatmentSite": "Right Lower Lobe + Mediastinum",
-    "intent": "Definitive (Curative)",
+    "surgOnc": "N/A (Patient declined surgery)",
+    "treatmentSite": "Right Lower Lobe Primary Lung Tumor + Involved Hilar (Level 10) and Mediastinal (Level 7) Lymph Nodes",
+    "intent": "Definitive (Curative) - Eradication of macroscopic and microscopic disease to maximize survival.",
     "modality": "External Beam Radiation Therapy (EBRT) with concurrent Chemotherapy",
-    "rtRxDetails": "66 Gy in 33 fractions (2 Gy/fx)",
-    "targetVolumeSummary": "PTV encompassing RLL primary tumor and involved hilar/mediastinal nodes (N1) with margin.",
-    "techniqueSummary": "3D Conformal Radiation Therapy (3D-CRT)",
+    "rtRxDetails": "66 Gy in 33 fractions (2 Gy/fx) to Gross Tumor Volume (GTV) and Involved Nodal Clinical Target Volume (CTV_node).",
+    "targetVolumeSummary": "Gross Tumor Volume (GTV) includes the primary RLL mass and involved Level 10 and Level 7 lymph nodes as identified on diagnostic PET/CT and CT simulation. Internal Target Volume (ITV) generated from 4D-CT to account for respiratory motion. Clinical Target Volume (CTV) is ITV + 0.8 cm margin for microscopic disease. Planning Target Volume (PTV) is CTV + 0.5 cm margin for setup uncertainty. Esophagus and spinal cord are primary OARs. Individual lung dosimetry also optimized.",
+    "techniqueSummary": "3D Conformal Radiation Therapy (3D-CRT) utilizing 4 oblique fields (AP, PA, RAO, LAO) with MLC shaping. Fields designed to conform to the PTV while sparing surrounding lung, heart, esophagus, and spinal cord. Dose calculated with heterogeneity corrections.",
     "concurrentChemo": "Carboplatin/Paclitaxel",
-    "detailedConcurrentChemo": "Carboplatin AUC 2 + Paclitaxel 45 mg/m^2 weekly x 6-7 cycles - Managed by Dr. Rickman",
+    "detailedConcurrentChemo": "Carboplatin AUC 2 IV (weekly) + Paclitaxel 45 mg/m^2 IV (weekly) for 6-7 cycles. Managed by Dr. Rickman. Started 03/27/2025 (Day 1 of RT).",
     "medications": [
-      "Ondansetron/Prochlorperazine PRN Nausea/Vomiting (Chemo related)",
-      "Loperamide PRN Diarrhea (Chemo related)",
-      "Cough Syrup (e.g., Tessalon Perles) PRN radiation-induced cough",
-      "Esomeprazole PRN radiation-induced esophagitis"
+      "Ondansetron 8mg PO PRN Nausea/Vomiting (Chemo related, prior to infusions and as needed)",
+      "Prochlorperazine 10mg PO PRN Nausea/Vomiting (Chemo related, as needed)",
+      "Loperamide 2mg PO PRN Diarrhea (Chemo related, as needed)",
+      "Dexamethasone 4mg PO BID x 3 days with Paclitaxel infusions (pre-medication for hypersensitivity)",
+      "Cough Syrup (e.g., Tessalon Perles 100mg PO TID) PRN radiation-induced cough",
+      "Esomeprazole 40mg PO Daily PRN radiation-induced esophagitis/heartburn",
+      "Mucus thinners (e.g., Guaifenesin) PRN thick secretions/cough"
     ],
     "therapistAlerts": [
-        "Monitor for cough and shortness of breath.",
-        "Assess for esophagitis (difficulty/pain swallowing) weekly.",
-        "Patient is an active smoker; reinforce cessation resources."
-    ]
+        "Monitor for increasing cough and shortness of breath (SOB) daily; refer to nursing/physician if persistent or worsening. Document frequency and severity of cough.",
+        "Assess for esophagitis (difficulty/pain swallowing, retrosternal burning) weekly, or more frequently if patient reports symptoms. Document oral intake status.",
+        "Patient is an active smoker; reinforce cessation resources and importance of quitting during RT. Offer NRT or counseling referral.",
+        "Monitor skin reaction in treatment field (chest/back); advise gentle skin care. Document grade of dermatitis weekly.",
+        "Observe for signs of myelosuppression (fatigue, fever, chills) especially with concurrent chemo. Labs reviewed weekly with physician.",
+        "Ensure consistent and reproducible setup using vacuum bag; address any discomfort or patient motion immediately to maintain dose accuracy."
+    ],
+    "gynOnc": "N/A",
+    "dermatologist": "N/A"
   },
   "radiationOncologyData": {
     "ctSimulation": {
       "simulationDate": "03/20/2025",
-      "setupInstructions": "Supine on wingboard with arms up, immobilized in BodyFix vacuum bag. 4D-CT acquired with respiratory tracking. SAD setup.",
-      "immobilization": "BodyFix vacuum bag, Wingboard (Arms Up).",
-      "referenceMarks": "3-point tattoos at isocenter projections (AP and bilateral laterals).",
+      "setupInstructions": "Supine on wingboard with arms up and secured in arm rests, immobilized in BodyFix vacuum bag molded to torso. Patient instructed on shallow breathing for 4D-CT acquisition. SAD setup with skin marks placed at isocenter projections.",
+      "immobilization": "BodyFix vacuum bag (molded to torso), Wingboard (Arms Up), Headrest (Type B).",
+      "referenceMarks": "3-point tattoos placed at anterior chest and bilateral mid-axillary line at isocenter projections. Isocenter derived from 4D-CT Mid-Ventilation phase: L+2.0, P+5.0, S-4.5 (Lateral, Anterior-Posterior, Superior-Inferior from CT sim reference point).",
       "setupImages": [
-        { "type": "AP", "url": "https://placehold.co/250x200/EEE/31343C?text=AP+Setup+Photo" },
-        { "type": "Lateral", "url": "https://placehold.co/250x200/EEE/31343C?text=Lateral+Setup+Photo" }
+        { "type": "AP", "url": "https://placehold.co/250x200/EEE/31343C?text=AP+Setup+Photo_DG55667" },
+        { "type": "Lateral", "url": "https://placehold.co/250x200/EEE/31343C?text=Lateral+Setup+Photo_DG55667" }
       ],
-      "scanner": "Siemens Somatom Confidence",
-      "sliceThickness": "3.0 mm",
-      "contrastUsed": "IV Contrast",
-      "ctNotes": "4D-CT acquired with respiratory tracking. Tumor/Nodes motion assessed. Data acquired for 3D-CRT planning."
+      "scanner": "Siemens Somatom Confidence Big Bore CT (for patient comfort and image quality in lung)",
+      "sliceThickness": "3.0 mm (for primary planning). 2.0 mm for 4D-CT acquisition to accurately capture tumor motion.",
+      "contrastUsed": "IV Contrast (100ml Omnipaque 300mgI/ml) administered for enhanced visualization of tumor and nodal volumes. Bolus tracking used for optimal enhancement.",
+      "ctNotes": "4D-CT acquired with respiratory tracking (average phase, MIP, ITV generated). Tumor/Nodes motion assessed (primary tumor motion <1cm). Data acquired for 3D-CRT planning. Patient tolerated supine position well. Good breath holding capability during acquisition windows. Vacuum bag molded effectively for reproducibility. Fused with diagnostic PET/CT for GTV delineation."
     },
     "dosimetry": {
-      "planId": "DG55667_Lung",
-      "planStatus": "Final - Approved by Dr. Sarah Jenkins",
-      "rx": "66 Gy / 33 fx",
-      "technique": "3D-CRT",
-      "energy": "6MV / 10MV",
+      "planId": "DG55667_Lung_3DCRT",
+      "planStatus": "Final - Approved by Dr. Sarah Jenkins (03/25/2025)",
+      "rx": "66 Gy / 33 fx (2 Gy/fx daily)",
+      "technique": "3D-CRT (Conformal Radiation Therapy with multiple static fields)",
+      "energy": "6MV (for AP/RAO/LAO fields), 10MV (for PA field for better penetration through spine)",
       "numberOfFieldsOrArcs": 4,
-      "gantryAngles": "0, 180, 45, 285",
-      "collAngles": "Variable based on beam-eye-view shaping",
-      "couchAngles": "0",
-      "isoCoords": "L+2.0, P+5.0, S-4.5 (relative to reference)",
-      "tps": "Eclipse",
-      "algorithm": "AAA",
-      "hetero": "Yes",
-      "norm": "Isocenter",
-      "constraints": "Spinal Cord Max < 45 Gy; Heart V30 < 40%; Total Lung V20 < 30%. All constraints met.",
-      "planNotes": "3D CRT for locally advanced NSCLC. Motion managed with ITV approach on 4D-CT.",
+      "gantryAngles": "0 (AP), 180 (PA), 45 (LAO), 285 (RAO) - angles chosen to maximize target coverage and minimize OAR dose.",
+      "collAngles": "Variable based on beam-eye-view shaping with MLCs for each field to contour to PTV. (e.g., AP: 5, PA: 5, LAO: 355, RAO: 355)",
+      "couchAngles": "0 (Patient supine)",
+      "isoCoords": "L+2.0, P+5.0, S-4.5 (Lateral, Anterior-Posterior, Superior-Inferior relative to CT sim reference point, located near tumor center for optimal geometry)",
+      "tps": "Eclipse 15.6",
+      "algorithm": "AAA (Anisotropic Analytic Algorithm, for accurate dose calculation in lung tissue heterogeneity)",
+      "hetero": "Yes (Full heterogeneity correction applied)",
+      "norm": "Isocenter (100% at isocenter)",
+      "constraints": "Spinal Cord Max < 45 Gy (achieved 42.1 Gy); Esophagus Mean < 34 Gy (achieved 30.5 Gy); Heart V30 < 40% (achieved 35.8%); Total Lung V20 < 30% (achieved 28.1%, Mean Lung Dose 15.5 Gy). All constraints met within acceptable clinical limits. Brachial Plexus Max < 66 Gy (achieved 58.0 Gy).",
+      "planNotes": "3D CRT for locally advanced NSCLC. Respiratory motion managed with ITV approach based on 4D-CT data. Patient to receive weekly concurrent chemotherapy. Plan optimized to balance target coverage with lung/esophagus/heart sparing. Patient on daily IGRT with kV imaging.",
       "igrtProtocol": {
         "frequency": "Daily",
-        "type": "kV Imaging (Orthogonal Pair)",
-        "alignment": "Match to carina and vertebral bodies."
+        "type": "kV Imaging (Orthogonal Pair - AP & Lateral)",
+        "alignment": "Primary match to carina and vertebral bodies (T4/T5). Secondary check to tumor location relative to ribs/diaphragm. Shifts approved by therapists within pre-set tolerance, physician approval for larger shifts or rotational errors.",
+        "tolerances": "Translational: +/- 3mm; Rotational: +/- 2 degrees. Action taken for out-of-tolerance shifts."
       },
       "qaChecks": [
-        { "date": "2025-03-25", "type": "Initial Chart Check", "by": "Physics Staff" }
+        { "date": "2025-03-25", "type": "Initial Chart Check", "by": "Physics Staff (RD)", "result": "Pass - All plan parameters, prescriptions, and notes verified." },
+        { "date": "2025-03-25", "type": "Patient Specific QA (IMRT QA)", "by": "Physics Staff (RD)", "result": "Pass (Gamma 98.8% @ 3%/3mm)." },
+        { "date": "2025-03-26", "type": "Dry Run Verification", "by": "Lead Therapist (SD)", "result": "Pass - Machine parameters, field sequencing, and couch movements verified on LINAC." }
       ],
       "fieldDetails": [
-        { "fieldName": "AP", "fieldSize": "12.5 x 15.0 cm", "gantryAngle": "0", "collimatorAngle": "5", "couchAngle": "0", "energy": "6MV", "monitorUnits": 85, "ssd": "88.0 cm" },
-        { "fieldName": "PA", "fieldSize": "12.5 x 15.0 cm", "gantryAngle": "180", "collimatorAngle": "5", "couchAngle": "0", "energy": "10MV", "monitorUnits": 90, "ssd": "87.5 cm" },
-        { "fieldName": "LAO", "fieldSize": "14.0 x 15.0 cm", "gantryAngle": "45", "collimatorAngle": "355", "couchAngle": "0", "energy": "10MV", "monitorUnits": 110, "ssd": "91.0 cm" },
-        { "fieldName": "RAO", "fieldSize": "14.0 x 15.0 cm", "gantryAngle": "285", "collimatorAngle": "355", "couchAngle": "0", "energy": "6MV", "monitorUnits": 105, "ssd": "90.5 cm" }
+        { "fieldName": "AP Field", "fieldSize": "12.5 x 15.0 cm (MLC defined)", "gantryAngle": "0", "collimatorAngle": "5", "couchAngle": "0", "energy": "6MV", "monitorUnits": 85, "ssd": "88.0 cm (Calculated)" },
+        { "fieldName": "PA Field", "fieldSize": "12.5 x 15.0 cm (MLC defined)", "gantryAngle": "180", "collimatorAngle": "5", "couchAngle": "0", "energy": "10MV", "monitorUnits": 90, "ssd": "87.5 cm (Calculated)" },
+        { "fieldName": "LAO Field", "fieldSize": "14.0 x 15.0 cm (MLC defined)", "gantryAngle": "45", "collimatorAngle": "355", "couchAngle": "0", "energy": "10MV", "monitorUnits": 110, "ssd": "91.0 cm (Calculated)" },
+        { "fieldName": "RAO Field", "fieldSize": "14.0 x 15.0 cm (MLC defined)", "gantryAngle": "285", "collimatorAngle": "355", "couchAngle": "0", "energy": "6MV", "monitorUnits": 105, "ssd": "90.5 cm (Calculated)" }
       ],
       "imagingFields": [
-        { "fieldName": "AP Verification", "gantryAngle": "0", "fieldSize": "10x10 cm", "energy": "6MV", "monitorUnits": 2 },
-        { "fieldName": "Right Lateral Verification", "gantryAngle": "270", "fieldSize": "10x10 cm", "energy": "6MV", "monitorUnits": 2 }
+        { "fieldName": "AP Verification (kV)", "gantryAngle": "0", "fieldSize": "10x10 cm", "energy": "kV", "monitorUnits": "N/A" },
+        { "fieldName": "Lateral Verification (kV)", "gantryAngle": "270", "fieldSize": "10x10 cm", "energy": "kV", "monitorUnits": "N/A" }
       ]
     },
     "treatmentDelivery": {
       "fractions": [
-        { 
-          "fractionNumber": 1, 
-          "date": "2025-03-27", 
-          "machine": "LINAC2", 
-          "setupNotes":"KV imaging for setup verification. Matched to carina. No adjustments needed.", 
-          "sideEffects": "No acute side effects after Fx 1.", 
-          "notes": "Patient tolerated first treatment and concurrent chemotherapy well.",
+        {
+          "fractionNumber": 1,
+          "totalFractions": 33,
+          "date": "2025-03-27",
+          "machine": "LINAC2",
+          "therapistInitials": "JL, KM",
+          "overallMUs": 390,
+          "setupVerification": "Tolerances Met",
+          "immobilizationDevicesChecked": "Vacuum bag, wingboard, arm rests",
+          "setupAdjustments": "None (initial setup accurate)",
+          "organTargetChecks": "kV imaging reviewed, matched to carina and vertebral bodies. Lung fields clear.",
+          "imagingType": "kV Pair",
+          "igrtMatchQuality": "Good - No Shifts Required",
+          "shiftsApplied": "None",
+          "igrtApprovedBy": "SJ (Physician)",
+          "igrtVerificationNotes": "First treatment. kV match excellent. Patient tolerated setup well. Reviewed pre-meds for chemo.",
+          "patientTolerance": "Good",
+          "generalSideEffects": "No acute side effects after Fx 1.",
+          "siteSpecificSideEffects": "None.",
+          "painAssessment": "0/10.",
+          "patientConcerns": "None.",
+          "instructionsGiven": "Educated on daily RT, weekly chemo, and need for symptom reporting.",
+          "billingCodes": "77412, 77387",
+          "dailyNotes": "Patient tolerated first treatment and concurrent chemotherapy well. Quick setup. Confirmed he took his weekly chemo prior to arriving. Encouraged deep breaths before and after treatment.",
+          "energiesUsed": "6MV, 10MV",
           "recordedFields": [
-            { "fieldName": "AP", "deliveredMu": 85, "notes": ""},
-            { "fieldName": "PA", "deliveredMu": 90, "notes": ""},
-            { "fieldName": "RAO", "deliveredMu": 110, "notes": ""},
-            { "fieldName": "LAO", "deliveredMu": 105, "notes": ""}
+            { "fieldName": "AP", "deliveredMu": 85, "notes": "OK" },
+            { "fieldName": "PA", "deliveredMu": 90, "notes": "OK" },
+            { "fieldName": "RAO", "deliveredMu": 110, "notes": "OK" },
+            { "fieldName": "LAO", "deliveredMu": 105, "notes": "OK" }
           ]
+        },
+        {
+          "fractionNumber": 5,
+          "totalFractions": 33,
+          "date": "2025-04-02",
+          "machine": "LINAC2",
+          "therapistInitials": "JL, KM",
+          "overallMUs": 390,
+          "setupVerification": "Adjustments Made",
+          "immobilizationDevicesChecked": "Vacuum bag, wingboard, arm rests",
+          "setupAdjustments": "V:0.1 cm, L:-0.1 cm, S:0.2 cm shifts applied.",
+          "organTargetChecks": "kV imaging reviewed, matched to carina. Minor shifts for bony alignment. Lungs clear on imaging.",
+          "imagingType": "kV Pair",
+          "igrtMatchQuality": "Good - Shifts Applied",
+          "shiftsApplied": "V:0.1, L:-0.1, S:0.2",
+          "igrtApprovedBy": "JL (Therapist)",
+          "igrtVerificationNotes": "Minor shifts applied after kV. Patient cooperative.",
+          "patientTolerance": "Good",
+          "generalSideEffects": "Mild fatigue.",
+          "siteSpecificSideEffects": "Occasional mild cough.",
+          "painAssessment": "0/10.",
+          "patientConcerns": "Asked about timing for next chemo. Stated mild increase in cough.",
+          "instructionsGiven": "Advised to try Tessalon Perles. Reinforce hydration. Next chemo on 04/03/2025.",
+          "billingCodes": "77412, 77387",
+          "dailyNotes": "Patient remains comfortable during treatment. Reminder to use cough syrup as needed. No issues with motion.",
+          "energiesUsed": "6MV, 10MV",
+          "recordedFields": [
+            { "fieldName": "AP", "deliveredMu": 85, "notes": "OK" },
+            { "fieldName": "PA", "deliveredMu": 90, "notes": "OK" },
+            { "fieldName": "RAO", "deliveredMu": 110, "notes": "OK" },
+            { "fieldName": "LAO", "deliveredMu": 105, "notes": "OK" }
+          ]
+        },
+        {
+          "fractionNumber": 10,
+          "totalFractions": 33,
+          "date": "2025-04-09",
+          "machine": "LINAC2",
+          "therapistInitials": "KM, SN",
+          "overallMUs": 390,
+          "setupVerification": "Tolerances Met",
+          "immobilizationDevicesChecked": "Vacuum bag, wingboard, arm rests",
+          "setupAdjustments": "V:-0.1 cm, L:0.2 cm, S:-0.1 cm shifts applied.",
+          "organTargetChecks": "kV imaging reviewed. Matches to carina and vertebral bodies confirmed.",
+          "imagingType": "kV Pair",
+          "igrtMatchQuality": "Good - Shifts Applied",
+          "shiftsApplied": "V:-0.1, L:0.2, S:-0.1",
+          "igrtApprovedBy": "SJ (Physician)",
+          "igrtVerificationNotes": "Physician approved daily shifts. Patient reports continued general well-being. Tolerated treatment without issues.",
+          "patientTolerance": "Good",
+          "generalSideEffects": "Mild fatigue, intermittent cough.",
+          "siteSpecificSideEffects": "None.",
+          "painAssessment": "1/10 (occasional chest ache).",
+          "patientConcerns": "Asked about appetite changes.",
+          "instructionsGiven": "Advised on small, frequent meals. Encouraged continued activity as tolerated.",
+          "billingCodes": "77412, 77387",
+          "dailyNotes": "Patient cooperative. Able to take full breaths during verification images. No issues with compliance.",
+          "energiesUsed": "6MV, 10MV",
+          "recordedFields": [
+            { "fieldName": "AP", "deliveredMu": 85, "notes": "OK" },
+            { "fieldName": "PA", "deliveredMu": 90, "notes": "OK" },
+            { "fieldName": "RAO", "deliveredMu": 110, "notes": "OK" },
+            { "fieldName": "LAO", "deliveredMu": 105, "notes": "OK" }
+          ]
+        },
+        {
+          "fractionNumber": 15,
+          "totalFractions": 33,
+          "date": "2025-04-16",
+          "machine": "LINAC2",
+          "therapistInitials": "JL, KM",
+          "overallMUs": 390,
+          "setupVerification": "Tolerances Met",
+          "immobilizationDevicesChecked": "Vacuum bag, wingboard, arm rests",
+          "setupAdjustments": "None.",
+          "organTargetChecks": "kV imaging reviewed, good match. Lung volumes appeared consistent.",
+          "imagingType": "kV Pair",
+          "igrtMatchQuality": "Good - No Shifts Required",
+          "shiftsApplied": "None",
+          "igrtApprovedBy": "SJ (Physician)",
+          "igrtVerificationNotes": "No shifts. Patient comfortable. Physician OTV conducted post-treatment.",
+          "patientTolerance": "Fair",
+          "generalSideEffects": "Moderate fatigue. Mild throat/chest soreness when swallowing.",
+          "siteSpecificSideEffects": "Mild esophagitis (Grade 1).",
+          "painAssessment": "2/10 (when swallowing).",
+          "patientConcerns": "Reported mild discomfort with swallowing and felt some heartburn.",
+          "instructionsGiven": "Advised soft, bland foods. Started Esomeprazole PRN. Reinforce hydration.",
+          "billingCodes": "77412, 77387, 77427",
+          "dailyNotes": "Patient compliant. Weekly OTV today with Dr. Jenkins. Reviewed labs. Patient continues to manage. No skin changes.",
+          "energiesUsed": "6MV, 10MV",
+          "recordedFields": [
+            { "fieldName": "AP", "deliveredMu": 85, "notes": "OK" },
+            { "fieldName": "PA", "deliveredMu": 90, "notes": "OK" },
+            { "fieldName": "RAO", "deliveredMu": 110, "notes": "OK" },
+            { "fieldName": "LAO", "deliveredMu": 105, "notes": "OK" }
+          ]
+        },
+        {
+          "fractionNumber": 20,
+          "totalFractions": 33,
+          "date": "2025-04-23",
+          "machine": "LINAC2",
+          "therapistInitials": "KM, SN",
+          "overallMUs": 390,
+          "setupVerification": "Adjustments Made",
+          "immobilizationDevicesChecked": "Vacuum bag, wingboard, arm rests",
+          "setupAdjustments": "V:0.2 cm, L:0 cm, S:0.1 cm shifts applied. Small rotation corrected.",
+          "organTargetChecks": "kV imaging reviewed. Small rotational adjustment needed for carina/vertebral body match. Approved.",
+          "imagingType": "kV Pair",
+          "igrtMatchQuality": "Good - Shifts Applied",
+          "shiftsApplied": "V:0.2, L:0, S:0.1",
+          "igrtApprovedBy": "TP (Resident)",
+          "igrtVerificationNotes": "Shift to correct minor rotation. Resident approved. Patient comfortable.",
+          "patientTolerance": "Fair",
+          "generalSideEffects": "Moderate fatigue. Moderate esophagitis (painful swallowing). Persistent cough.",
+          "siteSpecificSideEffects": "Redness in neck/chest skin (Grade 1 dermatitis).",
+          "painAssessment": "3/10 (when swallowing).",
+          "patientConcerns": "Reported increased difficulty swallowing solid foods. Asked about managing cough.",
+          "instructionsGiven": "Reinforced soft diet, advised use of Tessalon Perles. Ensured taking Esomeprazole daily.",
+          "billingCodes": "77412, 77387",
+          "dailyNotes": "Patient remains cooperative. Chemo C5 given today. Labs reviewed with Med Onc. Discussed symptoms with attending.",
+          "energiesUsed": "6MV, 10MV",
+          "recordedFields": [
+            { "fieldName": "AP", "deliveredMu": 85, "notes": "OK" },
+            { "fieldName": "PA", "deliveredMu": 90, "notes": "OK" },
+            { "fieldName": "RAO", "deliveredMu": 110, "notes": "OK" },
+            { "fieldName": "LAO", "deliveredMu": 105, "notes": "OK" }
+          ]
+        },
+        {
+          "fractionNumber": 25,
+          "totalFractions": 33,
+          "date": "2025-04-30",
+          "machine": "LINAC2",
+          "therapistInitials": "JL, KM",
+          "overallMUs": 390,
+          "setupVerification": "Adjustments Made",
+          "immobilizationDevicesChecked": "Vacuum bag, wingboard, arm rests",
+          "setupAdjustments": "V:0.1 cm, L:-0.2 cm, S:-0.1 cm shifts applied.",
+          "organTargetChecks": "kV imaging reviewed. Slight lateral shift corrected. Lungs clear.",
+          "imagingType": "kV Pair",
+          "igrtMatchQuality": "Good - Shifts Applied",
+          "shiftsApplied": "V:0.1, L:-0.2, S:-0.1",
+          "igrtApprovedBy": "SJ (Physician)",
+          "igrtVerificationNotes": "Minor shifts. Patient holding still very well. Dr. Jenkins approved.",
+          "patientTolerance": "Poor",
+          "generalSideEffects": "Severe fatigue. Moderate to severe esophagitis. Persistent cough. Mild nausea managed.",
+          "siteSpecificSideEffects": "Grade 2 esophagitis (painful, difficult swallowing). Grade 2 skin reaction (moist desquamation in axilla).",
+          "painAssessment": "5/10 (swallowing and general fatigue).",
+          "patientConcerns": "Expressed significant discomfort with eating. Asked about possibility of PEG tube (patient declined pre-tx).",
+          "instructionsGiven": "Advised liquid diet, use of Ensure/Boost. Reinforced pain medication. Discussed PEG tube again due to declining oral intake. Referral to Nutritionist for PEG re-evaluation.",
+          "billingCodes": "77412, 77387, 77427",
+          "dailyNotes": "Weekly OTV with Dr. Jenkins today. Labs show nadir counts, discussed with Med Onc for potential chemo hold. Patient coping, but struggling with side effects. Advised on soft foods/liquid diet."
+        },
+        {
+          "fractionNumber": 33,
+          "totalFractions": 33,
+          "date": "2025-05-13",
+          "machine": "LINAC2",
+          "therapistInitials": "KM, SN",
+          "overallMUs": 390,
+          "setupVerification": "Tolerances Met",
+          "immobilizationDevicesChecked": "Vacuum bag, wingboard, arm rests",
+          "setupAdjustments": "None",
+          "organTargetChecks": "Final kV imaging. Perfect match to bony anatomy. Lungs clear.",
+          "imagingType": "kV Pair",
+          "igrtMatchQuality": "Good - No Shifts Required",
+          "shiftsApplied": "None",
+          "igrtApprovedBy": "SJ (Physician)",
+          "igrtVerificationNotes": "Final fraction verification. Excellent consistency. Patient comfortable. Plan completed.",
+          "patientTolerance": "Poor",
+          "generalSideEffects": "Severe fatigue. Severe esophagitis. Persistent cough. Mild diarrhea.",
+          "siteSpecificSideEffects": "Grade 3 esophagitis (painful swallowing, significant discomfort). Grade 2 moist desquamation in axilla/chest wall folds. Voice hoarse.",
+          "painAssessment": "6/10 (managed with scheduled meds).",
+          "patientConcerns": "Very relieved to finish. Anxious about recovery and side effects improving.",
+          "instructionsGiven": "Reinforced all post-treatment instructions. Emphasized continued use of Esomeprazole, cough syrup, and anti-diarrhea meds. Provided contact info for urgent concerns. Scheduled follow-up appointments with Radiation Oncology and Medical Oncology.",
+          "billingCodes": "77412, 77387, 77427",
+          "dailyNotes": "Completed 33/33 fractions of definitive RT with concurrent chemotherapy. Patient was very relieved. Provided completion certificate. Instructions on continued supportive care, especially nutrition and symptom management, were emphasized. Patient to be seen by Med Onc for continued systemic therapy. Discussed post-RT plan for monitoring and follow-up imaging."
         }
       ]
     }
   },
   "imagingAndReports": [
     {
-      "date": "03/01/2025", "type": "Sputum Cytology", "summary": "Positive for malignant cells, consistent with NSCLC.",
-      "reportDetails": { "specimenAdequacy": "Adequate for evaluation", "generalCategorization": "Positive for Malignant Cells", "interpretation": "Atypical cells present with features consistent with adenocarcinoma." }
+      "date": "03/01/2025",
+      "type": "Sputum Cytology",
+      "summary": "Positive for malignant cells, consistent with NSCLC, Adenocarcinoma type.",
+      "reportDetails": {
+        "accessionNumber": "CYT-25-001",
+        "specimenAdequacy": "Adequate for evaluation. Numerous exfoliated cells.",
+        "generalCategorization": "Positive for Malignant Cells",
+        "interpretation": "Numerous atypical cells present, arranged in cohesive clusters and singly. Nuclear pleomorphism, irregular nuclear membranes, prominent nucleoli, and vacuolated cytoplasm noted. Features consistent with adenocarcinoma. Background includes inflammatory cells and scant mucus.",
+        "comment": "Findings support a diagnosis of adenocarcinoma. Correlate with tissue biopsy.",
+        "signedBy": "Dr. A. Cytopathologist, 03/03/2025"
+      }
     },
     {
-      "date": "03/05/2025", "type": "Bronchoscopy Biopsy Report", "summary": "NSCLC - Adenocarcinoma.",
-      "reportDetails": { "lab": "ANYTOWN HOSPITAL PATHOLOGY", "specimen": "Bronchoscopy Biopsy, Right Lower Lobe Mass", "diagnosis": "NON-SMALL CELL LUNG CARCINOMA, ADENOCARCINOMA." }
+      "date": "03/05/2025",
+      "type": "Bronchoscopy Biopsy Report",
+      "summary": "NSCLC - Adenocarcinoma. Molecular results pending (TTF-1/Napsin A positive).",
+      "reportDetails": {
+        "lab": "ANYTOWN HOSPITAL PATHOLOGY",
+        "accessionNumber": "BX-25-005",
+        "specimen": "Bronchoscopy Biopsy, Right Lower Lobe Mass",
+        "diagnosis": "NON-SMALL CELL LUNG CARCINOMA, ADENOCARCINOMA. (WHO Classification)",
+        "microscopicDescription": "Multiple fragments of bronchial mucosa and underlying lung parenchyma show infiltration by a malignant epithelial neoplasm, arranged in glandular and acinar patterns. Tumor cells are pleomorphic with prominent nucleoli and moderate cytoplasm. Desmoplastic stromal reaction is noted. Mitotic figures are frequent. No evidence of small cell features or squamous differentiation. Immunostains for TTF-1 and Napsin A are positive, confirming pulmonary origin. p40 and CK5/6 are negative. PD-L1, EGFR, ALK, ROS1 testing sent out.",
+        "grossDescription": "Received in saline, several irregular tan-white tissue fragments, largest 0.4 cm, from 'RLL mass'. Entirely submitted.",
+        "comment": "Invasive adenocarcinoma of the lung. Molecular studies for actionable mutations are pending and will be crucial for guiding systemic therapy. Patient should be managed per multidisciplinary lung cancer board recommendations.",
+        "signedBy": "Dr. P. Pathologist, 03/07/2025",
+        "reviewedBy": "Dr. Alan Rickman (Med Onc)"
+      }
+    },
+    {
+      "date": "03/12/2025",
+      "type": "Molecular Pathology Report",
+      "summary": "NSCLC Adenocarcinoma: EGFR Wildtype, ALK Negative, ROS1 Negative, PD-L1 TPS <1%.",
+      "reportDetails": {
+        "lab": "GENOMICS LAB INC.",
+        "accessionNumber": "MOL-25-010",
+        "specimen": "RLL Biopsy Tissue (from BX-25-005)",
+        "testPerformed": "Next-Generation Sequencing (NGS) and Immunohistochemistry (IHC) for relevant lung cancer biomarkers.",
+        "results": {
+          "EGFR": "Wildtype (no activating mutations detected in Exon 18, 19, 20, 21).",
+          "ALK": "Negative (no rearrangements detected by FISH).",
+          "ROS1": "Negative (no rearrangements detected by FISH).",
+          "BRAF": "Wildtype (no V600E or other common mutations detected).",
+          "KRAS": "Wildtype (no G12C or other common mutations detected).",
+          "PDL1_IHC_TPS": "<1% (Negative for high expression).",
+          "NTRK_Fusion": "Negative."
+        },
+        "interpretation": "Absence of actionable driver mutations (EGFR, ALK, ROS1, BRAF, NTRK). PD-L1 expression is low. These findings support standard chemoradiation or chemotherapy options, and do not indicate a target for specific targeted therapies at this time.",
+        "signedBy": "Dr. G. Geneticist, 03/12/2025"
+      }
+    },
+    {
+      "date": "03/18/2025",
+      "type": "Diagnostic PET/CT Scan (Pre-treatment Planning)",
+      "summary": "Confirms RLL primary (4.2cm, SUVmax 18.0) and involved mediastinal nodes (Level 10: 1.5cm, SUVmax 12.1; Level 7: 1.8cm, SUVmax 10.5). No distant metastases. For fusion with RT Sim CT.",
+      "reportDetails": {
+        "accessionNumber": "PETCT-25-002",
+        "protocol": "FDG PET/CT, Head to Mid-thigh, for RT Planning",
+        "findings": "Hypermetabolic mass in the right lower lobe, measuring 4.2 x 3.5 cm (SUVmax 18.0). Hypermetabolic lymph nodes identified in the right hilum (Level 10 - 1.5 cm, SUVmax 12.1) and subcarinal region (Level 7 - 1.8 cm, SUVmax 10.5). No other suspicious lymphadenopathy or distant hypermetabolic foci in chest, abdomen, pelvis, or bones. Brain MRI (03/19/2025) was negative for brain metastases.",
+        "impression": "Locally advanced NSCLC, Adenocarcinoma. cT3 N1 M0. Imaging suitable for fusion with upcoming CT simulation for definitive chemoradiation planning.",
+        "signedBy": "Dr. R. Radiologist, 03/19/2025"
+      }
+    },
+    {
+      "date": "03/19/2025",
+      "type": "Diagnostic Brain MRI",
+      "summary": "No evidence of brain metastases.",
+      "reportDetails": {
+        "accessionNumber": "MRI-Brain-25-001",
+        "protocol": "MRI Brain with and without contrast",
+        "findings": "Normal brain parenchyma. No enhancing lesions, areas of restricted diffusion, or abnormal signal changes suggestive of metastatic disease. Ventricular system is normal. Cerebrovascular structures appear unremarkable.",
+        "impression": "Normal brain MRI. No evidence of intracranial metastases.",
+        "signedBy": "Dr. S. Neuroradiologist, 03/19/2025"
+      }
     }
   ],
-  "dicomImages": [],
+  "dicomImages": [
+    {
+      "description": "CT Simulation (Thorax 4D - 03/20/2025)",
+      "seriesType": "CT",
+      "imageUrls": [
+        "https://raw.githubusercontent.com/cornerstonejs/cornerstone-wado-image-loader/master/examples/images/CT000000.dcm"
+      ],
+      "ohifViewerUrl": "https://viewer.ohif.org/viewer/latest",
+      "accessionNumber": "CT-20250320-THORAX"
+    },
+    {
+      "description": "Diagnostic PET/CT (Thorax - 03/18/2025)",
+      "seriesType": "PET/CT",
+      "imageUrls": [],
+      "ohifViewerUrl": "https://viewer.ohif.org/viewer/latest?studyUIDs=1.2.826.0.1.3680043.8.498.5085351717327429184518715878414407864"
+    }
+  ],
   "labResults": [
-    { "date": "03/15/2025", "test": "WBC", "value": "7.5", "units": "K/mcL", "notes": "Pre-ChemoRT Baseline" },
-    { "date": "03/15/2025", "test": "Hemoglobin", "value": "14.2", "units": "g/dL", "notes": "Pre-ChemoRT Baseline" },
-    { "date": "03/15/2025", "test": "Platelet count", "value": "275", "units": "K/mcL", "notes": "Pre-ChemoRT Baseline" },
-    { "date": "03/27/2025", "test": "WBC", "value": "7.2", "units": "K/mcL", "notes": "Pre-Chemo C1" },
-    { "date": "04/03/2025", "test": "WBC", "value": "4.1", "units": "K/mcL", "notes": "Weekly monitoring (Week 1)" },
-    { "date": "04/17/2025", "test": "WBC", "value": "2.8", "units": "K/mcL", "notes": "Weekly monitoring (Week 3) - monitor closely" },
-    { "date": "04/17/2025", "test": "Platelet count", "value": "110", "units": "K/mcL", "notes": "Weekly monitoring (Week 3) - monitor closely" }
+    { "date": "03/15/2025", "test": "CBC - WBC", "value": "7.5", "units": "K/mcL", "notes": "Pre-ChemoRT Baseline" },
+    { "date": "03/15/2025", "test": "CBC - Hemoglobin", "value": "14.2", "units": "g/dL", "notes": "Pre-ChemoRT Baseline" },
+    { "date": "03/15/2025", "test": "CBC - Platelet count", "value": "275", "units": "K/mcL", "notes": "Pre-ChemoRT Baseline" },
+    { "date": "03/15/2025", "test": "Creatinine", "value": "1.0", "units": "mg/dL", "notes": "Pre-ChemoRT Baseline - Good renal function." },
+    { "date": "03/15/2025", "test": "Liver Function Tests (LFTs)", "value": "WNL", "units": "N/A", "notes": "Pre-ChemoRT Baseline." },
+    { "date": "03/27/2025", "test": "CBC - WBC", "value": "7.2", "units": "K/mcL", "notes": "Pre-Chemo C1 (Day 1 RT). Absolute Neutrophil Count (ANC): 4.5 K/mcL. Cleared for chemo." },
+    { "date": "03/27/2025", "test": "Creatinine", "value": "0.9", "units": "mg/dL", "notes": "Pre-Chemo C1. Stable." },
+    { "date": "04/03/2025", "test": "CBC - WBC", "value": "4.1", "units": "K/mcL", "notes": "Weekly monitoring (Week 1 Post-C1 Chemo). ANC: 2.5 K/mcL. Mild leukopenia." },
+    { "date": "04/03/2025", "test": "Platelet count", "value": "190", "units": "K/mcL", "notes": "Weekly monitoring (Week 1 Post-C1 Chemo). Mild thrombocytopenia." },
+    { "date": "04/10/2025", "test": "CBC - WBC", "value": "3.5", "units": "K/mcL", "notes": "Weekly monitoring (Week 2). ANC: 1.8 K/mcL. Moderate leukopenia/neutropenia. Cleared for Chemo C2." },
+    { "date": "04/10/2025", "test": "Creatinine", "value": "1.1", "units": "mg/dL", "notes": "Pre-Chemo C2. Mild elevation, still acceptable." },
+    { "date": "04/17/2025", "test": "CBC - WBC", "value": "2.8", "units": "K/mcL", "notes": "Weekly monitoring (Week 3 Post-C2 Chemo). ANC: 1.2 K/mcL. Significant leukopenia/neutropenia. Monitor closely." },
+    { "date": "04/17/2025", "test": "Platelet count", "value": "110", "units": "K/mcL", "notes": "Weekly monitoring (Week 3 Post-C2 Chemo). Moderate thrombocytopenia. Holding next Paclitaxel if below 100k." },
+    { "date": "04/24/2025", "test": "CBC - WBC", "value": "3.2", "units": "K/mcL", "notes": "Weekly monitoring (Week 4). ANC: 1.5 K/mcL. Improving counts. Chemo C3 approved by Med Onc." },
+    { "date": "04/24/2025", "test": "Creatinine", "value": "1.0", "units": "mg/dL", "notes": "Pre-Chemo C3. Stable." }
   ],
   "progressNotes": [
-    { "date": "03/15/2025", "author": "Dr. Sarah Jenkins (Rad Onc)", "type": "Initial Consult", "summary": "Reviewed case cT3N1M0 NSCLC Adeno. Agreed w/ Med Onc plan for concurrent chemoRT. Discussed RT details (3D-CRT, 66Gy/33fx), motion management (4D/ITV), potential RT side effects (fatigue, cough, esophagitis, pneumonitis). Pt agrees. 4D Sim scheduled." },
-    { "date": "04/10/2025", "author": "Dr. Sarah Jenkins (Rad Onc)", "type": "OTV - Week 2", "summary": "Pt completed 10/33 fx. Mild fatigue. Intermittent cough, managed with Tessalon Perles. No esophagitis yet. Tolerating chemo/RT well. Continue plan." },
-    { "date": "04/24/2025", "author": "Dr. Sarah Jenkins (Rad Onc)", "type": "OTV - Week 4", "summary": "Pt c/o moderate throat/chest soreness when swallowing (Grade 2 esophagitis). Started Esomeprazole. Cough increased slightly. Fatigue moderate. Labs show low WBC/Plt, discussed w/ Med Onc re: chemo dose/schedule. Continue RT. Monitor closely." }
+    { "date": "03/15/2025", "author": "Dr. Sarah Jenkins (Rad Onc)", "type": "Initial Consult", "summary": "Reviewed case cT3N1M0 NSCLC Adeno in 66yo active smoker. Patient declined surgery due to PFTs and personal preference. Agreed with Med Onc plan for definitive concurrent Carboplatin/Paclitaxel chemoRT. Discussed RT details (3D-CRT, 66Gy/33fx to primary & involved nodes), motion management (4D/ITV approach), potential RT side effects (fatigue, cough, shortness of breath, esophagitis, radiation pneumonitis - delayed), and chemotherapy side effects (nausea, fatigue, myelosuppression, neuropathy). Patient verbalizes understanding of risks/benefits and agrees to proceed. Strongly encouraged smoking cessation. 4D-CT Sim scheduled. Coordinated with Med Onc for chemo start and weekly labs.", "patientTolerance": "Good", "generalSideEffects": "Mild cough.", "siteSpecificSideEffects": "None.", "painAssessment": "1/10 (occasional chest ache).", "patientConcerns": "Expressed concern about fatigue and maintaining energy for family activities. Asked about treatment duration.", "instructionsGiven": "Provided Lung RT patient education booklet. Advised on importance of smoking cessation and provided resources. Encouraged maintaining activity level." },
+    { "date": "03/20/2025", "author": "Radiation Therapist Lead", "type": "Simulation Note", "summary": "4D-CT Simulation for Thorax RT completed. Patient supine on wingboard, immobilized in BodyFix bag. Respiratory motion observed during 4D-CT was minimal (<1cm), suitable for ITV approach. Reference tattoos placed. Patient very cooperative. Images sent to dosimetry for planning. Fusion with diagnostic PET/CT requested.", "patientTolerance": "Good", "generalSideEffects": "None.", "siteSpecificSideEffects": "None.", "painAssessment": "0/10.", "patientConcerns": "Asked how long treatment will take each day.", "instructionsGiven": "Explained daily setup and imaging will take ~15-20 min total. Advised to wear comfortable clothing." },
+    { "date": "03/27/2025", "author": "Radiation Therapist", "type": "Daily Treatment Note - Fx 1", "summary": "First treatment delivered. kV imaging for setup verification. Matched to carina and vertebral bodies. No adjustments needed. Patient reports taking Carboplatin/Paclitaxel earlier today. No acute RT side effects during treatment. Treatment time 15 minutes. Patient remained still. Provided smoking cessation pamphlet.", "patientTolerance": "Good", "generalSideEffects": "No acute side effects after Fx 1.", "siteSpecificSideEffects": "None.", "painAssessment": "0/10.", "patientConcerns": "None.", "instructionsGiven": "Reinforced daily RT attendance, weekly chemo, and need for prompt symptom reporting. Encouraged fluid intake." },
+    { "date": "04/03/2025", "author": "Dr. Alan Rickman (Med Onc)", "type": "Chemotherapy Cycle 2 Note", "summary": "Patient received Cycle 2 Carboplatin/Paclitaxel. Tolerated well with pre-meds. Labs reviewed (WBC 4.1), acceptable for chemo. Patient reports mild fatigue and occasional cough. No fever/chills. Continue weekly chemo and daily RT. Discussed upcoming RT OTV.", "patientTolerance": "Good", "generalSideEffects": "Mild fatigue, intermittent cough.", "siteSpecificSideEffects": "None.", "painAssessment": "1/10 (cough related).", "patientConcerns": "Asked about potential hair loss from Paclitaxel.", "instructionsGiven": "Advised on potential hair thinning/loss and scalp care. Reviewed importance of reporting fever." },
+    { "date": "04/10/2025", "author": "Dr. Sarah Jenkins (Rad Onc)", "type": "OTV - Week 2", "summary": "Pt completed 10/33 fx. Mild fatigue (3/10). Intermittent productive cough, managed with Tessalon Perles. No esophagitis yet. Skin intact, no redness. Tolerating chemo/RT well. Labs reviewed with Med Onc (WBC 3.5, Plt 190k). Continue plan. Reinforce smoking cessation. Discussed initial lung reaction expectations.", "patientTolerance": "Good", "generalSideEffects": "Mild fatigue, intermittent cough.", "siteSpecificSideEffects": "None.", "painAssessment": "1/10 (cough related).", "patientConcerns": "Still actively smoking, states difficulty quitting. Asked about dry mouth.", "instructionsGiven": "Reinforced smoking cessation strategies and benefits. Advised on managing dry mouth (frequent water sips, sugar-free candies)." },
+    { "date": "04/17/2025", "author": "Dr. Alan Rickman (Med Onc)", "type": "Chemotherapy Cycle 3 Note", "summary": "Patient received Cycle 3 Carboplatin/Paclitaxel. Labs reviewed (WBC 2.8, Plt 110k), acceptable for chemo. Patient reports increasing fatigue and mild throat soreness. No fever. Continue weekly chemo. Discussed holding Paclitaxel if platelets drop further.", "patientTolerance": "Fair", "generalSideEffects": "Increasing fatigue, mild throat soreness.", "siteSpecificSideEffects": "Mild oral/pharyngeal irritation.", "painAssessment": "2/10 (swallowing).", "patientConcerns": "Concerned about low blood counts.", "instructionsGiven": "Emphasized reporting fever/chills immediately. Advised on soft foods." },
+    { "date": "04/24/2025", "author": "Dr. Sarah Jenkins (Rad Onc)", "type": "OTV - Week 4", "summary": "Pt c/o moderate throat/chest soreness when swallowing (Grade 2 esophagitis). Started Esomeprazole 40mg daily. Cough increased slightly in frequency. Fatigue moderate (5/10). Labs reviewed with Med Onc (WBC 3.2, Plt 120k). Chemo dose/schedule discussed due to counts, Med Onc recommends continuing for now. Continue RT. Monitor closely for symptom progression and blood counts. Advised on liquid diet if swallowing worsens.", "patientTolerance": "Fair", "generalSideEffects": "Moderate fatigue, increasing cough.", "siteSpecificSideEffects": "Grade 2 esophagitis (painful swallowing). Skin intact.", "painAssessment": "3/10 (with swallowing).", "patientConcerns": "Difficulty eating. Asked about PEG tube placement (patient declined again).", "instructionsGiven": "Reinforced Esomeprazole use. Encouraged Ensure/Boost drinks for nutrition. Advised on gentle cough suppression." },
+    { "date": "05/01/2025", "author": "Dr. Alan Rickman (Med Onc)", "type": "Chemotherapy Cycle 5 Note", "summary": "Patient received Cycle 5 Carboplatin/Paclitaxel. Labs reviewed (WBC 3.8, Plt 150k), counts recovering, acceptable for chemo. Patient reports stable esophagitis with Esomeprazole. Fatigue remains moderate. Continue weekly chemo. Patient remains motivated.", "patientTolerance": "Fair", "generalSideEffects": "Moderate fatigue, controlled nausea.", "siteSpecificSideEffects": "Stable Grade 2 esophagitis.", "painAssessment": "3/10.", "patientConcerns": "Concerned about finishing treatment strong.", "instructionsGiven": "Encouraged to maintain strength. Reviewed post-treatment follow-up plan." },
+    { "date": "05/13/2025", "author": "Dr. Sarah Jenkins (Rad Onc)", "type": "OTV - End of Treatment", "summary": "Completed 33/33 fractions of definitive RT with concurrent chemotherapy. Patient was very relieved. Severe fatigue (7/10). Esophagitis improved slightly towards end, Grade 3 at worst. Cough is intermittent. Skin reaction Grade 2 moist desquamation in right axilla. Provided post-treatment instructions. Scheduled follow-up MRI and Neuro-Onc clinic visit. Commended patient on excellent compliance despite severe side effects. Discussed follow-up for continued systemic therapy.", "patientTolerance": "Poor", "generalSideEffects": "Severe fatigue, mild diarrhea, occasional nausea.", "siteSpecificSideEffects": "Grade 2 moist desquamation in right axilla. Grade 3 esophagitis (painful swallowing).", "painAssessment": "4/10 (managed with meds).", "patientConcerns": "Very relieved to be finishing. Asked about recovery timeline and when symptoms will subside.", "instructionsGiven": "Reinforced all post-treatment instructions, including skin care, fatigue management, continued symptom management (Esomeprazole, cough syrup, anti-diarrhea). Provided contact info for urgent concerns. Scheduled follow-up appointments with Radiation Oncology and Medical Oncology." }
   ],
   "patientEducation": {
-    "goalsDiscussed": "Definitive treatment with curative intent using concurrent chemoradiation.",
-    "sideEffectsReviewed": "Fatigue (very common), cough, shortness of breath, esophagitis (difficulty/pain swallowing), skin irritation/redness in treatment area, nausea/vomiting (chemo), diarrhea (chemo), low blood counts (chemo - risk of infection/bleeding).",
-    "safetyConsiderations": "Reporting fever/chills, significant pain, worsening SOB, difficulty swallowing. Skin care instructions (mild soap, moisturizers). Importance of hydration and nutrition.",
-    "patientResponsibilities": "Attend daily RT/weekly chemo, weekly labs, report symptoms promptly, maintain nutrition/hydration.",
-    "medicationCompliance": "Importance of anti-nausea meds with chemo, PRN meds for cough/esophagitis."
+    "goalsDiscussed": "Definitive treatment with curative intent for locally advanced NSCLC using concurrent chemoradiation. Aim to maximize tumor eradication and long-term disease control. Preservation of lung function and overall quality of life are key considerations.",
+    "sideEffectsReviewed": "Common: Fatigue (can be severe and prolonged, often peaks post-treatment), radiation pneumonitis (inflammation of lungs, usually delayed 2-6 months post-RT, causing cough/SOB), esophagitis (inflammation of esophagus, leading to painful/difficult swallowing), skin irritation/redness (dermatitis in treatment area), cough (can worsen during and after RT). Chemotherapy-related: Nausea/vomiting, myelosuppression (low blood counts increasing infection/anemia/bleeding risk), peripheral neuropathy (tingling/numbness in hands/feet, from Paclitaxel), muscle/joint pain, hair thinning/loss. Long-term: Lung fibrosis (scarring, impacting breathing), chronic cough, chronic esophagitis/swallowing issues, fatigue, secondary malignancy (rare).",
+    "safetyConsiderations": "Critical: Strict adherence to daily RT and weekly chemotherapy schedule. Importance of smoking cessation immediately and permanently. Monitoring for signs of infection (fever >100.4°F, chills, severe cough/SOB, new pain) due to low blood counts – report immediately. Close symptom management (pain medication, anti-nausea, anti-diarrhea). Daily weight monitoring for hydration/nutrition status. Reporting worsening SOB or cough. Regular communication of symptoms to the care team.",
+    "patientResponsibilities": "Attend all daily RT appointments. Attend all scheduled weekly chemotherapy infusions. Take all prescribed oral medications (anti-emetics, cough meds, Esomeprazole, pain meds) as instructed. Maintain good nutrition and hydration (soft foods, liquid supplements if needed). Report any new or worsening symptoms, especially concerning pain, infection, or respiratory changes (SOB, persistent cough). Continue smoking cessation efforts.",
+    "medicationCompliance": "Crucial to take anti-nausea meds prior to chemotherapy. Use cough suppressants and Esomeprazole proactively as symptoms develop. Adhere to pain medication schedule as needed. Discuss any challenges with medication adherence or side effects with the care team promptly."
   },
   "scheduling": [
-    { "date": "03/15/2025", "type": "Rad Onc Consult", "location": "Rad Onc Clinic", "status": "Completed" },
-    { "date": "03/20/2025", "type": "4D-CT Simulation Thorax", "location": "Rad Onc Sim", "status": "Completed" },
-    { "date": "03/27/2025", "type": "Chemo Cycle 1 / Fx 1", "location": "Infusion Center / Rad Onc", "status": "Completed" },
-    { "date": "04/03/2025", "type": "Chemo C2 / OTV", "location": "Infusion Center / Rad Onc", "status": "Scheduled" }
+    { "date": "03/05/2025", "type": "Bronchoscopy Biopsy", "location": "Pulmonology Suite", "status": "Completed" },
+    { "date": "03/12/2025", "type": "Molecular Tumor Board Review", "location": "Multidisciplinary Clinic", "status": "Completed" },
+    { "date": "03/15/2025", "type": "Rad Onc Consult", "location": "Radiation Oncology Clinic - Exam Room 1", "status": "Completed" },
+    { "date": "03/18/2025", "type": "Diagnostic PET/CT (for RT Planning)", "location": "Imaging Department", "status": "Completed" },
+    { "date": "03/19/2025", "type": "Diagnostic Brain MRI", "location": "Imaging Department", "status": "Completed" },
+    { "date": "03/20/2025", "type": "4D-CT Simulation Thorax", "location": "Radiation Oncology Sim Room", "status": "Completed" },
+    { "date": "03/27/2025", "type": "First Treatment (Fx 1/33) & Chemo Cycle 1", "location": "Linear Accelerator #2 / Infusion Center", "status": "Completed" },
+    { "date": "04/03/2025", "type": "Chemo Cycle 2 & OTV - Week 1", "location": "Infusion Center / Radiation Oncology Clinic - Exam Room 2", "status": "Completed" },
+    { "date": "04/10/2025", "type": "Chemo Cycle 3 & OTV - Week 2", "location": "Infusion Center / Radiation Oncology Clinic - Exam Room 2", "status": "Completed" },
+    { "date": "04/16/2025", "type": "On Treatment Visit (OTV) - Week 3", "location": "Radiation Oncology Clinic - Exam Room 1", "status": "Completed" },
+    { "date": "04/17/2025", "type": "Chemo Cycle 4", "location": "Infusion Center", "status": "Completed" },
+    { "date": "04/23/2025", "type": "On Treatment Visit (OTV) - Week 4", "location": "Radiation Oncology Clinic - Exam Room 1", "status": "Completed" },
+    { "date": "04/24/2025", "type": "Chemo Cycle 5", "location": "Infusion Center", "status": "Completed" },
+    { "date": "04/30/2025", "type": "On Treatment Visit (OTV) - Week 5", "location": "Radiation Oncology Clinic - Exam Room 2", "status": "Completed" },
+    { "date": "05/01/2025", "type": "Chemo Cycle 6", "location": "Infusion Center", "status": "Completed" },
+    { "date": "05/07/2025", "type": "On Treatment Visit (OTV) - Week 6", "location": "Radiation Oncology Clinic - Exam Room 2", "status": "Completed" },
+    { "date": "05/08/2025", "type": "Chemo Cycle 7 (Final)", "location": "Infusion Center", "status": "Completed" },
+    { "date": "05/13/2025", "type": "End of Treatment (Fx 33/33)", "location": "Linear Accelerator #2", "status": "Completed" },
+    { "date": "06/10/2025", "type": "Post-RT Follow-up (Rad Onc)", "location": "Radiation Oncology Clinic - Exam Room 1", "status": "Scheduled" },
+    { "date": "06/17/2025", "type": "Post-RT Follow-up (Med Onc)", "location": "Medical Oncology Clinic", "status": "Scheduled" },
+    { "date": "07/10/2025", "type": "Post-Treatment PET/CT Scan (3-Month Follow-up)", "location": "Imaging Department", "status": "Scheduled" }
   ],
   "cptCharges": [
-    { "code": "77290", "description": "Simulation, Complex (4D-CT Thorax)", "frequency": "Once" },
-    { "code": "77334", "description": "Treatment device, Complex (BodyFix)", "frequency": "Once" },
-    { "code": "77295", "description": "3D radiotherapy plan, including dose-volume histograms", "frequency": "Once" },
-    { "code": "77412", "description": "Radiation treatment delivery, complex", "frequency": "Daily" },
-    { "code": "77387", "description": "Image Guided RT (IGRT)", "frequency": "Daily" },
-    { "code": "77427", "description": "Radiation treatment management, 5 treatments", "frequency": "Weekly" },
-    { "code": "96409", "description": "Chemotherapy administration, IV", "frequency": "Weekly" }
+    { "code": "77290", "description": "Simulation, Complex (4D-CT Thorax for Lung RT)", "frequency": "Once" },
+    { "code": "77334", "description": "Treatment device, Complex (BodyFix Vacuum Bag & Wingboard)", "frequency": "Once" },
+    { "code": "77295", "description": "3D radiotherapy plan, including dose-volume histograms and physician interpretation", "frequency": "Once" },
+    { "code": "77412", "description": "Radiation treatment delivery, complex (multiple beams, MLC shaping)", "frequency": "33 fractions" },
+    { "code": "77387", "description": "Image Guided RT (IGRT) - Daily kV imaging with shifts", "frequency": "33 fractions" },
+    { "code": "77427", "description": "Radiation treatment management, 5 treatments", "frequency": "Weekly (7x)" },
+    { "code": "96409", "description": "Chemotherapy administration, IV, for infusion technique (Paclitaxel portion)", "frequency": "7 infusions" },
+    { "code": "96413", "description": "Chemotherapy administration, IV infusion, initial 1 hour (Carboplatin portion)", "frequency": "7 infusions" },
+    { "code": "99213", "description": "Office visit for OTV (Established Patient, low complexity)", "frequency": "7 visits" }
   ],
-  "diagnosisSearch": "Lung Cancer"
+  "diagnosisSearch": "Lung Cancer, NSCLC, Adenocarcinoma"
 }
