@@ -6,20 +6,24 @@
     "gender": "Male",
     "address": "789 Oak Street, Anytown, USA",
     "phone": "555-4567",
-    "insurance": "Anthem",
+    "insurance": "Anthem - Policy #ANT-DL-600501",
     "referringPhysician": "Dr. Jennifer Wilson (Gastroenterology)",
     "emergencyContact": "Karen Lee (Wife) - 555-7890",
     "advanceDirectives": "Full Code (On File)",
-    "supportServices": "Nutrition consult post-operatively.",
-    "mobility": "Ambulatory without assistance."
+    "supportServices": "Nutrition consult placed post-operatively and re-engaged for RT. Social work support offered for managing treatment course.",
+    "mobility": "Ambulatory without assistance. ECOG Performance Status 0-1 (1 during adjuvant therapy)."
   },
   "diagnosis": {
     "primary": "Adenocarcinoma of the Jejunum",
     "datePathologicDiagnosis": "06/05/2025 (Surgical Pathology)",
-    "pathologicStage": "IIB (T4, N0, M0)",
-    "symptomsAtPresentation": "Intermittent abdominal pain and bloating.",
-    "relevantHistory": "Crohn's disease.",
-    "priorTreatmentSummary": "Segmental resection of the jejunum with en bloc removal of regional lymph nodes performed on 06/01/2025."
+    "pathologicStage": "pT4 N0 M0, Stage IIB (AJCC 8th Edition)",
+    "symptomsAtPresentation": "Patient presented with a several-month history of intermittent, crampy mid-abdominal pain and significant bloating, particularly after meals.",
+    "pathologyFindings": [
+      "Surgical Pathology (Jejunal Resection, 06/01/2025): Moderately differentiated adenocarcinoma, 4.5 cm. Tumor perforates the visceral peritoneum (pT4). All surgical margins negative. 0 of 12 regional lymph nodes positive for malignancy (pN0). Lymphovascular invasion is present."
+    ],
+    "priorProcedures": "Segmental resection of the jejunum with en bloc removal of regional lymph nodes performed on 06/01/2025.",
+    "relevantHistory": "Long-standing history of Crohn's disease, managed with intermittent therapies. This is a known risk factor for small bowel adenocarcinoma.",
+    "baselineStatus": "Patient has recovered well from surgery and completed 4 cycles of adjuvant chemotherapy. He reports mild residual fatigue and has ongoing dietary modifications related to his Crohn's disease. ECOG 1."
   },
   "treatmentPlan": {
     "radOnc": "Dr. Thomas Wilson",
@@ -30,96 +34,91 @@
     "modality": "Adjuvant Chemotherapy followed by Adjuvant External Beam Radiation Therapy (EBRT)",
     "totalDose": "50 Gy",
     "fractionation": "25 fx",
-    "rtRxDetails": "50 Gy / 25 fx (2.0 Gy/fx)",
-    "targetVolumeSummary": "PTV_JejunalBed",
-    "techniqueSummary": "IMRT",
-    "systemicChemo": "5-FU/LV",
-    "detailedSystemicChemo": "5-FU 500 mg/m² IV bolus 1 hour after Leucovorin 500 mg/m² IV weekly x 6 every 8 weeks for 4 cycles",
-    "medications": []
+    "rtRxDetails": "50 Gy in 25 fractions (2.0 Gy/fx)",
+    "targetVolumeSummary": "The PTV encompasses the post-operative surgical bed, including the anastomosis site (defined by surgical clips), and the draining mesenteric nodal basin.",
+    "techniqueSummary": "Intensity-Modulated Radiation Therapy (IMRT) is used to deliver a conformal dose to the target in the mid-abdomen while minimizing dose to the kidneys, liver, stomach, and surrounding small bowel.",
+    "priorSystemicChemo": "4 cycles of adjuvant 5-FU/Leucovorin chemotherapy completed post-operatively.",
+    "medications": [
+      "Ondansetron (Zofran) 8mg PO, taken 30 minutes prior to each radiation treatment for nausea prophylaxis.",
+      "Loperamide (Imodium) 2mg PO PRN for diarrhea.",
+      "Budesonide (for Crohn's disease), managed by gastroenterology."
+    ],
+    "therapistAlerts": [
+      "This is an upper abdominal IMRT plan. Daily CBCT is critical due to organ motion.",
+      "Patient has a history of Crohn's disease, which may increase his sensitivity to radiation-induced GI toxicity (diarrhea, cramping). Assess symptoms daily.",
+      "Verify patient is NPO for 3 hours prior to treatment as per protocol.",
+      "Assess for nausea and fatigue daily. Encourage patient to stay hydrated and follow nutritional advice."
+    ]
   },
   "radiationOncologyData": {
     "ctSimulation": {
       "simulationDate": "12/15/2025",
-      "setupInstructions": "Supine with leg immobilization and arms up on wingboard. SAD setup.",
-      "immobilization": "Vac-Lok bag, knee/foot sponges",
+      "setupInstructions": "Supine in a custom Vac-Lok bag with arms up on a wingboard to clear the lateral fields. Patient instructed to be NPO for 3 hours prior to simulation.",
+      "immobilization": "Vac-Lok bag (torso), Wingboard.",
       "referenceMarks": "3-point tattoos at isocenter projections (AP and bilateral laterals).",
       "scanner": "Siemens Somatom Definition AS",
-      "sliceThickness": "3.0 mm",
-      "contrastUsed": "IV and Oral Contrast",
-      "ctNotes": "CT simulation for adjuvant abdominal radiation therapy post-chemotherapy."
+      "sliceThickness": "2.5 mm",
+      "contrastUsed": "IV and Oral Contrast were administered to help delineate the bowel, kidneys, and vascular structures.",
+      "ctNotes": "CT simulation for adjuvant abdominal radiation therapy. Patient compliant with NPO instructions. Oral contrast helps visualize the small bowel to be avoided. Surgical clips from the jejunal resection are clearly visible."
     },
     "dosimetry": {
-      "planId": "DLSB004_SmlBwl",
-      "rx": "50 Gy / 25 fx",
+      "planId": "DLSB004_SmlBwl_IMRT",
+      "planStatus": "Final - Approved by Dr. Thomas Wilson (12/22/2025)",
+      "rx": "50 Gy / 25 fx (2.0 Gy/fx)",
       "technique": "IMRT",
       "energy": "6MV",
-      "numberOfFieldsOrArcs": 7,
-      "gantryAngles": "Multiple Static",
-      "collAngles": "Variable",
-      "couchAngles": "0",
-      "isoCoords": "Mid-Abdomen",
       "tps": "RayStation",
       "algorithm": "Monte Carlo",
-      "hetero": "Yes",
-      "norm": "PTV Mean 95%",
-      "constraints": "Kidney Mean < 15 Gy; Liver Mean < 25 Gy; Bowel Max < 50 Gy",
-      "planNotes": "Adjuvant RT post-resection and post-chemotherapy.",
+      "constraints": "Bilateral Kidney Mean < 15 Gy (achieved L: 14.5, R: 13.8 Gy); Liver Mean < 25 Gy (achieved 20.1 Gy); Small Bowel Max < 50 Gy (achieved 49.5 Gy); Spinal Cord Max < 45 Gy (achieved 40 Gy).",
+      "planNotes": "Adjuvant IMRT post-resection and chemotherapy for T4 small bowel adenocarcinoma. The IMRT plan allows for significant sparing of the kidneys and liver while covering the target volume.",
+      "igrtProtocol": {
+        "frequency": "Daily",
+        "type": "Cone Beam CT (CBCT)",
+        "alignment": "Primary match to surgical clips in the jejunal bed. Secondary check to spine for rotational accuracy.",
+        "tolerances": "Translational: +/- 3mm"
+      },
+      "qaChecks": [
+        { "date": "2025-12-22", "type": "Initial Chart Check", "by": "Physics Staff (SD)", "result": "Pass" },
+        { "date": "2025-12-22", "type": "Patient Specific QA (IMRT)", "by": "Medical Physicist (JL)", "result": "Pass (Gamma 98.8% @ 3%/3mm)" }
+      ],
       "fieldDetails": [
-        { "fieldName": "Field 1", "gantryAngle": "25", "collimatorAngle": "10", "couchAngle": "0", "energy": "6MV", "monitorUnits": 115 },
-        { "fieldName": "Field 2", "gantryAngle": "75", "collimatorAngle": "345", "couchAngle": "0", "energy": "6MV", "monitorUnits": 130 },
-        { "fieldName": "Field 3", "gantryAngle": "125", "collimatorAngle": "330", "couchAngle": "0", "energy": "6MV", "monitorUnits": 125 },
-        { "fieldName": "Field 4", "gantryAngle": "180", "collimatorAngle": "0", "couchAngle": "0", "energy": "6MV", "monitorUnits": 90 },
-        { "fieldName": "Field 5", "gantryAngle": "235", "collimatorAngle": "30", "couchAngle": "0", "energy": "6MV", "monitorUnits": 125 },
-        { "fieldName": "Field 6", "gantryAngle": "285", "collimatorAngle": "15", "couchAngle": "0", "energy": "6MV", "monitorUnits": 130 },
-        { "fieldName": "Field 7", "gantryAngle": "335", "collimatorAngle": "350", "couchAngle": "0", "energy": "6MV", "monitorUnits": 115 }
+        { "fieldName": "Field 1 (AP)", "fieldSize": "16.0 x 17.0 cm MLC defined", "gantryAngle": "0", "collimatorAngle": "0", "couchAngle": "0", "energy": "6MV", "monitorUnits": 110, "ssd": "91.0 cm" },
+        { "fieldName": "Field 2 (RAO)", "fieldSize": "16.0 x 17.0 cm MLC defined", "gantryAngle": "50", "collimatorAngle": "340", "couchAngle": "0", "energy": "6MV", "monitorUnits": 135, "ssd": "92.5 cm" },
+        { "fieldName": "Field 3 (RPO)", "fieldSize": "16.0 x 17.0 cm MLC defined", "gantryAngle": "130", "collimatorAngle": "340", "couchAngle": "0", "energy": "6MV", "monitorUnits": 130, "ssd": "94.0 cm" },
+        { "fieldName": "Field 4 (LPO)", "fieldSize": "16.0 x 17.0 cm MLC defined", "gantryAngle": "230", "collimatorAngle": "20", "couchAngle": "0", "energy": "6MV", "monitorUnits": 132, "ssd": "93.1 cm" },
+        { "fieldName": "Field 5 (LAO)", "fieldSize": "16.0 x 17.0 cm MLC defined", "gantryAngle": "310", "collimatorAngle": "20", "couchAngle": "0", "energy": "6MV", "monitorUnits": 128, "ssd": "91.8 cm" }
       ]
     },
     "treatmentDelivery": {
       "fractions": [
-        { "fractionNumber": 1, "date": "2026-01-02", "machine": "LINAC3", "setupNotes":"Daily CBCT IGRT. Setup to surgical clips.", "sideEffects": "No acute side effects after first fraction.", "notes": "Patient tolerated treatment well." }
+        {
+          "fractionNumber": 1, "totalFractions": 25, "date": "2026-01-02", "machine": "LINAC3", "therapistInitials": "AM, LW",
+          "recordedFields": [{ "fieldName": "All Fields Delivered", "deliveredMu": 635 }],
+          "energiesUsed": "6MV", "setupVerification": "Tolerances Met", "immobilizationDevicesChecked": "Vac-Lok bag, Wingboard", "setupAdjustments": "None", "organTargetChecks": "CBCT reviewed. Excellent match to surgical clips.", "imagingType": "CBCT", "igrtMatchQuality": "Excellent", "igrtApprovedBy": "TW (Physician)",
+          "patientTolerance": "Good", "generalSideEffects": "None", "siteSpecificSideEffects": "None", "painAssessment": "0/10", "patientConcerns": "None", "instructionsGiven": "Reviewed supportive care instructions for nausea and diarrhea.", "billingCodes": "77386, 77387", "dailyNotes": "Patient tolerated first treatment well. Pre-medicated with Ondansetron."
+        },
+        {
+          "fractionNumber": 10, "totalFractions": 25, "date": "2026-01-15", "machine": "LINAC3", "therapistInitials": "AM, LW",
+          "recordedFields": [{ "fieldName": "All Fields Delivered", "deliveredMu": 635 }],
+          "energiesUsed": "6MV", "setupVerification": "Tolerances Met", "immobilizationDevicesChecked": "Vac-Lok bag, Wingboard", "setupAdjustments": "None", "organTargetChecks": "CBCT match consistent.", "imagingType": "CBCT", "igrtMatchQuality": "Good", "igrtApprovedBy": "Therapist",
+          "patientTolerance": "Good", "generalSideEffects": "Mild fatigue", "siteSpecificSideEffects": "Occasional mild nausea, well-controlled. 2-3 loose stools/day.", "painAssessment": "0/10", "patientConcerns": "Concerned about diarrhea, given history of Crohn's.", "instructionsGiven": "Reinforced use of Loperamide and to follow a low-residue diet.", "billingCodes": "77386, 77387, 77427", "dailyNotes": "OTV today. Patient managing side effects well. His underlying Crohn's may be contributing to GI symptoms, but they are currently well-controlled."
+        },
+        {
+          "fractionNumber": 25, "totalFractions": 25, "date": "2026-02-05", "machine": "LINAC3", "therapistInitials": "AM, LW",
+          "recordedFields": [{ "fieldName": "All Fields Delivered", "deliveredMu": 635 }],
+          "energiesUsed": "6MV", "setupVerification": "Tolerances Met", "immobilizationDevicesChecked": "Vac-Lok bag, Wingboard", "setupAdjustments": "None", "organTargetChecks": "Final CBCT reviewed.", "imagingType": "CBCT", "igrtMatchQuality": "Excellent", "igrtApprovedBy": "TW (Physician)",
+          "patientTolerance": "Good", "generalSideEffects": "Moderate fatigue.", "siteSpecificSideEffects": "Diarrhea controlled with Loperamide. No significant nausea or skin reaction.", "painAssessment": "0/10", "patientConcerns": "Relieved to be finished.", "instructionsGiven": "End-of-treatment instructions provided. Side effects will resolve over the next few weeks.", "billingCodes": "77386, 77387, 77427", "dailyNotes": "Final treatment delivered. Patient tolerated the full course of adjuvant radiation well. Follow-up appointments scheduled."
+        }
       ]
     }
   },
   "imagingAndReports": [
-    { "date": "05/25/2025", "type": "CT Abdomen/Pelvis", "summary": "Mass in the jejunum.", "modalId": "dl-ct-modal", "reportDetails": { "date": "05/25/2025", "findings": "A mass is identified in the jejunum, approximately 4 cm in size.", "impression": "Small bowel adenocarcinoma." } },
-    { "date": "06/05/2025", "type": "Pathology Report", "summary": "Adenocarcinoma of the Jejunum, Stage IIB (T4, N0, M0).", "modalId": "dl-path-modal", "reportDetails": { "specimen": "Jejunum Resection", "diagnosis": "Adenocarcinoma of the Jejunum, Stage IIB (T4, N0, M0)", "grade": "Moderately differentiated", "margins": "Negative", "lymphNodes": "10 regional lymph nodes examined, 0 positive for metastatic carcinoma." } },
-    { "date": "12/15/2025", "type": "CT Simulation", "summary": "Simulation for adjuvant radiation therapy.", "modalId": "dl-sim-modal", "reportDetails": { "date": "12/15/2025", "region": "Abdomen", "purpose": "Adjuvant radiation therapy planning.", "position": "Supine with leg immobilization." } }
-  ],
-  "dicomImages": [
-    { "description": "Diagnostic CT Abdomen/Pelvis (05/25/2025)", "seriesType": "CT", "ohifViewerUrl": "" },
-    { "description": "CT Simulation Abdomen (12/15/2025)", "seriesType": "CT", "ohifViewerUrl": "" }
-  ],
-  "labResults": [
-    { "date": "06/25/2025", "test": "CBC", "value": "WNL", "notes": "Baseline" },
-    { "date": "06/25/2025", "test": "CMP", "value": "WNL", "notes": "Baseline" },
-    { "date": "06/25/2025", "test": "CEA", "value": "1.8", "units": "ng/mL", "range": "<5.0", "notes": "Baseline" }
+    { "date": "05/25/2025", "type": "CT Abdomen/Pelvis", "summary": "4.5 cm mass in the jejunum, causing partial obstruction.", "reportDetails": { "accessionNumber": "CT-25-1111", "protocol": "CT Abdomen/Pelvis with IV and Oral Contrast", "findings": "There is a 4.5 cm circumferential, apple-core-like mass in the proximal jejunum, causing high-grade partial small bowel obstruction with proximal dilation. No evidence of distant metastatic disease.", "impression": "Findings highly suggestive of a primary small bowel malignancy. Surgical consultation recommended." } },
+    { "date": "06/05/2025", "type": "Pathology Report", "summary": "Adenocarcinoma of the Jejunum, Stage IIB (pT4, N0, M0).", "reportDetails": { "accessionNumber": "S-25-2222", "specimen": "Segmental Jejunum Resection", "diagnosis": "Adenocarcinoma of the Jejunum, Moderately Differentiated", "findings": "Tumor measures 4.5 cm and perforates the visceral peritoneum (pT4). All surgical margins are negative. 0 of 12 examined lymph nodes are positive for malignancy (pN0). Lymphovascular invasion is identified.", "comment": "Pathologic Stage IIB. Given the T4 stage, adjuvant therapy is recommended." } }
   ],
   "progressNotes": [
-    { "date": "07/05/2025", "author": "Dr. Karen Brown", "type": "Post-Op Note", "summary": "Post-operative visit - Tolerating diet well. Path reviewed, discussed need for adjuvant therapy." },
-    { "date": "07/01/2025", "author": "Dr. Evelyn Reed", "type": "Chemo Start Note", "summary": "Started adjuvant chemotherapy with 5-FU/LV." },
-    { "date": "01/02/2026", "author": "Dr. Thomas Wilson", "type": "RT Start Note", "summary": "Started adjuvant radiation therapy." }
-  ],
-  "patientEducation": {
-    "goalsDiscussed": "Adjuvant (post-operative) radiation therapy to reduce the risk of cancer recurrence in the surgical bed.",
-    "sideEffectsReviewed": "Acute: Nausea, diarrhea, fatigue, and potential for skin irritation in the treatment area.",
-    "safetyConsiderations": "Following a low-residue diet to help manage diarrhea. Importance of hydration and nutrition, especially with prior surgery and chemotherapy.",
-    "patientResponsibilities": "Attend daily RT appointments, report side effects to the team.",
-    "medicationCompliance": "Use supportive medications for nausea and diarrhea as prescribed."
-  },
-  "scheduling": [
-    { "date": "05/25/2025", "time": "11:00 AM", "type": "CT Abdomen/Pelvis", "location": "Radiology Dept", "status": "Completed" },
-    { "date": "06/05/2025", "time": "10:00 AM", "type": "Surgical Consultation", "location": "Surgical Oncology Clinic", "status": "Completed" },
-    { "date": "06/01/2025", "time": "9:00 AM", "type": "Surgery: Jejunectomy", "location": "Operating Room 4", "status": "Completed" },
-    { "date": "07/01/2025", "time": "1:00 PM", "type": "Medical Oncology Consultation", "location": "Oncology Clinic", "status": "Completed" },
-    { "date": "12/15/2025", "time": "3:00 PM", "type": "Radiation Oncology Simulation", "location": "Radiation Oncology Sim Room", "status": "Completed" },
-    { "date": "01/02/2026", "time": "11:00 AM", "type": "Radiation Therapy Treatment", "location": "Radiation Oncology", "status": "Scheduled" }
-  ],
-  "cptCharges": [
-    { "code": "44120", "description": "Resection of small intestine, with anastomosis", "frequency": "Once" },
-    { "code": "96413", "description": "Chemotherapy administration, IV infusion", "frequency": "Per Cycle" },
-    { "code": "77290", "description": "Radiation therapy simulation; complex", "frequency": "Once" },
-    { "code": "77407", "description": "Radiation treatment delivery, single treatment area, complex", "frequency": "Per Fraction" },
-    { "code": "77427", "description": "Radiation treatment management, 5 treatments", "frequency": "Weekly" }
-  ],
-  "diagnosisSearch": "Small Bowel Adenocarcinoma"
+    { "date": "06/10/2025", "author": "Dr. Karen Brown (Surg Onc)", "type": "Post-Op Note", "summary": "Patient recovering well from segmental jejunectomy. Final pathology confirms T4N0 adenocarcinoma. Given the T4 stage, he is at high risk for locoregional recurrence. Will refer to Medical Oncology for discussion of adjuvant chemotherapy, to be followed by adjuvant radiation therapy." },
+    { "date": "07/01/2025", "author": "Dr. Evelyn Reed (Med Onc)", "type": "Chemo Start Note", "summary": "Patient with resected Stage IIB small bowel adenocarcinoma. Discussed adjuvant therapy. Plan for 4 cycles of 5-FU/Leucovorin, to be followed by consolidative chemoradiation. Patient agrees to proceed." },
+    { "date": "12/20/2025", "author": "Dr. Thomas Wilson (Rad Onc)", "type": "Initial Consult", "summary": "Patient s/p jejunal resection and adjuvant chemo for T4N0 small bowel adenocarcinoma. He is now referred for adjuvant radiation to the tumor bed and regional nodes. Plan for 50 Gy in 25 fractions via IMRT. Discussed rationale and potential GI side effects. Patient understands and wishes to proceed." }
+  ]
 }
