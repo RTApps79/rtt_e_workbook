@@ -1,141 +1,163 @@
 {
-  "patientId": "11224",
+  "patientId": "PR-LUNG-001",
   "demographics": {
     "name": "Patricia Rodriguez",
-    "dob": "1970-06-15",
+    "dob": "1955-09-10",
     "gender": "Female",
-    "ageAtDiagnosis": "54 years old",
-    "address": "987 Oak St, Anytown, USA",
-    "phone": "555-1124",
-    "insurance": "BlueCross BlueShield",
-    "referringPhysician": "Dr. Michael Chen (Medical Oncology)",
-    "emergencyContact": "Carlos Rodriguez (Husband) - 555-1125",
-    "advanceDirectives": "Full Code (On File)",
-    "supportServices": "Nutrition consult placed due to esophagitis risk; Social work consult offered for coping support.",
-    "mobility": "Ambulatory without assistance."
+    "address": "456 Pine St, Rivertown, USA",
+    "phone": "555-4567",
+    "insurance": "Medicare Part B",
+    "referringPhysician": "Dr. Alan Grant (Pulmonology)",
+    "emergencyContact": "Carlos Rodriguez (Son) - 555-4568",
+    "advanceDirectives": "Full Code",
+    "supportServices": "Connected with Lung Cancer Alliance support group. Nutrition consult completed.",
+    "mobility": "Ambulatory without assistance. ECOG Performance Status 1."
   },
   "diagnosis": {
-    "primary": "Non-Small Cell Lung Cancer (NSCLC), Adenocarcinoma",
-    "location": "Right Upper Lobe, abutting mediastinum",
-    "datePathologicDiagnosis": "02/05/2025 (Bronchoscopy Biopsy)",
-    "tnmStage": "cT2b N2 M0",
-    "overallStage": "Stage IIIA",
-    "symptomsAtPresentation": "Persistent cough, shortness of breath.",
-    "relevantHistory": "40 pack-year smoking history (quit 5 years prior to diagnosis).",
-    "pftSummary": "FEV1 65% predicted, DLCO 60% predicted (moderate impairment)",
-    "reasonForProtonTherapy": "Locally advanced disease requiring concurrent chemoradiation. Protons considered to minimize dose to heart and contralateral lung due to tumor location and borderline PFTs."
+    "primary": "Non-Small Cell Lung Cancer (NSCLC) - Squamous Cell Carcinoma",
+    "location": "Right Upper Lobe (RUL)",
+    "datePathologicDiagnosis": "2025-01-15 (CT-guided Biopsy)",
+    "pathologicStage": "Stage IIIA (T2b N2 M0)",
+    "symptomsAtPresentation": "Persistent cough, shortness of breath on exertion, and mild hemoptysis.",
+    "pathologyFindings": [
+      "CT-Guided Biopsy of RUL mass (01/15/2025): Moderately differentiated squamous cell carcinoma.",
+      "EBUS-FNA of Station 4R lymph node (01/20/2025): Positive for metastatic squamous cell carcinoma.",
+      "Molecular Panel: PD-L1 TPS 60%. EGFR/ALK/ROS1 negative."
+    ],
+    "priorTreatmentSummary": "Patient has received 2 cycles of induction chemotherapy (Carboplatin/Paclitaxel) with concurrent Pembrolizumab, completed 03/15/2025, with good partial response seen on post-chemo PET/CT.",
+    "relevantHistory": "30-pack-year smoking history (quit 5 years ago). Mild COPD.",
+    "baselineStatus": "ECOG 1. Post-induction chemo, cough has improved. Still has mild dyspnea on exertion."
   },
   "treatmentPlan": {
-    "radOnc": "Dr. Jane Wilson",
-    "medOnc": "Dr. Michael Chen",
-    "treatmentSite": "RUL + Mediastinum",
-    "intent": "Definitive",
-    "modality": "External Beam Radiation Therapy (EBRT) with Concurrent Chemotherapy",
-    "totalDose": "60 Gy(RBE)",
+    "radOnc": "Dr. Evelyn Reed",
+    "medOnc": "Dr. Ben Carter",
+    "pulmonologist": "Dr. Alan Grant",
+    "treatmentSite": "Right Upper Lobe Tumor and Mediastinal Lymph Nodes (4R, 7)",
+    "intent": "Curative (Definitive radiation after induction chemo)",
+    "modality": "Proton Beam Therapy (PBT)",
+    "totalDose": "60 Gy (CGE)",
     "fractionation": "30 fx",
-    "rtRxDetails": "60 Gy(RBE) / 30 fx (2 Gy(RBE)/fx)",
-    "targetVolumeSummary": "PTV_Primary+Nodes",
-    "techniqueSummary": "Intensity-Modulated Proton Therapy (IMPT) / Pencil Beam Scanning",
-    "concurrentChemo": "Carboplatin/Paclitaxel",
-    "detailedConcurrentChemo": "Carboplatin/Paclitaxel, weekly (Managed by Dr. Chen)",
+    "rtRxDetails": "60 Gy (CGE) in 30 fractions (2 Gy/fx) using Pencil Beam Scanning (PBS) proton therapy.",
+    "targetVolumeSummary": "Consolidate response in the primary RUL tumor and involved mediastinal lymph nodes.",
+    "techniqueSummary": "Intensity Modulated Proton Therapy (IMPT) to deliver a highly conformal dose distribution, minimizing dose to the uninvolved lung, heart, and esophagus.",
+    "concurrentChemo": "Concurrent Pembrolizumab (Immunotherapy) to continue every 3 weeks during proton therapy.",
     "medications": [
-      "Anti-emetics PRN",
-      "Esomeprazole for potential esophagitis",
-      "Cough Suppressant PRN",
-      "Monitor for pneumonitis symptoms"
+      "Tylenol as needed for discomfort.",
+      "Viscous Lidocaine / 'Magic Mouthwash' for anticipated esophagitis."
+    ],
+    "therapistAlerts": [
+      "Proton Therapy - Strict adherence to IGRT and QA protocols is mandatory.",
+      "Patient utilizes 4D-CT based motion management. Ensure gating system is active and tracking patient's breathing cycle correctly.",
+      "Monitor for signs of esophagitis (difficulty swallowing) and pneumonitis (worsening cough, shortness of breath)."
     ]
   },
   "radiationOncologyData": {
     "ctSimulation": {
-      "simulationDate": "02/15/2025",
-      "setupInstructions": "Supine in custom BodyFix mold with arms up. Abdominal compression belt applied. Respiratory gating utilized. SAD setup.",
-      "immobilization": "Custom body mold (e.g., BodyFix)",
-      "referenceMarks": "3-point tattoos for alignment.",
-      "scanner": "Siemens Somatom Confidence",
-      "sliceThickness": "2.5 mm",
-      "contrastUsed": "IV Contrast",
-      "ctNotes": "4D CT acquired for proton therapy planning with respiratory gating assessment. Fused with PET/CT for target delineation."
+      "simulationDate": "2025-03-25",
+      "setupInstructions": "Supine, arms overhead in wing board. Immobilized with a custom Vac-Lok bag.",
+      "immobilization": "Vac-Lok (full body), Wing Board",
+      "referenceMarks": "Tattoos placed at isocenter reference.",
+      "scanner": "Siemens Biograph Vision PET/CT (for Sim)",
+      "ctNotes": "4D-CT simulation performed to capture tumor motion during the breathing cycle. An Average Intensity Projection (AIP) CT was generated for planning. Patient was coached on consistent, regular breathing and tolerated the scan well."
     },
     "dosimetry": {
-      "planId": "PR11224_LungProton",
-      "rx": "60 Gy(RBE) / 30 fx",
-      "technique": "IMPT",
-      "energy": "Protons (variable)",
-      "numberOfFieldsOrArcs": "Multiple (2-3 fields)",
-      "gantryAngles": "Multiple",
-      "collAngles": "N/A",
-      "couchAngles": "0",
-      "isoCoords": "Thoracic Iso",
-      "tps": "RayStation",
-      "algorithm": "Monte Carlo",
-      "hetero": "Yes",
-      "norm": "Target Coverage",
-      "constraints": "Spinal Cord Max < 50 Gy(RBE); Heart Mean < 15 Gy(RBE); Total Lung V20 < 25%",
-      "planNotes": "Proton therapy for lung to spare OARs, particularly heart and contralateral lung, due to borderline PFTs.",
+      "planId": "PR-LUNG-PBT-01",
+      "planStatus": "Final - Approved by Dr. Evelyn Reed (03/28/2025)",
+      "rx": "60 Gy (CGE) / 30 fx",
+      "technique": "Pencil Beam Scanning (PBS) / IMPT",
+      "energy": "Protons",
+      "tps": "Eclipse (Proton Module)",
+      "algorithm": "Proton Convolution Superposition (PCS)",
+      "constraints": "Mean Lung Dose < 18 Gy, Heart V30 < 25%, Esophagus max < 65 Gy. All constraints met.",
+      "planNotes": "Robust optimization performed to account for setup and range uncertainties. Daily CBCT for initial alignment, with orthogonal X-rays to verify target position relative to spine. MUs may be adjusted based on results of weekly adaptive re-planning QA.",
+      "igrtProtocol": {
+        "frequency": "Daily",
+        "type": "CBCT + Orthogonal X-ray Pair",
+        "alignment": "Initial alignment to bony anatomy on CBCT, then verify tumor position against fiducials/spine on orthogonal pair.",
+        "tolerances": "2 mm / 1 degree"
+      },
+      "qaChecks": [
+        { "date": "2025-03-28", "type": "Patient-Specific Plan QA", "by": "Medical Physicist (JW)", "result": "Pass (Gamma >98% at 3%/2mm)" }
+      ],
       "fieldDetails": [
-        { "fieldName": "Anterior Oblique", "gantryAngle": "30", "couchAngle": "0", "energy": "Variable", "monitorUnits": "Variable" },
-        { "fieldName": "Posterior Oblique 1", "gantryAngle": "150", "couchAngle": "0", "energy": "Variable", "monitorUnits": "Variable" },
-        { "fieldName": "Posterior Oblique 2", "gantryAngle": "210", "couchAngle": "0", "energy": "Variable", "monitorUnits": "Variable" }
-      ]
+        {
+          "fieldName": "Anterior Oblique Field",
+          "fieldSize": "Variable (scanned beam)",
+          "gantryAngle": "45",
+          "collimatorAngle": "0",
+          "couchAngle": "0",
+          "energy": "70-180 MeV (scanned)",
+          "monitorUnits": 2250,
+          "ssd": "100 cm"
+        },
+        {
+          "fieldName": "Posterior Oblique Field",
+          "fieldSize": "Variable (scanned beam)",
+          "gantryAngle": "210",
+          "collimatorAngle": "0",
+          "couchAngle": "0",
+          "energy": "80-210 MeV (scanned)",
+          "monitorUnits": 1980,
+          "ssd": "100 cm"
+        }
+      ],
+      "imagingFields": []
     },
     "treatmentDelivery": {
       "fractions": [
-        { "fractionNumber": 10, "date": "2025-03-15", "machine": "Proton Gantry 1", "setupNotes": "Daily IGRT confirmed target alignment within tolerance. Gating system active.", "sideEffects": "Mild fatigue. Grade 1 esophagitis managed with diet and medication.", "notes": "Patient tolerating concurrent chemo and proton therapy well." }
+        { "fractionNumber": 1, "totalFractions": 30, "date": "2025-04-01", "machine": "Proton Gantry 2", "therapistInitials": "CF, RS",
+          "recordedFields": [{ "fieldName": "Anterior/Posterior Obliques", "deliveredMu": 4230 }],
+          "setupVerification": "Tolerances Met", "imagingType": "CBCT / Orthogonal kV Pair", "igrtMatchQuality": "Excellent", "igrtApprovedBy": "ER (Physician)",
+          "patientTolerance": "Good", "generalSideEffects": "None", "siteSpecificSideEffects": "None", "dailyNotes": "First proton fraction delivered. Patient tolerated well. Breathing pattern was stable."
+        },
+        { "fractionNumber": 15, "totalFractions": 30, "date": "2025-04-21", "machine": "Proton Gantry 2", "therapistInitials": "CF, RS",
+          "recordedFields": [{ "fieldName": "Anterior/Posterior Obliques", "deliveredMu": 4230 }],
+          "setupVerification": "Tolerances Met", "imagingType": "CBCT / Orthogonal kV Pair", "igrtMatchQuality": "Good", "igrtApprovedBy": "Therapist",
+          "patientTolerance": "Fair", "generalSideEffects": "Mild fatigue", "siteSpecificSideEffects": "Grade 1 esophagitis (mild difficulty swallowing solids). Mild cough.", "dailyNotes": "OTV today. Esophagitis beginning as expected. Advised patient to start on magic mouthwash and stick to soft foods. Weekly QA plan review shows no need for adaptation yet."
+        },
+        { "fractionNumber": 30, "totalFractions": 30, "date": "2025-05-12", "machine": "Proton Gantry 2", "therapistInitials": "CF, RS",
+          "recordedFields": [{ "fieldName": "Anterior/Posterior Obliques", "deliveredMu": 4230 }],
+          "setupVerification": "Tolerances Met", "imagingType": "CBCT / Orthogonal kV Pair", "igrtMatchQuality": "Excellent", "igrtApprovedBy": "ER (Physician)",
+          "patientTolerance": "Fair", "generalSideEffects": "Moderate fatigue", "siteSpecificSideEffects": "Grade 2 esophagitis, managed with medication. Persistent cough.", "dailyNotes": "Final fraction completed. Patient relieved. Esophagitis peaked last week and is stable. Follow-up PET/CT scheduled in 3 months."
+        }
       ]
     }
   },
   "imagingAndReports": [
-    { "date": "01/25/2025", "type": "CT Chest w/ Contrast", "summary": "3.0 cm RUL mass abutting mediastinum. R hilar and mediastinal lymphadenopathy.", "modalId": "pr-ct-chest", "reportDetails": { "findings": "A 3.0 cm speculated mass is identified in the posterior segment of the right upper lobe, abutting the major fissure and adjacent mediastinal pleura. Enlarged right hilar (Station 10R) and paratracheal (Station 4R) lymph nodes are noted, measuring up to 1.5 cm in short axis. Minor adjacent atelectasis.", "impression": "Right upper lobe mass with associated hilar and mediastinal adenopathy, suspicious for primary lung malignancy with nodal involvement." } },
-    { "date": "02/01/2025", "type": "PET/CT", "summary": "FDG-avid RUL mass (SUV max 12) and mediastinal nodes (SUV max 8). No distant mets.", "modalId": "pr-pet-ct", "reportDetails": { "findings": "Intense FDG uptake within the known right upper lobe mass (SUV max 12.0). Moderately intense FDG uptake within right hilar (Station 10R, SUV max 7.5) and right paratracheal (Station 4R, SUV max 8.0) lymph nodes. No other suspicious FDG avid foci identified in the chest, abdomen, or pelvis to suggest distant metastatic disease.", "impression": "Hypermetabolic right upper lobe mass and associated hilar/mediastinal lymph nodes consistent with malignancy (Stage IIIA). No evidence of distant metastases." } },
-    { "date": "02/05/2025", "type": "Bronchoscopy w/ Biopsy Report", "summary": "Adenocarcinoma identified in RUL biopsy.", "modalId": "pr-path-report", "reportDetails": { "lab": "Anytown General Hospital Pathology", "patientInfo": "Rodriguez, Patricia | ID: 11224 | DOB: 06/15/1970", "referringDoctor": "Dr. Pulmo Fictional (Pulmonology)", "pathNum": "B-25-2468", "dateObtained": "02/05/2025", "specimen": "Bronchial Biopsy, Right Upper Lobe", "diagnosis": "ADENOCARCINOMA, LUNG PRIMARY.", "microscopicDescription": "Sections show fragments of bronchial mucosa infiltrated by malignant glands lined by atypical columnar cells with enlarged, hyperchromatic nuclei and prominent nucleoli. Immunohistochemical stains show positivity for TTF-1 and Napsin-A, supporting lung origin.", "comment": "Findings consistent with primary lung adenocarcinoma.", "signedBy": "Dr. Path Fictional, 02/07/2025" } },
-    { "date": "02/10/2025", "type": "Pulmonary Function Tests (PFTs)", "summary": "FEV1 65% predicted, DLCO 60% predicted. Moderate impairment.", "modalId": "pr-pfts", "reportDetails": { "spirometry": { "FVC": "2.5 L (70% predicted)", "FEV1": "1.8 L (65% predicted)", "FEV1/FVC Ratio": "72%" }, "lungVolumes": { "TLC": "4.5 L (85% predicted)" }, "diffusingCapacity": { "DLCO": "15 mL/min/mmHg (60% predicted)", "DLCO/VA": "3.8 (80% predicted)" }, "impression": "Moderate obstructive defect with reduced diffusing capacity. Findings suggest moderate underlying lung disease limiting pulmonary reserve." } },
-    { "date": "02/15/2025", "type": "4D-CT Simulation (Thorax)", "summary": "4D CT acquired for proton therapy planning with respiratory gating assessment.", "modalId": "pr-ct-sim", "reportDetails": { "procedure": "4D CT simulation for proton therapy of thorax.", "setup": "Patient positioned supine in custom BodyFix mold with arms up. Abdominal compression belt applied to limit diaphragmatic excursion.", "scanParams": "4D CT dataset acquired covering entire thorax, synchronized with respiratory cycle (Varian RPM system). Multiple respiratory phases reconstructed (e.g., 0%, 50% inhale, AvgIP).", "fusion": "Diagnostic PET/CT (02/01/2025) fused with average intensity projection (AvgIP) CT dataset for target delineation.", "notes": "Patient tolerated procedure and compression well. Respiratory motion assessed for ITV generation/gating strategy. Data sent for IMPT planning." } }
+    { "date": "01-10-2025", "type": "Diagnostic PET/CT Report", "summary": "Hypermetabolic 3.5 cm mass in the right upper lobe (SUVmax 12.5). Hypermetabolic right paratracheal (4R, SUVmax 8.9) and subcarinal (7, SUVmax 6.5) lymph nodes. Findings consistent with Stage IIIA NSCLC.", "reportDetails": {} }
   ],
   "dicomImages": [
-    { "description": "Diagnostic PET/CT (02/01/2025)", "seriesType": "PT", "ohifViewerUrl": "" },
-    { "description": "4D-CT Simulation (02/15/2025)", "seriesType": "CT", "ohifViewerUrl": "" }
+    { "description": "Diagnostic PET/CT (01/10/2025)", "seriesType": "PET/CT", "ohifViewerUrl": "" },
+    { "description": "4D-CT Simulation (03/25/2025)", "seriesType": "CT", "ohifViewerUrl": "" }
   ],
   "labResults": [
-    { "date": "02/25/2025", "test": "CBC", "value": "WNL", "notes": "Pre-RT/Chemo Baseline" },
-    { "date": "02/25/2025", "test": "CMP", "value": "WNL", "notes": "Pre-RT/Chemo Baseline" },
-    { "date": "03/15/2025", "test": "CBC (During RT)", "value": "WBC 3.2, Plt 100k", "notes": "Myelosuppression, monitor" }
+    { "date": "03/20/2025", "test": "Pulmonary Function Tests (PFTs)", "value": "FEV1 75% predicted, DLCO 68% predicted", "notes": "Mild obstructive defect, consistent with known COPD. Sufficient lung function for definitive chemoradiation." },
+    { "date": "03/20/2025", "test": "CBC/CMP", "value": "WNL", "notes": "Counts recovered post-induction chemotherapy." }
   ],
   "progressNotes": [
-    { "date": "02/08/2025", "author": "Dr. Michael Chen (Med Onc)", "type": "Consult Note", "summary": "Pt with Stage IIIA NSCLC AdenoCa, referred for definitive chemoradiation. Reviewed PFTs show moderate impairment. Discussed standard chemoRT (Carbo/Taxol + Photons). Given location and PFTs, will refer to Rad Onc to discuss potential benefit of proton therapy for OAR sparing." },
-    { "date": "02/20/2025", "author": "Dr. Jane Wilson (Rad Onc)", "type": "Initial Consult", "summary": "Pt w/ Stage IIIA NSCLC, borderline PFTs. Reviewed case. Comparative photon vs proton plan requested. Proton plan shows significant reduction in mean heart dose and contralateral lung dose. Discussed potential benefits (reduced cardiac/pulm tox) and risks/logistics of proton therapy. Pt wishes to proceed with IMPT + concurrent Carbo/Taxol. 4D sim scheduled." },
-    { "date": "03/01/2025", "author": "Physics/Dosimetry", "type": "Planning Note", "summary": "IMPT plan using pencil beam scanning finalized. Meets target coverage goals (60Gy/30fx) and OAR constraints (heart, lungs, esophagus, cord). Respiratory gating parameters set. Plan approved." },
-    { "date": "03/15/2025", "author": "Dr. Jane Wilson (Rad Onc)", "type": "OTV - Week 2", "summary": "Pt completed 10/30 fx. Tolerating concurrent chemo/RT. Reports mild fatigue, Grade 1 esophagitis (manageable with diet/meds). No significant cough/SOB. Daily IGRT consistent. Continue plan." }
+    { "date": "01-25-2025", "author": "Dr. Alan Grant (Pulmonology)", "type": "Referral Note", "summary": "69yo F with new diagnosis of Stage IIIA squamous cell lung cancer after EBUS-guided staging. She is a candidate for curative-intent therapy. Referring to Medical Oncology and Radiation Oncology for combined modality treatment planning." },
+    { "date": "03-20-2025", "author": "Dr. Evelyn Reed (Rad Onc)", "type": "Initial Consult", "summary": "Patient seen for definitive radiation planning after a good response to induction chemo. Given the tumor location and N2 disease, proton therapy is recommended to reduce dose to the heart and lungs compared to IMRT. We discussed the 6-week course of treatment, the use of concurrent immunotherapy, and potential side effects, focusing on esophagitis and pneumonitis. Patient understands and wishes to proceed with proton therapy. 4D-CT Sim scheduled." }
   ],
   "patientEducation": {
-    "goalsDiscussed": "Definitive (curative) treatment with concurrent chemoradiation, using proton therapy to minimize dose to the heart and healthy lung tissue.",
-    "sideEffectsReviewed": "Acute: Fatigue, esophagitis (difficulty/pain swallowing), skin reaction in treatment area, nausea/vomiting and low blood counts from chemotherapy. Late: Risk of radiation pneumonitis (lung inflammation), cardiac effects, and esophageal stricture. Explained rationale for protons to reduce these risks.",
-    "safetyConsiderations": "Reporting fever, uncontrolled nausea/vomiting, severe pain with swallowing, or worsening shortness of breath.",
-    "patientResponsibilities": "Attend daily RT and weekly chemotherapy. Report symptoms promptly. Maintain nutrition and hydration.",
-    "medicationCompliance": "Adherence to chemotherapy schedule and supportive medications (anti-nausea, esophagitis meds)."
+    "goalsDiscussed": "To deliver a curative dose of radiation to the lung tumor and involved lymph nodes while using protons to minimize radiation exposure to healthy surrounding organs, including the lungs, heart, and esophagus.",
+    "sideEffectsReviewed": "Common: Fatigue, skin reaction at beam entrance, esophagitis (soreness or difficulty swallowing), and cough. Less common but serious: Pneumonitis (inflammation of the lungs), which can cause shortness of breath and may require steroids.",
+    "safetyConsiderations": "Consistent, regular breathing is very important for this treatment, as the plan is designed around the tumor's movement. Daily imaging ensures accurate targeting. It is critical to report any new or worsening cough, shortness of breath, or difficulty swallowing.",
+    "patientResponsibilities": "Attend all daily treatments. Follow breathing instructions. Report side effects to the team promptly."
   },
   "scheduling": [
-    { "date": "01/25/2025", "time": "10:00 AM", "type": "CT Chest", "location": "Radiology", "status": "Completed" },
-    { "date": "02/01/2025", "time": "11:00 AM", "type": "PET/CT", "location": "Nuclear Med", "status": "Completed" },
-    { "date": "02/05/2025", "time": "9:00 AM", "type": "Bronchoscopy/Biopsy", "location": "Pulmonary Lab", "status": "Completed" },
-    { "date": "02/10/2025", "time": "1:00 PM", "type": "PFTs", "location": "Pulmonary Lab", "status": "Completed" },
-    { "date": "02/12/2025", "time": "10:00 AM", "type": "Medical Oncology Consult", "location": "Oncology Clinic", "status": "Completed" },
-    { "date": "02/20/2025", "time": "2:00 PM", "type": "Radiation Oncology Consult", "location": "Radiation Oncology Clinic", "status": "Completed" },
-    { "date": "02/25/2025", "time": "9:00 AM", "type": "4D-CT Simulation", "location": "Radiation Oncology Sim", "status": "Completed" },
-    { "date": "03/01/2025 - 04/11/2025", "time": "Daily (M-F) ~10:00 AM", "type": "IMPT Treatment", "location": "Proton Therapy Center", "status": "Ongoing" },
-    { "date": "Weekly", "time": "Varies", "type": "Concurrent Chemotherapy", "location": "Infusion Center", "status": "Ongoing" },
-    { "date": "Weekly", "time": "~10:30 AM (Post-RT)", "type": "OTV", "location": "Radiation Oncology Clinic", "status": "Scheduled" }
+    { "date": "03-20-2025", "type": "Radiation Oncology Consult", "status": "Completed" },
+    { "date": "03-25-2025", "type": "4D-CT Simulation (Protons)", "status": "Completed" },
+    { "date": "04-01-2025", "type": "Proton Therapy Start (Fx 1/30)", "status": "Completed" },
+    { "date": "05-12-2025", "type": "Proton Therapy End (Fx 30/30)", "status": "Completed" },
+    { "date": "08-12-2025", "type": "3-Month Post-RT Follow-up PET/CT", "status": "Scheduled" }
   ],
   "cptCharges": [
-    { "code": "77290", "description": "Simulation, Complex (4D-CT Thorax)", "frequency": "Once" },
-    { "code": "77334", "description": "Treatment device, Complex (Body mold)", "frequency": "Once" },
-    { "code": "77301", "description": "IMRT plan (Proton)", "frequency": "Once" },
-    { "code": "77321", "description": "Special teletherapy port plan, particles", "frequency": "Once" },
-    { "code": "77293", "description": "Respiratory motion management simulation", "frequency": "Once" },
-    { "code": "77525", "description": "Proton treatment delivery, complex", "frequency": "Daily" },
-    { "code": "77387", "description": "Image Guidance RT (IGRT)", "frequency": "Daily" },
-    { "code": "G6017", "description": "Intra-fraction motion management (Gating)", "frequency": "Daily" },
-    { "code": "77427", "description": "Radiation treatment management, 5 treatments", "frequency": "Weekly" },
-    { "code": "96409 / 96411", "description": "Chemotherapy administration, IV push/infusion", "frequency": "Weekly" }
+    { "code": "77290", "description": "Simulation, Complex", "frequency": "1" },
+    { "code": "77338", "description": "IMRT/Proton planning", "frequency": "1" },
+    { "code": "77301", "description": "IMRT plan", "frequency": "1" },
+    { "code": "77523", "description": "Proton treatment delivery, intermediate", "frequency": "30" },
+    { "code": "77387", "description": "Image Guided RT (IGRT)", "frequency": "30" },
+    { "code": "77427", "description": "Radiation treatment management, 5 treatments", "frequency": "6" }
   ],
-  "diagnosisSearch": "Lung Cancer"
+  "diagnosisSearch": "Lung Cancer, NSCLC, Proton Therapy, Squamous Cell Carcinoma, IMPT"
 }
