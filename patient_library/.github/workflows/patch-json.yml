@@ -1,0 +1,36 @@
+name: Auto Patch EMR JSON Files
+
+on:
+  push:
+    paths:
+      - 'patient_library/**/*.json'
+  workflow_dispatch:
+
+jobs:
+  patch-json:
+    runs-on: ubuntu-latest
+    name: Patch JSON EMR files
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies (if needed)
+        run: npm install || true
+
+      - name: Run JSON patch script
+        run: node patch-json.js
+
+      - name: Commit & push changes (if any)
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@users.noreply.github.com"
+          git add patient_library/*.json
+          git diff --cached --quiet || git commit -m "🤖 Auto-patched missing EMR fields"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
