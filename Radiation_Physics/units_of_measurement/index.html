@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab Worksheet: The Hierarchy of Units in Radiation Science</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; line-height: 1.6; color: #333; background-color: #f4f4f9; margin: 0; padding: 20px; }
+        .container { max-width: 800px; margin: 20px auto; background: #fff; padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); }
+        h1 { font-size: 2em; color: #2c3e50; text-align: center; border-bottom: 2px solid #3498db; padding-bottom: 10px; margin-bottom: 20px; }
+        h2 { font-size: 1.5em; color: #34495e; margin-top: 40px; border-bottom: 1px solid #ecf0f1; padding-bottom: 8px; }
+        h3 { font-size: 1.2em; color: #34495e; margin-top: 30px; }
+        p, ul, ol, label { margin-bottom: 1em; color: #555; }
+        ul, ol { padding-left: 20px; }
+        strong { font-weight: 700; color: #2c3e50; }
+        .purpose-box { background-color: #eaf6ff; border-left: 5px solid #3498db; padding: 15px; margin: 2em 0; border-radius: 4px; }
+        .purpose-box strong { color: #2980b9; }
+        .task-section { margin-top: 25px; }
+        textarea.answer-space { width: 100%; border: none; border-bottom: 1px solid #999; background-color: #f8f9f9; resize: vertical; min-height: 2em; margin-top: 0.5em; margin-bottom: 1.5em; font-family: 'Inter', sans-serif; font-size: 1em; line-height: 1.6; padding: 8px; box-sizing: border-box; border-radius: 4px 4px 0 0;}
+        textarea.answer-space:focus { outline: none; border-bottom: 2px solid #3498db; background-color: #fff; }
+        .criterion { font-style: italic; color: #7f8c8d; background-color: #f8f9f9; padding: 10px; border-radius: 4px; margin-top: 5px; }
+        .student-info { display: flex; justify-content: space-between; margin-bottom: 40px; flex-wrap: wrap; }
+        .student-info div { width: 100%; }
+        @media (min-width: 600px) { .student-info div { width: 48%; } }
+        .student-info label { font-weight: bold; }
+        .student-info .fill-in { border: none; border-bottom: 1px solid #333; width: 100%; font-size: 1em; padding: 4px; box-sizing: border-box; background-color: #f8f9f9; }
+        .student-info .fill-in:focus { outline: none; border-bottom: 2px solid #3498db; background-color: #fff; }
+        .submission-area { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 2px dashed #bdc3c7; }
+        #submitBtn { background-color: #2980b9; color: white; padding: 12px 25px; border: none; border-radius: 5px; font-size: 1.1em; font-weight: 500; cursor: pointer; transition: background-color 0.3s, transform 0.2s; }
+        #submitBtn:hover { background-color: #3498db; transform: translateY(-2px); }
+        @media print {
+            body { background-color: #fff; padding: 0; }
+            .container { box-shadow: none; margin: 0; padding: 10mm; width: 100%; border-radius: 0; }
+            .submission-area { display: none; }
+            h1, h2, h3 { page-break-after: avoid; }
+            p, ul, ol, .criterion, .task-section { page-break-inside: avoid; }
+            textarea, .fill-in { border-bottom: 1px solid #999 !important; background-color: #fff !important; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="worksheet-content">
+            <h1>Lab Worksheet: The Hierarchy of Units</h1>
+            <div class="student-info">
+                <div><label for="studentName">Student Name:</label><input type="text" id="studentName" class="fill-in"></div>
+                <div><label for="studentDate">Date:</label><input type="text" id="studentDate" class="fill-in"></div>
+            </div>
+
+            <div class="purpose-box">
+                <h2>Part 1: Purpose of this Lab</h2>
+                <p>This activity uses an interactive converter to explore the essential units used in radiation sciences. You will practice converting between SI base units and their common prefixes, and learn the clinical context in which each unit is used.</p>
+            </div>
+
+            <h2>Part 2: Basic & Derived Unit Conversions</h2>
+            <p>Use the <strong>Integrated Units Converter</strong> to explore foundational clinical units.</p>
+            <div class="criterion"><strong>Criterion for Success:</strong> Your answers should accurately reflect the data displayed by the simulator.</div>
+
+            <h3>Task 1: Length (Distance)</h3>
+            <ol>
+                <li>A patient's SSD is measured as <strong>94.5 cm</strong>. Convert this to meters (m).</li>
+                <textarea class="answer-space" rows="1"></textarea>
+                <li>The multileaf collimator (MLC) leaves have a precision of <strong>1 mm</strong>. Convert this to centimeters (cm).</li>
+                <textarea class="answer-space" rows="1"></textarea>
+            </ol>
+
+            <h3>Task 2: Energy</h3>
+            <ol>
+                <li>A linear accelerator is set to a <strong>6 MeV</strong> beam. Convert this to kilo-electron-Volts (keV).</li>
+                <textarea class="answer-space" rows="1"></textarea>
+                <li>A diagnostic CT scan uses an X-ray beam with an average energy of about <strong>70 keV</strong>. Convert this to mega-electron-Volts (MeV).</li>
+                <textarea class="answer-space" rows="1"></textarea>
+            </ol>
+            
+            <h2>Part 3: Special Radiologic Unit Conversions</h2>
+             <p>Explore the special units used for dose, safety, and source strength.</p>
+             <div class="criterion"><strong>Criterion for Success:</strong> Your answers should be accurate and your explanations should correctly describe the clinical roles of each quantity.</div>
+
+            <h3>Task 3: Absorbed Dose</h3>
+            <ol>
+                <li>A patient's prescription is for <strong>60 Gy</strong> total. A daily fraction is <strong>2 Gy</strong>. Use the converter to express the daily fraction in centigray (cGy).</li>
+                <textarea class="answer-space" rows="1"></textarea>
+            </ol>
+            
+            <h3>Task 4: Equivalent Dose</h3>
+            <ol>
+                <li>An area survey meter shows a reading of <strong>0.015 mSv</strong> per hour near a treatment room door. Convert this to microsieverts (μSv) per hour.</li>
+                 <textarea class="answer-space" rows="1"></textarea>
+            </ol>
+
+            <h3>Task 5: Radioactivity</h3>
+             <ol>
+                <li>A PET scanner requires an injection of <strong>370 MBq</strong> of a radioactive tracer. Convert this to Gigabecquerels (GBq).</li>
+                 <textarea class="answer-space" rows="1"></textarea>
+            </ol>
+
+            <h2>Part 4: Conceptual Understanding</h2>
+            
+            <p><strong>1. The "Special" Units:</strong> Read the clinical context for Absorbed Dose. The Gray (Gy) is just a special name for what derived unit?</p>
+            <textarea class="answer-space" rows="1"></textarea>
+            
+            <p><strong>2. Clinical Convenience:</strong> Based on the clinical contexts you've read, why do we use prefixes so often in the clinic (e.g., mSv instead of Sv, or cGy instead of Gy)?</p>
+            <textarea class="answer-space" rows="3"></textarea>
+
+        </div>
+
+        <div class="submission-area">
+            <button id="submitBtn">Email / Print Results</button>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('submitBtn').addEventListener('click', function () {
+            const btn = document.getElementById('submitBtn');
+            btn.textContent = 'Generating PDF...';
+            btn.disabled = true;
+            const { jsPDF } = window.jspdf;
+            const worksheetContent = document.getElementById('worksheet-content');
+            const studentNameInput = document.getElementById('studentName');
+            const studentName = studentNameInput.value.trim() || 'Unnamed_Student';
+            const fileName = `Rad_Units_Hierarchy_Lab_${studentName.replace(/\s+/g, '_')}.pdf`;
+            html2canvas(worksheetContent, { scale: 2, useCORS: true, onclone: (clonedDoc) => {
+                 clonedDoc.querySelectorAll('textarea').forEach(textarea => {
+                    textarea.style.height = textarea.scrollHeight + 'px';
+                    textarea.style.overflow = 'hidden';
+                });
+            }}).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const margin = 15;
+                const imgWidth = pdfWidth - (margin * 2);
+                const imgHeight = canvas.height * imgWidth / canvas.width;
+                let heightLeft = imgHeight;
+                let position = margin;
+                pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
+                heightLeft -= (pdf.internal.pageSize.getHeight() - margin*2);
+                while (heightLeft > 0) {
+                    position = -heightLeft - margin;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
+                    heightLeft -= (pdf.internal.pageSize.getHeight() - margin*2);
+                }
+                pdf.save(fileName);
+                btn.textContent = 'Email / Print Results';
+                btn.disabled = false;
+                const subject = encodeURIComponent(`Radiologic Units Hierarchy Lab Submission: ${studentName}`);
+                const body = encodeURIComponent(`Hello,\n\nPlease find my completed Radiologic Units Hierarchy Lab worksheet attached ("${fileName}").\n\nThank you,\n${studentName}`);
+                window.location.href = `mailto:kkindle@augusta.edu?subject=${subject}&body=${body}`;
+            }).catch(err => {
+                console.error("Error generating PDF:", err);
+                alert("Sorry, an error occurred while generating the PDF.");
+                btn.textContent = 'Email / Print Results';
+                btn.disabled = false;
+            });
+        });
+    </script>
+</body>
+</html>
