@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuclear Notation Challenge</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #f0f8ff; /* Light blue background */
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+        .game-container {
+            max-width: 600px; /* Adjusted max-width */
+            width: 100%;
+            margin: 20px; /* Added margin */
+            text-align: center;
+        }
+        .game-card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); /* Slightly stronger shadow */
+        }
+        h1 {
+            color: #2c3e50; /* Darker heading */
+            margin-bottom: 25px;
+        }
+        .question-display { /* Renamed for clarity */
+            font-size: 1.4em; /* Larger font */
+            margin: 25px 0;
+            line-height: 1.6;
+            color: #34495e; /* Dark grey text */
+            background-color: #f8f9fa; /* Light grey background for question */
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #e9ecef;
+        }
+        .question-display p {
+            margin: 5px 0; /* Spacing for p/n/e lines */
+        }
+        .notation-input {
+            font-size: 1.3em; /* Larger input font */
+            padding: 12px;
+            width: 220px; /* Wider input */
+            text-align: center;
+            border: 2px solid #007bff;
+            border-radius: 5px;
+            margin: 15px 0; /* Added margin */
+            box-sizing: border-box;
+        }
+        .notation-input::placeholder {
+            color: #aaa;
+            font-style: italic;
+        }
+        .feedback {
+            margin-top: 20px;
+            font-weight: bold;
+            padding: 15px;
+            border-radius: 5px;
+            min-height: 2em; /* Reserve space */
+            line-height: 1.4;
+            display: none; /* Hide initially */
+        }
+        .correct { background: #d4edda; color: #155724; display: block; }
+        .incorrect { background: #f8d7da; color: #721c24; display: block; }
+
+        .score-display {
+            font-size: 1.2em;
+            margin: 20px 0;
+            padding: 15px;
+            background: #e9ecef;
+            border-radius: 5px;
+            color: #495057;
+        }
+        .score-display span {
+            font-weight: bold;
+            color: #0056b3;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px; /* Adjusted margin */
+            font-size: 1em;
+            transition: background-color 0.2s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        button:disabled {
+             background-color: #ccc;
+             cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>Nuclear Notation Challenge</h1>
+        <p>Given the particle counts, enter the standard nuclear notation (e.g., <strong><sup>4</sup>He<sub>2</sub></strong> or simplified as <strong>4He2</strong>).</p>
+        <div class="game-card">
+            <div id="question" class="question-display">
+                </div>
+            <label for="answer" style="display: block; margin-bottom: 5px;">Your Answer (Format: MassSymbolAtomic#):</label>
+            <input type="text" id="answer" class="notation-input" placeholder="e.g., 4He2">
+            <button id="submitBtn" onclick="checkAnswer()">Submit</button>
+            <div id="feedback" class="feedback">
+                </div>
+            <div class="score-display">
+                Score: <span id="score">0</span> |
+                Time Left: <span id="timer">60</span>s
+            </div>
+            <button onclick="newGame()">New Game</button>
+        </div>
+    </div>
+
+    <script>
+        const elements = [
+            { symbol: 'H', name: 'Hydrogen', atomicNumber: 1, commonMass: 1 }, // Added commonMass for more realistic neutrons
+            { symbol: 'He', name: 'Helium', atomicNumber: 2, commonMass: 4 },
+            { symbol: 'Li', name: 'Lithium', atomicNumber: 3, commonMass: 7 },
+            { symbol: 'Be', name: 'Beryllium', atomicNumber: 4, commonMass: 9 },
+            { symbol: 'B', name: 'Boron', atomicNumber: 5, commonMass: 11 },
+            { symbol: 'C', name: 'Carbon', atomicNumber: 6, commonMass: 12 },
+            { symbol: 'N', name: 'Nitrogen', atomicNumber: 7, commonMass: 14 },
+            { symbol: 'O', name: 'Oxygen', atomicNumber: 8, commonMass: 16 },
+            { symbol: 'F', name: 'Fluorine', atomicNumber: 9, commonMass: 19 },
+            { symbol: 'Ne', name: 'Neon', atomicNumber: 10, commonMass: 20 }
+            // Can add more elements
+        ];
+
+        let currentQuestion = {}; // Use object to store current question details
+        let score = 0;
+        let timeLeft = 60;
+        let timerInterval = null; // To hold the interval ID
+
+        const timerElement = document.getElementById('timer');
+        const questionElement = document.getElementById('question');
+        const feedbackElement = document.getElementById('feedback');
+        const scoreElement = document.getElementById('score');
+        const answerInput = document.getElementById('answer');
+        const submitButton = document.getElementById('submitBtn');
+
+        function generateQuestion() {
+            const element = elements[Math.floor(Math.random() * elements.length)];
+            const baseNeutrons = element.commonMass - element.atomicNumber;
+            // Generate neutrons close to the common isotope (+/- 0, 1, or 2)
+            const neutronVariation = Math.floor(Math.random() * 5) - 2; // -2, -1, 0, 1, 2
+            let neutrons = Math.max(0, baseNeutrons + neutronVariation); // Ensure non-negative neutrons
+             // Special case for Hydrogen (can have 0 neutrons)
+            if (element.atomicNumber === 1 && neutrons < 0) {
+                 neutrons = 0;
+            }
+
+
+            const massNumber = element.atomicNumber + neutrons;
+            // Generate charge between -2 and +2, including 0 more often
+            let charge = Math.floor(Math.random() * 5) - 2; // -2, -1, 0, 1, 2
+            // Ensure charge doesn't create impossible ions for elements 1-10
+             if (element.atomicNumber - charge < 0 && charge > 0) { // Trying to remove too many electrons
+                 charge = element.atomicNumber; // Max positive charge
+             }
+             if (element.atomicNumber === 1 && charge > 1) charge = 1; // H+ max
+             if (element.atomicNumber === 2 && charge > 2) charge = 2; // He2+ max
+             // Limit excess negative charge too?
+             if (element.atomicNumber < 5 && charge < -1) charge = -1;
+
+
+            const electrons = element.atomicNumber - charge;
+
+            // Construct the correct notation answer (MassSymbolAtomic# - ignoring charge for basic notation)
+            // More advanced notation could include charge as superscript after symbol: MassSymbolChargeAtomic#
+            const correctAnswerString = `${massNumber}${element.symbol}${element.atomicNumber}`;
+
+            currentQuestion = {
+                element: element,
+                protons: element.atomicNumber,
+                neutrons: neutrons,
+                electrons: electrons,
+                mass: massNumber,
+                charge: charge,
+                correctAnswer: correctAnswerString
+            };
+
+            // Display the question
+            questionElement.innerHTML = `
+                <p><strong>Protons:</strong> ${currentQuestion.protons}</p>
+                <p><strong>Neutrons:</strong> ${currentQuestion.neutrons}</p>
+                <p><strong>Electrons:</strong> ${currentQuestion.electrons}</p>
+            `;
+             feedbackElement.style.display = 'none'; // Hide feedback for new question
+             answerInput.value = ''; // Clear previous answer
+             answerInput.disabled = false;
+             submitButton.disabled = false;
+             answerInput.focus(); // Focus input for easy typing
+        }
+
+        function checkAnswer() {
+            if (!currentQuestion || !currentQuestion.correctAnswer) return; // Ensure question is loaded
+
+            const userAnswer = answerInput.value;
+            // Simple formatting: remove spaces, make case-insensitive for comparison
+            const formattedUserAnswer = userAnswer.replace(/\s+/g, '').toLowerCase();
+            const formattedCorrectAnswer = currentQuestion.correctAnswer.toLowerCase();
+
+            feedbackElement.style.display = 'block'; // Show feedback area
+
+            if (formattedUserAnswer === formattedCorrectAnswer) {
+                score += 2; // Correct answer bonus
+                feedbackElement.className = 'feedback correct';
+                feedbackElement.textContent = 'Correct! +2 points';
+            } else {
+                score--; // Incorrect answer penalty
+                feedbackElement.className = 'feedback incorrect';
+                // Show the expected format clearly
+                feedbackElement.textContent = `Incorrect. The correct notation is: ${currentQuestion.correctAnswer}`;
+            }
+
+            scoreElement.textContent = score; // Update score display
+            answerInput.value = ''; // Clear input for next question
+            generateQuestion(); // Load next question immediately after feedback
+        }
+
+        function startTimer() {
+            // Clear any existing timer
+            if (timerInterval) {
+                clearInterval(timerInterval);
+            }
+
+            timeLeft = 60; // Reset timer
+            timerElement.textContent = timeLeft;
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerElement.textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    timerInterval = null; // Clear interval ID
+                    gameOver();
+                }
+            }, 1000);
+        }
+
+        function gameOver() {
+             alert(`Time's up! Final score: ${score}`);
+             // Optionally disable input and submit button until New Game
+             answerInput.disabled = true;
+             submitButton.disabled = true;
+             feedbackElement.style.display = 'none';
+        }
+
+
+        function newGame() {
+            score = 0;
+            scoreElement.textContent = score;
+            feedbackElement.style.display = 'none'; // Hide feedback
+            feedbackElement.textContent = '';
+            answerInput.disabled = false;
+            submitButton.disabled = false;
+            generateQuestion();
+            startTimer(); // Start the timer for the new game
+        }
+
+        // Add event listener for Enter key in the input field
+        answerInput.addEventListener('keypress', function(event) {
+            // Check if the key pressed is 'Enter'
+            if (event.key === 'Enter' || event.keyCode === 13) {
+                event.preventDefault(); // Prevent default form submission behavior if it were in a form
+                checkAnswer(); // Call checkAnswer function
+            }
+        });
+
+
+        // Initial setup when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            newGame(); // Start a new game automatically
+        });
+    </script>
+</body>
+</html>
