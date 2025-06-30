@@ -3,160 +3,231 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lab Worksheet: The Hierarchy of Units in Radiation Science</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <title>Integrated Radiologic Units Lesson & Converter</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; line-height: 1.6; color: #333; background-color: #f4f4f9; margin: 0; padding: 20px; }
-        .container { max-width: 800px; margin: 20px auto; background: #fff; padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); }
-        h1 { font-size: 2em; color: #2c3e50; text-align: center; border-bottom: 2px solid #3498db; padding-bottom: 10px; margin-bottom: 20px; }
-        h2 { font-size: 1.5em; color: #34495e; margin-top: 40px; border-bottom: 1px solid #ecf0f1; padding-bottom: 8px; }
-        h3 { font-size: 1.2em; color: #34495e; margin-top: 30px; }
-        p, ul, ol, label { margin-bottom: 1em; color: #555; }
-        ul, ol { padding-left: 20px; }
-        strong { font-weight: 700; color: #2c3e50; }
-        .purpose-box { background-color: #eaf6ff; border-left: 5px solid #3498db; padding: 15px; margin: 2em 0; border-radius: 4px; }
-        .purpose-box strong { color: #2980b9; }
-        .task-section { margin-top: 25px; }
-        textarea.answer-space { width: 100%; border: none; border-bottom: 1px solid #999; background-color: #f8f9f9; resize: vertical; min-height: 2em; margin-top: 0.5em; margin-bottom: 1.5em; font-family: 'Inter', sans-serif; font-size: 1em; line-height: 1.6; padding: 8px; box-sizing: border-box; border-radius: 4px 4px 0 0;}
-        textarea.answer-space:focus { outline: none; border-bottom: 2px solid #3498db; background-color: #fff; }
-        .criterion { font-style: italic; color: #7f8c8d; background-color: #f8f9f9; padding: 10px; border-radius: 4px; margin-top: 5px; }
-        .student-info { display: flex; justify-content: space-between; margin-bottom: 40px; flex-wrap: wrap; }
-        .student-info div { width: 100%; }
-        @media (min-width: 600px) { .student-info div { width: 48%; } }
-        .student-info label { font-weight: bold; }
-        .student-info .fill-in { border: none; border-bottom: 1px solid #333; width: 100%; font-size: 1em; padding: 4px; box-sizing: border-box; background-color: #f8f9f9; }
-        .student-info .fill-in:focus { outline: none; border-bottom: 2px solid #3498db; background-color: #fff; }
-        .submission-area { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 2px dashed #bdc3c7; }
-        #submitBtn { background-color: #2980b9; color: white; padding: 12px 25px; border: none; border-radius: 5px; font-size: 1.1em; font-weight: 500; cursor: pointer; transition: background-color 0.3s, transform 0.2s; }
-        #submitBtn:hover { background-color: #3498db; transform: translateY(-2px); }
-        @media print {
-            body { background-color: #fff; padding: 0; }
-            .container { box-shadow: none; margin: 0; padding: 10mm; width: 100%; border-radius: 0; }
-            .submission-area { display: none; }
-            h1, h2, h3 { page-break-after: avoid; }
-            p, ul, ol, .criterion, .task-section { page-break-inside: avoid; }
-            textarea, .fill-in { border-bottom: 1px solid #999 !important; background-color: #fff !important; }
-        }
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; }
+        .lesson-container { display: grid; grid-template-columns: 1fr; gap: 1.5rem; padding: 1.5rem; max-width: 1800px; margin: auto; }
+        @media (min-width: 1024px) { .lesson-container { grid-template-columns: minmax(500px, 1.25fr) 1fr; align-items: flex-start; } }
+        .lesson-panel { background-color: white; border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); padding: 1.5rem 2rem; }
+        .simulator-panel { position: sticky; top: 1.5rem; background-color: white; border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); padding: 1.5rem; }
+        .lesson-panel h1 { font-size: 1.875rem; font-weight: 700; color: #1e3a8a; }
+        .lesson-panel h2 { font-size: 1.5rem; font-weight: 600; color: #1e293b; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; margin-top: 1.5rem; }
+        .lesson-panel p, .lesson-panel ul { color: #475569; }
+        .lesson-panel ul { list-style-type: disc; margin-left: 1.25rem; }
+        .interactive-question { background-color: #f8fafc; border: 1px solid #e2e8f0; border-left: 4px solid #3b82f6; padding: 1rem; margin-top: 1.25rem; border-radius: 0.5rem; }
+        .unit-def { font-weight: 600; color: #1d4ed8; }
+        .formula { font-family: 'Courier New', Courier, monospace; background-color: #f1f5f9; color: #475569; padding: 0.5rem 1rem; border-radius: 0.25rem; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div id="worksheet-content">
-            <h1>Lab Worksheet: The Hierarchy of Units</h1>
-            <div class="student-info">
-                <div><label for="studentName">Student Name:</label><input type="text" id="studentName" class="fill-in"></div>
-                <div><label for="studentDate">Date:</label><input type="text" id="studentDate" class="fill-in"></div>
-            </div>
+    <div class="lesson-container">
+        <!-- Left Column: Lesson Text -->
+        <div class="lesson-panel">
+            <h1>The Hierarchy of Units in Radiation Science</h1>
+            <p class="mt-2 text-lg text-slate-700">From basic building blocks to specialized clinical units.</p>
 
-            <div class="purpose-box">
-                <h2>Part 1: Purpose of this Lab</h2>
-                <p>This activity uses an interactive converter to explore the essential units used in radiation sciences. You will practice converting between SI base units and their common prefixes, and learn the clinical context in which each unit is used.</p>
-            </div>
-
-            <h2>Part 2: Basic & Derived Unit Conversions</h2>
-            <p>Use the <strong>Integrated Units Converter</strong> to explore foundational clinical units.</p>
-            <div class="criterion"><strong>Criterion for Success:</strong> Your answers should accurately reflect the data displayed by the simulator.</div>
-
-            <h3>Task 1: Length (Distance)</h3>
-            <ol>
-                <li>A patient's SSD is measured as <strong>94.5 cm</strong>. Convert this to meters (m).</li>
-                <textarea class="answer-space" rows="1"></textarea>
-                <li>The multileaf collimator (MLC) leaves have a precision of <strong>1 mm</strong>. Convert this to centimeters (cm).</li>
-                <textarea class="answer-space" rows="1"></textarea>
-            </ol>
-
-            <h3>Task 2: Energy</h3>
-            <ol>
-                <li>A linear accelerator is set to a <strong>6 MeV</strong> beam. Convert this to kilo-electron-Volts (keV).</li>
-                <textarea class="answer-space" rows="1"></textarea>
-                <li>A diagnostic CT scan uses an X-ray beam with an average energy of about <strong>70 keV</strong>. Convert this to mega-electron-Volts (MeV).</li>
-                <textarea class="answer-space" rows="1"></textarea>
-            </ol>
+            <section>
+                <h2>1. Basic & Derived SI Units</h2>
+                <p>All physical measurements are built upon seven <strong>Basic SI Units</strong>. In our field, the most critical are:</p>
+                <ul>
+                    <li><strong>Meter (m):</strong> For distance (e.g., SSD, SAD).</li>
+                    <li><strong>Kilogram (kg):</strong> For mass (used in dose calculations).</li>
+                    <li><strong>Second (s):</strong> For time (e.g., beam-on time, radioactive decay).</li>
+                </ul>
+                <p>When we combine these, we get <strong>Derived Units</strong>, such as velocity (m/s) or energy (Joule). These are the true foundation of all our other measurements.</p>
+                 <div class="interactive-question">
+                    <p class="font-semibold">Experiment 1: Distance</p>
+                    <p>A treatment setup is at 100 cm SSD. Use the converter to see how many meters (m) this is. Why is it important for all units to be consistent (e.g., in meters) for physics calculations like the Inverse Square Law?</p>
+                </div>
+            </section>
             
-            <h2>Part 3: Special Radiologic Unit Conversions</h2>
-             <p>Explore the special units used for dose, safety, and source strength.</p>
-             <div class="criterion"><strong>Criterion for Success:</strong> Your answers should be accurate and your explanations should correctly describe the clinical roles of each quantity.</div>
-
-            <h3>Task 3: Absorbed Dose</h3>
-            <ol>
-                <li>A patient's prescription is for <strong>60 Gy</strong> total. A daily fraction is <strong>2 Gy</strong>. Use the converter to express the daily fraction in centigray (cGy).</li>
-                <textarea class="answer-space" rows="1"></textarea>
-            </ol>
+            <section>
+                <h2>2. The Bridge: From Derived to Special Units</h2>
+                <p>For convenience, some complex derived units are given special names. This is how our key radiologic units are born.</p>
+                <ul>
+                    <li><span class="unit-def">Absorbed Dose:</span> The derived unit is energy per mass (<span class="formula">Joule/kilogram</span>). We give this the special name <strong>Gray (Gy)</strong>.</li>
+                    <li><span class="unit-def">Radioactivity:</span> The derived unit is decays per time (<span class="formula">1/second</span>). We give this the special name <strong>Becquerel (Bq)</strong>.</li>
+                    <li><span class="unit-def">Equivalent Dose:</span> This is also based on J/kg, but includes a biological weighting factor. We give this the special name <strong>Sievert (Sv)</strong>.</li>
+                </ul>
+            </section>
             
-            <h3>Task 4: Equivalent Dose</h3>
-            <ol>
-                <li>An area survey meter shows a reading of <strong>0.015 mSv</strong> per hour near a treatment room door. Convert this to microsieverts (μSv) per hour.</li>
-                 <textarea class="answer-space" rows="1"></textarea>
-            </ol>
-
-            <h3>Task 5: Radioactivity</h3>
-             <ol>
-                <li>A PET scanner requires an injection of <strong>370 MBq</strong> of a radioactive tracer. Convert this to Gigabecquerels (GBq).</li>
-                 <textarea class="answer-space" rows="1"></textarea>
-            </ol>
-
-            <h2>Part 4: Conceptual Understanding</h2>
-            
-            <p><strong>1. The "Special" Units:</strong> Read the clinical context for Absorbed Dose. The Gray (Gy) is just a special name for what derived unit?</p>
-            <textarea class="answer-space" rows="1"></textarea>
-            
-            <p><strong>2. Clinical Convenience:</strong> Based on the clinical contexts you've read, why do we use prefixes so often in the clinic (e.g., mSv instead of Sv, or cGy instead of Gy)?</p>
-            <textarea class="answer-space" rows="3"></textarea>
-
+            <section>
+                <h2>3. Practical Use: Radiologic Units & Prefixes</h2>
+                <p>While the Gray, Becquerel, and Sievert are the official SI units, we use metric prefixes to handle the vast range of values seen in the clinic.</p>
+                 <div class="interactive-question">
+                    <p class="font-semibold">Experiment 2: Prescription Dose</p>
+                    <p>A standard prescription is <strong>2 Gy</strong> per fraction. Use the converter to find out how many <strong>cGy</strong> this is. Why is it common for therapists and physicians to talk about giving "200" to a patient?</p>
+                </div>
+                 <div class="interactive-question">
+                    <p class="font-semibold">Experiment 3: Staff Safety</p>
+                    <p>The annual occupational dose limit is <strong>50 mSv</strong>. Use the converter to see how many Sieverts (Sv) this is. Notice how using mSv makes the number much easier to work with.</p>
+                </div>
+            </section>
         </div>
 
-        <div class="submission-area">
-            <button id="submitBtn">Email / Print Results</button>
+        <!-- Right Column: Simulator -->
+        <div class="simulator-panel">
+            <h2 class="text-xl font-bold text-center text-gray-800 mb-4">SI Unit & Prefix Converter</h2>
+            <!-- Quantity Selection -->
+            <div class="mb-4">
+                <label for="quantity-select" class="block text-sm font-medium text-gray-700">1. Select Quantity:</label>
+                <select id="quantity-select" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                    <option value="length">Length (Distance)</option>
+                    <option value="energy">Energy</option>
+                    <option value="absorbedDose" selected>Absorbed Dose</option>
+                    <option value="equivalentDose">Equivalent Dose</option>
+                    <option value="radioactivity">Radioactivity</option>
+                    <option value="exposure">Exposure</option>
+                </select>
+            </div>
+            <!-- Conversion UI -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
+                <div>
+                    <label for="from-value" class="block text-sm font-medium text-gray-700">2. Enter Value:</label>
+                    <input type="number" id="from-value" value="2" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                </div>
+                <div class="flex items-center gap-2">
+                    <div class="flex-grow">
+                        <label for="from-unit" class="block text-sm font-medium text-gray-700">From:</label>
+                        <select id="from-unit" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 rounded-md"></select>
+                    </div>
+                    <div class="text-2xl font-bold text-gray-500 pt-6">→</div>
+                    <div class="flex-grow">
+                        <label for="to-unit" class="block text-sm font-medium text-gray-700">To:</label>
+                        <select id="to-unit" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 rounded-md"></select>
+                    </div>
+                </div>
+            </div>
+             <!-- Result -->
+            <div class="mt-6 text-center bg-blue-50 p-4 rounded-lg border border-blue-200">
+                <p class="text-lg font-medium text-gray-700">Result:</p>
+                <p id="result-display" class="text-3xl font-bold text-blue-800">200.00</p>
+            </div>
+            <!-- Clinical Context -->
+            <div id="context-box" class="mt-4 p-4 rounded-lg bg-slate-50 border">
+                <h3 id="context-title" class="font-semibold text-slate-800"></h3>
+                <p id="context-text" class="text-sm text-slate-600"></p>
+            </div>
         </div>
     </div>
 
     <script>
-        document.getElementById('submitBtn').addEventListener('click', function () {
-            const btn = document.getElementById('submitBtn');
-            btn.textContent = 'Generating PDF...';
-            btn.disabled = true;
-            const { jsPDF } = window.jspdf;
-            const worksheetContent = document.getElementById('worksheet-content');
-            const studentNameInput = document.getElementById('studentName');
-            const studentName = studentNameInput.value.trim() || 'Unnamed_Student';
-            const fileName = `Rad_Units_Hierarchy_Lab_${studentName.replace(/\s+/g, '_')}.pdf`;
-            html2canvas(worksheetContent, { scale: 2, useCORS: true, onclone: (clonedDoc) => {
-                 clonedDoc.querySelectorAll('textarea').forEach(textarea => {
-                    textarea.style.height = textarea.scrollHeight + 'px';
-                    textarea.style.overflow = 'hidden';
-                });
-            }}).then(canvas => {
-                const imgData = canvas.toDataURL('image/png');
-                const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const margin = 15;
-                const imgWidth = pdfWidth - (margin * 2);
-                const imgHeight = canvas.height * imgWidth / canvas.width;
-                let heightLeft = imgHeight;
-                let position = margin;
-                pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
-                heightLeft -= (pdf.internal.pageSize.getHeight() - margin*2);
-                while (heightLeft > 0) {
-                    position = -heightLeft - margin;
-                    pdf.addPage();
-                    pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
-                    heightLeft -= (pdf.internal.pageSize.getHeight() - margin*2);
-                }
-                pdf.save(fileName);
-                btn.textContent = 'Email / Print Results';
-                btn.disabled = false;
-                const subject = encodeURIComponent(`Radiologic Units Hierarchy Lab Submission: ${studentName}`);
-                const body = encodeURIComponent(`Hello,\n\nPlease find my completed Radiologic Units Hierarchy Lab worksheet attached ("${fileName}").\n\nThank you,\n${studentName}`);
-                window.location.href = `mailto:kkindle@augusta.edu?subject=${subject}&body=${body}`;
-            }).catch(err => {
-                console.error("Error generating PDF:", err);
-                alert("Sorry, an error occurred while generating the PDF.");
-                btn.textContent = 'Email / Print Results';
-                btn.disabled = false;
+        const quantitySelect = document.getElementById('quantity-select');
+        const fromValueInput = document.getElementById('from-value');
+        const fromUnitSelect = document.getElementById('from-unit');
+        const toUnitSelect = document.getElementById('to-unit');
+        const resultDisplay = document.getElementById('result-display');
+        const contextTitle = document.getElementById('context-title');
+        const contextText = document.getElementById('context-text');
+
+        const unitsData = {
+            length: {
+                units: ['meter (m)', 'centimeter (cm)', 'millimeter (mm)'],
+                factors: { 'meter (m)': 1, 'centimeter (cm)': 1e-2, 'millimeter (mm)': 1e-3 },
+                context: { title: 'Clinical Context: Length', text: 'Distance is critical for treatment setups (SSD/SAD) and the Inverse Square Law. We measure patient separations in cm and use mm for high-precision MLC leaf movements.' }
+            },
+             energy: {
+                units: ['Joule (J)', 'electron-Volt (eV)', 'kilo-electron-Volt (keV)', 'mega-electron-Volt (MeV)'],
+                factors: { 'Joule (J)': 1, 'electron-Volt (eV)': 1.602e-19, 'kilo-electron-Volt (keV)': 1.602e-16, 'mega-electron-Volt (MeV)': 1.602e-13 },
+                context: { title: 'Clinical Context: Energy', text: 'The energy of a radiation beam is prescribed in mega-electron-Volts (MeV). This determines its penetration. Diagnostic beams are in the keV range.' }
+            },
+            absorbedDose: {
+                units: ['Gray (Gy)', 'centigray (cGy)', 'milligray (mGy)'],
+                factors: { 'Gray (Gy)': 1, 'centigray (cGy)': 1e-2, 'milligray (mGy)': 1e-3 },
+                context: { title: 'Clinical Context: Absorbed Dose', text: 'Prescriptions are given in Gray (Gy). However, daily fractions are often referred to in centigray (cGy) because 1 cGy equals 1 rad, a familiar number from the traditional system. 2 Gy = 200 cGy.' }
+            },
+            equivalentDose: {
+                units: ['Sievert (Sv)', 'millisievert (mSv)', 'microsievert (μSv)'],
+                factors: { 'Sievert (Sv)': 1, 'millisievert (mSv)': 1e-3, 'microsievert (μSv)': 1e-6 },
+                context: { title: 'Clinical Context: Equivalent Dose', text: 'Used for radiation protection. The base unit (Sv) is very large, so annual dose limits for staff and the public are almost always discussed in millisieverts (mSv).' }
+            },
+            radioactivity: {
+                units: ['Becquerel (Bq)', 'kilobecquerel (kBq)', 'megabecquerel (MBq)', 'gigabecquerel (GBq)'],
+                factors: { 'Becquerel (Bq)': 1, 'kilobecquerel (kBq)': 1e3, 'megabecquerel (MBq)': 1e6, 'gigabecquerel (GBq)': 1e9 },
+                context: { title: 'Clinical Context: Radioactivity', text: 'Describes source activity. A single Becquerel (1 decay/sec) is tiny. Clinical sources (e.g., for PET scans or brachytherapy) have immense activity, requiring prefixes like mega- (MBq) or giga- (GBq) for manageable numbers.' }
+            },
+            exposure: {
+                units: ['Coulomb/kg (C/kg)', 'milliC/kg (mC/kg)', 'microC/kg (μC/kg)'],
+                factors: { 'Coulomb/kg (C/kg)': 1, 'milliC/kg (mC/kg)': 1e-3, 'microC/kg (μC/kg)': 1e-6 },
+                context: { title: 'Clinical Context: Exposure', text: 'Measures ionization in air and is primarily used for the calibration of radiation-producing equipment. It is not used for patient dose calculations.' }
+            }
+        };
+
+        function populateUnitSelectors() {
+            const selectedQuantity = quantitySelect.value;
+            const data = unitsData[selectedQuantity];
+
+            fromUnitSelect.innerHTML = '';
+            toUnitSelect.innerHTML = '';
+
+            data.units.forEach(unit => {
+                fromUnitSelect.add(new Option(unit, unit));
+                toUnitSelect.add(new Option(unit, unit));
             });
-        });
+
+            // Set default selections
+            fromUnitSelect.value = data.units[0]; // default from base unit
+            toUnitSelect.value = data.units.length > 1 ? data.units[1] : data.units[0]; // default to first prefix
+            
+            // Set a more logical default input value based on quantity
+            if (selectedQuantity === 'equivalentDose') fromValueInput.value = 50;
+            else if (selectedQuantity === 'radioactivity') fromValueInput.value = 370;
+            else if (selectedQuantity === 'length') fromValueInput.value = 100;
+            else if (selectedQuantity === 'energy') fromValueInput.value = 6;
+            else fromValueInput.value = 2;
+
+
+            updateContext();
+            convert();
+        }
+
+        function updateContext() {
+            const selectedQuantity = quantitySelect.value;
+            const context = unitsData[selectedQuantity].context;
+            contextTitle.textContent = context.title;
+            contextText.textContent = context.text;
+        }
+
+        function convert() {
+            const selectedQuantity = quantitySelect.value;
+            const data = unitsData[selectedQuantity];
+            
+            const fromValue = parseFloat(fromValueInput.value);
+            const fromUnit = fromUnitSelect.value;
+            const toUnit = toUnitSelect.value;
+
+            if (isNaN(fromValue)) {
+                resultDisplay.textContent = 'Invalid Input';
+                return;
+            }
+
+            const fromFactor = data.factors[fromUnit];
+            const toFactor = data.factors[toUnit];
+
+            // Convert 'from' value to base SI unit
+            const valueInBaseSI = fromValue * fromFactor;
+
+            // Convert from SI base to 'to' unit
+            const resultValue = valueInBaseSI / toFactor;
+            
+            // Format the result nicely
+            if (resultValue > 1e6 || (resultValue < 1e-4 && resultValue !== 0)) {
+                 resultDisplay.textContent = resultValue.toExponential(2);
+            } else {
+                 resultDisplay.textContent = resultValue.toLocaleString(undefined, {minimumFractionDigits: 4, maximumFractionDigits: 4});
+            }
+        }
+
+        // Event Listeners
+        quantitySelect.addEventListener('change', populateUnitSelectors);
+        fromValueInput.addEventListener('input', convert);
+        fromUnitSelect.addEventListener('change', convert);
+        toUnitSelect.addEventListener('change', convert);
+
+        // Initial setup
+        window.onload = populateUnitSelectors;
     </script>
 </body>
 </html>
