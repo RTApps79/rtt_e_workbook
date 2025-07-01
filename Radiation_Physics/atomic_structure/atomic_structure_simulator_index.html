@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integrated Atomic Structure Lesson & Simulator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; }
+        .lesson-container { display: grid; grid-template-columns: 1fr; gap: 2rem; padding: 1.5rem; max-width: 1800px; margin: auto; }
+        @media (min-width: 1024px) { .lesson-container { grid-template-columns: minmax(500px, 1fr) 1.25fr; align-items: flex-start; } }
+        .lesson-panel { background-color: white; border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); padding: 1.5rem 2rem; }
+        .simulator-panel { position: sticky; top: 1.5rem; }
+        .lesson-panel h1 { font-size: 1.875rem; font-weight: 700; color: #1e3a8a; }
+        .lesson-panel h2 { font-size: 1.5rem; font-weight: 600; color: #1e293b; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; margin-top: 1.5rem; }
+        .lesson-panel p, .lesson-panel ul { color: #475569; }
+        .lesson-panel ul { list-style-type: disc; margin-left: 1.25rem; }
+        .interactive-question { background-color: #f8fafc; border: 1px solid #e2e8f0; border-left: 4px solid #3b82f6; padding: 1rem; margin-top: 1.25rem; border-radius: 0.5rem; }
+        .particle-key { display: flex; align-items: center; gap: 0.5rem; }
+        .particle-key div { width: 20px; height: 20px; border-radius: 50%; }
+        /* Simulator Styles */
+        .visualization { margin: auto; position: relative; width: 450px; height: 450px; }
+        .nucleus { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 4px; padding: 10px; border-radius: 50%; min-width: 40px; min-height: 40px; background: rgba(239, 68, 68, 0.1); }
+        .nucleon { width: 20px; height: 20px; line-height: 20px; text-align: center; border-radius: 50%; font-size: 0.7rem; font-weight: bold; color: white; user-select: none; }
+        .proton { background: radial-gradient(circle at 30% 30%, #f87171, #b91c1c); }
+        .neutron { background: radial-gradient(circle at 30% 30%, #9ca3af, #374151); }
+        .electron { background: radial-gradient(circle at 30% 30%, #60a5fa, #1d4ed8); position: absolute; transform-origin: center center; width: 22px; height: 22px; line-height: 22px; }
+        .electron-shell { position: absolute; border-radius: 50%; border: 2px dashed rgba(6, 78, 239, 0.3); top: 50%; left: 50%; transform: translate(-50%, -50%); box-sizing: border-box; }
+        .notation-display { text-align: center; position: relative; font-size: 3rem; font-weight: bold; height: 5rem; width: 8rem; margin: auto;}
+        .notation-mass { position: absolute; top: 0; left: 0; font-size: 1.5rem; }
+        .notation-atomic { position: absolute; bottom: 0; left: 0; font-size: 1.5rem; }
+        .notation-symbol { vertical-align: middle; }
+        .notation-charge { position: absolute; top: 0; right: 0; font-size: 1.5rem; }
+    </style>
+</head>
+<body>
+    <div class="lesson-container">
+        <!-- Left Column: Lesson Text -->
+        <div class="lesson-panel">
+            <h1>Atomic Structure & Radiation Therapy</h1>
+            <p class="mt-2 text-lg text-slate-700">Understanding the building blocks of matter is the first step to understanding radiation.</p>
+
+            <section>
+                <h2>The Fundamental Particles</h2>
+                <p>Atoms are made of three primary particles:</p>
+                <ul>
+                    <li><strong>Protons (P+):</strong> Positively charged. The number of protons defines the element. This is the <strong>Atomic Number (Z)</strong>.</li>
+                    <li><strong>Neutrons (N⁰):</strong> No charge. They add mass to the nucleus. The total number of protons and neutrons is the <strong>Mass Number (A)</strong>.</li>
+                    <li><strong>Electrons (e-):</strong> Negatively charged. They orbit the nucleus in shells.</li>
+                </ul>
+                <div class="interactive-question">
+                    <p class="font-semibold">Experiment 1: Build a Helium Atom</p>
+                    <p>Use the controls to create a stable, neutral Helium atom (He). It has 2 protons, 2 neutrons, and 2 electrons. Observe the info panel and the notation display update as you add each particle.</p>
+                </div>
+            </section>
+            
+            <section>
+                <h2>Ions and Isotopes</h2>
+                <p>Atoms are not always stable or neutral. Their properties can change in two key ways:</p>
+                <ul>
+                    <li><strong>Ions:</strong> An atom that has gained or lost electrons, resulting in a net electrical charge. This process, <strong>ionization</strong>, is the primary way radiation deposits energy and damages cells.</li>
+                    <li><strong>Isotopes:</strong> Atoms of the same element (same number of protons) but with a different number of neutrons. Some isotopes are unstable and radioactive, making them useful in medicine.</li>
+                </ul>
+                <div class="interactive-question">
+                    <p class="font-semibold">Experiment 2: Ions and Isotopes</p>
+                    <ol class="list-decimal ml-5 mt-2 space-y-2">
+                        <li>Start with your neutral Helium-4 atom. Remove one electron. Notice the charge changes to +1, making it a Helium ion.</li>
+                        <li>Reset to a neutral Helium-4 atom. Now, add one neutron. The element is still Helium, but its mass number is now 5. You have created an isotope: Helium-5.</li>
+                    </ol>
+                </div>
+            </section>
+
+             <section>
+                <h2>Nuclear Notation & Clinical Use</h2>
+                <p>We use a standard notation to describe atoms: <sup>A</sup>X<sub>Z</sub>, where A is the mass number, Z is the atomic number, and X is the element symbol.</p>
+                <p>Unstable isotopes, like <strong>Cobalt-60</strong> (<sup>60</sup>Co<sub>27</sub>), are vital in radiation therapy. They decay and release high-energy gamma rays that are used to treat tumors.</p>
+            </section>
+        </div>
+
+        <!-- Right Column: Simulator -->
+        <div class="simulator-panel">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white p-4 rounded-lg shadow-md">
+                <!-- Controls -->
+                <div class="controls text-center">
+                    <h3 class="font-semibold text-lg mb-2">Build an Atom</h3>
+                    <div class="grid grid-cols-2 gap-2">
+                         <button onclick="addParticle('proton')" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">Add Proton</button>
+                         <button onclick="removeParticle('proton')" class="bg-red-200 hover:bg-red-300 text-red-800 py-2 px-4 rounded">Remove P+</button>
+                         <button onclick="addParticle('neutron')" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">Add Neutron</button>
+                         <button onclick="removeParticle('neutron')" class="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded">Remove N⁰</button>
+                         <button onclick="addParticle('electron')" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">Add Electron</button>
+                         <button onclick="removeParticle('electron')" class="bg-blue-200 hover:bg-blue-300 text-blue-800 py-2 px-4 rounded">Remove e-</button>
+                    </div>
+                </div>
+                <!-- Info Panel -->
+                <div class="info-panel bg-slate-50 p-3 rounded-lg">
+                     <h3 class="font-semibold text-lg mb-2">Properties</h3>
+                     <div id="info-content" class="text-sm space-y-1">
+                        <p><strong>Element:</strong> <span id="element-name">--</span> (<span id="element-symbol">X</span>)</p>
+                        <p><strong>Protons (Z):</strong> <span id="atomic-number">0</span></p>
+                        <p><strong>Neutrons (N):</strong> <span id="neutron-number">0</span></p>
+                        <p><strong>Mass (A):</strong> <span id="mass-number">0</span></p>
+                        <p><strong>Electrons:</strong> <span id="electron-count">0</span></p>
+                        <p><strong>Charge:</strong> <span id="ion-state">0</span></p>
+                     </div>
+                </div>
+            </div>
+            <!-- Visualization -->
+            <div class="bg-white p-4 rounded-lg shadow-md mt-4">
+                <div class="flex justify-center items-center">
+                    <div class="visualization" id="visualization"><div class="nucleus" id="nucleus"></div></div>
+                    <div class="notation-display">
+                        <span class="notation-mass" id="notation-mass"></span>
+                        <span class="notation-symbol" id="notation-symbol">X</span>
+                        <span class="notation-atomic" id="notation-atomic"></span>
+                        <span class="notation-charge" id="notation-charge"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- State ---
+        let protons = 0, neutrons = 0, electrons = 0;
+        const shells = [];
+        const ELEMENTS = [ { symbol: 'H', name: 'Hydrogen'}, { symbol: 'He', name: 'Helium'}, { symbol: 'Li', name: 'Lithium'}, { symbol: 'Be', name: 'Beryllium'}, { symbol: 'B', name: 'Boron'}, { symbol: 'C', name: 'Carbon'}, { symbol: 'N', name: 'Nitrogen'}, { symbol: 'O', name: 'Oxygen'}, { symbol: 'F', name: 'Fluorine'}, { symbol: 'Ne', name: 'Neon'} ];
+
+        // --- DOM Elements ---
+        const viz = document.getElementById('visualization');
+        const nucleus = document.getElementById('nucleus');
+
+        // --- Functions ---
+        function addParticle(type) {
+            if (type === 'proton' && protons >= 10) return;
+            if (type === 'neutron' && neutrons >= 12) return;
+            if (type === 'electron' && electrons >= 18) return;
+
+            if (type === 'proton') protons++;
+            if (type === 'neutron') neutrons++;
+            if (type === 'electron') electrons++;
+            updateDOM();
+        }
+
+        function removeParticle(type) {
+            if (type === 'proton' && protons > 0) protons--;
+            if (type === 'neutron' && neutrons > 0) neutrons--;
+            if (type === 'electron' && electrons > 0) electrons--;
+            updateDOM();
+        }
+
+        function updateDOM() {
+            // Update counts
+            document.getElementById('atomic-number').textContent = protons;
+            document.getElementById('neutron-number').textContent = neutrons;
+            const mass = protons + neutrons;
+            document.getElementById('mass-number').textContent = mass;
+            document.getElementById('electron-count').textContent = electrons;
+            const charge = protons - electrons;
+            document.getElementById('ion-state').textContent = charge > 0 ? `+${charge}` : charge;
+            
+            const element = protons > 0 && protons <= ELEMENTS.length ? ELEMENTS[protons - 1] : { symbol: 'X', name: '--' };
+            document.getElementById('element-name').textContent = element.name;
+            document.getElementById('element-symbol').textContent = element.symbol;
+            
+            // Update notation
+            document.getElementById('notation-symbol').textContent = element.symbol;
+            document.getElementById('notation-mass').textContent = mass > 0 ? mass : '';
+            document.getElementById('notation-atomic').textContent = protons > 0 ? protons : '';
+            const chargeText = charge !== 0 ? (charge > 0 ? `${charge}+` : `${Math.abs(charge)}-`) : '';
+            document.getElementById('notation-charge').textContent = chargeText;
+
+            // --- Render particles ---
+            // Nucleus
+            nucleus.innerHTML = '';
+            for (let i = 0; i < protons; i++) nucleus.innerHTML += `<div class="nucleon proton">P</div>`;
+            for (let i = 0; i < neutrons; i++) nucleus.innerHTML += `<div class="nucleon neutron">N</div>`;
+            const numNucleons = protons + neutrons;
+            const nucleusDiameter = Math.max(40, 10 * Math.sqrt(numNucleons));
+            nucleus.style.width = `${nucleusDiameter}px`;
+            nucleus.style.height = `${nucleusDiameter}px`;
+            
+            // Electrons and shells
+            // Clear old shells
+            viz.querySelectorAll('.electron-shell, .electron').forEach(el => el.remove());
+
+            let electronsToPlace = electrons;
+            let shellNum = 1;
+            while (electronsToPlace > 0) {
+                const shellCapacity = 2 * shellNum * shellNum;
+                const electronsInThisShell = Math.min(electronsToPlace, shellCapacity);
+                
+                const shellRadius = (nucleusDiameter / 2) + 40 + (shellNum - 1) * 50;
+                const shellDiv = document.createElement('div');
+                shellDiv.className = 'electron-shell';
+                shellDiv.style.width = `${shellRadius * 2}px`;
+                shellDiv.style.height = `${shellRadius * 2}px`;
+                viz.appendChild(shellDiv);
+
+                for (let i = 0; i < electronsInThisShell; i++) {
+                    const angle = (i / electronsInThisShell) * 2 * Math.PI;
+                    const x = (viz.clientWidth / 2) + shellRadius * Math.cos(angle) - 11;
+                    const y = (viz.clientHeight / 2) + shellRadius * Math.sin(angle) - 11;
+                    const electronDiv = document.createElement('div');
+                    electronDiv.className = 'nucleon electron';
+                    electronDiv.textContent = 'e';
+                    electronDiv.style.position = 'absolute';
+                    electronDiv.style.left = `${x}px`;
+                    electronDiv.style.top = `${y}px`;
+                    viz.appendChild(electronDiv);
+                }
+                electronsToPlace -= electronsInThisShell;
+                shellNum++;
+            }
+        }
+        
+        window.onload = updateDOM;
+        window.onresize = updateDOM;
+    </script>
+</body>
+</html>
