@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body {
+    font-family: sans-serif;
+    line-height: 1.6;
+    margin: 20px;
+    background-color: #f4f4f4;
+    color: #333;
+  }
+  h2 {
+    color: #0056b3;
+    border-bottom: 2px solid #0056b3;
+    padding-bottom: 5px;
+    margin-top: 30px;
+  }
+  h3 {
+    color: #004085;
+    margin-top: 20px;
+  }
+  h4 {
+    color: #004085;
+    margin-top: 15px;
+    margin-bottom: 10px;
+  }
+  .lesson-container {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  .tab-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  .tab-button {
+    background-color: #e0e0e0;
+    border: 1px solid #ccc;
+    padding: 10px 15px;
+    cursor: pointer;
+    margin-right: 5px;
+    border-radius: 5px 5px 0 0;
+    transition: background-color 0.3s ease;
+    white-space: nowrap; /* Prevent text wrapping */
+  }
+  .tab-button.active {
+    background-color: #0056b3;
+    color: white;
+    border-color: #0056b3;
+  }
+  .tab-content {
+    display: none;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-top: none;
+    padding: 20px;
+    border-radius: 0 0 8px 8px;
+    background-color: #f9f9f9;
+  }
+  .tab-content.active {
+    display: block;
+  }
+  ul {
+    list-style-type: disc;
+    margin-left: 20px;
+  }
+  li {
+    margin-bottom: 8px;
+  }
+  b {
+    color: #0056b3;
+  }
+  .references {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #ccc;
+    font-size: 0.9em;
+    color: #555;
+  }
+  .attention {
+    font-weight: bold;
+    color: #d9534f;
+  }
+</style>
+</head>
+<body>
+
+<div class="lesson-container">
+  <h2>Sarcomas: Radiation Therapy Planning and Delivery</h2>
+
+  <p>This lesson provides detailed information on the preplanning, planning, and delivery steps for radiation therapy in various sarcoma types, including Soft Tissue Sarcomas and Bone Sarcomas.</p>
+
+  <div class="tab-container">
+    <button class="tab-button active" onclick="openSarcomaTab(event, 'general-sts')">General Soft Tissue Sarcoma (STS)</button>
+    <button class="tab-button" onclick="openSarcomaTab(event, 'retroperitoneal-sts')">Retroperitoneal/Intra-Abdominal STS</button>
+    <button class="tab-button" onclick="openSarcomaTab(event, 'desmoid-tumors')">Desmoid Tumors</button>
+    <button class="tab-button" onclick="openSarcomaTab(event, 'rhabdomyosarcoma')">Rhabdomyosarcoma (RMS)</button>
+    <button class="tab-button" onclick="openSarcomaTab(event, 'alt-wdlps')">Atypical Lipomatous Tumor (ALT)/WDLPS</button>
+    <button class="tab-button" onclick="openSarcomaTab(event, 'bone-sarcoma-general')">General Bone Sarcoma</button>
+    <button class="tab-button" onclick="openSarcomaTab(event, 'chondrosarcoma')">Chondrosarcoma</button>
+    <button class="tab-button" onclick="openSarcomaTab(event, 'chordoma')">Chordoma</button>
+    <button class="tab-button" onclick="openSarcomaTab(event, 'ewing-sarcoma')">Ewing Sarcoma</button>
+    <button class="tab-button" onclick="openSarcomaTab(event, 'giant-cell-tumor')">Giant Cell Tumor of Bone</button>
+    <button class="tab-button" onclick="openSarcomaTab(event, 'osteosarcoma')">Osteosarcoma</button>
+  </div>
+
+  <div id="general-sts" class="tab-content active">
+    <h3>General Soft Tissue Sarcoma (Extremity/Body Wall, Head/Neck)</h3>
+    <p>Soft tissue sarcomas (STS) are a heterogeneous group of rare tumors. Management often involves surgery, radiation, and/or systemic therapy, tailored to the specific subtype, grade, and location.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li><b>Primary RT:</b> For unresectable disease or when surgery would lead to unacceptable functional outcomes.</li>
+      <li><b>Neoadjuvant (Preoperative) RT:</b> Generally preferred over postoperative RT. Benefits include lower total dose, shorter treatment time, smaller field sizes, and potential for reduced late toxicities (fibrosis, edema, joint stiffness). Potential for tumor downstaging.</li>
+      <li><b>Adjuvant (Postoperative) RT:</b> Considered for close (<1 cm) or positive surgical margins, especially on critical structures. Higher total doses and larger fields may lead to increased late toxicities.</li>
+      <li><b>Brachytherapy:</b> Used as an adjuvant to surgery (LDR or HDR) or for re-irradiation.</li>
+      <li><b>Intraoperative RT (IORT):</b> Delivery of radiation during surgery, used to boost high-risk areas.</li>
+      <li><b>Stereotactic Body Radiotherapy (SBRT):</b> Used for oligometastatic or oligoprogressive disease, or re-irradiation.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Multidisciplinary Team:</b> Evaluation and treatment by a team with expertise in sarcoma is highly recommended.</li>
+      <li><b>History and Physical (H&P):</b> Comprehensive assessment.</li>
+      <li><b>Imaging of Primary Tumor:</b> Cross-sectional imaging (MRI with and without contrast, and/or CT with contrast) to detail tumor size, contiguity to neurovascular structures, and visceral structures. Angiogram and plain x-ray may be warranted.</li>
+      <li><b>Biopsy:</b> Carefully planned core needle (preferred) or incisional biopsy after imaging. Biopsy should establish grade and histologic subtype. Place biopsy along future resection axis.</li>
+      <li><b>Imaging for Metastatic Disease:</b> Chest CT (preferred) for lung metastases. Abdominal/pelvic CT for specific histologies (angiosarcoma, LMS, myxoid/round cell LPS, epithelioid sarcoma). MRI of total spine for myxoid/round cell LPS. CNS MRI/CT for alveolar soft part sarcoma and angiosarcoma. FDG-PET/CT may be useful in staging, prognostication, grading, and assessing response to neoadjuvant therapy.</li>
+      <li><b>Genetic Syndromes:</b> Consider evaluation for Li-Fraumeni syndrome, neurofibromatosis, FAP/Gardner's syndrome.</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Patient Positioning:</b> Supine, arms up. Immobilization devices for reproducibility.</li>
+      <li><b>Target Volume Delineation:</b>
+        <ul>
+          <li><b>GTV:</b> Gross tumor volume (pre-chemotherapy/biopsy imaging).</li>
+          <li><b>CTV:</b> GTV + margin (e.g., 1-2 cm) to encompass original suspicious volume.</li>
+          <li><b>PTV:</b> CTV + setup margin.</li>
+        </ul>
+      </li>
+      <li><b>OARs:</b> Bone, lymphatics, soft tissue. Specific OARs depend on location (e.g., heart, lungs, spinal cord, kidneys, GI tract).</li>
+      <li><b>Clip Placement:</b> If R1 or R2 resection is anticipated, clips in high-risk areas are encouraged to guide future RT.</li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>Neoadjuvant RT:</b> 50-50.4 Gy (1.8-2 Gy/fraction). A dose reduction to 36 Gy for myxoid liposarcoma can be considered. Moderately hypofractionated regimens may be appropriate for select patients.</li>
+      <li><b>Adjuvant RT (Postoperative):</b>
+        <ul>
+          <li>EBRT: 50-50.4 Gy to larger volume, followed by 10-16 Gy boost to tumor bed (total 60 Gy for R0, 66 Gy for R1).</li>
+          <li>Brachytherapy ± EBRT: LDR (16-20 Gy) or HDR equivalent (14-16 Gy) + 50 Gy EBRT for positive margins. LDR (45 Gy) or HDR equivalent (36 Gy in 3.6 Gy BID) for negative margins.</li>
+        </ul>
+      </li>
+      <li><b>Definitive RT (Unresectable):</b> 50 Gy to initial volume with boost to at least 63 Gy; higher doses of 70-80 Gy can be considered based on tolerance. Alternative hypofractionated regimens may be considered.</li>
+      <li><b>SBRT for Metastases:</b> Various dosing regimens reported (e.g., 25-60 Gy in 1-5 fractions).</li>
+      <li><b>Palliative RT:</b> Doses individualized for symptom relief.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Techniques:</b> Electron beam therapy, 3D conformal RT, IMRT, or proton beam therapy delivered with image guidance. IMRT is preferred for its ability to closely contour high-dose volume.</li>
+      <li><b>Wound Healing:</b> Preoperative RT may increase early wound healing complications, especially for lower extremity. A 3-6 week interval before resection is necessary. Plastic surgeon consultation may be needed.</li>
+      <li><b>Sequencing:</b> RT can be primary, preoperative, or postoperative. Chemotherapy or chemoradiation may be used preoperatively to downstage tumors.</li>
+      <li><b>Re-irradiation:</b> Possible for local recurrence, using brachytherapy, IMRT, and/or proton beam therapy to reduce morbidity.</li>
+    </ul>
+  </div>
+
+  <div id="retroperitoneal-sts" class="tab-content">
+    <h3>Retroperitoneal/Intra-Abdominal Soft Tissue Sarcomas</h3>
+    <p>Retroperitoneal/intra-abdominal STS are often challenging due to their deep location and proximity to vital organs. Complete surgical resection is difficult to achieve.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li><b>Neoadjuvant RT:</b> Can be considered for selected patients at high risk for local recurrence. Favored due to defined tumor target and potential for bowel displacement.</li>
+      <li><b>Adjuvant RT:</b> Generally discouraged due to toxicity risks, especially to bowel. Consider follow-up with possible neoadjuvant RT at time of localized recurrence if not given prior to surgery.</li>
+      <li><b>IORT:</b> Used as a boost for known or suspected positive margins at the time of surgery.</li>
+      <li><b>Definitive RT:</b> For unresectable disease.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Workup:</b> Similar to extremity sarcomas (H&P, imaging, biopsy). CT is preferred imaging modality.</li>
+      <li><b>Biopsy:</b> Image-guided core needle biopsy preferred, avoiding free intra-abdominal space. May be omitted if imaging is pathognomonic (e.g., WDLPS) and no preoperative treatment planned.</li>
+      <li><b>Multidisciplinary Panel:</b> Essential for review.</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Target Volume Delineation:</b>
+        <ul>
+          <li><b>Neoadjuvant RT:</b> 50-50.4 Gy EBRT (1.8-2.0 Gy/fraction) to tumor. Consider IORT boost for known/suspected positive margins (10-12.5 Gy for microscopic, 15 Gy for gross).</li>
+          <li><b>Alternative Neoadjuvant:</b> 45-50 Gy in 25-28 fractions to CTV with dose-painted SIB to 57.5 Gy in 25 fractions to high-risk retroperitoneal margin (experienced centers only).</li>
+        </ul>
+      </li>
+      <li><b>OARs:</b> Bowel, kidneys, liver, spinal cord. Tissue displacement spacers may be used to keep bowel out of high-dose RT volume.</li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li>As described above for planning technique.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Techniques:</b> IMRT, IGRT, and/or proton beam therapy to improve therapeutic ratio and spare OARs.</li>
+      <li><b>Sequencing:</b> Neoadjuvant RT is favored.</li>
+      <li><b>Surgery:</b> Complete or macroscopic surgical resection is challenging due to proximity to critical structures.</li>
+    </ul>
+  </div>
+
+  <div id="desmoid-tumors" class="tab-content">
+    <h3>Desmoid Tumors (Aggressive Fibromatosis)</h3>
+    <p>Desmoid tumors are locally aggressive, non-metastasizing mesenchymal neoplasms. They are often categorized as low-grade sarcomas due to high local recurrence rates.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li><b>Definitive RT:</b> Appropriate for non-mesenteric desmoid tumors, especially when surgery would be too morbid or result in positive margins, or if systemic therapy fails. Recommended dose is 56 Gy in 28 fractions.</li>
+      <li><b>Adjuvant RT:</b> For R1 (microscopic residual) or R2 (gross residual) resections, especially if recurrence would cause undue morbidity. Doses typically 50-56 Gy.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Multidisciplinary Team:</b> Essential for evaluation and treatment.</li>
+      <li><b>H&P:</b> Evaluate for Gardner syndrome/FAP.</li>
+      <li><b>Imaging:</b> CT or MRI of primary site.</li>
+      <li><b>Biopsy:</b> To confirm diagnosis.</li>
+      <li><b>Molecular:</b> CTNNB1 mutation analysis may provide prognostic information.</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Target Volume Delineation:</b> Similar to high-grade STS, keeping in mind the infiltrative nature.</li>
+      <li><b>OARs:</b> Dependent on location.</li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>Definitive RT:</b> 56 Gy in 28 fractions.</li>
+      <li><b>Postoperative RT:</b> Doses ≥50-56 Gy in standard 1.8-2 Gy/fraction.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Techniques:</b> Standard RT techniques (3D conformal, IMRT).</li>
+      <li><b>Initial Management:</b> "Wait and see" (observation) for asymptomatic, non-critical location tumors.</li>
+      <li><b>Active Therapy (for progressive/symptomatic disease):</b> Systemic therapy, surgery, ablation/embolization, or definitive RT.</li>
+      <li><b>Surgery:</b> Primary treatment for resectable tumors. R1 margins may be acceptable if R0 would cause excessive morbidity.</li>
+      <li><b>Systemic Therapy:</b> NSAIDs, hormonal agents (tamoxifen), chemotherapy (methotrexate/vinblastine, doxorubicin-based), TKIs (imatinib, sorafenib), nirogacestat (preferred).</li>
+    </ul>
+  </div>
+
+  <div id="rhabdomyosarcoma" class="tab-content">
+    <h3>Rhabdomyosarcoma (RMS)</h3>
+    <p>Rhabdomyosarcoma is the most common soft tissue sarcoma in children and adolescents, but less common in adults. Treatment is highly multidisciplinary.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li><b>Local Control:</b> RT is a key component for local control, often combined with chemotherapy and surgery.</li>
+      <li><b>Primary Tumor/Dosing:</b>
+        <ul>
+          <li><b>Definitive RT:</b> 45 Gy to initial GTV + margins, with cone-down to 55.8 Gy to post-chemotherapy soft tissue volume + margins.</li>
+          <li><b>Preoperative RT:</b> 36-45 Gy to initial GTV + 2 cm.</li>
+          <li><b>Postoperative RT:</b> 45 Gy to GTV-equivalent volume + margins for R0/R1. For R2, boost to 55.8 Gy.</li>
+        </ul>
+      </li>
+      <li><b>Metastatic Disease:</b> Whole Lung Irradiation (WLI) for pulmonary metastases (15-18 Gy). SBRT for oligometastases.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Multidisciplinary Evaluation:</b> Pediatric, medical, surgical, and radiation oncologists.</li>
+      <li><b>Histology:</b> Pleomorphic RMS (adults) treated like high-grade undifferentiated pleomorphic sarcoma (UPS). Non-pleomorphic RMS (alveolar, embryonal, spindle cell/sclerosing) follow specific RMS protocols.</li>
+      <li><b>Imaging:</b> Contrast-enhanced MRI/CT of primary site. Chest CT. FDG-PET/CT (head-to-toe) or bone scan.</li>
+      <li><b>Biopsy:</b> Cytogenetics/molecular studies for specific translocations (e.g., PAX3::FOXO1, PAX7::FOXO1).</li>
+      <li><b>Fertility:</b> Fertility consultation should be considered.</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Target Volume Delineation:</b> Based on pre-treatment extent of bone and soft tissue disease. GTV should exclude soft tissue volume that extended into a cavity if it has returned to normal position after chemotherapy.</li>
+      <li><b>OARs:</b> Standard OARs, with specific attention to lung for WLI.</li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li>As described above under "Role of Radiotherapy."</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Chemotherapy:</b> Multiagent chemotherapy (e.g., VDC/IE) for at least 9 weeks prior to local therapy. Continue chemotherapy post-local therapy.</li>
+      <li><b>Local Control Therapy:</b> Wide excision, definitive RT, or amputation. Choice depends on tumor location, size, response to chemotherapy, age, and anticipated morbidity.</li>
+      <li><b>Sequencing:</b> RT should start by week 12 of VDC/IE or week 18 of VIDE, given concurrently with chemotherapy (withholding anthracyclines). Postoperative RT should begin within 60 days of surgery.</li>
+    </ul>
+  </div>
+
+  <div id="alt-wdlps" class="tab-content">
+    <h3>Atypical Lipomatous Tumor (ALT) and Well-Differentiated Liposarcoma (WDLPS)</h3>
+    <p>ALT/WDLPS are generally indolent lipomatous tumors. WDLPS can dedifferentiate into more aggressive sarcomas.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li><b>Adjuvant RT:</b> Reserved for selected patients with recurrent or deeply infiltrative primary lesions with a risk of local recurrence, depending on tumor location and patient's age.</li>
+      <li><b>Observation:</b> Recommended for focally positive margins if re-resection would be unduly morbid.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Diagnosis:</b> Histologic confirmation. Evidence of dedifferentiation means treating as other soft tissue sarcomas.</li>
+      <li><b>Imaging:</b> Imaging of primary site based on location and estimated risk of locoregional recurrence. Routine chest imaging for metastatic disease is not necessary.</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Target Volume Delineation:</b> Based on primary site.</li>
+      <li><b>OARs:</b> Standard.</li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li>Doses are individualized if RT is used.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Surgical Resection:</b> With oncologically appropriate margins is the primary treatment. Tailored to minimize surgical morbidity. En bloc resection with negative margins is generally sufficient.</li>
+      <li><b>Follow-up:</b> H&P every 6-12 months for 2 years, then annually. Imaging of primary site based on estimated risk of locoregional recurrence.</li>
+    </ul>
+  </div>
+
+  <div id="bone-sarcoma-general" class="tab-content">
+    <h3>General Bone Sarcoma Principles</h3>
+    <p>Primary bone cancers are rare and heterogeneous. Management requires a multidisciplinary team and often involves surgery, chemotherapy, and radiation therapy.</p>
+
+    <h4>Key Principles:</h4>
+    <ul>
+      <li><b>Multidisciplinary Team:</b> Essential for evaluation and treatment. Core group includes orthopedic oncologist, bone pathologist, medical/pediatric oncologist, radiation oncologist, musculoskeletal radiologist.</li>
+      <li><b>Biopsy:</b> Prior to any surgical procedure or fixation. Optimally performed at the center providing definitive management. Core needle biopsy preferred. Biopsy tract must be in line with future resection. Fresh tissue for molecular studies.</li>
+      <li><b>Surgery:</b> Wide excision to achieve histologically negative margins is preferred. Limb-sparing excision is preferred if functional outcomes are reasonable. Amputation for non-functional limb or if wide excision is not feasible.</li>
+      <li><b>Radiation Therapy (RT):</b> Used as adjuvant to surgery or as definitive therapy for unresectable tumors. Specialized techniques (IMRT, particle beam RT, SRS/SBRT) for high-dose delivery with normal tissue sparing.</li>
+      <li><b>Laboratory Studies:</b> CBC, LDH, ALP for diagnosis, prognosis, and monitoring. Consider molecular studies for therapeutic options.</li>
+      <li><b>Long-Term Follow-up:</b> Life-long follow-up for surveillance and management of late effects. Fertility issues should be addressed.</li>
+    </ul>
+  </div>
+
+  <div id="chondrosarcoma" class="tab-content">
+    <h3>Chondrosarcoma</h3>
+    <p>Chondrosarcomas are cartilage-producing bone tumors, more common in older adults. They are classified by location (central/peripheral) and histology (conventional, clear cell, dedifferentiated, myxoid, mesenchymal).</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li><b>Primary RT:</b> Considered for borderline resectable and unresectable disease (category 2B).</li>
+      <li><b>Adjuvant RT:</b> Recommended after incomplete resection or for palliation.</li>
+      <li><b>Specialized Techniques:</b> Proton beam RT or carbon ion RT for skull base and axial skeleton tumors due to high local control rates and normal tissue sparing. SRS for adjuvant treatment of skull base.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Clinical Evaluation:</b> Mild symptoms depending on size/location. Pelvic/axial lesions present later.</li>
+      <li><b>Imaging:</b> Radiographs (cortical destruction, medullary bone trabeculations, calcification, destruction). MRI for intramedullary/extraosseous extension. Serial radiographs for slow growth. Cartilage "cap" >2 cm or documented growth after skeletal maturity raises suspicion.</li>
+      <li><b>Prognostic Factors:</b> Anatomic location, histologic grade, size. Dedifferentiated and mesenchymal subtypes are more associated with metastasis.</li>
+      <li><b>Molecular:</b> IDH1/IDH2 mutations, CDKN2A, COL2A1.</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Patient Positioning:</b> Standard immobilization.</li>
+      <li><b>Target Volume Delineation:</b> Based on tumor extent.</li>
+      <li><b>OARs:</b> Critical structures near the tumor.</li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>Unresectable Low-grade:</b> Consider RT (70 Gy) with specialized techniques.</li>
+      <li><b>High-grade/Clear Cell/Extracompartmental (Resectable):</b> Preoperative RT if positive margins likely (19.8-50.4 Gy) followed by individualized postoperative RT (final target dose 70 Gy for R1, 72-78 Gy for R2). Postoperative RT (70 Gy for R1, >70 Gy for R2) using specialized techniques. RT not needed for R0.</li>
+      <li><b>Unresectable High-grade:</b> Consider RT (>70 Gy) with specialized techniques.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Surgery:</b> Wide excision with negative margins is preferred. Intralesional curettage with adjuvant cryosurgery for low-grade intracompartmental.</li>
+      <li><b>Systemic Therapy:</b> Generally not effective for conventional/dedifferentiated. Dasatinib, pazopanib, ivosidenib (for IDH1-mutant) for metastatic/unresectable. Chemotherapy may reduce recurrence/death in mesenchymal type.</li>
+    </ul>
+  </div>
+
+  <div id="chordoma" class="tab-content">
+    <h3>Chordoma</h3>
+    <p>Chordomas arise from notochord remnants, predominantly in the axial skeleton (sacrum, skull base, spine). Histologic variants include conventional, chondroid, and dedifferentiated. Poorly differentiated is more aggressive.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li><b>Combined with Surgery:</b> RT (preoperative, postoperative, or intraoperative) improves local control and DFS for resectable chordomas.</li>
+      <li><b>Primary RT:</b> For unresectable chordomas, irrespective of location.</li>
+      <li><b>Specialized Techniques:</b> Particle beam RT (protons, carbon ions) for high local control and long-term survival. IMRT and SRS/SRT also used.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Clinical Evaluation:</b> Localized deep pain, radiculopathies, airway obstruction, dysphagia. Neurologic deficit more common with skull base/mobile spine.</li>
+      <li><b>Imaging:</b> X-ray, MRI, CT of primary site. Screening MRI of spinal axis. C/A/P CT with contrast. FDG-PET/CT or bone scan for unusual cases.</li>
+      <li><b>Histologic Subtype:</b> Conventional, chondroid, dedifferentiated, poorly differentiated (SMARCB1 absence).</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Target Volume Delineation:</b> Based on tumor extent.</li>
+      <li><b>OARs:</b> Critical structures near the tumor.</li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>Preoperative RT:</b> Consider if positive margins likely (19.8-50.4 Gy) followed by individualized postoperative RT.</li>
+      <li><b>Postoperative RT:</b> For R1/R2 resection (final target dose 70 Gy for R1, 72-78 Gy for R2) using specialized techniques.</li>
+      <li><b>Definitive RT (Unresectable):</b> >70 Gy using specialized techniques.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Surgery:</b> Wide excision with adequate margins is preferred. Intralesional excision for resectable skull base tumors. Maximal safe resection recommended.</li>
+      <li><b>Systemic Therapy:</b> Not sensitive to chemotherapy (except dedifferentiated portion). Targeted therapies (Imatinib, Sunitinib, Dasatinib, Erlotinib, Lapatinib, Sorafenib) for advanced/recurrent disease. CGP for targeted therapy opportunities.</li>
+      <li><b>Re-irradiation:</b> For local recurrence, effective with carbon ion RT.</li>
+    </ul>
+  </div>
+
+  <div id="ewing-sarcoma" class="tab-content">
+    <h3>Ewing Sarcoma</h3>
+    <p>Ewing sarcoma is an aggressive bone cancer in children and young adults, characterized by specific gene fusions. It has a high propensity for early widespread metastases.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li><b>Definitive RT:</b> For primary tumor local control, often with concurrent chemotherapy.</li>
+      <li><b>Preoperative RT:</b> For marginally resectable tumors, concurrently with consolidation chemotherapy.</li>
+      <li><b>Postoperative RT:</b> If surgery is performed, should begin within 60 days.</li>
+      <li><b>Metastatic Disease:</b> Whole Lung Irradiation (WLI) for pulmonary metastases (15-18 Gy). SBRT for oligometastases. Palliative RT for symptomatic areas.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Multidisciplinary Team:</b> Essential.</li>
+      <li><b>H&P:</b> Localized pain/swelling, occasional constitutional symptoms (fever, weight loss).</li>
+      <li><b>Lab Tests:</b> Elevated LDH, leukocytosis.</li>
+      <li><b>Imaging:</b> Contrast-enhanced MRI/CT of primary site. Chest CT. Head-to-toe FDG-PET/CT and/or bone scan. Consider bone marrow biopsy and/or screening MRI of spine/pelvis.</li>
+      <li><b>Molecular:</b> Cytogenetics/molecular studies for EWS gene fusions (EWSR1::FLI1, EWSR1::ERG, FUS::ERG, FUS::FEV). CGP/fusion panels for translocations.</li>
+      <li><b>Fertility:</b> Fertility consultation should be considered.</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Target Volume Delineation:</b>
+        <ul>
+          <li><b>Definitive RT:</b> 45 Gy to initial GTV + margins, with cone-down to 55.8 Gy to post-chemotherapy soft tissue volume + margins.</li>
+          <li><b>Preoperative RT:</b> 36-45 Gy for initial GTV + 2 cm.</li>
+          <li><b>Postoperative RT:</b> 45 Gy to GTV-equivalent volume + margins for R0/R1. For R2, boost to 55.8 Gy.</li>
+        </ul>
+      </li>
+      <li><b>OARs:</b> Standard OARs, with specific attention to lung for WLI.</li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>Primary Tumor:</b> As described above under "Role of Radiotherapy."</li>
+      <li><b>Metastatic Disease:</b> WLI (15 Gy for <14y, 18 Gy for >14y). SBRT for oligometastases.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Chemotherapy:</b> Multiagent (e.g., VDC/IE) for at least 9 weeks prior to local therapy. Continue chemotherapy post-local therapy.</li>
+      <li><b>Local Control Therapy:</b> Wide excision, definitive RT, or amputation. Choice depends on tumor location, size, response to chemotherapy, age, and anticipated morbidity.</li>
+      <li><b>Sequencing:</b> RT should start by week 12 of VDC/IE or week 18 of VIDE, given concurrently with chemotherapy (withholding anthracyclines). Postoperative RT should begin within 60 days of surgery.</li>
+    </ul>
+  </div>
+
+  <div id="giant-cell-tumor" class="tab-content">
+    <h3>Giant Cell Tumor of Bone (GCTB)</h3>
+    <p>GCTB is a rare benign primary bone tumor with a strong tendency for local recurrence and potential for lung metastases. It typically affects young adults.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li><b>Primary RT:</b> Considered for unresectable/progressive/recurrent disease not responding to denosumab or embolization. Doses typically 50-60 Gy.</li>
+      <li><b>Adjuvant RT:</b> For marginally resected, unresectable, progressive, or recurrent disease.</li>
+      <li><b>Risk of Malignant Transformation:</b> RT may be associated with increased risk of malignant transformation. Consider if no other treatment options are available.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Clinical Evaluation:</b> History, physical exam.</li>
+      <li><b>Imaging:</b> X-ray, contrast-enhanced CT/MRI of primary site. Chest imaging. Bone scan (optional).</li>
+      <li><b>Biopsy:</b> To confirm diagnosis. Rule out brown tumor of hyperparathyroidism.</li>
+      <li><b>Malignant Transformation:</b> If present, treat as osteosarcoma.</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Target Volume Delineation:</b> Primary site or metastatic sites.</li>
+      <li><b>OARs:</b> Surrounding healthy tissues.</li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>Primary/Metastatic RT:</b> 50-60 Gy.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Surgery:</b> Wide excision or intralesional curettage (with adjuvants like cryosurgery). Intralesional curettage preferred for stage I/II. Wide excision for aggressive stage III.</li>
+      <li><b>Systemic Therapy:</b> Denosumab (preferred) for unresectable/recurrent GCTB. May be continued until progression. Serial embolization.</li>
+      <li><b>Setup Verification:</b> Image guidance.</li>
+      <li><b>Follow-up:</b> Physical exam, imaging of surgical site (x-ray, contrast-enhanced CT/MRI), chest imaging (every 6-12 mo for 4y, then annually).</li>
+    </ul>
+  </div>
+
+  <div id="osteosarcoma" class="tab-content">
+    <h3>Osteosarcoma</h3>
+    <p>Osteosarcoma is the most common primary malignant bone tumor in children and young adults. It is classified into intramedullary, surface (parosteal, periosteal, high-grade surface), and extraskeletal types.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li><b>Adjuvant RT:</b> Considered for positive margins (R1) or gross residual (R2) disease after resection.</li>
+      <li><b>Definitive RT:</b> For unresectable disease (60-70 Gy).</li>
+      <li><b>Metastatic Disease:</b> SBRT for oligometastases. Radiopharmaceuticals (Radium-223) for bone metastases.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>H&P:</b> Pain and swelling.</li>
+      <li><b>Lab Tests:</b> Elevated ALP and LDH.</li>
+      <li><b>Imaging:</b> MRI/CT of primary site. Chest CT. Head-to-toe FDG-PET/CT and/or bone scan.</li>
+      <li><b>Genetic Counseling:</b> Consider for Li-Fraumeni syndrome, hereditary retinoblastoma, etc.</li>
+      <li><b>Fertility:</b> Fertility consultation should be offered.</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Target Volume Delineation:</b> Primary tumor, involved nodes, metastatic sites.</li>
+      <li><b>OARs:</b> Standard.</li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>Postoperative RT (R1/R2):</b> 55 Gy with 9-13 Gy boost (total 64-68 Gy).</li>
+      <li><b>Unresectable:</b> 60-70 Gy.</li>
+      <li><b>SBRT for Oligometastases:</b> Doses individualized.</li>
+      <li><b>Radiopharmaceuticals:</b> Radium-223 (Alpha-emitter) for bone metastases.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Surgery:</b> Limb-sparing surgery (preferred) or amputation. Wide surgical margins are crucial.</li>
+      <li><b>Chemotherapy:</b>
+        <ul>
+          <li><b>Neoadjuvant:</b> Preferred for high-grade. MAP (methotrexate, cisplatin, doxorubicin) is category 1.</li>
+          <li><b>Adjuvant:</b> For low-grade/periosteal with high-grade pathology, or high-grade.</li>
+          <li><b>Relapsed/Refractory:</b> Ifosfamide ± etoposide, Regorafenib, Sorafenib, Cabozantinib, Gemcitabine ± docetaxel, Cyclophosphamide + topotecan.</li>
+        </ul>
+      </li>
+      <li><b>Sequencing:</b> Neoadjuvant chemotherapy followed by wide excision. RT for positive margins or unresectable disease.</li>
+    </ul>
+  </div>
+
+  <div class="references">
+    <h3>References</h3>
+    <ul>
+      <li>National Comprehensive Cancer Network. (2025). <i>NCCN Clinical Practice Guidelines in Oncology (NCCN Guidelines®): Soft Tissue Sarcoma</i> (Version 5.2024).</li>
+      <li>National Comprehensive Cancer Network. (2025). <i>NCCN Clinical Practice Guidelines in Oncology (NCCN Guidelines®): Bone Cancer</i> (Version 1.2025).</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  function openSarcomaTab(evt, tabId) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tab-content");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+      tabcontent[i].classList.remove("active");
+    }
+    tablinks = document.getElementsByClassName("tab-button");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].classList.remove("active");
+    }
+    document.getElementById(tabId).style.display = "block";
+    document.getElementById(tabId).classList.add("active");
+    evt.currentTarget.classList.add("active");
+  }
+
+  // Set the first tab as active by default when the page loads
+  document.addEventListener("DOMContentLoaded", function() {
+    document.querySelector(".tab-button").click();
+  });
+</script>
+
+</body>
+</html>
