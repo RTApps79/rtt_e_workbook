@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body {
+    font-family: sans-serif;
+    line-height: 1.6;
+    margin: 20px;
+    background-color: #f4f4f4;
+    color: #333;
+  }
+  h2 {
+    color: #0056b3;
+    border-bottom: 2px solid #0056b3;
+    padding-bottom: 5px;
+    margin-top: 30px;
+  }
+  h3 {
+    color: #004085;
+    margin-top: 20px;
+  }
+  h4 {
+    color: #004085;
+    margin-top: 15px;
+    margin-bottom: 10px;
+  }
+  .lesson-container {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  .tab-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  .tab-button {
+    background-color: #e0e0e0;
+    border: 1px solid #ccc;
+    padding: 10px 15px;
+    cursor: pointer;
+    margin-right: 5px;
+    border-radius: 5px 5px 0 0;
+    transition: background-color 0.3s ease;
+    white-space: nowrap; /* Prevent text wrapping */
+  }
+  .tab-button.active {
+    background-color: #0056b3;
+    color: white;
+    border-color: #0056b3;
+  }
+  .tab-content {
+    display: none;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-top: none;
+    padding: 20px;
+    border-radius: 0 0 8px 8px;
+    background-color: #f9f9f9;
+  }
+  .tab-content.active {
+    display: block;
+  }
+  ul {
+    list-style-type: disc;
+    margin-left: 20px;
+  }
+  li {
+    margin-bottom: 8px;
+  }
+  b {
+    color: #0056b3;
+  }
+  .references {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #ccc;
+    font-size: 0.9em;
+    color: #555;
+  }
+  .attention {
+    font-weight: bold;
+    color: #d9534f;
+  }
+</style>
+</head>
+<body>
+
+<div class="lesson-container">
+  <h2>Pediatric Tumors: Radiation Therapy Planning and Delivery</h2>
+
+  <p>This lesson provides detailed information on the preplanning, planning, and delivery steps for radiation therapy in various pediatric cancer types, focusing on both Central Nervous System (CNS) and Non-CNS Solid Tumors.</p>
+
+  <div class="tab-container">
+    <button class="tab-button active" onclick="openPediatricTab(event, 'general-pediatric-rt')">General Pediatric RT Principles</button>
+    <button class="tab-button" onclick="openPediatricTab(event, 'pediatric-astrocytomas')">Pediatric Astrocytomas</button>
+    <button class="tab-button" onclick="openPediatricTab(event, 'pediatric-ependymomas')">Pediatric Ependymomas</button>
+    <button class="tab-button" onclick="openPediatricTab(event, 'pediatric-choroid-plexus')">Pediatric Choroid Plexus Tumors</button>
+    <button class="tab-button" onclick="openPediatricTab(event, 'pediatric-craniopharyngiomas')">Pediatric Craniopharyngiomas/Sellar</button>
+    <button class="tab-button" onclick="openPediatricTab(event, 'pediatric-pineal')">Pediatric Pineal Tumors</button>
+    <button class="tab-button" onclick="openPediatricTab(event, 'pediatric-medulloblastomas')">Pediatric Medulloblastomas</button>
+    <button class="tab-button" onclick="openPediatricTab(event, 'pediatric-supratentorial-pnet')">Pediatric Supratentorial PNET</button>
+    <button class="tab-button" onclick="openPediatricTab(event, 'pediatric-germ-cell')">Pediatric Germ Cell Tumors</button>
+    <button class="tab-button" onclick="openPediatricTab(event, 'pediatric-retinoblastoma')">Pediatric Retinoblastoma</button>
+    <button class="tab-button" onclick="openPediatricTab(event, 'pediatric-wilms-tumor')">Pediatric Wilms' Tumor</button>
+    <button class="tab-button" onclick="openPediatricTab(event, 'pediatric-neuroblastoma')">Pediatric Neuroblastoma</button>
+    <button class="tab-button" onclick="openPediatricTab(event, 'pediatric-ewing-sarcoma')">Pediatric Ewing Sarcoma</button>
+    <button class="tab-button" onclick="openPediatricTab(event, 'pediatric-rhabdomyosarcoma')">Pediatric Rhabdomyosarcoma</button>
+    <button class="tab-button" onclick="openPediatricTab(event, 'pediatric-lymphomas')">Pediatric Lymphomas</button>
+    <button class="tab-button" onclick="openPediatricTab(event, 'pediatric-leukemias')">Pediatric Leukemias</button>
+    <button class="tab-button" onclick="openPediatricTab(event, 'pediatric-hepatoblastomas')">Pediatric Hepatoblastomas</button>
+    <button class="tab-button" onclick="openPediatricTab(event, 'pediatric-langerhans')">Pediatric Langerhans Cell Hist.</button>
+  </div>
+
+  <div id="general-pediatric-rt" class="tab-content active">
+    <h3>General Principles of Radiation Therapy in Children</h3>
+    <p>Radiation therapy (RT) for pediatric malignancies presents unique challenges and considerations compared to adult treatment, primarily due to the impact on growing tissues and the need for specialized immobilization.</p>
+
+    <h4>Fundamental Aspects:</h4>
+    <ul>
+      <li><b>Radio-Responsiveness:</b> Many pediatric tumors are highly radio-responsive, often requiring relatively lower doses, especially when combined with chemotherapy.</li>
+      <li><b>Growing Tissues:</b> Children's growing tissues are more susceptible to radiation damage, which can lead to long-term side effects. Therefore, RT may sometimes need to be delayed, particularly in very young children.</li>
+      <li><b>Immobilization:</b> Achieving precise immobilization in young children is a major concern. Target volumes are generally well-defined with narrow margins, necessitating rigid immobilization. Children under 4-5 years of age may require anesthesia for simulation and treatment.</li>
+      <li><b>CNS Tumors:</b> The most common solid tumors in childhood, accounting for 20-25% of all malignancies.</li>
+    </ul>
+
+    <h4>Radiotherapy Technique (General Brain Tumors in Children):</h4>
+    <ul>
+      <li><b>Patient Positioning:</b> Head, neck, and body should be positioned for locatable and reproducible anterior and lateral setup marks. A neutral head position with the patient supine is generally used.</li>
+      <li><b>Immobilization:</b> Thermoplastic masks provide setup variability not more than 2-3 mm. More accurate immobilization can be achieved with modified stereotactic head frames with noninvasive multiple-point head fixation.</li>
+      <li><b>Simulation:</b> CT scan simulation with radiopaque reference markers. Prone setup may be considered for posterior fossa tumors.</li>
+      <li><b>Beam Arrangement:</b> Single-field or opposed-beam two-field arrangements are generally avoided for intracranial disease due to excessive dose to normal tissues. Optimum arrangements typically involve 3 to 7 non-opposed shaped beams.</li>
+      <li><b>Beam Energy:</b> Most lesions can be treated with 4-6 MV photons. 10-MV photons may be used for deeper targets.</li>
+      <li><b>Whole Brain Irradiation (WBI):</b> Most often with opposed lateral fields. Field size encompasses the whole brain, with "German helmet" technique to exclude the anterior part of the eyes. Optic nerve and cribriform plate must be included.</li>
+      <li><b>Intensity-Modulated Radiation Therapy (IMRT):</b> Can improve dose conformity and reduce dose to critical OARs (optic chiasm, optic nerves, globes, brainstem, inner ear, temporal lobes).</li>
+      <li><b>Craniospinal Irradiation (CSI):</b> Patient usually prone with careful immobilization. Intracranial area and upper cervical cord treated with two opposed lateral fields. Spine treated with one or two posterior fields. Junction lines are moved 0.5-1.0 cm every 8-12 Gy to avoid hot/cold spots.</li>
+    </ul>
+  </div>
+
+  <div id="pediatric-astrocytomas" class="tab-content">
+    <h3>Pediatric Astrocytomas</h3>
+    <p>Astrocytomas are common neuroepithelial tumors in children, ranging from low-grade (e.g., Pilocytic Astrocytoma) to high-grade. Surgery is the mainstay of treatment, with RT often playing an adjuvant role.</p>
+
+    <h4>Low-Grade Astrocytomas (Juvenile Pilocytic Astrocytoma, Oligoastrocytoma, Oligodendroglioma, Astrocytomas Grade I and II):</h4>
+    <ul>
+      <li><b>Surgery:</b> Mainstay of treatment. Complete surgical resection is often curative for cerebral, cerebellar, and spinal cord tumors.</li>
+      <li><b>Indications for RT:</b>
+        <ul>
+          <li>Following incomplete resection where tumor progression would compromise neurological function.</li>
+          <li>Progressive and/or symptomatic unresectable disease.</li>
+          <li>RT is generally not indicated after complete resection.</li>
+        </ul>
+      </li>
+      <li><b>Target Volume:</b>
+        <ul>
+          <li><b>GTV:</b> Enhancement on initial MRI (T1 with gadolinium) or T2/FLAIR for non-enhancing lesions.</li>
+          <li><b>CTV:</b> GTV + 0.5 cm (pilocytic) or 1-1.5 cm (fibrillary) margin.</li>
+          <li><b>PTV:</b> CTV + 0.3-0.5 cm (thermoplastic mask) or 0.1-0.2 cm (rigid/stereotactic frame).</li>
+        </ul>
+      </li>
+      <li><b>Dose:</b>
+        <ul>
+          <li><b>Postoperative:</b> 50-54 Gy in 150-180 cGy fractions (for children 2-5 years). 54 Gy/30 fractions (for children >5 years).</li>
+          <li><b>Non-operated:</b> 54 Gy/30 fractions.</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h4>High-Grade Astrocytomas (Anaplastic Astrocytoma, Glioblastoma Multiforme [GBM]):</h4>
+    <ul>
+      <li><b>Surgery:</b> Maximal possible resection with good neurological outcome.</li>
+      <li><b>Indications for RT:</b> Postoperative RT is indicated in all cases.</li>
+      <li><b>Target Volume:</b>
+        <ul>
+          <li><b>GTV:</b> T1 enhancement on MRI. If no postoperative residual enhancement, surgical cavity is GTV.</li>
+          <li><b>CTV1 (initial):</b> GTV + 2-3 cm margin.</li>
+          <li><b>CTV2 (boost):</b> GTV + 1-1.5 cm margin.</li>
+          <li><b>PTV:</b> CTV + 1-1.5 cm margin.</li>
+        </ul>
+      </li>
+      <li><b>Dose:</b>
+        <ul>
+          <li><b>Postoperative:</b> 54 Gy to CTV1, then boost CTV2 to total 60 Gy.</li>
+          <li><b>Non-operated:</b> 65 Gy/35 fractions.</li>
+        </ul>
+      </li>
+      <li><b>Supportive Care:</b> Dexamethasone for cerebral edema, seizure prophylaxis, rehabilitation.</li>
+    </ul>
+
+    <h4>Optic Nerve/Chiasmatic/Hypothalamic Gliomas:</h4>
+    <ul>
+      <li><b>Treatment:</b> Chemotherapy first. RT (45-50 Gy) reserved for patients who progress on/after chemotherapy.</li>
+    </ul>
+
+    <h4>Brainstem Gliomas (Focal vs. Diffuse Infiltrating):</h4>
+    <ul>
+      <li><b>Treatment:</b> Focal RT is mainstay. Surgery for accessible focal lesions.</li>
+      <li><b>Target Volume:</b> Tumor + 2 cm margin or entire brainstem (up to C2) + cerebellar extension.</li>
+      <li><b>Dose:</b> 60 Gy/30 fractions for focal. Diffuse lesions: PTV includes whole brainstem, dose limited to 54 Gy/30 fractions.</li>
+    </ul>
+
+    <h4>Spinal Cord Astrocytomas:</h4>
+    <ul>
+      <li><b>Treatment:</b> Maximal safe resection. Chemotherapy may delay RT in very young children.</li>
+      <li><b>Indications for RT:</b> High-grade gliomas, progressive low-grade gliomas in older children, surgically inaccessible, diffuse/high-grade.</li>
+      <li><b>Target Volume:</b> GTV (solid tumor + cysts) + 0.5-1.5 cm CTV margin (depending on grade) + 1-1.5 cm PTV margin.</li>
+      <li><b>Dose:</b> 50.4 Gy/28 fractions.</li>
+    </ul>
+  </div>
+
+  <div id="pediatric-ependymomas" class="tab-content">
+    <h3>Pediatric Ependymomas</h3>
+    <p>Ependymomas are CNS tumors with a predilection for infants and children younger than 5 years. Gadolinium-enhanced MRI of the entire craniospinal axis and CSF cytology are essential for planning.</p>
+
+    <h4>Indications for Radiotherapy:</h4>
+    <ul>
+      <li>Postoperative RT is indicated in all cases.</li>
+      <li>RT can be avoided only in:
+        <ul>
+          <li>Spinal cord ependymoma post-complete resection.</li>
+          <li>Selected supratentorial ependymomas in non-eloquent areas resected with wide margins.</li>
+        </ul>
+      </li>
+      <li>Local RT is standard of care. CSI is only for anaplastic ependymoma with leptomeningeal seeding.</li>
+    </ul>
+
+    <h4>Planning Technique:</h4>
+    <ul>
+      <li><b>Target Volume:</b>
+        <ul>
+          <li><b>GTV:</b> Tumor based on preoperative imaging and macroscopic residual disease.</li>
+          <li><b>CTV:</b> GTV + 1 cm (ependymomas) or 1.5 cm (anaplastic/myxopapillary).</li>
+          <li><b>PTV:</b> CTV + 1-1.5 cm.</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h4>Dose:</h4>
+    <ul>
+      <li><b>Ependymomas:</b> 54 Gy/30 fractions.</li>
+      <li><b>Anaplastic Ependymomas:</b> 54 Gy/30 fractions, with boost to macroscopic residual disease to 59-60 Gy.</li>
+      <li><b>Myxopapillary Ependymomas:</b> 50.4 Gy.</li>
+      <li><b>Leptomeningeal Seedings:</b> CSI of 36 Gy/20 fractions followed by posterior fossa boost to 54 Gy.</li>
+    </ul>
+  </div>
+
+  <div id="pediatric-choroid-plexus" class="tab-content">
+    <h3>Pediatric Choroid Plexus Tumors</h3>
+    <p>Choroid plexus tumors range from papillomas (WHO Grade 1) to carcinomas (WHO Grade III). Surgery is the primary treatment.</p>
+
+    <h4>Indications for Radiotherapy:</h4>
+    <ul>
+      <li>Atypical tumors.</li>
+      <li>Leptomeningeal seedings (requires CSI).</li>
+      <li>Postoperative residual disease.</li>
+    </ul>
+
+    <h4>Planning Technique:</h4>
+    <ul>
+      <li><b>Target Volume:</b>
+        <ul>
+          <li><b>GTV:</b> Tumor based on preoperative imaging and macroscopic residual disease.</li>
+          <li><b>CTV:</b> GTV + 1 cm (papillomas) or 1.5 cm (atypical tumors).</li>
+          <li><b>PTV:</b> CTV + 1-1.5 cm.</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h4>Dose:</h4>
+    <ul>
+      <li>54 Gy/30 fractions.</li>
+      <li>If leptomeningeal seedings: CSI of 36 Gy/20 fractions followed by posterior fossa boost to 54 Gy.</li>
+    </ul>
+  </div>
+
+  <div id="pediatric-craniopharyngiomas" class="tab-content">
+    <h3>Pediatric Craniopharyngiomas/Sellar Tumors</h3>
+    <p>Craniopharyngiomas are common suprasellar tumors in children. Surgery is the primary treatment.</p>
+
+    <h4>Indications for Radiotherapy:</h4>
+    <ul>
+      <li>Subtotally resected tumor.</li>
+      <li>Recurrence after total excision.</li>
+    </ul>
+
+    <h4>Planning Technique:</h4>
+    <ul>
+      <li><b>Target Volume:</b>
+        <ul>
+          <li><b>GTV:</b> Whole tumor (solid plus cystic areas) based on preoperative imaging and any macroscopic residual disease.</li>
+          <li><b>CTV:</b> GTV + 1 cm.</li>
+          <li><b>PTV:</b> CTV + 0.5 cm.</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h4>Dose:</h4>
+    <ul>
+      <li><b>Craniopharyngiomas:</b> 54 Gy/30 fractions.</li>
+      <li><b>Other Sellar Tumors:</b> 50.4 Gy/28 fractions.</li>
+    </ul>
+  </div>
+
+  <div id="pediatric-pineal" class="tab-content">
+    <h3>Pediatric Pineal Tumors</h3>
+    <p>Pineal tumors include pinealoblastomas, pinealocytomas, and intermediate-grade tumors.</p>
+
+    <h4>Indications for Radiotherapy:</h4>
+    <ul>
+      <li>Sub-totally resected tumor.</li>
+      <li>Leptomeningeal seedings.</li>
+    </ul>
+
+    <h4>Planning Technique:</h4>
+    <ul>
+      <li><b>Target Volume:</b>
+        <ul>
+          <li><b>GTV:</b> Whole tumor (solid plus cystic areas) based on preoperative imaging and any macroscopic residual disease.</li>
+          <li><b>CTV:</b> GTV + 1-1.5 cm margin. Whole ventricle therapy may be used.</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h4>Dose:</h4>
+    <ul>
+      <li>54 Gy/30 fractions with standard CSI of 36 Gy followed by local boost.</li>
+    </ul>
+  </div>
+
+  <div id="pediatric-medulloblastomas" class="tab-content">
+    <h3>Pediatric Medulloblastomas</h3>
+    <p>Medulloblastoma is a radio-responsive and chemo-responsive tumor arising in the cerebellum, with characteristics of a PNET. It is staged as high-risk and low-risk.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li>RT is required in all cases.</li>
+    </ul>
+
+    <h4>Planning Technique:</h4>
+    <ul>
+      <li><b>Target Volume:</b>
+        <ul>
+          <li><b>GTV:</b> Tumor based on preoperative imaging and macroscopic residual disease. CT simulation for planning. MRI for lower cord extent.</li>
+          <li><b>CTV:</b> Whole brain and spine (to S3), including nerve roots from intervertebral foramina. Cranial field to C2-3. Spinal fields divided lengthwise.</li>
+          <li><b>PTV:</b> CTV + 1 cm.</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h4>Dose:</h4>
+    <ul>
+      <li><b>Standard Risk:</b>
+        <ul>
+          <li>Standard dose CSI: 36 Gy/20 fractions followed by posterior fossa boost to 19.8 Gy/11 fractions (total 55.8 Gy).</li>
+          <li>Low CSI dose: 23.4 Gy CSI with concurrent vincristine, followed by posterior fossa boost to total 55.8 Gy/31 fractions.</li>
+        </ul>
+      </li>
+      <li><b>High-Risk:</b> Standard dose CSI of 36 Gy/20 fractions followed by posterior fossa boost to 19.8 Gy/11 fractions (total 55.8 Gy). If leptomeningeal seedings, 5-10 Gy boost to whole spine after CSI.</li>
+    </ul>
+  </div>
+
+  <div id="pediatric-supratentorial-pnet" class="tab-content">
+    <h3>Pediatric Supratentorial Primitive Neuroectodermal Tumors (PNET)</h3>
+    <p>Supratentorial PNETs are aggressive, infiltrative neoplasms that spread widely throughout the CNS and carry a poor prognosis despite aggressive treatment.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li>Postoperative RT is indicated in all cases, followed by chemotherapy.</li>
+    </ul>
+
+    <h4>Planning Technique:</h4>
+    <ul>
+      <li><b>Target Volume:</b> As for high-risk medulloblastoma.</li>
+    </ul>
+
+    <h4>Dose:</h4>
+    <ul>
+      <li>As for high-risk medulloblastoma.</li>
+    </ul>
+  </div>
+
+  <div id="pediatric-germ-cell" class="tab-content">
+    <h3>Pediatric Germ Cell Tumors (Intracranial)</h3>
+    <p>Intracranial germ cell tumors are differentiated into germinomas and non-germinomatous GCTs.</p>
+
+    <h4>Indications for Radiotherapy:</h4>
+    <ul>
+      <li>All cases, especially germinomas.</li>
+    </ul>
+
+    <h4>Planning Technique:</h4>
+    <ul>
+      <li><b>Target Volume:</b>
+        <ul>
+          <li><b>GTV:</b> Whole tumor (solid plus cystic areas) based on preoperative and prechemotherapy imaging and any macroscopic residual disease.</li>
+          <li><b>CTV:</b> GTV + 1-1.5 cm margin. Whole ventricle therapy may be used.</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h4>Dose:</h4>
+    <ul>
+      <li><b>Germinomas:</b> Standard CSI to 30 Gy/20 fractions, followed by boost of 15 Gy/10 fractions (total 45 Gy/30 fractions).</li>
+      <li><b>Nongerminomatous GCTs:</b> 54 Gy/30 fractions with standard CSI of 36 Gy followed by local boost up to 54 Gy.</li>
+    </ul>
+  </div>
+
+  <div id="pediatric-retinoblastoma" class="tab-content">
+    <h3>Pediatric Retinoblastoma</h3>
+    <p>Retinoblastoma is a rare eye cancer, usually detected in the first 3 years of life. Treatment aims to preserve vision and cure the patient.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li><b>Brachytherapy (Episcleral Plaque):</b> For small, solitary lesions >3 mm from optic disc, <10 mm thick, or with choroidal extension.</li>
+      <li><b>Teletherapy (EBRT):</b> To preserve vision for lesions close to macula/optic nerve, large lesions with vitreous seeding, multifocal lesions, or recurrent disease. Adjuvant therapy post-enucleation/evisceration. Palliative.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Work-up:</b> External ocular exam, slit-lamp bimicroscopy, biocular indirect ophthalmoscopy (under anesthesia for mapping). CBC, chemistries, BUN, Cr, LFTs. Fluorescein angiography, bilateral USG, MRI. Bone scan/lumbar puncture for suspected metastatic disease.</li>
+      <li><b>Risk Factors for Metastasis:</b> Optic nerve invasion, uveal invasion, orbital invasion, choroidal involvement.</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Target Volume:</b> Entire retina including 5-8 mm of proximal optic nerve. Tumor treated to 98% isodose, rest of orbital structures in 50% isodose.</li>
+      <li><b>Critical Structures:</b> Opposite eye, chiasma, pituitary gland, brainstem, posterior teeth, upper cervical spine.</li>
+      <li><b>Postoperative:</b> Entire orbit (GTV) + 5 mm (PTV).</li>
+    </ul>
+
+    <h4>Dose:</h4>
+    <ul>
+      <li><b>Group I and II:</b> 45 Gy/25 fractions (daily) or 45 Gy/18 fractions (alternate day).</li>
+      <li><b>Group III, IV and V:</b> 50.4 Gy/28 fractions (daily) or 50.4 Gy/20 fractions (alternate day).</li>
+      <li><b>Postoperative Microscopic:</b> 45 Gy/25 fractions (daily) or 45 Gy/18 fractions (alternate day).</li>
+      <li><b>Postoperative Gross:</b> 50.4 Gy/28 fractions (daily) or 50.4 Gy/20 fractions (alternate day).</li>
+      <li><b>Children <1 year:</b> Microscopic: 39.6 Gy/22 fractions. Gross: 45 Gy/25 fractions.</li>
+      <li><b>Brachytherapy:</b> 40 Gy to apex, 100-150 Gy to sclera.</li>
+      <li><b>Intracranial Extension:</b> WBRT of 25 Gy/15 fractions + primary tumor treatment.</li>
+      <li><b>Metastases:</b> 15 Gy/5 fractions or 5 Gy single fraction.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>EBRT:</b> Conformal RT (CT/MRI based). 4-6 MV photons. For unilateral, four anterior oblique noncoplanar fields. For bilateral, 3DCRT/IMRT with opposed lateral and anterior oblique fields.</li>
+      <li><b>Episcleral Plaque Brachytherapy:</b> 40 Gy to apex, 100-200 Gy to sclera.</li>
+    </ul>
+  </div>
+
+  <div id="pediatric-wilms-tumor" class="tab-content">
+    <h3>Pediatric Wilms' Tumor (Nephroblastoma)</h3>
+    <p>Wilms' tumor is a highly responsive kidney tumor in children, amenable to radiation and chemotherapy. Patients are stratified into low, intermediate, and high-risk groups.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li><b>Local Control:</b> RT is a key component, often with chemotherapy and surgery.</li>
+      <li><b>Pulmonary Metastasis:</b> Lung RT for pulmonary metastasis (WLI) indicated for high-risk patients, or intermediate-risk not responding to chemotherapy.</li>
+      <li><b>Whole-Abdominal RT:</b> For all Stage III disease with diffuse spillage or peritoneal metastasis.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Risk Categories:</b> Low, Intermediate, High (based on stage, histology, anaplasia, lung mets).</li>
+      <li><b>Chemotherapy:</b> Regimens vary by risk group (Actinomycin D, Vincristine, Doxorubicin, Etoposide).</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Target Volume:</b> Operative bed (kidney outline + tumor + 2-3 cm margin). Superior border to diaphragmatic dome if tumor present. Fields overlap entire vertebral body, exclude other kidney (unless bilateral).</li>
+      <li><b>Whole-Abdomen RT:</b> Fields from diaphragmatic dome to obturator foramen, femoral head blocked. Uninvolved kidney dose <15 Gy.</li>
+      <li><b>Pulmonary Metastases (WLI):</b> Bilateral lung irradiation. Fields from clavicles to L1. Shoulders blocked. Mediastinal blocks never used.</li>
+    </ul>
+
+    <h4>Dose:</h4>
+    <ul>
+      <li><b>Postoperative (Stage I/II FH, Stage I-III focal anaplasia, Stage I-II diffuse anaplasia, Stage I-III CCSK):</b> 10.8 Gy to flank/tumor bed + 10 Gy boost to gross residual (>3 cm).</li>
+      <li><b>Stage III diffuse anaplasia, Stage I-III RTK:</b> 19.8 Gy flank RT (10.8 Gy for infants).</li>
+      <li><b>Stage IV (Lung Mets):</b> 12 Gy/8 fractions WLI (FH/UFH).</li>
+      <li><b>Stage IV (Brain mets):</b> 30.6 Gy/17 fractions WBRT or 21.6 Gy WBRT + 10.8 Gy IMRT/SRT boost.</li>
+      <li><b>Stage IV (Liver Mets):</b> 19.8 Gy/11 fractions whole liver RT.</li>
+      <li><b>Stage IV (Bone Mets):</b> 25.2 Gy to tumor + 3 cm margin.</li>
+      <li><b>Unresected LN mets:</b> 19.8 Gy.</li>
+      <li><b>Relapsed Abdominal Disease:</b> 12.6-18 Gy (infants), 21.6 Gy (older children) if previous RT <10.8 Gy. Boost 9 Gy to gross residual.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Timing:</b> Should start within 10 days of surgery.</li>
+      <li><b>Techniques:</b> AP/PA technique.</li>
+    </ul>
+  </div>
+
+  <div id="pediatric-neuroblastoma" class="tab-content">
+    <h3>Pediatric Neuroblastoma</h3>
+    <p>Neuroblastoma is a common solid tumor in children, often presenting with metastases at diagnosis. RT plays a role in local control and palliation.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li>Irradiation of positive regional lymph nodes.</li>
+      <li>Total Body Irradiation (TBI): Preparatory regimen for bone marrow transplant.</li>
+      <li>Symptomatic (Stage 4-5): For hepatomegaly causing respiratory compromise.</li>
+      <li>Palliation.</li>
+      <li>Postoperative: In high-risk cases even after complete resection.</li>
+      <li>Iodine-131 metaiodobenzylguanidine (mIBG) avid on scan.</li>
+    </ul>
+
+    <h4>Planning Technique:</h4>
+    <ul>
+      <li><b>Target Volume:</b>
+        <ul>
+          <li><b>GTV:</b> Tumor volume before surgery and after induction chemotherapy (CT/MRI).</li>
+          <li><b>CTV:</b> GTV + 1-2 cm margin. If spine in CTV, extend to include complete vertebral bodies.</li>
+          <li><b>PTV:</b> CTV + 0.5 cm margin.</li>
+        </ul>
+      </li>
+      <li><b>Dose Objectives:</b> Treat entire CTV to 100% of prescribed dose (~20 Gy). Keep 1/3 ipsilateral kidney <16 Gy, 2/3 contralateral kidney <16 Gy. Liver, spleen, stomach doses kept reasonable.</li>
+      <li><b>Liver:</b> For Stage 4-5, single anterior field (6 Gy/3 fractions) to reduce size, not eliminate tumor. Lateral fields avoid right kidney and spine.</li>
+    </ul>
+
+    <h4>Dose:</h4>
+    <ul>
+      <li><b>Age <18 months:</b> Gross: 15 Gy + 10 Gy boost. Microscopic: 15 Gy + 5 Gy boost.</li>
+      <li><b>Age >19 months:</b> Gross: 20 Gy + 10 Gy boost. Microscopic: 15 Gy + 10 Gy boost.</li>
+    </ul>
+  </div>
+
+  <div id="pediatric-ewing-sarcoma" class="tab-content">
+    <h3>Pediatric Ewing Sarcoma</h3>
+    <p>Ewing sarcoma is an aggressive bone cancer in children and young adults. Prognosis depends on tumor size, with metastases being the main cause of treatment failure.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li><b>Preoperative RT:</b> To avoid intralesional resection with comparable local control.</li>
+      <li><b>Postoperative RT:</b> After intralesional/marginal resections, or when wide resection has poor histologic response (<100% necrosis).</li>
+    </ul>
+
+    <h4>Planning Technique:</h4>
+    <ul>
+      <li><b>Target Volume:</b> Map complete extent of disease (radiographs, T2-weighted MRI, bone scans). Initial: 3 cm margin around pre-chemotherapy soft tissue, 2 cm around initial bony disease. Reduced to 1 cm around original abnormality if complete response to chemo.</li>
+      <li><b>Boost Field:</b> Soft tissue component to post-chemotherapy volume + 2 cm margin. No bony field reduction.</li>
+      <li><b>Spinal Cord:</b> Minimize doses using electron field, shallow wedged fields, or rotational techniques.</li>
+      <li><b>Normal Tissue Sparing:</b> A strip of normal tissue should be spared for lymphatic drainage. Entire medullary cavity need not be irradiated.</li>
+    </ul>
+
+    <h4>Dose:</h4>
+    <ul>
+      <li><b>Preoperative RT:</b> Phase I: 45 Gy/25 fractions. Phase II: If complete response, no boost. If <50% response, 10.8 Gy/6 fractions. If >50% response, 14.4 Gy/8 fractions.</li>
+      <li><b>Postoperative RT (Phase I):</b> 45 Gy/25 fractions. No RT if negative margin and 100% necrosis.</li>
+      <li><b>Postoperative RT (Phase II, for <100% necrosis or positive margins):</b> 5.4 Gy/3 fractions to 10.8 Gy/6 fractions depending on margin status and necrosis.</li>
+    </ul>
+  </div>
+
+  <div id="pediatric-rhabdomyosarcoma" class="tab-content">
+    <h3>Pediatric Rhabdomyosarcoma (RMS)</h3>
+    <p>Rhabdomyosarcoma is the most common soft tissue sarcoma in children. Treatment is highly multidisciplinary, involving chemotherapy, surgery, and RT.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li>To ensure adequate local control in cases unable to undergo complete wide surgical resection.</li>
+    </ul>
+
+    <h4>Planning Technique:</h4>
+    <ul>
+      <li><b>Target Volume:</b>
+        <ul>
+          <li><b>GTV:</b> Extent of disease at diagnosis (pre-chemotherapy volume).</li>
+          <li><b>CTV:</b> GTV + 1 cm.</li>
+          <li><b>PTV:</b> CTV + 0.5 cm.</li>
+        </ul>
+      </li>
+      <li><b>Margins:</b> Site-dependent. Tight margins for head and neck, wider for other sites.</li>
+    </ul>
+
+    <h4>Dose:</h4>
+    <ul>
+      <li><b>Children <6 years:</b> 41.4 Gy for tumors <5 cm, 45 Gy for tumors ≥5 cm.</li>
+      <li><b>Children ≥6 years:</b> 45 Gy for tumors <5 cm, 50.4 Gy for tumors ≥5 cm.</li>
+      <li>Fraction sizes of 180 cGy. Local control improves with higher doses for larger tumors.</li>
+      <li><b>IRS-5 protocol:</b> 36 Gy for microscopic disease, 45 Gy for Group III orbital tumors.</li>
+    </ul>
+  </div>
+
+  <div id="pediatric-lymphomas" class="tab-content">
+    <h3>Pediatric Lymphomas (Hodgkin's Disease & Non-Hodgkin's Lymphomas)</h3>
+    <p>Radiation therapy plays a role in both Hodgkin's and Non-Hodgkin's Lymphomas in children, often as consolidation or for specific indications.</p>
+
+    <h4>Hodgkin's Disease:</h4>
+    <ul>
+      <li><b>Treatment:</b> Primary chemotherapy (e.g., ABVD) followed by Involved-Field RT (IFRT).</li>
+      <li><b>Dose:</b> 15-25 Gy in 1.5 Gy/fraction.</li>
+      <li><b>Technique:</b> IFRT requires precise staging and localization. Most treatments with AP/PA. For supra-diaphragmatic, tailored mantle field + para-aortic field. For sub-diaphragmatic, para-aortic + inguino-iliac fields (inverted Y).</li>
+    </ul>
+
+    <h4>Non-Hodgkin's Lymphomas:</h4>
+    <ul>
+      <li><b>Indications for RT:</b>
+        <ul>
+          <li>Emergency RT for mediastinal masses and cranial nerve palsies.</li>
+          <li>CNS irradiation in primary lymphomas or established CNS disease.</li>
+          <li>Localized disease.</li>
+          <li>Bone lymphoma (uncertain value).</li>
+          <li>Total body irradiation (TBI) for transplantation (immunosuppression).</li>
+        </ul>
+      </li>
+      <li><b>Techniques:</b> Tailored to each field and case.</li>
+    </ul>
+  </div>
+
+  <div id="pediatric-leukemias" class="tab-content">
+    <h3>Pediatric Leukemias (Acute Lymphoblastic Leukemia - ALL)</h3>
+    <p>Acute Lymphoblastic Leukemia (ALL) is the most common leukemia in children. Radiation therapy is primarily used for CNS prophylaxis/treatment and as part of conditioning for transplant.</p>
+
+    <h4>Indications for Radiotherapy in ALL:</h4>
+    <ul>
+      <li>Prophylactic cranial irradiation (PCI).</li>
+      <li>Treatment of central nervous system leukemia.</li>
+      <li>Meningeal relapses.</li>
+      <li>Testicular irradiation.</li>
+      <li>Large mediastinal mass.</li>
+      <li>Palliation.</li>
+      <li>Total body irradiation (TBI) as preparation for bone marrow transplant.</li>
+    </ul>
+
+    <h4>Dose:</h4>
+    <ul>
+      <li><b>PCI:</b> 18 Gy in 10 fractions.</li>
+      <li><b>CNS Leukemia:</b> 18-30 Gy in 1.8 Gy fractions (CSI) + local boost (spine dose not >15 Gy).</li>
+      <li><b>Testicular Irradiation:</b> Therapeutic: 24 Gy in 12 fractions. Prophylactic: 12 Gy in 9 fractions.</li>
+      <li><b>Palliative:</b> 2-6 Gy.</li>
+      <li><b>TBI:</b> 12 Gy in 3-4 days.</li>
+    </ul>
+
+    <h4>Technique:</h4>
+    <ul>
+      <li><b>Therapeutic CNS Irradiation:</b> CSI technique. 6 MV photons.</li>
+      <li><b>PCI:</b> Volume includes subarachnoid space inside vault. Inferior margin C2. Two parallel opposed lateral fields. Protect posterior globe, cribriform plate, middle cranial fossa. German Helmet technique. 6 MV photons.</li>
+      <li><b>Testicular Irradiation:</b> Single AP field, smallest size. Photon beam angled superior-inferior. Electron beam en face. Penis taped to abdomen. Frog-leg position. Scrotal sac taped to minimize field. Bolus for Dmax.</li>
+      <li><b>TBI:</b> Dose to midplane (umbilicus). Compensators/bolus for uniformity. Bilateral technique (arms shield heart/lungs) or AP/PA. Higher energy beams for uniformity, may need bolus for skin dose. Lung blocking (8-10 Gy midplane). Dose-rate <10 cGy/min. Immobilization crucial.</li>
+    </ul>
+  </div>
+
+  <div id="pediatric-hepatoblastomas" class="tab-content">
+    <h3>Pediatric Hepatoblastomas</h3>
+    <p>Hepatoblastomas are the most common primary liver tumors in children. Radiation therapy plays a role in specific settings.</p>
+
+    <h4>Indications for Radiotherapy:</h4>
+    <ul>
+      <li>Preoperatively in unresectable disease after surgery.</li>
+      <li>Postoperative residual disease.</li>
+      <li>Palliative.</li>
+    </ul>
+
+    <h4>Dose:</h4>
+    <ul>
+      <li><b>Limited Volume:</b> 45 Gy for bulky disease, 35 Gy for microscopic disease.</li>
+      <li><b>Whole Liver Irradiation:</b> 20-25 Gy in 10-13 fractions.</li>
+    </ul>
+
+    <h4>Technique:</h4>
+    <ul>
+      <li>Parallel opposed beams usually used. Multiple noncoplanar beams may also be used. 4-6 MV photons preferred.</li>
+    </ul>
+  </div>
+
+  <div id="pediatric-langerhans" class="tab-content">
+    <h3>Pediatric Langerhans Cell Histiocytosis (LCH)</h3>
+    <p>Langerhans Cell Histiocytosis is a rare disorder that can affect various organs. Radiation therapy is used for local control when other treatments are insufficient.</p>
+
+    <h4>Indications for Radiotherapy:</h4>
+    <ul>
+      <li>Local healing not achieved with surgery.</li>
+      <li>Postoperative relapsed disease.</li>
+      <li>Palliative: Nerve compression, pain relief.</li>
+    </ul>
+
+    <h4>Dose:</h4>
+    <ul>
+      <li>10 Gy in conventional fractions.</li>
+      <li>For uncontrolled metastatic disease: 40-50 Gy in 15 fractions (2.5-3.5 Gy/fx).</li>
+    </ul>
+
+    <h4>Technique:</h4>
+    <ul>
+      <li>Grossly identified tumor with 5 cm margin in Grade I, 8 cm margin in Grade II/III.</li>
+      <li>Margin of 2-3 cm for boost.</li>
+      <li>Preferable to spare an uninvolved compartment to preserve lymphatic drainage.</li>
+      <li>Shrinking fields for high dose to primary.</li>
+      <li>For limb lesions, opposing fields.</li>
+      <li>Pelvis: Exclude bladder/bowel.</li>
+      <li>Spinal cord doses minimized by electron field, shallow wedged fields, or rotational techniques.</li>
+      <li>Beam energy: Cobalt, 6-10 MV X-rays.</li>
+    </ul>
+  </div>
+
+  <div class="references">
+    <h3>Reference</h3>
+    <ul>
+      <li>Rathi, A. K. (n.d.). <i>Step by Step Radiation Therapy: Treatment and Planning</i>. Jaypee Brothers Medical Publishers.</li>
+    </ul>
+  </div>
+</div>
