@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body {
+    font-family: sans-serif;
+    line-height: 1.6;
+    margin: 20px;
+    background-color: #f4f4f4;
+    color: #333;
+  }
+  h2 {
+    color: #0056b3;
+    border-bottom: 2px solid #0056b3;
+    padding-bottom: 5px;
+    margin-top: 30px;
+  }
+  h3 {
+    color: #004085;
+    margin-top: 20px;
+  }
+  h4 {
+    color: #004085;
+    margin-top: 15px;
+    margin-bottom: 10px;
+  }
+  .lesson-container {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  .tab-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  .tab-button {
+    background-color: #e0e0e0;
+    border: 1px solid #ccc;
+    padding: 10px 15px;
+    cursor: pointer;
+    margin-right: 5px;
+    border-radius: 5px 5px 0 0;
+    transition: background-color 0.3s ease;
+    white-space: nowrap; /* Prevent text wrapping */
+  }
+  .tab-button.active {
+    background-color: #0056b3;
+    color: white;
+    border-color: #0056b3;
+  }
+  .tab-content {
+    display: none;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-top: none;
+    padding: 20px;
+    border-radius: 0 0 8px 8px;
+    background-color: #f9f9f9;
+  }
+  .tab-content.active {
+    display: block;
+  }
+  ul {
+    list-style-type: disc;
+    margin-left: 20px;
+  }
+  li {
+    margin-bottom: 8px;
+  }
+  b {
+    color: #0056b3;
+  }
+  .references {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #ccc;
+    font-size: 0.9em;
+    color: #555;
+  }
+  .attention {
+    font-weight: bold;
+    color: #d9534f;
+  }
+</style>
+</head>
+<body>
+
+<div class="lesson-container">
+  <h2>Male Reproductive Tumors: Radiation Therapy Planning and Delivery (Enhanced)</h2>
+
+  <p>This lesson provides detailed information on the preplanning, planning, and delivery steps for radiation therapy in prostate, penile, and testicular cancers, with enhanced focus on precise field borders and setup considerations.</p>
+
+  <div class="tab-container">
+    <button class="tab-button active" onclick="openMaleReproTab(event, 'prostate-overview')">Prostate Cancer Overview</button>
+    <button class="tab-button" onclick="openMaleReproTab(event, 'prostate-preplanning')">Prostate Preplanning</button>
+    <button class="tab-button" onclick="openMaleReproTab(event, 'prostate-planning')">Prostate Planning & Delivery</button>
+    <button class="tab-button" onclick="openMaleReproTab(event, 'penile-overview')">Penile Cancer Overview</button>
+    <button class="tab-button" onclick="openMaleReproTab(event, 'penile-planning')">Penile Planning & Delivery</button>
+    <button class="tab-button" onclick="openMaleReproTab(event, 'testicular-overview')">Testicular Cancer Overview</button>
+    <button class="tab-button" onclick="openMaleReproTab(event, 'testicular-seminoma')">Testicular Seminoma RT</button>
+  </div>
+
+  <div id="prostate-overview" class="tab-content active">
+    <h3>Prostate Cancer Overview</h3>
+    <p>Prostate cancer is the most common cancer in men in the United States, with a wide spectrum of disease from very low-risk to metastatic. Treatment decisions are highly individualized based on risk stratification, patient life expectancy, and preferences.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li><b>Definitive RT:</b> A primary treatment option for clinically localized prostate cancer across all risk groups (very low to very high risk).</li>
+      <li><b>Adjuvant/Salvage RT:</b> Used after radical prostatectomy for PSA persistence/recurrence or adverse pathological features.</li>
+      <li><b>Regional Nodal RT:</b> For regional (N1) disease, often combined with Androgen Deprivation Therapy (ADT).</li>
+      <li><b>RT to Primary Tumor in Metastatic Disease:</b> Considered for low-volume metastatic castration-sensitive prostate cancer (CSPC).</li>
+      <li><b>Palliative RT:</b> For symptomatic bone metastases or other sites of disease.</li>
+      <li><b>Radiopharmaceutical Therapy:</b> For metastatic castration-resistant prostate cancer (CRPC) with bone metastases (Radium-223) or PSMA-positive lesions (Lu-177-PSMA-617).</li>
+    </ul>
+  </div>
+
+  <div id="prostate-preplanning" class="tab-content">
+    <h3>Prostate Cancer Preplanning and Assessment</h3>
+    <p>Comprehensive evaluation is crucial for accurate staging and personalized treatment planning in prostate cancer.</p>
+
+    <h4>Initial Diagnosis and Workup:</h4>
+    <ul>
+      <li><b>Clinical Presentation:</b> Abnormal Digital Rectal Examination (DRE) or elevated Prostate-Specific Antigen (PSA) level.</li>
+      <li><b>Biopsy:</b> Definitive diagnosis requires prostate biopsies, usually TRUS-guided. Pathologist assigns Gleason primary/secondary grade and Grade Group (1-5).</li>
+      <li><b>Serum Markers:</b> PSA level and PSA density.</li>
+      <li><b>Life Expectancy Estimation:</b> Critical for treatment decision-making, considering comorbidities and overall health.</li>
+      <li><b>Genetic Testing:</b> Inquire about known high-risk germline mutations and family history. Germline testing recommended for metastatic, regional, very-high-risk, or high-risk localized prostate cancer. Somatic tumor testing (HRR, MSI/dMMR, TMB) recommended for metastatic disease.</li>
+      <li><b>Quality-of-Life Assessment:</b> Assess baseline urinary, sexual, and bowel function using standardized instruments (e.g., EPIC-26).</li>
+    </ul>
+
+    <h4>Staging Workup for Clinically Localized Disease:</h4>
+    <ul>
+      <li><b>Risk Stratification:</b> Patients are stratified into Very-Low, Low, Favorable Intermediate, Unfavorable Intermediate, High, and Very High-Risk groups based on cT stage, Grade Group, and PSA.</li>
+      <li><b>Imaging for Staging:</b>
+        <ul>
+          <li><b>Bone Imaging:</b> Bone scan (technetium-99m-MDP) for high-risk for skeletal metastases. Plain films, CT, MRI, or PET/CT (F-18 sodium fluoride, C-11 choline, F-18 fluciclovine, Ga-68 PSMA-11, F-18 piflufolastat PSMA) for equivocal results. PSMA-PET/CT or PSMA-PET/MRI can be considered as an alternative to bone scan for full body imaging.</li>
+          <li><b>Soft Tissue Imaging:</b> Chest CT, abdomen/pelvis CT or MRI. Multiparametric MRI (mpMRI) is preferred over CT for pelvic staging.</li>
+          <li><b>PSMA-PET:</b> F-18 piflufolastat PSMA, F-18 flotufolastat PSMA, and Ga-68 PSMA-11 are FDA-approved. Can be considered as an alternative to CT, MRI, and bone scans for initial staging, biochemical recurrence, and progression workup. Higher sensitivity at very low PSA levels.</li>
+          <li><b>C-11 Choline PET/CT or PET/MRI:</b> May be used for small-volume recurrent disease.</li>
+          <li><b>F-18 Fluciclovine PET/CT or PET/MRI:</b> May be used for biochemical recurrence.</li>
+          <li><b>FDG-PET/CT:</b> Not routinely used for staging.</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <div id="prostate-planning" class="tab-content">
+    <h3>Prostate Cancer Planning and Delivery</h3>
+    <p>Radiation therapy planning and delivery for prostate cancer require highly conformal techniques and careful consideration of dose to achieve optimal tumor control while minimizing side effects.</p>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Patient Positioning:</b> Supine position with immobilization (e.g., vaclok to legs, pillows/blocks/wedges for upper body support) for reproducibility.</li>
+      <li><b>Bladder/Rectum Management:</b> Patients should have a comfortably full bladder (to push small bowel out of pelvis) and empty rectum (to increase daily reproducibility) before simulation and daily treatment.</li>
+      <li><b>Image Guidance:</b> Daily prostate localization using IGRT (CT, MRI, ultrasound, implanted fiducials, or electromagnetic tracking) is essential.</li>
+      <li><b>Perirectal Spacer:</b> Biocompatible and biodegradable perirectal spacer materials may be implanted between the prostate and rectum to displace the rectum from high radiation dose regions, reducing toxicity.</li>
+      <li><b>Target Volume Delineation:</b>
+        <ul>
+          <li><b>EBRT:</b> Whole gland, prostate + seminal vesicles, or prostate + seminal vesicles + pelvic lymph nodes, depending on risk group and nodal status. Clinically positive nodes should be dose-escalated.</li>
+          <li><b>Brachytherapy:</b> Prostate +/- proximal seminal vesicles.</li>
+          <li><b>OARs:</b> Rectum, bladder, small bowel, femoral heads. Strict dose constraints are applied.</li>
+        </ul>
+      </li>
+      <li><b>Treatment Margins:</b> Standard practice is to encompass the prostate and seminal vesicles with a <b>6 mm expansion in all directions except posteriorly</b>. Posteriorly, the expansion is limited to <b>4 mm</b> due to the rectum’s proximity. For treatment units with ATS (adapt-to-shape) capabilities, tighter margins of <b>5 mm in all directions with a 3 mm posterior margin</b> may be used.</li>
+      <li><b>Motion Management:</b> Advanced image guidance with real-time intrafraction tracking for further precision.</li>
+      <li><b>Traditional Field Borders (4-field box):</b>
+        <ul>
+          <li><b>Superior:</b> L4-L5 interspace (to include common iliac nodes).</li>
+          <li><b>Inferior:</b> Inferior aspect of the ischial tuberosities (about 1.5-2cm below the caudal aspect of the prostate).</li>
+          <li><b>Lateral:</b> 1.5-2 cm beyond the lateral pelvic brim.</li>
+          <li><b>Anterior:</b> Includes the pubic symphysis.</li>
+          <li><b>Posterior:</b> Transects the rectum.</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h4>Dose/Fractionation (EBRT):</h4>
+    <ul>
+      <li><b>Conventional Fractionation:</b> 1.8-2.0 Gy/fraction. Total doses up to 75.6-79.2 Gy for low-risk, up to 81.0 Gy for intermediate/high-risk.</li>
+      <li><b>Moderate Hypofractionation:</b> 2.4-4 Gy/fraction over 4-6 weeks (e.g., 2.7 Gy x 26 fx, 2.5 Gy x 28 fx).</li>
+      <li><b>Ultra-Hypofractionation (SBRT):</b> High-dose radiation in 5 or fewer fractions (e.g., 7.25-8 Gy x 5 fx). Acceptable for all risk groups with appropriate expertise.</li>
+      <li><b>Boost Techniques:</b> Micro-boost to MRI-dominant lesion (e.g., 2.2 Gy x 35 fx + micro-boost to ≤95 Gy). SBRT boost (e.g., 6.1 Gy x 7 fx or 6 Gy x 6 fx) in combination with fractionated EBRT.</li>
+    </ul>
+
+    <h4>Dose/Fractionation (Brachytherapy):</h4>
+    <ul>
+      <li><b>LDR Monotherapy:</b> Iodine-125 (145 Gy), Palladium-103 (125 Gy), Cesium-131 (115 Gy).</li>
+      <li><b>HDR Monotherapy:</b> Iridium-192 (e.g., 13.5 Gy x 2 implants, 9.5 Gy BID x 2 implants).</li>
+      <li><b>Brachytherapy Boost with EBRT:</b> LDR (110-115 Gy Iodine-125, 90-100 Gy Palladium-103, 85 Gy Cesium-131) or HDR (15 Gy x 1 fx Iridium-192, 10.75 Gy x 2 fx Iridium-192) combined with 45-50.4 Gy EBRT.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Techniques:</b> 3D-CRT, IMRT/VMAT (standard). Higher energies (10MV to 18MV) for deep penetration, but IMRT/VMAT not possible with 18MV. Beams may be weighted more posteriorly or anteriorly depending on structures involved.</li>
+      <li><b>Proton Therapy:</b> Can be considered as an alternative to photons.</li>
+      <li><b>Post-Prostatectomy RT:</b> 64-72 Gy (standard fractionation) to prostate bed. Hypofractionated regimens (e.g., 52.5 Gy/20 fx) also used. ADT may be added based on risk factors and genomic classifiers.</li>
+      <li><b>Local Secondary Therapy (Post-RT Recurrence):</b> Options include radical prostatectomy + PLND, cryotherapy, HIFU, or re-irradiation (LDR/HDR brachytherapy, SBRT).</li>
+      <li><b>Radiopharmaceutical Therapy:</b>
+        <ul>
+          <li><b>Radium-223:</b> Alpha-emitter for CRPC with symptomatic bone metastases (no visceral metastases). 50 mCi (7.4 GBq) IV every 6 weeks for 6 cycles.</li>
+          <li><b>Lu-177-PSMA-617:</b> Beta-emitter for PSMA-positive mCRPC previously treated with ARPI and taxane. 200 mCi (7.4 GBq) IV every 6 weeks for 4-6 cycles.</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <div id="penile-overview" class="tab-content">
+    <h3>Penile Cancer Overview</h3>
+    <p>Squamous cell carcinoma (SCC) of the penis is a rare disease, often presenting as a palpable lesion. Early diagnosis and multidisciplinary management are crucial due to potential disfigurement and impact on survival.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li><b>Primary RT (Penile Preservation):</b> For early-stage (T1-2, N0) tumors, especially those <4 cm, as an alternative to surgery. Brachytherapy or EBRT.</li>
+      <li><b>Adjuvant RT:</b> For positive surgical margins after penectomy or for inguinal/pelvic lymph node involvement (especially with extranodal extension).</li>
+      <li><b>Neoadjuvant Chemoradiation:</b> For unresectable primary tumors or bulky nodal disease.</li>
+      <li><b>Palliative RT:</b> For symptom control in advanced or metastatic disease.</li>
+    </ul>
+  </div>
+
+  <div id="penile-planning" class="tab-content">
+    <h3>Penile Cancer Planning and Delivery</h3>
+    <p>Radiation therapy for penile cancer aims for organ preservation while achieving local control, requiring precise techniques and careful consideration of field design.</p>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Clinical Evaluation:</b> Detailed history, physical exam (lesion characteristics, inguinal/pelvic lymph nodes).</li>
+      <li><b>Biopsy:</b> Histologic diagnosis (punch, excisional, incisional biopsy). Assess HPV/HIV status.</li>
+      <li><b>Imaging:</b> Cross-sectional imaging of chest/abdomen/pelvis (CT, MRI, PET/CT). MRI or ultrasound for depth of invasion. FDG-PET/CT for clinically node-positive disease.</li>
+      <li><b>Risk Stratification:</b> Based on primary lesion (stage, grade, lymphovascular/perineural invasion) to predict occult nodal metastasis.</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Patient Positioning:</b> Supine. Circumcision should precede RT to prevent complications.
+        <ul>
+          <li><b>Reproducibility:</b> Styrofoam molds and custom bolus may be necessary to position, immobilize, and reproduce the position. Alternatively, patients can be positioned prone on a board to let the penis fall anteriorly into a water bath.</li>
+        </ul>
+      </li>
+      <li><b>Target Volume Delineation:</b>
+        <ul>
+          <li><b>Primary RT:</b> Primary penile lesion with 2 cm margins.</li>
+          <li><b>Nodal RT:</b> Inguinal lymph nodes (ILNs) and pelvic lymph nodes (PLNs) based on risk.</li>
+          <li><b>OARs:</b> Urethra, scrotum, testes (shielded if possible).</li>
+        </ul>
+      </li>
+      <li><b>Bolus:</b> Appropriate bolus (e.g., wet gauze) for superficial lesions to ensure adequate skin dose.</li>
+      <li><b>Treatment Volume:</b> May include the primary tumor and/or inguinal and pelvic lymphatics to 50-60 Gy. A boost to the primary tumor of 5-10 Gy may be recommended. Bolus is required to bring the dose more superficial when using photon beams.</li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>Primary RT (T1-2, N0, <4 cm):</b>
+        <ul>
+          <li>Brachytherapy alone (interstitial implant): Total dose 65-70 Gy (category 2B).</li>
+          <li>EBRT: Total dose 65-70 Gy with conventional fractionation.</li>
+        </ul>
+      </li>
+      <li><b>Locally Advanced (T3-4 or N+ unresectable):</b> EBRT with concurrent chemotherapy: 45-50.4 Gy to whole penile shaft, pelvic/bilateral inguinal lymph nodes, then boost primary lesion (2 cm margins) and gross lymph nodes (total 60-70 Gy).</li>
+      <li><b>Adjuvant RT (Post-penectomy positive margins):</b> 45-60 Gy to primary site and scar. If gross disease remains, follow T3-4/N+ guidelines.</li>
+      <li><b>Adjuvant Chemo/RT (N+):</b> Inguinal and pelvic lymph node EBRT to 45-50.4 Gy. Boost gross nodes/extracapsular extension to 65-70 Gy.</li>
+      <li><b>Palliative RT:</b> 30 Gy in 10 fractions.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Techniques:</b> Brachytherapy (interstitial implant or surface mold) or EBRT (conventional fractionation). Adaptive Radiotherapy (ART) can generate a treatment plan daily based on the size, shape, and location of the penis.</li>
+      <li><b>Systemic Therapy:</b>
+        <ul>
+          <li><b>Neoadjuvant:</b> TIP (paclitaxel, ifosfamide, cisplatin) for bulky ILNs (≥4 cm, fixed/mobile).</li>
+          <li><b>First-Line Metastatic/Recurrent:</b> TIP (preferred), 5-FU + cisplatin, or 5-FU + cisplatin/carboplatin + pembrolizumab followed by pembrolizumab maintenance.</li>
+          <li><b>Subsequent-Line:</b> Clinical trial (preferred), pembrolizumab (for MSI-H/dMMR or TMB-H), paclitaxel, cetuximab.</li>
+        </ul>
+      </li>
+      <li><b>Organ-Sparing Approaches (PeIN, Ta, T1a):</b> Topical therapy (imiquimod, 5-FU cream), wide local excision, laser therapy, glansectomy, Mohs surgery.</li>
+      <li><b>Surgical Management:</b> Partial or total penectomy for invasive disease. Inguinal Lymph Node Dissection (ILND) for intermediate/high-risk non-palpable nodes or palpable nodes. Pelvic Lymph Node Dissection (PLND) for ≥3 positive ILNs or high-grade ILN involvement.</li>
+    </ul>
+  </div>
+
+  <div id="testicular-overview" class="tab-content">
+    <h3>Testicular Cancer Overview</h3>
+    <p>Testicular cancer is most common in young men (20-34 years), with excellent prognosis. It is broadly categorized into seminoma and nonseminoma, with distinct management pathways.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li><b>Pure Seminoma:</b> Adjuvant RT is an option for Stage I seminoma (20-25.5 Gy). Primary RT is also an option for Stage IIA/IIB seminoma (30-36 Gy).</li>
+      <li><b>Nonseminoma:</b> RT has a very limited role in nonseminoma, primarily for palliative purposes (e.g., brain metastases) or in very rare, specific situations. Chemotherapy and surgery are the mainstays.</li>
+      <li><b>Prophylactic Cranial Irradiation (PCI):</b> Not typically used in testicular cancer. Brain metastases are managed with WBRT or SRS.</li>
+    </ul>
+  </div>
+
+  <div id="testicular-seminoma" class="tab-content">
+    <h3>Testicular Seminoma: Radiation Therapy Planning and Delivery</h3>
+    <p>Radiation therapy for pure testicular seminoma involves precise targeting of regional lymph nodes, with modern techniques aiming to reduce treatment volumes and doses to minimize long-term toxicities.</p>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Pathologic Diagnosis:</b> Pure seminoma histology and normal AFP (elevated beta-hCG may be present).</li>
+      <li><b>Serum Markers:</b> Repeat beta-hCG, LDH, and AFP post-orchiectomy. Elevated AFP indicates nonseminomatous elements.</li>
+      <li><b>Imaging:</b>
+        <ul>
+          <li>Abdomen/pelvis CT or MRI (with contrast) to assess retroperitoneal lymph nodes.</li>
+          <li>Chest X-ray (routine) or Chest CT (if abnormal X-ray or abdomen CT/MRI).</li>
+          <li>Brain MRI (with/without contrast) if clinically indicated (e.g., beta-hCG >5000 IU/L, extensive lung metastases, non-pulmonary visceral metastases, or neurologic symptoms).</li>
+        </ul>
+      </li>
+      <li><b>Sperm Banking:</b> Recommended prior to chemotherapy, RT, or RPLND if fertility preservation is desired.</li>
+      <li><b>Clinical Staging:</b> AJCC TNM staging (8th ed., 2017).</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Patient Positioning:</b> Supine, arms at sides (hands high on chest or above head to account for cephalic field-edge's superior location), in treatment position (e.g., with a custom cast for immobilization).
+        <ul>
+          <li><b>Immobilization:</b> Patient may require the use of a testicular shield (clamshell) to protect the remaining testis and preserve fertility. Forming the base of the shield into the vaclok and frogging the patient’s legs is helpful for comfort and reproducibility. Warming the shield (warm water/blankets) makes it more comfortable for the patient and easier to relax the scrotum and tissues away from the body.</li>
+          <li><b>Alignment:</b> Additional marks to level and straighten the patient are helpful due to the long treatment field.</li>
+          <li><b>Scan Parameters:</b> Typically extend from the dome of the diaphragm (T11) to the ischial tuberosities.</li>
+        </ul>
+      </li>
+      <li><b>Scrotal Shield:</b> Used for all patients (except bilateral orchiectomy) to protect the remaining testis.</li>
+      <li><b>CT Simulation:</b> Non-contrast CT simulation.</li>
+      <li><b>Target Volume Delineation:</b>
+        <ul>
+          <li><b>Stage I (Adjuvant RT):</b> Para-aortic strip fields.
+            <ul>
+              <li>Superior border: Bottom of vertebral body T10/T11.</li>
+              <li>Inferior border: Inferior border of vertebral body L5.</li>
+              <li>Lateral borders: Conventionally 10 cm wide, encompassing transverse processes. Modern 3D-CRT may contour aorta/IVC with 1.2-1.9 cm margin.</li>
+              <li>Small renal blocks may be added for medial kidneys (D50% ≤8 Gy).</li>
+              <li>Ipsilateral iliac and inguinal lymph nodes/surgical scar may be included if prior ipsilateral pelvic surgery.</li>
+            </ul>
+          </li>
+          <li><b>Stage IIA/IIB (Primary RT):</b> Two consecutive AP-PA phases (modified dog-leg fields and cone down).
+            <ul>
+              <li>Initial phase (modified dog-leg or "hockey stick" fields): Includes retroperitoneal and proximal ipsilateral iliac lymph nodes down to the top of the acetabulum. Superior border T10/T11. Medial border extends from contralateral L5 transverse process to ipsilateral obturator foramen. Lateral border from ipsilateral L5 transverse process to superolateral acetabulum.</li>
+              <li>Cone Down: Nodal mass (gross tumor volume) contoured with 2 cm margin.</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li><b>OARs:</b> Kidneys (D50% ≤8 Gy, or D15% ≤20 Gy if solitary), liver, bowel.</li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>Stage I (Adjuvant RT):</b>
+        <ul>
+          <li>Preferred: 20 Gy in 10 fractions (2.0 Gy/fx).</li>
+          <li>Alternatives: 25.5 Gy in 17 fractions (1.5 Gy/fx), 19.8 Gy in 11 fractions (1.8 Gy/fx), 21.6 Gy in 12 fractions (1.8 Gy/fx).</li>
+        </ul>
+      </li>
+      <li><b>Stage IIA/IIB (Primary RT):</b>
+        <ul>
+          <li>Initial phase (modified dog-leg fields): 20-25.5 Gy (e.g., 20 Gy in 10 fx or 25.5 Gy in 17 fx).</li>
+          <li>Boost (cone down): 1.8-2.0 Gy/fraction to a cumulative total of 30 Gy (for 1-2 cm nodes in Stage IIA) or 36 Gy (for 2-3 cm nodes in Stage IIB).</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Linear Accelerators:</b> >6 MV photons should be used. Proton therapy can also be considered.</li>
+      <li><b>Fractionation:</b> Typically 5 days per week. Missed fractions are made up by extending overall treatment time.</li>
+      <li><b>Antiemetics:</b> Prophylactic antiemetic medication is encouraged due to potential nausea.</li>
+      <li><b>Setup Verification:</b> Image-guided RT (IGRT) to verify daily prostate localization.</li>
+      <li><b>Contraindications to Primary RT:</b> Horseshoe (pelvic) kidney, inflammatory bowel disease, or history of prior RT.</li>
+    </ul>
+  </div>
+
+  <div class="references">
+    <h3>References</h3>
+    <ul>
+      <li>Rathi, A. K. (n.d.). <i>Step by Step Radiation Therapy: Treatment and Planning</i>. Jaypee Brothers Medical Publishers.</li>
+      <li>National Comprehensive Cancer Network. (2025). <i>NCCN Clinical Practice Guidelines in Oncology (NCCN Guidelines®): Prostate Cancer</i> (Version 1.2025).</li>
+      <li>National Comprehensive Cancer Network. (2025). <i>NCCN Clinical Practice Guidelines in Oncology (NCCN Guidelines®): Penile Cancer</i> (Version 2.2025).</li>
+      <li>National Comprehensive Cancer Network. (2025). <i>NCCN Clinical Practice Guidelines in Oncology (NCCN Guidelines®): Testicular Cancer</i> (Version 1.2025).</li>
+      <li>Stiles, J. (2023). <i>Localization & Treatment Procedures in Radiation Therapy</i>. Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  function openMaleReproTab(evt, tabId) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tab-content");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+      tabcontent[i].classList.remove("active");
+    }
+    tablinks = document.getElementsByClassName("tab-button");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].classList.remove("active");
+    }
+    document.getElementById(tabId).style.display = "block";
+    document.getElementById(tabId).classList.add("active");
+    evt.currentTarget.classList.add("active");
+  }
+
+  // Set the first tab as active by default when the page loads
+  document.addEventListener("DOMContentLoaded", function() {
+    document.querySelector(".tab-button").click();
+  });
+</script>
+
+</body>
+</html>
