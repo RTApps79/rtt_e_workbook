@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body {
+    font-family: sans-serif;
+    line-height: 1.6;
+    margin: 20px;
+    background-color: #f4f4f4;
+    color: #333;
+  }
+  h2 {
+    color: #0056b3;
+    border-bottom: 2px solid #0056b3;
+    padding-bottom: 5px;
+    margin-top: 30px;
+  }
+  h3 {
+    color: #004085;
+    margin-top: 20px;
+  }
+  h4 {
+    color: #004085;
+    margin-top: 15px;
+    margin-bottom: 10px;
+  }
+  .lesson-container {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  .tab-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  .tab-button {
+    background-color: #e0e0e0;
+    border: 1px solid #ccc;
+    padding: 10px 15px;
+    cursor: pointer;
+    margin-right: 5px;
+    border-radius: 5px 5px 0 0;
+    transition: background-color 0.3s ease;
+    white-space: nowrap; /* Prevent text wrapping */
+  }
+  .tab-button.active {
+    background-color: #0056b3;
+    color: white;
+    border-color: #0056b3;
+  }
+  .tab-content {
+    display: none;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-top: none;
+    padding: 20px;
+    border-radius: 0 0 8px 8px;
+    background-color: #f9f9f9;
+  }
+  .tab-content.active {
+    display: block;
+  }
+  ul {
+    list-style-type: disc;
+    margin-left: 20px;
+  }
+  li {
+    margin-bottom: 8px;
+  }
+  b {
+    color: #0056b3;
+  }
+  .references {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #ccc;
+    font-size: 0.9em;
+    color: #555;
+  }
+  .attention {
+    font-weight: bold;
+    color: #d9534f;
+  }
+</style>
+</head>
+<body>
+
+<div class="lesson-container">
+  <h2>Thoracic Tumors: Radiation Therapy Planning and Delivery (Enhanced)</h2>
+
+  <p>This lesson provides detailed information on the preplanning, planning, and delivery steps for radiation therapy in various thoracic cancer sites, including Non-Small Cell Lung Cancer (NSCLC) and Small Cell Lung Cancer (SCLC), with enhanced focus on precise field borders.</p>
+
+  <div class="tab-container">
+    <button class="tab-button active" onclick="openThoracicTab(event, 'general-principles')">General RT Principles</button>
+    <button class="tab-button" onclick="openThoracicTab(event, 'nsclc-overview')">NSCLC Overview</button>
+    <button class="tab-button" onclick="openThoracicTab(event, 'nsclc-preplanning')">NSCLC Preplanning</button>
+    <button class="tab-button" onclick="openThoracicTab(event, 'nsclc-planning')">NSCLC Planning & Delivery</button>
+    <button class="tab-button" onclick="openThoracicTab(event, 'sclc-overview')">SCLC Overview</button>
+    <button class="tab-button" onclick="openThoracicTab(event, 'sclc-preplanning')">SCLC Preplanning</button>
+    <button class="tab-button" onclick="openThoracicTab(event, 'sclc-planning')">SCLC Planning & Delivery</button>
+    <button class="tab-button" onclick="openThoracicTab(event, 'superior-sulcus')">Superior Sulcus Tumor</button>
+    <button class="tab-button" onclick="openThoracicTab(event, 'mesothelioma')">Mesothelioma</button>
+    <button class="tab-button" onclick="openThoracicTab(event, 'svc-syndrome')">SVC Syndrome</button>
+    <button class="tab-button" onclick="openThoracicTab(event, 'esophagus')">Esophagus</button>
+    <button class="tab-button" onclick="openThoracicTab(event, 'sbrt')">Stereotactic Body RT (SBRT)</button>
+    <button class="tab-button" onclick="openThoracicTab(event, 'special-considerations')">Special Considerations</button>
+  </div>
+
+  <div id="general-principles" class="tab-content active">
+    <h3>General Principles of Radiation Therapy for Thoracic Tumors</h3>
+    <p>Radiation therapy (RT) plays a crucial role in the management of thoracic cancers, both as definitive and palliative therapy. Modern RT aims to maximize tumor control while minimizing toxicity to surrounding healthy tissues.</p>
+
+    <h4>Key Aspects:</h4>
+    <ul>
+      <li><b>Multidisciplinary Approach:</b> Radiation oncology input is essential early in the treatment strategy, involving thoracic surgeons, medical oncologists, and pulmonologists.</li>
+      <li><b>Accurate Target Definition:</b> Critical components include appropriate simulation, precise target delineation, conformal RT (CRT) planning, and accurate delivery.</li>
+      <li><b>Advanced Technologies:</b> Use of 4D-CT, FDG-PET/CT, and/or MRI simulation, Intensity-Modulated Radiation Therapy (IMRT)/Volumetric Modulated Arc Therapy (VMAT), Image-Guided Radiation Therapy (IGRT), and motion management strategies (e.g., Deep Inspiration Breath-Hold [DIBH], abdominal compression) are crucial to deliver adequate tumor doses while respecting normal tissue dose constraints and reducing toxicity. IMRT is preferred over 3D-CRT due to reduced toxicity with concurrent chemotherapy/RT.</li>
+      <li><b>Quality Assurance:</b> Essential measures for both treatment planning and delivery should be implemented and documented.</li>
+      <li><b>Normal Tissue Sparing:</b> Optimization to maximally improve homogeneity across the target volume while minimizing dose to organs at risk (OARs) like the heart, lungs, and spinal cord.</li>
+    </ul>
+
+    <h4>General Target Volume Delineation for Thorax:</h4>
+    <ul>
+      <li>For patients not candidates for respiratory monitoring with a free-breathing CT simulation, the PTV is about a <b>2 cm expansion from the Internal Target Volume (ITV)</b>. The ITV encompasses the CTV with a margin for motion.</li>
+      <li>For patients who are 4D candidates, the PTV is an expansion of <b>5-8 mm from the ITV</b>.</li>
+    </ul>
+
+    <h4>Whole Organ TD 5/5 for Common OARs (Organs at Risk) for Thorax Radiotherapy:</h4>
+    <ul>
+      <li><b>Spinal Cord:</b> 45 or 47 Gy (Myelitis/Necrosis)</li>
+      <li><b>Lung:</b> 18 Gy (Pneumonitis)</li>
+      <li><b>Heart:</b> 40 Gy (Pericarditis)</li>
+      <li><b>Esophagus:</b> 55 Gy (Stricture/Perforation)</li>
+      <li><b>Brachial Plexus:</b> 55-60 Gy (Nerve Damage)</li>
+    </ul>
+  </div>
+
+  <div id="nsclc-overview" class="tab-content">
+    <h3>Non-Small Cell Lung Cancer (NSCLC) Overview</h3>
+    <p>NSCLC accounts for over 80% of all lung cancer cases. It includes adenocarcinoma, squamous cell carcinoma, and large cell carcinoma. Treatment approaches are highly individualized based on stage, histology, and molecular characteristics.</p>
+
+    <h4>Role of Radiotherapy in NSCLC:</h4>
+    <ul>
+      <li><b>Definitive Therapy:</b> For locally advanced NSCLC, generally combined with chemotherapy.</li>
+      <li><b>Early-Stage Disease:</b> For patients medically inoperable or who refuse surgery, or are high-risk surgical candidates. Stereotactic Ablative Radiotherapy (SABR) is a preferred option.</li>
+      <li><b>Neoadjuvant or Adjuvant Therapy:</b> For selected patients treated with surgery.</li>
+      <li><b>Limited Progression:</b> For isolated or limited metastatic sites.</li>
+      <li><b>Palliative Therapy:</b> For symptom relief (e.g., pain, bleeding, obstruction) in patients with incurable NSCLC.</li>
+    </ul>
+  </div>
+
+  <div id="nsclc-preplanning" class="tab-content">
+    <h3>NSCLC Preplanning and Assessment</h3>
+    <p>Comprehensive evaluation is essential to accurately stage NSCLC and tailor treatment, especially considering the diverse range of molecular targets.</p>
+
+    <h4>Initial Evaluation:</h4>
+    <ul>
+      <li><b>History and Physical Examination:</b> Including performance status and weight loss.</li>
+      <li><b>Laboratory Tests:</b> Complete blood count (CBC), electrolytes, liver function tests (LFTs), blood urea nitrogen (BUN), creatinine.</li>
+      <li><b>Imaging:</b>
+        <ul>
+          <li>CT chest and upper abdomen with contrast, including adrenals.</li>
+          <li>Brain MRI with contrast (preferred) or CT with contrast.</li>
+          <li>FDG-PET/CT scan (skull base to mid-thigh) to clarify extent of disease, especially important for detecting occult nodal or distant metastases.</li>
+        </ul>
+      </li>
+      <li><b>Pathology Review:</b> To determine histologic classification (adenocarcinoma, squamous cell carcinoma, large cell carcinoma, NOS) and preserve tissue for molecular studies.</li>
+      <li><b>Smoking Cessation:</b> Counseling and intervention.</li>
+      <li><b>Palliative Care:</b> Integrate early palliative care discussions.</li>
+    </ul>
+
+    <h4>Molecular and Biomarker Analysis:</h4>
+    <ul>
+      <li><b>Universal Testing:</b> Recommended for all patients with advanced or metastatic NSCLC, especially for adenocarcinoma, large cell, or NSCLC NOS. Consider for squamous cell carcinoma.</li>
+      <li><b>Key Biomarkers:</b>
+        <ul>
+          <li>EGFR mutations (Exon 19 deletion, L858R, uncommon mutations, Exon 20 insertions).</li>
+          <li>ALK rearrangements.</li>
+          <li>ROS1 rearrangements.</li>
+          <li>BRAF V600E mutations.</li>
+          <li>MET Exon 14 skipping mutations.</li>
+          <li>RET rearrangements.</li>
+          <li>ERBB2 (HER2) mutations.</li>
+          <li>NTRK1/2/3 gene fusions.</li>
+          <li>NRG1 gene fusions.</li>
+          <li>PD-L1 expression levels (by IHC).</li>
+        </ul>
+      </li>
+      <li><b>Testing Methodologies:</b> Broad molecular profiling using Next-Generation Sequencing (NGS) is preferred to identify multiple alterations simultaneously. Plasma circulating tumor DNA (ctDNA) testing can complement tissue biopsy.</li>
+    </ul>
+
+    <h4>Mediastinal Staging:</h4>
+    <ul>
+      <li><b>Pathologic Mediastinal Lymph Node Evaluation:</b> Recommended for most patients with clinical stage I or II lung cancer, especially for central tumors or if FDG-PET/CT suggests nodal involvement. Methods include mediastinoscopy, EBUS-TBNA, EUS-FNA.</li>
+      <li><b>Thoracentesis:</b> With cytologic analysis if pleural effusion is present.</li>
+    </ul>
+  </div>
+
+  <div id="nsclc-planning" class="tab-content">
+    <h3>NSCLC Planning and Delivery</h3>
+    <p>Precise planning and careful delivery are essential to maximize local control and minimize toxicity in NSCLC radiation therapy.</p>
+
+    <h4>Patient Positioning and Immobilization:</h4>
+    <ul>
+      <li>Supine position with arms up (e.g., in a wing board or arm board), knee bolster.</li>
+      <li>Immobilization devices (e.g., custom vaclok) for reproducibility.</li>
+      <li>Respiratory motion management (4D-CT, DIBH, abdominal compression, gating) is crucial for lung tumors.</li>
+    </ul>
+
+    <h4>Target Volume Delineation:</h4>
+    <ul>
+      <li><b>GTV:</b> Gross tumor (primary and involved nodes) based on planning CT and diagnostic images (FDG-PET/CT, MRI).</li>
+      <li><b>CTV:</b> GTV plus margin for microscopic disease (e.g., 0.5-1 cm radial, 1.5-2 cm superior/inferior). Elective nodal irradiation (ENI) is generally omitted, but involved nodal regions (even if responding to systemic therapy) should be covered.</li>
+      <li><b>PTV:</b> CTV plus margins for motion and setup uncertainty (e.g., 0.5-1 cm).</li>
+      <li><b>OARs:</b> Lungs (V20Gy ≤35-40%, Mean Lung Dose [MLD] ≤20 Gy), Heart (V40Gy ≤20%, Mean ≤20 Gy), Esophagus (Mean ≤34 Gy, Max ≤105% of prescription dose), Spinal Cord (Max ≤50 Gy), Brachial Plexus (Median dose ≤69 Gy).</li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>Definitive RT:</b> 60-70 Gy in 2 Gy fractions over 6-7 weeks. Higher doses (e.g., 74 Gy) are not routinely recommended due to increased toxicity.</li>
+      <li><b>SABR:</b> For early-stage, medically inoperable NSCLC. Dosing regimens with Biologically Effective Dose (BED) ≥100 Gy are preferred (e.g., 25-34 Gy in 1 fraction, 45-60 Gy in 3 fractions, 50-60 Gy in 5 fractions).</li>
+      <li><b>Preoperative RT:</b> 45-54 Gy in 1.8-2 Gy fractions over 5 weeks.</li>
+      <li><b>Postoperative RT (PORT):</b> 50-54 Gy in 1.8-2 Gy fractions. Boost to high-risk regions (e.g., positive margins, extracapsular extension) up to 54-60 Gy.</li>
+      <li><b>Palliative RT:</b> Short courses for symptom relief (e.g., 8 Gy in 1 fraction, 20 Gy in 5 fractions, 30 Gy in 10 fractions).</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Techniques:</b> IMRT is preferred over 3D-CRT for definitive/concurrent chemoradiation due to reduced toxicity. Proton beam therapy may be considered.</li>
+      <li><b>Concurrent Chemoradiation:</b> Standard for unresectable stage II/III NSCLC. RT should start early (cycle 1 or 2 of systemic therapy).</li>
+      <li><b>Sequencing with Systemic Therapy:</b> RT typically follows chemotherapy. Capecitabine and olaparib should be given after RT completion. HER2-targeted therapy may be given concurrently.</li>
+      <li><b>Setup Verification:</b> Daily IGRT (CBCT, kV imaging) is routinely used.</li>
+      <li><b>Supportive Care:</b> Aggressive management of toxicities (pneumonitis, esophagitis, hematologic).</li>
+    </ul>
+  </div>
+
+  <div id="sclc-overview" class="tab-content">
+    <h3>Small Cell Lung Cancer (SCLC) Overview</h3>
+    <p>SCLC is an aggressive neuroendocrine carcinoma characterized by rapid doubling time and early widespread metastases. It is strongly associated with cigarette smoking.</p>
+
+    <h4>Staging:</h4>
+    <ul>
+      <li><b>Limited Stage:</b> Disease confined to the ipsilateral hemithorax that can be safely encompassed within a definitive radiation field (T any, N any, M0).</li>
+      <li><b>Extensive Stage:</b> Disease beyond the ipsilateral hemithorax, including malignant pleural/pericardial effusion or hematogenous metastases (T any, N any, M1a/b/c).</li>
+    </ul>
+
+    <h4>Role of Radiotherapy in SCLC:</h4>
+    <ul>
+      <li><b>Limited Stage:</b> RT is a key component of curative-intent treatment, combined with chemotherapy.</li>
+      <li><b>Extensive Stage:</b> Consolidative thoracic RT may be used for selected patients with good response to systemic therapy. Palliative RT for symptom management (e.g., bone metastases, brain metastases, SVC syndrome).</li>
+      <li><b>Prophylactic Cranial Irradiation (PCI):</b> Considered for patients with good response to initial therapy to reduce brain metastases.</li>
+    </ul>
+  </div>
+
+  <div id="sclc-preplanning" class="tab-content">
+    <h3>SCLC Preplanning and Assessment</h3>
+    <p>Expedited and comprehensive workup is essential due to the aggressive nature of SCLC, often involving parallel diagnostic studies.</p>
+
+    <h4>Initial Evaluation:</h4>
+    <ul>
+      <li><b>History and Physical Examination.</b></li>
+      <li><b>Laboratory Tests:</b> CBC, electrolytes, LFTs, BUN, creatinine.</li>
+      <li><b>Imaging:</b>
+        <ul>
+          <li>CT chest/abdomen/pelvis with contrast.</li>
+          <li>Brain MRI (preferred) or CT with contrast (mandatory for all patients).</li>
+          <li>FDG-PET/CT scan (skull base to mid-thigh) to clarify disease extent.</li>
+        </ul>
+      </li>
+      <li><b>Pathology Review:</b> Histologic confirmation (small blue cells, high nuclear-to-cytoplasmic ratio, high mitotic counts). Immunohistochemistry (INSM1, CD56, synaptophysin, chromogranin A, TTF-1) is crucial for differentiation.</li>
+      <li><b>Smoking Cessation:</b> Counseling and intervention.</li>
+      <li><b>Palliative Care:</b> Integrate early palliative care discussions.</li>
+    </ul>
+
+    <h4>Additional Workup for Limited Stage:</h4>
+    <ul>
+      <li><b>Pathologic Mediastinal Staging:</b> Recommended (mediastinoscopy, EBUS-TBNA, EUS-FNA) to rule out occult nodal disease.</li>
+      <li><b>Thoracentesis:</b> If pleural effusion is present.</li>
+      <li><b>Pulmonary Function Tests (PFTs):</b> For surgical or definitive RT candidates.</li>
+      <li><b>Bone Imaging (Radiographs or MRI):</b> If FDG-PET/CT is equivocal.</li>
+    </ul>
+  </div>
+
+  <div id="sclc-planning" class="tab-content">
+    <h3>SCLC Planning and Delivery</h3>
+    <p>Radiation therapy for SCLC requires careful planning to balance aggressive treatment with manageable toxicity, especially given the rapid tumor growth and systemic nature of the disease.</p>
+
+    <h4>Patient Positioning and Immobilization:</h4>
+    <ul>
+      <li>Supine position with immobilization device (e.g., custom vaclok).</li>
+      <li>Arms up for thoracic fields.</li>
+      <li>Motion management (4D-CT, respiratory gating) may be used.</li>
+    </ul>
+
+    <h4>Target Volume Delineation (Limited Stage):</h4>
+    <ul>
+      <li><b>GTV:</b> Primary tumor and involved regional lymph nodes based on pretreatment FDG-PET/CT and planning CT.</li>
+      <li><b>CTV:</b> Historically included clinically uninvolved mediastinal nodes. Modern approaches may omit elective nodal irradiation (ENI) based on FDG-PET staging, but initially involved nodal regions should be covered.</li>
+      <li><b>PTV:</b> CTV plus margin for motion and setup uncertainty.</li>
+      <li><b>OARs:</b> Lungs (V20Gy ≤35-40%, MLD ≤20 Gy), Esophagus (Mean ≤34 Gy, Max ≤105% of prescription dose), Spinal Cord (Max ≤50 Gy for conventional, ≤41 Gy for accelerated 45 Gy BID).</li>
+      <li><b>Detailed Target Volume for SCLC:</b> GTV + 1.5 cm margin which includes ipsilateral hilum, and bilateral mediastinum from thoracic inlet to subcarinal region (5 cm below subcarinal region or adequate margin for subcarinal disease).</li>
+    </ul>
+
+    <h4>Dose/Fractionation (Limited Stage):</h4>
+    <ul>
+      <li><b>Concurrent Chemoradiation:</b> Standard and preferred to sequential. RT should start early (cycle 1 or 2 of systemic therapy).</li>
+      <li><b>Accelerated Regimen:</b> 45 Gy in 1.5 Gy twice-daily (BID) fractions over 3 weeks (category 1). At least a 6-hour interfraction interval.</li>
+      <li><b>Once-Daily Fractionation:</b> Higher doses of 66-70 Gy are preferred if using once-daily fractionation.</li>
+      <li><b>SABR:</b> For clinical stage I-IIA (T1-2, N0, M0) medically inoperable patients or who decline surgery. Followed by adjuvant systemic therapy.</li>
+    </ul>
+
+    <h4>Dose/Fractionation (Extensive Stage):</h4>
+    <ul>
+      <li><b>Consolidative Thoracic RT:</b> For selected patients with complete or good response to systemic therapy, especially with residual thoracic disease and low-bulk extrathoracic metastatic disease. Dosing individualized (e.g., 30 Gy in 10 daily fractions up to definitive doses).</li>
+      <li><b>Palliative RT:</b> Common regimens (e.g., 30 Gy in 10 fractions, 20 Gy in 5 fractions, 8 Gy in 1 fraction) for symptom control (bone metastases, spinal cord compression).</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Techniques:</b> CT-planned 3D-CRT is minimum. IMRT/VMAT is preferred for lower toxicity. Proton therapy may be considered.</li>
+      <li><b>Setup Verification:</b> IGRT is routinely used.</li>
+      <li><b>Supportive Care:</b> Aggressive management of esophagitis, pneumonitis, and hematologic toxicity. Myeloid growth factors are not recommended during concurrent chemoradiation.</li>
+    </ul>
+  </div>
+
+  <div id="superior-sulcus" class="tab-content">
+    <h3>Superior Sulcus Tumor (Pancoast Tumor)</h3>
+    <p>A Pancoast tumor is a tumor that occurs at the apex or the superior aspect of the lung. These rare cancers (3-5% of lung cancers) may present with unique symptoms like one-sided shoulder pain or Horner's syndrome.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li>Often part of a trimodality approach (chemo + RT + surgery).</li>
+      <li>Definitive RT for unresectable cases.</li>
+    </ul>
+
+    <h4>Planning Technique:</h4>
+    <ul>
+      <li>The treatment field includes the tumor, supraclavicular and adjacent mediastinal and hilar lymph node and the vertebral bodies to encompass tumor infiltration of neural exit foramina.</li>
+      <li>Field arrangements and shielding should be such that spinal cord receives minimal dose.</li>
+    </ul>
+    <h5>Simulation:</h5>
+    <ul>
+      <li>Patient lies in supine position with arms up. Immobilization is done with wingboard or alfa cradle.</li>
+      <li>3D-CRT/IMRT is preferred to improve therapeutic ratio. Field margins are defined and AP simulator films are taken.</li>
+      <li>A correction factor of 0.2-0.3 is used to adjust for reduced attenuation in the lungs. Wedges and compensating filters may be needed.</li>
+      <li>For CT simulation; the patient lies supine with proper immobilization devices similar to the treatment position. Slice thickness 0.5 cm from larynx to L2 to include all lung volume. Critical organs of interest such as heart, lung esophagus and spinal cord are outlined. Beam's eye view is used to assist choice of direction, size and shape of beam.</li>
+    </ul>
+    <h5>Field Arrangements:</h5>
+    <ul>
+      <li>Radical treatment: Primary field planning.</li>
+      <li>Parallel opposing AP/PA portal is frequently used. This arrangement gives some hotspots outside the treatment volume and some inhomogeneous distribution. Alternatively, a three-field or four-field arrangements is used.</li>
+      <li>Radical treatment: Boost field planning/single phase planning.</li>
+      <li>Three-field technique is usually used to minimize dose to the lungs and spinal cord. 3D-CRT/IMRT.</li>
+    </ul>
+  </div>
+
+  <div id="mesothelioma" class="tab-content">
+    <h3>Mesothelioma</h3>
+    <p>Mesothelioma is a rare and aggressive cancer that affects the lining of the lungs, often associated with asbestos exposure.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li>Adjuvant RT after extrapleural pneumonectomy for Stage I-II resectable disease.</li>
+      <li>Palliative RT for unresectable disease.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Diagnostic Work-up:</b> CXR, CT/MRI, PET for pleural thickening, effusions, mediastinal/chest wall/diaphragm involvement and pleural calcifications and histopathology for confirmation.</li>
+    </ul>
+
+    <h4>Planning Technique:</h4>
+    <h5>Simulation:</h5>
+    <ul>
+      <li>Patient in supine position with arms overhead.</li>
+      <li>Hemithoracic radiotherapy is planned 3-6 weeks after extrapleural pneumonectomy.</li>
+    </ul>
+    <h5>Radiation Techniques (Hemithoracic Radiotherapy):</h5>
+    <ul>
+      <li>Conventional treatment: Parallel opposed AP/PA portals are used.</li>
+      <li><b>Upper margin:</b> Superior border of T1.</li>
+      <li><b>Lower margin:</b> Inferior border of T12.</li>
+      <li><b>Medial margin:</b> Contralateral edge of vertebral body. If mediastinum negative 1.5 cm beyond contralateral edge, if mediastinum is involved.</li>
+      <li><b>Lateral margin:</b> Flash along thoracic margins.</li>
+      <li>Part of liver and stomach is shielded throughout the treatment, humerus and heart are shielded after 20 Gy and spinal cord is shielded after 41.4 Gy. Scars are included within treatment field and are treated with bolus. Electron boost to the areas of chest wall shielded.</li>
+    </ul>
+    <h4>Dose Prescription:</h4>
+    <ul>
+      <li>54 Gy in 30 fractions (1.8 Gy/fx).</li>
+      <li>Electron beam therapy with appropriate energy is delivered concurrent with photon (1.5 Gy/fx).</li>
+    </ul>
+  </div>
+
+  <div id="svc-syndrome" class="tab-content">
+    <h3>Superior Vena Cava Syndrome (SVCS)</h3>
+    <p>SVCS is a medical emergency caused by a tumor compressing the thin-walled superior vena cava, leading to symptoms like shortness of breath, facial swelling, and distension of neck/thorax veins.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li>Primary treatment for symptom relief.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Clinical Presentation:</b> Shortness of breath, dyspnea, facial swelling, distension of neck/thorax veins, chest pain, cough, dysphagia, cyanosis of upper body.</li>
+    </ul>
+
+    <h4>Planning Technique:</h4>
+    <h5>Patient Simulation & Special Considerations:</h5>
+    <ul>
+      <li>SVCS is a medical emergency, requiring immediate treatment (2-3 daily fractions initially).</li>
+      <li>Positioning is complex due to respiratory compromise and orthopnea. Patients often require elevation of their upper body using an incline board or custom vacloc/cushion.</li>
+      <li>Patient is positioned as close to supine as possible.</li>
+      <li>Oxygen may be prescribed by the doctor; oxygen saturation should be monitored.</li>
+    </ul>
+    <h5>Treatment Volume Localization:</h5>
+    <ul>
+      <li>Clinical setups start with a <b>12x12 cm field size</b>.</li>
+      <li><b>Isocenter:</b> Palpate suprasternal notch (T2-T3) and xiphoid process (T9-T10), center halfway between. Place isocenter mid-sternum over hilum/carina.</li>
+      <li><b>Treatment Depth:</b> Measure patient's thickness at isocenter and divide by 2; set SSD. (e.g., 20 cm thickness / 2 = 10 cm. Anterior SSD is 90 cm).</li>
+      <li><b>Field Inclusion:</b> Primary tumor + 2-3 cm margin. Mediastinal, hilar, and supraclavicular areas are also included.</li>
+      <li><b>Verification:</b> Doctor approves treatment portal images. Document setup with photos, table, and field parameters. Monitor unit calculation should be double-checked by physicist/physician.</li>
+    </ul>
+    <h4>Treatment Techniques:</h4>
+    <ul>
+      <li>EBRT is the treatment of choice.</li>
+      <li>Initial 2-3 treatments: AP/PA beams with doses of 3-4 Gy/fx daily until symptoms improve or a computer-based plan is generated.</li>
+      <li>After initial treatments: Smaller fractions of 1.8-2.0 Gy are delivered daily.</li>
+      <li>Total dose and future techniques depend on histology (e.g., lymphoma may keep same fields; lung cancer may use IMRT/VMAT).</li>
+    </ul>
+  </div>
+
+  <div id="esophagus" class="tab-content">
+    <h3>Esophagus</h3>
+    <p>The esophagus is a muscular tube connecting the pharynx to the stomach. Esophageal cancer is rare, often associated with smoking, alcohol, GERD, and Barrett’s Esophagus. It lacks a serosal layer, contributing to early spread.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li>Definitive RT (alone or with chemotherapy), especially for cervical esophagus.</li>
+      <li>Postoperative: For positive resected margin or positive mediastinal LN.</li>
+      <li>Preoperative: In T3, T4 and node positive tumors.</li>
+      <li>Palliative: For symptom relief (obstruction, dysphagia).</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Assessment of Primary Tumor:</b> Barium swallow, Upper GI endoscopy, CECT thorax and abdomen, endoscopic ultrasound.</li>
+    </ul>
+
+    <h4>Planning Technique:</h4>
+    <h5>Patient Position:</h5>
+    <ul>
+      <li>Supine. For upper esophagus, head and shoulder mask with headrest extending up mandible. For lower two-thirds, arms above head in arm board/vacloc.</li>
+      <li>Doctor may request NPO 2-4 hours before simulation and daily treatment for reproducibility.</li>
+      <li>Straighten patient from SSN to xiphoid and umbilicus.</li>
+      <li>Localization marks anteriorly along midline and laterally on each side.</li>
+      <li>Scan parameters extend from around EAM to about L2.</li>
+    </ul>
+    <h5>Treatment Volume Localization:</h5>
+    <ul>
+      <li>Esophageal cancers spread via lymph (skip metastasis possible). Longitudinal treatment borders are generous.</li>
+      <li><b>PTV:</b> Typically 5 cm superior/inferior beyond the treatment volume.</li>
+      <li><b>Lateral Margins:</b> Generally 2-2.5 cm beyond demonstrable disease (or 1 cm radial margin for CT-based planning).</li>
+      <li>Motion management (4D techniques) may be beneficial for distal esophageal tumors.</li>
+    </ul>
+    <h5>Organs at Risk (OARs) TD 5/5:</h5>
+    <ul>
+      <li><b>Spinal Cord:</b> 45 or 47 Gy (Myelitis/Necrosis)</li>
+      <li><b>Lung:</b> 18 Gy (Pneumonitis)</li>
+      <li><b>Heart:</b> 40 Gy (Pericarditis)</li>
+      <li><b>Esophagus:</b> 55 Gy (Stricture/Perforation)</li>
+      <li><b>Brachial Plexus:</b> 60 Gy (Nerve damage)</li>
+      <li><b>Liver:</b> 30 Gy (Clinical hepatitis)</li>
+      <li><b>Kidney:</b> 23 Gy (Nephritis/Loss of function)</li>
+    </ul>
+    <h4>Treatment Techniques:</h4>
+    <ul>
+      <li><b>Techniques:</b> 3D conformal radiation therapy (3DCRT) or IMRT. IMRT can reduce dose to critical structures.</li>
+      <li><b>Beam Energy:</b> Higher energy beams (10 MV) minimize dose to lung volume.</li>
+      <li><b>Supraclavicular Lymph Nodes:</b> Considered for upper two-thirds of esophagus (45 Gy).</li>
+      <li><b>Image Guided Radiation Therapy (IGRT):</b> Daily imaging (CT, MR, kV & MV) for localization. Align to PTV, verify spine and carina.</li>
+      <li><b>3D-CRT:</b> MLCs conform beam. More beam angles with increasing disease stage. Upper 1/3: anterior oblique wedged fields to avoid spinal cord. Lower 2/3: AP/PA to 45 Gy, then cord sparing boost.</li>
+      <li><b>VMAT/IMRT:</b> Significantly reduce dose to normal tissues, increase conformity. Best for complex treatments.</li>
+    </ul>
+    <h4>Dose Prescription:</h4>
+    <ul>
+      <li><b>Definitive Chemoradiation:</b> 50-50.4 Gy in 25-28 daily fractions with cisplatin-5FU.</li>
+      <li><b>Preoperative:</b> 45-50.4 Gy in 25-28 daily fractions.</li>
+      <li><b>Curative RT Alone:</b> 55 Gy in 20 daily fractions (2.75 Gy/fx) OR 60-65 Gy using IMRT/VMAT or off-cord boost after 45 Gy.</li>
+      <li><b>Palliative:</b> 30 Gy in 10 fractions (3 Gy/fx) OR 20 Gy in 5 fractions (4 Gy/fx).</li>
+    </ul>
+  </div>
+
+  <div id="sbrt" class="tab-content">
+    <h3>Stereotactic Body Radiation Therapy (SBRT)</h3>
+    <p>SBRT is an advanced and precise technique for treating small and well-defined tumors, commonly used for lung and liver lesions. It delivers high doses of radiation in a limited number of fractions.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li>Primary treatment for early-stage, medically inoperable NSCLC.</li>
+      <li>For oligometastatic lesions.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Simulation:</b> Consistent with thorax simulation. Often 4D scans and surface guidance due to tight margins.</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Target Volume Delineation:</b>
+        <ul>
+          <li><b>GTV:</b> Visible extent of disease. For lung, typically limited to 5 cm.</li>
+          <li><b>CTV:</b> GTV + 5-10mm margin.</li>
+          <li><b>ITV:</b> Included to compensate for internal movements of the CTV during treatment.</li>
+          <li><b>PTV:</b> ITV + 5-10mm margin (for patient setup errors).</li>
+        </ul>
+      </li>
+      <li><b>OARs:</b> Avoid treating through the contralateral lung.</li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li>25-50 Gy in <5 fractions.</li>
+      <li>Common lung SBRT doses: 25 Gy in 5 fractions (minimum 40 hours between fractions) OR 50 Gy in 5 fractions (minimum 40 hours between fractions).</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Techniques:</b> Linac-based VMAT with CT or MRI image guidance is most common. Flattening filter often removed for high dose-rate (1400 MU/minute).</li>
+      <li><b>Beam Arrangement:</b> Multiple arcs or beams (lateral, anterior, posterior oblique) to precisely target the tumor and avoid critical structures.</li>
+      <li><b>Setup Verification:</b> 4D motion-monitoring systems using IGRT. Image alignment and prescription verification from oncologist and physicist required.</li>
+    </ul>
+  </div>
+
+  <div id="special-considerations" class="tab-content">
+    <h3>Special Considerations for Thoracic Tumors</h3>
+    <p>Beyond standard treatment protocols, several specialized considerations are important for optimizing outcomes and managing unique challenges in thoracic oncology.</p>
+
+    <h4>Prophylactic Cranial Irradiation (PCI) for SCLC:</h4>
+    <ul>
+      <li><b>Indication:</b> In patients with limited stage SCLC who achieve a good response to initial therapy (complete or partial response), PCI decreases brain metastases and increases overall survival.</li>
+      <li><b>Dose:</b> Preferred dose is 25 Gy in 10 daily fractions. A shorter course (e.g., 20 Gy in 5 fractions) may be appropriate for selected extensive stage patients. Higher doses (e.g., 36 Gy) are associated with increased neurotoxicity.</li>
+      <li><b>Timing:</b> Administer after resolution of acute toxicities of initial therapy. Not concurrently with chemotherapy.</li>
+      <li><b>Neurocognitive Function:</b> Increasing age (≥60 years) and higher doses are predictive factors for chronic neurotoxicity. PCI is not recommended for patients with poor performance status or impaired neurocognitive function.</li>
+      <li><b>Hippocampal-Avoidance (HA) PCI:</b> Using IMRT may be considered to improve cognitive preservation.</li>
+      <li><b>MRI Brain Surveillance:</b> Recommended for all patients not receiving PCI, as MRI is more sensitive than CT for detecting brain metastases.</li>
+      <li><b>Memantine:</b> Consider adding memantine during and after RT to decrease neurocognitive impairment.</li>
+    </ul>
+
+    <h4>Brain Metastases (NSCLC & SCLC):</h4>
+    <ul>
+      <li><b>Treatment Options:</b> Conventionally treated with Whole Brain Radiation Therapy (WBRT). Stereotactic Radiotherapy (SRT)/Radiosurgery (SRS) is preferred for selected patients with a small number of metastases (e.g., 1-3 lesions). Surgical resection may be an option for symptomatic lesions or for tissue diagnosis.</li>
+      <li><b>Dose for WBRT:</b> 30 Gy in 10 daily fractions.</li>
+      <li><b>Repeat RT:</b> May be considered for patients who develop brain metastases after prior PCI, with SRS preferred if feasible.</li>
+      <li><b>Hippocampal-Sparing WBRT:</b> Preferred for patients with better prognosis (e.g., >24 months) to preserve cognitive function.</li>
+    </ul>
+
+    <h4>Palliative Radiation for Extracranial Metastases:</h4>
+    <ul>
+      <li><b>Common Regimens:</b> 30 Gy in 10 fractions, 20 Gy in 5 fractions, or 8 Gy in 1 fraction.</li>
+      <li><b>Conformal Techniques:</b> IMRT, SABR, or SRS may be appropriate for selected patients (e.g., tumors close to OARs, re-irradiation).</li>
+      <li><b>Bone Metastases:</b> Palliative RT for pain relief and prevention of skeletal-related events (SREs). Bisphosphonates or denosumab may be used in conjunction.</li>
+    </ul>
+  </div>
+
+  <div class="references">
+    <h3>References</h3>
+    <ul>
+      <li>Rathi, A. K. (n.d.). <i>Step by Step Radiation Therapy: Treatment and Planning</i>. Jaypee Brothers Medical Publishers.</li>
+      <li>National Comprehensive Cancer Network. (2025). <i>NCCN Clinical Practice Guidelines in Oncology (NCCN Guidelines®): Non-Small Cell Lung Cancer</i> (Version 3.2025).</li>
+      <li>National Comprehensive Cancer Network. (2025). <i>NCCN Clinical Practice Guidelines in Oncology (NCCN Guidelines®): Small Cell Lung Cancer</i> (Version 4.2025).</li>
+      <li>Stiles, J. (2023). <i>Localization & Treatment Procedures in Radiation Therapy</i>. Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  function openThoracicTab(evt, tabId) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tab-content");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+      tabcontent[i].classList.remove("active");
+    }
+    tablinks = document.getElementsByClassName("tab-button");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].classList.remove("active");
+    }
+    document.getElementById(tabId).style.display = "block";
+    document.getElementById(tabId).classList.add("active");
+    evt.currentTarget.classList.add("active");
+  }
+
+  // Set the first tab as active by default when the page loads
+  document.addEventListener("DOMContentLoaded", function() {
+    document.querySelector(".tab-button").click();
+  });
+</script>
+
+</body>
+</html>
