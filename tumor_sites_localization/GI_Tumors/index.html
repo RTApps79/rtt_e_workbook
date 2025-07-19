@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body {
+    font-family: sans-serif;
+    line-height: 1.6;
+    margin: 20px;
+    background-color: #f4f4f4;
+    color: #333;
+  }
+  h2 {
+    color: #0056b3;
+    border-bottom: 2px solid #0056b3;
+    padding-bottom: 5px;
+    margin-top: 30px;
+  }
+  h3 {
+    color: #004085;
+    margin-top: 20px;
+  }
+  h4 {
+    color: #004085;
+    margin-top: 15px;
+    margin-bottom: 10px;
+  }
+  .lesson-container {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  .tab-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  .tab-button {
+    background-color: #e0e0e0;
+    border: 1px solid #ccc;
+    padding: 10px 15px;
+    cursor: pointer;
+    margin-right: 5px;
+    border-radius: 5px 5px 0 0;
+    transition: background-color 0.3s ease;
+    white-space: nowrap; /* Prevent text wrapping */
+  }
+  .tab-button.active {
+    background-color: #0056b3;
+    color: white;
+    border-color: #0056b3;
+  }
+  .tab-content {
+    display: none;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-top: none;
+    padding: 20px;
+    border-radius: 0 0 8px 8px;
+    background-color: #f9f9f9;
+  }
+  .tab-content.active {
+    display: block;
+  }
+  ul {
+    list-style-type: disc;
+    margin-left: 20px;
+  }
+  li {
+    margin-bottom: 8px;
+  }
+  b {
+    color: #0056b3;
+  }
+  .references {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #ccc;
+    font-size: 0.9em;
+    color: #555;
+  }
+  .attention {
+    font-weight: bold;
+    color: #d9534f;
+  }
+</style>
+</head>
+<body>
+
+<div class="lesson-container">
+  <h2>Gastrointestinal Tract Tumors: Radiation Therapy Planning and Delivery</h2>
+
+  <p>This lesson provides detailed information on the preplanning, planning, and delivery steps for radiation therapy in various gastrointestinal cancer sites, with enhanced focus on precise field borders and setup considerations.</p>
+
+  <div class="tab-container">
+    <button class="tab-button active" onclick="openGITab(event, 'esophageal-egj')">Esophageal & EGJ Cancers</button>
+    <button class="tab-button" onclick="openGITab(event, 'gastric')">Gastric Cancer</button>
+    <button class="tab-button" onclick="openGITab(event, 'small-bowel')">Small Bowel Adenocarcinoma</button>
+    <button class="tab-button" onclick="openGITab(event, 'pancreatic')">Pancreatic Adenocarcinoma</button>
+    <button class="tab-button" onclick="openGITab(event, 'liver')">Hepatocellular Carcinoma (Liver)</button>
+    <button class="tab-button" onclick="openGITab(event, 'rectal')">Rectal Cancer</button>
+    <button class="tab-button" onclick="openGITab(event, 'anal')">Anal Carcinoma</button>
+  </div>
+
+  <div id="esophageal-egj" class="tab-content active">
+    <h3>Esophageal and Esophagogastric Junction (EGJ) Cancers</h3>
+    <p>Esophageal and EGJ cancers include squamous cell carcinoma (SCC) and adenocarcinoma, with distinct etiologies and treatment approaches.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li>Radiation therapy (RT) is a cornerstone of treatment for esophageal and EGJ cancers, often used in combination with chemotherapy.</li>
+      <li>For SCC, definitive chemoradiation is a primary treatment option, especially for cervical or cervicothoracic tumors.</li>
+      <li>For adenocarcinoma, preoperative chemoradiation is commonly used to downstage tumors and improve resection rates.</li>
+      <li>Palliative RT is crucial for symptom management, particularly dysphagia and bleeding.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Clinical Evaluation:</b> History, physical exam, esophagogastroduodenoscopy (EGD) with biopsy.</li>
+      <li><b>Imaging:</b> Chest/abdomen CT with oral and IV contrast, pelvis CT with contrast (if clinically indicated), FDG-PET/CT (if no M1 disease), Endoscopic Ultrasound (EUS) for local staging. Bronchoscopy if tumor is at or above the carina.</li>
+      <li><b>Staging:</b> AJCC TNM staging (8th ed., 2017). Siewert classification for EGJ tumors (Type I and II managed as esophageal, Type III as gastric).</li>
+      <li><b>Biomarker Testing:</b> Universal MSI/MMR testing, PD-L1 testing (for PD-1 inhibitors), HER2 testing (for adenocarcinoma), CLDN18.2 testing (for adenocarcinoma), NGS for broader molecular profiling.</li>
+      <li><b>Nutritional Assessment:</b> Crucial due to dysphagia; consider enteric feeding tube for preoperative nutritional support.</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Patient Positioning:</b> Supine position with immobilization device (e.g., custom vaclok) for reproducibility.
+        <ul>
+          <li>For the upper esophagus, use a head and shoulder mask and a headrest that extends up the mandible to reduce its dose.</li>
+          <li>For the lower two-thirds of the esophagus, the arms are above the patient’s head in an arm board or vaclok.</li>
+          <li>Patients may be asked not to eat 2-4 hours before simulation and daily treatment for reproducibility.</li>
+          <li>Straighten patient from SSN to xiphoid and umbilicus. Localization marks anteriorly along midline and laterally on each side.</li>
+          <li>Scan parameters extend from around the EAM (external auditory meatus) to about the second lumbar vertebra.</li>
+        </ul>
+      </li>
+      <li><b>Contrast:</b> IV and/or oral contrast for CT simulation to aid target localization.</li>
+      <li><b>Motion Management:</b> 4D-CT planning or other motion management techniques (e.g., respiratory gating, breath-hold) due to significant respiratory motion for distal esophageal and EGJ lesions. Margins may be modified based on observed motion.</li>
+      <li><b>Target Volume Delineation:</b>
+        <ul>
+          <li><b>GTV:</b> Primary tumor and involved regional lymph nodes from planning CT and diagnostic studies.</li>
+          <li><b>CTV:</b> GTV plus 3-4 cm superior/inferior margin along esophagus/cardia, 1 cm radial expansion. Nodal CTV with 0.5-1.5 cm expansion from nodal GTV. Elective nodal regions (e.g., supraclavicular, para-esophageal, celiac axis, lesser curvature, splenic nodes) included based on primary tumor location.</li>
+          <li><b>PTV:</b> CTV plus 0.5-1 cm expansion, accounting for respiratory motion and setup uncertainties.</li>
+          <li><b>OARs:</b> Lungs (V20Gy ≤20%, Mean Lung Dose [MLD] ≤20 Gy), Heart (V40Gy ≤20%, Mean ≤20 Gy), Esophagus (Mean ≤34 Gy, Max ≤105% of prescription dose), Spinal Cord (Max ≤45 Gy), Brachial Plexus (60 Gy for nerve damage), Liver (30 Gy for clinical hepatitis), Kidney (23 Gy for nephritis/loss of function).</li>
+        </ul>
+      </li>
+      <li><b>Traditional Treatment Borders:</b>
+        <ul>
+          <li><b>Longitudinal:</b> Generous, PTV typically 5 cm superior/inferior beyond treatment volume due to lymphatic spread (skip metastases).</li>
+          <li><b>Lateral:</b> Generally 2-2.5 cm beyond demonstrable disease (or 1 cm radial margin for CT-based planning).</li>
+          <li><b>Upper 1/3 Esophagus:</b> More complicated due to spine curvature; anterior oblique wedged fields carefully planned to exclude spinal cord.</li>
+          <li><b>Lower 2/3 Esophagus:</b> AP/PA treatments to spine tolerance of 45 Gy are delivered.</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>Preoperative RT:</b> 41.4-50.4 Gy (1.8-2.0 Gy/day) in 23-28 fractions.</li>
+      <li><b>Postoperative RT:</b> 45-50.4 Gy (1.8-2.0 Gy/day) in 25-28 fractions.</li>
+      <li><b>Definitive RT:</b> 50-50.4 Gy (1.8-2.0 Gy/day) in 25-28 fractions. Higher doses (e.g., 60-66 Gy) may be used in definitive settings, but caution is advised due to increased toxicity.</li>
+      <li><b>Curative RT Alone:</b> 55 Gy in 20 daily fractions (2.75 Gy/fx) or 60-65 Gy using IMRT/VMAT or off-cord boost after 45 Gy.</li>
+      <li><b>Palliative RT:</b> 30 Gy in 10 fractions (3 Gy/fx) or 20 Gy in 5 fractions (4 Gy/fx). For esophageal obstruction, 30 Gy in 10 fractions by AP-PA portals with minimal field size.</li>
+      <li><b>Concurrent Chemotherapy:</b> Fluoropyrimidine-based (e.g., 5-FU, capecitabine) with paclitaxel/carboplatin or oxaliplatin/cisplatin.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Techniques:</b> 3D conformal RT (3D-CRT) using multiple beam angles, or IMRT. IMRT can reduce dose to critical structures. Proton beam therapy may be considered to reduce dose to OARs, ideally within a clinical trial.</li>
+      <li><b>Beam Energy:</b> Higher energy beams (10 MV) minimize dose to lung volume.</li>
+      <li><b>Supportive Care:</b> Aggressive supportive care (antiemetics, antacids, antidiarrheals, nutritional support) to avoid treatment interruptions. Weekly status checks (vitals, weight, blood counts).</li>
+      <li><b>Setup Verification:</b> Image-guided RT (IGRT) with kV imaging or cone-beam CT is routinely used. When aligning images, align to the planning target volume (PTV) and verify the position of the spine and carina.</li>
+    </ul>
+  </div>
+
+  <div id="gastric" class="tab-content">
+    <h3>Gastric Cancer</h3>
+    <p>Gastric cancer, primarily adenocarcinoma, is a global health problem with varying incidence geographically. It is often diagnosed at advanced stages in Western countries.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li>RT is used in multimodality treatment for resectable and locally advanced gastric cancer.</li>
+      <li>Postoperative chemoradiation is recommended for R1/R2 resections or R0 resections with high-risk features (e.g., pT3-T4, N+).</li>
+      <li>Preoperative chemoradiation may be considered for cT2 or higher, Any N tumors.</li>
+      <li>Palliative RT can manage symptoms like bleeding and obstruction.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Clinical Evaluation:</b> H&P, EGD with biopsy, CBC, comprehensive chemistry profile.</li>
+      <li><b>Imaging:</b> Chest/abdomen/pelvis CT with oral and IV contrast. FDG-PET/CT for locally advanced/metastatic disease. EUS for early-stage or to determine early vs. locally advanced. Laparoscopy with cytology for peritoneal spread.</li>
+      <li><b>Staging:</b> AJCC TNM staging (8th ed., 2017). Siewert classification for EGJ tumors.</li>
+      <li><b>Biomarker Testing:</b> Universal MSI/MMR, HER2, PD-L1, CLDN18.2, NGS for comprehensive profiling.</li>
+      <li><b>Nutritional Assessment:</b> Crucial due to potential for weight loss and malnutrition.</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Patient Positioning:</b> Supine position with immobilization. Patients may be NPO 2-4 hours before simulation and daily treatment to keep the stomach volume smaller and consistent.</li>
+      <li><b>Contrast:</b> IV and/or oral contrast for CT simulation. Oral contrast will define the stomach.</li>
+      <li><b>Motion Management:</b> 4D-CT or other motion management may be used for respiratory motion.</li>
+      <li><b>Target Volume Delineation:</b>
+        <ul>
+          <li><b>Preoperative:</b> Primary tumor and pertinent nodal groups (perigastric, celiac, left gastric artery, splenic artery, splenic hilar, hepatic artery, porta hepatic, suprapyloric, subpyloric, pancreaticoduodenal). Margins (3-5 cm) based on tumor location (proximal, middle, distal).</li>
+          <li><b>Postoperative:</b> Tumor/gastric bed, anastomosis/stumps, pertinent nodal groups. Treatment of remaining stomach balanced with normal tissue morbidity.</li>
+          <li><b>OARs:</b> Lungs, heart, spinal cord, kidneys, liver, bowel, stomach. Dose constraints are critical (e.g., Lung V20Gy ≤20%, Heart Mean <30 Gy, Kidney V20Gy ≤33%, Bowel Max <54 Gy, Liver Mean <25 Gy, Stomach Mean <45 Gy).</li>
+        </ul>
+      </li>
+      <li><b>Regional Lymph Nodes at Risk:</b> Pancreaticoduodenal, porta hepatis, supra-pancreatic, splenic hilar, and those of the greater and lesser curvature.</li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>Adjuvant RT:</b> 45-50.4 Gy (1.8 Gy/day) in 25-28 fractions. Higher doses for positive surgical margins.</li>
+      <li><b>Preoperative Chemoradiation:</b> Typically 45-50.4 Gy.</li>
+      <li><b>Chemoradiation for Unresectable Disease:</b> Doses up to 54 Gy, higher if technically feasible. Historically, 60 Gy in 1.5-2.0 Gy fractions for unresectable gastric cancer.</li>
+      <li><b>Concurrent Chemotherapy:</b> Fluoropyrimidine-based (5-FU, capecitabine) often with oxaliplatin or cisplatin.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Techniques:</b> 3D-CRT or IMRT. IMRT is preferred to reduce toxicity to OARs.</li>
+      <li><b>Supportive Care:</b> Aggressive management of acute toxicities (antiemetics, antacids, antidiarrheals). Nutritional support (oral/enteral, J-tubes if needed). Weekly status checks.</li>
+      <li><b>Setup Verification:</b> Image guidance (IGRT) is routinely used.</li>
+    </ul>
+  </div>
+
+  <div id="small-bowel" class="tab-content">
+    <h3>Small Bowel Adenocarcinoma (SBA)</h3>
+    <p>Small bowel adenocarcinoma is a rare gastrointestinal malignancy, often presenting at advanced stages. Treatment is primarily surgical, with adjuvant and systemic therapies playing supportive roles.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li>RT is not generally indicated for jejunum/ileum lesions.</li>
+      <li>For duodenal adenocarcinoma, chemo/RT may be considered in patients with positive margins or who remain unresectable after induction chemotherapy.</li>
+      <li>Palliative RT may be used for symptom control (e.g., obstruction, bleeding).</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Clinical Evaluation:</b> H&P, CBC, chemistry profile, CA 19-9, CEA. Consider studies for celiac disease or Crohn's disease.</li>
+      <li><b>Imaging:</b> Abdomen/pelvis CT or MRI, Chest CT. FDG-PET/CT is not routinely indicated but may be considered for equivocal findings. EGD with EUS for duodenal malignancy. Consider CT enterography for poorly visualized primary tumors.</li>
+      <li><b>Biopsy:</b> Pathology review for diagnosis, MMR/MSI testing.</li>
+      <li><b>Molecular Testing:</b> KRAS, BRAF V600E, HER2, MSI/MMR, TMB, POLE/POLD1, RET, NTRK fusions.</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Patient Positioning:</b> Supine with arms positioned high on their chest or above the head (if treating upper abdomen). A low vaclok under the patient's legs will improve comfort and help flatten the back.
+        <ul>
+          <li>For malignancies of the distal (sigmoid) colon and rectum, prone positioning may be used to displace the small bowel out of the pelvis.</li>
+        </ul>
+      </li>
+      <li><b>Target Volumes (Duodenum):</b> Primary site and regional lymph node basins.</li>
+      <li><b>RT Dosing (Duodenum):</b> 45-54 Gy in 1.8-2 Gy daily fractions.</li>
+      <li><b>OARs:</b> Adjacent small bowel dose should be limited to Dmax 55 Gy, V45 Gy ≤150 cc (bowel bag avoidance), or V50 ≤30 cc (individual small bowel loops).
+        <ul>
+          <li><b>TD 5/5 for Small Bowel:</b> 40 Gy (Obstruction/Perforation/Fistula).</li>
+          <li><b>TD 5/5 for Large Bowel (Colon):</b> 50 Gy (Obstruction/Perforation/Ulceration/Fistula).</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>Techniques:</b> 3D-CRT or IMRT. IMRT is preferred to limit toxicity to adjacent normal organs.</li>
+      <li><b>Setup Verification:</b> IGRT with kV imaging, MR-guided imaging, and cone beam CT is routinely used.</li>
+      <li><b>Concurrent Chemotherapy:</b> Fluoropyrimidine-based chemotherapy should be delivered concurrently with RT.</li>
+    </ul>
+  </div>
+
+  <div id="pancreatic" class="tab-content">
+    <h3>Pancreatic Adenocarcinoma</h3>
+    <p>Pancreatic adenocarcinoma is a highly aggressive malignancy, often diagnosed at advanced stages, requiring multidisciplinary management.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li>RT is used in neoadjuvant, adjuvant, locally advanced, and palliative settings.</li>
+      <li>In the neoadjuvant setting, RT aims to sterilize vessel margins, enhance R0 resection likelihood, and improve local control.</li>
+      <li>Adjuvant RT may be considered for high-risk features (e.g., positive margins) after resection.</li>
+      <li>For locally advanced disease, RT (chemoradiation or SBRT) is used to prevent or delay local progression and facilitate local control.</li>
+      <li>Palliative RT is crucial for pain relief, bleeding control, and ameliorating obstructive symptoms.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Clinical Suspicion/Workup:</b> Pancreatic protocol CT or MRI (abdomen), Chest/pelvis CT. Consider EUS, ERCP with stent placement (if jaundiced), liver function tests, baseline CA 19-9, genetic testing for inherited mutations, and molecular profiling of tumor tissue.</li>
+      <li><b>Resectability Assessment:</b> Multidisciplinary consultation at a high-volume center is crucial for determining resectability (resectable, borderline resectable, locally advanced, metastatic).</li>
+      <li><b>Biopsy:</b> EUS-guided needle biopsy is preferred for tissue acquisition.</li>
+      <li><b>Imaging for Restaging:</b> Consider PET/CT or PET/MRI before and after neoadjuvant therapy to assess response and for restaging.</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Fiducial Markers:</b> Placement of 1-5 (preferably ≥3) fiducial markers directly into the tumor/periphery under EUS guidance for targeting.</li>
+      <li><b>Patient Positioning:</b> Supine with arms up in an immobilization device. Patients may be NPO 2-3 hours before treatment to reduce organ motion.</li>
+      <li><b>Contrast:</b> IV contrast for CT simulation (multiphase preferred), oral contrast may also be used. MRI may be complementary.</li>
+      <li><b>Motion Management:</b> Consider 4D-CT, respiratory gating, breath-hold, respiratory tracking, or abdominal compression to account for respiratory motion.</li>
+      <li><b>Target Volume Delineation:</b>
+        <ul>
+          <li><b>GTV:</b> Gross tumor and involved nodes.</li>
+          <li><b>CTV:</b> GTV plus margins for microscopic spread.</li>
+          <li><b>PTV:</b> CTV plus margins for motion and setup uncertainty. PTV margins are anisotropic with 5-10 mm in the AP direction, 2-4 mm in the transverse plane, and 15-30 mm craniocaudal for organ movement with respiration or abdominal motion and set-up variations. If breath hold techniques or gating is used (ITV), craniocaudal margins may be reduced.</li>
+          <li><b>OARs:</b> Duodenum, stomach, liver, kidneys, spinal cord, bowel. Dose constraints are critical (e.g., Stomach/Duodenum Max 55 Gy, Liver Mean <30 Gy, Kidney V18Gy <30%, Spinal Cord Max ≤45 Gy).</li>
+        </ul>
+      </li>
+      <li><b>Traditional Treatment Borders (4-field box):</b>
+        <ul>
+          <li><b>Superior:</b> Mid or upper portion of T11.</li>
+          <li><b>Inferior:</b> Includes the L3 vertebral body.</li>
+          <li><b>Lateral:</b> At least 2/3rds of the right kidney needs to be excluded with a 2-3 cm margin around the tumor or tumor bed. (It is not necessary to include the entire duodenal loop). The treatment field is extended to the left of the pancreas so that a 3 cm margin around the tumor is created to treat the splenic hilum.</li>
+          <li><b>Posterior:</b> Vertebral bodies should be split with a 1-2 cm margin beyond the tumor or tumor bed anteriorly.</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>Resectable/Borderline Resectable (Neoadjuvant):</b> 36 Gy in 2.4 Gy fractions to 45-54 Gy in 1.8-2.0 Gy fractions.</li>
+      <li><b>Resected (Adjuvant):</b> 45-50.4 Gy in 1.8-2.0 Gy fractions to the tumor bed, surgical anastomoses, and adjacent lymph node basins. Historically, 200-220 cGy with 25-28 fractions. If critical structure tolerances are not exceeded, a boost to 50-65 Gy may be delivered.</li>
+      <li><b>Locally Advanced/Unresectable:</b> 45-56 Gy in 1.8-2.2 Gy fractions for chemoradiation. SBRT doses: 30-45 Gy in 3 fractions or 25-50 Gy in 5 fractions. Hypofractionated: 67.5 Gy in 15 fractions or 75 Gy in 25 fractions. Nonresectable cases have a target dose of 50-60 Gy.</li>
+      <li><b>Palliative RT:</b> Short courses for pain (e.g., osseous metastases) or local obstructive symptoms.</li>
+      <li><b>Concurrent Chemotherapy:</b> Commonly gemcitabine- or fluoropyrimidine-based.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Techniques:</b> 3D-CRT, IMRT, or SBRT. IMRT is preferred over 3D-CRT. SBRT at experienced, high-volume centers. VMAT and MR-Linac are used due to their ability to conform and spare surrounding healthy tissue. Common VMAT treatments consist of two to three complete 360-degree arcs. MRLinac SBRT pancreas fractionation: 40 Gy in 5 fractions (8 Gy/fx) with 40 hours minimum between treatments.</li>
+      <li><b>Beam Energy:</b> Typically 10 MV photons for adequate skin sparing and even dose distribution.</li>
+      <li><b>Setup Verification:</b> IGRT with fiducial markers is highly recommended.</li>
+      <li><b>Supportive Care:</b> Aggressive management of symptoms (pain, obstruction, bleeding, malnutrition). Prophylactic antiemetics. Pancreatic enzyme replacement for exocrine insufficiency. Dose rate may be lowered (<300 MU/min) if nausea occurs.</li>
+    </ul>
+  </div>
+
+  <div id="liver" class="tab-content">
+    <h3>Hepatocellular Carcinoma (HCC)</h3>
+    <p>Hepatocellular carcinoma is a common primary liver cancer, often arising in the setting of chronic liver disease. Management is complex and multidisciplinary.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li>RT is a treatment option for unresectable or medically inoperable HCC.</li>
+      <li>Stereotactic Body Radiation Therapy (SBRT) is an advanced technique delivering ablative doses and is an alternative to ablation/embolization.</li>
+      <li>Proton Beam Therapy (PBT) may be appropriate in specific situations to spare normal liver/OARs.</li>
+      <li>Palliative RT is used for symptom control (e.g., bone or brain metastases) and extensive liver tumor burden.</li>
+      <li>RT can be used as bridge therapy or downstaging therapy for transplant candidates.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>HCC Screening:</b> Ultrasound (US) + AFP every 6 months for at-risk patients (cirrhosis, chronic HBV).</li>
+      <li><b>Diagnosis:</b> Multiphasic abdomen CT or MRI with contrast for suspicious nodules. Biopsy if imaging is not definitive or for systemic therapy candidates.</li>
+      <li><b>Workup:</b> H&P, hepatitis panel, liver function tests (bilirubin, transaminases, albumin, INR), CBC, platelets, AFP, chest CT, abdomen/pelvis CT or MRI. Assess portal hypertension.</li>
+      <li><b>Liver Functional Assessment:</b> Child-Pugh (CP) classification, MELD score, ALBI grade. Most systemic therapies studied in CP A.</li>
+      <li><b>Molecular Testing:</b> No established routine indication, but considered case-by-case for atypical histology or clinical trials.</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Patient Positioning:</b> Supine with arms up in a wing board or arm board, knee bolster. Immobilization for reproducibility.</li>
+      <li><b>Contrast:</b> IV and oral contrast for CT simulation.</li>
+      <li><b>Motion Management:</b> Respiratory motion is significant. Techniques like abdominal compression, breath-hold (DIBH), or respiratory gating (4D CT) may be used.</li>
+      <li><b>Target Volume Delineation:</b>
+        <ul>
+          <li><b>GTV:</b> Primary tumor and involved lymph nodes.</li>
+          <li><b>CTV:</b> GTV plus margin for microscopic disease.</li>
+          <li><b>ITV:</b> CTV plus margin for organ motion (if free-breathing).</li>
+          <li><b>PTV:</b> ITV/CTV plus margin for setup errors.</li>
+          <li><b>OARs:</b> Kidneys, liver, lung, heart, stomach, small bowel, large bowel, spinal cord, femoral heads. Dose constraints are crucial (e.g., Liver V30Gy ≤33% or Mean <25 Gy, Kidney V20Gy ≤33% or Mean <18 Gy, Spinal Cord Max ≤45 Gy).</li>
+        </ul>
+      </li>
+      <li><b>Field Placement Borders (General):</b>
+        <ul>
+          <li>For liver metastasis, 20-30 Gy in 13-29 fractions is delivered to the whole organ to relieve painful hepatomegaly. Another option is 20-25 Gy in 2-3 weeks.</li>
+          <li>For lesions <5 cm, SBRT is the treatment of choice, giving 45-54 Gy in 3-5 fractions.</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>SBRT:</b> Doses ranging from 40-60 Gy (in 3-5 fractions; BED10 >100) are preferred if dose constraints can be met.</li>
+      <li><b>Hypofractionation:</b> 37.5-72 Gy in 10-15 fractions.</li>
+      <li><b>Conventional Fractionation:</b> 50-66 Gy in 25-33 fractions.</li>
+      <li><b>Palliative RT:</b> Short courses for symptom control (e.g., bone metastases).</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Techniques:</b> 3D conformal RT, IMRT, or SBRT. Image-guided RT (IGRT) is strongly recommended. Proton beam therapy may be used.</li>
+      <li><b>Bridge/Downstaging Therapy:</b> Locoregional therapies (ablation, TACE, TARE, RT) are used to reduce tumor burden for transplant eligibility.</li>
+      <li><b>Supportive Care:</b> Close monitoring of liver function during and after RT.</li>
+    </ul>
+  </div>
+
+  <div id="rectal" class="tab-content">
+    <h3>Rectal Cancer</h3>
+    <p>Rectal cancer management involves a multidisciplinary approach, often incorporating surgery, chemotherapy, and radiation therapy to optimize local control and survival.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li>Neoadjuvant chemoradiation (chemoRT) is widely used to downstage tumors, increase R0 resection rates, and improve local control.</li>
+      <li>Total Neoadjuvant Therapy (TNT) (chemoRT + chemotherapy before surgery) is a preferred approach, especially for high-risk stage II/III disease.</li>
+      <li>Short-course RT (25 Gy in 5 days) is an alternative neoadjuvant approach.</li>
+      <li>Postoperative RT may be used for positive margins or high-risk features if not given preoperatively.</li>
+      <li>Palliative RT for symptom control (e.g., pain, bleeding).</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Clinical Evaluation:</b> H&P, DRE, proctoscopy, CBC, chemistry profile, CEA.</li>
+      <li><b>Imaging:</b> Chest/abdomen CT or MRI, pelvis MRI (preferred for local staging), Endorectal ultrasound (if MRI contraindicated/inconclusive). FDG-PET/CT is not routinely indicated for staging but may be used for equivocal findings or potentially curable M1 disease.</li>
+      <li><b>Biopsy:</b> Histologic confirmation of malignancy.</li>
+      <li><b>Molecular Testing:</b> Universal MMR/MSI testing. KRAS, NRAS, BRAF, HER2, POLE/POLD1, RET, NTRK fusions for metastatic disease.</li>
+      <li><b>Multidisciplinary Team:</b> Essential for treatment planning, especially for T3, N any; T1-2, N1-2; T4, N any, or locally unresectable/medically inoperable disease.</li>
+      <li><b>Fertility Counseling:</b> Discuss fertility risks and preservation options.</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Patient Positioning:</b> Supine, often with full bladder and empty rectum to displace small bowel. Immobilization devices for reproducibility. Prone positioning with a belly board or custom-made prone vaclok device with an anterior void allows the radiosensitive small bowel to fall forward and out of the pelvis. Patients are indexed longitudinally on the belly board using the ruler found on the right and left lateral sides of the board. The pubic symphysis should sit at the inferior ridge of the belly board to displace as much small bowel as possible.</li>
+      <li><b>Reference Marks:</b> Tattoos or external marks aligned with lasers. External radiopaque marker may be placed on the anal verge for visualization.</li>
+      <li><b>Contrast:</b> IV contrast and oral contrast may be used. Rectal contrast may be instilled to assist radiographic identification.</li>
+      <li><b>Target Volume Delineation:</b>
+        <ul>
+          <li><b>GTV:</b> Primary tumor and involved lymph nodes.</li>
+          <li><b>CTV:</b> GTV plus 2-5 cm margin, mesorectum, presacral nodes, internal iliac nodes. External iliac nodes for T4 anterior invasion. Inguinal nodes for low-lying tumors involving anal canal.</li>
+          <li><b>PTV:</b> CTV plus margins for organ motion and setup inaccuracies.</li>
+          <li><b>OARs:</b> Small bowel, bladder, femoral heads, bone marrow. Prone positioning and full bladder are encouraged to minimize small bowel in field.</li>
+        </ul>
+      </li>
+      <li><b>Traditional Treatment Borders (3-field technique: PA field and opposed lateral fields with wedges):</b>
+        <ul>
+          <li><b>Superior:</b> L5-S1 interspace.</li>
+          <li><b>Inferior:</b> 5 cm below the tumor; below obturator foramina.</li>
+          <li><b>Lateral:</b> 1-2 cm beyond the pelvic inlet.</li>
+          <li><b>Anterior:</b> Anterior to or mid-acetabulum for a standard lateral field; anterior to the pubic symphysis to include the external iliac nodes (if needed).</li>
+          <li><b>Posterior:</b> Posterior to the sacrum.</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>Long-course ChemoRT:</b> 45-54 Gy in 25-30 fractions to the pelvis. Boost to tumor bed (5.4-9.0 Gy in 3-5 fractions) for resectable cancers. Higher doses for unresectable cancers if feasible.</li>
+      <li><b>Short-course RT:</b> 25 Gy in 5 fractions.</li>
+      <li><b>Concurrent Chemotherapy:</b> Fluoropyrimidine-based (5-FU, capecitabine) is standard. Oxaliplatin is not routinely recommended concurrently with RT.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Techniques:</b> 3D-CRT or IMRT. IMRT is preferred for re-irradiation or complex anatomical situations. SBRT for oligometastatic disease (in clinical trial setting).
+        <ul>
+          <li>For 3-field technique, the heel of the wedges is placed posteriorly, where the PA and lateral beams meet, to reduce hotspots in the posterior pelvis.</li>
+        </ul>
+      </li>
+      <li><b>Setup Verification:</b> Image-guided RT (IGRT) with kV imaging or cone-beam CT is routinely used.</li>
+      <li><b>Timing:</b> Surgery typically 5-8 weeks after long-course chemoRT.</li>
+      <li><b>Supportive Care:</b> Aggressive management of acute toxicities. Patient counseling on sexual dysfunction, vaginal stenosis, and fertility.</li>
+    </ul>
+  </div>
+
+  <div id="anal" class="tab-content">
+    <h3>Anal Carcinoma</h3>
+    <p>Anal carcinoma, primarily squamous cell carcinoma, is often associated with HPV infection. Concurrent chemoradiation is the standard of care for most localized disease.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li>Concurrent chemoradiation (chemoRT) is the primary treatment for most stages of anal canal cancer, with curative intent.</li>
+      <li>Local RT may be considered for perianal cancer with inadequate surgical margins.</li>
+      <li>Palliative RT for symptomatic relief (e.g., pain, bleeding).</li>
+      <li>RT to groin may be considered for inguinal node recurrence if no prior RT to groin.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Clinical Evaluation:</b> DRE, inguinal lymph node evaluation, anoscopy, HIV testing, gynecologic exam.</li>
+      <li><b>Imaging:</b> Chest/abdomen CT + pelvis CT or MRI. Consider FDG-PET/CT or FDG-PET/MRI for suspected nodal involvement or staging.</li>
+      <li><b>Biopsy:</b> Squamous cell carcinoma confirmation. FNA if suspicious nodes.</li>
+      <li><b>Fertility Counseling:</b> Discuss fertility risks and preservation.</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Patient Positioning:</b> Supine or prone with legs slightly abducted ("frog-legged") in immobilization device. Full bladder. External genitalia positioned inferiorly. Vaginal dilator in females to delineate genitalia. Radiopaque marker at anal verge.
+        <ul>
+          <li><b>Bolus:</b> May be necessary for the anal verge due to its shallow location, to bring the dose more superficial. Prone positioning is easiest for bolus placement with minimal air gaps. Wet or Vaseline-coated gauze can fill gaps under the bolus.</li>
+        </ul>
+      </li>
+      <li><b>Contrast:</b> IV contrast for pelvic/groin vasculature, oral contrast for small bowel avoidance.</li>
+      <li><b>Target Volume Delineation:</b>
+        <ul>
+          <li><b>GTV:</b> Primary tumor and involved lymph nodes.</li>
+          <li><b>CTV:</b> GTV plus 1-2 cm margin around primary, 0.5-1 cm around involved nodes. Pelvic and inguinal nodes routinely treated. Three tiers (gross, high-risk elective, low-risk elective) may be contoured. Mesorectal, presacral, internal/external iliac, obturator, and inguinal nodes are at-risk regions.</li>
+          <li><b>PTV:</b> CTV plus 0.5-1 cm expansion, with more generous margins for bladder/rectum.</li>
+          <li><b>OARs:</b> Small bowel, bladder, pelvic/femoral bones, external genitalia, large bowel. Dose constraints are crucial (e.g., Small Bowel/Large Bowel V45Gy ≤150 cc, Bladder V50Gy ≤35%, Femoral Heads V44Gy ≤5%, External Genitalia V40Gy ≤5%).</li>
+        </ul>
+      </li>
+      <li><b>Traditional Treatment Borders (3D conformal plan):</b>
+        <ul>
+          <li><b>Superior:</b> L5-S1 interspace to include the common iliac lymph nodes.</li>
+          <li><b>Inferior:</b> 5 cm below the tumor; below obturator foramina.</li>
+          <li><b>Lateral Anterior:</b> To include inguinal lymph nodes.</li>
+          <li><b>Lateral Posterior:</b> Narrow to protect femoral necks.</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>Localized ChemoRT:</b>
+        <ul>
+          <li>T1-2 N0: Primary PTV 50.4 Gy (1.8 Gy/fx), Nodal PTV 42 Gy (1.5 Gy/fx).</li>
+          <li>T3-4 N0 or T any N+ (≤3 cm nodes): Primary PTV 54 Gy (1.8 Gy/fx), Involved Nodal PTV 50.4 Gy (1.68 Gy/fx), Nodal PTV 45 Gy (1.5 Gy/fx).</li>
+          <li>T any N+ (>3 cm nodes): Primary PTV 54 Gy (1.8 Gy/fx), Involved Nodal PTV 54 Gy (1.8 Gy/fx), Nodal PTV 45 Gy (1.5 Gy/fx).</li>
+        </ul>
+      </li>
+      <li><b>Palliative RT:</b> 20-30 Gy in 5-10 fractions. SBRT for low-volume metastatic disease.</li>
+      <li><b>Concurrent Chemotherapy:</b> 5-FU/mitomycin or Capecitabine/mitomycin (preferred). 5-FU/cisplatin (category 2B).</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Techniques:</b> IMRT is preferred over 3D-CRT. SIB (simultaneous integrated boost) technique may be used.</li>
+      <li><b>Setup Verification:</b> IGRT with kV imaging or CBCT is routinely used.</li>
+      <li><b>Supportive Care:</b> Vaginal dilators (females), counseling on sexual dysfunction and infertility. Aggressive supportive care to manage toxicities (e.g., anoproctitis, perineal dermatitis).</li>
+    </ul>
+  </div>
+
+  <div class="references">
+    <h3>References</h3>
+    <ul>
+      <li>Rathi, A. K. (n.d.). <i>Step by Step Radiation Therapy: Treatment and Planning</i>. Jaypee Brothers Medical Publishers.</li>
+      <li>National Comprehensive Cancer Network. (2025). <i>NCCN Clinical Practice Guidelines in Oncology (NCCN Guidelines®): Esophageal and Esophagogastric Junction Cancers</i> (Version 2.2025).</li>
+      <li>National Comprehensive Cancer Network. (2024). <i>NCCN Clinical Practice Guidelines in Oncology (NCCN Guidelines®): Gastric Cancer</i> (Version 5.2024).</li>
+      <li>National Comprehensive Cancer Network. (2025). <i>NCCN Clinical Practice Guidelines in Oncology (NCCN Guidelines®): Small Bowel Adenocarcinoma</i> (Version 2.2025).</li>
+      <li>National Comprehensive Cancer Network. (2025). <i>NCCN Clinical Practice Guidelines in Oncology (NCCN Guidelines®): Pancreatic Adenocarcinoma</i> (Version 2.2025).</li>
+      <li>National Comprehensive Cancer Network. (2025). <i>NCCN Clinical Practice Guidelines in Oncology (NCCN Guidelines®): Rectal Cancer</i> (Version 1.2025).</li>
+      <li>National Comprehensive Cancer Network. (2025). <i>NCCN Clinical Practice Guidelines in Oncology (NCCN Guidelines®): Anal Carcinoma</i> (Version 2.2025).</li>
+      <li>National Comprehensive Cancer Network. (2025). <i>NCCN Clinical Practice Guidelines in Oncology (NCCN Guidelines®): Hepatocellular Carcinoma</i> (Version 4.2024).</li>
+      <li>Stiles, J. (2023). <i>Localization & Treatment Procedures in Radiation Therapy</i>. Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  function openGITab(evt, tabId) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tab-content");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+      tabcontent[i].classList.remove("active");
+    }
+    tablinks = document.getElementsByClassName("tab-button");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].classList.remove("active");
+    }
+    document.getElementById(tabId).style.display = "block";
+    document.getElementById(tabId).classList.add("active");
+    evt.currentTarget.classList.add("active");
+  }
+
+  // Set the first tab as active by default when the page loads
+  document.addEventListener("DOMContentLoaded", function() {
+    document.querySelector(".tab-button").click();
+  });
+</script>
+
+</body>
+</html>
