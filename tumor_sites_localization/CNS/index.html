@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body {
+    font-family: sans-serif;
+    line-height: 1.6;
+    margin: 20px;
+    background-color: #f4f4f4;
+    color: #333;
+  }
+  h2 {
+    color: #0056b3;
+    border-bottom: 2px solid #0056b3;
+    padding-bottom: 5px;
+    margin-top: 30px;
+  }
+  h3 {
+    color: #004085;
+    margin-top: 20px;
+  }
+  h4 {
+    color: #004085;
+    margin-top: 15px;
+    margin-bottom: 10px;
+  }
+  .lesson-container {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  .tab-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  .tab-button {
+    background-color: #e0e0e0;
+    border: 1px solid #ccc;
+    padding: 10px 15px;
+    cursor: pointer;
+    margin-right: 5px;
+    border-radius: 5px 5px 0 0;
+    transition: background-color 0.3s ease;
+    white-space: nowrap; /* Prevent text wrapping */
+  }
+  .tab-button.active {
+    background-color: #0056b3;
+    color: white;
+    border-color: #0056b3;
+  }
+  .tab-content {
+    display: none;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-top: none;
+    padding: 20px;
+    border-radius: 0 0 8px 8px;
+    background-color: #f9f9f9;
+  }
+  .tab-content.active {
+    display: block;
+  }
+  ul {
+    list-style-type: disc;
+    margin-left: 20px;
+  }
+  li {
+    margin-bottom: 8px;
+  }
+  b {
+    color: #0056b3;
+  }
+  .references {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #ccc;
+    font-size: 0.9em;
+    color: #555;
+  }
+  .attention {
+    font-weight: bold;
+    color: #d9534f;
+  }
+</style>
+</head>
+<body>
+
+<div class="lesson-container">
+  <h2>Central Nervous System Tumors: Radiation Therapy Planning and Delivery</h2>
+
+  <p>This lesson provides detailed information on the preplanning, planning, and delivery steps for radiation therapy in various Central Nervous System (CNS) cancer types in adults, with enhanced focus on precise field borders and setup considerations.</p>
+
+  <div class="tab-container">
+    <button class="tab-button active" onclick="openCNSTab(event, 'general-principles')">General RT Principles for CNS</button>
+    <button class="tab-button" onclick="openCNSTab(event, 'low-grade-glioma')">Low-Grade Diffuse Glioma</button>
+    <button class="tab-button" onclick="openCNSTab(event, 'high-grade-glioma')">High-Grade Diffuse Glioma</button>
+    <button class="tab-button" onclick="openCNSTab(event, 'ependymoma')">Intracranial & Spinal Ependymoma</button>
+    <button class="tab-button" onclick="openCNSTab(event, 'medulloblastoma')">Adult Medulloblastoma</button>
+    <button class="tab-button" onclick="openCNSTab(event, 'pcns-lymphoma')">Primary CNS Lymphoma</button>
+    <button class="tab-button" onclick="openCNSTab(event, 'primary-spinal')">Primary Spinal Cord Tumors</button>
+    <button class="tab-button" onclick="openCNSTab(event, 'meningioma')">Meningiomas</button>
+    <button class="tab-button" onclick="openCNSTab(event, 'brain-metastases')">Brain Metastases</button>
+    <button class="tab-button" onclick="openCNSTab(event, 'leptomeningeal')">Leptomeningeal Metastases</button>
+    <button class="tab-button" onclick="openCNSTab(event, 'metastatic-spine')">Metastatic Spine Tumors</button>
+  </div>
+
+  <div id="general-principles" class="tab-content active">
+    <h3>General Principles of Radiation Therapy for CNS Tumors</h3>
+    <p>Radiation therapy (RT) is a cornerstone in the management of CNS tumors. Precise planning and delivery are paramount due to the radiosensitivity of surrounding brain and spinal cord tissues.</p>
+
+    <h4>Key Principles:</h4>
+    <ul>
+      <li><b>Multidisciplinary Approach:</b> Essential involvement of neurosurgeons, neurologists, medical oncologists, radiation oncologists, and neuroradiologists. Brain tumor boards are highly recommended.</li>
+      <li><b>Accurate Diagnosis:</b> Surgical biopsy is critical to obtain sufficient tissue for accurate histopathologic and molecular diagnosis. Steroids should be withheld before biopsy if CNS lymphoma is suspected.</li>
+      <li><b>Imaging:</b> MRI of the brain and spine (with and without contrast) is the gold standard for defining tumor volumes and monitoring response. CT can be used if MRI is contraindicated. Advanced techniques like MR spectroscopy, MR perfusion, and PET scanning may differentiate tumor from radiation necrosis.</li>
+      <li><b>Patient Positioning & Immobilization:</b> Supine position with appropriate neck flexion. Head, neck, and body immobilization using thermoplastic masks or stereotactic frames is crucial for reproducibility (variability not more than 2-3 mm).
+        <ul>
+          <li><b>Common Setup:</b> Supine, headfirst, with a thermoplastic mask, knee bolster, feet-banded, and hands clasped or holding a ring.</li>
+          <li><b>Fiducials:</b> Placed laterally on each side of the mask (just superior to the ear) and midline anteriorly (superior to the orbits) for reference.</li>
+          <li><b>Documentation:</b> Thorough documentation of patient position and set-up instructions with lateral and anterior photographs, including all immobilization devices, positioning aids, and close-up images of fiducials/reference marks, bolus, or complexities.</li>
+        </ul>
+      </li>
+      <li><b>Special Simulation Considerations:</b>
+        <ul>
+          <li><b>Claustrophobia:</b> May require premedication, open face masks, or eyes cut out of mask. Proper coaching, pre-sim education, music, and updates during treatment can help.</li>
+          <li><b>Seizure Risk:</b> Safety strap across arms and chest may be needed.</li>
+          <li><b>Mask Shrinking/Facial Swelling:</b> A shim can be placed under the headrest during mask formation (must be removed after the mask cools).</li>
+        </ul>
+      </li>
+      <li><b>Target Volume Delineation:</b>
+        <ul>
+          <li><b>GTV (Gross Tumor Volume):</b> Contrast-enhancing tumor on MRI/CT, or residual visible tumor post-op.</li>
+          <li><b>CTV (Clinical Target Volume):</b> GTV expanded by a margin (e.g., 1-2 cm for low-grade, 1-2 cm for high-grade, editing off anatomic boundaries) to account for microscopic disease.</li>
+          <li><b>PTV (Planning Target Volume):</b> CTV plus a 3-5 mm margin for daily setup errors and image registration. Daily image guidance is required for smaller PTV margins.</li>
+        </ul>
+      </li>
+      <li><b>Dose Constraints for Organs at Risk (OARs):</b> Strict limits for critical structures like optic chiasm (50 Gy), optic nerves (50 Gy), globes, brainstem (50 Gy), spinal cord (47 Gy for 20 cm), cochlea, and uninvolved normal brain (47 Gy for necrosis/infarction). Lacrimal gland (26 Gy for dry eye), Parotid (32 Gy for xerostomia), Ear (30 Gy for acute serous otitis, 55 Gy for chronic serous otitis). Proton therapy and IMRT are often used to spare OARs.</li>
+      <li><b>Techniques:</b>
+        <ul>
+          <li><b>Standard Fractionated EBRT:</b> Most common approach, administered within a limited field.</li>
+          <li><b>Hypofractionated RT:</b> Appropriate for select patients (e.g., older adults, poor performance status) to reduce treatment time.</li>
+          <li><b>Stereotactic Radiosurgery (SRS) / Stereotactic Body Radiotherapy (SBRT):</b> Highly focused, high-dose delivery in 1-5 fractions, used for small, well-defined lesions, or re-irradiation.</li>
+          <li><b>IMRT/VMAT:</b> Provide superior dosimetric target coverage and better sparing of critical structures.</li>
+          <li><b>Proton Therapy:</b> May reduce radiation dose to developing brain tissue and potentially diminish toxicities without compromising disease control, especially for low-grade gliomas.</li>
+        </ul>
+      </li>
+      <li><b>Supportive Care:</b> Medical management of symptoms (e.g., corticosteroids for edema, anticonvulsants for seizures). Palliative care integration is important.</li>
+    </ul>
+  </div>
+
+  <div id="low-grade-glioma" class="tab-content">
+    <h3>Adult Low-Grade Diffuse Glioma (WHO Grade 2 Oligodendroglioma, IDH-mutant, 1p19q codeleted; WHO Grade 2 IDH-Mutant Astrocytoma)</h3>
+    <p>Low-grade gliomas (LGG) are a diverse group of relatively uncommon malignancies. Molecular markers (IDH mutation, 1p/19q codeletion, ATRX, TERT promoter) are crucial for accurate diagnosis and prognosis.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li><b>Adjuvant RT:</b> For incompletely resected or biopsied tumors, or if significant growth/neurologic symptom development occurs.</li>
+      <li><b>Combined Modality:</b> Often with chemotherapy (PCV or TMZ-based regimens).</li>
+      <li><b>Delayed RT:</b> Observation may be a reasonable initial option for asymptomatic/stable patients, deferring RT.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Risk Stratification:</b> Based on age (≥40 years), extent of resection (STR), and molecular markers.</li>
+      <li><b>Imaging:</b> Pre- and postoperative MRI (T2 FLAIR and T1 post-contrast sequences) to define GTV and assess extent of resection.</li>
+      <li><b>Molecular Testing:</b> IDH1/2 mutation, 1p/19q codeletion, ATRX, TERT promoter.</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Patient Positioning:</b> Supine position with immobilization (as per general CNS principles).</li>
+      <li><b>Scan Parameters:</b> Vertex to mid-neck (or as specified by physician). CT simulation and/or MR imaging with contrast.</li>
+      <li><b>Target Volume Delineation:</b>
+        <ul>
+          <li><b>GTV:</b> T2 FLAIR or T1 post-contrast enhancement.</li>
+          <li><b>CTV:</b> GTV + 1-2 cm margin, editing off anatomic boundaries.</li>
+          <li><b>PTV:</b> CTV + 3-5 mm margin. Daily image guidance is required if smaller PTV margins are used (≤3 mm).</li>
+        </ul>
+      </li>
+      <li><b>OARs:</b> Minimize dose to normal brain, especially for younger patients. Proton therapy can be considered.</li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>Standard:</b> 50-54 Gy in 1.8-2.0 Gy fractions. Doses as low as 45 Gy may be appropriate.</li>
+      <li><b>IDH wild-type LGG:</b> May consider 59.4-60 Gy due to worse prognosis.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Techniques:</b> 3D-CRT or IMRT. Proton therapy may reduce toxicity. Historically, 2 or 3-field techniques (two parallel opposed lateral beams and perhaps a third (anterior, posterior, or vertex) beam) were used. Wedges were common to compensate for the round shape of the head and improve dose uniformity. Modern treatments incorporate 3D conformal planning (forward-planning) or IMRT/VMAT (dynamic MLCs, treatment arcs, inverse-planning) with approximately 5 different beams and couch positions.</li>
+      <li><b>Sequencing:</b> RT followed by PCV (procarbazine, lomustine, vincristine) is a Category 1 recommendation for high-risk LGG. RT with concurrent and/or adjuvant TMZ (temozolomide) is also an option.</li>
+      <li><b>Follow-up:</b> Brain MRI every 3-6 months for 5 years, then annually.</li>
+    </ul>
+  </div>
+
+  <div id="high-grade-glioma" class="tab-content">
+    <h3>High-Grade Diffuse Glioma (Glioblastoma, WHO Grade 3 Oligodendroglioma, WHO Grade 3 or 4 IDH-Mutant Astrocytoma)</h3>
+    <p>High-grade gliomas (HGG) are aggressive tumors with a challenging prognosis. Glioblastoma (WHO Grade 4) is the most common malignant brain tumor in adults.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li><b>Adjuvant RT:</b> Standard after maximal safe resection to improve local control and survival.</li>
+      <li><b>Definitive RT:</b> For unresectable tumors.</li>
+      <li><b>Re-irradiation:</b> Considered in select recurrent cases, especially with highly focused techniques.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Surgical Goals:</b> Obtain diagnosis, alleviate symptoms, maximize safe resection (ideally GTR).</li>
+      <li><b>Imaging:</b> Postoperative MRI (contrast-enhanced T1 and FLAIR/T2) within 48 hours to assess extent of resection.</li>
+      <li><b>Molecular Testing:</b> MGMT promoter methylation status (essential for all HGG), IDH1/2 mutation, 1p/19q codeletion, ATRX, TERT promoter, BRAF, H3-3A mutations. NGS is preferred.</li>
+      <li><b>Supportive Care:</b> Corticosteroids for cerebral edema, anticonvulsants for seizures.</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Patient Positioning:</b> Supine position with immobilization (as per general CNS principles).</li>
+      <li><b>Scan Parameters:</b> Vertex to mid-neck (or as specified by physician). CT simulation and/or MR imaging with contrast.</li>
+      <li><b>Target Volume Delineation:</b>
+        <ul>
+          <li><b>GTV:</b> Gross tumor (post-op residual and/or surgical cavity) based on pre- and postoperative MRI imaging using post-contrast T1 and FLAIR/T2 sequences.</li>
+          <li><b>CTV:</b> GTV + 1-2 cm margin (historically 2cm, smaller expansions are supported). This accounts for sub-diagnostic tumor infiltration.</li>
+          <li><b>PTV:</b> CTV + 3-5 mm margin to account for daily setup errors and image registration. Daily image guidance is required if smaller PTV margins are used (≤3 mm).</li>
+          <li><b>Boost Target Volume:</b> Typically encompasses only the gross residual tumor and the resection cavity.</li>
+        </ul>
+      </li>
+      <li><b>OARs:</b> Minimize dose to normal brain, brainstem, optic structures.</li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>Standard:</b> 60 Gy in 2.0 Gy fractions or 59.4 Gy in 1.8 Gy fractions.</li>
+      <li><b>Lower Doses:</b> 54-55.8 Gy (1.8 Gy/fx) or 57 Gy (1.9 Gy/fx) for very large tumors, brainstem/spinal cord involvement, or Grade 3 astrocytoma.</li>
+      <li><b>Boost Doses:</b> Initial phase RT plan receives 46 Gy in 2 Gy fractions or 45-50.4 Gy in 1.8 Gy fractions. Boost plan then receives 14 Gy in 2 Gy fractions or 9-14.4 Gy in 1.8 Gy fractions.</li>
+      <li><b>Hypofractionated:</b> For older/poor PS patients: 34 Gy/10 fx, 40.05 Gy/15 fx, or 25 Gy/5 fx.</li>
+      <li><b>Re-irradiation:</b> Highly focused RT (e.g., 35 Gy in 10 fx for recurrent glioblastoma).</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Techniques:</b> 3D-CRT, IMRT (preferred), or proton therapy. Historically, 2 or 3-field techniques (two parallel opposed lateral beams and perhaps a third (anterior, posterior, or vertex) beam) were used. Wedges were common to compensate for the round shape of the head and improve dose uniformity. Modern treatments incorporate 3D conformal planning (forward-planning) or IMRT/VMAT (dynamic MLCs, treatment arcs, inverse-planning) with approximately 5 different beams and couch positions. Dynamic plans are more conformal, better OAR sparing, and allow for potential dose escalation.</li>
+      <li><b>Concurrent Chemoradiation:</b> Standard for glioblastoma (TMZ). For Grade 3 oligodendroglioma/astrocytoma, RT + PCV or RT + TMZ.</li>
+      <li><b>Alternating Electric Field Therapy:</b> FDA-approved for newly diagnosed glioblastoma (with TMZ) and recurrent glioblastoma.</li>
+      <li><b>Follow-up:</b> Brain MRI 2-8 weeks post-RT, then every 2-4 months for 3 years, then every 3-6 months indefinitely. Monitor for pseudoprogression.</li>
+    </ul>
+  </div>
+
+  <div id="ependymoma" class="tab-content">
+    <h3>Adult Intracranial and Spinal Ependymoma (Excluding Subependymoma)</h3>
+    <p>Ependymomas are rare CNS tumors, more common in the spinal canal than intracranially in adults. They are classified into Grade 2 (classic) and Grade 3 (anaplastic), with myxopapillary ependymomas (spinal) also classified as Grade 2.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li><b>Adjuvant RT:</b> Standard postoperative management for all cases except completely resected Grade 1 spinal ependymomas.</li>
+      <li><b>Craniospinal Irradiation (CSI):</b> For evidence of leptomeningeal dissemination.</li>
+      <li><b>Re-irradiation:</b> For local recurrence, sometimes with SRS boost.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Surgical Goals:</b> Maximal safe resection. Image-confirmed GTR is preferred.</li>
+      <li><b>Imaging:</b> Contrast-enhanced brain/spine MRI. Spine MRI should be delayed 2-3 weeks post-op to avoid artifacts.</li>
+      <li><b>CSF Analysis:</b> Lumbar puncture for CSF cytology if clinical concern for meningeal dissemination (delay 2 weeks post-op for false positive avoidance).</li>
+      <li><b>Molecular Testing:</b> ZFTA and YAP1 fusions (supratentorial), MYCN amplification (spinal), H3K27 trimethylation (posterior fossa).</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Target Volume Delineation:</b>
+        <ul>
+          <li><b>GTV:</b> Preoperative tumor volume and any macroscopic residual disease.</li>
+          <li><b>CTV:</b> GTV + 1 cm (classic ependymomas) or 1.5 cm (anaplastic/myxopapillary).</li>
+          <li><b>PTV:</b> CTV + 1-1.5 cm margin.</li>
+        </ul>
+      </li>
+      <li><b>OARs:</b> Brainstem, temporal lobes, middle/inner ear regions (for intracranial). Spinal cord (for spinal).</li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>Local RT:</b> 54-59.4 Gy in 1.8-2.0 Gy fractions (Grade 2/3). Myxopapillary: 50.4 Gy.</li>
+      <li><b>CSI:</b> 36 Gy in 1.8 Gy fractions to whole brain and spine, followed by local boost to primary site (total 54-59.4 Gy). For gross spinal lesions below conus, higher doses (54-60 Gy). To reduce toxicity from CSI in adults, consider IMRT or protons.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Techniques:</b> 3D-CRT, IMRT, or proton therapy (especially for CSI to reduce toxicity).</li>
+      <li><b>Chemotherapy:</b> Role is poorly defined in adults. May be used for recurrence (platinum-based, etoposide, TMZ, bevacizumab).</li>
+      <li><b>Follow-up:</b> Brain/spine MRI every 3-4 months for 1 year, then every 4-6 months for 2-4 years, then every 6-12 months for 5-10 years, then as clinically indicated.</li>
+    </ul>
+  </div>
+
+  <div id="medulloblastoma" class="tab-content">
+    <h3>Adult Medulloblastoma</h3>
+    <p>Adult medulloblastoma is a rare, aggressive brain tumor, typically arising from the cerebellum. It has a propensity for CSF dissemination and is classified into molecular subtypes (WNT-activated, SHH-activated, non-WNT/non-SHH).</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li><b>Adjuvant RT:</b> Standard of care following surgery, typically craniospinal irradiation (CSI).</li>
+      <li><b>CSI Dose:</b> 30-36 Gy to craniospinal axis, with boost to primary site. Reduced dose CSI (23.4 Gy) with systemic therapy is an option.</li>
+      <li><b>Palliative RT:</b> For symptomatic recurrence.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Surgical Goals:</b> Maximal safe resection to establish diagnosis, relieve symptoms, and maximize local control. Postoperative MRI within 48 hours.</li>
+      <li><b>Staging:</b> Brain and spine MRI, CSF analysis via lumbar puncture (delayed 2-3 weeks post-op to avoid false positives). Molecular analysis for subtypes.</li>
+      <li><b>Risk Stratification:</b> Standard risk (no metastasis, small residual, classic/desmoplastic histology) vs. High risk (unresectable/large residual, disseminated, large cell histology).</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Patient Positioning:</b> Patient usually prone with careful immobilization. Historically, prone position was used to visualize the spine and gap between spinal fields. Today, supine is more comfortable and reproducible, allowing for airway access if anesthesia is required.
+        <ul>
+          <li><b>Setup:</b> Patient positioned straight with arms at their side. Thermoplastic head and shoulder mask for head, neck, and upper spine alignment. Vacloc for lower extremities/pelvis/low spine alignment. For small children, a body vacloc abutting the headrest and a brain mask can be used. Custom headrests can improve comfort and reproducibility.</li>
+          <li><b>Localization Marks:</b> Lateral and anterior aspects of the brain field, straightening marks down the abdomen (spine), lateral leveling marks (rotation).</li>
+          <li><b>Scan Parameters:</b> Extend from the patient's vertex through the sacrum.</li>
+        </ul>
+      </li>
+      <li><b>Target Volume Delineation:</b>
+        <ul>
+          <li><b>CSI:</b> Treats all parts of the cranial and spinal cavities where CSF flows, terminating at the second sacral vertebrae (S2).</li>
+          <li><b>Cranial Field Borders:</b> Same as whole brain fields, but inferior border extends from mastoid tip to approximately C5-C7 to include the cervical spinal cord with a 2 cm margin. Treating the cervical portion of the spine with the lateral brain fields blocks anterior structures from posterior spine field exit dose. A lower superior border of the posterior spine field reduces divergence towards the mandible.</li>
+          <li><b>Spine Field:</b> Uses an abutting or feathering technique, extends to approximately S2. Feathering uses MLCs to blend the dose at field junctions to avoid overdosing the spinal cord.</li>
+          <li><b>Boost:</b> Primary brain site (posterior fossa).</li>
+        </ul>
+      </li>
+      <li><b>Field Matching (for static fields, if more than one spine field):</b>
+        <ul>
+          <li><b>Gap Calculation:</b> Measures separation of two fields on skin surface to ensure overlap at depth anterior to spinal cord. Easiest in prone position.</li>
+          <li><b>Match Line Shifting:</b> 0.5-1 cm shift every 8-12 Gy (approximately 2-3 times during treatment) to avoid hot/cold spots. Superior flash beyond vertex needed.</li>
+          <li><b>Couch and Collimator Rotations (for 3D plans):</b> To prevent beam overlap. Cephalad aspect of spine field diverges towards cranial field; match collimator rotation of cranial field to spine field divergence. Inferior cranial field divergence into spinal field; rotate foot of couch toward gantry until cranial field inferior border matches spine field superior aspect (approx. 5 degrees).</li>
+        </ul>
+      </li>
+      <li><b>OARs:</b> Spinal cord, brainstem, eyes, inner ear. Proton therapy or IMRT for OAR sparing.</li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>Standard Risk:</b>
+        <ul>
+          <li>Standard dose CSI: 36 Gy/20 fractions followed by posterior fossa boost to 19.8 Gy/11 fractions (total 55.8 Gy).</li>
+          <li>Low CSI dose: 23.4 Gy CSI with concurrent vincristine, followed by posterior fossa boost to total 55.8 Gy/31 fractions.</li>
+        </ul>
+      </li>
+      <li><b>High-Risk:</b> Standard dose CSI of 36 Gy/20 fractions followed by posterior fossa boost to 19.8 Gy/11 fractions (total 55.8 Gy). If leptomeningeal seedings, 5-10 Gy boost to whole spine after CSI.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Techniques:</b> 3D-CRT, IMRT, or proton therapy for CSI. TomoTherapy can irradiate large target volumes continuously and homogeneously without gaps/junctions.</li>
+      <li><b>Concurrent Chemotherapy:</b> Vincristine often omitted in adults due to toxicity.</li>
+      <li><b>Sequencing:</b> RT typically follows surgery. Adjuvant systemic therapy after RT.</li>
+      <li><b>Follow-up:</b> Brain MRI every 3 months for 2 years, then every 6-12 months for 5-10 years, then annually indefinitely. Concurrent spine imaging and CSF sampling as indicated.</li>
+    </ul>
+  </div>
+
+  <div id="pcns-lymphoma" class="tab-content">
+    <h3>Primary CNS Lymphoma (PCNSL)</h3>
+    <p>PCNSL is an aggressive non-Hodgkin lymphoma confined to the brain, spinal cord, eye, or leptomeninges without systemic involvement. It typically affects older adults and is often multifocal.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li><b>Consolidation:</b> Low-dose WBRT (23.4 Gy) after complete response to systemic therapy.</li>
+      <li><b>Primary RT:</b> For patients not candidates for systemic therapy (24-36 Gy to whole brain + boost to 45 Gy).</li>
+      <li><b>Focal RT:</b> For residual disease or symptomatic sites.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Diagnosis:</b> Brain biopsy (stereotactic preferred). Vitreous fluid biopsy if ocular symptoms. Hold steroids before biopsy if possible.</li>
+      <li><b>Staging:</b> Full ophthalmologic exam, spine MRI, lumbar puncture for CSF analysis (flow cytometry, cytology, cell count, gene rearrangements). Whole body PET/CT or contrast-enhanced C/A/P CT. Bone marrow biopsy (category 2B). Testicular ultrasound for men >60 years. HIV status.</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Patient Positioning:</b> Supine with immobilization (as per general CNS principles).</li>
+      <li><b>Scan Parameters:</b> Vertex to mid-neck (or as specified by physician). CT simulation and/or MR imaging with contrast.</li>
+      <li><b>Target Volume Delineation:</b>
+        <ul>
+          <li><b>WBRT:</b> Whole brain.</li>
+          <li><b>Limited Field:</b> Gross disease + margin for boost.</li>
+        </ul>
+      </li>
+      <li><b>WBRT Field Borders (Two-field technique using opposed laterals):</b>
+        <ul>
+          <li><b>Field Size:</b> Approximately 22cm x 17cm.</li>
+          <li><b>Posterior, Superior, & Anterior:</b> 1-2cm flash/field falloff (verify with field light).</li>
+          <li><b>Inferior:</b> Superior orbital ridge to 1-2cm below the mastoid tip (verify eye block).</li>
+          <li><b>Avoiding Beam Divergence into opposite eye:</b>
+            <ul>
+              <li><b>Option 1:</b> Angle each beam posteriorly a few degrees until the beam divergence matches the opposing side's outer canthus. Beams should match anteriorly just posterior to the lenses of the eyes.</li>
+              <li><b>Option 2:</b> Use a half-beam block. Rotate the collimator to match the inferior border (superior orbital ridge and mastoid tip). Isocenter will fall near the EAM. Ensure adequate light field falloff in anterior, superior, and posterior directions.</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li><b>OARs:</b> Standard brain OARs.</li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>Induction:</b> High-dose methotrexate-based regimens (e.g., with rituximab, TMZ). Intra-CSF therapy (methotrexate, cytarabine, rituximab) if CSF positive or spinal MRI positive.</li>
+      <li><b>Consolidation:</b> High-dose systemic therapy with stem cell rescue (e.g., cytarabine + thiotepa followed by carmustine + thiotepa) or low-dose WBRT (23.4 Gy).</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Techniques:</b> 3D-CRT, IMRT.</li>
+      <li><b>Sequencing:</b> Systemic therapy is primary. RT for consolidation or if systemic therapy is not feasible.</li>
+      <li><b>Supportive Care:</b> Steroids for symptom relief (use judiciously before biopsy). Glucarpidase for methotrexate-induced renal dysfunction.</li>
+      <li><b>Follow-up:</b> Brain MRI every 3 months for 2 years, then every 6 months for 3 years, then annually indefinitely. CSF sampling and spine imaging as clinically indicated.</li>
+    </ul>
+  </div>
+
+  <div id="primary-spinal" class="tab-content">
+    <h3>Primary Spinal Cord Tumors</h3>
+    <p>Primary spinal cord tumors are rare, classified as extradural, intradural-extramedullary, and intradural-intramedullary. This section focuses on intradural primary spinal tumors.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li><b>Adjuvant RT:</b> For incompletely resected tumors or specific histologies (e.g., myxopapillary ependymoma).</li>
+      <li><b>Definitive RT:</b> For unresectable/symptomatic tumors.</li>
+      <li><b>SRS/SBRT:</b> For focal lesions (e.g., hemangioblastoma).</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Clinical Evaluation:</b> Pain (worsens at night), progressive motor weakness, sensory loss, autonomic dysfunction.</li>
+      <li><b>Imaging:</b> MRI of spine (gold standard). CT myelogram if MRI contraindicated.</li>
+      <li><b>Biopsy:</b> To confirm diagnosis.</li>
+      <li><b>Molecular:</b> Consider screening for VHL syndrome (for hemangioblastoma), neurofibromatosis.</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Patient Positioning:</b> Supine with appropriate immobilization (as per general CNS principles).</li>
+      <li><b>Scan Parameters:</b> Extend from vertex through the sacrum.</li>
+      <li><b>Target Volume Delineation:</b>
+        <ul>
+          <li><b>GTV:</b> Solid portion of tumor including intra-tumoral cysts.</li>
+          <li><b>CTV:</b> GTV + 0.5-1.5 cm margin (depending on grade).</li>
+          <li><b>PTV:</b> CTV + 1-1.5 cm margin.</li>
+        </ul>
+      </li>
+      <li><b>OARs:</b> Spinal cord (strict dose limits), surrounding normal tissues.</li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>Low-grade glioma:</b> 50.4-54 Gy in 1.8 Gy fractions.</li>
+      <li><b>High-grade glioma:</b> 54 Gy.</li>
+      <li><b>Ependymoma:</b> 50.4-60 Gy. Myxopapillary: 50.4 Gy.</li>
+      <li><b>Meningioma (STR):</b> 50-54 Gy.</li>
+      <li><b>SRS/SBRT:</b> Doses individualized for focal tumors.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Primary Treatment:</b> Maximal safe surgical resection is preferred for symptomatic, resectable tumors. Observation for asymptomatic low-grade tumors.</li>
+      <li><b>Techniques:</b> 3D-CRT, IMRT, or proton therapy to spare OARs. AP/PA beam arrangements with MLC shaping are often appropriate for symmetrical irradiation of vertebrae, avoiding contralateral kidney, and minimizing whole body doses.</li>
+      <li><b>Systemic Therapy:</b> Limited role due to lack of evidence. Belzutifan for VHL-associated hemangioblastoma.</li>
+      <li><b>Follow-up:</b> Spinal MRI every 3-6 months for 5 years, then annually indefinitely. More frequent for high-grade.</li>
+    </ul>
+  </div>
+
+  <div id="meningioma" class="tab-content">
+    <h3>Meningiomas</h3>
+    <p>Meningiomas are extra-axial CNS tumors arising from arachnoid cap cells. Most are benign (WHO Grade 1), but atypical (Grade 2) and malignant (Grade 3) forms exist.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li><b>Primary RT:</b> For surgically inaccessible tumors or patients deemed poor surgical candidates.</li>
+      <li><b>Adjuvant RT:</b> For Grade 3 (malignant) meningiomas (even after GTR) and Grade 2 (atypical) with incomplete resection. May be considered for Grade 2 with complete resection or symptomatic Grade 1.</li>
+      <li><b>SRS/Fractionated SRS:</b> For small (<3.5 cm) tumors, recurrent, or partially resected tumors, or as primary therapy for inaccessible tumors.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Imaging:</b> Contrast-enhanced CT/MRI (MRI preferred). CT for bone remodeling. Octreotide scan or DOTATATE PET/CT/MRI for diagnostic doubt.</li>
+      <li><b>Diagnosis:</b> Biopsy is essential.</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Patient Positioning:</b> Supine with immobilization (as per general CNS principles).</li>
+      <li><b>Scan Parameters:</b> Vertex to mid-neck (or as specified by physician). CT simulation and/or MR imaging with contrast.</li>
+      <li><b>Target Volume Delineation:</b>
+        <ul>
+          <li><b>Grade 1:</b> GTV + 1 cm margin.</li>
+          <li><b>Grade 2:</b> GTV + 0.5-2 cm margin (microscopic disease).</li>
+          <li><b>Grade 3:</b> GTV + 2-3 cm margin (malignant infiltration).</li>
+        </ul>
+      </li>
+      <li><b>OARs:</b> Critical structures (e.g., optic nerves, brainstem).</li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>Grade 1:</b> 50-54 Gy (1.8-2.0 Gy/fx). SRS: 12-16 Gy (single fx) or 25-30 Gy (5 fx).</li>
+      <li><b>Grade 2:</b> 54-60 Gy (1.8-2.0 Gy/fx). Higher for STR/recurrent. SRS: 16-20 Gy (single fx) or 27.5-30 Gy (5 fx).</li>
+      <li><b>Grade 3:</b> 59.4-60 Gy (1.8-2.0 Gy/fx). Higher doses (66-70 Gy) for gross tumor.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Primary Treatment:</b> Surgical resection (GTR preferred if feasible). Observation for small, asymptomatic tumors.</li>
+      <li><b>Techniques:</b> Highly conformal RT (3D-CRT, IMRT, VMAT, proton therapy). Stereotactic/image-guided therapy.</li>
+      <li><b>Systemic Therapy:</b> For recurrent/refractory cases. Sunitinib, Bevacizumab (± everolimus), Somatostatin analogues (± everolimus).</li>
+      <li><b>Follow-up:</b> MRI every 3-12 months (depending on grade/recurrence risk), then annually or less frequently.</li>
+    </ul>
+  </div>
+
+  <div id="brain-metastases" class="tab-content">
+    <h3>Brain Metastases (Limited & Extensive)</h3>
+    <p>Brain metastases are the most common intracranial tumors in adults. Management strategies depend on the number and volume of lesions, patient performance status, and systemic disease control.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li><b>SRS:</b> Preferred for limited brain metastases (1-10 lesions, small total volume). Offers comparable OS and superior cognitive preservation vs. WBRT. Also used post-resection to surgical cavity.</li>
+      <li><b>WBRT:</b> For extensive brain metastases, diffuse disease, or if SRS/surgery are not feasible. Can be used with hippocampal avoidance (HA-WBRT) and memantine to preserve cognitive function.</li>
+      <li><b>Palliative RT:</b> For symptom control.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Imaging:</b> Contrast-enhanced brain MRI (preferred). Chest/abdomen/pelvis CT or whole body PET/CT to identify primary/other metastases.</li>
+      <li><b>Biopsy:</b> If no known primary or concern about diagnosis.</li>
+      <li><b>Systemic Disease:</b> Assess extent and control of systemic disease.</li>
+      <li><b>Prognostic Factors:</b> Number/volume of metastases, PS, age, primary tumor histology.</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Patient Positioning:</b> Supine with immobilization (as per general CNS principles).</li>
+      <li><b>Scan Parameters:</b> Vertex to mid-neck (or as specified by physician). CT simulation and/or MR imaging with contrast.</li>
+      <li><b>Target Volume Delineation:</b>
+        <ul>
+          <li><b>SRS:</b> Gross lesion(s) with tight margins. Post-op cavity with specific contouring guidelines.</li>
+          <li><b>WBRT:</b> Entire brain. HA-WBRT spares hippocampi.</li>
+        </ul>
+      </li>
+      <li><b>SRS Treatment Planning:</b> MRI with thick 1-mm slice T1+c sequence recommended, obtained within 14 days of SRS initiation.</li>
+      <li><b>OARs:</b> Hippocampi (for HA-WBRT), optic structures, brainstem.</li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>SRS:</b> Maximum marginal doses from 15-24 Gy based on tumor volume.
+        <ul>
+          <li>Lesions ≤20 mm: up to 24 Gy.</li>
+          <li>Lesions 21-30 mm: up to 18 Gy.</li>
+          <li>Lesions 31-40 mm: up to 15 Gy.</li>
+          <li>Larger tumors (>2 cm, >30 mm, or >4 cm): Fractionated SRS (24-27 Gy in 3 fractions, 25-35 Gy in 5 fractions).</li>
+        </ul>
+      </li>
+      <li><b>Postoperative SRS:</b> Common dose schedules include 16-20 Gy in 1 fraction, 24-27 Gy in 3 fractions, and 30 Gy in 5 fractions.</li>
+      <li><b>WBRT:</b> 30 Gy in 10 fractions (standard). 20 Gy in 5 fractions (for poor prognosis/symptomatic). HA-WBRT (plus memantine) 30 Gy in 10 fractions preferred for patients with better prognosis (≥4 months) and no metastases within 5 mm of hippocampi.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Techniques:</b> SRS (Gamma Knife, LINAC-based, Cyberknife), 3D-CRT, IMRT.</li>
+      <li><b>Systemic Therapy:</b> Increasingly used upfront, especially for CNS-active agents.</li>
+      <li><b>Sequencing:</b> SRS alone is preferred for limited disease. WBRT for extensive disease. Post-op SRS to cavity. Systemic therapy may defer RT.</li>
+      <li><b>Supportive Care:</b> Corticosteroids for edema, memantine with WBRT.</li>
+      <li><b>Follow-up:</b> Brain MRI every 2-3 months for 1-2 years, then every 4-6 months indefinitely.</li>
+    </ul>
+  </div>
+
+  <div id="leptomeningeal" class="tab-content">
+    <h3>Leptomeningeal Metastases (LM)</h3>
+    <p>Leptomeningeal metastases (neoplastic meningitis) involve multifocal seeding of the leptomeninges by malignant cells, leading to significant morbidity and mortality. Common from breast, lung, and melanoma.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li><b>Focal RT:</b> For symptomatic sites (e.g., cranial nerve palsies, spinal cord compression), CSF flow obstruction, or bulky disease.</li>
+      <li><b>Craniospinal Irradiation (CSI):</b> For CNS and CSF disease control in select patients, but associated with substantial toxicity.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Clinical Evaluation:</b> Neurologic evaluation for cranial nerve palsies, spinal cord symptoms (pain, motor/sensory dysfunction), headache, nausea/vomiting, confusion.</li>
+      <li><b>Diagnosis:</b> CSF analysis (cell count, differential, glucose, protein, cytology for tumor cells, flow cytometry for hematologic malignancies). Brain and spine MRI.</li>
+      <li><b>Risk Stratification:</b> Good risk (KPS ≥60, no major neurologic deficits, minimal systemic disease) vs. Poor risk (KPS <60, multiple/serious deficits, extensive systemic disease).</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Patient Positioning:</b> Supine with immobilization (as per general CNS principles).</li>
+      <li><b>Scan Parameters:</b> Extend from vertex through the sacrum.</li>
+      <li><b>Target Volume Delineation:</b> Symptomatic sites, areas of CSF flow obstruction, bulky disease. CSI covers entire neuraxis.</li>
+      <li><b>OARs:</b> Bone marrow (for CSI), brain, spinal cord.</li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>Focal RT:</b> 20-30 Gy in 5-10 fractions.</li>
+      <li><b>CSI:</b> 30 Gy in 10 fractions. Techniques maximizing bone marrow sparing should be considered (protons, conformal photon-based techniques/IMRT).</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Systemic Therapy:</b> Emphasize drugs with good CNS penetration.</li>
+      <li><b>Intra-CSF Therapy:</b> Via lumbar puncture or Ommaya reservoir (methotrexate, cytarabine, thiotepa, rituximab, topotecan, etoposide, trastuzumab).</li>
+      <li><b>Sequencing:</b> Systemic therapy is primary. RT for symptom alleviation or CSF flow correction.</li>
+      <li><b>Supportive Care:</b> Corticosteroids for symptoms. CSF flow scan before intra-CSF therapy if obstruction suspected.</li>
+      <li><b>Follow-up:</b> Re-evaluate CSF cytology every 4-8 weeks. MRI of spine/brain for new/worsening symptoms.</li>
+    </ul>
+  </div>
+
+  <div id="metastatic-spine" class="tab-content">
+    <h3>Metastatic Spine Tumors</h3>
+    <p>Spinal metastases are common, leading to pain, neurological deficits, and spinal instability. Management aims for palliation and functional preservation.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li><b>Primary RT:</b> For radiosensitive tumors (lymphoma, myeloma, SCLC, germ cell tumors) without spinal instability.</li>
+      <li><b>Adjuvant RT:</b> After surgical decompression/stabilization.</li>
+      <li><b>SBRT:</b> Preferred for oligometastatic lesions, radioresistant tumors (RCC, melanoma, sarcoma), or re-irradiation.</li>
+      <li><b>Palliative RT:</b> For pain relief (8 Gy/1 fx, 20 Gy/5 fx, 30 Gy/10 fx).</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Clinical Evaluation:</b> Severe, new, or progressive pain; neurologic symptoms (motor weakness, sensory loss, myelopathy, cauda equina syndrome).</li>
+      <li><b>Imaging:</b> Spinal MRI (urgent if neurologic symptoms). CT myelogram if MRI contraindicated. Systemic imaging (CT chest/abdomen/pelvis, PET/CT, bone scan).</li>
+      <li><b>Spinal Instability:</b> Assess using Spinal Instability Neoplastic Score (SINS).</li>
+      <li><b>Steroids:</b> Dexamethasone (4 mg q6h or higher) for cord compression.</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Patient Positioning:</b> Supine or prone with immobilization (as per general CNS principles).</li>
+      <li><b>Scan Parameters:</b> Extend from vertex through the sacrum.</li>
+      <li><b>Target Volume Delineation:</b> Vertebral body metastases, epidural disease.</li>
+      <li><b>OARs:</b> Spinal cord, nerve roots.</li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>Conventional EBRT:</b> 8 Gy/1 fx, 20 Gy/5 fx, 30 Gy/10 fx.</li>
+      <li><b>SBRT:</b> 16-24 Gy/1 fx; 24-28 Gy/2 fx; 24-30 Gy/3 fx; 30-40 Gy/5 fx. Common recommended doses for spine SRS/SBRT.</li>
+      <li><b>Re-irradiation:</b> Doses individualized with careful consideration of cumulative dose to spinal cord.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Primary Treatment:</b>
+        <ul>
+          <li><b>Spinal Cord Compression:</b> Decompressive surgery + adjuvant RT (category 1) if unstable/contraindication to RT. Primary RT alone for radiosensitive tumors without instability.</li>
+          <li><b>No Cord Compression, Fracture/Instability:</b> EBRT. SBRT for oligometastatic/radioresistant. Systemic therapy for chemosensitive.</li>
+          <li><b>Fracture/Instability:</b> Surgical stabilization/vertebral augmentation + adjuvant RT.</li>
+        </ul>
+      </li>
+      <li><b>Techniques:</b> 3D-CRT, IMRT, SBRT. AP/PA beam arrangements with MLC shaping are often appropriate for symmetrical irradiation of vertebrae, avoiding contralateral kidney, and minimizing whole body doses.</li>
+      <li><b>Supportive Care:</b> Pain management, physical/occupational therapy.</li>
+      <li><b>Follow-up:</b> Spine MRI/CT 1-3 months post-treatment, then every 3-4 months for 1 year, then as clinically indicated.</li>
+    </ul>
+  </div>
+
+  <div class="references">
+    <h3>References</h3>
+    <ul>
+      <li>Rathi, A. K. (n.d.). <i>Step by Step Radiation Therapy: Treatment and Planning</i>. Jaypee Brothers Medical Publishers.</li>
+      <li>National Comprehensive Cancer Network. (2025). <i>NCCN Clinical Practice Guidelines in Oncology (NCCN Guidelines®): Central Nervous System Cancers</i> (Version 4.2024).</li>
+      <li>Stiles, J. (2023). <i>Localization & Treatment Procedures in Radiation Therapy</i>. Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  function openCNSTab(evt, tabId) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tab-content");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+      tabcontent[i].classList.remove("active");
+    }
+    tablinks = document.getElementsByClassName("tab-button");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].classList.remove("active");
+    }
+    document.getElementById(tabId).style.display = "block";
+    document.getElementById(tabId).classList.add("active");
+    evt.currentTarget.classList.add("active");
+  }
+
+  // Set the first tab as active by default when the page loads
+  document.addEventListener("DOMContentLoaded", function() {
+    document.querySelector(".tab-button").click();
+  });
+</script>
+
+</body>
+</html>
