@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body {
+    font-family: sans-serif;
+    line-height: 1.6;
+    margin: 20px;
+    background-color: #f4f4f4;
+    color: #333;
+  }
+  h2 {
+    color: #0056b3;
+    border-bottom: 2px solid #0056b3;
+    padding-bottom: 5px;
+    margin-top: 30px;
+  }
+  h3 {
+    color: #004085;
+    margin-top: 20px;
+  }
+  h4 {
+    color: #004085;
+    margin-top: 15px;
+    margin-bottom: 10px;
+  }
+  .lesson-container {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  .tab-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  .tab-button {
+    background-color: #e0e0e0;
+    border: 1px solid #ccc;
+    padding: 10px 15px;
+    cursor: pointer;
+    margin-right: 5px;
+    border-radius: 5px 5px 0 0;
+    transition: background-color 0.3s ease;
+    white-space: nowrap; /* Prevent text wrapping */
+  }
+  .tab-button.active {
+    background-color: #0056b3;
+    color: white;
+    border-color: #0056b3;
+  }
+  .tab-content {
+    display: none;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-top: none;
+    padding: 20px;
+    border-radius: 0 0 8px 8px;
+    background-color: #f9f9f9;
+  }
+  .tab-content.active {
+    display: block;
+  }
+  ul {
+    list-style-type: disc;
+    margin-left: 20px;
+  }
+  li {
+    margin-bottom: 8px;
+  }
+  b {
+    color: #0056b3;
+  }
+  .references {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #ccc;
+    font-size: 0.9em;
+    color: #555;
+  }
+  .attention {
+    font-weight: bold;
+    color: #d9534f;
+  }
+</style>
+</head>
+<body>
+
+<div class="lesson-container">
+  <h2>Lymphomas: Radiation Therapy Planning and Delivery</h2>
+
+  <p>This lesson provides detailed information on the preplanning, planning, and delivery steps for radiation therapy in various lymphoma subtypes, including both B-cell and T-cell lymphomas.</p>
+
+  <div class="tab-container">
+    <button class="tab-button active" onclick="openLymphomaTab(event, 'general-principles')">General RT Principles</button>
+    <button class="tab-button" onclick="openLymphomaTab(event, 'follicular-lymphoma')">Follicular Lymphoma (FL)</button>
+    <button class="tab-button" onclick="openLymphomaTab(event, 'marginal-zone-lymphoma')">Marginal Zone Lymphomas (MZL)</button>
+    <button class="tab-button" onclick="openLymphomaTab(event, 'mantle-cell-lymphoma')">Mantle Cell Lymphoma (MCL)</button>
+    <button class="tab-button" onclick="openLymphomaTab(event, 'dlbcl')">Diffuse Large B-Cell Lymphoma (DLBCL)</button>
+    <button class="tab-button" onclick="openLymphomaTab(event, 'pmbl')">Primary Mediastinal Large B-Cell Lymphoma (PMBL)</button>
+    <button class="tab-button" onclick="openLymphomaTab(event, 'hgbl')">High-Grade B-Cell Lymphomas (HGBL)</button>
+    <button class="tab-button" onclick="openLymphomaTab(event, 'burkitt-lymphoma')">Burkitt Lymphoma (BL)</button>
+    <button class="tab-button" onclick="openLymphomaTab(event, 'ptcl')">Peripheral T-Cell Lymphomas (PTCL)</button>
+    <button class="tab-button" onclick="openLymphomaTab(event, 'enktl')">Extranodal NK/T-Cell Lymphomas (ENKL)</button>
+    <button class="tab-button" onclick="openLymphomaTab(event, 'bia-alcl')">Breast Implant-Associated ALCL (BIA-ALCL)</button>
+    <button class="tab-button" onclick="openLymphomaTab(event, 't-lgll')">T-Cell Large Granular Lymphocytic Leukemia (T-LGLL)</button>
+    <button class="tab-button" onclick="openLymphomaTab(event, 't-pll')">T-Cell Prolymphocytic Leukemia (T-PLL)</button>
+    <button class="tab-button" onclick="openLymphomaTab(event, 'atll')">Adult T-Cell Leukemia/Lymphoma (ATLL)</button>
+    <button class="tab-button" onclick="openLymphomaTab(event, 'hstcl')">Hepatosplenic T-Cell Lymphoma (HSTCL)</button>
+  </div>
+
+  <div id="general-principles" class="tab-content active">
+    <h3>General Principles of Radiation Therapy for Lymphomas</h3>
+    <p>Radiation therapy (RT) is a critical component in the multidisciplinary management of lymphomas. Modern RT techniques aim to deliver highly conformal doses to target volumes while minimizing exposure to surrounding healthy tissues, thereby reducing long-term toxicities.</p>
+
+    <h4>Key Principles:</h4>
+    <ul>
+      <li><b>Accurate Target Definition:</b> Precise delineation of gross tumor volume (GTV), clinical target volume (CTV), and planning target volume (PTV) is paramount. This relies on advanced imaging like PET/CT and MRI.</li>
+      <li><b>Involved-Site Radiation Therapy (ISRT):</b> This is the standard approach, limiting radiation fields to only the initially involved nodal and extranodal sites, sparing adjacent uninvolved organs. This minimizes long-term complications.</li>
+      <li><b>Advanced RT Technologies:</b>
+        <ul>
+          <li><b>IMRT/VMAT:</b> Intensity-Modulated Radiation Therapy and Volumetric Modulated Arc Therapy are highly conformal techniques that shape radiation beams to the tumor, minimizing dose to organs at risk (OARs).</li>
+          <li><b>Proton Therapy:</b> May offer significant advantages in specific instances to spare OARs due to its Bragg peak phenomenon, which allows for a sharp dose fall-off.</li>
+          <li><b>Image-Guided Radiation Therapy (IGRT):</b> Daily imaging (e.g., cone-beam CT) to verify patient position and target localization, ensuring accurate delivery.</li>
+          <li><b>Motion Management:</b> Techniques like 4D-CT, deep inspiration breath-hold (DIBH), or respiratory gating are crucial for tumors affected by respiratory motion (e.g., mediastinal, abdominal).</li>
+        </ul>
+      </li>
+      <li><b>Quality Assurance:</b> Rigorous quality assurance measures are essential throughout the planning and delivery process.</li>
+      <li><b>Dose Constraints:</b> Strict dose limits are applied to critical OARs such as the heart (including coronary arteries and valves), lungs, kidneys, spinal cord, esophagus, bone marrow, breasts, stomach, muscle/soft tissue, and salivary glands.</li>
+    </ul>
+    <h4>General Dose Guidelines (Conventional Fractionation, 1.5-2.0 Gy daily fractions):</h4>
+    <ul>
+      <li><b>Consolidation after chemotherapy:</b> 30-36 Gy for complete response (CR), 36-50 Gy for partial response (PR).</li>
+      <li><b>RT as primary treatment (if unfit for chemotherapy):</b> 40-55 Gy.</li>
+      <li><b>In combination with HCT:</b> 20-36 Gy, depending on sites of disease and prior RT exposure. Hypofractionation may be used to expedite HCT.</li>
+      <li><b>Palliative RT:</b> 2-30 Gy in 1-10 fractions, depending on symptoms and goals.</li>
+      <li><b>Bridging RT with CAR T-cell Therapy:</b> Localized disease 20-40 Gy; extensive disease 20-30 Gy.</li>
+    </ul>
+  </div>
+
+  <div id="follicular-lymphoma" class="tab-content">
+    <h3>Follicular Lymphoma (FL)</h3>
+    <p>Follicular Lymphoma is the most common indolent non-Hodgkin lymphoma. Treatment strategies vary based on stage and tumor burden.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li><b>Primary RT:</b> For localized (Stage I-II) disease, ISRT is a highly effective treatment option, often curative.</li>
+      <li><b>Consolidation:</b> May be used after systemic therapy for residual disease.</li>
+      <li><b>Palliative RT:</b> For symptom management in advanced disease.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Clinical Evaluation:</b> H&P, B symptoms, performance status, evaluation of nodal areas (Waldeyer's ring, liver, spleen).</li>
+      <li><b>Lab Tests:</b> CBC with differential, LDH, comprehensive metabolic panel, Hepatitis B testing.</li>
+      <li><b>Imaging:</b> PET/CT scan (preferred) or C/A/P CT with contrast. PET/CT is crucial for staging and detecting transformation.</li>
+      <li><b>Biopsy:</b> Excisional or incisional biopsy preferred. Bone marrow biopsy for staging or unexplained cytopenias.</li>
+      <li><b>Prognostic Indices:</b> FLIPI-1, FLIPI-2, m7-FLIPI (molecular) for risk stratification.</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Patient Positioning:</b> Supine, arms up. Immobilization devices for reproducibility.</li>
+      <li><b>Target Volume Delineation (ISRT):</b>
+        <ul>
+          <li>GTV: Based on pre-chemotherapy/biopsy imaging (PET/CT, CT, MRI).</li>
+          <li>CTV: GTV + margin (e.g., 1-2 cm) to encompass original suspicious volume, sparing adjacent uninvolved organs. For RT alone, larger volumes may be considered to cover potential microscopic disease.</li>
+          <li>PTV: CTV + setup margin.</li>
+        </ul>
+      </li>
+      <li><b>OARs:</b> Lungs, heart, kidneys, spinal cord.</li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>Localized Disease (Stage I-II):</b>
+        <ul>
+          <li>ISRT: 24-30 Gy (1.5-2.0 Gy/fraction).</li>
+          <li>Ultra-low dose: 4 Gy in 2 fractions (for selected cases, requires careful follow-up).</li>
+        </ul>
+      </li>
+      <li><b>Consolidation after Chemoimmunotherapy (CR):</b> 24-30 Gy. For PR, 36 Gy.</li>
+      <li><b>Palliative RT:</b> 2 Gy x 2 fractions or 4 Gy x 1 fraction. Up to 30 Gy for select circumstances.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Techniques:</b> 3D conformal, IMRT/VMAT, or proton therapy.</li>
+      <li><b>Setup Verification:</b> Image-guided RT (IGRT) is important.</li>
+      <li><b>Sequencing:</b> RT may be used alone, or in combination with anti-CD20 mAb (rituximab/obinutuzumab) +/- chemotherapy.</li>
+    </ul>
+  </div>
+
+  <div id="marginal-zone-lymphoma" class="tab-content">
+    <h3>Marginal Zone Lymphomas (MZL)</h3>
+    <p>MZLs include extranodal (EMZL), nodal (NMZL), and splenic (SMZL) subtypes. EMZL often associated with chronic inflammation/infections.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li><b>EMZL (Stomach):</b> ISRT is highly effective for H. pylori-negative disease or refractory H. pylori-positive disease.</li>
+      <li><b>EMZL (Non-gastric):</b> ISRT is an effective initial treatment for localized disease.</li>
+      <li><b>NMZL:</b> ISRT is preferred for localized (Stage I-II contiguous) disease.</li>
+      <li><b>SMZL:</b> Palliative ISRT may be used for symptomatic sites.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Clinical Evaluation:</b> H&P, performance status, B symptoms, specific site evaluation (e.g., endoscopy for gastric).</li>
+      <li><b>Lab Tests:</b> CBC, LDH, comprehensive metabolic panel, Hepatitis B/C testing.</li>
+      <li><b>Imaging:</b> PET/CT or C/A/P CT with contrast. EUS for gastric MZL.</li>
+      <li><b>Biopsy:</b> Excisional biopsy preferred. For gastric, endoscopic biopsy with H. pylori stain.</li>
+      <li><b>Molecular:</b> t(11;18) for gastric EMZL. MYD88 for differentiation from WM.</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Target Volume Delineation (ISRT):</b>
+        <ul>
+          <li><b>EMZL (Stomach):</b> Entire affected organ (stomach).</li>
+          <li><b>EMZL (Non-gastric):</b> Entire affected organ (e.g., orbit, salivary gland, thyroid) if well localized.</li>
+          <li><b>NMZL:</b> Involved nodal regions.</li>
+        </ul>
+      </li>
+      <li><b>OARs:</b> Dependent on site (e.g., GI tract, kidneys, liver, spinal cord, optic structures).</li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>Definitive RT:</b> 24-30 Gy (1.5-2.0 Gy/fraction).</li>
+      <li><b>EMZL (Stomach):</b> 24 Gy in 16 fractions (1.5 Gy/fraction) to minimize GI toxicity. Ultra-low dose (4 Gy in 2 fractions) for selected cases.</li>
+      <li><b>Orbital/Salivary Gland MZL:</b> 4 Gy in 2 fractions may be considered.</li>
+      <li><b>Palliative RT:</b> 2-30 Gy.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Techniques:</b> 3D conformal, IMRT/VMAT.</li>
+      <li><b>Setup Verification:</b> IGRT.</li>
+      <li><b>Sequencing:</b>
+        <ul>
+          <li><b>EMZL (Stomach):</b> H. pylori eradication therapy first. If refractory or H. pylori negative, then ISRT or rituximab.</li>
+          <li><b>Non-gastric EMZL/NMZL:</b> ISRT alone, or rituximab +/- chemotherapy. Active surveillance for selected cases.</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <div id="mantle-cell-lymphoma" class="tab-content">
+    <h3>Mantle Cell Lymphoma (MCL)</h3>
+    <p>MCL is an aggressive B-cell lymphoma, often presenting at advanced stages. Treatment is complex and stratified by patient eligibility for aggressive therapy and TP53 mutation status.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li><b>Primary RT:</b> For localized (Stage I or contiguous Stage II non-bulky) disease, ISRT (30-36 Gy) alone is an option.</li>
+      <li><b>Consolidation:</b> May be used after chemoimmunotherapy (24-36 Gy for CR/PR).</li>
+      <li><b>Palliative RT:</b> For symptomatic sites.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Clinical Evaluation:</b> H&P, B symptoms, performance status, evaluation of nodal areas, liver, spleen.</li>
+      <li><b>Lab Tests:</b> CBC, LDH, comprehensive metabolic panel, uric acid, Hepatitis B/C testing.</li>
+      <li><b>Imaging:</b> PET/CT scan (preferred) or C/A/P CT with contrast. Neck CT with contrast.</li>
+      <li><b>Biopsy:</b> Excisional or incisional biopsy. Bone marrow biopsy to confirm stage I-II.</li>
+      <li><b>Molecular:</b> TP53 sequencing (essential). Ki-67 proliferation index (prognostic). FISH for t(11;14).</li>
+      <li><b>CNS Evaluation:</b> Lumbar puncture for blastic variant or CNS symptoms.</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Target Volume Delineation (ISRT):</b>
+        <ul>
+          <li>GTV: Gross tumor.</li>
+          <li>CTV: GTV + margin.</li>
+          <li>PTV: CTV + setup margin.</li>
+        </ul>
+      </li>
+      <li><b>OARs:</b> Dependent on site.</li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>Localized Disease (Stage I/II non-bulky):</b> ISRT 30-36 Gy.</li>
+      <li><b>Consolidation after Chemoimmunotherapy:</b> 24-30 Gy for CR, 36 Gy for PR.</li>
+      <li><b>Palliative RT:</b> 2-30 Gy.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Techniques:</b> 3D conformal, IMRT/VMAT.</li>
+      <li><b>Sequencing:</b>
+        <ul>
+          <li><b>Localized:</b> ISRT alone, or less aggressive chemoimmunotherapy +/- ISRT.</li>
+          <li><b>Advanced Stage (Classical TP53 wildtype):</b> Aggressive induction (e.g., R-HyperCVAD, NORDIC, TRIANGLE) followed by HDT/ASCR and rituximab/BTKi maintenance.</li>
+          <li><b>Advanced Stage (Classical TP53 mutated):</b> Clinical trial preferred. BOVen, or less aggressive induction regimens.</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <div id="dlbcl" class="tab-content">
+    <h3>Diffuse Large B-Cell Lymphoma (DLBCL)</h3>
+    <p>DLBCL is the most common aggressive lymphoma. Treatment is intensive and often involves multiagent chemoimmunotherapy.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li><b>Consolidation:</b> For limited-stage (Stage I-II non-bulky) disease, RT is often used after R-CHOP. For bulky disease or extensive mesenteric disease, RT to initially bulky sites may be beneficial.</li>
+      <li><b>CNS Prophylaxis:</b> Cranial or craniospinal RT may be considered in very high-risk CNS relapse cases.</li>
+      <li><b>Palliative RT:</b> For symptom control.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Clinical Evaluation:</b> H&P, B symptoms, performance status, evaluation of nodal areas, liver, spleen.</li>
+      <li><b>Lab Tests:</b> CBC, LDH, comprehensive metabolic panel, uric acid, Hepatitis B/C, HIV.</li>
+      <li><b>Imaging:</b> PET/CT scan (preferred) or C/A/P CT with contrast. Brain MRI/CT for CNS risk.</li>
+      <li><b>Biopsy:</b> Excisional biopsy preferred. FISH for MYC, BCL2, BCL6 rearrangements. NGS panel.</li>
+      <li><b>CNS Evaluation:</b> Lumbar puncture for high-risk CNS involvement.</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Target Volume Delineation (ISRT):</b>
+        <ul>
+          <li>GTV: Gross tumor.</li>
+          <li>CTV: GTV + margin.</li>
+          <li>PTV: CTV + setup margin.</li>
+        </ul>
+      </li>
+      <li><b>OARs:</b> Heart, lungs, spinal cord, kidneys, GI tract.</li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>Consolidation after Chemoimmunotherapy:</b>
+        <ul>
+          <li>CR (PET negative): 30-36 Gy.</li>
+          <li>PR (PET positive): 36-50 Gy.</li>
+          <li>Refractory disease: 40-55 Gy.</li>
+        </ul>
+      </li>
+      <li><b>Primary RT (without chemoimmunotherapy):</b> 40 Gy.</li>
+      <li><b>Palliative RT:</b> 20-30 Gy in 5-10 fractions.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Techniques:</b> 3D conformal, IMRT/VMAT.</li>
+      <li><b>Sequencing:</b>
+        <ul>
+          <li><b>Limited Stage:</b> R-CHOP (3-4 cycles) +/- ISRT. PET-directed therapy is common.</li>
+          <li><b>Advanced Stage:</b> R-CHOP (6 cycles) or Pola-R-CHP (preferred for IPI ≥2). DA-EPOCH-R for certain subtypes (PMBL, double/triple-hit).</li>
+          <li><b>CNS Prophylaxis:</b> Systemic high-dose methotrexate and/or intrathecal methotrexate/cytarabine.</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <div id="pmbl" class="tab-content">
+    <h3>Primary Mediastinal Large B-Cell Lymphoma (PMBL)</h3>
+    <p>PMBL is a distinct aggressive B-cell lymphoma arising in the mediastinum, often with unique molecular features and a tendency for local spread.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li><b>Consolidation:</b> ISRT is often considered after chemotherapy, especially for residual mediastinal masses.</li>
+      <li><b>Primary RT:</b> For patients unfit for systemic therapy.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Clinical Evaluation:</b> H&P, B symptoms, performance status, large anterior mediastinal mass.</li>
+      <li><b>Lab Tests:</b> CBC, LDH, comprehensive metabolic panel.</li>
+      <li><b>Imaging:</b> PET/CT scan (essential), C/A/P CT with contrast.</li>
+      <li><b>Biopsy:</b> Excisional biopsy preferred. Expert hematopathology review is essential.</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Patient Positioning:</b> Supine, arms up. 4D-CT simulation for respiratory motion.</li>
+      <li><b>Target Volume Delineation (ISRT):</b>
+        <ul>
+          <li>GTV: Pre-chemotherapy gross tumor.</li>
+          <li>CTV: GTV + margin.</li>
+          <li>PTV: CTV + setup margin.</li>
+        </ul>
+      </li>
+      <li><b>OARs:</b> Heart, lungs, breasts, esophagus, spinal cord. Minimizing dose to these is critical.</li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>Consolidation after Chemoimmunotherapy:</b> 30-36 Gy for CR, 36-50 Gy for PR.</li>
+      <li><b>Primary RT (unfit for chemotherapy):</b> 40-55 Gy.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Techniques:</b> IMRT/VMAT preferred due to mediastinal location and critical OARs. Proton therapy may be considered.</li>
+      <li><b>Sequencing:</b> DA-EPOCH-R (6 cycles) or R-CHOP (4-6 cycles) as first-line. ISRT for consolidation, especially for PET-positive residual masses.</li>
+    </ul>
+  </div>
+
+  <div id="hgbl" class="tab-content">
+    <h3>High-Grade B-Cell Lymphomas (HGBL)</h3>
+    <p>HGBLs are aggressive lymphomas with specific genetic rearrangements (e.g., MYC and BCL2/BCL6) that confer a poor prognosis. They include "double-hit" and "triple-hit" lymphomas.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li><b>Consolidation:</b> ISRT may be considered for early-stage disease or localized residual disease after chemotherapy.</li>
+      <li><b>CNS Prophylaxis:</b> Cranial or craniospinal RT may be considered in very high-risk CNS relapse cases.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Clinical Evaluation:</b> H&P, B symptoms, performance status. Often present with poor prognostic variables (elevated LDH, bone marrow/CNS involvement).</li>
+      <li><b>Lab Tests:</b> CBC, LDH, comprehensive metabolic panel.</li>
+      <li><b>Imaging:</b> PET/CT scan (preferred) or C/A/P CT with contrast. Brain MRI/CT for CNS risk.</li>
+      <li><b>Biopsy:</b> Excisional biopsy preferred. FISH for MYC, BCL2, BCL6 rearrangements (essential). NGS panel.</li>
+      <li><b>CNS Evaluation:</b> Lumbar puncture for CNS symptoms or high risk.</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Target Volume Delineation (ISRT):</b> Similar to DLBCL.</li>
+      <li><b>OARs:</b> Similar to DLBCL.</li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>Consolidation after Chemoimmunotherapy:</b> 30-36 Gy for CR, 36-50 Gy for PR.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Techniques:</b> Intensive chemoimmunotherapy regimens (DA-EPOCH-R, R-HyperCVAD, R-CODOX-M/IVAC) are typically used.</li>
+      <li><b>CNS Prophylaxis:</b> Systemic high-dose methotrexate and/or intrathecal chemotherapy.</li>
+      <li><b>Consolidation:</b> HDT/ASCR may be considered, but its role is not fully established.</li>
+    </ul>
+  </div>
+
+  <div id="burkitt-lymphoma" class="tab-content">
+    <h3>Burkitt Lymphoma (BL)</h3>
+    <p>BL is a highly aggressive B-cell lymphoma characterized by rapid growth and frequent extranodal involvement. It requires immediate, intensive, multiagent chemotherapy.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li><b>Consolidation:</b> Palliative ISRT may be considered for patients with less than CR to induction therapy.</li>
+      <li><b>CNS Prophylaxis:</b> Essential component of all regimens, often involving intrathecal and/or high-dose systemic chemotherapy. Cranial RT is rarely used for prophylaxis.</li>
+      <li><b>Palliative RT:</b> For symptom control.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Clinical Evaluation:</b> H&P, B symptoms, performance status, bulky abdominal masses, bone marrow involvement, CNS involvement.</li>
+      <li><b>Lab Tests:</b> CBC, LDH, uric acid, comprehensive metabolic panel, Hepatitis B/C, HIV.</li>
+      <li><b>Imaging:</b> PET/CT scan (preferred, but do not delay therapy) or C/A/P CT with contrast. Brain MRI for suspected CNS involvement.</li>
+      <li><b>Biopsy:</b> Excisional biopsy preferred. FISH for MYC rearrangement (essential).</li>
+      <li><b>CNS Evaluation:</b> Lumbar puncture and CSF flow cytometry (essential).</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Target Volume Delineation:</b> Typically involves systemic treatment due to rapid dissemination. RT fields are usually limited to palliative sites or for CNS prophylaxis.</li>
+      <li><b>OARs:</b> Standard OARs, with particular attention to CNS structures for prophylaxis.</li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>Palliative ISRT:</b> Doses are typically individualized for symptom relief.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Techniques:</b> Intensive multiagent chemoimmunotherapy regimens (e.g., CODOX-M/IVAC, HyperCVAD, DA-EPOCH-R).</li>
+      <li><b>CNS Prophylaxis:</b> Mandatory with all regimens, using high-dose systemic methotrexate and/or intrathecal methotrexate/cytarabine.</li>
+      <li><b>Consolidation:</b> Autologous HCT is generally not recommended in CR1 after induction therapy due to excellent outcomes with chemotherapy alone.</li>
+    </ul>
+  </div>
+
+  <div id="ptcl" class="tab-content">
+    <h3>Peripheral T-Cell Lymphomas (PTCL)</h3>
+    <p>PTCLs are a heterogeneous group of aggressive T-cell lymphomas. Treatment approaches vary significantly by subtype, often involving multiagent chemotherapy and sometimes consolidation with hematopoietic cell transplant (HCT).</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li><b>Consolidation:</b> ISRT may be used for localized disease after chemotherapy, especially for ALCL, ALK-positive.</li>
+      <li><b>Palliative RT:</b> For symptom management in relapsed/refractory disease.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Clinical Evaluation:</b> H&P, B symptoms, performance status, full skin exam, nodal areas, liver, spleen.</li>
+      <li><b>Lab Tests:</b> CBC, LDH, comprehensive metabolic panel, uric acid, Hepatitis B/C, HIV/HTLV-1/2.</li>
+      <li><b>Imaging:</b> FDG-PET/CT (preferred) or C/A/P CT with contrast. Neck CT, Head CT/MRI for CNS symptoms.</li>
+      <li><b>Biopsy:</b> Excisional or incisional biopsy preferred. Adequate immunophenotyping (IHC, flow cytometry). EBER-ISH.</li>
+      <li><b>Molecular Analysis:</b> Clonal TCR gene rearrangements (useful). Cytogenetics (FISH for DUSP22, TP63, ALK). NGS panel for TFH subtypes (TET2, IDH2, RHOA, DNMT3A).</li>
+      <li><b>Prognostic Indices:</b> IPI, PIT, T-cell score.</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Target Volume Delineation (ISRT):</b>
+        <ul>
+          <li>GTV: Pre-chemotherapy gross tumor.</li>
+          <li>CTV: GTV + margin.</li>
+          <li>PTV: CTV + setup margin.</li>
+        </ul>
+      </li>
+      <li><b>OARs:</b> Lungs, heart, kidneys, spinal cord, esophagus, bone marrow, salivary glands.</li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>Consolidation after Chemotherapy (CR):</b> 30-36 Gy. For PR, 40-50 Gy.</li>
+      <li><b>Palliative RT:</b> 20-36 Gy in 5-18 fractions.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Techniques:</b> 3D conformal, IMRT/VMAT.</li>
+      <li><b>First-line Therapy:</b> Multiagent chemotherapy (e.g., Brentuximab vedotin + CHP for CD30+; CHOEP, CHOP, DA-EPOCH for others). Consolidation with autologous HCT often considered.</li>
+      <li><b>Relapsed/Refractory:</b> Clinical trial preferred. Single agents (e.g., Belinostat, Brentuximab vedotin, Duvelisib, Pralatrexate, Romidepsin, Ruxolitinib) or combination regimens (e.g., DHA+platinum, ESHAP+platinum, GDP, GemOx, ICE). Allogeneic HCT often considered.</li>
+      <li><b>Supportive Care:</b> TLS prophylaxis, CMV reactivation monitoring/prophylaxis, PJP prophylaxis.</li>
+    </ul>
+  </div>
+
+  <div id="enktl" class="tab-content">
+    <h3>Extranodal NK/T-Cell Lymphomas (ENKL)</h3>
+    <p>ENKL is a rare, predominantly extranodal lymphoma, often of nasal type. It is strongly associated with EBV infection and requires non-anthracycline-based chemotherapy.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li><b>Primary RT:</b> Essential component of initial treatment for localized (Stage I-II) nasal type, often combined with chemotherapy.</li>
+      <li><b>Consolidation:</b> For localized disease after chemotherapy.</li>
+      <li><b>Palliative RT:</b> For symptom management.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Clinical Evaluation:</b> H&P, B symptoms, performance status, ENT evaluation (nasopharynx, nasal cavity, paranasal sinuses), testicles, skin.</li>
+      <li><b>Lab Tests:</b> CBC, LDH, comprehensive metabolic panel, uric acid, EBV viral load (quantitative PCR), Hepatitis B/C, HIV/HTLV-1/2.</li>
+      <li><b>Imaging:</b> FDG-PET/CT, C/A/P CT with contrast. MRI/CT for nasal cavity, hard palate, anterior fossa.</li>
+      <li><b>Biopsy:</b> Hematopathology review (excisional/incisional preferred). Adequate immunophenotyping (cCD3ε, CD2, CD56, TIA1, granzyme B). EBER-ISH (essential).</li>
+      <li><b>Prognostic Indices:</b> PINK, PINK-E.</li>
+      <li><b>CNS Evaluation:</b> Ophthalmologic exam, lumbar puncture for CSF analysis (if indicated).</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Patient Positioning:</b> Supine. Immobilization.</li>
+      <li><b>Target Volume Delineation (ISRT):</b>
+        <ul>
+          <li>GTV: Combined abnormalities from endoscopy, CT, MRI, FDG-PET/CT.</li>
+          <li>CTV: Entire involved cavity and adjacent structures (e.g., bilateral nasal cavities, ipsilateral maxillary sinus, bilateral anterior ethmoids). Involved nodes should be included.</li>
+          <li>PTV: CTV + setup margin.</li>
+        </ul>
+      </li>
+      <li><b>OARs:</b> Eyes, optic nerves, brainstem, salivary glands. IMRT strongly preferred.</li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>RT alone (if unfit for chemotherapy):</b> 50-55 Gy.</li>
+      <li><b>RT with Chemotherapy:</b> 45-56 Gy.</li>
+      <li><b>Combined Modality Therapy:</b>
+        <ul>
+          <li>CCRT (e.g., 50 Gy with DeVIC).</li>
+          <li>Sequential chemoradiation (e.g., Modified SMILE followed by 45-50.4 Gy RT).</li>
+          <li>Sandwich chemoradiation (e.g., P-GEMOX/GELAD followed by RT, then more chemotherapy).</li>
+        </ul>
+      </li>
+      <li><b>Palliative RT:</b> 20-36 Gy.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Techniques:</b> IMRT is strongly preferred.</li>
+      <li><b>Sequencing:</b> Non-anthracycline-based chemotherapy regimens (e.g., SMILE, P-GEMOX, DDGP) are preferred. RT is essential for localized disease.</li>
+      <li><b>Consolidation:</b> HCT may be considered for CR/PR.</li>
+      <li><b>Supportive Care:</b> TLS prophylaxis, antiemetics.</li>
+    </ul>
+  </div>
+
+  <div id="bia-alcl" class="tab-content">
+    <h3>Breast Implant-Associated Anaplastic Large Cell Lymphoma (BIA-ALCL)</h3>
+    <p>BIA-ALCL is an uncommon T-cell lymphoma arising around breast implants, predominantly textured ones. It often presents as a delayed periprosthetic effusion.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li><b>Adjuvant RT:</b> For local residual disease after incomplete surgical excision or partial capsulectomy, especially if systemic therapy is not feasible or lymph nodes are positive. Doses typically 24-36 Gy.</li>
+      <li><b>Palliative RT:</b> For symptom control in advanced disease.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Clinical Evaluation:</b> H&P, physical signs (effusion, enlargement, mass, ulceration) >1 year post-implantation.</li>
+      <li><b>Imaging:</b> Ultrasound of breast/axilla. Breast MRI with/without contrast. FDG-PET/CT for staging in selected cases.</li>
+      <li><b>Biopsy:</b> FNA biopsy of fluid (minimum 50 mL) around implant with cell block, IHC, flow cytometry. Biopsy of mass if present.</li>
+      <li><b>Pathology Review:</b> Tumor cells are CD30+, ALK-, T-cell monoclonal. Secondary review by tertiary center.</li>
+      <li><b>Genetic Testing:</b> Consider NGS for high-risk mutations (e.g., TP53, JAK-STAT3 pathway).</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Patient Positioning:</b> Supine. Immobilization.</li>
+      <li><b>Target Volume Delineation:</b> Local residual disease, regional lymph nodes.</li>
+      <li><b>Bolus:</b> May be needed for superficial lesions.</li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>Adjuvant RT:</b> 24-36 Gy for local residual disease.</li>
+      <li><b>Palliative RT:</b> Doses individualized for symptom relief.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Techniques:</b> 3D conformal, IMRT/VMAT.</li>
+      <li><b>Primary Treatment:</b> Complete surgical excision of implant, capsule, and associated mass with biopsy of suspicious nodes.</li>
+      <li><b>Systemic Therapy:</b> Brentuximab vedotin (BV) alone or with CHP (cyclophosphamide, doxorubicin, prednisone) for extended disease (Stage II-IV) or incomplete excision with residual disease.</li>
+      <li><b>Follow-up:</b> Clinical and imaging surveillance.</li>
+    </ul>
+  </div>
+
+  <div id="t-lgll" class="tab-content">
+    <h3>T-Cell Large Granular Lymphocytic Leukemia (T-LGLL)</h3>
+    <p>T-LGLL is an indolent T-cell lymphoproliferative disorder often associated with autoimmune conditions and cytopenias. Treatment is initiated for symptomatic disease.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li>RT is typically not a primary treatment for T-LGLL.</li>
+      <li>May be used in rare cases for localized symptomatic splenomegaly or lymphadenopathy if refractory to systemic therapy.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Clinical Evaluation:</b> H&P (splenomegaly, lymphadenopathy, autoimmune disease), B symptoms, performance status.</li>
+      <li><b>Lab Tests:</b> CBC with differential (persistent LGL increase), comprehensive metabolic panel. Serologic markers for autoimmune disease.</li>
+      <li><b>Biopsy:</b> Peripheral blood smear analysis, flow cytometry (essential). Bone marrow biopsy (useful for low LGL counts).</li>
+      <li><b>Molecular Analysis:</b> STAT3 and STAT5B mutations (useful). T-cell clonality (essential).</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Target Volume Delineation:</b> Localized symptomatic areas (e.g., spleen).</li>
+      <li><b>OARs:</b> Surrounding organs.</li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li>Doses are typically palliative.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Primary Treatment:</b> Low-dose methotrexate, oral cyclophosphamide, or cyclosporine (with or without corticosteroids). Ruxolitinib for refractory disease.</li>
+      <li><b>Response Assessment:</b> After 4 months, assess hematologic parameters and LGL counts.</li>
+      <li><b>Supportive Care:</b> Management of underlying autoimmune disease and cytopenias.</li>
+    </ul>
+  </div>
+
+  <div id="t-pll" class="tab-content">
+    <h3>T-Cell Prolymphocytic Leukemia (T-PLL)</h3>
+    <p>T-PLL is a rare, aggressive T-cell malignancy. It is characterized by rapid progression and often presents with lymphadenopathy, hepatosplenomegaly, and high WBC counts.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li>RT may be used for localized, symptomatic disease (e.g., splenomegaly, lymphadenopathy) as part of palliative care.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Clinical Evaluation:</b> H&P (skin, lymph nodes, spleen, liver), B symptoms, performance status.</li>
+      <li><b>Lab Tests:</b> CBC with differential, LDH, comprehensive metabolic panel. HTLV-1/2 serology.</li>
+      <li><b>Biopsy:</b> Peripheral blood smear analysis, flow cytometry (essential). Cytogenetics (FISH for inv(14), t(14;14), t(X;14), trisomy 8).</li>
+      <li><b>Molecular Analysis:</b> Clonal TCR gene rearrangements (useful).</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Target Volume Delineation:</b> Localized symptomatic areas.</li>
+      <li><b>OARs:</b> Surrounding organs.</li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li>Doses are typically palliative.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Primary Treatment:</b> Alemtuzumab (IV) monotherapy is preferred. FCM (fludarabine, mitoxantrone, cyclophosphamide) followed by alemtuzumab, or alemtuzumab + pentostatin are alternatives.</li>
+      <li><b>Consolidation:</b> Allogeneic HCT is a potentially curative option for responders. Autologous HCT may be considered if allogeneic is not feasible.</li>
+      <li><b>Relapsed/Refractory:</b> Pentostatin, ruxolitinib, bendamustine, or retreatment with alemtuzumab.</li>
+      <li><b>Supportive Care:</b> TLS prophylaxis, CMV monitoring/prophylaxis.</li>
+    </ul>
+  </div>
+
+  <div id="atll" class="tab-content">
+    <h3>Adult T-Cell Leukemia/Lymphoma (ATLL)</h3>
+    <p>ATLL is an aggressive T-cell malignancy caused by HTLV-1. It has four subtypes (smoldering, chronic, acute, lymphoma) with varying prognoses and treatment intensities.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li>RT may be used in selected cases with localized, symptomatic disease for palliation.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Clinical Evaluation:</b> H&P (skin, lymph nodes, spleen, liver), B symptoms, performance status.</li>
+      <li><b>Lab Tests:</b> CBC with differential, comprehensive metabolic panel, LDH, serology for strongyloides, HTLV-1/2 serology (essential).</li>
+      <li><b>Imaging:</b> FDG-PET/CT scan (preferred) or C/A/P CT with contrast. CNS evaluation (Head CT/MRI, lumbar puncture) for acute/lymphoma subtypes.</li>
+      <li><b>Biopsy:</b> Peripheral blood smear analysis, flow cytometry (essential). Biopsy of lymph nodes/skin/GI/bone marrow if peripheral blood is non-diagnostic.</li>
+      <li><b>Molecular Analysis:</b> NGS panel for recurrent mutations (TP53, IRF4, PD-L1, CDKN2A). CCR4 expression.</li>
+      <li><b>Prognostic Indices:</b> iATL-PI (indolent), ATL-PI (acute/lymphoma).</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Target Volume Delineation:</b> Localized symptomatic lesions.</li>
+      <li><b>OARs:</b> Surrounding organs.</li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li>Doses are typically palliative.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Smoldering (Asymptomatic):</b> Observation.</li>
+      <li><b>Smoldering (Symptomatic):</b> Skin-directed therapies for skin lesions. Zidovudine + IFN-alfa for tumor lesions.</li>
+      <li><b>Chronic:</b> Zidovudine + IFN-alfa (all risk groups). Combination chemotherapy for high-risk.</li>
+      <li><b>Acute/Lymphoma:</b> Combination chemotherapy (e.g., DA-EPOCH, Brentuximab vedotin + CHP for CD30+). Zidovudine + IFN-alfa for acute subtype.</li>
+      <li><b>Consolidation:</b> Allogeneic HCT for high-risk chronic, acute, or lymphoma subtypes responding to initial therapy.</li>
+      <li><b>Relapsed/Refractory:</b> Clinical trial preferred. Mogamulizumab (for CCR4+), Lenalidomide, Brentuximab vedotin (for CD30+), Arsenic trioxide, Alemtuzumab, Bortezomib, Pralatrexate.</li>
+      <li><b>Supportive Care:</b> Strongyloides screening/treatment, PJP prophylaxis.</li>
+    </ul>
+  </div>
+
+  <div id="hstcl" class="tab-content">
+    <h3>Hepatosplenic T-Cell Lymphoma (HSTCL)</h3>
+    <p>HSTCL is a rare, aggressive T-cell lymphoma characterized by liver, spleen, and bone marrow involvement, often with systemic symptoms and HLH. It has a poor prognosis.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li>RT is generally not a primary treatment due to the systemic nature.</li>
+      <li>May be used for localized symptom palliation.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Clinical Evaluation:</b> H&P (hepatosplenomegaly, cytopenias, HLH symptoms), B symptoms, performance status.</li>
+      <li><b>Lab Tests:</b> CBC, LDH, comprehensive metabolic panel, uric acid. HLH workup (ferritin, sCD25, triglycerides, fibrinogen). Hepatitis B/C, HIV/HTLV-1/2.</li>
+      <li><b>Biopsy:</b> Bone marrow or liver core biopsy (essential). IHC (CD2, CD3, CD4, CD5, CD8, CD56, TCRβ, TCRγδ, TIA-1, granzyme B). Flow cytometry.</li>
+      <li><b>Molecular Analysis:</b> Clonal TCR gene rearrangements (useful). Karyotype/FISH for isochromosome 7q, trisomy 8. NGS panel (STAT3, STAT5B, SETD2, INO80, ARID1B).</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Target Volume Delineation:</b> Localized symptomatic areas (e.g., spleen).</li>
+      <li><b>OARs:</b> Surrounding organs.</li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li>Doses are typically palliative.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Primary Treatment:</b> Intensive non-CHOP-based chemotherapy (e.g., ICE, DHA+platinum, DA-EPOCH, HyperCVAD, IVAC).</li>
+      <li><b>Consolidation:</b> Allogeneic HCT (preferred) for CR/PR. Autologous HCT if allogeneic is not feasible.</li>
+      <li><b>Relapsed/Refractory:</b> Clinical trial preferred. Purine analogs (cladribine, pentostatin), or regimens for PTCL-NOS (e.g., Alemtuzumab, Pralatrexate, Duvelisib, ESHAP).</li>
+      <li><b>Supportive Care:</b> HLH management, TLS prophylaxis.</li>
+    </ul>
+  </div>
+
+  <div class="references">
+    <h3>References</h3>
+    <ul>
+      <li>National Comprehensive Cancer Network. (2025). <i>NCCN Clinical Practice Guidelines in Oncology (NCCN Guidelines®): T-Cell Lymphomas</i> (Version 1.2025).</li>
+      <li>National Comprehensive Cancer Network. (2025). <i>NCCN Clinical Practice Guidelines in Oncology (NCCN Guidelines®): B-Cell Lymphomas</i> (Version 1.2025).</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  function openLymphomaTab(evt, tabId) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tab-content");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+      tabcontent[i].classList.remove("active");
+    }
+    tablinks = document.getElementsByClassName("tab-button");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].classList.remove("active");
+    }
+    document.getElementById(tabId).style.display = "block";
+    document.getElementById(tabId).classList.add("active");
+    evt.currentTarget.classList.add("active");
+  }
+
+  // Set the first tab as active by default when the page loads
+  document.addEventListener("DOMContentLoaded", function() {
+    document.querySelector(".tab-button").click();
+  });
+</script>
+
+</body>
+</html>
