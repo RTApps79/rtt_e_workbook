@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body {
+    font-family: sans-serif;
+    line-height: 1.6;
+    margin: 20px;
+    background-color: #f4f4f4;
+    color: #333;
+  }
+  h2 {
+    color: #0056b3;
+    border-bottom: 2px solid #0056b3;
+    padding-bottom: 5px;
+    margin-top: 30px;
+  }
+  h3 {
+    color: #004085;
+    margin-top: 20px;
+  }
+  h4 {
+    color: #004085;
+    margin-top: 15px;
+    margin-bottom: 10px;
+  }
+  .lesson-container {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  .tab-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  .tab-button {
+    background-color: #e0e0e0;
+    border: 1px solid #ccc;
+    padding: 10px 15px;
+    cursor: pointer;
+    margin-right: 5px;
+    border-radius: 5px 5px 0 0;
+    transition: background-color 0.3s ease;
+    white-space: nowrap; /* Prevent text wrapping */
+  }
+  .tab-button.active {
+    background-color: #0056b3;
+    color: white;
+    border-color: #0056b3;
+  }
+  .tab-content {
+    display: none;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-top: none;
+    padding: 20px;
+    border-radius: 0 0 8px 8px;
+    background-color: #f9f9f9;
+  }
+  .tab-content.active {
+    display: block;
+  }
+  ul {
+    list-style-type: disc;
+    margin-left: 20px;
+  }
+  li {
+    margin-bottom: 8px;
+  }
+  b {
+    color: #0056b3;
+  }
+  .references {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #ccc;
+    font-size: 0.9em;
+    color: #555;
+  }
+  .attention {
+    font-weight: bold;
+    color: #d9534f;
+  }
+</style>
+</head>
+<body>
+
+<div class="lesson-container">
+  <h2>Skin Cancers: Radiation Therapy Planning and Delivery</h2>
+
+  <p>This lesson provides detailed information on the preplanning, planning, and delivery steps for radiation therapy in common skin cancer types, including Basal Cell Carcinoma, Squamous Cell Carcinoma, and Melanoma.</p>
+
+  <div class="tab-container">
+    <button class="tab-button active" onclick="openSkinTab(event, 'bcc-overview')">Basal Cell Carcinoma (BCC)</button>
+    <button class="tab-button" onclick="openSkinTab(event, 'scc-overview')">Squamous Cell Carcinoma (SCC)</button>
+    <button class="tab-button" onclick="openSkinTab(event, 'melanoma-overview')">Melanoma</button>
+    <button class="tab-button" onclick="openSkinTab(event, 'general-skin-rt')">General Skin RT Principles</button>
+  </div>
+
+  <div id="bcc-overview" class="tab-content active">
+    <h3>Basal Cell Carcinoma (BCC)</h3>
+    <p>Basal cell carcinoma is the most common type of skin cancer. It is a slow-growing, locally invasive tumor that rarely metastasizes. It typically arises in sun-exposed areas.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li><b>Primary Treatment:</b> For tumors that are surgically challenging (e.g., large lesions, poor cosmetic outcome with surgery, functionally critical areas like eyelids, nose, ears), or for patients who are not surgical candidates due to comorbidities.</li>
+      <li><b>Adjuvant RT:</b> For positive or close surgical margins, perineural invasion, or recurrent disease after surgery.</li>
+      <li><b>Palliative RT:</b> For symptomatic advanced or metastatic disease (rare).</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Clinical Evaluation:</b> Visual inspection, palpation to assess depth and fixation.</li>
+      <li><b>Biopsy:</b> Shave, punch, or excisional biopsy to confirm diagnosis and subtype.</li>
+      <li><b>Imaging:</b> Generally not required for localized BCC. MRI may be used for very large or deeply invasive tumors to assess perineural or bone involvement.</li>
+      <li><b>Risk Stratification:</b> Based on size, location, histology (e.g., aggressive subtypes like morpheaform, infiltrative, micronodular), and patient factors (e.g., immunosuppression).</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Patient Positioning:</b> Comfortable and reproducible, often supine with head/body immobilization if needed.</li>
+      <li><b>Target Volume Delineation:</b>
+        <ul>
+          <li><b>GTV:</b> Visible/palpable tumor.</li>
+          <li><b>CTV:</b> GTV plus a margin (e.g., 0.5-1.5 cm) depending on tumor size, location, and risk factors.</li>
+          <li><b>PTV:</b> CTV plus a small setup margin.</li>
+        </ul>
+      </li>
+      <li><b>Bolus:</b> Tissue-equivalent material (e.g., wet gauze, Superflab) is typically applied directly to the skin surface to ensure adequate dose to the superficial layers and skin-sparing effect.</li>
+      <li><b>Shielding:</b> Lead cutouts or internal shielding (e.g., lead eye shields, intraoral shields) are used to protect adjacent normal tissues and critical structures (e.g., eye, oral mucosa, cartilage).</li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>Conventional Fractionation:</b> 50-70 Gy in 25-35 fractions (2.0 Gy/fx).</li>
+      <li><b>Hypofractionation:</b> Common for BCC due to slow growth and high α/β ratio. Examples: 45-50 Gy in 15-20 fractions (2.25-3.0 Gy/fx), or 35-40 Gy in 10-15 fractions (2.5-4.0 Gy/fx). Very short courses (e.g., 20-30 Gy in 4-6 fractions) may be used for palliative intent or very elderly/frail patients.</li>
+      <li><b>Adjuvant RT:</b> Doses typically 60-66 Gy for positive/close margins or perineural invasion.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Techniques:</b>
+        <ul>
+          <li><b>Superficial X-ray/Electron Therapy:</b> Most common, ideal for superficial lesions due to rapid dose fall-off. Energy selected based on tumor depth.</li>
+          <li><b>Orthovoltage X-ray:</b> For superficial lesions.</li>
+          <li><b>Megavoltage Electron Beams:</b> For deeper lesions or those with underlying bone/cartilage.</li>
+          <li><b>Megavoltage Photon Beams:</b> For very large or deeply invasive tumors, or involvement of underlying structures, often with bolus.</li>
+          <li><b>Brachytherapy:</b> Interstitial or surface molds may be used for specific sites (e.g., nose, ear, lip) to provide highly conformal dose.</li>
+        </ul>
+      </li>
+      <li><b>Setup Verification:</b> Daily visual checks, orthogonal kV imaging, or cone-beam CT (CBCT) for complex sites.</li>
+      <li><b>Patient Care:</b> Management of acute skin reactions (erythema, dry/moist desquamation), pain, and long-term cosmetic outcomes.</li>
+    </ul>
+  </div>
+
+  <div id="scc-overview" class="tab-content">
+    <h3>Squamous Cell Carcinoma (SCC) of the Skin</h3>
+    <p>Squamous cell carcinoma is the second most common skin cancer. It can be more aggressive than BCC, with a higher risk of local recurrence and regional lymph node metastasis, especially for high-risk features.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li><b>Primary Treatment:</b> For tumors that are surgically unresectable, would result in significant functional deficit or poor cosmesis, or for patients who are not surgical candidates.</li>
+      <li><b>Adjuvant RT:</b> For high-risk SCC after surgical resection, including positive/close margins, perineural invasion, lymphovascular invasion, recurrent disease, large tumor size, deep invasion, or tumors in high-risk anatomic sites (e.g., ear, lip, eyelid, nose, scalp, genitals). Also for regional lymph node metastases after surgery.</li>
+      <li><b>Neoadjuvant RT:</b> For very advanced, unresectable primary tumors or bulky regional nodal disease to downstage for potential surgery.</li>
+      <li><b>Palliative RT:</b> For symptomatic advanced or metastatic disease.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Clinical Evaluation:</b> Visual inspection, palpation for primary lesion and regional lymph nodes.</li>
+      <li><b>Biopsy:</b> Excisional, incisional, or punch biopsy to confirm diagnosis, subtype, and depth.</li>
+      <li><b>Imaging:</b>
+        <ul>
+          <li>Generally not for low-risk SCC.</li>
+          <li><b>High-risk SCC:</b> CT or MRI of the primary site to assess deep invasion (bone, cartilage, perineural spread).</li>
+          <li><b>Regional Nodal Assessment:</b> Ultrasound with FNA of suspicious regional lymph nodes. CT or PET/CT for clinically positive nodes or high-risk features.</li>
+          <li><b>Distant Metastasis:</b> Chest CT for high-risk SCC.</li>
+        </ul>
+      </li>
+      <li><b>Risk Stratification:</b> Based on size, location, depth, differentiation, perineural/lymphovascular invasion, recurrence, and immunosuppression.</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Patient Positioning:</b> Comfortable and reproducible, tailored to the treatment site.</li>
+      <li><b>Target Volume Delineation:</b>
+        <ul>
+          <li><b>Primary Site:</b> GTV (visible/palpable tumor) plus a generous margin (e.g., 1.5-3 cm) to cover microscopic extension.</li>
+          <li><b>Regional Lymphatics:</b> Elective nodal basins (e.g., parotid, cervical, submandibular, inguinal) are included based on primary site and risk factors.</li>
+          <li><b>PTV:</b> CTV plus setup margin.</li>
+        </ul>
+      </li>
+      <li><b>Bolus & Shielding:</b> Similar to BCC, tailored to ensure superficial dose and protect underlying structures.</li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>Primary RT (Definitive):</b> 60-75 Gy in 30-35 fractions (2.0-2.25 Gy/fx) for localized disease. Higher doses (70-75 Gy) for gross disease.</li>
+      <li><b>Adjuvant RT:</b> 50-60 Gy for microscopic disease/negative margins with high-risk features. 60-66 Gy for positive/close margins or perineural invasion. 60-66 Gy for regional nodal areas (post-op).</li>
+      <li><b>Hypofractionation:</b> Similar to BCC, can be used for selected patients or palliative intent.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Techniques:</b> Superficial X-ray, orthovoltage, electron beams (most common). Megavoltage photons for deeper lesions or nodal areas. Brachytherapy for highly conformal treatment of specific sites.</li>
+      <li><b>Setup Verification:</b> Daily visual checks, imaging.</li>
+      <li><b>Patient Care:</b> Management of acute skin reactions, mucositis (for lip/oral cavity lesions), and long-term cosmetic/functional outcomes.</li>
+    </ul>
+  </div>
+
+  <div id="melanoma-overview" class="tab-content">
+    <h3>Melanoma</h3>
+    <p>Melanoma is a highly aggressive skin cancer with a significant risk of metastasis. While surgery is the primary treatment, radiation therapy plays important roles in adjuvant, neoadjuvant, and palliative settings.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li><b>Adjuvant RT:</b> For high-risk resected primary melanoma (e.g., desmoplastic melanoma with positive/close margins). For regional lymph node basins after lymphadenectomy, especially with extranodal extension (ENE).</li>
+      <li><b>Neoadjuvant RT:</b> For selected patients with unresectable or borderline resectable regional nodal disease.</li>
+      <li><b>Palliative RT:</b> For symptomatic local recurrence, in-transit metastases, or distant metastases (e.g., bone, brain).</li>
+      <li><b>Definitive RT:</b> For unresectable primary melanoma or regional nodal disease in patients who are not surgical candidates.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Clinical Evaluation:</b> Visual inspection, palpation of primary lesion and regional lymph nodes.</li>
+      <li><b>Biopsy:</b> Excisional biopsy for primary diagnosis. Sentinel Lymph Node (SLN) biopsy for staging.</li>
+      <li><b>Imaging:</b>
+        <ul>
+          <li><b>Primary:</b> Generally not for localized primary.</li>
+          <li><b>Regional Nodes:</b> Ultrasound of regional basins with FNA of suspicious nodes. CT or PET/CT for clinically positive nodes.</li>
+          <li><b>Distant Metastasis:</b> CT chest/abdomen/pelvis and brain MRI for Stage III/IV. PET/CT often used.</li>
+        </ul>
+      </li>
+      <li><b>Molecular Testing:</b> BRAF, NRAS, KIT, GNAQ/GNA11 mutations for advanced disease to guide systemic therapy.</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Patient Positioning:</b> Comfortable and reproducible. Custom immobilization devices may be used for head/neck or trunk lesions.</li>
+      <li><b>Target Volume Delineation:</b>
+        <ul>
+          <li><b>Primary Site/Scar:</b> Surgical scar with appropriate margin (e.g., 2-3 cm).</li>
+          <li><b>Regional Lymph Node Basins:</b> Includes involved and at-risk nodal areas (e.g., parotid, cervical, axillary, inguinal, pelvic).</li>
+          <li><b>PTV:</b> CTV plus setup margin.</li>
+        </ul>
+      </li>
+      <li><b>Bolus:</b> Essential for superficial dose coverage, especially over scars or skin involvement.</li>
+      <li><b>Shielding:</b> To protect adjacent normal tissues.</li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>Adjuvant RT (Primary Site):</b> 48-60 Gy in 20-30 fractions (2.0-3.0 Gy/fx). Higher doses for desmoplastic melanoma with positive margins (e.g., 60-66 Gy).</li>
+      <li><b>Adjuvant RT (Regional Nodes):</b> 48-60 Gy in 20-30 fractions (2.0-3.0 Gy/fx). Higher doses (e.g., 60-66 Gy) for gross residual disease or ENE.</li>
+      <li><b>Palliative RT:</b> Short courses for symptom relief (e.g., 20-30 Gy in 5-10 fractions for bone/soft tissue, 20 Gy in 5 fractions for brain). SBRT/SRS for oligometastases.</li>
+      <li><b>Hypofractionation:</b> Often used due to melanoma's presumed low α/β ratio.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Techniques:</b> Electron beams, orthovoltage, or megavoltage photons depending on depth and location. IMRT/VMAT for complex head and neck sites or to spare critical structures.</li>
+      <li><b>Setup Verification:</b> Daily imaging (kV, CBCT).</li>
+      <li><b>Sequencing with Systemic Therapy:</b>
+        <ul>
+          <li><b>Adjuvant Systemic Therapy:</b> Pembrolizumab, nivolumab, dabrafenib/trametinib for high-risk resected melanoma. RT can be given before or after systemic therapy, or concurrently in some cases (with caution due to potential for increased toxicity).</li>
+          <li><b>Neoadjuvant Systemic Therapy:</b> Ipilimumab/nivolumab or BRAF/MEK inhibitors for resectable Stage III/IV.</li>
+        </ul>
+      </li>
+      <li><b>Patient Care:</b> Management of acute skin reactions, fatigue, and long-term side effects.</li>
+    </ul>
+  </div>
+
+  <div id="general-skin-rt" class="tab-content">
+    <h3>General Principles of Radiation Therapy for Skin Cancers</h3>
+    <p>Radiation therapy for skin cancers, including BCC, SCC, and melanoma, requires specialized techniques to deliver precise doses to superficial targets while minimizing damage to underlying healthy tissues and optimizing cosmetic outcomes.</p>
+
+    <h4>Key Principles:</h4>
+    <ul>
+      <li><b>Patient Selection:</b> RT is an excellent option for patients who are not surgical candidates, refuse surgery, or for lesions in cosmetically or functionally sensitive areas.</li>
+      <li><b>Accurate Target Delineation:</b> Careful clinical examination and often imaging are used to define the gross tumor and appropriate margins for microscopic extension.</li>
+      <li><b>Superficial Dose Delivery:</b> Skin cancers are superficial, so RT techniques must ensure adequate dose to the skin surface.</li>
+      <li><b>Tissue Equivalence:</b> Bolus (tissue-equivalent material) is frequently used to ensure buildup of dose on the skin surface and to conform the treatment field to irregular surfaces.</li>
+      <li><b>Shielding:</b> Custom lead cutouts and internal shields are essential to protect adjacent normal skin, underlying bone, cartilage, and critical organs (e.g., eyes, oral cavity).</li>
+      <li><b>Fractionation:</b>
+        <ul>
+          <li><b>Conventional:</b> Standard for many cases.</li>
+          <li><b>Hypofractionation:</b> Often employed, especially for BCC and SCC, due to their radiobiology (high α/β ratio for BCC/SCC, low α/β for melanoma). Can offer convenience and comparable efficacy.</li>
+        </ul>
+      </li>
+      <li><b>Technique Selection:</b>
+        <ul>
+          <li><b>Superficial X-ray (Orthovoltage):</b> Ideal for very superficial lesions with minimal penetration.</li>
+          <li><b>Electron Beams:</b> Provide a sharp dose fall-off, making them suitable for lesions of varying depths while sparing deeper tissues. Energy is chosen based on tumor depth.</li>
+          <li><b>Brachytherapy:</b> Surface applicators or interstitial implants can deliver highly conformal doses to complex anatomical sites, minimizing dose to surrounding healthy tissue.</li>
+          <li><b>Megavoltage Photons:</b> Used for very thick lesions, deeply invasive tumors, or regional nodal areas, often with bolus.</li>
+        </ul>
+      </li>
+      <li><b>Image Guidance:</b> While not always daily, careful setup and verification (e.g., using light fields, laser alignment, or occasional imaging) are crucial.</li>
+      <li><b>Cosmetic Outcome:</b> A primary consideration, especially for lesions on the face. RT can offer excellent cosmetic results when appropriately planned.</li>
+      <li><b>Acute and Late Toxicities:</b> Management of skin reactions (erythema, desquamation), hair loss (temporary or permanent), and long-term changes (telangiectasias, fibrosis, pigment changes).</li>
+    </ul>
+  </div>
+
+  <div class="references">
+    <h3>References</h3>
+    <ul>
+      <li>Rathi, A. K. (n.d.). <i>Step by Step Radiation Therapy: Treatment and Planning</i>. Jaypee Brothers Medical Publishers.</li>
+      <li>National Comprehensive Cancer Network. (2024). <i>NCCN Clinical Practice Guidelines in Oncology (NCCN Guidelines®): Basal Cell Skin Cancer</i> (Version 1.2024).</li>
+      <li>National Comprehensive Cancer Network. (2024). <i>NCCN Clinical Practice Guidelines in Oncology (NCCN Guidelines®): Cutaneous Squamous Cell Carcinoma</i> (Version 1.2024).</li>
+      <li>National Comprehensive Cancer Network. (2024). <i>NCCN Clinical Practice Guidelines in Oncology (NCCN Guidelines®): Melanoma</i> (Version 3.2024).</li>
+    </ul>
+  </div>
+</div>
