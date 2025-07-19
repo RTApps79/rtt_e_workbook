@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body {
+    font-family: sans-serif;
+    line-height: 1.6;
+    margin: 20px;
+    background-color: #f4f4f4;
+    color: #333;
+  }
+  h2 {
+    color: #0056b3;
+    border-bottom: 2px solid #0056b3;
+    padding-bottom: 5px;
+    margin-top: 30px;
+  }
+  h3 {
+    color: #004085;
+    margin-top: 20px;
+  }
+  h4 {
+    color: #004085;
+    margin-top: 15px;
+    margin-bottom: 10px;
+  }
+  .lesson-container {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  .tab-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  .tab-button {
+    background-color: #e0e0e0;
+    border: 1px solid #ccc;
+    padding: 10px 15px;
+    cursor: pointer;
+    margin-right: 5px;
+    border-radius: 5px 5px 0 0;
+    transition: background-color 0.3s ease;
+    white-space: nowrap; /* Prevent text wrapping */
+  }
+  .tab-button.active {
+    background-color: #0056b3;
+    color: white;
+    border-color: #0056b3;
+  }
+  .tab-content {
+    display: none;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-top: none;
+    padding: 20px;
+    border-radius: 0 0 8px 8px;
+    background-color: #f9f9f9;
+  }
+  .tab-content.active {
+    display: block;
+  }
+  ul {
+    list-style-type: disc;
+    margin-left: 20px;
+  }
+  li {
+    margin-bottom: 8px;
+  }
+  b {
+    color: #0056b3;
+  }
+  .references {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #ccc;
+    font-size: 0.9em;
+    color: #555;
+  }
+  .attention {
+    font-weight: bold;
+    color: #d9534f;
+  }
+</style>
+</head>
+<body>
+
+<div class="lesson-container">
+  <h2>Breast Tumors: Radiation Therapy Planning and Delivery</h2>
+
+  <p>This lesson provides detailed information on the preplanning, planning, and delivery steps for radiation therapy in breast cancer, with enhanced focus on precise field borders.</p>
+
+  <div class="tab-container">
+    <button class="tab-button active" onclick="openBreastTab(event, 'role-rt')">Role of Radiotherapy</button>
+    <button class="tab-button" onclick="openBreastTab(event, 'preplanning-assessment')">Preplanning & Assessment</button>
+    <button class="tab-button" onclick="openBreastTab(event, 'target-delineation')">Target Delineation & Borders</button>
+    <button class="tab-button" onclick="openBreastTab(event, 'patient-positioning')">Patient Positioning & Immobilization</button>
+    <button class="tab-button" onclick="openBreastTab(event, 'techniques-fields')">Techniques & Field Arrangements</button>
+    <button class="tab-button" onclick="openBreastTab(event, 'dose-prescription')">Dose Prescription</button>
+    <button class="tab-button" onclick="openBreastTab(event, 'treatment-delivery')">Treatment Delivery</button>
+  </div>
+
+  <div id="role-rt" class="tab-content active">
+    <h3>Role of Radiation Therapy</h3>
+    <p>Radiation therapy (RT) plays a crucial role in the management of breast cancer, both for local control and regional nodal control. The specific indications depend on the type of surgery, tumor characteristics, and nodal status.</p>
+
+    <h4>Indications of Chest Wall Radiation:</h4>
+    <ul>
+      <li>Positive resection margin or gross residual disease.</li>
+      <li>T3 tumors and T4 tumors (any size with direct extension to chest wall or skin).</li>
+      <li>Four or more positive nodes in the axilla.</li>
+      <li>Close surgical margins.</li>
+      <li>Lymphovascular invasion (LVSI).</li>
+      <li>1-3 lymph nodes in the presence of other risk factors.</li>
+    </ul>
+
+    <h4>Indications of Axillary Irradiation:</h4>
+    <ul>
+      <li>Four or more axillary lymph nodes positive.</li>
+      <li>Perinodal disease.</li>
+      <li>Inadequate surgical dissection (less than 10 lymph nodes dissected).</li>
+      <li>Unknown axillary status.</li>
+      <li>Posterior axillary boost needed in obese patients where the anterior field is unable to deliver adequate dose to axillary nodes (e.g., patients with separation >12 cm and heavily involved axilla).</li>
+    </ul>
+    <p>For Ductal Carcinoma In Situ (DCIS), Whole Breast RT (WBRT) following Breast-Conserving Surgery (BCS) reduces ipsilateral breast tumor recurrence rates by 50%-70%. Accelerated Partial Breast Irradiation (APBI)/Partial Breast Irradiation (PBI) may be considered in selected low-risk patients.</p>
+  </div>
+
+  <div id="preplanning-assessment" class="tab-content">
+    <h3>Preplanning and Assessment</h3>
+    <p>Thorough assessment is critical before initiating radiation therapy for breast cancer to ensure accurate staging and personalized treatment planning.</p>
+
+    <h4>Assessment of Primary Tumor:</h4>
+    <ul>
+      <li><b>Clinical examination</b> and diagrammatic documentation of primary tumor and nodal areas.</li>
+      <li><b>Mammography</b>: Diagnostic bilateral mammogram.</li>
+      <li><b>MRI breast</b>: May be used for staging evaluation to define the extent of cancer or presence of multifocal or multicentric cancer in the ipsilateral breast, or as screening of the contralateral breast cancer at the time of initial diagnosis. It can also be helpful for evaluation before and after preoperative systemic therapy.</li>
+      <li><b>Grossing of surgical specimen</b> for size, site, and extent.</li>
+      <li><b>Histology</b> for size, type, grade, margin receptor status (Estrogen Receptor [ER], Progesterone Receptor [PR]), and HER2 status, and lymph node status.</li>
+      <li><b>Extent of surgical scar</b>.</li>
+      <li><b>Genetic counseling and testing</b>: Recommended for patients at risk of hereditary breast cancer, those with triple-negative breast cancer (TNBC) at any age, or candidates for adjuvant olaparib.</li>
+      <li><b>Fertility and sexual health concerns</b>: Should be addressed as appropriate.</li>
+      <li><b>Pregnancy test</b>: In all patients of childbearing potential (if pregnant, refer to specific guidelines for breast cancer during pregnancy).</li>
+      <li><b>Distress assessment</b>: Consider assessing for distress using appropriate guidelines.</li>
+      <li><b>Lymphedema screening</b>: Consider baseline lymphedema screening.</li>
+    </ul>
+  </div>
+
+  <div id="target-delineation" class="tab-content">
+    <h3>Target Delineation & Field Borders</h3>
+    <p>Accurate delineation of target volumes and organs at risk is fundamental for precise radiation delivery in breast cancer treatment. This includes defining specific field borders for various techniques.</p>
+
+    <h4>Target Volume:</h4>
+    <ul>
+      <li><b>In intact breast</b>: The entire breast with a one-centimeter margin and a small portion of underlying lung.</li>
+      <li><b>In operated cases (after modified radical mastectomy)</b>: The chest wall and a small portion of underlying lung. Radiopaque surgical clips placed peri-operatively at margins of the tumor bed assist in defining the target volume.</li>
+    </ul>
+
+    <h4>Field Placement Borders (General):</h4>
+    <ul>
+      <li><b>Whole Breast Technique (Medial and lateral tangential portals)</b>:
+        <ul>
+          <li><b>Upper border:</b> Lower margin of clavicle or intercostal space.</li>
+          <li><b>Medial border:</b> At or over 1 cm over the midline.</li>
+          <li><b>Lateral border:</b> 2 cm beyond all palpable breast tissue (Midaxillary line).</li>
+          <li><b>Inferior border:</b> 2 cm below the inframammary fold.</li>
+        </ul>
+      </li>
+      <li><b>Locoregional RT (including chest wall, axilla, and supraclavicular/infraclavicular regions)</b>:
+        <ul>
+          <li><b>Upper border:</b> 2nd intercostal space (angle of Louis).</li>
+          <li><b>Medial border:</b> At or 1 cm over the midline, abutting the lateral margin of the Internal Mammary Nodal (IMN) field if used.</li>
+          <li><b>Lateral border:</b> Midaxillary line.</li>
+          <li><b>Inferior border:</b> 2 cm below the inframammary fold.</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h4>Detailed Field Placement Borders:</h4>
+    <ul>
+      <li><b>Tangential Treatment Borders (Whole Breast/Chest Wall):</b>
+        <ul>
+          <li><b>Medial:</b> Midline (Sternum).</li>
+          <li><b>Lateral:</b> Mid-axillary line (2 cm beyond breast tissue).</li>
+          <li><b>Superior:</b> 1st costal space (or as superior as possible, may be limited by the ipsilateral arm).</li>
+          <li><b>Inferior:</b> 1-2 cm below inframammary fold.</li>
+          <li><b>Anterior:</b> Field light fall-off (“flash”) and SSD should be checked during the verification simulation on the linac. This margin accounts for the respiratory motion to ensure the inclusion of all breast tissue.</li>
+        </ul>
+      </li>
+      <li><b>Supraclavicular Treatment Borders:</b>
+        <ul>
+          <li><b>Medial:</b> 1 cm across midline (or at midline).</li>
+          <li><b>Lateral:</b> From acromioclavicular (AC) joint, bisect humeral head to include coracoid process (Axillary lymph nodes are medial to the humeral head and coracoid process. If undissected axilla, include the entire lateral aspect of the humeral head to include the Level 1 axillary nodes).</li>
+          <li><b>Superior:</b> Approximately 5 cm above suprasternal notch (SSN) extending laterally across neck to the acromion process.</li>
+          <li><b>Inferior:</b> 1st costal interspace or abutting the tangent field.</li>
+        </ul>
+      </li>
+      <li><b>Posterior Axillary Boost (PAB) Treatment Borders:</b>
+        <ul>
+          <li><b>Superior:</b> Bisect clavicle and humeral head.</li>
+          <li><b>Inferior:</b> Field matches the superior border of the tangential field (same as supraclav field).</li>
+          <li><b>Medial:</b> Approximately 1 cm of the lung to include the axillary nodes close to the chest wall.</li>
+          <li><b>Lateral:</b> Latissimus dorsi muscle.</li>
+        </ul>
+      </li>
+      <li><b>Internal Mammary Nodal Portal (Direct Fields):</b> Not routinely used, but considered for tumors of the central and medial quadrant, and locally advanced breast cancers.
+        <ul>
+          <li><b>Upper border:</b> Inferior border of the Supraclavicular Fossa (SCF) field.</li>
+          <li><b>Medial border:</b> Midline (2 cm across midline).</li>
+          <li><b>Lateral border:</b> 6 cm from and parallel to medial border (4 cm to ipsilateral side).</li>
+          <li><b>Inferior border:</b> Base of xiphoid.</li>
+        </ul>
+      </li>
+    </ul>
+    <p>Regional nodes should be contoured when Regional Nodal Irradiation (RNI) is indicated. Refer to breast atlases for contouring guidelines to ensure adequate RT coverage.</p>
+  </div>
+
+  <div id="patient-positioning" class="tab-content">
+    <h3>Patient Positioning and Immobilization</h3>
+    <p>Precise patient positioning and immobilization are crucial for reproducible and accurate radiation delivery in breast cancer treatment.</p>
+
+    <h4>Standard Positioning:</h4>
+    <ul>
+      <li>Patient is positioned <b>supine</b> with the arm abducted at 90°.</li>
+      <li><b>Immobilization devices</b> such as alpha cradle and plastic molds may be used to ensure stability and reproducibility.</li>
+      <li>The slope of the chest wall can be corrected with a triangular wedge or an incline under the head and shoulders to optimize dose distribution.</li>
+    </ul>
+
+    <h4>Special Positioning (for Posterior Axillary Boost Portal):</h4>
+    <ul>
+      <li>Patient is positioned <b>prone</b> with the head turned to the contralateral side.</li>
+      <li>The forearm is rotated down, and the shoulder is in contact with the table top. The back of the hand is placed on the pelvic brim. This position helps to bring the axillary region into a more favorable geometry for treatment.</li>
+    </ul>
+  </div>
+
+  <div id="techniques-fields" class="tab-content">
+    <h3>Techniques and Field Arrangements</h3>
+    <p>Modern radiation therapy utilizes advanced techniques and precise field arrangements to deliver highly conformal doses to breast tumors while minimizing exposure to healthy tissues.</p>
+
+    <h4>Optimizing Delivery of Individual Therapy:</h4>
+    <ul>
+      <li><b>3-D CT-based treatment planning</b> should be routinely utilized to delineate target volumes and organs at risk, and assess dose distribution across the entire treatment volume.</li>
+      <li>Radiation is generally delivered with single or mixed energy photons ± electrons.</li>
+      <li>Treatment planning should be optimized to maximally improve homogeneity across the target volume while minimizing dose to organs at risk (OARs).</li>
+      <li>Additional techniques such as <b>respiratory control</b> (deep inspiration breath-hold [DIBH]), <b>prone positioning</b>, and <b>cardiac blocks</b> may also be used to further reduce dose to the heart, lung, and adjacent normal tissue.</li>
+      <li>Dose-Volume Histograms (DVHs) should be used to evaluate dose, normal tissue constraints (e.g., heart, lung), and Planning Target Volumes (PTVs).</li>
+    </ul>
+
+    <h4>Whole Breast RT (WBRT) Techniques:</h4>
+    <ul>
+      <li><b>Medial and lateral tangential portals</b> are the standard approach.</li>
+      <li><b>Ultra-hypofractionated WBRT</b> (e.g., 28.5 Gy in 5 once-a-week fractions or 26 Gy in 5 daily fractions over one week) may be considered for selected patients, particularly those over 50 years with early-stage, node-negative disease. When using ultra-hypofractionated dosing, 3D planning is essential to minimize inhomogeneity and exposure to heart and lung.</li>
+    </ul>
+
+    <h4>Postmastectomy Radiation Therapy (PMRT) Techniques:</h4>
+    <ul>
+      <li>The target includes the ipsilateral chest wall and the clinically relevant mastectomy scar ± drain sites.</li>
+      <li>Regional nodal RT is typically delivered with the chest wall.</li>
+      <li>Various 3-D, Intensity Modulated Radiation Therapy (IMRT), or Volumetric Modulated Arc Therapy (VMAT) techniques using photons and/or electrons are appropriate, especially with breast reconstruction.</li>
+      <li>The routine use of bolus is not recommended; it should be used for inflammatory breast cancer and considered in clinically relevant situations where the dose to the skin may not be adequate.</li>
+    </ul>
+
+    <h4>Regional Nodal Radiation (RNI) Techniques:</h4>
+    <ul>
+      <li>For supra/infra-clavicular and axillary nodes, prescription depth varies based on patient anatomy.</li>
+      <li>Regional nodes should be contoured when RNI is indicated using breast atlases for guidelines.</li>
+      <li>A supplemental boost of RT can be delivered to grossly involved or enlarged lymph nodes (e.g., internal mammary, supra/infra-clavicular) that have not been surgically removed.</li>
+    </ul>
+
+    <h4>Accelerated Partial Breast Irradiation (APBI)/Partial Breast Irradiation (PBI):</h4>
+    <ul>
+      <li>APBI/PBI targets only a portion of the breast, offering comparable local control and cosmetic outcomes to WBRT in selected patients.</li>
+      <li>Techniques include External Beam RT APBI (e.g., 30 Gy/5 fractions QOD with IMRT/VMAT protocol mandated, or 40 Gy/15 fractions) and Brachytherapy APBI (e.g., 34 Gy/10 fractions BID, 32 Gy/8 fractions BID, 30.1 Gy/7 fractions BID).</li>
+    </ul>
+  </div>
+
+  <div id="dose-prescription" class="tab-content">
+    <h3>Dose Prescription</h3>
+    <p>Radiation doses for breast cancer vary based on the treatment area, intent, and fractionation schedule.</p>
+
+    <h4>Primary Tumor and Regional Nodes (Conventional Fractionation):</h4>
+    <ul>
+      <li><b>Primary (Breast/Chest Wall)</b>: 50 Gy in 25 fractions over 5 weeks, at a dose rate of 2 Gy/day, treated 5 days a week. Dose calculated at mid-separation (3-3.5 cm within the flap for operated cases).</li>
+      <li><b>Regional Nodes</b>: 50 Gy in 25 fractions over 5 weeks, at a dose rate of 2 Gy/day, treated 5 days a week. Dose calculated at 3 cm depth for IMN field and 0.5 cm for SCF field. At midplane 2 cm below the midportion of the clavicle in posterior axillary field.</li>
+    </ul>
+
+    <h4>Boost to Lumpectomy Cavity (after breast conservation):</h4>
+    <ul>
+      <li>Electrons or photons: 15-18 Gy in 6-7 fractions.</li>
+      <li>Interstitial brachytherapy: 20-25 Gy at 85% isodose in 3-4 days.</li>
+      <li>Typical boost doses when given sequentially are 10-16 Gy in 4-8 fractions.</li>
+      <li>When given concurrently (as a simultaneous integrated boost): the whole breast should receive 40 Gy in 15 fractions and the lumpectomy site should receive 48 Gy in 15 fractions.</li>
+    </ul>
+
+    <h4>Hypofractionated Whole Breast RT:</h4>
+    <ul>
+      <li>Preferred dose: 40-42.5 Gy in 15-16 fractions.</li>
+      <li>Ultra-hypofractionated: 28.5 Gy in 5 (once-a-week) fractions may be considered for selected patients over 50 years following BCS with early-stage, node-negative disease (particularly if no boost is intended). Alternatively, 26 Gy in 5 daily fractions over one week.</li>
+    </ul>
+
+    <h4>Postmastectomy RT (PMRT) Dosing:</h4>
+    <ul>
+      <li>Chest wall RT dose: May be delivered in conventional dosing of 45-50.4 Gy in 25-28 fractions or moderately hypofractionated dosing of 40-42.5 Gy in 15-16 fractions.</li>
+      <li>Chest wall scar boost: Approximately 10 Gy delivered in 4-5 fractions with or without bolus using electrons or photons.</li>
+    </ul>
+
+    <h4>Regional Nodal Radiation (RNI) Dosing:</h4>
+    <ul>
+      <li>RT doses to the regional nodes: 46-50 Gy (conventional fractionation) or 39-42 Gy (moderately fractionated).</li>
+    </ul>
+
+    <h4>Accelerated Partial Breast Irradiation (APBI)/Partial Breast Irradiation (PBI) Dosing:</h4>
+    <ul>
+      <li>EBRT APBI: 30 Gy/5 fractions QOD (preferred) or 40 Gy/15 fractions.</li>
+      <li>Brachytherapy APBI (including balloon/interstitial): 34 Gy/10 fractions BID; 32 Gy/8 fractions BID; 30.1 Gy/7 fractions BID.</li>
+    </ul>
+  </div>
+
+  <div id="treatment-delivery" class="tab-content">
+    <h3>Treatment Delivery</h3>
+    <p>The final stage of radiation therapy involves meticulous implementation, verification, and monitoring to ensure the precise delivery of the prescribed dose.</p>
+
+    <h4>Sequencing of RT with Systemic Therapy:</h4>
+    <ul>
+      <li>It is common for RT to follow chemotherapy when chemotherapy is indicated.</li>
+      <li>CMF (cyclophosphamide/methotrexate/fluorouracil) is the only standard regimen that can be given concurrently with RT.</li>
+      <li>Capecitabine is typically given after completion of RT.</li>
+      <li>Olaparib should be given after completion of RT.</li>
+      <li>Available data suggest that sequential or concurrent endocrine therapy with RT is acceptable. Due to compounding side effects, initiating endocrine therapy at the completion of RT may be preferred.</li>
+      <li>Abemaciclib or ribociclib should be initiated after completion of surgery/RT/chemotherapy, concurrently with endocrine therapy.</li>
+      <li>Adjuvant HER2-targeted therapy ± endocrine therapy may be delivered concurrently with RT.</li>
+    </ul>
+
+    <h4>Setup Verification and Image Guidance:</h4>
+    <ul>
+      <li>At a minimum, <b>weekly imaging</b> to verify treatment setup should be utilized. More frequent imaging may be needed for selected cases with inconsistent reproducibility.</li>
+      <li><b>Image-guided radiation therapy (IGRT)</b> may be utilized with DIBH technique to reduce normal tissue exposure of the heart, lung, or liver.</li>
+      <li>For electron boosts, physician approval of setup is crucial, and templates/photos are used for reproducibility.</li>
+    </ul>
+
+    <h4>Patient Care During Treatment:</h4>
+    <ul>
+      <li>Monitor for skin reactions, especially with bolus use or in inflammatory breast cancer.</li>
+      <li>Manage fatigue and other systemic side effects.</li>
+      <li>Address potential cardiac toxicity, especially with anthracyclines or HER2-targeted therapy; regular cardiac monitoring (e.g., LVEF assessment) is recommended.</li>
+      <li>For patients receiving taxane therapies, consider cryotherapy of hands and feet to decrease the risk of peripheral neuropathy.</li>
+      <li>Consider scalp cooling to reduce chemotherapy-induced alopecia.</li>
+    </ul>
+  </div>
+
+  <div class="references">
+    <h3>References</h3>
+    <ul>
+      <li>Rathi, A. K. (n.d.). <i>Step by Step Radiation Therapy: Treatment and Planning</i>. Jaypee Brothers Medical Publishers.</li>
+      <li>National Comprehensive Cancer Network. (2025). <i>NCCN Clinical Practice Guidelines in Oncology (NCCN Guidelines®): Breast Cancer</i> (Version 1.2025).</li>
+      <li>Stiles, J. (2023). <i>Localization & Treatment Procedures in Radiation Therapy</i>. Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  function openBreastTab(evt, tabId) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tab-content");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+      tabcontent[i].classList.remove("active");
+    }
+    tablinks = document.getElementsByClassName("tab-button");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].classList.remove("active");
+    }
+    document.getElementById(tabId).style.display = "block";
+    document.getElementById(tabId).classList.add("active");
+    evt.currentTarget.classList.add("active");
+  }
+
+  // Set the first tab as active by default when the page loads
+  document.addEventListener("DOMContentLoaded", function() {
+    document.querySelector(".tab-button").click();
+  });
+</script>
+
+</body>
+</html>
