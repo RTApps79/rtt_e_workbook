@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body {
+    font-family: sans-serif;
+    line-height: 1.6;
+    margin: 20px;
+    background-color: #f4f4f4;
+    color: #333;
+  }
+  h2 {
+    color: #0056b3;
+    border-bottom: 2px solid #0056b3;
+    padding-bottom: 5px;
+    margin-top: 30px;
+  }
+  h3 {
+    color: #004085;
+    margin-top: 20px;
+  }
+  h4 {
+    color: #004085;
+    margin-top: 15px;
+    margin-bottom: 10px;
+  }
+  .lesson-container {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  .tab-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  .tab-button {
+    background-color: #e0e0e0;
+    border: 1px solid #ccc;
+    padding: 10px 15px;
+    cursor: pointer;
+    margin-right: 5px;
+    border-radius: 5px 5px 0 0;
+    transition: background-color 0.3s ease;
+    white-space: nowrap; /* Prevent text wrapping */
+  }
+  .tab-button.active {
+    background-color: #0056b3;
+    color: white;
+    border-color: #0056b3;
+  }
+  .tab-content {
+    display: none;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-top: none;
+    padding: 20px;
+    border-radius: 0 0 8px 8px;
+    background-color: #f9f9f9;
+  }
+  .tab-content.active {
+    display: block;
+  }
+  ul {
+    list-style-type: disc;
+    margin-left: 20px;
+  }
+  li {
+    margin-bottom: 8px;
+  }
+  b {
+    color: #0056b3;
+  }
+  .references {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #ccc;
+    font-size: 0.9em;
+    color: #555;
+  }
+  .attention {
+    font-weight: bold;
+    color: #d9534f;
+  }
+</style>
+</head>
+<body>
+
+<div class="lesson-container">
+  <h2>Metastatic and Palliative Disease Treatment</h2>
+
+  <p>This lesson explores the concepts and treatment strategies for metastatic cancer, with a particular focus on oligometastatic disease and the role of palliative radiation therapy, including detailed field borders and setup considerations.</p>
+
+  <div class="tab-container">
+    <button class="tab-button active" onclick="openMetPalliTab(event, 'overview-metastasis')">Overview of Metastasis & Oligometastasis</button>
+    <button class="tab-button" onclick="openMetPalliTab(event, 'oligometastasis-paradigms')">Oligometastatic Disease: Treatment Paradigms</button>
+    <button class="tab-button" onclick="openMetPalliTab(event, 'oligometastasis-therapy')">Therapeutic Options for Oligometastasis</button>
+    <button class="tab-button" onclick="openMetPalliTab(event, 'palliative-rt-general')">Palliative Radiotherapy: General Principles</button>
+    <button class="tab-button" onclick="openMetPalliTab(event, 'palliative-rt-bone')">Palliative RT: Bone Metastasis</button>
+    <button class="tab-button" onclick="openMetPalliTab(event, 'palliative-rt-brain')">Palliative RT: Brain Metastasis</button>
+    <button class="tab-button" onclick="openMetPalliTab(event, 'palliative-rt-lung')">Palliative RT: Lung Metastasis</button>
+    <button class="tab-button" onclick="openMetPalliTab(event, 'palliative-rt-other')">Palliative RT: Other Sites</button>
+  </div>
+
+  <div id="overview-metastasis" class="tab-content active">
+    <h3>Overview of Metastasis & Oligometastasis</h3>
+    <p>Metastasis is the primary cause of most cancer-related deaths. It describes the process by which cancer cells spread from the primary tumor to distant sites in the body.</p>
+
+    <h4>Theories of Metastasis:</h4>
+    <ul>
+      <li><b>"Seed and Soil" Theory (Paget, 1889):</b> Circulating tumor cells ("seeds") would "seed" to an amenable distant organ microenvironment ("soil").</li>
+      <li><b>Halsted's Theory (1894):</b> Cancer progresses in an orderly, contiguous manner, from the primary tumor through lymphatics to lymph nodes, then to distant sites. This supported radical surgery and regional irradiation.</li>
+      <li><b>"Systemic" Theory (Keynes, Fisher):</b> Clinically apparent cancer is a systemic disease, and small tumors are an early manifestation of systemic disease. Local control would not impact survival.</li>
+      <li><b>"Spectrum" Theory (Hellman, 1994):</b> Disease stage falls into a continuum from localized to widely metastatic. Metastatic potential is influenced by tumor phenotype, location, venous drainage, and host factors.</li>
+    </ul>
+
+    <h4>Oligometastasis:</h4>
+    <ul>
+      <li><b>Definition:</b> A disease state where metastatic burden is limited, usually to 1-5 clinically evident or radiographic sites, and is not rapidly spreading. It represents a transitional state between localized and widespread systemic disease.</li>
+      <li><b>Clinical Implication:</b> If the primary site is controlled (or resected) and the metastatic sites are ablated (surgically or with radiation), a prolonged disease-free interval and potentially even cure may be achieved.</li>
+      <li><b>Biological Basis:</b>
+        <ul>
+          <li>Cancer cells at different sites within a patient can have varied malignant potential.</li>
+          <li>Some primary tumor cells may have limited capability in necessary biological requirements for full metastasis.</li>
+          <li>The concept of "sleeping cancer cells" suggests cells that look like cancer but are energetically insufficient.</li>
+          <li>MicroRNAs may distinguish oligometastases from polymetastatic disease.</li>
+        </ul>
+      </li>
+      <li><b>Increasing Diagnosis:</b> Due to sensitive imaging technologies and effective therapies allowing patients to live longer.</li>
+    </ul>
+  </div>
+
+  <div id="oligometastasis-paradigms" class="tab-content">
+    <h3>Oligometastatic Disease: Treatment Paradigms</h3>
+    <p>The treatment of oligometastatic disease is a growing area of oncology, driven by improved diagnostics and novel local therapies. However, controversies exist regarding its optimal management.</p>
+
+    <h4>Controversies:</h4>
+    <ul>
+      <li><b>Lack of Randomized Studies:</b> Without high-level evidence from randomized controlled trials, it's challenging to definitively prove that aggressive local treatment of oligometastatic disease improves overall survival.</li>
+      <li><b>Indolent Disease:</b> Oligometastatic disease may represent an indolent form of cancer that might not require potentially toxic treatments.</li>
+      <li><b>Distinguishing from Widespread Disease:</b> Current imaging may detect very early disease that is destined to become widespread, making it difficult to distinguish true oligometastasis from early polymetastatic disease.</li>
+    </ul>
+
+    <h4>Rationale for Treatment:</h4>
+    <ul>
+      <li><b>Potential for Cure/Prolonged Survival:</b> Ablative therapies (surgery, radiation) to limited metastatic sites may lead to long-term disease-free intervals or even cure.</li>
+      <li><b>Decreased Tumor Burden:</b> Reducing overall tumor burden can decrease morbidity and potentially delay the need for more toxic systemic treatments.</li>
+      <li><b>Prevention of Further Evolution:</b> Treating limited metastases may prevent further evolution of genetically unstable clones and widespread metastatic dissemination.</li>
+      <li><b>Novel Therapies:</b> Availability of effective local therapies with acceptable safety profiles (e.g., SBRT, cryoablation, minimally invasive surgery) makes treatment more feasible.</li>
+      <li><b>Quality of Life:</b> Treatment may improve quality of life by addressing symptomatic lesions.</li>
+    </ul>
+
+    <h4>Definitions of Oligometastasis (Evolving):</h4>
+    <ul>
+      <li><b>Classic Oligometastasis:</b> Metastases limited in number and location due to undeveloped metastatic competence.</li>
+      <li><b>Induced Oligometastasis:</b> Occurs when widespread micrometastatic disease is mostly eradicated by systemic chemotherapy, leaving drug-resistant clones or foci in chemotherapy-inaccessible sites.</li>
+      <li><b>Oligorecurrence:</b> Limited metastases in the presence of a controlled primary lesion.</li>
+      <li><b>Synchronous Oligometastasis:</b> Oligometastatic disease detected at the time of primary tumor diagnosis (active primary tumor present).</li>
+      <li><b>Metachronous Oligometastasis:</b> Development of oligometastatic disease after treatment of the primary tumor.</li>
+      <li><b>Oligoprogression:</b> Progression of a limited number of metastatic deposits while remaining metastases are controlled with systemic therapy.</li>
+    </ul>
+  </div>
+
+  <div id="oligometastasis-therapy" class="tab-content">
+    <h3>Therapeutic Options for Oligometastasis</h3>
+    <p>Various local ablative therapies are employed to treat oligometastatic disease, aiming for local control and potential long-term benefits.</p>
+
+    <h4>1. Radiation Therapy:</h4>
+    <ul>
+      <li><b>Stereotactic Body Radiotherapy (SBRT) / Stereotactic Radiosurgery (SRS):</b>
+        <ul>
+          <li><b>Mechanism:</b> Noninvasive method delivering high doses of radiation to a target lesion with high precision, sparing neighboring normal tissue. Radiation is delivered from multiple converging beams.</li>
+          <li><b>Benefits:</b> Improved tumor control, reduced treatment-related toxicity compared to conventional RT, higher-dose hypofractionated regimens (1-5 sessions vs. 6+ weeks).</li>
+          <li><b>Indications:</b> Preferred for deep-seated or osseous lesions where surgery is morbid. Suitable for poor surgical candidates.</li>
+          <li><b>Immune Effects:</b> High-dose, hypofractionated radiation may reverse antitumor immunity via CD8+ T-cells and cellular stress signals. The "abscopal effect" (regression in distant tumors) is a rare example. Irradiated tumor may act as a "vaccine."</li>
+          <li><b>Limitations:</b> Lesions larger than 7-8 cm or those difficult to target may be better suited for surgery.</li>
+        </ul>
+      </li>
+      <li><b>Conventional Fractionated Radiotherapy:</b> Still used, but SBRT/SRS offers advantages in precision and dose escalation.</li>
+    </ul>
+
+    <h4>2. Surgery:</h4>
+    <ul>
+      <li><b>Historical Focus:</b> Much of the supporting literature for oligometastatic disease treatment comes from surgical data, particularly hepatic resection for colorectal cancer metastases.</li>
+      <li><b>Improvements:</b> Decreased perioperative mortality, improved patient selection criteria (complete macroscopic and microscopic resection), advanced surgical techniques, and effective neoadjuvant/adjuvant therapies have enhanced outcomes.</li>
+      <li><b>Role:</b> Considered the "gold standard" as it allows for pathologic evaluation and assessment of surgical margins. Can offer long-term survival comparable to resectable disease at presentation.</li>
+      <li><b>Indications:</b> For oligometastatic lesions amenable to complete resection.</li>
+      <li><b>Limitations:</b> Can be morbid for deep-seated or osseous lesions.</li>
+    </ul>
+
+    <h4>3. Cryotherapy:</h4>
+    <ul>
+      <li><b>Mechanism:</b> Ablative technique using extreme hypothermia to achieve cell death.</li>
+      <li><b>Applications:</b> Utilized for ablation of metastatic disease in various sites (retroperitoneal, superficial, intraperitoneal, bone, head and neck).</li>
+      <li><b>Outcomes:</b> Demonstrated low local progression rates and significant volume reduction of ablation zones.</li>
+    </ul>
+  </div>
+
+  <div id="palliative-rt-general" class="tab-content">
+    <h3>Palliative Radiotherapy: General Principles</h3>
+    <p>Palliative radiotherapy (RT) aims to alleviate symptoms, improve quality of life, and sometimes prolong survival in patients with advanced or metastatic cancer, without curative intent.</p>
+    <p><b>Aim:</b> "To cure sometimes, to relieve often and to comfort always."</p>
+    <ul>
+      <li><b>Primary Goal:</b> Symptom relief (e.g., pain, bleeding, obstruction, neurological deficits).</li>
+      <li><b>Dose and Fractionation:</b> Typically involves shorter courses and lower total doses compared to curative RT, balancing symptom control with minimal side effects and patient convenience. Single fractions or short hypofractionated courses are common.</li>
+      <li><b>Target Volume:</b> Limited to the symptomatic area, with appropriate margins.</li>
+      <li><b>Techniques:</b> Simple field arrangements (e.g., AP/PA opposed fields) are often sufficient, but conformal techniques (3D-CRT, IMRT, SBRT) may be used for complex cases or to spare critical organs.</li>
+      <li><b>Patient Selection:</b> Based on performance status, life expectancy, and specific symptoms.</li>
+    </ul>
+  </div>
+
+  <div id="palliative-rt-bone" class="tab-content">
+    <h3>Palliative RT: Bone Metastasis</h3>
+    <p>Bone metastases are a common complication of many cancers, leading to pain, fracture risk, and spinal cord compression. Radiotherapy is highly effective for pain relief.</p>
+
+    <h4>Work-up:</h4>
+    <ul>
+      <li><b>Clinical:</b> History and physical examination, HMG, LFT, KFT, Alkaline phosphatase, Serum calcium.</li>
+      <li><b>Imaging:</b> Plain radiographs of suspected/symptomatic sites, Bone scan, MRI (especially for cord compression).</li>
+    </ul>
+
+    <h4>Indications for RT:</h4>
+    <ul>
+      <li>Solitary lesions.</li>
+      <li>Painful lesions.</li>
+      <li>Weight-bearing bones (to prevent fracture).</li>
+      <li>Acute spinal cord compression (often with urgent RT).</li>
+      <li>Impending pathological fracture.</li>
+      <li>Pathological fracture (after reduction and fixation).</li>
+    </ul>
+
+    <h4>Dose & Technique:</h4>
+    <ul>
+      <li><b>Standard Dose:</b> 30 Gy in 10 fractions.</li>
+      <li><b>Single Dose:</b> 8 Gy in 1 fraction (shown to be as effective as fractionated courses for pain relief).</li>
+      <li><b>Field Placement:</b>
+        <ul>
+          <li><b>Superficial bones (clavicles, ribs, skull, sacrum):</b> Direct field.</li>
+          <li><b>Hip joint, shoulder joint, pelvis:</b> AP-PA portal, dose prescribed at mid-point.</li>
+          <li><b>Spine:</b> Patient prone. Depth for dose prescription: 3 cm (cervical), 4 cm (dorsal), 5 cm (lower dorsal/lumbar).</li>
+          <li><b>Vertebral Metastases:</b> Doses to vertebral body metastases will depend on patient's PS, spine stability, location in relationship to spinal cord, primary histology, presence of epidural disease, and overall treatment intent (pain relief, long-term local control, or cure).</li>
+          <li><b>Spine SBRT/SRS:</b> For patients with life expectancy ≥3 months where tumor ablation is a goal of treatment, in tumors considered radioresistant (e.g., renal cell, melanoma, sarcoma, hepatocellular, some colorectal and NSCLC cases), and in select patients for optimal pain relief. Common recommended doses include: 16-24 Gy in 1 fraction; 20-24 Gy in 2 fractions; 24-27 Gy in 3 fractions; 30-40 Gy in 5 fractions.</li>
+        </ul>
+      </li>
+      <li><b>Multiple Symptomatic Metastases:</b> Radionuclide therapy (Sr-89 or Sm-153), Hemibody irradiation (Upper: 6 Gy/1 fx; Middle/Lower: 8 Gy/1 fx).</li>
+      <li><b>Systemic Agents:</b> Bisphosphonates (Pamidronate, Zoledronic acid) or Denosumab are often used concurrently to reduce skeletal-related events.</li>
+    </ul>
+  </div>
+
+  <div id="palliative-rt-brain" class="tab-content">
+    <h3>Palliative RT: Brain Metastasis</h3>
+    <p>Brain metastases are common in advanced cancer, causing neurological symptoms. Radiotherapy is a primary modality for symptom control and local disease management.</p>
+
+    <h4>Work-up:</h4>
+    <ul>
+      <li><b>Clinical:</b> History and physical examination, HMG, LFT, KFT.</li>
+      <li><b>Imaging:</b> MRI Head with contrast (preferred) or CECT head.</li>
+      <li><b>Primary Tumor Workup:</b> Specific investigations for primary tumor and other metastatic workup in patients with good performance status (PS).</li>
+    </ul>
+
+    <h4>Treatment:</h4>
+    <ul>
+      <li><b>Medical Decompression:</b> Steroids (Dexamethasone) +/- Mannitol should be started immediately.</li>
+      <li><b>Antiepileptics:</b> For patients experiencing convulsions.</li>
+    </ul>
+
+    <h4>Indications for RT:</h4>
+    <ul>
+      <li><b>Solitary Metastasis (Good PS, Controlled Extraneurologic Disease):</b> Surgical excision + postoperative RT (45-50 Gy) or SRS (Stereotactic Radiosurgery) if unresectable.</li>
+      <li><b>Multiple Metastases (KPS ≥ 60):</b> Palliative Whole Brain Radiotherapy (WBRT).</li>
+    </ul>
+
+    <h4>Dose & Technique:</h4>
+    <ul>
+      <li><b>Palliative WBRT:</b> 20 Gy in 5 fractions over 1 week, or 30 Gy in 10 fractions over 2 weeks.</li>
+      <li><b>Portal:</b> Whole brain radiotherapy using parallel opposed portals.
+        <ul>
+          <li><b>Field Size:</b> Approximately 22cm x 17cm.</li>
+          <li><b>Posterior, Superior, & Anterior Borders:</b> 1-2cm flash/field falloff.</li>
+          <li><b>Inferior Border:</b> Superior orbital ridge to 1-2cm below the mastoid tip (verify eye block).</li>
+          <li><b>Avoiding Beam Divergence into opposite eye:</b> Angle each beam posteriorly a few degrees until beam divergence matches opposing side's outer canthus, or use a half-beam block with isocenter near EAM.</li>
+        </ul>
+      </li>
+      <li><b>SRS Doses:</b> 24 Gy for tumor volume <20 mm, 18 Gy for 21-30 mm, 15 Gy for 31-40 mm.</li>
+      <li><b>Fractionated Stereotactic Radiotherapy (FSRT):</b> For ≤3 metastatic sites but tumor diameter >30 mm, or near brainstem/optic nerves, or long life expectancy.</li>
+      <li><b>Re-treatment:</b> 30-40 Gy by fractionated RT. SRS doses as above.</li>
+    </ul>
+
+    <h4>Contraindications for Re-irradiation:</h4>
+    <ul>
+      <li>In-field relapse diagnosed <3 months after first RT.</li>
+      <li>Short life expectation (<3 months).</li>
+      <li>Poor performance status (KPS ≤60%).</li>
+      <li>Other extra-cranial metastatic sites in progression.</li>
+      <li>Paresis/plegia and unfavorable histologies (non-small cell lung, kidney, GI, head and neck carcinomas, melanoma, sarcomas).</li>
+    </ul>
+  </div>
+
+  <div id="palliative-rt-lung" class="tab-content">
+    <h3>Palliative RT: Lung Metastasis</h3>
+    <p>Lung metastases can cause significant symptoms like dyspnea and hemoptysis. Radiotherapy is used for local symptom control.</p>
+
+    <h4>Indications:</h4>
+    <ul>
+      <li>Complete occlusion, consolidation, or atelectasis.</li>
+      <li>Chest wall invasion.</li>
+      <li>Brachial plexus involvement.</li>
+      <li>Lesions eroding blood vessels leading to hemoptysis.</li>
+      <li>Superior Vena Cava (SVC) syndrome.</li>
+    </ul>
+
+    <h4>Work-up:</h4>
+    <ul>
+      <li>History and physical examination, HMG, LFT, KFT.</li>
+      <li>Chest X-ray, CECT chest (if required for confirmation).</li>
+    </ul>
+
+    <h4>Treatment:</h4>
+    <ul>
+      <li><b>Solitary Metastasis (Good PS, Controlled Extrapulmonary Disease):</b> Surgical resection + disease-specific systemic therapy +/- postoperative RT.</li>
+      <li><b>Unresectable:</b> Disease-specific systemic therapy. Palliative RT for symptomatic lesions.</li>
+      <li><b>Multiple Metastases (Good PS, Controlled Extrapulmonary Disease):</b> Surgery +/- chemotherapy +/- postoperative RT.</li>
+      <li><b>Unresectable:</b> Chemotherapy (for chemosensitive disease). Palliative RT for symptomatic lesions.</li>
+    </ul>
+
+    <h4>Dose & Technique:</h4>
+    <ul>
+      <li><b>Palliative RT:</b> 20 Gy in 5 fractions over 1 week by AP-PA portals, dose calculated at midplane. Field size 12x12 cm to 15x15 cm (with proper lung correction factors).</li>
+      <li><b>Endobronchial Lesions:</b> HDR brachytherapy (7.5-10 Gy at 1 cm depth from mucosa).</li>
+      <li><b>Supportive Treatment:</b> Antibiotics, steroids, bronchodilators, antitussives.</li>
+    </ul>
+  </div>
+
+  <div id="palliative-rt-other" class="tab-content">
+    <h3>Palliative RT: Other Symptomatic Sites</h3>
+    <p>Palliative radiotherapy extends to various other sites for symptom control, including esophageal obstruction, hemorrhage, orbital metastases, and leptomeningeal metastases.</p>
+
+    <h4>1. Esophageal Obstruction:</h4>
+    <ul>
+      <li><b>Cause:</b> Endoluminal growth or extrinsic compression (e.g., lymphoma, germ cell tumor, lung cancer).</li>
+      <li><b>Dose:</b> 30 Gy in 10 fractions by AP-PA portals. Minimal field size to reduce morbidities.</li>
+    </ul>
+
+    <h4>2. Hemorrhage:</h4>
+    <ul>
+      <li><b>Cause:</b> Vaginal bleeding (carcinoma cervix, endometrium), hematuria, rectal bleeding.</li>
+      <li><b>Dose:</b> 20 Gy in 5 fractions followed by intracavitary hemostatic dose of 30 Gy to surface by LDR brachytherapy.</li>
+    </ul>
+
+    <h4>3. Orbital Metastasis:</h4>
+    <ul>
+      <li><b>Common Tumors:</b> Breast, lymphomas, leukemias, renal cell carcinoma.</li>
+      <li><b>Investigation:</b> Ultrasound B scan, fluorescent angiography.</li>
+      <li><b>Dose:</b> 45 Gy in 25 fractions by direct lateral portal at 2.5 cm depth.</li>
+    </ul>
+
+    <h4>4. Leptomeningeal Metastasis:</h4>
+    <ul>
+      <li><b>Use:</b> Useful for areas of CSF flow obstruction or bulky disease.</li>
+      <li><b>Dose:</b> 30 Gy in 10 fractions. Craniospinal irradiation (CSI) is rarely used due to significant toxicity.</li>
+    </ul>
+  </div>
+
+  <div class="references">
+    <h3>References</h3>
+    <ul>
+      <li>Rathi, A. K. (n.d.). <i>Step by Step Radiation Therapy: Treatment and Planning</i>. Jaypee Brothers Medical Publishers.</li>
+      <li>Reyes, D. K., Pienta, K. J. (2015). <i>The biology and treatment of oligometastatic cancer</i>. Oncotarget, 6(11), 8491-8524.</li>
+      <li>Stiles, J. (2023). <i>Localization & Treatment Procedures in Radiation Therapy</i>. Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  function openMetPalliTab(evt, tabId) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tab-content");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+      tabcontent[i].classList.remove("active");
+    }
+    tablinks = document.getElementsByClassName("tab-button");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].classList.remove("active");
+    }
+    document.getElementById(tabId).style.display = "block";
+    document.getElementById(tabId).classList.add("active");
+    evt.currentTarget.classList.add("active");
+  }
+
+  // Set the first tab as active by default when the page loads
+  document.addEventListener("DOMContentLoaded", function() {
+    document.querySelector(".tab-button").click();
+  });
+</script>
+
+</body>
+</html>
