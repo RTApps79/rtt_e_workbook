@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body {
+    font-family: sans-serif;
+    line-height: 1.6;
+    margin: 20px;
+    background-color: #f4f4f4;
+    color: #333;
+  }
+  h2 {
+    color: #0056b3;
+    border-bottom: 2px solid #0056b3;
+    padding-bottom: 5px;
+    margin-top: 30px;
+  }
+  h3 {
+    color: #004085;
+    margin-top: 20px;
+  }
+  h4 {
+    color: #004085;
+    margin-top: 15px;
+    margin-bottom: 10px;
+  }
+  .lesson-container {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  .tab-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  .tab-button {
+    background-color: #e0e0e0;
+    border: 1px solid #ccc;
+    padding: 10px 15px;
+    cursor: pointer;
+    margin-right: 5px;
+    border-radius: 5px 5px 0 0;
+    transition: background-color 0.3s ease;
+    white-space: nowrap; /* Prevent text wrapping */
+  }
+  .tab-button.active {
+    background-color: #0056b3;
+    color: white;
+    border-color: #0056b3;
+  }
+  .tab-content {
+    display: none;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-top: none;
+    padding: 20px;
+    border-radius: 0 0 8px 8px;
+    background-color: #f9f9f9;
+  }
+  .tab-content.active {
+    display: block;
+  }
+  ul {
+    list-style-type: disc;
+    margin-left: 20px;
+  }
+  li {
+    margin-bottom: 8px;
+  }
+  b {
+    color: #0056b3;
+  }
+  .references {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #ccc;
+    font-size: 0.9em;
+    color: #555;
+  }
+  .attention {
+    font-weight: bold;
+    color: #d9534f;
+  }
+</style>
+</head>
+<body>
+
+<div class="lesson-container">
+  <h2>Thyroid Malignancies: Radiation Therapy Planning and Delivery</h2>
+
+  <p>This lesson provides detailed information on the role of radiation therapy, preplanning, planning, and delivery steps for various thyroid cancer types.</p>
+
+  <div class="tab-container">
+    <button class="tab-button active" onclick="openThyroidTab(event, 'role-rt')">Role of Radiotherapy</button>
+    <button class="tab-button" onclick="openThyroidTab(event, 'assessment-delineation')">Assessment & Target Delineation</button>
+    <button class="tab-button" onclick="openThyroidTab(event, 'planning-techniques')">Planning & Techniques</button>
+    <button class="tab-button" onclick="openThyroidTab(event, 'dose-prescription')">Dose Prescription</button>
+    <button class="tab-button" onclick="openThyroidTab(event, 'palliative-rt')">Palliative Radiotherapy</button>
+  </div>
+
+  <div id="role-rt" class="tab-content active">
+    <h3>Role of Radiation Therapy in Thyroid Malignancies</h3>
+    <p>Radiation therapy (RT) plays a modest but important role in the management of thyroid cancers, particularly in papillary thyroid cancers, medullary thyroid cancer, and anaplastic thyroid cancers.</p>
+
+    <h4>Indications for External Beam Radiation Therapy (EBRT):</h4>
+    <ul>
+      <li><b>Grossly Visible Extrathyroidal Extension:</b> For patients over age 45 with disease extending beyond the thyroid capsule at the time of surgery.</li>
+      <li><b>Retrosternal Disease:</b> For locally advanced retrosternal disease that is otherwise unresectable.</li>
+      <li><b>High Likelihood of Microscopic Residual Disease:</b> When there is a high probability of microscopic disease remaining after surgery.</li>
+      <li><b>Gross Residual Tumor:</b> In cases where further surgery or radioactive iodine (RAI) therapy would likely be ineffective.</li>
+      <li><b>Recurrence:</b> For recurrence after maximal RAI therapy.</li>
+      <li><b>Postoperative Setting:</b> Routinely used postoperatively in medullary thyroid cancer and anaplastic thyroid cancers.</li>
+      <li><b>Palliation:</b> For symptom control in metastatic disease.</li>
+    </ul>
+  </div>
+
+  <div id="assessment-delineation" class="tab-content">
+    <h3>Assessment and Target Delineation</h3>
+    <p>Accurate assessment and precise target delineation are crucial for effective radiation therapy in thyroid malignancies, considering the complex anatomy of the neck and mediastinum.</p>
+
+    <h4>Assessment of Tumor:</h4>
+    <ul>
+      <li><b>Symptoms:</b> Evaluate for hoarseness, dysphagia (difficulty swallowing), and stridor (noisy breathing).</li>
+      <li><b>Palpation:</b> Thorough physical examination of the neck for masses or nodal involvement.</li>
+      <li><b>Laryngoscopy:</b> Indirect laryngoscopy to rule out recurrent laryngeal nerve palsy.</li>
+      <li><b>Imaging:</b>
+        <ul>
+          <li>Lateral soft tissue neck X-ray.</li>
+          <li>Ultrasonography of the neck.</li>
+          <li>CT scan of the neck (and chest, if indicated for mediastinal extension).</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h4>Target Delineation:</h4>
+    <ul>
+      <li><b>Stage-Dependent:</b> The target volume is dependent on the clinical stage of the disease and the extent of nodal involvement.</li>
+      <li><b>Margins:</b> Typically includes a 2-3 cm margin around the primary tumor and draining lymph nodes.</li>
+      <li><b>Spinal Cord:</b> Spinal cord tolerance must be strictly respected during planning.</li>
+    </ul>
+  </div>
+
+  <div id="planning-techniques" class="tab-content">
+    <h3>Planning and Techniques</h3>
+    <p>Radiation therapy planning for thyroid cancer can be challenging due to the complex contours of the body and potential extension into the mediastinum. Advanced techniques are often employed to ensure conformal dose delivery.</p>
+
+    <h4>Patient Positioning:</h4>
+    <ul>
+      <li><b>Supine Position:</b> Patient is positioned supine.</li>
+      <li><b>Immobilization:</b> A Perspex cast from the base of the skull to the mid-thoracic level is used for immobilization and reproducibility.</li>
+      <li><b>Head Hyperextension:</b> The head is often hyperextended to bring the oral cavity out of the radiation field.</li>
+    </ul>
+
+    <h4>Field Placements:</h4>
+    <ul>
+      <li><b>Initial Fields (AP-PA):</b> An initial anteroposterior (AP) and posteroanterior (PA) opposed field setup is frequently used.</li>
+      <li><b>DTC (Differentiated Thyroid Cancer) Direct Enface Field:</b> A direct enface field or a multifield technique with electron beams (12-16 MeV) may be used.</li>
+      <li><b>Medullary Thyroid Cancer:</b> A "mini-mantle" field is often employed, extending from the chin to the T4 lower border, encompassing the entire neck and upper mediastinum.</li>
+      <li><b>Contour Compensation:</b> Tissue compensators can be used to account for differences in body contour and improve dose homogeneity.</li>
+      <li><b>Lymphadenopathy (LAP) Considerations:</b>
+        <ul>
+          <li><b>Without LAP:</b> Upper border at the tip of the mastoid, lower border at the sternal notch, treated with anterior oblique fields.</li>
+          <li><b>With LAP:</b> Spinal cord tolerance is a major concern. 20 MeV electron beams can provide ideal dose distribution. Alternatively, two anterior fields centered laterally to the spinal cord, each rotating through an arc of 100-120 degrees, can be used.</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h4>Tumor Extending to Superior Mediastinum:</h4>
+    <ul>
+      <li><b>Upper Margin:</b> Tip of the mastoid.</li>
+      <li><b>Lower Margin:</b> Carina.</li>
+      <li><b>Lateral Margin:</b> Includes bilateral deep cervical nodes.</li>
+      <li><b>Dose Escalation:</b> The dose to the primary site can be escalated after 45-50 Gy using oblique fields.</li>
+      <li><b>Beam Mix:</b> Mixed beams with posterior photons and anterior electrons or low-energy photons can be used.</li>
+      <li><b>Compensators/Wedges:</b> Used in the superoinferior dimension to improve dose homogeneity.</li>
+    </ul>
+
+    <h4>Advanced Techniques:</h4>
+    <ul>
+      <li><b>3D-CRT/IMRT:</b> Three-dimensional conformal radiation therapy (3D-CRT) and Intensity-Modulated Radiation Therapy (IMRT) are useful for complex geometries, allowing for better dose distribution to vital structures and critical organs.</li>
+      <li><b>CT/MRI Planning:</b> Treatment planning with CT and MRI permits precise evaluation of dose distribution.</li>
+    </ul>
+  </div>
+
+  <div id="dose-prescription" class="tab-content">
+    <h3>Dose Prescription</h3>
+    <p>Radiation doses for thyroid malignancies vary based on the type of cancer, extent of disease, and whether it's a primary or postoperative setting.</p>
+
+    <h4>General Principles:</h4>
+    <ul>
+      <li><b>Daily Fractionation:</b> Typically 1.8 Gy per fraction, 5 days a week.</li>
+      <li><b>Spinal Cord Tolerance:</b> The spinal cord should receive no more than 40 Gy in 5 weeks.</li>
+    </ul>
+
+    <h4>Specific Doses:</h4>
+    <ul>
+      <li><b>Postoperative RT (General):</b> 60 Gy in 6-6.5 weeks.</li>
+      <li><b>Gross Residual Disease:</b> Requires higher doses of 68-70 Gy.</li>
+      <li><b>Anaplastic Thyroid Cancer:</b> 60 Gy in 6 weeks.</li>
+      <li><b>Non-Hodgkin's Lymphoma of Thyroid:</b> 35-40 Gy in 4 weeks.</li>
+      <li><b>Tumor Extending to Superior Mediastinum:</b>
+        <ul>
+          <li>Initial dose: 50 Gy in 5 weeks.</li>
+          <li>Post-mediastinal boost: 40 Gy in 4 weeks.</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <div id="palliative-rt" class="tab-content">
+    <h3>Palliative Radiotherapy for Thyroid Malignancies</h3>
+    <p>Palliative radiation therapy is used to control symptoms caused by advanced or metastatic thyroid cancer, aiming to improve patient comfort and quality of life.</p>
+
+    <h4>Indications:</h4>
+    <ul>
+      <li>Symptom control of metastatic disease, particularly vertebral metastases.</li>
+    </ul>
+
+    <h4>Dose & Technique:</h4>
+    <ul>
+      <li><b>Dose:</b> 30-40 Gy in 10-12 fractions over 2-4 weeks.</li>
+      <li><b>Field Arrangement:</b> For vertebral metastases, typically 2 vertebrae above and below the affected area are treated with a direct dorsal spinal field or 2 wedges.</li>
+    </ul>
+  </div>
+
+  <div class="references">
+    <h3>Reference</h3>
+    <ul>
+      <li>Rathi, A. K. (n.d.). <i>Step by Step Radiation Therapy: Treatment and Planning</i>. Jaypee Brothers Medical Publishers.</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  function openThyroidTab(evt, tabId) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tab-content");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+      tabcontent[i].classList.remove("active");
+    }
+    tablinks = document.getElementsByClassName("tab-button");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].classList.remove("active");
+    }
+    document.getElementById(tabId).style.display = "block";
+    document.getElementById(tabId).classList.add("active");
+    evt.currentTarget.classList.add("active");
+  }
+
+  // Set the first tab as active by default when the page loads
+  document.addEventListener("DOMContentLoaded", function() {
+    document.querySelector(".tab-button").click();
+  });
+</script>
+
+</body>
+</html>
