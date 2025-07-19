@@ -1,295 +1,109 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<style>
-  body {
-    font-family: sans-serif;
-    line-height: 1.6;
-    margin: 20px;
-    background-color: #f4f4f4;
-    color: #333;
-  }
-  h2 {
-    color: #0056b3;
-    border-bottom: 2px solid #0056b3;
-    padding-bottom: 5px;
-    margin-top: 30px;
-  }
-  h3 {
-    color: #004085;
-    margin-top: 20px;
-  }
-  h4 {
-    color: #004085;
-    margin-top: 15px;
-    margin-bottom: 10px;
-  }
-  .lesson-container {
-    background-color: #fff;
-    padding: 25px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  }
-  .tab-container {
-    display: flex;
-    flex-wrap: wrap;
-    margin-bottom: 10px;
-  }
-  .tab-button {
-    background-color: #e0e0e0;
-    border: 1px solid #ccc;
-    padding: 10px 15px;
-    cursor: pointer;
-    margin-right: 5px;
-    border-radius: 5px 5px 0 0;
-    transition: background-color 0.3s ease;
-    white-space: nowrap; /* Prevent text wrapping */
-  }
-  .tab-button.active {
-    background-color: #0056b3;
-    color: white;
-    border-color: #0056b3;
-  }
-  .tab-content {
-    display: none;
-    width: 100%;
-    border: 1px solid #ccc;
-    border-top: none;
-    padding: 20px;
-    border-radius: 0 0 8px 8px;
-    background-color: #f9f9f9;
-  }
-  .tab-content.active {
-    display: block;
-  }
-  ul {
-    list-style-type: disc;
-    margin-left: 20px;
-  }
-  li {
-    margin-bottom: 8px;
-  }
-  b {
-    color: #0056b3;
-  }
-  .references {
-    margin-top: 40px;
-    padding-top: 20px;
-    border-top: 1px solid #ccc;
-    font-size: 0.9em;
-    color: #555;
-  }
-  .attention {
-    font-weight: bold;
-    color: #d9534f;
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basics of Radiation Therapy Planning</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; }
+        .lesson-container { display: grid; grid-template-columns: 1fr; gap: 2rem; padding: 1.5rem; max-width: 1800px; margin: auto; }
+        @media (min-width: 1024px) { .lesson-container { grid-template-columns: minmax(500px, 1fr) 1.25fr; align-items: flex-start; } }
+        .lesson-panel { background-color: white; border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); padding: 1.5rem 2rem; }
+        .lesson-panel h1 { font-size: 1.875rem; font-weight: 700; color: #1e3a8a; }
+        .lesson-panel h2 { font-size: 1.5rem; font-weight: 600; color: #1e293b; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; margin-top: 1.5rem; }
+        .lesson-panel p, .lesson-panel ul { color: #475569; }
+        .lesson-panel ul { list-style-type: disc; margin-left: 1.25rem; }
+        .interactive-question { background-color: #f8fafc; border: 1px solid #e2e8f0; border-left: 4px solid #3b82f6; padding: 1rem; margin-top: 1.25rem; border-radius: 0.5rem; }
+        .tab-button { background-color: #e2e8f0; padding: 0.875rem 1rem; border-radius: 0.5rem; font-weight: 600; cursor: pointer; transition: background-color 0.2s ease-in-out; }
+        .tab-button.active { background-color: #3b82f6; color: white; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .references { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #e2e8f0; color: #64748b; }
+    </style>
 </head>
 <body>
+    <div class="lesson-container">
+        <div class="lesson-panel">
+            <h1>Basics of Radiation Therapy Planning</h1>
+            <p>This lesson covers the fundamental steps and concepts involved in planning and delivering radiation therapy.</p>
+            
+            <!-- Tab Navigation -->
+            <div class="tab-container">
+                <button class="tab-button active" onclick="openTab(event, 'aim')">Aim of Radiotherapy</button>
+                <button class="tab-button" onclick="openTab(event, 'steps-planning')">Steps in Planning</button>
+                <button class="tab-button" onclick="openTab(event, 'preplanning')">Steps in Preplanning</button>
+                <button class="tab-button" onclick="openTab(event, 'planning-radiotherapy')">Planning Radiotherapy</button>
+                <button class="tab-button" onclick="openTab(event, 'treatment-delivery')">Treatment Delivery</button>
+            </div>
 
-<div class="lesson-container">
-  <h2>Basics of Radiation Therapy Planning</h2>
+            <!-- Tab Content -->
+            <div id="aim" class="tab-content active">
+                <h2>Aim of Radiotherapy</h2>
+                <p>The primary goal of radiotherapy is to deliver a tumoricidal dose to a defined target volume while minimizing damage to surrounding healthy tissues, aiming for an optimum therapeutic ratio.</p>
+            </div>
 
-  <p>This lesson covers the fundamental steps and concepts involved in planning and delivering radiation therapy.</p>
+            <div id="steps-planning" class="tab-content">
+                <h2>Steps in Planning</h2>
+                <ul>
+                    <li><b>Preplanning:</b> Includes evaluating and staging the tumor.</li>
+                    <li><b>Planning Radiotherapy Treatment:</b> Involves describing the treatment and immobilizing the patient.</li>
+                    <li><b>Treatment Delivery:</b> Encompasses dose prescription and monitoring for morbidity.</li>
+                </ul>
+            </div>
 
-  <div class="tab-container">
-    <button class="tab-button active" onclick="openTab(event, 'aim')">Aim of Radiotherapy</button>
-    <button class="tab-button" onclick="openTab(event, 'steps-planning')">Steps in Planning</button>
-    <button class="tab-button" onclick="openTab(event, 'steps-preplanning')">Steps in Preplanning</button>
-    <button class="tab-button" onclick="openTab(event, 'planning-radiotherapy')">Planning Radiotherapy</button>
-    <button class="tab-button" onclick="openTab(event, 'treatment-delivery')">Treatment Delivery & Monitoring</button>
-  </div>
+            <div id="preplanning" class="tab-content">
+                <h2>Steps in Preplanning</h2>
+                <ul>
+                    <li><b>Clinical Evaluation:</b> History and clinical examination, confirmation of malignancy, etc.</li>
+                    <li><b>Intent of Treatment:</b> Radical or palliative approaches.</li>
+                    <li><b>Choice of Treatment:</b> Tumor board decision, modality sequences, etc.</li>
+                </ul>
+            </div>
 
-  <div id="aim" class="tab-content active">
-    <h3>Aim of Radiotherapy</h3>
-    <p>The primary goal of radiotherapy is to deliver a tumoricidal dose to a defined target volume while minimizing damage to surrounding healthy tissues, aiming for an optimum therapeutic ratio. This results in tumor eradication, a high and improved quality of life, prolongation of survival, and effective palliation of cancer symptoms with minimal morbidity.</p>
-  </div>
+            <div id="planning-radiotherapy" class="tab-content">
+                <h2>Planning Radiotherapy</h2>
+                <p>Detailed phase includes patient positioning, tumor localization, and defining target volumes.</p>
+            </div>
 
-  <div id="steps-planning" class="tab-content">
-    <h3>Steps in Radiotherapy Planning</h3>
-    <p>Radiation therapy planning involves several key stages:</p>
-    <ul>
-      <li><b>Preplanning</b>: This includes evaluating and staging the tumor, determining the intent of treatment, and choosing the treatment modality.</li>
-      <li><b>Planning Radiotherapy Treatment</b>: This stage involves describing the treatment, immobilizing the patient, simulating the treatment, acquiring images, defining volumes, choosing the technique and beam modifications, and computing the dose distribution.</li>
-      <li><b>Treatment Delivery</b>: This final stage encompasses dose prescription, implementing the treatment, verifying the delivery, monitoring for morbidity, and recording and reporting outcomes.</li>
-    </ul>
-  </div>
+            <div id="treatment-delivery" class="tab-content">
+                <h2>Treatment Delivery</h2>
+                <p>Final stage includes dose prescription, implementation, verification, and monitoring.</p>
+            </div>
 
-  <div id="steps-preplanning" class="tab-content">
-    <h3>Steps in Preplanning</h3>
-    <p>Before detailed planning, the following steps are crucial:</p>
-    <h4>1. Clinical Evaluation and Staging:</h4>
-    <ul>
-      <li>History and thorough clinical examination.</li>
-      <li>Confirmation of malignancy (cytology/histology).</li>
-      <li>Appropriate investigations to assess the patient's general condition.</li>
-      <li>Assess suitability to various treatment options.</li>
-      <li>To know the local spread.</li>
-      <li>Work-up of metastatic spread.</li>
-      <li>Appropriate staging (TNM, FIGO, etc.).</li>
-    </ul>
-    <h4>2. Intent of Treatment:</h4>
-    <ul>
-      <li><b>Radical</b>: Intended to cure the patient of his or her disease. The area to be treated includes the primary tumor and any other area having risk of disease. Radiation dose is higher, so some side effects are unavoidable, but these are acceptable as an inevitable part of attempted cure.</li>
-      <li><b>Palliative</b>: Aims to relieve distressing symptoms, such as hemoptysis, pain, or bleeding. These treatments are simpler to execute and require lesser treatment time, with comparatively lower dosage to avoid unacceptable side effects.</li>
-    </ul>
-    <h4>3. Choice of Treatment:</h4>
-    <ul>
-      <li>Ideally, this should be a tumor board decision.</li>
-      <li>It involves radiotherapy, surgery, chemotherapy, biotherapy, or various combinations.</li>
-      <li>If more than one treatment modality is required, the sequences of these are decided.</li>
-      <li>This can include primary (definitive), adjuvant, neoadjuvant (anterior), or concurrent treatments (e.g., concomitant chemoradiation).</li>
-    </ul>
-  </div>
+            <!-- References -->
+            <div class="references">
+                <h2>References</h2>
+                <ul>
+                    <li>Rathi, A. K. <i>Step by Step Radiation Therapy</i>.</li>
+                    <li>Stiles, J. <i>Localization & Treatment Procedures</i>.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
 
-  <div id="planning-radiotherapy" class="tab-content">
-    <h3>Planning Radiotherapy Treatment</h3>
-    <p>This detailed phase includes:</p>
+    <script>
+        function openTab(evt, tabId) {
+            var i, tabContent, tabButtons;
+            tabContent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabContent.length; i++) {
+                tabContent[i].style.display = "none";
+                tabContent[i].classList.remove("active");
+            }
+            tabButtons = document.getElementsByClassName("tab-button");
+            for (i = 0; i < tabButtons.length; i++) {
+                tabButtons[i].classList.remove("active");
+            }
+            document.getElementById(tabId).style.display = "block";
+            document.getElementById(tabId).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
 
-    <h4>Patient Positioning and Immobilization</h4>
-    <ul>
-        <li>Positioning must be <b>comfortable, reproducible, and technically ideal</b>.</li>
-        <li>Metallic prostheses, abdominal stomata, and pacemaker batteries must be identified and excluded from the treatment field as much as possible.</li>
-        <li>Common immobilization devices include neck rests, thermoplastic shells and casts, bite blocks, shoulder retractors, breast boards, and vacuum bags. For stereotactic treatments, specialized head rings or frameless systems are used.</li>
-    </ul>
-
-    <h4>Tumor Volume Localization and Field Determination</h4>
-    <p>Accurate localization of the tumor and definition of treatment volumes are the foundation of modern radiation therapy. This process ensures the tumor receives the prescribed dose while minimizing exposure to healthy surrounding tissues.</p>
-    <h5>Defining Target Volumes 🎯</h5>
-    <p>Radiation oncologists define several volumes to create a comprehensive treatment plan, following guidelines from bodies like the <b>International Commission on Radiation Units and Measurements (ICRU)</b>.</p>
-    <ul>
-        <li><b>Gross Tumor Volume (GTV)</b>: This is the macroscopic, visible extent of the malignant growth. It's what can be seen on imaging scans (like CT, MRI, PET) or identified through clinical examination and palpation.</li>
-        <li><b>Clinical Target Volume (CTV)</b>: This volume includes the GTV plus a margin to account for subclinical or microscopic disease that cannot be seen. The size of this margin depends on the specific cancer type and its patterns of spread. Both GTV and CTV are anatomical-clinical concepts.</li>
-        <li><b>Internal Target Volume (ITV)</b>: This volume accounts for the movement of the CTV due to internal physiological processes, most notably respiration. A 4D-CT scan is often used to capture the tumor's full range of motion, and the ITV encompasses the CTV at all phases of the breathing cycle.</li>
-        <li><b>Planning Target Volume (PTV)</b>: This is a geometric concept that includes the CTV (or ITV, if motion is a factor) plus an additional margin to compensate for variations and uncertainties in daily patient setup and treatment delivery. Tighter PTV margins (e.g., 3-5 mm) are possible with advanced image-guidance technologies.</li>
-    </ul>
-    
-
-    <h5>Imaging for Localization</h5>
-    <ul>
-        <li><b>CT Simulation</b>: This is the standard. It provides a 3D map of the patient's anatomy in the treatment position and provides the electron density information needed for dose calculation.</li>
-        <li><b>MRI and PET Scans</b>: These scans are often fused with the planning CT scan. MRI provides superior soft-tissue contrast, which is excellent for delineating tumors in the brain or pelvis. PET scans highlight areas of high metabolic activity, helping to distinguish tumor from normal tissue and identify involved lymph nodes.</li>
-    </ul>
-
-    <h5>Principles of Field Border Determination</h5>
-    <p>Once the PTV is defined, radiation fields are designed to cover it adequately.</p>
-    <ul>
-        <li><b>Traditional Landmark-Based Fields</b>: Historically, field borders were defined using bony anatomical landmarks. This is still a useful concept for understanding treatment principles. The goal is to create a field that encompasses the target volume with appropriate margins while shielding critical organs.
-            <ul>
-                <li><b>Example: A "Four-Field Box" for Pelvic Cancers (e.g., Cervix, Bladder)</b>
-                    <ul>
-                        <li><b>Superior Border</b>: L4-L5 or L5-S1 interspace (to include common iliac nodes).</li>
-                        <li><b>Inferior Border</b>: Bottom of the obturator foramen (or 3-5 cm below the lowest extent of disease).</li>
-                        <li><b>Lateral Borders</b>: 1.5-2 cm beyond the bony pelvic sidewalls.</li>
-                        <li><b>Anterior Border</b>: Encompasses the pubic symphysis.</li>
-                        <li><b>Posterior Border</b>: Splits or is posterior to the sacrum to cover presacral nodes.</li>
-                    </ul>
-                </li>
-            </ul>
-        </li>
-        <li><b>Beam's Eye View (BEV)</b>: Modern planning systems allow the planner to view the anatomy from the perspective of the radiation beam. This is used to shape the field precisely around the PTV and block out nearby OARs.</li>
-        <li><b>Field Margins and "Flash"</b>: A small margin of the beam, often called "flash," is intentionally extended beyond the skin surface (e.g., 1-2 cm) to account for patient movement, respiratory motion, and setup inaccuracies, ensuring the entire target is treated even at the skin edge.</li>
-        <li><b>Field Matching</b>: When two or more separate fields are used next to each other (e.g., treating the breast and supraclavicular nodes), the junction between them must be carefully managed to avoid hot spots (overdose) or cold spots (underdose). Techniques like half-beam blocks, couch kicks, or junction shifts ("feathering") are used.</li>
-    </ul>
-
-    <h5>Modern Volume-Based Planning (IMRT/VMAT)</h5>
-    <p>While traditional borders are useful for initial field placement, modern techniques like IMRT and VMAT use Multi-Leaf Collimators (MLCs) to create highly complex and conformal dose distributions that are not simple squares or rectangles. In these plans, the concept of a simple "border" is replaced by a three-dimensional isodose cloud that tightly conforms to the PTV.</p>
-
-    <h5>Beam Modification Devices</h5>
-    <ul>
-        <li><b>Wedges</b>: Tilted absorbers that create a gradient in radiation intensity across the beam, used to compensate for sloping body contours and create a more uniform dose distribution.</li>
-        <li><b>Compensators & Bolus</b>: Bolus is a tissue-equivalent material placed directly on the skin to increase the surface dose or compensate for missing tissue. Compensating filters achieve a similar effect but are placed further from the patient to preserve skin-sparing.</li>
-        <li><b>Blocks and MLCs</b>: Used to shape the beam and shield healthy tissue. Custom-made blocks have largely been replaced by dynamic MLCs in modern practice.</li>
-    </ul>
-    
-    <h5>Computation of Dose Distribution</h5>
-    <ul>
-        <li>Can be done manually using percentage depth dose charts.</li>
-        <li>More commonly, it is done with the help of computerized Treatment Planning Systems (TPS) that use sophisticated algorithms to calculate the dose distribution throughout the patient's anatomy.</li>
-    </ul>
-  </div>
-
-  <div id="treatment-delivery" class="tab-content">
-    <h3>Steps in Treatment Delivery</h3>
-    <h4>Dose Prescription:</h4>
-    <ul>
-      <li>Specifies the total dose to the target volume, number of fractions, dose per fraction, overall treatment time, number of fractions per week, and dose specification point.</li>
-    </ul>
-    <h4>Implementation, Verification, and Monitoring of Treatment:</h4>
-    <p>Once the radiation therapy plan is finalized, the actual delivery of treatment begins, coupled with rigorous verification and monitoring to ensure accuracy and patient safety. </p>
-    <h5>Patient Setup and Alignment</h5>
-    <ul>
-      <li>The patient is meticulously positioned on the treatment couch exactly in the same manner as in the simulator, using all treatment aids.</li>
-      <li>The patient is aligned using lasers.</li>
-      <li>Beam parameters (size, gantry angle, wedges, compensators, collimator setting, etc.) are checked.</li>
-      <li>SSD (Source-Surface Distance) is verified.</li>
-      <li>Ideally, the clinician should monitor the first day of treatment.</li>
-    </ul>
-    <h5>Verification Techniques</h5>
-    <p>To confirm that the radiation is being delivered accurately to the target, various verification methods are used:</p>
-    <ul>
-      <li><b>Port Film</b>: Historically, port films were used for verification. These are radiographic images taken with the treatment beam itself, showing the anatomical structures within the treatment field. However, port films have significant limitations:
-        <ul>
-          <li>Delayed viewing due to processing time.</li>
-          <li>It is impractical to do port films before each treatment.</li>
-          <li>Poor quality images with megavoltage beams (especially >6 MV) due to the Compton effect.</li>
-        </ul>
-      </li>
-      <li><b>Electronic Portal Imaging (EPI)</b>: EPI systems (mirror based/liquid ion chamber based/solid state detector based) overcome the first two limitations of port film by providing immediate digital images. This allows for real-time or near real-time viewing of the treatment field, eliminating the delay of film processing, and making frequent image verification more feasible.</li>
-      <li><b>Cone Beam CT (CBCT) Scan</b>: This is a highly advanced imaging modality integrated into modern linear accelerators. CBCT acquires a 3D volumetric image of the patient in the treatment position just before radiation delivery. This allows for:
-        <ul>
-          <li>Precise visualization of the tumor, critical organs, and bony anatomy in 3D.</li>
-          <li>Comparison of the patient's current anatomy to the planning CT scan, enabling online image-guided radiation therapy (IGRT) corrections for subtle shifts in patient position or internal organ motion.</li>
-          <li>Improved accuracy in target localization and treatment delivery, which is especially beneficial for treatments requiring tight margins.</li>
-        </ul>
-      </li>
-    </ul>
-    <h5>Monitoring Treatment Delivery and Morbidity</h5>
-    <p>Beyond initial setup verification, continuous monitoring throughout the course of treatment is essential. This includes:</p>
-    <ul>
-      <li>Regular <b>patient assessment</b> for any acute side effects (e.g., skin reactions, mucositis, nausea, fatigue).</li>
-      <li>Adjustments to supportive care and medications based on observed toxicities.</li>
-      <li>Monitoring of <b>blood counts</b> (myelosuppression) where relevant, such as in total body irradiation or certain chemotherapy regimens.</li>
-      <li>For specific sites like the spine, continuous vigilance for <b>spinal cord dose</b> to keep it within tolerance limits is paramount.</li>
-      <li>For dynamic treatments like IMRT, the machine's delivery is continuously monitored to ensure the planned dose distribution is achieved.</li>
-      <li>For treatments involving moving organs (e.g., lung tumors), advanced techniques like <b>gated radiotherapy, active breathing control (ABC), or 4D-CT data acquisition and planning</b> are used to account for respiratory motion and ensure accurate dose delivery to the moving target.</li>
-      <li>In <b>Total Body Irradiation (TBI)</b>, individual patient dosimetry using devices like <b>thermoluminescent dosimeters (TLDs) or diodes</b> is crucial for monitoring overall dose uniformity across the entire body, especially during the first few treatments.</li>
-    </ul>
-    <p>Effective verification and monitoring practices are integral to ensuring the safe and effective delivery of radiation therapy, contributing significantly to patient outcomes and minimizing treatment-related side effects. 🌟</p>
-  </div>
-
-  <div class="references">
-    <h3>References</h3>
-    <ul>
-      <li>Rathi, A. K. (n.d.). <i>Step by Step Radiation Therapy: Treatment and Planning</i>. Jaypee Brothers Medical Publishers.</li>
-      <li>Stiles, J. (2023). <i>Localization & Treatment Procedures in Radiation Therapy</i>. Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.</li>
-       <li>Purtilo, R. (2005). <i>Ethical Dimensions in the Health Professions</i> (4th ed.). Elsevier Saunders.</li>
-    </ul>
-  </div>
-</div>
-
-<script>
-  function openTab(evt, tabId) {
-    var i, tabcontent, tablinks;
-    tabcontent = document.getElementsByClassName("tab-content");
-    for (i = 0; i < tabcontent.length; i++) {
-      tabcontent[i].style.display = "none";
-      tabcontent[i].classList.remove("active");
-    }
-    tablinks = document.getElementsByClassName("tab-button");
-    for (i = 0; i < tablinks.length; i++) {
-      tablinks[i].classList.remove("active");
-    }
-    document.getElementById(tabId).style.display = "block";
-    document.getElementById(tabId).classList.add("active");
-    evt.currentTarget.classList.add("active");
-  }
-  
-  // Set the first tab as active by default
-  document.addEventListener("DOMContentLoaded", function() {
-    document.querySelector(".tab-button").click();
-  });
-</script>
-
+        // Set default active tab
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelector(".tab-button").click();
+        });
+    </script>
 </body>
 </html>
