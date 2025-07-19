@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body {
+    font-family: sans-serif;
+    line-height: 1.6;
+    margin: 20px;
+    background-color: #f4f4f4;
+    color: #333;
+  }
+  h2 {
+    color: #0056b3;
+    border-bottom: 2px solid #0056b3;
+    padding-bottom: 5px;
+    margin-top: 30px;
+  }
+  h3 {
+    color: #004085;
+    margin-top: 20px;
+  }
+  h4 {
+    color: #004085;
+    margin-top: 15px;
+    margin-bottom: 10px;
+  }
+  .lesson-container {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  .tab-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  .tab-button {
+    background-color: #e0e0e0;
+    border: 1px solid #ccc;
+    padding: 10px 15px;
+    cursor: pointer;
+    margin-right: 5px;
+    border-radius: 5px 5px 0 0;
+    transition: background-color 0.3s ease;
+    white-space: nowrap; /* Prevent text wrapping */
+  }
+  .tab-button.active {
+    background-color: #0056b3;
+    color: white;
+    border-color: #0056b3;
+  }
+  .tab-content {
+    display: none;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-top: none;
+    padding: 20px;
+    border-radius: 0 0 8px 8px;
+    background-color: #f9f9f9;
+  }
+  .tab-content.active {
+    display: block;
+  }
+  ul {
+    list-style-type: disc;
+    margin-left: 20px;
+  }
+  li {
+    margin-bottom: 8px;
+  }
+  b {
+    color: #0056b3;
+  }
+  .references {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #ccc;
+    font-size: 0.9em;
+    color: #555;
+  }
+  .attention {
+    font-weight: bold;
+    color: #d9534f;
+  }
+</style>
+</head>
+<body>
+
+<div class="lesson-container">
+  <h2>Gynecologic Tumors: Radiation Therapy Planning and Delivery</h2>
+
+  <p>This lesson provides detailed information on the preplanning, planning, and delivery steps for radiation therapy in various gynecologic cancer sites, with enhanced focus on precise field borders.</p>
+
+  <div class="tab-container">
+    <button class="tab-button active" onclick="openGynTab(event, 'uterine-cancer')">Uterine Cancer (Endometrial)</button>
+    <button class="tab-button" onclick="openGynTab(event, 'cervix-cancer')">Carcinoma Cervix</button>
+    <button class="tab-button" onclick="openGynTab(event, 'vaginal-cancer')">Carcinoma Vagina</button>
+    <button class="tab-button" onclick="openGynTab(event, 'vulvar-cancer')">Carcinoma Vulva</button>
+    <button class="tab-button" onclick="openGynTab(event, 'ovarian-cancer')">Carcinoma Ovary</button>
+    <button class="tab-button" onclick="openGynTab(event, 'ovarian-ablation')">Ovarian Ablation (RT Context)</button>
+    <button class="tab-button" onclick="openGynTab(event, 'pregnancy-malignancy')">Malignancy During Pregnancy</button>
+  </div>
+
+  <div id="uterine-cancer" class="tab-content active">
+    <h3>Uterine Cancer (Endometrial)</h3>
+    <p>Endometrial cancer is the most common gynecological malignancy, typically adenocarcinoma. It often presents with abnormal bleeding, leading to early diagnosis.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li>Radiation therapy (RT) is a widely used modality, often improving locoregional control.</li>
+      <li>It can be used as adjuvant therapy after surgery, as primary treatment for medically inoperable patients, or for recurrent disease.</li>
+      <li>Combined modality therapy (RT + chemotherapy) is increasingly common for high-risk or advanced stages.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Clinical Evaluation:</b> Includes history, physical exam, and assessment of symptoms like metrorrhagia or post-menopausal bleeding.</li>
+      <li><b>Diagnosis:</b> Usually by office endometrial biopsy. A negative biopsy in a symptomatic patient requires further investigation (e.g., fractional D&C).</li>
+      <li><b>Imaging:</b>
+        <ul>
+          <li>Pelvis MRI is preferred to assess local disease extent (myometrial invasion, cervical involvement).</li>
+          <li>Chest X-ray or CT chest/abdomen/pelvis (for high-grade or suspected extrauterine disease) to rule out metastatic spread.</li>
+          <li>FDG-PET/CT may be considered for suspected metastasis or ambiguous findings.</li>
+        </ul>
+      </li>
+      <li><b>Staging:</b> FIGO (International Federation of Gynecology and Obstetrics) staging system (2009 revision) is used, based on surgical-pathologic findings. Key factors include myometrial invasion, cervical stromal involvement, and lymph node status.</li>
+      <li><b>Molecular Analysis:</b> Recommended to identify molecular subgroups (POLE-mutated, MSI-H/dMMR, p53 aberrant, NSMP) which may guide treatment escalation or de-escalation. HER2 testing is recommended for p53 aberrant carcinomas (serous, clear cell, carcinosarcoma). ER/PR testing for stage III/IV/recurrent disease.</li>
+      <li><b>Genetic Counseling:</b> For suspected Lynch syndrome (MMR deficiency).</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Patient Positioning:</b> Supine position is common. Pillows under the head and a vaclok under the legs for comfort and reproducibility.</li>
+      <li><b>Bladder/Rectum Management:</b> Patients are often instructed to have a comfortably full bladder to push small bowel superiorly out of the pelvis and an empty rectum to prevent anatomical shifts.</li>
+      <li><b>Immobilization:</b> Lower extremity immobilization (e.g., vaclok) to minimize intra-fraction motion.</li>
+      <li><b>Contrast:</b> IV and oral contrast may be used for better visualization of pelvic vessels and bowel contouring.</li>
+      <li><b>Reference Marks:</b> Placed laterally and anteriorly on stable positions.</li>
+      <li><b>Scan Parameters:</b> Extend from above the iliac crest to the bottom of the obturator foramen, or as specified by physician.</li>
+      <li><b>Target Volume Delineation:</b>
+        <ul>
+          <li><b>GTV:</b> Gross tumor volume (visible/palpable disease).</li>
+          <li><b>CTV:</b> GTV plus a margin for microscopic disease (e.g., entire uterus, parametria, upper vagina, regional lymph nodes).</li>
+          <li><b>PTV:</b> CTV plus a margin (e.g., 7mm) for setup uncertainties and organ motion.</li>
+          <li><b>OARs:</b> Small bowel, bladder, rectum, femoral heads, bone marrow.</li>
+        </ul>
+      </li>
+      <li><b>Lymph Node Assessment:</b> Sentinel lymph node (SLN) mapping (cervical injection with ICG or radiocolloid) is preferred over full lymphadenectomy for apparent uterine-confined disease. If SLN mapping fails on one side, a side-specific lymph node dissection (LND) is performed. Para-aortic LND may be considered for high-risk tumors.</li>
+      <li><b>Field Placement Borders (External Beam RT):</b>
+        <ul>
+          <li><b>Superior:</b> L5-S1 interspace (to include common iliac nodes).</li>
+          <li><b>Inferior:</b> Mid-obturator foramen (to include common iliac nodes).</li>
+          <li><b>Lateral:</b> 1.5-2 cm from widest true pelvis (to encompass external and internal iliac nodes).</li>
+          <li><b>Anterior:</b> Encompass the symphysis pubis.</li>
+          <li><b>Posterior:</b> Split the sacrum.</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>Adjuvant RT:</b>
+        <ul>
+          <li>Vaginal brachytherapy alone is preferred for low-risk stage IA/IB endometrioid (G1-2). Doses like 6 Gy x 5 fractions to vaginal surface or 5.5 Gy x 4 fractions to 5 mm depth.</li>
+          <li>EBRT may be considered for higher risk stage IA/IB (G3, LVSI, age >60/70y).</li>
+          <li>For stage IB G3 and stage II, RT (EBRT and/or vaginal brachytherapy) with or without systemic therapy is used.</li>
+          <li>For stage III/IV, systemic therapy is the mainstay, combined with EBRT +/- vaginal brachytherapy.</li>
+          <li>External-beam doses for microscopic disease: 45-50 Gy. Boosts to gross residual disease: 60-70 Gy.</li>
+        </ul>
+      </li>
+      <li><b>Definitive RT (for inoperable):</b> EBRT and/or brachytherapy. Brachytherapy doses are individualized, aiming for EQD2 D90 of ≥48 Gy for brachytherapy alone, or 65 Gy for EBRT + brachytherapy.</li>
+      <li><b>Chemoradiation:</b> Often platinum-based (cisplatin/carboplatin) concurrently with EBRT.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Techniques:</b> IMRT/VMAT are standard for pelvic RT to spare normal tissues (small bowel, bladder, rectum, femoral heads). 3D conformal techniques (3-field, 4-field box) are also used.</li>
+      <li><b>Brachytherapy:</b> Used as boost after EBRT or as definitive treatment. High-dose-rate (HDR) or low-dose-rate (LDR) techniques. Intracavitary applicators (cylinders) or interstitial needles (for larger/irregular tumors). Image-guided brachytherapy is encouraged.</li>
+      <li><b>Setup Verification:</b> Daily IGRT (e.g., CBCT) to confirm patient position and target coverage.</li>
+      <li><b>Timing:</b> Adjuvant RT should begin as soon as vaginal cuff is healed, preferably within 12 weeks post-surgery. Overall treatment time (EBRT + brachytherapy) should not exceed 8 weeks.</li>
+    </ul>
+  </div>
+
+  <div id="cervix-cancer" class="tab-content">
+    <h3>Carcinoma Cervix</h3>
+    <p>Cervical cancer is the third most common cancer in women worldwide, strongly correlated with HPV infection. Squamous cell carcinoma is the most common histology.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li>Radiation therapy (RT) is the primary treatment for most stages of cervical cancer, often with curative intent.</li>
+      <li>Concurrent chemoradiation (CRT) is the standard of care for locally advanced disease.</li>
+      <li>Brachytherapy is a crucial component of definitive RT for cervical cancer.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Clinical Evaluation:</b> Includes history, physical exam, Pap smear, colposcopy, and biopsy.</li>
+      <li><b>Imaging:</b> Pelvis MRI is preferred for local staging (tumor size, parametrial invasion, nodal involvement). Chest CT or X-ray for distant metastases. PET/CT may be used for nodal staging and distant metastases.</li>
+      <li><b>Staging:</b> FIGO staging system is used, primarily clinical.</li>
+      <li><b>HPV Testing:</b> Essential for diagnosis and prognosis.</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Patient Positioning:</b> Supine position, often with a knee bolster to flatten the spine. Arms typically on chest or above head if para-aortic nodes are included.</li>
+      <li><b>Bladder/Rectum Management:</b> Comfortably full bladder and empty rectum are crucial for reproducibility and organ sparing.</li>
+      <li><b>Immobilization:</b> Lower extremity immobilization (e.g., vaclok).</li>
+      <li><b>Reference Marks:</b> Placed anteriorly along midline and laterally. A radiopaque marker may be inserted onto the vaginal apex or cervical os.</li>
+      <li><b>Scan Parameters:</b> Extend from L4-L5 interspace (or higher for para-aortic nodes) to the bottom of the obturator foramen.</li>
+      <li><b>Target Volume Delineation:</b>
+        <ul>
+          <li><b>GTV:</b> Gross tumor.</li>
+          <li><b>CTV:</b> GTV plus entire cervix, uterus, parametria, and regional lymph nodes (obturator, internal/external iliac, common iliac, presacral). Para-aortic nodes are included for advanced cases.</li>
+          <li><b>PTV:</b> CTV plus a margin (e.g., 1-2 cm lateral to pelvic inlet, encompassing pubic symphysis, splitting sacrum posteriorly).</li>
+          <li><b>OARs:</b> Bladder, rectum, small bowel, femoral heads, bone marrow.</li>
+        </ul>
+      </li>
+      <li><b>Field Placement Borders (External Beam RT):</b>
+        <ul>
+          <li><b>Superior:</b> L4-L5 interspace (if common iliac nodes, then L4 interspace).</li>
+          <li><b>Inferior:</b> Inferior obturator foramen (if no vaginal involvement); entire vagina if vaginal extension present in lower 1/3rd (inguinal LN included if distal vagina involved).</li>
+          <li><b>Lateral:</b> 1.5-2 cm from widest true pelvis.</li>
+          <li><b>Anterior:</b> Encompassing the pubic symphysis.</li>
+          <li><b>Posterior:</b> Splitting the sacrum.</li>
+        </ul>
+      </li>
+      <li><b>Para-aortic Nodal Irradiation:</b>
+        <ul>
+          <li><b>Position:</b> Supine.</li>
+          <li><b>Borders:</b> Superior: T12-L1 interspace. Inferior: Above pelvic field with adequate gap. Width: 9-10 cm.</li>
+          <li><b>Spinal Cord:</b> Dose from T12-L2 should be kept below 45 Gy by interposing a 2 cm wide HVL shield in posterior portal after 32-46 Gy.</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>External Beam RT (EBRT):</b> Typically 45-50.4 Gy to the pelvis (1.8-2.0 Gy/fraction).</li>
+      <li><b>Concurrent Chemotherapy:</b> Platinum-based (e.g., weekly cisplatin) is standard for advanced stages.</li>
+      <li><b>Brachytherapy Boost:</b> Following EBRT, intracavitary brachytherapy delivers a high dose to the primary tumor and involved parametria. Total equivalent doses (EBRT + brachytherapy) often reach 80-85 Gy.</li>
+      <li><b>Palliative RT:</b> For symptomatic relief, doses like 20 Gy in 5 fractions or 30 Gy in 10 fractions.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Techniques:</b> IMRT/VMAT are standard for EBRT to conform dose and spare OARs. 3D conformal techniques (4-field box) are also used.</li>
+      <li><b>Brachytherapy:</b> HDR is common. Applicators (e.g., tandem and ovoids, vaginal cylinders) are placed, and image guidance (kV, CT, MRI) confirms position. Bladder and rectum are filled/emptied to displace them from the high-dose region.</li>
+      <li><b>Setup Verification:</b> Daily IGRT (CBCT) for EBRT. Image guidance for brachytherapy.</li>
+    </ul>
+  </div>
+
+  <div id="vaginal-cancer" class="tab-content">
+    <h3>Carcinoma Vagina</h3>
+    <p>Vaginal cancer is a rare gynecological malignancy, predominantly squamous cell carcinoma, often associated with HPV and smoking.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li>Radiation therapy (RT) is the preferred primary treatment due to improved organ preservation compared to radical surgery.</li>
+      <li>Often involves a combination of external beam radiation therapy (EBRT) and brachytherapy.</li>
+      <li>Concurrent platinum-based chemotherapy is often used for invasive cancers.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Clinical Evaluation:</b> History, physical exam (bimanual and rectovaginal), colposcopy, biopsy. Rule out metastasis from other sites (cervix, vulva).</li>
+      <li><b>Imaging:</b>
+        <ul>
+          <li>Pelvis MRI with vaginal gel (preferred) to assess local disease extent.</li>
+          <li>Neck/chest/abdomen/pelvis/groin FDG-PET/CT (preferred) or CT to evaluate for metastatic disease.</li>
+        </ul>
+      </li>
+      <li><b>Staging:</b> FIGO staging system.</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Patient Positioning:</b> Supine position with legs abducted slightly ("frog leg") to reduce perineal skin folds.</li>
+      <li><b>Immobilization:</b> Custom-made vaclok or alpha cradle for legs.</li>
+      <li><b>Reference Marks:</b> Radiopaque marker on the inferior extent of the vaginal tumor to identify GTV. Lateral positioning marks to reduce leg rotation.</li>
+      <li><b>Contrast:</b> IV contrast for vessel visualization.</li>
+      <li><b>Scan Parameters:</b> Include entire pelvis.</li>
+      <li><b>Target Volume Delineation:</b>
+        <ul>
+          <li><b>GTV:</b> Macroscopic gross residual tumor at time of brachytherapy.</li>
+          <li><b>HR-CTV:</b> GTV + any abnormal/irregular vaginal wall within initial tumor extension + paravaginal/parametrial gray zones. Entire vagina, paravaginal tissues, cervix, parametria, and GTV with 1-2 cm margin for primary CTV.</li>
+          <li><b>CTV nodes:</b> Pelvic nodal coverage (common iliac, internal/external iliac, presacral, obturator). Inguinal nodes if lower third of vagina involved.</li>
+          <li><b>PTV:</b> CTV plus 0.5-0.7 cm expansion for setup error.</li>
+          <li><b>OARs:</b> Rectum, bladder, sigmoid, small bowel, femoral heads, urethra.</li>
+        </ul>
+      </li>
+      <li><b>Field Placement Borders (External Beam RT):</b>
+        <ul>
+          <li><b>Superior:</b> L-S1 junction.</li>
+          <li><b>Inferior:</b> Beyond distal end of tumor defined by marker or bead.</li>
+          <li><b>Lateral:</b> 2 cm beyond pelvic brim.</li>
+          <li><b>Inguinal Lymph Nodes:</b> If to be boosted, direct appositional field used.</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>EBRT:</b> 45-50.4 Gy to the entire pelvis, including associated lymph nodes (25-28 fractions at 1.8 Gy/fraction).</li>
+      <li><b>Brachytherapy:</b>
+        <ul>
+          <li><b>Primary:</b> LDR 60 Gy EQD2 to vaginal surface, or HDR 50-60 Gy EQD2. Common HDR regimens: 5 Gy x 8 fractions or 8 Gy x 5 fractions to vaginal surface.</li>
+          <li><b>Boost:</b> After 45 Gy EBRT, HDR 4.5-5.5 Gy x 5 fractions to HR-CTV. Or LDR 15-25 Gy.</li>
+        </ul>
+      </li>
+      <li><b>Palliative RT:</b> EBRT: 20 Gy in 5 fractions, 30 Gy in 10 fractions, or 8-10 Gy in 1 fraction for hemostasis. Brachytherapy: LDR 20-30 Gy, HDR 18-24 Gy in 3-4 fractions.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Techniques:</b> IMRT/VMAT for EBRT to conform dose and spare OARs. 3D conformal techniques also used.</li>
+      <li><b>Brachytherapy:</b> Intracavitary (vaginal cylinder) for ≤5mm gross disease or interstitial (needles/perineal template) for >5mm gross disease. Real-time image guidance (CT, MRI, US) is encouraged. Bladder is filled/emptied to displace structures.</li>
+      <li><b>Setup Verification:</b> Daily IGRT (CBCT) for EBRT. Image guidance for brachytherapy.</li>
+      <li><b>Overall Treatment Time:</b> Should not extend beyond 8 weeks.</li>
+    </ul>
+  </div>
+
+  <div id="vulvar-cancer" class="tab-content">
+    <h3>Carcinoma Vulva</h3>
+    <p>Vulvar cancer, predominantly squamous cell carcinoma, typically affects women over 70. It is primarily treated by surgical resection.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li>Adjuvant RT is recommended for residual or recurrent disease, especially with insufficient resection margins.</li>
+      <li>Used for inoperable cases or for palliation.</li>
+      <li>Can be combined with chemotherapy for locally advanced disease or positive nodes.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Clinical Evaluation:</b> History, physical exam, biopsy of suspicious areas.</li>
+      <li><b>Imaging:</b>
+        <ul>
+          <li>Pelvic MRI to aid in surgical and/or radiation treatment planning.</li>
+          <li>Chest X-ray or CT chest/abdomen/pelvis for metastatic disease.</li>
+          <li>FDG-PET/CT if metastasis is suspected.</li>
+        </ul>
+      </li>
+      <li><b>Staging:</b> FIGO staging system. Lymph node status is a critical prognostic factor.</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Patient Positioning:</b> Supine with legs abducted ("frog leg" or akimbo) to reduce skin folds and facilitate bolus placement.</li>
+      <li><b>Immobilization:</b> Stirrups and custom-made vaclok for legs.</li>
+      <li><b>Bolus:</b> Necessary to bring dose superficially to skin surface, especially for electron fields. Can be wet gauze or Vaseline-coated gauze.</li>
+      <li><b>Reference Marks:</b> Placed laterally and anteriorly. Radiopaque vaginal localizer may be used.</li>
+      <li><b>Scan Parameters:</b> Include pelvis, extending superiorly to L5-S1 interspace for common iliac nodes.</li>
+      <li><b>Target Volume Delineation:</b>
+        <ul>
+          <li><b>GTV:</b> Gross tumor.</li>
+          <li><b>CTV:</b> GTV plus microscopic extension, including superficial inguinal, deep femoral, and pelvic lymph nodes.</li>
+          <li><b>PTV:</b> CTV plus 2-3 cm expansion.</li>
+          <li><b>OARs:</b> Bowel, rectum, bladder, femoral heads.</li>
+        </ul>
+      </li>
+      <li><b>Field Placement Borders (AP/PA Oppositional Portal):</b>
+        <ul>
+          <li><b>Superior:</b> Middle of sacroiliac joint/L5-S1 interspace (If pelvic lymph nodes positive, L3-L4 interspace).</li>
+          <li><b>Inferior:</b> Entire vulva and most superficial inguinal lymph nodes (about 6-8 cm inferior to inguinal skin crease).</li>
+          <li><b>Lateral:</b> 2 cm lateral to widest part in pelvic inlet (should extend out to anterior superior iliac spine to include inguinal ligament).</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>Postoperative RT:</b> 45-50 Gy (6 MV) to the pelvis with an electron boost of 10-20 Gy for insufficient resection margins. Total electron treatment: 50-60 Gy (including boost).</li>
+      <li><b>Locally Advanced/Unresectable:</b> EBRT with concurrent chemotherapy. Doses for primary tumor bed with positive margins: 54-60 Gy. For gross residual or unresectable disease: 60-70 Gy.</li>
+      <li><b>Adjuvant Regional Disease:</b> 50-66 Gy in 25-33 fractions over 5-7 weeks.</li>
+      <li><b>Hypofractionated:</b> 27-30 Gy in 5 fractions over 2 weeks for primary disease only.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Techniques:</b> 3D conformal (AP/PA fields) or IMRT/VMAT (6 MV) to conform dose and spare OARs. Electrons for superficial boosts.</li>
+      <li><b>Electron Boost:</b> Central ray perpendicular (en face) at 100 SSD. Custom Cerrobend blocks. Energy chosen based on depth (e.g., 12 MeV for 3 cm depth). Bolus may be used.</li>
+      <li><b>Setup Verification:</b> Daily IGRT (CBCT). For electron fields, physician approval of setup is crucial, and templates/photos are used for reproducibility.</li>
+      <li><b>Treatment Breaks:</b> Doses beyond 40 Gy often require treatment breaks due to moist desquamation.</li>
+    </ul>
+  </div>
+
+  <div id="ovarian-cancer" class="tab-content">
+    <h3>Carcinoma Ovary (Including Fallopian Tube Cancer and Primary Peritoneal Cancer)</h3>
+    <p>Ovarian cancer is the deadliest gynecological cancer, with epithelial subtypes being most common. It is often diagnosed at advanced stages.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li>Radiation therapy (RT) is rarely used as primary curative treatment due to the widespread nature of the disease at diagnosis.</li>
+      <li>Mainly used for palliation of symptoms (e.g., pain, bleeding) from localized metastases or for oligometastatic disease.</li>
+      <li>Whole Abdomen Irradiation (WAI) was historically used but is now less common due to toxicity and availability of systemic therapies.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Clinical Presentation:</b> Suspicious pelvic mass, ascites, abdominal distention, bloating, pelvic/abdominal pain, urinary symptoms.</li>
+      <li><b>Workup:</b> Abdominal/pelvic ultrasound, CT/MRI, chest CT/X-ray, CBC, LFTs, CA-125 (and other tumor markers like inhibin, AFP, beta-hCG, CEA for less common types).</li>
+      <li><b>Genetic Testing:</b> Germline and somatic BRCA1/2 testing is crucial, as it informs maintenance therapy options (PARP inhibitors). HRD status is also important.</li>
+      <li><b>Staging:</b> FIGO staging system (8th edition, 2017).</li>
+      <li><b>Nutritional Status:</b> Evaluation is important as patients often have deficiencies due to symptoms.</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Patient Positioning:</b> Supine with arms above head in a wing board or arm board, knee bolster.</li>
+      <li><b>Immobilization:</b> Reproducible and precise immobilization is essential.</li>
+      <li><b>Contrast:</b> IV and oral contrast are commonly used to delineate organs and tumor extent.</li>
+      <li><b>Scan Parameters:</b> Extend from mid-neck to the inferior costal margin or L3, or to cover all known disease.</li>
+      <li><b>Motion Management:</b> Respiratory motion is a key consideration. Techniques like abdominal compression, breath-hold (DIBH), or respiratory gating (4D CT) may be used, especially for upper abdominal tumors.</li>
+      <li><b>Target Volume Delineation:</b>
+        <ul>
+          <li><b>GTV:</b> Gross tumor.</li>
+          <li><b>CTV:</b> GTV plus margin for microscopic disease.</li>
+          <li><b>ITV:</b> CTV plus margin for organ motion (if free-breathing).</li>
+          <li><b>PTV:</b> ITV/CTV plus margin (e.g., 5-8mm) for setup errors.</li>
+          <li><b>OARs:</b> Kidneys, liver, lung, heart, stomach, small bowel, large bowel, spinal cord, femoral heads.</li>
+        </ul>
+      </li>
+      <li><b>Field Placement Borders (Whole Abdomen Irradiation - WAI):</b>
+        <ul>
+          <li><b>Superior:</b> 1.5-2 cm above diaphragm.</li>
+          <li><b>Inferior:</b> Inferior border of obturator foramen.</li>
+          <li><b>Lateral:</b> Whole peritoneum with a margin of subcutaneous tissue.</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>Palliative RT:</b> Localized RT for symptom control (e.g., bone metastases, painful ascites). Doses like 20-30 Gy in 5-10 fractions.</li>
+      <li><b>WAI:</b> Historically 1.25-1.5 Gy/fraction to 30 Gy. Boosts to pelvis and para-aortic nodes (45-50 Gy). Kidney blocks are crucial (limit to 20 Gy).</li>
+      <li><b>SBRT:</b> For small, well-defined metastases (e.g., liver), 25-50 Gy in <5 fractions.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Techniques:</b> VMAT/IMRT are preferred for highly conformal plans, minimizing dose to OARs. 3DCRT for less complex cases.</li>
+      <li><b>Setup Verification:</b> Daily IGRT (CBCT) is standard. Align to PTV, checking spine, carina, or organ edges.</li>
+      <li><b>Dose Rate:</b> May be lowered to reduce nausea.</li>
+      <li><b>Systemic Therapy:</b> Primary treatment often involves surgery (cytoreduction) followed by platinum-based chemotherapy. Maintenance therapy with PARP inhibitors (olaparib, niraparib, rucaparib) or bevacizumab is common for advanced stages, especially with BRCA mutations or HRD.</li>
+    </ul>
+  </div>
+
+  <div id="ovarian-ablation" class="tab-content">
+    <h3>Ovarian Ablation (in the context of Radiation Therapy)</h3>
+    <p>In the context of radiation therapy for gynecologic tumors, "ovarian ablation" typically refers to the cessation of ovarian function due to radiation exposure, rather than a direct radiation treatment technique for ovarian cancer itself. This is often an unintended side effect of pelvic radiation.</p>
+
+    <h4>Mechanism:</h4>
+    <ul>
+      <li>Ovaries are highly radiosensitive. Exposure to radiation, even at relatively low doses, can damage ovarian follicles, leading to premature ovarian failure.</li>
+      <li>This results in cessation of menses, infertility, and symptoms of menopause (e.g., hot flashes, vaginal dryness).</li>
+    </ul>
+
+    <h4>Clinical Relevance in RT:</h4>
+    <ul>
+      <li>When pelvic radiation is delivered for gynecologic cancers (e.g., cervical, endometrial, vaginal, vulvar, rectal cancers), the ovaries may be included in or near the treatment field.</li>
+      <li>For premenopausal patients, ovarian transposition (surgically moving the ovaries out of the radiation field) may be considered to preserve ovarian function and fertility, if feasible and appropriate for the patient's prognosis.</li>
+      <li>For patients where ovarian function suppression is desired (e.g., in some hormone-sensitive breast cancers), radiation-induced ovarian ablation could be a therapeutic goal, though typically achieved via surgical oophorectomy or hormonal agents.</li>
+    </ul>
+
+    <h4>Dose Threshold:</h4>
+    <ul>
+      <li>The dose required to induce permanent ovarian ablation varies with age, but generally, doses as low as 2-3 Gy can cause temporary suppression, and doses around 5-10 Gy can lead to permanent sterility, especially in older women.</li>
+      <li><b>Field Placement Borders (Ovarian Ablation):</b>
+        <ul>
+          <li><b>Superior:</b> L5 vertebral level.</li>
+          <li><b>Inferior:</b> Middle of femoral heads.</li>
+          <li><b>Lateral:</b> 1 cm lateral to pelvic wall.</li>
+          <li><b>Portal Size:</b> 12 x 12 cm.</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li>15 Gy in 5 fractions over 5 days. Dosage is age-dependent, higher in younger patients.</li>
+    </ul>
+  </div>
+
+  <div id="pregnancy-malignancy" class="tab-content">
+    <h3>Malignancy During Pregnancy</h3>
+    <p>Managing gynecologic malignancies during pregnancy is complex, balancing maternal treatment needs with fetal safety. Radiation therapy carries significant risks to the developing fetus.</p>
+
+    <h4>General Principles:</h4>
+    <ul>
+      <li>Diagnosis and staging of cancer in pregnant patients should proceed as for non-pregnant patients, with modifications to minimize fetal radiation exposure from diagnostic imaging (e.g., using ultrasound or MRI instead of CT/PET where possible, or shielding).</li>
+      <li>Treatment decisions are highly individualized, considering the type and stage of cancer, gestational age, and patient's wishes.</li>
+    </ul>
+
+    <h4>Radiation Therapy Considerations:</h4>
+    <ul>
+      <li><b>Fetal Dose:</b> Radiation is teratogenic and embryocidal. The fetus is most sensitive during organogenesis (weeks 2-8 of gestation). Even low doses can cause congenital anomalies, growth restriction, or neurodevelopmental deficits.</li>
+      <li><b>Shielding:</b> Extensive lead shielding of the abdomen and pelvis is crucial if radiation to other body sites (e.g., head and neck, breast) is necessary. However, scatter radiation can still reach the fetus.</li>
+      <li><b>Treatment Modality:</b> Photon therapy generally has higher scatter than proton therapy, which may be considered for non-pelvic sites if available, due to its sharp dose fall-off.</li>
+      <li><b>Timing of RT:</b>
+        <ul>
+          <li><b>First Trimester:</b> RT is generally contraindicated due to high risk of severe malformations or fetal demise. Termination of pregnancy is often discussed.</li>
+          <li><b>Second/Third Trimester:</b> Risks decrease but are still significant (e.g., growth restriction, intellectual disability, childhood cancer). RT to non-pelvic sites may be considered with maximal shielding. Pelvic RT usually necessitates delaying treatment until after delivery or considering termination.</li>
+        </ul>
+      </li>
+      <li><b>Alternative Treatments:</b> Surgery (if feasible) or chemotherapy (with careful agent selection and timing) may be preferred over RT during pregnancy to avoid fetal exposure.</li>
+    </ul>
+    <p class="attention"><b>Note:</b> Direct radiation to the uterus/pelvis during pregnancy is generally avoided and is a strong indication for considering termination of pregnancy or delaying definitive treatment until after delivery, depending on the cancer's aggressiveness and gestational age.</p>
+  </div>
+
+  <div class="references">
+    <h3>References</h3>
+    <ul>
+      <li>Rathi, A. K. (n.d.). <i>Step by Step Radiation Therapy: Treatment and Planning</i>. Jaypee Brothers Medical Publishers.</li>
+      <li>National Comprehensive Cancer Network. (2025). <i>NCCN Clinical Practice Guidelines in Oncology (NCCN Guidelines®): Uterine Neoplasms</i> (Version 2.2025).</li>
+      <li>National Comprehensive Cancer Network. (2025). <i>NCCN Clinical Practice Guidelines in Oncology (NCCN Guidelines®): Vaginal Cancer</i> (Version 4.2025).</li>
+      <li>National Comprehensive Cancer Network. (2024). <i>NCCN Clinical Practice Guidelines in Oncology (NCCN Guidelines®): Vulvar Cancer</i> (Version 4.2024).</li>
+      <li>National Comprehensive Cancer Network. (2024). <i>NCCN Clinical Practice Guidelines in Oncology (NCCN Guidelines®): Ovarian Cancer</i> (Version 3.2024).</li>
+      <li>Stiles, J. (2023). <i>Localization & Treatment Procedures in Radiation Therapy</i>. Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  function openGynTab(evt, tabId) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tab-content");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+      tabcontent[i].classList.remove("active");
+    }
+    tablinks = document.getElementsByClassName("tab-button");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].classList.remove("active");
+    }
+    document.getElementById(tabId).style.display = "block";
+    document.getElementById(tabId).classList.add("active");
+    evt.currentTarget.classList.add("active");
+  }
+
+  // Set the first tab as active by default when the page loads
+  document.addEventListener("DOMContentLoaded", function() {
+    document.querySelector(".tab-button").click();
+  });
+</script>
+
+</body>
+</html>
