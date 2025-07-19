@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body {
+    font-family: sans-serif;
+    line-height: 1.6;
+    margin: 20px;
+    background-color: #f4f4f4;
+    color: #333;
+  }
+  h2 {
+    color: #0056b3;
+    border-bottom: 2px solid #0056b3;
+    padding-bottom: 5px;
+    margin-top: 30px;
+  }
+  h3 {
+    color: #004085;
+    margin-top: 20px;
+  }
+  h4 {
+    color: #004085;
+    margin-top: 15px;
+    margin-bottom: 10px;
+  }
+  .lesson-container {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  .tab-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  .tab-button {
+    background-color: #e0e0e0;
+    border: 1px solid #ccc;
+    padding: 10px 15px;
+    cursor: pointer;
+    margin-right: 5px;
+    border-radius: 5px 5px 0 0;
+    transition: background-color 0.3s ease;
+    white-space: nowrap; /* Prevent text wrapping */
+  }
+  .tab-button.active {
+    background-color: #0056b3;
+    color: white;
+    border-color: #0056b3;
+  }
+  .tab-content {
+    display: none;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-top: none;
+    padding: 20px;
+    border-radius: 0 0 8px 8px;
+    background-color: #f9f9f9;
+  }
+  .tab-content.active {
+    display: block;
+  }
+  ul {
+    list-style-type: disc;
+    margin-left: 20px;
+  }
+  li {
+    margin-bottom: 8px;
+  }
+  b {
+    color: #0056b3;
+  }
+  .references {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #ccc;
+    font-size: 0.9em;
+    color: #555;
+  }
+  .attention {
+    font-weight: bold;
+    color: #d9534f;
+  }
+</style>
+</head>
+<body>
+
+<div class="lesson-container">
+  <h2>Head and Neck Cancer: Radiation Therapy Planning and Delivery</h2>
+
+  <p>This lesson provides an overview of common head and neck cancer sites and focuses on the detailed steps involved in preplanning, planning, and delivery of radiation therapy for these tumors, with enhanced focus on precise field borders.</p>
+
+  <div class="tab-container">
+    <button class="tab-button active" onclick="openHNCtab(event, 'general-principles')">General Principles</button>
+    <button class="tab-button" onclick="openHNCtab(event, 'oral-cavity')">Oral Cavity</button>
+    <button class="tab-button" onclick="openHNCtab(event, 'maxillary-antrum')">Maxillary Antrum & Sinuses</button>
+    <button class="tab-button" onclick="openHNCtab(event, 'nasopharynx')">Nasopharynx</button>
+    <button class="tab-button" onclick="openHNCtab(event, 'oropharynx')">Oropharynx</button>
+    <button class="tab-button" onclick="openHNCtab(event, 'larynx')">Larynx</button>
+    <button class="tab-button" onclick="openHNCtab(event, 'hypopharynx')">Hypopharynx</button>
+    <button class="tab-button" onclick="openHNCtab(event, 'parotid')">Parotid Tumors</button>
+    <button class="tab-button" onclick="openHNCtab(event, 'ear')">Ear</button>
+  </div>
+
+  <div id="general-principles" class="tab-content active">
+    <h3>General Principles and Outline of Management</h3>
+    <p>Managing head and neck cancers requires a comprehensive approach, often involving a multidisciplinary team. Key aspects include:</p>
+    <ul>
+      <li><b>History and clinical examination</b> (local and systemic).</li>
+      <li><b>Clinical staging</b>.</li>
+      <li><b>Performance status and nutritional status</b>.</li>
+      <li><b>Histopathology and cytology</b> for confirmation.</li>
+    </ul>
+
+    <h4>General Guidelines for Treatment:</h4>
+    <ul>
+      <li><b>Stage I/II disease</b>: Often treated with a single modality (surgery or radiotherapy).</li>
+      <li><b>Stage III/IV disease</b>: Typically requires a combination of modalities, such as surgery plus radiotherapy, or chemotherapy plus radiotherapy.</li>
+      <li><b>Surgery preferred over RT as a single modality when</b>: Less morbidity is expected, cosmesis and function are not major concerns, lesions involve or are close to bone (to prevent radionecrosis), or in young patients.</li>
+      <li><b>Radiotherapy (RT) preferred over surgery as a single modality when</b>: High morbidity is expected after surgery, severe impairment of function and cosmesis can occur after surgery, surgery is difficult or radical excision is not possible, or the patient is unfit for or refuses surgery.</li>
+    </ul>
+
+    <h4>Treatment Modalities:</h4>
+    <ul>
+      <li><b>Surgery</b>: Used as a single modality in some early-stage diseases (I and II), and along with radiotherapy in advanced diseases (stage III and IV).</li>
+      <li><b>Radiotherapy (RT)</b>: External Beam Radiotherapy (EBRT) and brachytherapy are used in three main settings: radical curative radiotherapy (often with chemotherapy), postoperative adjuvant radiotherapy, and palliative radiotherapy. 3D Conformal Radiation Therapy (3D CRT) and Intensity-Modulated Radiation Therapy (IMRT) are advanced RT techniques that provide an optimum therapeutic ratio.</li>
+      <li><b>Chemotherapy</b>: Current evidence often favors concurrent administration with chemoradiotherapy. In selected patients, chemotherapy has palliative role.</li>
+    </ul>
+
+    <h4>Treatment Intent:</h4>
+    <ul>
+      <li><b>Definitive or Curative</b>: For Stage I-IV A disease. Prerequisites include dental review, speech therapy/counseling, and nutritional counseling and support.</li>
+      <li><b>Palliative/Supportive</b>: For Stage IVB-IVC disease, or in patients with poor general condition/performance status/advanced disease needing counseling and supportive care. Also for unresectable/metastatic disease with good general condition/performance status, needing chemotherapy with or without radiotherapy/altered fractionations.</li>
+    </ul>
+
+    <h4>Reasons for Unresectability (Related to Primary):</h4>
+    <ul>
+      <li>Base of skull involvement.</li>
+      <li>Skin/soft tissue involvement.</li>
+      <li>Infratemporal fossa involvement.</li>
+    </ul>
+
+    <h4>Reasons for Unresectability (Related to Secondary):</h4>
+    <ul>
+      <li>Infiltration to internal or common carotid artery.</li>
+      <li>Clinically fixed node.</li>
+      <li>Extensive infiltration of prevertebral muscle, skull base.</li>
+    </ul>
+
+    <h4>Indications for Postoperative Radiotherapy:</h4>
+    <ul>
+      <li><b>Primary</b>: T3/T4 disease, close or positive margins of excision, deep infiltrative tumor, lymphovascular or perineural invasion.</li>
+      <li><b>Lymph Node</b>: Bulky nodal disease N2/N3, extranodal disease, multiple level involvement.</li>
+    </ul>
+    <p>The decision to give postoperative radiation depends on the stage of disease, spread pattern, excision margins status, perineural invasion, lymph node status (including perinodal spread), and differentiation.</p>
+
+    <h4>Indications of Brachytherapy:</h4>
+    <ul>
+      <li>Site: Oral cavity, base of tongue.</li>
+      <li>Localized disease (N0 disease), small (T1) lesion.</li>
+      <li>Accessible site.</li>
+      <li>Substantial local recurrence rate.</li>
+      <li>Lesions away from bone.</li>
+    </ul>
+
+    <h4>Field Matching in Head and Neck Cancer Treatment:</h4>
+    <ul>
+      <li>Conditions: Matching orthogonal fields (parallel opposed and anterior), matching photon and electron fields, positioning of lead shields.</li>
+      <li>Methods: By calculating gap between the fields, by using half beam block, by matching beam divergence, or by using moving junction.</li>
+    </ul>
+
+    <h4>Patient Care During Treatment:</h4>
+    <ul>
+      <li>Dental review and oral hygiene.</li>
+      <li>Cessation of smoking and alcohol.</li>
+      <li>Aspirin gargle and systemic analgesia.</li>
+      <li>Liquid/semisolid food, high calorie food supplements, and weekly weight/hematological assessment.</li>
+      <li>Nasogastric tube feeding (in compromised patients).</li>
+      <li>Tracheostomy in cases of laryngeal cancer (compromised airways).</li>
+      <li>Artificial saliva/artificial teardrop.</li>
+      <li>Shoulder physiotherapy and jaw stretching exercises to prevent postoperative trismus.</li>
+      <li>Swallowing and speech rehabilitation.</li>
+    </ul>
+
+    <h4>Radical Radiotherapy Dosing:</h4>
+    <ul>
+      <li><b>Brachytherapy alone</b>: T1-2 N0: 60-70 Gy by LDR or equivalent by Ir192 HDR doses.</li>
+      <li><b>Brachytherapy + EBRT</b>: T1-3 N0-1: EBRT-56-60 Gy/28-30 fractions/6 weeks, followed by a boost brachytherapy of 15-20 Gy.</li>
+      <li><b>EBRT alone</b>: T1-4 N0-2: 60-70 Gy/33-35 fractions/6-7 weeks (using shrinking fields). For concurrent chemoradiation, 66-70 Gy/33-35 fractions/6-7 weeks concurrent with CDDP 30 mg/m² weekly or 100 mg/m² 3 weekly.</li>
+    </ul>
+
+    <h4>Postoperative Radiotherapy Dosing:</h4>
+    <ul>
+      <li>Primary and nodal disease: 50-60 Gy/25-30 fractions/5-6 weeks using shrinking fields. For sites of residual disease or positive margins, a 4-10 Gy boost is given.</li>
+    </ul>
+
+    <h4>Follow-up Protocol:</h4>
+    <ul>
+      <li>Every 2 months for first 2 years.</li>
+      <li>Six monthly for next 3 years.</li>
+      <li>Annually thereafter.</li>
+      <li>Thorough clinical examination for locoregional control, second primary, and late toxicities. TSH monitoring for neck irradiation.</li>
+    </ul>
+  </div>
+
+  <div id="oral-cavity" class="tab-content">
+    <h3>Oral Cavity Cancer (Including Mucosal Lip)</h3>
+    <p>The oral cavity includes subsites like buccal mucosa, floor of mouth, oral tongue, alveolar ridge, retromolar trigone, and hard palate.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li><b>Buccal mucosa, floor of mouth, retromolar trigone</b>: T1 and small T2 tumors are treated by radical implantation unless the lesion extends close to bone/retromolar trigone. Larger lesions are treated by a combination of EBRT and implantation. In cases of bone invasion, surgery followed by EBRT is indicated. For retromolar trigone, surgery followed by postoperative EBRT or EBRT alone is often used due to difficulty with implantation.</li>
+      <li><b>Tongue</b>: Surgery for small superficial tumors. Interstitial implants for T1 and small T2 tumors. EBRT followed by interstitial implantation for larger T2 and T3 lesions. Early tumors with mobile lymph nodes are treated with surgery/interstitial implant for primary and neck dissection for lymph nodes.</li>
+    </ul>
+
+    <h4>Planning Technique:</h4>
+    <h5>Disease Assessment:</h5>
+    <ul>
+      <li>Clinical assessment.</li>
+      <li>Evaluation under anesthesia for tumor mapping.</li>
+      <li>Radiological: Orthopantomogram (OPG), Contrast-Enhanced CT (CECT), MRI, PET scan.</li>
+    </ul>
+    <h5>Simulation:</h5>
+    <ul>
+      <li>Patient is positioned supine with a Perspex cast, mouthbite, and straight neck.</li>
+      <li>Palpable nodes are demarcated with wire.</li>
+    </ul>
+    <h5>Target Volume:</h5>
+    <ul>
+      <li>For buccal mucosa: Primary tumor + 2 cm margin + ipsilateral submandibular lymph node.</li>
+      <li>For lower alveolus: Mandible on affected side plus submental and submandibular lymph nodes.</li>
+      <li>For tongue: Tumor plus 2 cm margin and ipsilateral submandibular and deep cervical lymph nodes.</li>
+    </ul>
+    <h5>Field Arrangements:</h5>
+    <ul>
+      <li><b>Buccal Mucosa</b>: Brachytherapy with single or double plane implant based on tumor thickness. For EBRT, small anterior and ipsilateral-wedged fields are used for unilateral disease.</li>
+      <li><b>Lower Alveolus</b>: Oblique anterior and lateral-wedged fields. For mandible uninvolved, surgery (wide excision with marginal mandibulectomy) with or without SOHD (supraomohyoid neck dissection) for N0 disease, or MND (modified neck dissection) for N+ disease. Postoperative radiotherapy is indicated as per guidelines. For mandible grossly involved, surgery + adjuvant radiotherapy (wide excision and segmental/hemi-mandibulectomy with SOHD for N0 and MND/RND for N+ disease), followed by postoperative RT as per guidelines.</li>
+      <li><b>Tongue</b>: Brachytherapy with hairpin technique for tumors <1 cm, or plastic loop technique for tumors up to 2 cm. For EBRT, T2 diseases unsuitable for surgery plus EBRT and implantation are treated by external radiotherapy (target volume includes tumor plus 2 cm margin and ipsilateral submandibular and deep cervical lymph nodes) using anterior and lateral-wedged fields. For large T2 and T3 disease spread across midline, parallel opposed lateral fields are used.</li>
+      <li><b>Floor of Mouth</b>: Brachytherapy techniques are similar to those of tongue. For EBRT, T1 and small T2 disease, two anterior oblique wedged fields are used. For T2-T4 disease, two parallel opposed lateral fields are used.</li>
+      <li><b>Retromolar Trigone</b>: Unsuitable for brachytherapy. For T1, T2 disease, anterior and posterior oblique-wedged fields are used. If palpable lymph node, neck is treated with separate anterior field. For T3 and T4 disease, two parallel opposed fields are used, with neck treated with separate anterior field.</li>
+    </ul>
+    <h4>Detailed Treatment Borders for Oral Cavity:</h4>
+    <ul>
+      <li><b>Floor of Mouth and Oral Tongue (Conventional 2D fields):</b>
+        <ul>
+          <li><b>Superior:</b> 1.5 cm above the tongue.</li>
+          <li><b>Inferior:</b> Thyroid notch.</li>
+          <li><b>Anterior:</b> In front of the mandible (exclude the lower lip if possible).</li>
+          <li><b>Posterior (Node Negative):</b> Behind the vertebral bodies.</li>
+          <li><b>Posterior (Node Positive):</b> Behind spinous processes.</li>
+        </ul>
+      </li>
+      <li><b>Lip Cancers:</b>
+        <ul>
+          <li><b>Treatment Field:</b> Primary lesion with a 2 cm margin.</li>
+          <li><b>Shielding:</b> Lead teeth shield wrapped with bolus/wax to absorb backscatter.</li>
+        </ul>
+      </li>
+      <li><b>Buccal Mucosa:</b>
+        <ul>
+          <li><b>Initial RT Dose:</b> 55-60 Gy in 6 weeks, followed by a 20 Gy boost to spare the mandible.</li>
+        </ul>
+      </li>
+    </ul>
+    <h4>Dose:</h4>
+    <ul>
+      <li><b>Brachytherapy (Radical treatment)</b>: 65-70 Gy to the 85% reference isodose using Paris system.</li>
+      <li><b>Brachytherapy (Boost treatment)</b>: 25-30 Gy to the 85% reference isodose using Paris system.</li>
+      <li><b>EBRT (Radical treatment)</b>: 66-70 Gy in 33-35 fractions over 6.5-7 weeks.</li>
+      <li><b>EBRT (Preimplantation)</b>: 40-50 Gy in 20-25 fractions in 4-5 weeks.</li>
+      <li><b>Lip Cancer (EBRT):</b> 60-70 Gy at 2 Gy per fraction.</li>
+    </ul>
+  </div>
+
+  <div id="maxillary-antrum" class="tab-content">
+    <h3>Maxillary Antrum & Sinuses</h3>
+    <p>Maxillary antrum tumors are categorized by infrastructure and suprastructure disease based on Ohngren's line. Cancers of the frontal sinuses or sphenoid sinuses are exceedingly rare.</p>
+
+    <h4>Criteria for Unresectability:</h4>
+    <ul>
+      <li>Gross infiltration of infratemporal fossa.</li>
+      <li>Pterygopalatine fissure involvement.</li>
+      <li>Involvement of dura and intracerebral extensions.</li>
+      <li>Cavernous sinus involvement, involvement of sphenoid.</li>
+      <li>Extensive soft tissue and skin infiltration, bilateral orbital involvement.</li>
+    </ul>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li>For T1 and T2 infrastructure disease, partial maxillectomy alone can lead to high control rate.</li>
+      <li>For advanced disease; total maxillectomy and radiotherapy is treatment of choice.</li>
+      <li>Definitive radiotherapy is indicated in medically unfit patients, those who refuse surgery, or with extensive inoperable disease.</li>
+    </ul>
+
+    <h4>Planning Technique:</h4>
+    <h5>Assessment of primary disease by:</h5>
+    <ul>
+      <li>Local examination.</li>
+      <li>X-ray PNS.</li>
+      <li>CECT.</li>
+    </ul>
+    <p>If maxillectomy has not been performed; drainage by Intranasal antrostomy/Caldwell-Luc procedure is advised.</p>
+    <h5>Target Volume:</h5>
+    <ul>
+      <li><b>Anterior field</b>: Upper border: supraorbital ridge; Lower border: hard palate; Medial border: contralateral inner canthus; Lateral border: gingivobuccal sulcus; Anterior border: cheek.</li>
+      <li><b>Lateral field</b>: Anterior border: just behind the lateral bony margin of the orbit; Posterior border: just before tragus; Upper and lower borders correspond to the anterior field.</li>
+      <li><b>Nasal Cavity and Ethmoid Sinuses (Limited disease):</b> Target volume includes medial maxillary sinus, ethmoid sinus, medial portion of orbit, nasopharynx, sphenoid sinus, and base of skull.</li>
+    </ul>
+    <h5>Field Arrangements:</h5>
+    <ul>
+      <li>Anterior and lateral wedged fields are used. Lateral field is angled 5-10° posteriorly.</li>
+      <li>If posteromedial part is involved, then an additional contralateral wedged field is used.</li>
+      <li>Hypothalamus and optic chiasm are shielded in the lateral field.</li>
+      <li>If the orbit is spared, cornea, lens, and lacrimal apparatus are shielded in the anterior field.</li>
+      <li>If the orbit is involved; cornea is protected by cutting out the cast, treating with the eye open and the patient is asked to look into the beam.</li>
+      <li>If the cheek or anterior nasal cavity is involved; anterior field is kept open.</li>
+      <li><b>Nasal Cavity and Ethmoid Sinuses (Advanced disease):</b> Treatment is heavily weighted towards the anterior field (8:1 or 10:1 in favor of anterior field). To boost the primary; open anterior field is used to concentrate dose to major bulk of disease. If orbit is involved minimally, the major lacrimal gland and lateral upper eyelid is shielded. If most of the orbit is involved; entire orbital content is included in the field.</li>
+    </ul>
+    <h4>Detailed Treatment Borders for Sinuses:</h4>
+    <ul>
+      <li><b>Anterior Field Borders:</b>
+        <ul>
+          <li><b>Superior:</b> 2 cm above the cribriform plate (patient looks straight ahead to avoid over-dosage to the retina).</li>
+          <li><b>Inferior:</b> Lateral commissure of the lip (provides margin on lower border of maxillary sinus) to include the alveolar ridge.</li>
+          <li><b>Medial:</b> 1.5-2cm across the midline to include the ethmoid sinus and the medial aspect of the contralateral orbit.</li>
+          <li><b>Lateral:</b> To include the entire maxillary sinus tumor extent with an adequate margin (if the infratemporal fossa is involved, fall off is needed laterally).</li>
+        </ul>
+      </li>
+      <li><b>Lateral Field Borders:</b>
+        <ul>
+          <li><b>Anterior:</b> Behind the contralateral bony canthus (lateral portals can be angled 5 degrees posteriorly to shield the contralateral lens).</li>
+          <li><b>Superior:</b> 2 cm above the cribriform plate and follow the floor of the skull with a margin on the clivus.</li>
+          <li><b>Posterior:</b> Includes the pterygopalatine fossa and the nasopharynx with a margin on the posterior extent of the tumor. In patients with nasal cavity/nasopharynx involvement, include the retropharyngeal nodes.</li>
+          <li><b>Inferior:</b> Lateral commissure of the lip.</li>
+        </ul>
+      </li>
+    </ul>
+    <h4>Dose Suggested:</h4>
+    <ul>
+      <li>T1/T2: 66 Gy in 33 fractions in 6.5 weeks for radical RT.</li>
+      <li>T3/T4: 70 Gy/35 fractions in 7 weeks.</li>
+      <li><b>Sinus Cancers:</b> 60 Gy in 30 daily fractions for 6 weeks OR 70 Gy in 35 daily fractions for residual disease. Palliative: 36 Gy in 6 fractions (6 Gy/fx) once weekly.</li>
+    </ul>
+  </div>
+
+  <div id="nasopharynx" class="tab-content">
+    <h3>Nasopharynx</h3>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li>For all stages; radiotherapy is treatment of choice and intent is radical.</li>
+      <li>Bilateral neck irradiation is mandatory even if the involvement is unilateral.</li>
+      <li>For T3, T4 disease with any N status, concurrent chemotherapy and radiotherapy is preferred over radiotherapy alone.</li>
+    </ul>
+
+    <h4>Planning Technique:</h4>
+    <h5>Assessment of Disease:</h5>
+    <ul>
+      <li>Rhinoscopy.</li>
+      <li>Examination of pharynx and larynx for tumor extension and cranial nerve involvement.</li>
+      <li>Examination of cranial nerve and cervical sympathetic chain.</li>
+      <li>Examination of ear for Eustachian tube obstruction.</li>
+      <li>Lateral X-rays of neck including skull base and petrous bone.</li>
+      <li>CECT.</li>
+    </ul>
+    <h5>Target Volume:</h5>
+    <ul>
+      <li>Comprises primary tumor, entire lymphatic system and the potential routes of spread. It includes-</li>
+      <li>Base of skull, Floor of middle cranial fossa, Posterior half of nasal cavity and orbit, Sphenoid and posterior ethmoid sinuses, Parapharyngeal space, and Lymph nodes (lateral pharyngeal, posterior cervical, deep cervical, and supraclavicular lymph node).</li>
+      <li><b>Detailed Treatment Borders for T1, T2 & T3 Nasopharyngeal Tumors:</b>
+        <ul>
+          <li><b>Anterior:</b> Posterior 2 cm of the nasal cavity, posterior 1/3rd of the maxillary sinus, the posterior ethmoid sinuses, and the posterior 1/4 of the orbit.</li>
+          <li><b>Posterior:</b> Behind the spinous processes, including the posterior pharyngeal wall, the deep cervical, the posterior cervical, and the retropharyngeal lymph nodes.</li>
+          <li><b>Superior:</b> The entire sphenoid sinus, the cavernous sinus, and the base of the skull with at least a 0.5 cm margin.</li>
+          <li><b>Inferior:</b> To include supraclavicular lymph nodes.</li>
+        </ul>
+      </li>
+      <li>For T4 tumors, treatment margins should include the pituitary gland and encompass all intracranial extension.</li>
+    </ul>
+    <h5>Simulation:</h5>
+    <ul>
+      <li>Supine with neck extended but keeping the spinal cord straight.</li>
+      <li>Lateral orbital margins and nodes are marked with wire.</li>
+    </ul>
+    <h5>Field Arrangements:</h5>
+    <ul>
+      <li><b>Patients without lymphadenopathy</b>: Parallel opposed lateral fields for primary disease with a separate anterior neck field for cervical lymph node. To boost primary, fields are shrunk to gross disease, and two lateral wedged and one anterior field are used.</li>
+      <li><b>Patients with lymphadenopathy</b>: Parallel opposed lateral fields covering the entire target volume including the spinal cord. Anterior half of orbit, optic chiasm, and part of brainstem are shielded. Lower half of the neck including supraclavicular is treated with a separate anterior field and care should be taken in defining the junction that it should not overlie the palpable disease. If anterior nasal cavity is involved; an additional anterior field is used. Anterior and lateral fields are treated isocentrically. Central shielding is used to protect the larynx and spinal cord.</li>
+    </ul>
+    <h4>Dose Suggested:</h4>
+    <ul>
+      <li><b>Patients without lymphadenopathy</b>: Nasopharyngeal and neck fields: 56 Gy in 28 fractions over 5.5 weeks. Nasopharynx alone: 10-14 Gy in 5-8 fractions in 1-1.5 weeks.</li>
+      <li><b>Patients with lymphadenopathy</b>: Large lateral fields: 40 Gy in 20 fractions over 4 weeks. Nasopharyngeal fields (boost) 26 Gy in 13 fractions over 2.5 weeks. Neck field boost 26 Gy in 13 fractions over 2.5 weeks.</li>
+      <li><b>Hypofractionation:</b> 74.4 Gy in 120 cGy BID fractions is common.</li>
+    </ul>
+  </div>
+
+  <div id="oropharynx" class="tab-content">
+    <h3>Oropharynx</h3>
+    <p>The oropharynx includes the base of the tongue, tonsils, soft palate, and pharyngeal wall. Tumor Human Papillomavirus (HPV) testing by p16 immunohistochemistry (IHC) is required for cancers of the oropharynx to determine the p16 status (p16-negative or p16-positive), which informs prognosis and treatment decisions. The NCCN guidelines provide separate algorithms based on p16 status for treatment planning.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li>Early T1-T2 tumors are best treated by radiotherapy alone as surgery leads to severe morbidities.</li>
+      <li>T3-T4 diseases are best treated by concomitant chemotherapy + radiotherapy. Surgery is added if low perioperative risk and reasonable functional outcome.</li>
+      <li>For T1-T2, N2-N3 disease, concomitant CT + radiotherapy is often used, followed by Neck salvage if residual nodes are present.</li>
+      <li>Sixty percent of patients present with lymphadenopathy; however, even in node-negative patients, elective neck irradiation is performed.</li>
+      <li>Mobile unilateral nodes are best treated by block dissection followed by radiotherapy. Fixed bilateral nodes are treated by radical radiotherapy; surgery is an option if residual nodes are present.</li>
+    </ul>
+
+    <h4>Planning Technique:</h4>
+    <h5>Assessment of Disease:</h5>
+    <ul>
+      <li>Clinical assessment.</li>
+      <li>Indirect/direct laryngoscopy.</li>
+      <li>X-ray soft tissue neck.</li>
+      <li>CECT.</li>
+    </ul>
+    <h5>Target Volume:</h5>
+    <ul>
+      <li>Upper border: hard palate.</li>
+      <li>Lower border: clavicle.</li>
+      <li>Anterior margin: anterior border of masseter.</li>
+      <li>Posterior margin: vertical line from tip of mastoid or is further extended posteriorly to include bulky cervical lymph node.</li>
+      <li>Medial margin: midline.</li>
+      <li><b>Lymph Node Drainage Pathways by Site:</b>
+        <ul>
+          <li><b>Tonsil:</b> Jugulodigastric & submaxillary nodes.</li>
+          <li><b>Base of Tongue:</b> Jugulodigastric, low cervical, & retropharyngeal nodes.</li>
+          <li><b>Lateral Pharyngeal Wall:</b> Retropharyngeal, pharyngeal, & jugulodigastric nodes.</li>
+          <li><b>Soft Palate & Uvula:</b> Jugulodigastric, submaxillary, & spinal accessory nodes.</li>
+        </ul>
+      </li>
+    </ul>
+    <h5>Simulation:</h5>
+    <ul>
+      <li>Patient is supine with straight neck, no mouth bite.</li>
+      <li>Wires are used to outline lymph nodes.</li>
+    </ul>
+    <h5>Field Arrangements:</h5>
+    <ul>
+      <li><b>Wedged pair technique</b>: Anterior and posterior oblique wedged fields for small primary tumors.</li>
+      <li><b>Opposing lateral fields</b>: For larger primary; parallel opposed lateral fields are used.</li>
+      <li>In some situations, such as tonsillar tumors, 2:1 weighting may be required to deliver a high dose to the primary and ipsilateral lymph nodes and prophylactic irradiation to the contralateral tonsil and deep cervical lymph nodes.</li>
+      <li>In case, if tongue base or soft palate is involved equal weightage is used for adequate dose to the both primary and lymph nodes.</li>
+      <li>If upper deep cervical lymph nodes are involved; the neck below the opposing lateral fields is treated using an anterior field with shielding to the larynx and spinal cord.</li>
+      <li>IMRT is the preferred technique to minimize dose to critical structures. Proton therapy may be considered if normal tissue constraints cannot be met by photon-based therapy.</li>
+      <li><b>Historical Yoke Field:</b> A separate anterior lower neck field to treat the supraclavicular and lower jugular lymph nodes, abutting opposed laterals. Field match achieved using a half-beam block and a single isocenter, or a two-isocenter technique with couch-kick and collimator rotation.</li>
+    </ul>
+    <h4>Dose Prescription:</h4>
+    <ul>
+      <li>66 Gy in 33 fractions over 6.5 weeks for T1, T2 (non-bulky).</li>
+      <li>70 Gy in 35 fractions over 7 weeks for T2 (bulky)-T4.</li>
+      <li>For p16-positive oropharyngeal cancer, de-escalation to 50 Gy may be considered in selected patients (e.g., those with ≤4 positive lymph nodes, T1-T2 resected to negative or close margins (<3 mm), and/or N1-N2 disease (excluding bilateral disease based on ECOG 3311 criteria) with ≤1 mm extranodal extension).</li>
+      <li><b>Hypofractionated Dose Examples:</b> 55 Gy in 20 fractions (2.75 Gy/fx); 44 Gy in 22 daily fractions (2 Gy/fx).</li>
+      <li><b>Palliative Dose Examples:</b> 30 Gy in 5 fractions (6 Gy/fx) twice weekly for 2.5 weeks; 20 Gy in 5 daily fractions (4 Gy/fx).</li>
+    </ul>
+  </div>
+
+  <div id="larynx" class="tab-content">
+    <h3>Larynx</h3>
+    <p>Laryngeal cancers are categorized into glottic, supraglottic, and subglottic regions.</p>
+
+    <h4>Choice of treatment depends upon:</h4>
+    <ul>
+      <li>Voice preservation.</li>
+      <li>Local control rate.</li>
+      <li>Fitness for surgery.</li>
+      <li>Reliability of follow-up.</li>
+    </ul>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li><b>Glottic Tumors</b>: T1 and T2 diseases are best treated with radical radiotherapy, with 5-year survival rates of 80-95%. Local recurrence rates are 10-20% for T1 and 25-30% for T2. T3 diseases have comparable results with radiotherapy and surgery; 5-year survival rate is 50%.</li>
+      <li><b>Supraglottic Tumors</b>: T1 and T2 supraglottic tumors are treated by radiotherapy or partial laryngectomy. T3 and T4 lesions are treated by laryngectomy and postoperative radiotherapy.</li>
+      <li><b>Subglottic Tumors</b>: T1 and T2 supraglottic tumors are treated by radiotherapy or partial laryngectomy. T3 and T4 lesions are treated by laryngectomy and postoperative radiotherapy.</li>
+    </ul>
+
+    <h4>Planning Technique:</h4>
+    <h5>Assessment of Disease:</h5>
+    <ul>
+      <li>Palpation for laryngeal crepitus and cervical lymph nodes.</li>
+      <li>Indirect and direct laryngoscopy.</li>
+      <li>Chest X-ray.</li>
+      <li>X-ray soft tissue neck.</li>
+      <li>Barium swallow.</li>
+      <li>CT scan, MRI (to provide information on extent of disease, cartilage invasion, extralaryngeal spread, para/pre-epiglottic space invasion, and nodal status).</li>
+    </ul>
+    <h5>Target Volume:</h5>
+    <ul>
+      <li><b>Glottic tumors</b>: T1-T2 disease: 5x5 field size centered 1 cm below the promontory of thyroid cartilage. If T2 disease is associated with supraglottic or subglottic extension; volume is larger to include the extensions and margins. For T3 and T4 disease, radiotherapy is used in postoperative setting, and target volume is individualized to cover the potential sites of recurrence.</li>
+      <li><b>Supraglottic tumors</b>: For N0 disease; target volume includes primary tumor, upper deep cervical and midjugular lymph nodes. Upper margin includes tonsillar margin. Posterior margin is a vertical line from the tip of mastoid process. Inferior margin is extended up to clavicle. Boost volume encompasses primary tumor alone. For patients with palpable cervical lymph nodes; target volume includes primary tumor with bilateral deep cervical chain and supraclavicular lymph nodes.</li>
+      <li><b>Subglottic tumors</b>: Target volume is primary tumor, pre- and paratracheal lymph nodes, lower jugular lymph nodes and superior mediastinum.</li>
+    </ul>
+    <h5>Detailed Treatment Borders for Larynx:</h5>
+    <ul>
+      <li><b>Early-Stage Glottic Cancer (T1 lesions):</b>
+        <ul>
+          <li><b>Anterior:</b> 1.5-2 cm beyond the thyroid cartilage (flash over skin).</li>
+          <li><b>Posterior:</b> Anterior margin of the vertebral bodies.</li>
+          <li><b>Superior:</b> Top of the thyroid cartilage.</li>
+          <li><b>Inferior:</b> Below the cricoid cartilage.</li>
+        </ul>
+      </li>
+      <li><b>Advanced T2 Glottic Tumors:</b>
+        <ul>
+          <li><b>Anterior:</b> 1.5-2 cm beyond the thyroid cartilage.</li>
+          <li><b>Posterior:</b> Mid-vertebral bodies.</li>
+          <li><b>Superior:</b> Supraglottic extension and 2-3 cm margin.</li>
+          <li><b>Inferior:</b> Infraglottic extension and 2-3 cm margin.</li>
+        </ul>
+      </li>
+      <li><b>Advanced Glottic and Supraglottic Cancers:</b> Follow standard IMRT treatment margins (refer to "Treatment Techniques: H&N" section).</li>
+    </ul>
+    <h5>Simulation:</h5>
+    <ul>
+      <li>Patient is treated in supine position with straight neck. Palpable lymph nodes are marked with wire. Target volume and spinal cord are simulated in both lateral and AP views.</li>
+      <li><b>Shoulder Retraction:</b> Shoulders should be low to keep them out of the lateral RT beams. Thermoplastic head and shoulder mask made while patient relaxes shoulders down or reaches towards toes. Straps around wrists with knees bent, having patient straighten legs on strap, depressing shoulders.</li>
+    </ul>
+    <h5>Field Arrangements:</h5>
+    <ul>
+      <li><b>Glottic</b>: Two parallel opposed lateral wedged (15° or 30°) portal is used to compensate for changing contours in the neck.</li>
+      <li><b>Special cases (Obese patients)</b>: Two anterior oblique wedged portals (gantry angle 45-60°) are used to spare skin in the lateral side of the neck and avoid the spinal cord.</li>
+      <li><b>Anterior commissure involvement</b>: Two parallel opposed lateral portals with bolus in front of the larynx or two parallel opposed lateral wedged (15°) portals are used.</li>
+      <li><b>Advanced glottic disease</b>: Treated using parallel opposed lateral portal.</li>
+      <li><b>Supraglottic</b>: For N0 disease, parallel opposed lateral wedged (15°) portal with equal weightage is used. For N+ disease, the primary site and upper and middle cervical lymph nodes are treated using parallel opposed lateral fields while the lower cervical lymph nodes and supraclavicular lymph nodes are treated by matched anterior fields. Boost is delivered by parallel opposed fields to primary disease and nodes, sparing the spinal cord. If massive cervical lymphadenopathy overlies the spinal cord; boost is delivered using an electron beam with suitable energy.</li>
+      <li><b>Subglottic</b>: Two parallel opposed lateral wedged fields angled inferiorly and an anterior field with a longitudinal wedge covering up to superior mediastinum is used. Lung apices are shielded with lead blocks. Lateral fields are angled inferiorly by using couch twist of 30°. Boost is delivered by parallel opposed fields to primary disease and nodes sparing the spinal cord. If cervical nodes overlie the spinal cord; boost is delivered using an electron beam with suitable energy.</li>
+    </ul>
+    <h4>Dose:</h4>
+    <ul>
+      <li>66 Gy in 33 fractions over 6.5 weeks.</li>
+      <li>In postoperative settings, 58-60 Gy is required.</li>
+      <li>For T1, N0 glottic larynx, an accelerated dosing schedule of 63 Gy (2.25 Gy/fraction) or 60 Gy (2.4 Gy/fraction) may be preferred over conventional fractionation (66 Gy, 2.0 Gy/fraction). Optional schedules like 50-52 Gy (3.12-3.28 Gy/fraction) can be considered for specific patient situations.</li>
+    </ul>
+  </div>
+
+  <div id="hypopharynx" class="tab-content">
+    <h3>Hypopharynx</h3>
+    <p>The hypopharynx is divided into pyriform sinus, posterior pharyngeal walls, and postcricoid area.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li>For pyriform fossa; radiotherapy is used in postoperative settings to reduce the local recurrence as these tumors present with advanced disease.</li>
+      <li>Indications of radical radiotherapy: Early medial wall tumors, patients unfit for surgery, palliative settings in T4, N3 disease.</li>
+      <li>For postcricoid tumors without lymphadenopathy or with mobile lymph node; TOC is laryngopharyngectomy. Radical RT is given in palliative settings for advanced cases.</li>
+      <li>For posterior pharyngeal wall tumors; radical radiotherapy is treatment of choice.</li>
+    </ul>
+
+    <h4>Planning Technique:</h4>
+    <h5>Assessment of Disease:</h5>
+    <ul>
+      <li>Indirect and direct laryngoscopy.</li>
+      <li>Chest X-ray.</li>
+      <li>X-ray soft tissue neck.</li>
+      <li>Barium swallow.</li>
+      <li>CT scan, MRI.</li>
+    </ul>
+    <h5>Target Volume:</h5>
+    <ul>
+      <li><b>Pyriform fossa (T1/T2 disease with N0 or minimal lymphadenopathy)</b>: Upper margin: angle of mouth; Lower margin: lower border of cricoid cartilage; Posterior border lies in front of spinal cord. Boost volume includes primary tumor and grossly involved lymph node.</li>
+      <li><b>Pyriform fossa (T3 disease with extensive lymphadenopathy)</b>: Upper margin: angle of mouth; Lower margin: up to clavicle; Posterior margin is individualized to include the cervical lymph nodes. Boost volume includes primary tumor and grossly involved lymph node.</li>
+      <li><b>Postcricoid Region</b>: Includes primary disease, inferior spread into the cervical esophagus, and adjacent lymphatics.</li>
+      <li><b>Posterior Pharyngeal Wall</b>: Whole hypopharynx, bilateral deep cervical lymph nodes, and retropharyngeal space with 2 cm margins.</li>
+    </ul>
+    <h5>Detailed Treatment Borders for Hypopharynx:</h5>
+    <ul>
+      <li><b>Superior:</b> Inferior aspect of the mandible and mastoid process to the base of the skull.</li>
+      <li><b>Anterior:</b> In front of thyroid cartilage with a margin around tumor extension.</li>
+      <li><b>Posterior:</b> Behind spinous processes with a margin on all nodal disease.</li>
+      <li><b>Inferior:</b> Below the cricoid cartilage, to encompass the entire extent of the tumor with a 1.5-2cm margin or to include the lower jugular and supraclavicular area.</li>
+    </ul>
+    <h5>Simulation:</h5>
+    <ul>
+      <li>Patient is treated in a supine cast with neck straight. For pyriform fossa T3, chin is extended to displace oral cavity and mandible out of treatment field.</li>
+      <li>Patient is asked to keep the neck straight.</li>
+    </ul>
+    <h5>Field Arrangements:</h5>
+    <ul>
+      <li><b>Pyriform fossa (T1/T2)</b>: Parallel opposed lateral portal is used.</li>
+      <li><b>Pyriform fossa (T3)</b>: Parallel opposed lateral portal is used. If lymph nodes overlie the spinal cord, the dose beyond cord tolerance is delivered by either electron boost or a wedged lateral field and a contralateral anterior oblique field.</li>
+      <li><b>Postcricoid Region</b>: Two lateral wedged (10°) portals angled inferiorly with equal weightage are used to increase dose to the superior mediastinum and cervical esophagus. Gantry angle, couch angle, and head twist are adjusted to achieve desired dose distribution.</li>
+      <li><b>Posterior Pharyngeal Wall</b>: Parallel opposed wedged (15°) lateral portal is used. If extension to cervical esophagus, the beam is angulated inferiorly.</li>
+    </ul>
+    <h4>Dose:</h4>
+    <ul>
+      <li><b>Pyriform fossa (T1/T2)</b>: Initial target volume: 50 Gy in 25 fractions over 5 weeks. Boost: 16 Gy in 8 fractions over 10 days.</li>
+      <li><b>Pyriform fossa (T3)</b>: 66 Gy in 33 fractions over 6.5 weeks.</li>
+      <li><b>Postcricoid Region</b>: 66 Gy in 33 fractions over 6.5 weeks.</li>
+      <li><b>Posterior Pharyngeal Wall</b>: 66 Gy in 33 fractions over 6.5 weeks.</li>
+    </ul>
+  </div>
+
+  <div id="parotid" class="tab-content">
+    <h3>Parotid Tumors</h3>
+
+    <h4>Surgical Options:</h4>
+    <ul>
+      <li>Superficial parotidectomy.</li>
+      <li>Total parotidectomy in cases with deep lobe tumors, high-grade tumors, positive margins following superficial parotidectomy.</li>
+      <li>Radical parotidectomy when involving skin, infratemporal fossa, mandible, or petrous bone.</li>
+    </ul>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li><b>Benign tumors</b>: Inadequate surgery, tumor spillage, recurrence.</li>
+      <li><b>Malignant tumors</b>: Positive or very close margins, high-grade histology, positive nodes, extensive perineural spread, skin or bone involvement, recurrence, palliation, T3/T4 disease, adenoid cystic carcinoma, deep lobe tumors.</li>
+    </ul>
+
+    <h4>Planning Technique:</h4>
+    <h5>Assessment of Disease:</h5>
+    <ul>
+      <li>Clinical: Facial nerve involvement, trismus, associated lymphadenopathy.</li>
+      <li>Radiological: CECT.</li>
+    </ul>
+    <h5>Target Volume:</h5>
+    <ul>
+      <li>Upper margin: 1 cm above the zygomatic arch.</li>
+      <li>Lower margin: 1 cm below the angle of mandible.</li>
+      <li>Anterior margin: anterior border of masseter.</li>
+      <li>Posterior margin: mastoid process.</li>
+      <li>Lateral margin: includes the scar/palpable disease.</li>
+      <li>Medial margin: covers the parapharyngeal space.</li>
+    </ul>
+    <h5>Detailed Treatment Borders for Parotid Gland:</h5>
+    <ul>
+      <li><b>Superior:</b> Zygomatic arch.</li>
+      <li><b>Inferior:</b> Top of thyroid cartilage.</li>
+      <li><b>Posterior:</b> Behind the mastoid process.</li>
+      <li><b>Anterior:</b> Anterior to the border of the masseter muscle.</li>
+    </ul>
+    <h5>Special Cases:</h5>
+    <ul>
+      <li><b>Adenoid cystic carcinoma</b>: For perineural spread, target volume is extended superiorly up to the base of skull and entire facial nerve up to the petrous temporal bone.</li>
+      <li><b>Undifferentiated or squamous cell carcinoma</b>: Entire ipsilateral lymphatic drainage of the neck is treated.</li>
+    </ul>
+    <h5>Simulation:</h5>
+    <ul>
+      <li>Patient lies supine and neck extended to make the superior margin perpendicular to the couch top.</li>
+      <li>No mouth bite is needed.</li>
+      <li>Operative scars and palpable disease are marked with radiopaque wire.</li>
+    </ul>
+    <h5>Beam arrangement:</h5>
+    <ul>
+      <li>Anterior and posterior oblique wedged (45°) portals with equal weightage.</li>
+      <li>If the patient is unable to extend their neck, or if the target volume needs to include the base of skull, the plane of the posterior beam is inclined downwards by 10-15%.</li>
+    </ul>
+    <h4>Dose prescription:</h4>
+    <ul>
+      <li>Macroscopic disease: 66 Gy in 33 fractions over 6.5 weeks.</li>
+      <li>Microscopic disease: 60 Gy in 30 fractions over 6 weeks.</li>
+      <li>Benign disease: 55 Gy in 27 fractions over 5.5 weeks.</li>
+    </ul>
+  </div>
+
+  <div id="ear" class="tab-content">
+    <h3>Ear</h3>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li>Usually given in postoperative settings.</li>
+      <li>Palliative settings.</li>
+      <li>Inoperable cases.</li>
+    </ul>
+
+    <h4>Planning Technique:</h4>
+    <h5>Assessment of Disease:</h5>
+    <ul>
+      <li>Clinical examination (parotid region, ear, facial nerve, mastoid region, regional lymphatics).</li>
+      <li>Otoscopy.</li>
+      <li>CT scan.</li>
+    </ul>
+    <h5>Target Volume:</h5>
+    <ul>
+      <li>Triangular volume with apex towards brainstem.</li>
+      <li>Upper border: inferior orbital margin.</li>
+      <li>Lower border: tip of mastoid.</li>
+      <li>Anterior border: covers the preauricular and parotid lymph nodes.</li>
+      <li>Posterior border: includes postauricular lymph nodes.</li>
+    </ul>
+    <h5>Simulation:</h5>
+    <ul>
+      <li>Patient is supine and neck extended to make the superior margin cross at the upper border of the pinna and to keep the treatment plane perpendicular to the table top.</li>
+    </ul>
+    <h5>Beam Arrangements:</h5>
+    <ul>
+      <li>Anterior and posterior oblique-wedged (45°) portals with equal weightage are used.</li>
+      <li>Posterior portal is aligned so that the beam exits below the contralateral eye.</li>
+    </ul>
+    <h4>Dose:</h4>
+    <ul>
+      <li>66 Gy in 33 fractions over 6.5 weeks.</li>
+    </ul>
+    <h5>Unknown Primary:</h5>
+    <ul>
+      <li>Treatment depends on the location of lymph nodes and histology.</li>
+      <li>If upper and middle jugular lymph nodal involvement is present, elective irradiation of the nasopharynx, oropharynx, supraglottic larynx, and hypopharynx is done via parallel opposed portal; lower neck, up to the level of clavicle, is treated by separated anterior field.</li>
+      <li>If a primary focus is suspected but has no proof, an extra boost dose may be added to this specific site.</li>
+      <li>A node in the upper neck with histologic findings suggestive of lymphoepithelioma, elective irradiation of nasopharynx and oropharynx is done.</li>
+      <li>A solitary lymph node in the submandibular region involved, then treatment is neck dissection with observation because irradiation to the entire oral cavity with the neck causes severe morbidities.</li>
+      <li>A preauricular lymph node with SCC histology represents metastases from a skin cancer and is treated by a combination of parotidectomy and radiation therapy or RT alone.</li>
+      <li>Supraclavicular lymph node treated with generous regional portal which includes adjacent apex of axilla.</li>
+    </ul>
+    <h5>Minor Salivary Gland Tumors:</h5>
+    <ul>
+      <li>Surgery is the treatment of choice for both benign and malignant tumors (wide excision is preferred).</li>
+      <li>Radiation therapy significantly decreases the locoregional recurrence rate.</li>
+      <li>Technique of radiation is similar to that of squamous cell carcinoma at the corresponding primary site.</li>
+      <li>For postoperative RT: 6000-6500 cGy over 6-7 weeks.</li>
+      <li>For early stage disease: 7000-7500 cGy over 7-7.5 weeks.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="references">
+  <h3>References</h3>
+  <ul>
+    <li>Rathi, A. K. (n.d.). <i>Step by Step Radiation Therapy: Treatment and Planning</i>. Jaypee Brothers Medical Publishers.</li>
+    <li>National Comprehensive Cancer Network. (2025). <i>NCCN Clinical Practice Guidelines in Oncology (NCCN Guidelines®): Head and Neck Cancers</i> (Version 2.2025).</li>
+    <li>Stiles, J. (2023). <i>Localization & Treatment Procedures in Radiation Therapy</i>. Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.</li>
+  </ul>
+</div>
+
+<script>
+  function openHNCtab(evt, tabId) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tab-content");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+      tabcontent[i].classList.remove("active");
+    }
+    tablinks = document.getElementsByClassName("tab-button");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].classList.remove("active");
+    }
+    document.getElementById(tabId).style.display = "block";
+    document.getElementById(tabId).classList.add("active");
+    evt.currentTarget.classList.add("active");
+  }
+
+  // Set the first tab as active by default when the page loads
+  document.addEventListener("DOMContentLoaded", function() {
+    document.querySelector(".tab-button").click();
+  });
+</script>
+
+</body>
+</html>
