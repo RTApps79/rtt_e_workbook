@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body {
+    font-family: sans-serif;
+    line-height: 1.6;
+    margin: 20px;
+    background-color: #f4f4f4;
+    color: #333;
+  }
+  h2 {
+    color: #0056b3;
+    border-bottom: 2px solid #0056b3;
+    padding-bottom: 5px;
+    margin-top: 30px;
+  }
+  h3 {
+    color: #004085;
+    margin-top: 20px;
+  }
+  h4 {
+    color: #004085;
+    margin-top: 15px;
+    margin-bottom: 10px;
+  }
+  .lesson-container {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  .tab-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  .tab-button {
+    background-color: #e0e0e0;
+    border: 1px solid #ccc;
+    padding: 10px 15px;
+    cursor: pointer;
+    margin-right: 5px;
+    border-radius: 5px 5px 0 0;
+    transition: background-color 0.3s ease;
+    white-space: nowrap; /* Prevent text wrapping */
+  }
+  .tab-button.active {
+    background-color: #0056b3;
+    color: white;
+    border-color: #0056b3;
+  }
+  .tab-content {
+    display: none;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-top: none;
+    padding: 20px;
+    border-radius: 0 0 8px 8px;
+    background-color: #f9f9f9;
+  }
+  .tab-content.active {
+    display: block;
+  }
+  ul {
+    list-style-type: disc;
+    margin-left: 20px;
+  }
+  li {
+    margin-bottom: 8px;
+  }
+  b {
+    color: #0056b3;
+  }
+  .references {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #ccc;
+    font-size: 0.9em;
+    color: #555;
+  }
+  .attention {
+    font-weight: bold;
+    color: #d9534f;
+  }
+</style>
+</head>
+<body>
+
+<div class="lesson-container">
+  <h2>Genitourinary Tumors: Radiation Therapy Planning and Delivery</h2>
+
+  <p>This lesson provides detailed information on the preplanning, planning, and delivery steps for radiation therapy in various genitourinary cancer sites, with enhanced focus on precise field borders.</p>
+
+  <div class="tab-container">
+    <button class="tab-button active" onclick="openGUTab(event, 'bladder-cancer')">Bladder Cancer</button>
+    <button class="tab-button" onclick="openGUTab(event, 'kidney-tumors')">Kidney Tumors</button>
+    <button class="tab-button" onclick="openGUTab(event, 'upper-tract-urothelial')">Upper Tract Urothelial Carcinoma</button>
+    <button class="tab-button" onclick="openGUTab(event, 'urethral-carcinoma')">Primary Carcinoma of the Urethra</button>
+  </div>
+
+  <div id="bladder-cancer" class="tab-content active">
+    <h3>Bladder Cancer (Urothelial Carcinoma of the Bladder)</h3>
+    <p>Bladder cancer is the sixth most common cancer in the United States, predominantly urothelial carcinoma. Management varies significantly based on whether the disease is non-muscle invasive (NMIBC) or muscle invasive (MIBC).</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li><b>NMIBC:</b> External Beam Radiation Therapy (EBRT) alone is rarely appropriate. Concurrent chemoradiotherapy may be considered for recurrent high-grade Ta or T1 disease in non-cystectomy candidates.</li>
+      <li><b>MIBC:</b> Bladder preservation with concurrent chemoradiotherapy is a primary treatment option for stage II or IIIA disease. RT alone or TURBT alone may be options for selected patients not candidates for cystectomy or definitive chemoradiotherapy.</li>
+      <li><b>Adjuvant RT:</b> May be considered for pT3-4, positive nodes/margins after radical cystectomy (category 2B).</li>
+      <li><b>Palliative RT:</b> For symptom control in metastatic disease.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Clinical Evaluation:</b> History (hematuria, urinary frequency), physical exam, office cystoscopy (enhanced if available), urine cytology.</li>
+      <li><b>Imaging:</b>
+        <ul>
+          <li>Abdomen/pelvis CT or MRI, including upper urinary tract.</li>
+          <li>Chest imaging (CT chest preferred).</li>
+          <li>Bone scan or MRI if clinical suspicion or symptoms of bone metastases.</li>
+          <li>FDG-PET/CT (category 2B) may be beneficial for MIBC (≥cT2 disease) but not for NMIBC.</li>
+        </ul>
+      </li>
+      <li><b>TURBT:</b> Transurethral Resection of Bladder Tumor with bimanual examination under anesthesia (EUA) to confirm diagnosis, stage, and resect visible tumor. Adequate muscle in specimen is crucial for MIBC.</li>
+      <li><b>Pathology Review:</b> Histology (urothelial, squamous, adenocarcinoma, small cell), grade (low/high), depth of invasion (Ta, T1, T2, T3, T4). Subtype histology (micropapillary, plasmacytoid, sarcomatoid) should be identified.</li>
+      <li><b>Renal Function:</b> Estimate Glomerular Filtration Rate (GFR) to assess cisplatin eligibility.</li>
+      <li><b>Genetic Counseling:</b> Consider germline testing and genetic counselor referral for younger age at presentation or family history of Lynch syndrome.</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Patient Positioning:</b> Supine. Empty bladder preferred for daily reproducibility; full bladder acceptable for tumor boosts with image guidance.</li>
+      <li><b>Immobilization:</b> Reproducible setup.</li>
+      <li><b>Contrast:</b> IV contrast for CT/MRI. Oral contrast for bowel delineation.</li>
+      <li><b>Target Volume Delineation:</b>
+        <ul>
+          <li><b>GTV:</b> Gross tumor.</li>
+          <li><b>CTV:</b> GTV + margin for microscopic extension (e.g., whole bladder). For node-positive disease, consider boosting grossly involved nodes.</li>
+          <li><b>PTV:</b> CTV + setup margin.</li>
+          <li><b>OARs:</b> Rectum, small bowel, femoral heads, bone marrow.</li>
+        </ul>
+      </li>
+      <li><b>Nodal RT:</b> Elective treatment to pelvic lymph nodes (hypogastric, obturator, internal/external iliac, perivesical, sacral, presacral) is optional and should consider comorbidities and toxicity risks. Common iliac nodes for N3 disease.</li>
+      <li><b>Traditional Treatment Borders (4-field Technique):</b>
+        <ul>
+          <li><b>Anteroposterior fields:</b> Extend laterally 1.5 cm to the bony pelvis at its widest; exclude the inferior corners to protect femoral heads.</li>
+          <li><b>Lateral fields:</b> Extend anteriorly 1.5-2 cm from the most anterior aspect of the bladder. The posterior border extends 2.5 cm posterior to the most posterior aspect of the bladder and falls within the rectum.</li>
+          <li><b>Inferior border:</b> Below the middle of the obturator foramen.</li>
+          <li><b>Superior border:</b> L5-S1 or at the superior S1 joint.</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>Concurrent Chemoradiotherapy (MIBC):</b>
+        <ul>
+          <li>Whole bladder with or without pelvic nodal RT: 39.6-50.4 Gy (1.8-2.0 Gy/day).</li>
+          <li>Boost to whole or partial bladder: 60-66 Gy.</li>
+          <li>Hypofractionated schedule: 55 Gy in 20 fractions over 4 weeks (noninferior to 64 Gy in 32 fractions).</li>
+          <li>Radiosensitizers: Cisplatin alone, low-dose gemcitabine, 5-FU and mitomycin (preferred). Cisplatin and 5-FU, or cisplatin and paclitaxel (other recommended).</li>
+        </ul>
+      </li>
+      <li><b>Adjuvant RT (post-cystectomy pT3/pT4, pN+):</b> 45-50.4 Gy to cystectomy bed and pelvic lymph nodes. Boost involved margins/extranodal extension to 54-60 Gy if feasible.</li>
+      <li><b>Palliative RT:</b> 30 Gy in 10 fractions or 21 Gy in 3 fractions.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Techniques:</b> Multiple fields from high-energy linear accelerators. IMRT/VMAT for conformal delivery.</li>
+      <li><b>Setup Verification:</b> Daily image guidance (IGRT) is preferred, especially for bladder-only or boost fields.</li>
+      <li><b>Chemotherapy:</b> Concurrent chemotherapy is recommended for added tumor cytotoxicity. Cisplatin is the preferred radiosensitizer.</li>
+    </ul>
+  </div>
+
+  <div id="kidney-tumors" class="tab-content">
+    <h3>Kidney Tumors (Renal Cell Carcinoma)</h3>
+    <p>Renal Cell Carcinoma (RCC) is the most common type of kidney cancer in adults, with clear cell histology being the most prevalent subtype. It is often diagnosed incidentally.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li><b>Primary RT (Definitive):</b> Stereotactic Body Radiation Therapy (SBRT) may be considered for medically inoperable patients with Stage I, II, or III kidney cancer.</li>
+      <li><b>Oligometastatic Disease:</b> SBRT/Stereotactic Radiosurgery (SRS) or ablative techniques for limited metastatic sites.</li>
+      <li><b>Palliative RT:</b> For symptomatic bone metastases or other sites of disease.</li>
+      <li><b>Adjuvant RT:</b> Generally not recommended after nephrectomy due to lack of overall survival (OS) benefit, but may be considered in very specific high-risk cases (e.g., positive margins, N+).</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Clinical Evaluation:</b> History, physical exam, labs (CBC, comprehensive metabolic panel, LDH).</li>
+      <li><b>Imaging:</b> Abdomen CT or MRI (renal protocol, with and without IV contrast preferred). Chest CT. Bone scan or brain MRI if symptomatic. FDG-PET/CT not routinely recommended for staging.</li>
+      <li><b>Biopsy:</b> Consider for small lesions to obtain diagnosis and guide active surveillance or ablative techniques. Essential prior to ablative therapies.</li>
+      <li><b>Staging:</b> AJCC TNM staging. Risk stratification using MSKCC or IMDC criteria.</li>
+      <li><b>Genetic Evaluation:</b> Consider for multiple renal masses, young age at diagnosis, or family history of RCC syndromes (e.g., von Hippel-Lindau [VHL], Hereditary Leiomyomatosis and Renal Cell Cancer [HLRCC], Birt-Hogg-Dubé syndrome [BHDS], Tuberous Sclerosis Complex [TSC]).</li>
+      <li><b>Renal Function:</b> Crucial to assess Glomerular Filtration Rate (GFR) for systemic therapy eligibility.</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Patient Positioning:</b> Supine with arms up (e.g., in a wing board or arm board), knee bolster. Immobilization devices (e.g., custom vaclok) for reproducibility.</li>
+      <li><b>Contrast:</b> IV and oral contrast for CT simulation.</li>
+      <li><b>Motion Management:</b> Crucial due to respiratory motion. Techniques include 4D-CT, abdominal compression, Deep Inspiration Breath-Hold (DIBH), and respiratory gating.</li>
+      <li><b>Target Volume Delineation (Primary Kidney Tumor):</b>
+        <ul>
+          <li><b>GTV:</b> Gross tumor.</li>
+          <li><b>CTV:</b> GTV plus margin (e.g., 5-10mm).</li>
+          <li><b>ITV:</b> CTV plus margin for organ motion (if free-breathing).</li>
+          <li><b>PTV:</b> ITV/CTV plus setup margin (e.g., 5-10mm).</li>
+        </ul>
+      </li>
+      <li><b>Organs at Risk (OARs):</b>
+        <ul>
+          <li><b>Contralateral Kidney:</b> Strict dose limits (e.g., D50% ≤8 Gy, or Mean <18 Gy for both kidneys).</li>
+          <li><b>Liver:</b> Mean <25-30 Gy.</li>
+          <li><b>Spinal Cord:</b> Max ≤45 Gy.</li>
+          <li><b>Bowel:</b> Minimize dose.</li>
+        </ul>
+      </li>
+      <li><b>Field Placement Borders (Primary Kidney Tumor - Conventional AP/PA):</b>
+        <ul>
+          <li><b>Superior:</b> Includes the kidney tumor with a 1 cm margin (or extends to the dome of the diaphragm if tumor is high).</li>
+          <li><b>Inferior:</b> Includes the kidney and entire preoperative tumor extent with a 1 cm margin.</li>
+          <li><b>Medial:</b> Includes the entire width of the vertebral bodies with enough contralateral extension to include the para-aortic lymph nodes while excluding the opposite kidney.</li>
+          <li><b>Lateral:</b> Encompasses the abdominal wall (outside peritoneal line).</li>
+        </ul>
+      </li>
+      <li><b>Regional Lymph Nodes:</b> Para-aortic and lumbar nodes. Lymph node dissection may be considered for resectable or palpable adenopathy.</li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>Primary Disease (SBRT for non-surgical candidates):</b>
+        <ul>
+          <li>Single fraction: 26 Gy.</li>
+          <li>3-4 fractions: 42-48 Gy.</li>
+          <li>5 fractions: 40-50 Gy. (Target Biologically Effective Dose [BED] ≥80 Gy assuming an alpha/beta ratio of 10).</li>
+        </ul>
+      </li>
+      <li><b>Postoperative RT (Adjuvant):</b> 45-50 Gy in 5 weeks (generally not routinely recommended, but if used for pT3-4, N+, positive margins, then 45-50.4 Gy).</li>
+      <li><b>Palliative RT:</b> 30 Gy in 10 fractions or 8 Gy in 1 fraction.</li>
+      <li><b>Metastatic Disease (SBRT/SRS):</b>
+        <ul>
+          <li>Spine SBRT: 16-24 Gy in 1 fraction; 20-24 Gy in 2 fractions; 24-27 Gy in 3 fractions; 30-40 Gy in 5 fractions.</li>
+          <li>Other body sites SBRT: 16-24 Gy in 1 fraction; 48-60 Gy in 3 fractions; 35-60 Gy in 4-5 fractions.</li>
+          <li>Brain SRS: 15-24 Gy in 1 fraction (volume dependent); Fractionated SRS (24-27 Gy in 3 fractions, 25-35 Gy in 5 fractions).</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Techniques:</b> IMRT/VMAT (preferred for OAR sparing), 3D-CRT, SBRT/SRS. Proton therapy may be considered for OAR sparing.</li>
+      <li><b>Setup Verification:</b> Daily Image-Guided Radiation Therapy (IGRT) is routinely used (CBCT, MRI-guided RT if available). Fiducial markers may be implanted for SBRT targeting.</li>
+      <li><b>Patient Care:</b> Close monitoring of renal function during and after RT.</li>
+    </ul>
+  </div>
+
+  <div id="upper-tract-urothelial" class="tab-content">
+    <h3>Upper Tract Urothelial Carcinoma (UTUC) - Renal Pelvis and Ureter</h3>
+    <p>UTUC is less common than bladder cancer, originating in the renal pelvis or ureter. Treatment is primarily surgical, with growing roles for neoadjuvant chemotherapy and organ-sparing approaches.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li>Adjuvant RT or chemoradiotherapy is generally **not recommended** after nephroureterectomy due to lack of conclusive data demonstrating OS benefit.</li>
+      <li>May be considered in very limited, specific situations (e.g., positive margins, high-risk features) but is not standard.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Clinical Evaluation:</b> Hematuria, flank pain, or obstruction.</li>
+      <li><b>Imaging:</b>
+        <ul>
+          <li>CT or MR urography (preferred for upper tract collecting system).</li>
+          <li>Ureteroscopy with biopsy or percutaneous biopsy/selective washings.</li>
+          <li>Chest X-ray or CT for metastasis.</li>
+          <li>Bone scan if clinical suspicion.</li>
+        </ul>
+      </li>
+      <li><b>Renal Function:</b> Assess GFR, especially for cisplatin eligibility.</li>
+      <li><b>Genetic Counseling:</b> Consider for Lynch syndrome risk.</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Target Volume:</b> Typically includes the tumor bed and regional lymph nodes if RT is considered (e.g., for positive margins).</li>
+      <li><b>Regional Lymphadenectomy:</b> Recommended for high-grade tumors. For renal pelvis/upper ureter, includes para-aortic/paracaval nodes from renal hilum to aortic/IVC bifurcation. For mid-ureter, includes common iliac, external iliac, obturator, hypogastric. For distal ureter, includes common iliac, external iliac, obturator, hypogastric.</li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>Neoadjuvant Chemotherapy:</b> Cisplatin-based (e.g., gemcitabine and cisplatin) is preferred for higher stage/grade or concerning radiographic findings, as renal function may decline post-nephroureterectomy.</li>
+      <li><b>Adjuvant Chemotherapy:</b> For pT2-4 or pN+ disease after nephroureterectomy, adjuvant platinum-based chemotherapy significantly improves DFS. Nivolumab may also be considered.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Primary Treatment:</b> Nephroureterectomy with bladder cuff and regional lymphadenectomy is standard.</li>
+      <li><b>Nephron-Sparing Endoscopic Treatment:</b> Option for low-grade, low-volume (<1.5 cm), unifocal papillary tumors. May involve mitomycin ureteral gel. Requires long-term surveillance.</li>
+      <li><b>Perioperative Intravesical Chemotherapy:</b> Strongly considered after nephroureterectomy with bladder cuff to reduce intravesical recurrence.</li>
+    </ul>
+  </div>
+
+  <div id="urethral-carcinoma" class="tab-content">
+    <h3>Primary Carcinoma of the Urethra</h3>
+    <p>Primary carcinoma of the urethra is rare, with squamous cell carcinoma being the most common histology. Treatment is highly individualized based on tumor location (male non-prostatic vs. female urethra) and stage.</p>
+
+    <h4>Role of Radiotherapy:</h4>
+    <ul>
+      <li><b>Definitive RT (organ preservation):</b> For cT2 cN0 disease, 66-70 Gy EBRT to gross disease with margins. Concurrent chemotherapy is encouraged. Prophylactic nodal RT (inguinal and low pelvic for female/distal male; pelvic for proximal male) is strongly considered.</li>
+      <li><b>Locally Advanced (T3-T4, N+):</b> 45-50.4 Gy EBRT to gross disease and regional nodes. Boost gross primary to 66-70 Gy, gross nodal to 54-66 Gy. Concurrent chemotherapy.</li>
+      <li><b>Postoperative Adjuvant RT:</b> 45-50.4 Gy to resection bed, inguinal/pelvic nodes. Boost involved margins/gross residual to 54-70 Gy. Concurrent chemotherapy.</li>
+      <li><b>Recurrent Disease:</b> RT (66-74 Gy to gross disease) with or without elective nodal RT.</li>
+    </ul>
+
+    <h4>Preplanning and Assessment:</h4>
+    <ul>
+      <li><b>Clinical Evaluation:</b> Cystourethroscopy, EUA, transurethral or transvaginal biopsy.</li>
+      <li><b>Imaging:</b> Chest X-ray or CT, MRI of pelvis with and without contrast.</li>
+      <li><b>Lymph Nodes:</b> If palpable inguinal lymph nodes, Chest/abdomen/pelvis CT with contrast and lymph node biopsy.</li>
+    </ul>
+
+    <h4>Planning Technique (Simulation & Localization):</h4>
+    <ul>
+      <li><b>Target Volume:</b> Primary tumor with margins, and regional lymph nodes (inguinal, pelvic).</li>
+      <li><b>Regional Lymphadenectomy:</b> May be performed for palpable nodes or high-risk disease.</li>
+    </ul>
+
+    <h4>Dose/Fractionation:</h4>
+    <ul>
+      <li><b>Definitive RT:</b> 66-70 Gy in 1.8-2.0 Gy fractions.</li>
+      <li><b>Adjuvant RT:</b> 45-50.4 Gy, with boosts to 54-70 Gy.</li>
+      <li><b>Concurrent Chemotherapy:</b> Regimens used for bladder cancer (e.g., cisplatin-based, 5-FU/mitomycin).</li>
+      <li><b>Neoadjuvant Chemotherapy/Chemoradiation:</b> May be considered for T2 disease.</li>
+    </ul>
+
+    <h4>Treatment Delivery:</h4>
+    <ul>
+      <li><b>Tis, Ta, T1:</b> Repeat TUR followed by intraurethral chemotherapy (BCG, mitomycin, gemcitabine). Total urethrectomy if prior radical cystectomy.</li>
+      <li><b>T2 (Male, Pendulous):</b> Distal urethrectomy or partial penectomy. Chemoradiotherapy or urethrectomy ± cystoprostatectomy for bulbar urethra.</li>
+      <li><b>T2 (Female):</b> Chemoradiation or urethrectomy + cystectomy (organ-sparing when feasible).</li>
+      <li><b>T3, T4, N+:</b> Multimodal approach (surgery, systemic therapy, radiation). Neoadjuvant chemotherapy (if urothelial histology) followed by consolidative surgery/RT. Chemoradiation preferred for squamous cell.</li>
+      <li><b>Recurrence:</b> Systemic therapy, total penectomy, RT, or pelvic exenteration.</li>
+    </ul>
+  </div>
+
+  <div class="references">
+    <h3>References</h3>
+    <ul>
+      <li>Rathi, A. K. (n.d.). <i>Step by Step Radiation Therapy: Treatment and Planning</i>. Jaypee Brothers Medical Publishers.</li>
+      <li>National Comprehensive Cancer Network. (2025). <i>NCCN Clinical Practice Guidelines in Oncology (NCCN Guidelines®): Bladder Cancer</i> (Version 6.2024).</li>
+      <li>National Comprehensive Cancer Network. (2025). <i>NCCN Clinical Practice Guidelines in Oncology (NCCN Guidelines®): Kidney Cancer</i> (Version 3.2025).</li>
+      <li>Stiles, J. (2023). <i>Localization & Treatment Procedures in Radiation Therapy</i>. Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  function openGUTab(evt, tabId) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tab-content");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+      tabcontent[i].classList.remove("active");
+    }
+    tablinks = document.getElementsByClassName("tab-button");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].classList.remove("active");
+    }
+    document.getElementById(tabId).style.display = "block";
+    document.getElementById(tabId).classList.add("active");
+    evt.currentTarget.classList.add("active");
+  }
+
+  // Set the first tab as active by default when the page loads
+  document.addEventListener("DOMContentLoaded", function() {
+    document.querySelector(".tab-button").click();
+  });
+</script>
+
+</body>
+</html>
