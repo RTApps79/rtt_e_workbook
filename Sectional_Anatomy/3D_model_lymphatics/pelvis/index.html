@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Pelvic Lymphatic Drainage</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+            background-color: #1a1a1a;
+            color: #fff;
+        }
+        canvas {
+            display: block;
+        }
+        #info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            max-width: 300px;
+            text-align: left;
+        }
+        h1 {
+            margin: 0 0 10px 0;
+            font-size: 1.5em;
+        }
+        p {
+            margin: 0 0 15px 0;
+            font-size: 0.9em;
+        }
+        .toggleButton {
+            padding: 8px 12px;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.3s;
+            margin-bottom: 5px;
+            display: block;
+            width: 150px;
+            text-align: center;
+            background-color: #007bff; /* Default button color */
+        }
+        .anatomical-label {
+            color: #111; font-family: sans-serif; padding: 2px 5px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 3px; font-size: 12px; border: 1px solid rgba(0,0,0,0.15);
+            text-shadow: 0 0 1px white; pointer-events: none; /* Important for click-through */
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="info">
+        <h1>Pelvic Lymphatic System</h1>
+        <p>Explore the lymphatic drainage pathways and nodes of the pelvis and lower abdomen.</p>
+        <p>Use your mouse to rotate and zoom.</p>
+        <button class="toggleButton" id="toggleAnatomyBtn">Toggle Anatomy</button>
+        <button class="toggleButton" id="toggleNodesBtn">Toggle Lymph Nodes</button>
+        <button class="toggleButton" id="toggleVesselsBtn">Toggle Lymph Vessels</button>
+        <button class="toggleButton" id="toggleLabelsBtn">Toggle Labels</button>
+    </div>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+        import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
+
+        let scene, camera, renderer, controls, labelRenderer;
+        let anatomyGroup, nodesGroup, vesselsGroup, labelsGroup;
+        let anatomicalLabelsCache = [];
+
+        function init() {
+            // Scene setup
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x222222); // Darker background for contrast
+
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 0, 20); // Initial view: centered on pelvis
+
+            // Renderer setup
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            document.body.appendChild(renderer.domElement);
+
+            // Label Renderer (for always-facing text labels)
+            labelRenderer = new CSS2DRenderer();
+            labelRenderer.setSize(window.innerWidth, window.innerHeight);
+            labelRenderer.domElement.style.position = 'absolute';
+            labelRenderer.domElement.style.top = '0px';
+            labelRenderer.domElement.style.pointerEvents = 'none'; // Allow mouse events to pass through
+            document.body.appendChild(labelRenderer.domElement);
+
+            // Controls setup
+            controls = new OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.target.set(0, -2, 0); // Focus on the center of the pelvis
+
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.7);
+            directionalLight.position.set(10, 10, 10);
+            scene.add(directionalLight);
+            const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.4);
+            directionalLight2.position.set(-10, 5, -10);
+            scene.add(directionalLight2);
+
+            // Create anatomical components
+            createLymphaticModel();
+
+            // Add all main groups to the scene
+            scene.add(anatomyGroup);
+            scene.add(nodesGroup);
+            scene.add(vesselsGroup);
+            scene.add(labelsGroup); // Labels are separate for easier toggling
+
+            // Event Listeners
+            window.addEventListener('resize', onWindowResize, false);
+            document.getElementById('toggleAnatomyBtn').addEventListener('click', () => anatomyGroup.visible = !anatomyGroup.visible);
+            document.getElementById('toggleNodesBtn').addEventListener('click', () => nodesGroup.visible = !nodesGroup.visible);
+            document.getElementById('toggleVesselsBtn').addEventListener('click', () => vesselsGroup.visible = !vesselsGroup.visible);
+            document.getElementById('toggleLabelsBtn').addEventListener('click', () => labelsGroup.visible = !labelsGroup.visible);
+
+            animate();
+        }
+
+        function createLymphaticModel() {
+            anatomyGroup = new THREE.Group();
+            nodesGroup = new THREE.Group();
+            vesselsGroup = new THREE.Group();
+            labelsGroup = new THREE.Group();
+
+            // Materials
+            const skinMaterial = new THREE.MeshStandardMaterial({ color: 0xffdab9, transparent: true, opacity: 0.2, side: THREE.DoubleSide });
+            const boneMaterial = new THREE.MeshStandardMaterial({ color: 0xeae6d3, transparent: true, opacity: 0.5 }); // More opaque for bones
+            const vesselMaterial = new THREE.MeshStandardMaterial({ color: 0x00FF00, transparent: true, opacity: 0.6 }); // Bright green for vessels
+            const nodeMaterial = new THREE.MeshStandardMaterial({ color: 0x008000, emissive: 0x004000 }); // Green for nodes
+            const kidneyMat = new THREE.MeshStandardMaterial({color: 0x8B0000, transparent: true, opacity: 0.5}); // Moved declaration here
+            const majorVesselMaterial = new THREE.MeshStandardMaterial({ color: 0x00008B, transparent: true, opacity: 0.4 }); // Dark blue for major vessels (aorta/vena cava)
+
+            // --- Anatomical Context (Lower Torso/Pelvis) ---
+            // Abdominal/Lower Torso Outline
+            const torsoGeo = new THREE.CylinderGeometry(8, 9, 15, 32);
+            const torsoMesh = new THREE.Mesh(torsoGeo, skinMaterial);
+            torsoMesh.position.y = 5;
+            anatomyGroup.add(torsoMesh);
+
+            // Pelvic Girdle (simplified)
+            const pelvicGirdleGroup = new THREE.Group();
+            pelvicGirdleGroup.position.y = -5; // Position below torso
+            
+            // Ilium (hip bones) - more realistic shape with Obturator Foramen
+            const iliumShape = new THREE.Shape();
+            iliumShape.moveTo(0, 0);
+            iliumShape.bezierCurveTo(2, 6, 8, 7, 10, 4);
+            iliumShape.bezierCurveTo(10, 2, 8, -2, 5, -4);
+            iliumShape.bezierCurveTo(2, -5, 0, -4, 0, 0);
+
+            // Obturator Foramen (inner hole)
+            const obturatorForamenPath = new THREE.Path();
+            obturatorForamenPath.moveTo(4, -2.5);
+            obturatorForamenPath.absellipse(4, -2.5, 2, 1.5, 0, Math.PI * 2, true); // x, y, xRadius, yRadius, startAngle, endAngle, clockwise
+            iliumShape.holes.push(obturatorForamenPath);
+
+            const iliumExtrudeSettings = { depth: 1.5, bevelEnabled: true, bevelSize: 0.5, bevelThickness: 0.5 };
+            const iliumGeo = new THREE.ExtrudeGeometry(iliumShape, iliumExtrudeSettings);
+            
+            // Left Ilium
+            const leftIlium = new THREE.Mesh(iliumGeo, boneMaterial);
+            leftIlium.position.set(-6, 0, 0); 
+            leftIlium.rotation.x = -Math.PI / 10; 
+            pelvicGirdleGroup.add(leftIlium);
+
+            // Right Ilium (mirrored)
+            const rightIliumGeo = new THREE.ExtrudeGeometry(iliumShape, iliumExtrudeSettings); // Use same geometry definition
+            const rightIlium = new THREE.Mesh(rightIliumGeo, boneMaterial);
+            rightIlium.position.set(6, 0, 0); 
+            rightIlium.scale.x = -1; // Flip geometry horizontally for mirroring
+            rightIlium.rotation.x = -Math.PI / 10; // Same tilt as left for symmetry
+            pelvicGirdleGroup.add(rightIlium);
+
+
+            // Pubis/Ischium (lower pelvic bones) - more realistic shape
+            const pubisShape = new THREE.Shape();
+            pubisShape.moveTo(0, 0);
+            pubisShape.bezierCurveTo(1.5, 1, 3, 0.5, 3.5, 0);
+            pubisShape.bezierCurveTo(3, -0.5, 1.5, -1, 0, 0);
+            const pubisExtrudeSettings = { depth: 1.5, bevelEnabled: true, bevelSize: 0.3, bevelThickness: 0.3 };
+            const pubisGeo = new THREE.ExtrudeGeometry(pubisShape, pubisExtrudeSettings);
+            const pubis = new THREE.Mesh(pubisGeo, boneMaterial);
+            pubis.position.set(0, -3, 2);
+            pubis.rotation.x = Math.PI / 2;
+            pelvicGirdleGroup.add(pubis);
+
+            // Sacrum/Coccyx (posterior base) with Sacral Foramina
+            const sacrumGeo = new THREE.ConeGeometry(2, 4, 8);
+            const sacrum = new THREE.Mesh(sacrumGeo, boneMaterial);
+            sacrum.position.set(0, -1, -2);
+            sacrum.rotation.x = Math.PI / 1.5; 
+            pelvicGirdleGroup.add(sacrum);
+
+            // Sacral Foramina (simplified - small cylinders as placeholders for holes)
+            const foramenRadius = 0.2;
+            const foramenDepth = 0.1; // Very shallow to look like a hole
+            const foramenGeo = new THREE.CylinderGeometry(foramenRadius, foramenRadius, foramenDepth, 8);
+            const foramenMat = new THREE.MeshBasicMaterial({ color: 0x1a1a1a }); // Match background/hole color
+
+            // Anterior sacral foramina (4 pairs)
+            for(let i = 0; i < 4; i++) {
+                const yPos = 1.5 - (i * 1.0);
+                const leftForamen = new THREE.Mesh(foramenGeo, foramenMat);
+                leftForamen.position.set(-0.8, yPos, -1.9); // Position on sacrum
+                leftForamen.rotation.x = Math.PI / 2;
+                sacrum.add(leftForamen);
+
+                const rightForamen = leftForamen.clone();
+                rightForamen.position.x = 0.8;
+                sacrum.add(rightForamen);
+            }
+
+
+            // Femur heads (for articulation)
+            const femurHeadGeo = new THREE.SphereGeometry(1.2, 16, 12);
+            const leftFemurHead = new THREE.Mesh(femurHeadGeo, boneMaterial);
+            leftFemurHead.position.set(-6, -4, 0);
+            pelvicGirdleGroup.add(leftFemurHead);
+            const rightFemurHead = leftFemurHead.clone();
+            rightFemurHead.position.x = 6;
+            pelvicGirdleGroup.add(rightFemurHead);
+
+            anatomyGroup.add(pelvicGirdleGroup);
+
+            // Vertebral Column (Lumbar Spine) - posterior
+            const lumbarSpineGroup = new THREE.Group();
+            const lumbarSpineStartY = 1; // Starting Y position for lumbar spine
+            for (let i = 0; i < 5; i++) { // 5 lumbar vertebrae
+                const vertebra = new THREE.Mesh(new RoundedBoxGeometry(2.5, 1.0, 2.0, 2, 0.2), boneMaterial);
+                vertebra.position.y = lumbarSpineStartY - (i * 1.5); // Position downwards
+                vertebra.position.z = -3; // Posterior to torso
+                lumbarSpineGroup.add(vertebra);
+            }
+            anatomyGroup.add(lumbarSpineGroup);
+
+            // Spinal Cord - runs through lumbar spine
+            const spinalCordPoints = [];
+            for (let i = 0; i < 5; i++) {
+                const vertebraY = lumbarSpineStartY - (i * 1.5);
+                spinalCordPoints.push(new THREE.Vector3(0, vertebraY, -3.5)); // Slightly posterior to vertebrae
+            }
+            const spinalCordCurve = new THREE.CatmullRomCurve3(spinalCordPoints);
+            const spinalCordGeo = new THREE.TubeGeometry(spinalCordCurve, 30, 0.3, 8, false);
+            const spinalCord = new THREE.Mesh(spinalCordGeo, new THREE.MeshStandardMaterial({ color: 0xffff00, transparent: true, opacity: 0.8 }));
+            anatomyGroup.add(spinalCord);
+
+
+            // Kidneys (bean-shaped)
+            const kidneyShape = new THREE.Shape();
+            kidneyShape.moveTo(0, 0.5);
+            kidneyShape.bezierCurveTo(0.5, 1.5, 1.5, 1.5, 2, 0.5);
+            kidneyShape.bezierCurveTo(2.5, -0.5, 1.5, -1.5, 0.5, -1.5);
+            kidneyShape.bezierCurveTo(-0.5, -1.5, -1.5, -0.5, 0, 0.5);
+            const kidneyExtrudeSettings = { depth: 1.5, bevelEnabled: true, bevelSize: 0.2, bevelThickness: 0.2 };
+            const kidneyGeo = new THREE.ExtrudeGeometry(kidneyShape, kidneyExtrudeSettings);
+            const leftKidney = new THREE.Mesh(kidneyGeo, kidneyMat);
+            leftKidney.position.set(-4, 8, -3); // Moved Z position from -1 to -3
+            leftKidney.rotation.z = Math.PI / 2;
+            anatomyGroup.add(leftKidney);
+            const rightKidney = leftKidney.clone();
+            rightKidney.position.x = 4;
+            anatomyGroup.add(rightKidney);
+
+            // Major Blood Vessels (Aorta and Vena Cava) - simplified cylinders
+            const aortaVenaCavaRadius = 0.8;
+            const aortaVenaCavaLength = 15;
+            const aortaGeo = new THREE.CylinderGeometry(aortaVenaCavaRadius, aortaVenaCavaRadius, aortaVenaCavaLength, 16);
+            const aorta = new THREE.Mesh(aortaGeo, majorVesselMaterial);
+            aorta.position.set(-0.5, 5, 0.5); // Slightly left, anterior
+            anatomyGroup.add(aorta);
+            const venaCava = new THREE.Mesh(aortaGeo, majorVesselMaterial);
+            venaCava.position.set(0.5, 5, -0.5); // Slightly right, posterior
+            anatomyGroup.add(venaCava);
+
+
+            // --- Lymph Nodes (based on reference images) ---
+            const nodeRadius = 0.4;
+            const nodeSegments = 12;
+
+            // Lumbar (Caval/Aortic) Lymph Nodes - along aorta/vena cava
+            const lumbarNodeStart = 10;
+            const leftLumbarNodePrimary = createNode(nodeRadius, nodeSegments, nodeMaterial, -1.5, lumbarNodeStart, 0, "Lumbar (Caval/Aortic) nodes"); nodesGroup.add(leftLumbarNodePrimary);
+            // No label for mirrored node or subsequent nodes in chain
+            nodesGroup.add(createNode(nodeRadius, nodeSegments, nodeMaterial, 1.5, lumbarNodeStart, 0, "")); 
+            for(let i = 1; i < 7; i++) { 
+                nodesGroup.add(createNode(nodeRadius, nodeSegments, nodeMaterial, -1.5, lumbarNodeStart - (i * 1.5), 0, ""));
+                nodesGroup.add(createNode(nodeRadius, nodeSegments, nodeMaterial, 1.5, lumbarNodeStart - (i * 1.5), 0, ""));
+            }
+
+            // Common Iliac Lymph Nodes
+            const commonIliacLeft = createNode(nodeRadius * 1.2, nodeSegments, nodeMaterial, -3, -1, 0, "Common Iliac nodes"); nodesGroup.add(commonIliacLeft);
+            nodesGroup.add(createNode(nodeRadius * 1.2, nodeSegments, nodeMaterial, 3, -1, 0, "")); // Mirrored without label
+
+            // External Iliac Lymph Nodes
+            const externalIliacLeft = createNode(nodeRadius, nodeSegments, nodeMaterial, -4, -3, 1, "External Iliac nodes"); nodesGroup.add(externalIliacLeft);
+            nodesGroup.add(createNode(nodeRadius, nodeSegments, nodeMaterial, 4, -3, 1, "")); // Mirrored without label
+
+            // Internal Iliac Lymph Nodes
+            const internalIliacLeft = createNode(nodeRadius, nodeSegments, nodeMaterial, -2, -4, -1, "Internal Iliac nodes"); nodesGroup.add(internalIliacLeft);
+            nodesGroup.add(createNode(nodeRadius, nodeSegments, nodeMaterial, 2, -4, -1, "")); // Mirrored without label
+
+            // Sacral Lymph Nodes
+            const sacralNode = createNode(nodeRadius, nodeSegments, nodeMaterial, 0, -5, -2, "Sacral lymph nodes"); nodesGroup.add(sacralNode);
+
+            // Superficial Inguinal Lymph Nodes (in groin area)
+            const supInguinalLeft = createNode(nodeRadius * 1.5, nodeSegments, nodeMaterial, -6, -8, 3, "Superficial Inguinal nodes"); nodesGroup.add(supInguinalLeft);
+            nodesGroup.add(createNode(nodeRadius * 1.5, nodeSegments, nodeMaterial, 6, -8, 3, "")); // Mirrored without label
+
+            // Deep Inguinal Lymph Nodes (deeper in groin)
+            const deepInguinalLeft = createNode(nodeRadius, nodeSegments, nodeMaterial, -4.5, -9, 2, "Deep Inguinal nodes"); nodesGroup.add(deepInguinalLeft);
+            nodesGroup.add(createNode(nodeRadius, nodeSegments, nodeMaterial, 4.5, -9, 2, "")); // Mirrored without label
+
+            // Cisterna Chyli (base of thoracic duct)
+            const cisternaChyli = createNode(nodeRadius * 1.5, nodeSegments, nodeMaterial, 0, 10, -0.5, "Cisterna Chyli"); nodesGroup.add(cisternaChyli);
+            
+            // Celiac Lymph Nodes (upper abdominal)
+            const celiacNode = createNode(nodeRadius * 1.2, nodeSegments, nodeMaterial, 0, 12, 0, "Celiac lymph nodes"); nodesGroup.add(celiacNode);
+
+            // Superior Mesenteric Lymph Nodes
+            const supMesentericNode = createNode(nodeRadius, nodeSegments, nodeMaterial, 0, 7, 1, "Superior mesenteric lymph nodes"); nodesGroup.add(supMesentericNode);
+
+            // Inferior Mesenteric Lymph Nodes
+            const infMesentericNode = createNode(nodeRadius, nodeSegments, nodeMaterial, 0, 3, 1, "Inferior mesenteric lymph nodes"); nodesGroup.add(infMesentericNode);
+
+            // Inferior Diaphragmatic Lymph Nodes
+            const infDiaphragmaticLeft = createNode(nodeRadius, nodeSegments, nodeMaterial, -3, 13, -1, "Inf. diaphragmatic lymph nodes"); nodesGroup.add(infDiaphragmaticLeft);
+            nodesGroup.add(createNode(nodeRadius, nodeSegments, nodeMaterial, 3, 13, -1, "")); // Mirrored without label
+
+
+            // --- Lymphatic Vessels (simplified paths) ---
+            const vesselRadius = 0.1;
+            const vesselSegments = 8;
+
+            // Inguinal to External Iliac
+            addVessel(vesselsGroup, vesselMaterial, vesselRadius, supInguinalLeft.position, externalIliacLeft.position);
+            addVessel(vesselsGroup, vesselMaterial, vesselRadius, deepInguinalLeft.position, externalIliacLeft.position);
+
+            // External Iliac to Common Iliac
+            addVessel(vesselsGroup, vesselMaterial, vesselRadius, externalIliacLeft.position, commonIliacLeft.position);
+            
+            // Internal Iliac to Common Iliac
+            addVessel(vesselsGroup, vesselMaterial, vesselRadius, internalIliacLeft.position, commonIliacLeft.position);
+
+            // Common Iliac to Lumbar/Aortic
+            addVessel(vesselsGroup, vesselMaterial, vesselRadius, commonIliacLeft.position, new THREE.Vector3(commonIliacLeft.position.x, lumbarNodeStart - (6 * 1.5), 0));
+
+            // Sacral to Lumbar/Common Iliac (simplified)
+            addVessel(vesselsGroup, vesselMaterial, vesselRadius, sacralNode.position, new THREE.Vector3(0, -1, 0)); // Towards central chain
+
+            // Lumbar/Aortic chain connections
+            for(let i = 0; i < 6; i++) {
+                addVessel(vesselsGroup, vesselMaterial, vesselRadius, new THREE.Vector3(-1.5, lumbarNodeStart - (i * 1.5), 0), new THREE.Vector3(-1.5, lumbarNodeStart - ((i+1) * 1.5), 0));
+                addVessel(vesselsGroup, vesselMaterial, vesselRadius, new THREE.Vector3(1.5, lumbarNodeStart - (i * 1.5), 0), new THREE.Vector3(1.5, lumbarNodeStart - ((i+1) * 1.5), 0));
+            }
+
+            // Mesenteric nodes to Lumbar/Cisterna Chyli
+            addVessel(vesselsGroup, vesselMaterial, vesselRadius, supMesentericNode.position, new THREE.Vector3(0, 8, 0));
+            addVessel(vesselsGroup, vesselMaterial, vesselRadius, infMesentericNode.position, new THREE.Vector3(0, 5, 0));
+            addVessel(vesselsGroup, vesselMaterial, vesselRadius, celiacNode.position, cisternaChyli.position);
+            addVessel(vesselsGroup, vesselMaterial, vesselRadius, infDiaphragmaticLeft.position, cisternaChyli.position);
+
+            // Drainage to Cisterna Chyli (from lumbar chain)
+            addVessel(vesselsGroup, vesselMaterial, vesselRadius, new THREE.Vector3(-1.5, lumbarNodeStart - (7 * 1.5), 0), cisternaChyli.position);
+            addVessel(vesselsGroup, vesselMaterial, vesselRadius, new THREE.Vector3(1.5, lumbarNodeStart - (7 * 1.5), 0), cisternaChyli.position);
+
+
+            // Mirror nodes and vessels for the right side
+            mirrorVessels(vesselsGroup); // Custom mirroring for vessels
+        }
+
+        // Helper function to create a lymph node
+        function createNode(radius, segments, material, x, y, z, labelText = "") { // labelText is now optional
+            const nodeGeo = new THREE.SphereGeometry(radius, segments, segments);
+            const node = new THREE.Mesh(nodeGeo, material);
+            node.position.set(x, y, z);
+            
+            // Create label only if labelText is provided
+            if (labelText) {
+                const label = createTextMesh(labelText, x + radius + 0.5, y, z);
+                labelsGroup.add(label);
+            }
+            return node;
+        }
+
+        // Helper function to add a lymphatic vessel (tube)
+        function addVessel(group, material, radius, startPos, endPos) { // Removed labelText parameter
+            const curve = new THREE.CatmullRomCurve3([startPos, endPos]);
+            const geometry = new THREE.TubeGeometry(curve, 20, radius, 8, false);
+            const vessel = new THREE.Mesh(geometry, material);
+            group.add(vessel);
+            return vessel;
+        }
+
+        // Custom helper function to mirror only vessels
+        function mirrorVessels(group) {
+            // Filter to get only the original vessels created (not the mirrored ones yet)
+            // We assume left side was created first (x <= 0) and we only mirror those.
+            const originalVessels = group.children.filter(child => 
+                child.geometry.type === 'TubeGeometry' && child.position.x <= 0 
+            );
+
+            originalVessels.forEach(child => {
+                const mirroredChild = child.clone();
+                // Mirror the curve points
+                const originalPath = child.geometry.parameters.path;
+                const originalRadius = child.geometry.parameters.radius;
+
+                if (originalPath && originalPath.points) {
+                    const mirroredPoints = originalPath.points.map(p => new THREE.Vector3(-p.x, p.y, p.z));
+                    mirroredChild.geometry = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(mirroredPoints), 20, originalRadius, 8, false);
+                }
+                group.add(mirroredChild);
+            });
+        }
+
+        // Helper for anatomical labels (CSS2DObject)
+        function createTextMesh(text, x, y, z) {
+            const div = document.createElement("div");
+            div.className = "anatomical-label";
+            div.textContent = text;
+            const label = new CSS2DObject(div);
+            label.position.set(x, y, z);
+            // anatomicalLabelsCache.push(label); // Labels are added directly to labelsGroup by createNode/addVessel
+            return label;
+        }
+
+        // Handle window resizing
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            labelRenderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update(); 
+            renderer.render(scene, camera);
+            labelRenderer.render(scene, camera); // Render CSS2D labels
+        }
+
+        // Initialize the 3D scene when the window loads
+        window.onload = init;
+    </script>
+</body>
+</html>
