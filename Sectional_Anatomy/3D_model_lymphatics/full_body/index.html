@@ -48,10 +48,16 @@
             background-color: #007bff; /* Default button color */
         }
         .anatomical-label {
-            color: #111; font-family: sans-serif; padding: 2px 5px;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 3px; font-size: 12px; border: 1px solid rgba(0,0,0,0.15);
-            text-shadow: 0 0 1px white; pointer-events: none; /* Important for click-through */
+            color: #fff; /* White text for contrast on dark background */
+            font-family: 'Inter', sans-serif; /* Use Inter font */
+            font-size: 14px; /* Slightly larger for readability */
+            font-weight: 400; /* Regular weight */
+            padding: 0; /* Remove padding */
+            background: none; /* No background */
+            border: none; /* No border */
+            text-shadow: none; /* No text shadow */
+            pointer-events: none; /* Important for click-through */
+            white-space: nowrap; /* Keep text on one line */
         }
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -98,6 +104,15 @@
         const kidneyMat = new THREE.MeshStandardMaterial({color: 0x8B0000, transparent: true, opacity: 0.3});
         const majorVesselMaterial = new THREE.MeshStandardMaterial({ color: 0x00008B, transparent: true, opacity: 0.2 });
         const thoracicDuctMaterial = new THREE.MeshStandardMaterial({ color: 0x00BFFF, emissive: 0x005F7F }); // Deep Sky Blue for major ducts
+        const lungMaterial = new THREE.MeshStandardMaterial({ color: 0x6495ED, transparent: true, opacity: 0.4, side: THREE.DoubleSide });
+        const heartMaterial = new THREE.MeshStandardMaterial({ color: 0xDC143C, transparent: true, opacity: 0.5 });
+        const liverMaterial = new THREE.MeshStandardMaterial({ color: 0x8B0000, transparent: true, opacity: 0.4 });
+        const stomachMaterial = new THREE.MeshStandardMaterial({ color: 0xADD8E6, transparent: true, opacity: 0.4 });
+        const intestineMaterial = new THREE.MeshStandardMaterial({ color: 0x90EE90, transparent: true, opacity: 0.5 });
+        const brainMaterial = new THREE.MeshStandardMaterial({ color: 0xff69b4, transparent: true, opacity: 0.6 }); // Pink for brain
+        const connectingLineMaterial = new THREE.LineBasicMaterial({ color: 0x888888, linewidth: 1 }); // Dark grey for connecting lines
+        const eyeMaterial = new THREE.MeshBasicMaterial({ color: 0x333333 }); // Dark for eyes
+        const mouthMaterial = new THREE.MeshBasicMaterial({ color: 0x9c3c3c }); // Reddish for mouth
 
 
         function init() {
@@ -177,24 +192,64 @@
             // Head (simplified)
             const headGeo = new THREE.SphereGeometry(6, 32, 24);
             const headMesh = new THREE.Mesh(headGeo, skinMaterial);
-            headMesh.position.y = 20;
+            headMesh.position.y = 26; // Moved up
             anatomyGroup.add(headMesh);
+
+            // Brain
+            const brainGeo = new THREE.SphereGeometry(4.5, 24, 18);
+            const brainMesh = new THREE.Mesh(brainGeo, brainMaterial);
+            brainMesh.position.y = 26; // Moved up
+            brainMesh.scale.z = 0.9; // Slightly flattened
+            anatomyGroup.add(brainMesh);
+
+            // Facial Features (Eyes, Nose, Mouth, Ears)
+            const eyeGeo = new THREE.SphereGeometry(0.4, 16, 12);
+            const leftEye = new THREE.Mesh(eyeGeo, eyeMaterial);
+            leftEye.position.set(-2, 26.5, 5.5); // Position on head, adjusted Y
+            anatomyGroup.add(leftEye);
+            const rightEye = leftEye.clone();
+            rightEye.position.x = 2;
+            anatomyGroup.add(rightEye);
+
+            const noseGeo = new THREE.ConeGeometry(0.7, 1.5, 8);
+            const nose = new THREE.Mesh(noseGeo, skinMaterial);
+            nose.position.set(0, 25.5, 6.0); // Position on head, adjusted Y
+            nose.rotation.x = Math.PI / 2; // Point forward
+            anatomyGroup.add(nose);
+
+            const mouthGeo = new THREE.CylinderGeometry(0.3, 0.3, 3, 12);
+            const mouth = new THREE.Mesh(mouthGeo, mouthMaterial);
+            mouth.position.set(0, 24.0, 5.8); // Position on head, adjusted Y
+            mouth.rotation.x = Math.PI / 2; // Horizontal
+            mouth.rotation.z = Math.PI / 2; // Rotate to be flat
+            mouth.scale.y = 0.8; // Make it wider than tall
+            anatomyGroup.add(mouth);
+
+            const earGeo = new THREE.SphereGeometry(0.8, 16, 12); // Slightly larger sphere for ear
+            const leftEar = new THREE.Mesh(earGeo, skinMaterial);
+            leftEar.position.set(-6.2, 26, 0); // Position on side of head, adjusted Y
+            leftEar.scale.set(0.5, 1, 1); // Flatten slightly
+            anatomyGroup.add(leftEar);
+            const rightEar = leftEar.clone();
+            rightEar.position.x = 6.2;
+            anatomyGroup.add(rightEar);
+
 
             // Neck (simplified)
             const neckGeo = new THREE.CylinderGeometry(2.5, 3.5, 7, 24);
             const neckMesh = new THREE.Mesh(neckGeo, skinMaterial);
-            neckMesh.position.y = 14;
+            neckMesh.position.y = 20; // Adjusted Y
             anatomyGroup.add(neckMesh);
 
             // Torso (simplified)
-            const torsoGeo = new THREE.CylinderGeometry(8, 9, 20, 32);
+            const torsoGeo = new THREE.CylinderGeometry(8, 9, 25, 32); // Increased height from 20 to 25
             const torsoMesh = new THREE.Mesh(torsoGeo, skinMaterial);
-            torsoMesh.position.y = 4;
+            torsoMesh.position.y = 6.5; // Adjusted Y position
             anatomyGroup.add(torsoMesh);
 
             // Pelvic Girdle (simplified)
             const pelvicGirdleGroup = new THREE.Group();
-            pelvicGirdleGroup.position.y = -8; // Position below torso
+            pelvicGirdleGroup.position.y = -4; // Adjusted Y position (moved up into lower torso)
             
             const iliumGeo = new RoundedBoxGeometry(10, 6, 2, 2, 0.5);
             const leftIlium = new THREE.Mesh(iliumGeo, boneMaterial);
@@ -215,15 +270,15 @@
             const sacrumGeo = new THREE.ConeGeometry(2, 4, 8);
             const sacrum = new THREE.Mesh(sacrumGeo, boneMaterial);
             sacrum.position.set(0, -1, -2);
-            sacrum.rotation.x = Math.PI / 2;
+            sacrum.rotation.x = -Math.PI / 2; // Flipped coccyx direction (from Math.PI / 2)
             pelvicGirdleGroup.add(sacrum);
 
             anatomyGroup.add(pelvicGirdleGroup);
 
             // Arms (simplified cylinders)
-            const armGeo = new THREE.CylinderGeometry(2, 1.5, 15, 16);
+            const armGeo = new THREE.CylinderGeometry(2, 1.5, 10, 16); // Shortened height from 15 to 10
             const leftArm = new THREE.Mesh(armGeo, skinMaterial);
-            leftArm.position.set(-12, 10, 0);
+            leftArm.position.set(-12, 15, 0); // Moved up to axillary level (from 10 to 15)
             leftArm.rotation.z = Math.PI / 2;
             anatomyGroup.add(leftArm);
             const rightArm = leftArm.clone();
@@ -238,30 +293,166 @@
             const rightLeg = leftLeg.clone();
             rightLeg.position.x = 5;
             anatomyGroup.add(rightLeg);
+
+            // --- Vertebral Column ---
+            const spineGroup = new THREE.Group();
+            const cervicalStartY = 24; // Adjusted to fit new neck position
+            const thoracicStartY = 14; 
+            const lumbarStartY = 4; // Adjusted to fit new pelvis position
+
+            // Cervical Vertebrae (C1-C7)
+            for (let i = 0; i < 7; i++) {
+                const vertebra = new THREE.Mesh(new RoundedBoxGeometry(1.2, 0.5, 1.2, 2, 0.1), boneMaterial);
+                vertebra.position.y = cervicalStartY - (i * 1.0);
+                vertebra.position.z = -1.5;
+                spineGroup.add(vertebra);
+            }
+            // Thoracic Vertebrae (T1-T12)
+            for (let i = 0; i < 12; i++) {
+                const vertebra = new THREE.Mesh(new RoundedBoxGeometry(1.5, 0.7, 1.5, 2, 0.2), boneMaterial);
+                vertebra.position.y = thoracicStartY - (i * 1.2);
+                vertebra.position.z = -2.0;
+                spineGroup.add(vertebra);
+            }
+            // Lumbar Vertebrae (L1-L5)
+            for (let i = 0; i < 5; i++) {
+                const vertebra = new THREE.Mesh(new RoundedBoxGeometry(2.0, 1.0, 2.0, 2, 0.3), boneMaterial);
+                vertebra.position.y = lumbarStartY - (i * 1.5);
+                vertebra.position.z = -3.0;
+                spineGroup.add(vertebra);
+            }
+            anatomyGroup.add(spineGroup);
+
+            // Spinal Cord (runs through the spine)
+            const spinalCordPoints = [];
+            for (let i = 0; i < 7; i++) spinalCordPoints.push(new THREE.Vector3(0, cervicalStartY - (i * 1.0), -1.8));
+            for (let i = 0; i < 12; i++) spinalCordPoints.push(new THREE.Vector3(0, thoracicStartY - (i * 1.2), -2.3));
+            for (let i = 0; i < 5; i++) spinalCordPoints.push(new THREE.Vector3(0, lumbarStartY - (i * 1.5), -3.3));
+            const spinalCordCurve = new THREE.CatmullRomCurve3(spinalCordPoints);
+            const spinalCordGeo = new THREE.TubeGeometry(spinalCordCurve, 100, 0.3, 8, false);
+            const spinalCord = new THREE.Mesh(spinalCordGeo, new THREE.MeshStandardMaterial({ color: 0xffff00, transparent: true, opacity: 0.6 }));
+            anatomyGroup.add(spinalCord);
+
+            // --- Major Internal Organs ---
+            // Lungs
+            const lungGeo = new THREE.SphereGeometry(3.0, 32, 16); 
+            const leftLung = new THREE.Mesh(lungGeo, lungMaterial);
+            leftLung.position.set(-4.0, 11, 1.5); 
+            leftLung.scale.set(1, 1.4, 1); 
+            anatomyGroup.add(leftLung);
+            const rightLung = leftLung.clone();
+            rightLung.position.x = 4.0;
+            anatomyGroup.add(rightLung);
+
+            // Heart
+            const heartGeo = new THREE.SphereGeometry(1.8, 16, 12); 
+            const heart = new THREE.Mesh(heartGeo, heartMaterial);
+            heart.position.set(0.5, 9, 2.5); 
+            heart.scale.set(1, 1.1, 1); 
+            anatomyGroup.add(heart);
+
+            // Liver
+            const liverShape = new THREE.Shape();
+            liverShape.moveTo(0, 0);
+            liverShape.bezierCurveTo(1.5, 1.0, 3.0, 1.0, 4.0, 0);
+            liverShape.bezierCurveTo(3.0, -1.0, 1.0, -1.5, 0, 0);
+            const liverExtrudeSettings = { depth: 1.0, bevelEnabled: true, bevelSize: 0.2, bevelThickness: 0.2 }; 
+            const liverGeo = new THREE.ExtrudeGeometry(liverShape, liverExtrudeSettings);
+            const liver = new THREE.Mesh(liverGeo, liverMaterial);
+            liver.position.set(2.0, 5, 1.5); 
+            liver.rotation.x = Math.PI / 2;
+            liver.rotation.z = -Math.PI / 10;
+            anatomyGroup.add(liver);
+
+            // Stomach
+            const stomachShape = new THREE.Shape();
+            stomachShape.moveTo(0, 0);
+            stomachShape.bezierCurveTo(1.0, 1.0, 2.0, 0, 1.0, -1.0);
+            stomachShape.bezierCurveTo(0.5, -1.5, -0.5, -0.5, 0, 0);
+            const stomachExtrudeSettings = { depth: 0.8, bevelEnabled: true, bevelSize: 0.1, bevelThickness: 0.1 }; 
+            const stomachGeo = new THREE.ExtrudeGeometry(stomachShape, stomachExtrudeSettings);
+            const stomach = new THREE.Mesh(stomachGeo, stomachMaterial);
+            stomach.position.set(-2.0, 4, 2.0); 
+            stomach.rotation.x = Math.PI / 2;
+            stomach.rotation.z = Math.PI / 6;
+            anatomyGroup.add(stomach);
+
+            // Kidneys
+            const kidneyShape = new THREE.Shape();
+            kidneyShape.moveTo(0, 0.5);
+            kidneyShape.bezierCurveTo(0.5, 1.5, 1.5, 1.5, 2, 0.5);
+            kidneyShape.bezierCurveTo(2.5, -0.5, 1.5, -1.5, 0.5, -1.5);
+            kidneyShape.bezierCurveTo(-0.5, -1.5, -1.5, -0.5, 0, 0.5); 
+            const kidneyExtrudeSettings = { depth: 0.8, bevelEnabled: true, bevelSize: 0.1, bevelThickness: 0.1 }; 
+            const kidneyGeo = new THREE.ExtrudeGeometry(kidneyShape, kidneyExtrudeSettings);
+            const leftKidney = new THREE.Mesh(kidneyGeo, kidneyMat);
+            leftKidney.position.set(-3.0, 5, -5.0); 
+            leftKidney.rotation.z = Math.PI / 2;
+            anatomyGroup.add(leftKidney);
+            const rightKidney = leftKidney.clone();
+            rightKidney.position.x = 3.0;
+            anatomyGroup.add(rightKidney);
+
+            // Intestines (folded structure)
+            const intestinesGroup = new THREE.Group();
+            const smallIntestinePoints = [];
+            const startY = 3; 
+            const startZ = 2;
+            const foldHeight = 0.8; 
+            const foldWidth = 1.5; 
+            const numFolds = 5;
+
+            // Start point near stomach
+            smallIntestinePoints.push(new THREE.Vector3(-1, startY + 0.5, startZ));
+
+            for (let i = 0; i < numFolds; i++) {
+                const currentY = startY - (i * foldHeight);
+                // Go right
+                smallIntestinePoints.push(new THREE.Vector3(foldWidth, currentY, startZ));
+                // Go left on next row
+                smallIntestinePoints.push(new THREE.Vector3(-foldWidth, currentY - foldHeight, startZ));
+            }
+            // End point (simplified to connect to large intestine area)
+            smallIntestinePoints.push(new THREE.Vector3(0, startY - (numFolds * foldHeight) - foldHeight, startZ));
+
+            const smallIntestineCurve = new THREE.CatmullRomCurve3(smallIntestinePoints);
+            const smallIntestineGeo = new THREE.TubeGeometry(smallIntestineCurve, 100, 0.4, 8, false); 
+            const smallIntestine = new THREE.Mesh(smallIntestineGeo, intestineMaterial);
+            intestinesGroup.add(smallIntestine);
+
+            const largeIntestinePoints = [
+                new THREE.Vector3(-5, 4, 0), new THREE.Vector3(-6, -1, 0), new THREE.Vector3(-4, -5, 0), 
+                new THREE.Vector3(4, -5, 0), new THREE.Vector3(6, -1, 0), new THREE.Vector3(5, 4, 0) 
+            ];
+            const largeIntestineCurve = new THREE.CatmullRomCurve3(largeIntestinePoints, false);
+            const largeIntestineGeo = new THREE.TubeGeometry(largeIntestineCurve, 50, 0.6, 8, false); 
+            const largeIntestine = new THREE.Mesh(largeIntestineGeo, intestineMaterial);
+            largeIntestine.position.y = -2; // Frame around small intestine
+            intestinesGroup.add(largeIntestine);
+            anatomyGroup.add(intestinesGroup);
         }
 
         function createHeadNeckLymphatics() {
-            // Adjust Y positions to fit full body model (head is at y=20)
-            const yOffset = 12; 
+            const yOffset = 12 + 5; // Base Y for head/neck structures, adjusted for new torso height
 
             // Superficial Nodes
-            const parotidNode = createNode(0.5, 16, nodeMaterial, -5.5, 8 + yOffset, 3, "Parotid"); nodesGroup.add(parotidNode);
-            const mastoidNode = createNode(0.5, 16, nodeMaterial, -6, 8.5 + yOffset, -1, "Mastoid"); nodesGroup.add(mastoidNode);
-            const occipitalNode = createNode(0.5, 16, nodeMaterial, -4, 9 + yOffset, -5, "Occipital"); nodesGroup.add(occipitalNode);
-            const submentalNode = createNode(0.5, 16, nodeMaterial, 0, 1.5 + yOffset, 4, "Submental"); nodesGroup.add(submentalNode);
-            const submandibularNode = createNode(0.5, 16, nodeMaterial, -2.5, 2.5 + yOffset, 3.5, "Submandibular"); nodesGroup.add(submandibularNode);
+            const parotidNode = createNode(0.5, 16, nodeMaterial, -5.5, 6 + yOffset, 3, "Parotid", 'left'); nodesGroup.add(parotidNode);
+            const mastoidNode = createNode(0.5, 16, nodeMaterial, -6, 6.5 + yOffset, -1, "Mastoid", 'right'); nodesGroup.add(mastoidNode);
+            const occipitalNode = createNode(0.5, 16, nodeMaterial, -4, 9 + yOffset, -5, "Occipital", 'left'); nodesGroup.add(occipitalNode);
+            const submentalNode = createNode(0.5, 16, nodeMaterial, 0, 4.5 + yOffset, 4, "Submental", 'right'); nodesGroup.add(submentalNode);
+            const submandibularNode = createNode(0.5, 16, nodeMaterial, -2.5, 4.0 + yOffset, 3.5, "Submandibular", 'left'); nodesGroup.add(submandibularNode);
             
             // Deep Cervical Nodes (Internal Jugular Chain)
-            const jugulodigastricNode = createNode(0.6, 16, nodeMaterial, -3.5, 6.5 + yOffset, 1, "Jugulodigastric"); nodesGroup.add(jugulodigastricNode);
-            const levelIINode = createNode(0.5, 16, nodeMaterial, -3.5, 5 + yOffset, 0.5, "Level II"); nodesGroup.add(levelIINode);
-            const levelIIINode = createNode(0.5, 16, nodeMaterial, -3.5, 3.5 + yOffset, 0.5, "Level III"); nodesGroup.add(levelIIINode);
-            const levelIVNode = createNode(0.5, 16, nodeMaterial, -3.5, 2 + yOffset, 0.5, "Level IV"); nodesGroup.add(levelIVNode);
+            const jugulodigastricNode = createNode(0.6, 16, nodeMaterial, -3.5, 6.5 + yOffset, 1, "Jugulodigastric", 'right'); nodesGroup.add(jugulodigastricNode);
+            const levelIINode = createNode(0.5, 16, nodeMaterial, -3.5, 5 + yOffset, 0.5, "Level II", 'left'); nodesGroup.add(levelIINode);
+            const levelIIINode = createNode(0.5, 16, nodeMaterial, -3.5, 3.5 + yOffset, 0.5, "Level III", 'right'); nodesGroup.add(levelIIINode);
+            const levelIVNode = createNode(0.5, 16, nodeMaterial, -3.5, 2 + yOffset, 0.5, "Level IV", 'left'); nodesGroup.add(levelIVNode);
             
             // Posterior Triangle Nodes (Level V)
-            const levelVNode = createNode(0.5, 16, nodeMaterial, -5, 4 + yOffset, -2, "Level V"); nodesGroup.add(levelVNode);
+            const levelVNode = createNode(0.5, 16, nodeMaterial, -5, 4 + yOffset, -2, "Level V", 'right'); nodesGroup.add(levelVNode);
 
             // Supraclavicular Nodes
-            const supraclavicularNode = createNode(0.5, 16, nodeMaterial, -4, 0 + yOffset, 0, "Supraclavicular"); nodesGroup.add(supraclavicularNode);
+            const supraclavicularNode = createNode(0.5, 16, nodeMaterial, -4, 0 + yOffset, 0, "Supraclavicular", 'left'); nodesGroup.add(supraclavicularNode);
 
             // Vessels (simplified paths)
             addVessel(vesselsGroup, vesselMaterial, 0.1, new THREE.Vector3(-4, 10 + yOffset, 3), parotidNode.position);
@@ -279,22 +470,27 @@
         }
 
         function createThoracicLymphatics() {
-            const yOffset = 0; // Relative to torso center (y=4)
+            const yOffset = 5; // Relative to torso center (y=4), adjusted for new torso height
 
             // Mediastinal Nodes (simplified chain)
             const mediastinalNodeStart = 10;
-            for(let i = 0; i < 4; i++) {
-                const node = createNode(0.5, 16, nodeMaterial, 0, mediastinalNodeStart - (i * 2) + yOffset, 1, "Mediastinal");
+            // Only create label for the first mediastinal node
+            const firstMediastinalNode = createNode(0.5, 16, nodeMaterial, 0, mediastinalNodeStart + yOffset, 1, "Mediastinal", 'right');
+            nodesGroup.add(firstMediastinalNode);
+            for(let i = 1; i < 4; i++) { // Remaining nodes without labels
+                const node = createNode(0.5, 16, nodeMaterial, 0, mediastinalNodeStart - (i * 2) + yOffset, 1, "", 'right'); // Pass side for consistent line direction
                 nodesGroup.add(node);
+                // Add connecting line from this node to the primary label
+                addConnectingLine(node.position, firstMediastinalNode.position);
             }
 
             // Hilar Nodes (near lungs, simplified)
-            const hilarLeft = createNode(0.5, 16, nodeMaterial, -4, 8 + yOffset, 0, "Hilar"); nodesGroup.add(hilarLeft);
-            const hilarRight = createNode(0.5, 16, nodeMaterial, 4, 8 + yOffset, 0, "Hilar"); nodesGroup.add(hilarRight);
+            const hilarLeft = createNode(0.5, 16, nodeMaterial, -4, 8 + yOffset, 0, "Hilar", 'left'); nodesGroup.add(hilarLeft);
+            const hilarRight = createNode(0.5, 16, nodeMaterial, 4, 8 + yOffset, 0, "Hilar", 'right'); nodesGroup.add(hilarRight);
 
             // Axillary Nodes (armpit)
-            const axillaryLeft = createNode(0.8, 16, nodeMaterial, -10, 10 + yOffset, 0, "Axillary"); nodesGroup.add(axillaryLeft);
-            const axillaryRight = createNode(0.8, 16, nodeMaterial, 10, 10 + yOffset, 0, "Axillary"); nodesGroup.add(axillaryRight);
+            const axillaryLeft = createNode(0.8, 16, nodeMaterial, -10, 10 + yOffset, 0, "Axillary", 'left'); nodesGroup.add(axillaryLeft);
+            const axillaryRight = createNode(0.8, 16, nodeMaterial, 10, 10 + yOffset, 0, "Axillary", 'right'); nodesGroup.add(axillaryRight);
 
             // Vessels
             addVessel(vesselsGroup, vesselMaterial, 0.1, hilarLeft.position, new THREE.Vector3(0, hilarLeft.position.y, hilarLeft.position.z));
@@ -303,55 +499,59 @@
         }
 
         function createAbdominalPelvicLymphatics() {
-            const yOffset = -8; // Relative to torso center (y=4), so pelvic girdle is at y=-8
+            const yOffset = -8 + 5; // Adjusted yOffset for new torso height
 
             // Lumbar (Caval/Aortic) Lymph Nodes
             const lumbarNodeStart = 10 + yOffset;
-            const leftLumbarNodePrimary = createNode(0.4, 12, nodeMaterial, -1.5, lumbarNodeStart, 0, "Lumbar (Caval/Aortic)"); nodesGroup.add(leftLumbarNodePrimary);
-            nodesGroup.add(createNode(0.4, 12, nodeMaterial, 1.5, lumbarNodeStart, 0, "")); // Mirrored
+            const leftLumbarNodePrimary = createNode(0.4, 12, nodeMaterial, -1.5, lumbarNodeStart, 0, "Lumbar (Caval/Aortic) nodes", 'left'); nodesGroup.add(leftLumbarNodePrimary);
+            nodesGroup.add(createNode(0.4, 12, nodeMaterial, 1.5, lumbarNodeStart, 0, "", 'right')); // Mirrored
             for(let i = 1; i < 7; i++) { 
-                nodesGroup.add(createNode(0.4, 12, nodeMaterial, -1.5, lumbarNodeStart - (i * 1.5), 0, ""));
-                nodesGroup.add(createNode(0.4, 12, nodeMaterial, 1.5, lumbarNodeStart - (i * 1.5), 0, ""));
+                const nodeLeft = createNode(0.4, 12, nodeMaterial, -1.5, lumbarNodeStart - (i * 1.5), 0, "", 'left');
+                nodesGroup.add(nodeLeft);
+                addConnectingLine(nodeLeft.position, leftLumbarNodePrimary.position); // Connect to primary label
+                const nodeRight = createNode(0.4, 12, nodeMaterial, 1.5, lumbarNodeStart - (i * 1.5), 0, "", 'right');
+                nodesGroup.add(nodeRight);
+                addConnectingLine(nodeRight.position, leftLumbarNodePrimary.position); // Connect to primary label
             }
 
             // Common Iliac Lymph Nodes
-            const commonIliacLeft = createNode(0.48, 12, nodeMaterial, -3, -1 + yOffset, 0, "Common Iliac"); nodesGroup.add(commonIliacLeft);
-            nodesGroup.add(createNode(0.48, 12, nodeMaterial, 3, -1 + yOffset, 0, ""));
+            const commonIliacLeft = createNode(0.48, 12, nodeMaterial, -3, -1 + yOffset, 0, "Common Iliac nodes", 'left'); nodesGroup.add(commonIliacLeft);
+            nodesGroup.add(createNode(0.48, 12, nodeMaterial, 3, -1 + yOffset, 0, "", 'right')); // Mirrored without label
 
             // External Iliac Lymph Nodes
-            const externalIliacLeft = createNode(0.4, 12, nodeMaterial, -4, -3 + yOffset, 1, "External Iliac"); nodesGroup.add(externalIliacLeft);
-            nodesGroup.add(createNode(0.4, 12, nodeMaterial, 4, -3 + yOffset, 1, ""));
+            const externalIliacLeft = createNode(0.4, 12, nodeMaterial, -4, -3 + yOffset, 1, "External Iliac nodes", 'left'); nodesGroup.add(externalIliacLeft);
+            nodesGroup.add(createNode(0.4, 12, nodeMaterial, 4, -3 + yOffset, 1, "", 'right')); // Mirrored without label
 
             // Internal Iliac Lymph Nodes
-            const internalIliacLeft = createNode(0.4, 12, nodeMaterial, -2, -4 + yOffset, -1, "Internal Iliac"); nodesGroup.add(internalIliacLeft);
-            nodesGroup.add(createNode(0.4, 12, nodeMaterial, 2, -4 + yOffset, -1, ""));
+            const internalIliacLeft = createNode(0.4, 12, nodeMaterial, -2, -4 + yOffset, -1, "Internal Iliac nodes", 'left'); nodesGroup.add(internalIliacLeft);
+            nodesGroup.add(createNode(0.4, 12, nodeMaterial, 2, -4 + yOffset, -1, "", 'right')); // Mirrored without label
 
             // Sacral Lymph Nodes
-            const sacralNode = createNode(0.4, 12, nodeMaterial, 0, -5 + yOffset, -2, "Sacral"); nodesGroup.add(sacralNode);
+            const sacralNode = createNode(0.4, 12, nodeMaterial, 0, -5 + yOffset, -2, "Sacral lymph nodes", 'right'); nodesGroup.add(sacralNode);
 
-            // Superficial Inguinal Lymph Nodes
-            const supInguinalLeft = createNode(0.6, 12, nodeMaterial, -6, -8 + yOffset, 3, "Superficial Inguinal"); nodesGroup.add(supInguinalLeft);
-            nodesGroup.add(createNode(0.6, 12, nodeMaterial, 6, -8 + yOffset, 3, ""));
+            // Superficial Inguinal Lymph Nodes (in groin area)
+            const supInguinalLeft = createNode(0.6, 12, nodeMaterial, -6, -5 + yOffset, 3, "Superficial Inguinal nodes", 'left'); nodesGroup.add(supInguinalLeft); 
+            nodesGroup.add(createNode(0.6, 12, nodeMaterial, 6, -5 + yOffset, 3, "", 'right')); // Mirrored
 
-            // Deep Inguinal Lymph Nodes
-            const deepInguinalLeft = createNode(0.4, 12, nodeMaterial, -4.5, -9 + yOffset, 2, "Deep Inguinal"); nodesGroup.add(deepInguinalLeft);
-            nodesGroup.add(createNode(0.4, 12, nodeMaterial, 4.5, -9 + yOffset, 2, ""));
+            // Deep Inguinal Lymph Nodes (deeper in groin)
+            const deepInguinalLeft = createNode(0.4, 12, nodeMaterial, -4.5, -6 + yOffset, 2, "Deep Inguinal nodes", 'left'); nodesGroup.add(deepInguinalLeft); 
+            nodesGroup.add(createNode(0.4, 12, nodeMaterial, 4.5, -6 + yOffset, 2, "", 'right')); // Mirrored
 
             // Cisterna Chyli (base of thoracic duct)
-            const cisternaChyli = createNode(0.6, 12, nodeMaterial, 0, 10 + yOffset, -0.5, "Cisterna Chyli"); nodesGroup.add(cisternaChyli);
+            const cisternaChyli = createNode(0.6, 12, nodeMaterial, 0, 10 + yOffset, -0.5, "Cisterna Chyli", 'right'); nodesGroup.add(cisternaChyli);
             
             // Celiac Lymph Nodes
-            const celiacNode = createNode(0.48, 12, nodeMaterial, 0, 12 + yOffset, 0, "Celiac"); nodesGroup.add(celiacNode);
+            const celiacNode = createNode(0.48, 12, nodeMaterial, 0, 12 + yOffset, 0, "Celiac lymph nodes", 'right'); nodesGroup.add(celiacNode);
 
             // Superior Mesenteric Lymph Nodes
-            const supMesentericNode = createNode(0.4, 12, nodeMaterial, 0, 7 + yOffset, 1, "Superior Mesenteric"); nodesGroup.add(supMesentericNode);
+            const supMesentericNode = createNode(0.4, 12, nodeMaterial, 0, 7 + yOffset, 1, "Superior Mesenteric lymph nodes", 'right'); nodesGroup.add(supMesentericNode);
 
             // Inferior Mesenteric Lymph Nodes
-            const infMesentericNode = createNode(0.4, 12, nodeMaterial, 0, 3 + yOffset, 1, "Inferior Mesenteric"); nodesGroup.add(infMesentericNode);
+            const infMesentericNode = createNode(0.4, 12, nodeMaterial, 0, 3 + yOffset, 1, "Inferior Mesenteric lymph nodes", 'right'); nodesGroup.add(infMesentericNode);
 
             // Inferior Diaphragmatic Lymph Nodes
-            const infDiaphragmaticLeft = createNode(0.4, 12, nodeMaterial, -3, 13 + yOffset, -1, "Inf. Diaphragmatic"); nodesGroup.add(infDiaphragmaticLeft);
-            nodesGroup.add(createNode(0.4, 12, nodeMaterial, 3, 13 + yOffset, -1, ""));
+            const infDiaphragmaticLeft = createNode(0.4, 12, nodeMaterial, -3, 13 + yOffset, -1, "Inf. Diaphragmatic lymph nodes", 'left'); nodesGroup.add(infDiaphragmaticLeft);
+            nodesGroup.add(createNode(0.4, 12, nodeMaterial, 3, 13 + yOffset, -1, "", 'right'));
 
             // Vessels
             addVessel(vesselsGroup, vesselMaterial, 0.1, supInguinalLeft.position, externalIliacLeft.position);
@@ -374,55 +574,86 @@
 
         function createExtremityLymphatics() {
             // Axillary drainage (from arm)
-            const axillaryLeft = nodesGroup.children.find(n => n.position.x < 0 && n.position.y > 0 && n.geometry.parameters.radius > 0.7); // Find the axillary node
+            const axillaryLeft = nodesGroup.children.find(n => n.labelText === "Axillary" && n.position.x < 0); 
             if (axillaryLeft) {
-                 addVessel(vesselsGroup, vesselMaterial, 0.1, new THREE.Vector3(-10, 0, 0), axillaryLeft.position); // From mid-arm
+                 // Add vessel from a point on the arm to the axillary node
+                 const armDrainageStart = new THREE.Vector3(-10, 5, 0); // Example point on arm
+                 addVessel(vesselsGroup, vesselMaterial, 0.1, armDrainageStart, axillaryLeft.position);
             }
             // Inguinal drainage (from leg)
-            const supInguinalLeft = nodesGroup.children.find(n => n.position.x < 0 && n.position.y < -7 && n.geometry.parameters.radius > 0.5); // Find sup. inguinal node
+            const supInguinalLeft = nodesGroup.children.find(n => n.labelText === "Superficial Inguinal nodes" && n.position.x < 0); 
             if (supInguinalLeft) {
-                addVessel(vesselsGroup, vesselMaterial, 0.1, new THREE.Vector3(-5, -20, 0), supInguinalLeft.position); // From mid-thigh
+                // Add vessel from a point on the leg to the superficial inguinal node
+                const legDrainageStart = new THREE.Vector3(-3, -15, 0); // Example point on leg
+                addVessel(vesselsGroup, vesselMaterial, 0.1, legDrainageStart, supInguinalLeft.position);
             }
         }
 
         function createMajorLymphaticDucts() {
             // Thoracic Duct
+            const cisternaChyliNode = nodesGroup.children.find(n => n.labelText === "Cisterna Chyli");
+            const cisternaChyliY = cisternaChyliNode ? cisternaChyliNode.position.y : -2; 
+
             const thoracicDuctPoints = [
-                new THREE.Vector3(0, nodesGroup.children.find(n => n.labelText === "Cisterna Chyli")?.position.y || -2, -0.5), // Start from Cisterna Chyli
-                new THREE.Vector3(0, 5, -0.5),
-                new THREE.Vector3(-0.5, 10, -0.5), // Ascend through thorax
-                new THREE.Vector3(-1, 15, -0.5),
-                new THREE.Vector3(-1.5, 17, 0), // Curve towards left subclavian vein
-                new THREE.Vector3(-2, 18, 0.5)
+                new THREE.Vector3(0, cisternaChyliY, -0.5), 
+                new THREE.Vector3(0, cisternaChyliY + 5, -0.5),
+                new THREE.Vector3(-0.5, cisternaChyliY + 10, -0.5), 
+                new THREE.Vector3(-1, cisternaChyliY + 15, -0.5),
+                new THREE.Vector3(-1.5, 18, 0), 
+                new THREE.Vector3(-2, 18.5, 0.5) 
             ];
             const thoracicDuctCurve = new THREE.CatmullRomCurve3(thoracicDuctPoints);
-            const thoracicDuctGeo = new THREE.TubeGeometry(thoracicDuctCurve, 50, 0.3, 8, false);
+            const thoracicDuctGeo = new THREE.TubeGeometry(thoracicDuctCurve, 50, 0.4, 8, false); 
             const thoracicDuct = new THREE.Mesh(thoracicDuctGeo, thoracicDuctMaterial);
             majorDuctsGroup.add(thoracicDuct);
-            labelsGroup.add(createTextMesh("Thoracic Duct", -2, 10, 1));
+            
+            const thoracicDuctLabelPos = new THREE.Vector3(-15, 10, 0); // Position label to the left, further out
+            labelsGroup.add(createTextMesh("Thoracic duct", thoracicDuctLabelPos.x, thoracicDuctLabelPos.y, thoracicDuctLabelPos.z));
+            addConnectingLine(new THREE.Vector3(-1.5, 15, -0.5), thoracicDuctLabelPos); 
+
 
             // Right Lymphatic Duct (simplified)
             const rightLymphaticDuctPoints = [
-                new THREE.Vector3(2, 17, 0.5), // Drains right upper quadrant
-                new THREE.Vector3(2.5, 18, 0.5)
+                new THREE.Vector3(2, 17, 0.5), 
+                new THREE.Vector3(2.5, 18.5, 0.5) 
             ];
             const rightLymphaticDuctCurve = new THREE.CatmullRomCurve3(rightLymphaticDuctPoints);
-            const rightLymphaticDuctGeo = new THREE.TubeGeometry(rightLymphaticDuctCurve, 20, 0.2, 8, false);
+            const rightLymphaticDuctGeo = new THREE.TubeGeometry(rightLymphaticDuctCurve, 20, 0.3, 8, false); 
             const rightLymphaticDuct = new THREE.Mesh(rightLymphaticDuctGeo, thoracicDuctMaterial);
             majorDuctsGroup.add(rightLymphaticDuct);
-            labelsGroup.add(createTextMesh("Right Lymphatic Duct", 2.5, 17.5, 1));
+
+            const rightLymphaticDuctLabelPos = new THREE.Vector3(15, 17.5, 0); // Position label to the right, further out
+            labelsGroup.add(createTextMesh("Right lymphatic duct", rightLymphaticDuctLabelPos.x, rightLymphaticDuctLabelPos.y, rightLymphaticDuctLabelPos.z));
+            addConnectingLine(new THREE.Vector3(2.5, 18, 0.5), rightLymphaticDuctLabelPos); 
         }
 
 
         // Helper function to create a lymph node
-        function createNode(radius, segments, material, x, y, z, labelText = "") {
+        // Added 'side' parameter to control label placement
+        function createNode(radius, segments, material, x, y, z, labelText = "", side = 'right') { 
             const nodeGeo = new THREE.SphereGeometry(radius, segments, segments);
             const node = new THREE.Mesh(nodeGeo, material);
             node.position.set(x, y, z);
             
             if (labelText) {
-                const label = createTextMesh(labelText, x + radius + 0.5, y, z);
+                // Determine base X offset based on side
+                const baseLabelXOffset = (side === 'left') ? -15 : 15; 
+                
+                // Introduce a dynamic Y offset for staggering based on node's Y position
+                // This creates varied lengths and avoids overlap
+                let dynamicYOffset = 0;
+                if (y > 10) dynamicYOffset = 0; // Upper body nodes
+                else if (y > 0) dynamicYOffset = -1; // Mid-torso
+                else if (y > -10) dynamicYOffset = -2; // Pelvic/Abdominal
+                else dynamicYOffset = -3; // Lower extremity/inguinal
+
+                const labelX = baseLabelXOffset;
+                const labelY = y + dynamicYOffset; // Apply dynamic Y offset
+                const labelZ = 0; // Keep Z consistent for labels
+
+                const label = createTextMesh(labelText, labelX, labelY, labelZ);
                 labelsGroup.add(label);
+                addConnectingLine(node.position, label.position); 
             }
             return node;
         }
@@ -440,8 +671,23 @@
         function mirrorGroup(group) {
             const originalChildren = [...group.children];
             originalChildren.forEach(child => {
+                // Check if the child already has a mirrored counterpart or is a central node
+                // This is a simplified check and might need refinement for very complex cases
+                if (child.position.x !== 0 && child.position.x > 0) { // Assuming original nodes are on the left (x<0) or central (x=0)
+                    return; // Skip if it's already a right-sided node or central
+                }
+
                 const mirroredChild = child.clone();
-                mirroredChild.position.x *= -1;
+                mirroredChild.position.x *= -1; // Mirror X position
+
+                // If it's a node, and it had a label, create a mirrored label on the opposite side
+                // This assumes createNode was called with a labelText and 'side' parameter
+                if (child.geometry.type === 'SphereGeometry' && child.labelText) { // Check if it's a labeled node
+                    const originalLabelText = child.labelText; // How to retrieve original labelText? Not stored on mesh.
+                    // This part needs a more robust way to link original node to its label text and side.
+                    // For now, we'll rely on manual creation in the createLymphaticModel functions.
+                }
+
                 if (child.geometry.type === 'TubeGeometry') {
                     const originalPath = child.geometry.parameters.path;
                     const originalRadius = child.geometry.parameters.radius;
@@ -481,6 +727,21 @@
             anatomicalLabelsCache.push(label);
             return label;
         }
+
+        // Helper function to add a connecting dashed line from a structure to its label
+        function addConnectingLine(startPos, endPos) {
+            const points = [];
+            points.push(startPos);
+            // Add an intermediate point to make the line horizontal before going to the label
+            // This creates the L-shaped line seen in the reference image
+            points.push(new THREE.Vector3(endPos.x, startPos.y, startPos.z)); // Horizontal segment
+            points.push(endPos);
+
+            const geometry = new THREE.BufferGeometry().setFromPoints(points);
+            const line = new THREE.Line(geometry, connectingLineMaterial);
+            labelsGroup.add(line); // Add lines to labelsGroup so they can be toggled
+        }
+
 
         // Handle window resizing
         function onWindowResize() {
