@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photon Interactions with Matter Simulator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; }
+        .sim-container { display: grid; grid-template-columns: 1fr; gap: 2rem; padding: 1.5rem; max-width: 1400px; margin: auto; }
+        @media (min-width: 1024px) { .sim-container { grid-template-columns: minmax(400px, 1fr) 1.5fr; } }
+        .panel { background-color: white; border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); padding: 1.5rem 2rem; }
+        h1 { font-size: 1.875rem; font-weight: 700; color: #1e3a8a; }
+        h2 { font-size: 1.5rem; font-weight: 600; color: #1e293b; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; margin-top: 1.5rem; }
+        
+        /* --- Visualization & Animation --- */
+        .visualization-area { position: relative; width: 100%; height: 500px; background-color: #e2e8f0; border-radius: 0.5rem; overflow: hidden; }
+        #animation-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+        
+        .target-atom { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 120px; height: 120px; }
+        .target-nucleus { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; background: radial-gradient(circle, #f87171, #b91c1c); border-radius: 50%; }
+        .target-electron { position: absolute; width: 15px; height: 15px; background: radial-gradient(circle, #60a5fa, #1d4ed8); border-radius: 50%; }
+        #inner-e { top: 50%; left: 50%; transform: translate(-50%, -50%) translateX(30px); }
+        #outer-e { top: 50%; left: 50%; transform: translate(-50%, -50%) translateX(55px); }
+
+        /* MODIFIED: Caption container */
+        #caption-container { position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); width: 90%; text-align: center; background-color: rgba(255, 255, 255, 0.7); padding: 5px 10px; border-radius: 0.5rem; font-style: italic; color: #1e293b; transition: opacity 0.3s ease; opacity: 0; }
+
+        /* Particle Styles */
+        .photon { position: absolute; width: 15px; height: 15px; border-radius: 50%; box-shadow: 0 0 15px 5px; animation-duration: 1.5s; animation-fill-mode: forwards; animation-timing-function: linear; top: 50%; transform: translateY(-50%); }
+        .photon-low { background: #60a5fa; box-shadow: 0 0 15px 5px #60a5fa; }
+        .photon-mid { background: #facc15; box-shadow: 0 0 15px 5px #facc15; }
+        .photon-high { background: #f87171; box-shadow: 0 0 15px 5px #f87171; }
+        .photon-vhigh { background: #a78bfa; box-shadow: 0 0 15px 5px #a78bfa; }
+        .photon-xhigh { background: #f1f5f9; box-shadow: 0 0 20px 8px #f1f5f9; }
+
+        .ejected-particle { position: absolute; border-radius: 50%; animation-duration: 1.2s; animation-fill-mode: forwards; animation-timing-function: ease-out; }
+        .photoelectron { width: 15px; height: 15px; background: radial-gradient(circle, #60a5fa, #1d4ed8); top: 50%; left: calc(50% + 30px); }
+        .compton-electron { width: 15px; height: 15px; background: radial-gradient(circle, #60a5fa, #1d4ed8); top: 50%; left: calc(50% + 55px); }
+        .scattered-photon { opacity: 0.6; }
+        .pair-electron, .positron { width: 15px; height: 15px; top: 50%; left: 50%; }
+        .pair-electron { background: #60a5fa; }
+        .positron { background: #f87171; }
+        .ejected-neutron { width: 18px; height: 18px; background: #6b7280; top: 50%; left: 50%; }
+
+        /* MODIFIED: Targeted Keyframe Animations */
+        @keyframes photon-approach-center { from { left: -5%; } to { left: calc(50% - 7px); } }
+        @keyframes photon-approach-inner-shell { from { left: -5%; } to { left: calc(50% + 22px); } }
+        @keyframes photon-approach-outer-shell { from { left: -5%; } to { left: calc(50% + 47px); } }
+        
+        @keyframes scatter-coherent { from { left: 48%; top: 50%; } to { left: 30%; top: 20%; } }
+        @keyframes eject-photoelectron { from { transform: translate(-50%, -50%); } to { transform: translate(250px, -150px); } }
+        @keyframes eject-compton-electron { from { transform: translate(-50%, -50%); } to { transform: translate(200px, 180px); } }
+        @keyframes scatter-compton-photon { from { left: 50%; top: 50%; } to { left: 75%; top: 25%; } }
+        @keyframes eject-pair-electron { from { transform: translate(-50%,-50%);} to {transform: translate(250px, 200px);}}
+        @keyframes eject-positron { from { transform: translate(-50%,-50%);} to {transform: translate(250px, -200px);}}
+        @keyframes eject-neutron { from { transform: translate(-50%, -50%); } to { transform: translate(-200px, 50px); } }
+        @keyframes atom-wiggle { 0%, 100% { transform: translate(-50%, -50%); } 50% { transform: translate(-52%, -48%); } }
+    </style>
+</head>
+<body>
+    <div class="sim-container">
+        <div class="panel">
+            <h1>Photon Interactions</h1>
+            <p class="text-slate-600 mt-2">Select an interaction type to learn about it and see a simplified animation of the process.</p>
+            <div class="mt-6">
+                <label for="interaction-select" class="block text-sm font-medium text-gray-700">1. Select Interaction Type</label>
+                <select id="interaction-select" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                    <option value="coherent">Coherent Scattering</option>
+                    <option value="photoelectric">Photoelectric Effect</option>
+                    <option value="compton">Compton Scattering</option>
+                    <option value="pair_production">Pair Production</option>
+                    <option value="photodisintegration">Photodisintegration</option>
+                </select>
+            </div>
+            <div id="description-panel" class="mt-4 p-4 bg-slate-50 rounded-lg min-h-[150px]"></div>
+            <div class="mt-6 flex gap-4">
+                <button id="play-button" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors">▶️ Play Animation</button>
+                <button id="reset-button" class="w-full bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded transition-colors">🔄 Reset</button>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="visualization-area">
+                <div class="target-atom" id="target-atom">
+                    <div class="target-nucleus"></div>
+                    <div class="target-electron" id="inner-e"></div>
+                    <div class="target-electron" id="outer-e"></div>
+                </div>
+                <div id="animation-layer"></div>
+                <div id="caption-container"></div>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="text-center py-6">
+        <p class="text-sm text-slate-500">&copy; 2025 RadtherapyApps79. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        const select = document.getElementById('interaction-select');
+        const descriptionPanel = document.getElementById('description-panel');
+        const playButton = document.getElementById('play-button');
+        const resetButton = document.getElementById('reset-button');
+        const animationLayer = document.getElementById('animation-layer');
+        const targetAtom = document.getElementById('target-atom');
+        const captionContainer = document.getElementById('caption-container');
+
+        const interactions = {
+            coherent: {
+                title: 'Coherent Scattering', energy: 'Low (< 10 keV)',
+                description: "A low-energy photon interacts with the atom's entire electron cloud, causing it to vibrate momentarily. The photon is then scattered in a new direction with no loss of energy. No ionization occurs.",
+                photonClass: 'photon-low', animationPath: 'photon-approach-center',
+                captions: [
+                    { text: 'A low-energy photon approaches the atom...', time: 100 },
+                    { text: 'It causes the atom\'s electron cloud to vibrate.', time: 1500 },
+                    { text: 'The photon scatters with no energy loss.', time: 2000 },
+                ]
+            },
+            photoelectric: {
+                title: 'Photoelectric Effect', energy: 'Low to Medium',
+                description: "The incident photon is completely absorbed by an inner-shell electron. The electron is ejected from the atom (as a photoelectron), creating an ion. This interaction is highly dependent on the absorber's atomic number (Z).",
+                photonClass: 'photon-mid', animationPath: 'photon-approach-inner-shell',
+                captions: [
+                    { text: 'A photon targets an inner-shell electron.', time: 100 },
+                    { text: 'The photon is completely absorbed...', time: 1500 },
+                    { text: '...and the electron is ejected as a photoelectron.', time: 2000 },
+                ]
+            },
+            compton: {
+                title: 'Compton Scattering', energy: 'Medium to High',
+                description: "The photon collides with a loosely-bound outer-shell electron, ejecting it. The photon loses some energy and scatters in a new direction. This is the dominant interaction in soft tissue at therapeutic energies.",
+                photonClass: 'photon-high', animationPath: 'photon-approach-outer-shell',
+                captions: [
+                    { text: 'A photon targets an outer-shell electron.', time: 100 },
+                    { text: 'It collides with the electron, transferring energy.', time: 1500 },
+                    { text: 'The electron is ejected, and the photon scatters with lower energy.', time: 2000 },
+                ]
+            },
+            pair_production: {
+                title: 'Pair Production', energy: 'Very High (> 1.022 MeV)',
+                description: "A high-energy photon passes near the nucleus and its energy is converted into mass, creating an electron-positron pair. The photon is annihilated in the process. This requires a threshold energy of 1.022 MeV.",
+                photonClass: 'photon-vhigh', animationPath: 'photon-approach-center',
+                captions: [
+                    { text: 'A very high-energy photon interacts with the nucleus\'s field.', time: 100 },
+                    { text: 'The photon\'s energy converts into an electron-positron pair.', time: 1500 },
+                    { text: 'The new particles are ejected from the atom.', time: 2000 },
+                ]
+            },
+            photodisintegration: {
+                title: 'Photodisintegration', energy: 'Extremely High (> 10 MeV)',
+                description: "The photon is absorbed directly by the nucleus, making it unstable. The nucleus immediately ejects a nuclear fragment, most commonly a neutron. This can occur in high-energy medical linear accelerators.",
+                photonClass: 'photon-xhigh', animationPath: 'photon-approach-center',
+                captions: [
+                    { text: 'An extremely high-energy photon targets the nucleus.', time: 100 },
+                    { text: 'The photon is absorbed by the nucleus.', time: 1500 },
+                    { text: 'The unstable nucleus ejects a neutron.', time: 2000 },
+                ]
+            }
+        };
+
+        function updateDescription() {
+            const data = interactions[select.value];
+            descriptionPanel.innerHTML = `<h3 class="font-bold text-lg text-gray-800">${data.title}</h3><p class="text-sm font-medium text-indigo-600">Typical Energy: ${data.energy}</p><p class="mt-2 text-gray-600">${data.description}</p>`;
+        }
+        
+        function showCaption(text) {
+            captionContainer.textContent = text;
+            captionContainer.style.opacity = '1';
+        }
+
+        function resetAnimation() {
+            animationLayer.innerHTML = '';
+            targetAtom.style.animation = 'none';
+            playButton.disabled = false;
+            resetButton.disabled = true;
+            captionContainer.style.opacity = '0';
+        }
+
+        function playAnimation() {
+            resetAnimation();
+            playButton.disabled = true;
+            resetButton.disabled = false;
+
+            const type = select.value;
+            const data = interactions[type];
+            
+            // --- Staged Animation Controller ---
+            data.captions.forEach(caption => {
+                setTimeout(() => showCaption(caption.text), caption.time);
+            });
+
+            // Step 1: Photon Approach (0ms)
+            const photon = document.createElement('div');
+            photon.className = `photon ${data.photonClass}`;
+            photon.style.animationName = data.animationPath;
+            animationLayer.appendChild(photon);
+
+            // Step 2: Interaction Event (1500ms)
+            setTimeout(() => {
+                photon.style.display = 'none';
+                
+                switch (type) {
+                    case 'coherent':
+                        targetAtom.style.animation = 'atom-wiggle 0.5s linear';
+                        break;
+                    case 'compton':
+                    case 'photoelectric':
+                    case 'pair_production':
+                    case 'photodisintegration':
+                        // The absorption is implied, visual happens in Step 3
+                        break;
+                }
+            }, 1500);
+
+            // Step 3: Resulting Particles (2000ms)
+            setTimeout(() => {
+                switch (type) {
+                    case 'coherent': {
+                        const scatteredPhoton = document.createElement('div');
+                        scatteredPhoton.className = `photon ${data.photonClass}`;
+                        scatteredPhoton.style.animationName = 'scatter-coherent';
+                        animationLayer.appendChild(scatteredPhoton);
+                        break;
+                    }
+                    case 'photoelectric': {
+                        const photoelectron = document.createElement('div');
+                        photoelectron.className = 'ejected-particle photoelectron';
+                        photoelectron.style.animationName = 'eject-photoelectron';
+                        animationLayer.appendChild(photoelectron);
+                        break;
+                    }
+                    case 'compton': {
+                        const comptonElectron = document.createElement('div');
+                        comptonElectron.className = 'ejected-particle compton-electron';
+                        comptonElectron.style.animationName = 'eject-compton-electron';
+                        animationLayer.appendChild(comptonElectron);
+                        const scatteredPhoton = document.createElement('div');
+                        scatteredPhoton.className = `photon ${data.photonClass} scattered-photon`;
+                        scatteredPhoton.style.animationName = 'scatter-compton-photon';
+                        animationLayer.appendChild(scatteredPhoton);
+                        break;
+                    }
+                    case 'pair_production': {
+                        const electron = document.createElement('div');
+                        electron.className = 'ejected-particle pair-electron';
+                        electron.style.animationName = 'eject-pair-electron';
+                        animationLayer.appendChild(electron);
+                        const positron = document.createElement('div');
+                        positron.className = 'ejected-particle positron';
+                        positron.style.animationName = 'eject-positron';
+                        animationLayer.appendChild(positron);
+                        break;
+                    }
+                    case 'photodisintegration': {
+                         const neutron = document.createElement('div');
+                         neutron.className = 'ejected-particle ejected-neutron';
+                         neutron.style.animationName = 'eject-neutron';
+                         animationLayer.appendChild(neutron);
+                         targetAtom.style.animation = 'atom-wiggle 0.3s linear';
+                        break;
+                    }
+                }
+            }, 2000);
+
+            // Step 4: Re-enable controls
+            setTimeout(() => {
+                playButton.disabled = false;
+            }, 3500);
+        }
+
+        // --- Event Listeners & Initial Load ---
+        select.addEventListener('change', () => {
+            resetAnimation();
+            updateDescription();
+        });
+        playButton.addEventListener('click', playAnimation);
+        resetButton.addEventListener('click', resetAnimation);
+
+        updateDescription();
+        resetButton.disabled = true;
+    </script>
+</body>
+</html>
