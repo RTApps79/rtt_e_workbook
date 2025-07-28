@@ -21,8 +21,29 @@
         .particle-key div { width: 20px; height: 20px; border-radius: 50%; }
         /* Simulator Styles */
         .visualization { margin: auto; position: relative; width: 450px; height: 450px; }
-        .nucleus { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 4px; padding: 10px; border-radius: 50%; min-width: 40px; min-height: 40px; background: rgba(239, 68, 68, 0.1); }
-        .nucleon { width: 20px; height: 20px; line-height: 20px; text-align: center; border-radius: 50%; font-size: 0.7rem; font-weight: bold; color: white; user-select: none; }
+        /* MODIFIED: Nucleus is now a simple relative container */
+        .nucleus {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            transition: width 0.3s ease, height 0.3s ease; /* Smooth transition */
+        }
+        .nucleon {
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            text-align: center;
+            border-radius: 50%;
+            font-size: 0.7rem;
+            font-weight: bold;
+            color: white;
+            user-select: none;
+            /* MODIFIED: Nucleons are positioned absolutely */
+            position: absolute; 
+            transition: top 0.3s ease, left 0.3s ease; /* Smooth transition */
+        }
         .proton { background: radial-gradient(circle at 30% 30%, #f87171, #b91c1c); }
         .neutron { background: radial-gradient(circle at 30% 30%, #9ca3af, #374151); }
         .electron { background: radial-gradient(circle at 30% 30%, #60a5fa, #1d4ed8); position: absolute; transform-origin: center center; width: 22px; height: 22px; line-height: 22px; }
@@ -36,7 +57,6 @@
 </head>
 <body>
     <div class="lesson-container">
-        <!-- Left Column: Lesson Text -->
         <div class="lesson-panel">
             <h1>Atomic Structure & Radiation Therapy</h1>
             <p class="mt-2 text-lg text-slate-700">Understanding the building blocks of matter is the first step to understanding radiation.</p>
@@ -78,10 +98,8 @@
             </section>
         </div>
 
-        <!-- Right Column: Simulator -->
         <div class="simulator-panel">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white p-4 rounded-lg shadow-md">
-                <!-- Controls -->
                 <div class="controls text-center">
                     <h3 class="font-semibold text-lg mb-2">Build an Atom</h3>
                     <div class="grid grid-cols-2 gap-2">
@@ -93,20 +111,18 @@
                          <button onclick="removeParticle('electron')" class="bg-blue-200 hover:bg-blue-300 text-blue-800 py-2 px-4 rounded">Remove e-</button>
                     </div>
                 </div>
-                <!-- Info Panel -->
                 <div class="info-panel bg-slate-50 p-3 rounded-lg">
                      <h3 class="font-semibold text-lg mb-2">Properties</h3>
                      <div id="info-content" class="text-sm space-y-1">
-                        <p><strong>Element:</strong> <span id="element-name">--</span> (<span id="element-symbol">X</span>)</p>
-                        <p><strong>Protons (Z):</strong> <span id="atomic-number">0</span></p>
-                        <p><strong>Neutrons (N):</strong> <span id="neutron-number">0</span></p>
-                        <p><strong>Mass (A):</strong> <span id="mass-number">0</span></p>
-                        <p><strong>Electrons:</strong> <span id="electron-count">0</span></p>
-                        <p><strong>Charge:</strong> <span id="ion-state">0</span></p>
+                         <p><strong>Element:</strong> <span id="element-name">--</span> (<span id="element-symbol">X</span>)</p>
+                         <p><strong>Protons (Z):</strong> <span id="atomic-number">0</span></p>
+                         <p><strong>Neutrons (N):</strong> <span id="neutron-number">0</span></p>
+                         <p><strong>Mass (A):</strong> <span id="mass-number">0</span></p>
+                         <p><strong>Electrons:</strong> <span id="electron-count">0</span></p>
+                         <p><strong>Charge:</strong> <span id="ion-state">0</span></p>
                      </div>
                 </div>
             </div>
-            <!-- Visualization -->
             <div class="bg-white p-4 rounded-lg shadow-md mt-4">
                 <div class="flex justify-center items-center">
                     <div class="visualization" id="visualization"><div class="nucleus" id="nucleus"></div></div>
@@ -172,25 +188,61 @@
             document.getElementById('notation-charge').textContent = chargeText;
 
             // --- Render particles ---
-            // Nucleus
+            // Clear previous render
             nucleus.innerHTML = '';
-            for (let i = 0; i < protons; i++) nucleus.innerHTML += `<div class="nucleon proton">P</div>`;
-            for (let i = 0; i < neutrons; i++) nucleus.innerHTML += `<div class="nucleon neutron">N</div>`;
-            const numNucleons = protons + neutrons;
-            const nucleusDiameter = Math.max(40, 10 * Math.sqrt(numNucleons));
-            nucleus.style.width = `${nucleusDiameter}px`;
-            nucleus.style.height = `${nucleusDiameter}px`;
-            
-            // Electrons and shells
-            // Clear old shells
             viz.querySelectorAll('.electron-shell, .electron').forEach(el => el.remove());
 
+            // --- MODIFIED: Nucleus rendering logic ---
+            const numNucleons = protons + neutrons;
+            // The overall diameter of the nucleus area. This also affects the electron shells.
+            // It's based on an estimate of the packed particle radius, with some padding.
+            const estimatedRadius = 5 * Math.sqrt(numNucleons);
+            const nucleusDiameter = Math.max(40, (estimatedRadius * 2) + 15);
+            nucleus.style.width = `${nucleusDiameter}px`;
+            nucleus.style.height = `${nucleusDiameter}px`;
+
+            // Create a shuffled list of protons and neutrons for a mixed look
+            const nucleonTypes = [];
+            for (let i = 0; i < protons; i++) nucleonTypes.push('proton');
+            for (let i = 0; i < neutrons; i++) nucleonTypes.push('neutron');
+            for (let i = nucleonTypes.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [nucleonTypes[i], nucleonTypes[j]] = [nucleonTypes[j], nucleonTypes[i]];
+            }
+
+            // Position nucleons in a phyllotaxis (sunflower) pattern
+            const goldenAngle = Math.PI * (3 - Math.sqrt(5)); // ~137.5 degrees
+            const nucleonWidth = 20; // from CSS
+            const spacing = 4.5; // Adjusts how tightly packed the particles are
+
+            nucleonTypes.forEach((type, i) => {
+                const nucleonDiv = document.createElement('div');
+                nucleonDiv.className = `nucleon ${type}`;
+                nucleonDiv.textContent = type === 'proton' ? 'P' : 'N';
+                
+                // For a single particle, place it in the center.
+                // For multiple, calculate spiral position.
+                const r = numNucleons > 1 ? spacing * Math.sqrt(i + 0.5) : 0;
+                const theta = i * goldenAngle;
+                
+                const x = r * Math.cos(theta);
+                const y = r * Math.sin(theta);
+                
+                // Position relative to the center of the nucleus div, accounting for particle size
+                nucleonDiv.style.left = `calc(50% + ${x}px - ${nucleonWidth / 2}px)`;
+                nucleonDiv.style.top = `calc(50% + ${y}px - ${nucleonWidth / 2}px)`;
+
+                nucleus.appendChild(nucleonDiv);
+            });
+            
+            // --- Electrons and shells (logic is mostly unchanged) ---
             let electronsToPlace = electrons;
             let shellNum = 1;
             while (electronsToPlace > 0) {
                 const shellCapacity = 2 * shellNum * shellNum;
                 const electronsInThisShell = Math.min(electronsToPlace, shellCapacity);
                 
+                // Shell radius is now based on the dynamic nucleus diameter
                 const shellRadius = (nucleusDiameter / 2) + 40 + (shellNum - 1) * 50;
                 const shellDiv = document.createElement('div');
                 shellDiv.className = 'electron-shell';
