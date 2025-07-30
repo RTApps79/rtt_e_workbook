@@ -138,10 +138,8 @@
         // DOM Elements
         const gameContainer = document.getElementById('game-container');
         const postGameContainer = document.getElementById('post-game-container');
-        const questionCard = document.getElementById('question-card');
         const nameEntryCard = document.getElementById('name-entry-card');
         const certificate = document.getElementById('certificate');
-
         const questionText = document.querySelector('.question-text');
         const optionButtons = document.querySelectorAll('.option-button');
         const feedback = document.querySelector('.feedback');
@@ -149,7 +147,6 @@
         const generateCertBtn = document.getElementById('generate-cert-btn');
         const printCertBtn = document.getElementById('print-cert-btn');
         const restartBtnCert = document.getElementById('restart-btn-cert');
-
         const currentStreakDisplay = document.getElementById('current-streak');
         const bestStreakDisplay = document.getElementById('best-streak');
         const studentNameInput = document.getElementById('student-name-input');
@@ -164,7 +161,8 @@
         let bestStreak = localStorage.getItem('bestStreak') || 0;
         let allQuestions = [];
 
-        const questions = [ /* Your extensive question array from the previous step goes here */ ];
+        // --- FIX: The question array is now populated. ---
+        const questions = [{"question":"CPR certification is required for which competency area?","options":["General Patient Care","Quality Control Procedures","Treatment Simulation Procedures","Dosimetry"],"correctAnswerIndex":0,"explanation":"Correct! Section 4.2.1 states that candidates must be CPR certified as part of the General Patient Care requirements."},{"question":"True or False: Actual delivery of the treatment dose is required to demonstrate competence in treatment procedures.","options":["True","False"],"correctAnswerIndex":1,"explanation":"Correct! Section 4.2.7 states, 'Demonstration of competence does not require actual delivery of treatment dose.' The focus is on the safe and correct setup."},{"question":"Fabricating a thermoplastic mold falls under which category?","options":["General Patient Care","Quality Control Procedures","Treatment Accessory Devices","Participatory Procedures"],"correctAnswerIndex":2,"explanation":"Correct! Fabricating devices like a thermoplastic mold is a core competency under Treatment Accessory Devices."},{"question":"Which of these is considered a 'Participatory Procedure' rather than a standard treatment competency?","options":["Multi-field Spine","Total Body Irradiation (TBI)","Electron Field","Breast Tangents"],"correctAnswerIndex":1,"explanation":"Correct! TBI is listed under Participatory Procedures in the provided table."},{"question":"Demonstrating competence means a candidate has performed a procedure how?","options":["Once, with help","Independently, consistently, and effectively","With verbal guidance","In a lab environment only"],"correctAnswerIndex":1,"explanation":"Correct! Section 4.1.3 states that competence means the candidate performed the procedure 'independently, consistently, and effectively'."},{"question":"How many quality control activities must a candidate demonstrate competence in?","options":["Three","Five","Seven","Ten"],"correctAnswerIndex":1,"explanation":"Correct! Section 4.2.2 states that candidates must demonstrate competence in five quality control activities."},{"question":"Which of the following is NOT listed as a required simulation procedure?","options":["Brain","Thorax","Abdomen","Pelvis"],"correctAnswerIndex":2,"explanation":"Correct! The table on page 4 lists Brain, Head and Neck, Thorax, Breast, Pelvis, and Skeletal as required simulation procedures. Abdomen is not included."},{"question":"Which of the following is a required dosimetry calculation?","options":["Multi-field Spine","Computer Generated Isodose Plan","Special Set-up","Craniospinal Treatment"],"correctAnswerIndex":1,"explanation":"Correct! The table on page 4 includes 'Computer Generated Isodose Plan' as one of the required dosimetry calculations."},{"question":"True or False: Candidates may simulate more than three radiation treatment procedures.","options":["True","False"],"correctAnswerIndex":1,"explanation":"Correct! Section 4.1.2 clearly states that 'a total of three radiation treatment procedures may be simulated'."},{"question":"Which of the following is a required participatory procedure?","options":["Electron Field","Abutting Fields","SBRT/SRS Treatment","Pelvis Multi-field Supine"],"correctAnswerIndex":2,"explanation":"Correct! SBRT/SRS Treatment is listed under Participatory Procedures in the table on page 4."},{"question":"Which domain includes verifying treatment parameters and positioning the patient?","options":["Cognitive Domain","Psychomotor Domain","Affective Domain","Interpersonal Domain"],"correctAnswerIndex":1,"explanation":"Correct! The Psychomotor Domain includes activities like verifying treatment parameters and positioning the patient."},{"question":"A patient becomes lightheaded and their oxygen saturation is 88%. What competency is most relevant?","options":["Patient Transfer","O2 Administration","Vital Signs - Pulse","Vital Signs - Temperature"],"correctAnswerIndex":1,"explanation":"Correct! Section 4.2.1 and the table on page 4 include oxygen administration as a required general patient care competency."},{"question":"During a morning QA check, you notice the simulator's laser alignment is off by 3 mm. What is the correct course of action?","options":["Ignore it if the shift is small","Document it and proceed with treatments","Report the issue and delay procedures until corrected","Realign the laser yourself without documentation"],"correctAnswerIndex":2,"explanation":"Correct! Laser alignment is a required Quality Control procedure. Patient safety requires that equipment functions within tolerance. Any deviation should be reported and corrected before use."},{"question":"During a craniospinal treatment, you are asked to help verify field junctions. What is your role as a student?","options":["Decline because you are not certified","Passively observe","Actively participate and ask questions to understand","Take over the procedure to show independence"],"correctAnswerIndex":2,"explanation":"Correct! For Participatory Procedures like craniosp-inal treatment, section 4.2.6 defines participation as 'taking an active role in the procedure and understanding the critical concepts'."}];
 
         function startGame() {
             gameContainer.classList.remove('hidden');
@@ -177,12 +175,16 @@
             currentStreakDisplay.textContent = currentStreak;
             bestStreakDisplay.textContent = bestStreak;
             
-            allQuestions = [...questions].sort(() => Math.random() - 0.5);
+            // Only proceed if there are questions to load
+            if (questions.length > 0) {
+                allQuestions = [...questions].sort(() => Math.random() - 0.5);
+                loadQuestion();
+            } else {
+                questionText.textContent = "Error: No questions found.";
+            }
             
             nextBtn.classList.remove('hidden');
             nextBtn.disabled = true;
-            
-            loadQuestion();
         }
 
         function loadQuestion() {
