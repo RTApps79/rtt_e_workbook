@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal & Ethical Principles Assessment</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&family=Orbitron&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto Slab', serif;
+            background-color: #3d2c23; /* Wood desk color */
+            color: #333;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-image: url('https://www.transparenttextures.com/patterns/wood-pattern.png');
+        }
+        #assessment-wrapper {
+            position: relative;
+            width: 1000px;
+            height: 650px;
+            background: #5d4037;
+            border-radius: 10px;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.5), 0 5px 15px rgba(0,0,0,0.3);
+            padding: 20px;
+        }
+        #case-file {
+            position: absolute;
+            width: 600px;
+            height: 400px;
+            background-color: #f5f5dc; /* Beige paper */
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 5px;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.3);
+            padding: 30px;
+            border: 1px solid #ccc;
+            font-family: 'Roboto Slab', serif;
+            cursor: pointer;
+        }
+        #case-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            text-align: center;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        #case-scenario {
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+        #stamp-area {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            height: 120px;
+            background: #4e342e;
+            border-radius: 5px;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .stamp {
+            background-color: #c62828; /* Red stamp color */
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            border: 3px solid #8e0000;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+        .stamp:hover, .stamp.selected {
+            background-color: #e53935;
+            transform: translateY(-5px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+        }
+        .ui-panel {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            display: flex;
+            gap: 20px;
+            background: rgba(0,0,0,0.2);
+            padding: 5px 10px;
+            border-radius: 5px;
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+        }
+        #animated-stamp {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300px;
+            height: 150px;
+            border: 10px solid;
+            border-radius: 10px;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            font-size: 3em;
+            font-weight: bold;
+            text-transform: uppercase;
+            z-index: 15;
+            pointer-events: none;
+        }
+        #animated-stamp.stamping {
+            display: flex;
+            animation: stamp-animation 0.5s ease-out forwards;
+        }
+        @keyframes stamp-animation {
+            0% { transform: translate(-50%, -50%) scale(2) rotate(-15deg); opacity: 0; }
+            50% { transform: translate(-50%, -50%) scale(1) rotate(-15deg); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1.1) rotate(-15deg); opacity: 0; }
+        }
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 100; }
+        .modal-content { background: #f5f5dc; border: 5px solid #8e0000; border-radius: 15px; padding: 30px; text-align: center; box-shadow: 0 0 30px #000; width: 90%; max-width: 700px; color: #333; }
+        .modal-content h2 { font-size: 2em; font-weight: bold; color: #8e0000; margin-bottom: 20px; }
+        .modal-content p { font-size: 1.1em; line-height: 1.6; margin-bottom: 20px; }
+        .modal-content button { background-color: #8e0000; color: white; border: none; padding: 15px 30px; border-radius: 8px; font-family: 'Orbitron', sans-serif; font-size: 1.2em; cursor: pointer; transition: all 0.3s ease; margin-top: 10px; }
+        
+        @media print {
+            body { background: #fff; }
+            #assessment-wrapper, #startScreen, #reportScreen button:last-child { display: none; }
+            .modal { position: static; box-shadow: none; border: none; }
+            .modal-content { box-shadow: none; max-width: 100%; border: 1px solid #ccc; }
+            #reportScreen { display: flex !important; }
+        }
+    </style>
+</head>
+<body>
+    <div id="assessment-wrapper" class="hidden">
+        <div class="ui-panel">
+            <div id="score-ui">Score: 0</div>
+            <div id="cases-ui">Case: 0/0</div>
+        </div>
+        <div id="case-file">
+            <h2 id="case-title"></h2>
+            <p id="case-scenario"></p>
+        </div>
+        <div id="stamp-area"></div>
+        <div id="animated-stamp"></div>
+    </div>
+    
+    <div id="startScreen" class="modal">
+        <div class="modal-content">
+            <h2>Legal & Ethical Principles Assessment</h2>
+            <p>Welcome to the legal review desk. A series of case files will appear. Read each scenario, select the correct legal or ethical "stamp," then click the case file to apply it. This is an untimed assessment to gauge your understanding.</p>
+            <button id="startButton">Start Assessment</button>
+        </div>
+    </div>
+    
+    <div id="reportScreen" class="modal hidden">
+        <div class="modal-content">
+            <h2 id="endTitle">Assessment Complete</h2>
+            <div class="text-left">
+                <h3 class="text-xl font-bold border-b pb-2 mb-3 text-gray-700">Performance Summary</h3>
+                <p><strong>Final Score:</strong> <span id="finalScore" class="font-bold text-lg"></span></p>
+                <p><strong>Performance Level:</strong> <span id="performance-level" class="font-bold"></span></p>
+                <h3 class="text-xl font-bold border-b pb-2 mt-6 mb-3 text-gray-700">Detailed Feedback</h3>
+                <p id="feedback-main" class="mb-3"></p>
+                <p id="feedback-principles" class="text-sm"></p>
+            </div>
+            <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Print / Save Report</button>
+            <button id="restartButton" class="bg-gray-500 hover:bg-gray-600">Start New Assessment</button>
+        </div>
+    </div>
+
+<script>
+// --- Setup ---
+const startScreen = document.getElementById('startScreen');
+const reportScreen = document.getElementById('reportScreen');
+const startButton = document.getElementById('startButton');
+const restartButton = document.getElementById('restartButton');
+const caseFileEl = document.getElementById('case-file');
+const caseTitleEl = document.getElementById('case-title');
+const caseScenarioEl = document.getElementById('case-scenario');
+const stampAreaEl = document.getElementById('stamp-area');
+const animatedStampEl = document.getElementById('animated-stamp');
+const scoreUI = document.getElementById('score-ui');
+const casesUI = document.getElementById('cases-ui');
+const assessmentWrapper = document.getElementById('assessment-wrapper');
+
+// --- State ---
+let score = {};
+let performanceHistory = [];
+let missedPrinciples = new Set();
+let assessmentRunning = false;
+let allCaseFiles = [];
+let availableStamps = [];
+let currentCaseIndex = 0;
+let selectedStamp = null;
+const totalCasesToPresent = 8;
+
+// --- Case File Data ---
+const caseFilePool = [
+    { difficulty: 'medium', name: 'Battery', scenario: 'A patient clearly states they do not want to be treated today, but the therapist proceeds with the setup and treats them anyway.', feedback: 'This is Battery, the intentional, unconsented touching of another person.' },
+    { difficulty: 'medium', name: 'Negligence', scenario: 'A therapist fails to notice a significant weight loss in a patient over several weeks, leading to an incorrect dose calculation that resulted in over-radiation.', feedback: 'This is Negligence, a failure to provide the expected standard of care, resulting in harm.' },
+    { difficulty: 'easy', name: 'HIPAA Violation', scenario: 'Two therapists are discussing a patient\'s identifiable cancer diagnosis in a public elevator where other patients and visitors can hear.', feedback: 'This is a HIPAA Violation. Discussing Protected Health Information (PHI) in a non-secure area is a breach of confidentiality.' },
+    { difficulty: 'hard', name: 'Respondeat Superior', scenario: 'A new therapist, while working under the clinic\'s protocols, makes a setup error. In the subsequent lawsuit, the hospital itself is held liable.', feedback: 'This is Respondeat Superior ("Let the master answer"), where the employer is responsible for the actions of its employees.' },
+    { difficulty: 'medium', name: 'Informed Consent', scenario: 'A physician explains a procedure but fails to mention any of the potential serious side effects. The patient agrees without knowing the full risks.', feedback: 'This is a failure of Informed Consent. For consent to be valid, the patient must be informed of the risks, benefits, and alternatives.' },
+    { difficulty: 'hard', name: 'Malpractice', scenario: 'A qualified radiation oncologist misinterprets a clear CT scan, plans a treatment field that completely misses the tumor, and treats the patient for several weeks.', feedback: 'This is Malpractice, which is a specific type of negligence committed by a professional.' },
+    { difficulty: 'easy', name: 'Beneficence', scenario: 'A therapist notices a patient is struggling with transportation and connects them with a hospital social worker to arrange for volunteer drivers.', feedback: 'This is an act of Beneficence, the ethical principle of acting in the best interest of the patient.' },
+    { difficulty: 'hard', name: 'Res Ipsa Loquitur', scenario: 'A patient wakes from anesthesia after a brachytherapy procedure with a severe burn on their leg, in an area unrelated to the treatment.', feedback: 'This is Res Ipsa Loquitur ("The thing speaks for itself"), where negligence is inferred because the event doesn\'t normally happen without it.' },
+    { difficulty: 'easy', name: 'Non-maleficence', scenario: 'When deciding on a beam arrangement, a therapist alerts the dosimetrist that the current plan delivers an unnecessarily high dose to a patient\'s healthy lung.', feedback: 'This follows the principle of Non-maleficence ("First, do no harm"), the fundamental imperative to avoid causing unnecessary harm.' },
+    { difficulty: 'medium', name: 'Libel', scenario: 'An angry therapist writes a false and damaging statement about a physician in the public comment section of the hospital\'s website.', feedback: 'This is Libel, the act of making a false, written statement that is damaging to a person\'s reputation.' },
+    { difficulty: 'easy', name: 'Assault', scenario: 'A therapist, angry at an uncooperative patient, raises their fist and says, "If you don\'t hold still, you\'ll regret it!" The patient becomes fearful.', feedback: 'This is Assault, which is the threat of bodily harm that reasonably causes fear in the victim. No touching is required.' },
+    { difficulty: 'hard', name: 'False Imprisonment', scenario: 'A dementia patient is trying to leave their room. A therapist, without any orders to do so, physically blocks the doorway and refuses to let them pass.', feedback: 'This is False Imprisonment, the unlawful restraint of a person against their will.' },
+    { difficulty: 'medium', name: 'Justice', scenario: 'The clinic has one new therapy machine. A manager decides that only patients with premium insurance will be scheduled for it, regardless of clinical need.', feedback: 'This is a violation of the principle of Justice, which requires fair and equitable treatment and resource distribution for all patients.' }
+];
+
+// --- Logic ---
+function init() {
+    startScreen.classList.remove('hidden');
+    reportScreen.classList.add('hidden');
+    assessmentWrapper.classList.add('hidden');
+
+    score = { user: 0, max: 0 };
+    performanceHistory = [];
+    missedPrinciples.clear();
+    currentCaseIndex = 0;
+    usedScenarios.clear();
+    assessmentRunning = false;
+}
+
+function startAssessment() {
+    startScreen.classList.add('hidden');
+    assessmentWrapper.classList.remove('hidden');
+    assessmentRunning = true;
+    loadNextCase();
+}
+
+function getNextCase() {
+    let averagePerf = performanceHistory.length > 0 ? performanceHistory.reduce((a, b) => a + b, 0) / performanceHistory.length : 75;
+    let desiredDifficulty = averagePerf > 85 ? 'hard' : averagePerf < 65 ? 'easy' : 'medium';
+    
+    let pool = caseFilePool.filter(c => c.difficulty === desiredDifficulty && !usedScenarios.has(c));
+    if (pool.length === 0) pool = caseFilePool.filter(c => c.difficulty === 'medium' && !usedScenarios.has(c));
+    if (pool.length === 0) pool = caseFilePool.filter(c => !usedScenarios.has(c));
+    
+    const nextCase = pool[Math.floor(Math.random() * pool.length)];
+    usedScenarios.add(nextCase);
+    return nextCase;
+}
+
+function loadNextCase() {
+    if (currentCaseIndex >= totalCasesToPresent) {
+        generateReport();
+        return;
+    }
+
+    const caseData = getNextCase();
+    if (!caseData) { // In case we run out
+        generateReport();
+        return;
+    }
+    
+    // Dynamically create the stamps for this round
+    let currentStamps = new Set([caseData.name]);
+    while(currentStamps.size < 5) {
+        const randomCase = caseFilePool[Math.floor(Math.random() * caseFilePool.length)];
+        currentStamps.add(randomCase.name);
+    }
+    availableStamps = [...currentStamps].sort(() => 0.5 - Math.random());
+    createStamps(availableStamps);
+
+    caseTitleEl.textContent = `Case File #${currentCaseIndex + 1}`;
+    caseScenarioEl.textContent = caseData.scenario;
+    caseFileEl.dataset.correct = caseData.name;
+    caseFileEl.dataset.feedback = caseData.feedback;
+
+    if (selectedStamp) {
+        selectedStamp.classList.remove('selected');
+        selectedStamp = null;
+    }
+    updateUI();
+}
+
+function createStamps(stampsToCreate) {
+    stampAreaEl.innerHTML = '';
+    stampsToCreate.forEach(type => {
+        const stamp = document.createElement('div');
+        stamp.className = 'stamp';
+        stamp.textContent = type;
+        stamp.dataset.type = type;
+        stamp.addEventListener('click', () => {
+            if (selectedStamp) selectedStamp.classList.remove('selected');
+            selectedStamp = stamp;
+            stamp.classList.add('selected');
+        });
+        stampAreaEl.appendChild(stamp);
+    });
+}
+
+function handleCaseFileClick(event) {
+    if (!assessmentRunning || !selectedStamp) return;
+    assessmentRunning = false; // Pause while processing
+    
+    const caseFile = event.currentTarget;
+    const correctType = caseFile.dataset.correct;
+    const selectedType = selectedStamp.dataset.type;
+    const feedbackText = caseFile.dataset.feedback;
+    
+    const isCorrect = selectedType === correctType;
+    const points = isCorrect ? 100 : -25;
+    const questionPerf = isCorrect ? 100 : 0;
+
+    performanceHistory.push(questionPerf);
+    if (performanceHistory.length > 3) performanceHistory.shift();
+
+    score.user += points;
+    score.max += 100;
+    if (score.user < 0) score.user = 0;
+
+    if (!isCorrect) {
+        missedPrinciples.add(correctType);
+    }
+
+    playStampAnimation(isCorrect);
+    
+    setTimeout(() => {
+        caseScenarioEl.innerHTML = `<strong>${isCorrect ? 'Correct.' : `Incorrect. This was ${correctType}.`}</strong><br>${feedbackText}`;
+        updateUI();
+
+        setTimeout(() => {
+            currentCaseIndex++;
+            assessmentRunning = true;
+            loadNextCase();
+        }, 4000); // Time to read feedback
+    }, 500);
+}
+
+function playStampAnimation(isCorrect) {
+    animatedStampEl.textContent = isCorrect ? "Correct" : "Incorrect";
+    animatedStampEl.style.color = isCorrect ? '#27ae60' : '#c0392b';
+    animatedStampEl.style.borderColor = isCorrect ? '#27ae60' : '#c0392b';
+    animatedStampEl.classList.add('stamping');
+    setTimeout(() => animatedStampEl.classList.remove('stamping'), 500);
+}
+
+function updateUI() {
+    scoreUI.textContent = `Score: ${score.user || 0}`;
+    casesUI.textContent = `Case: ${currentCaseIndex}/${totalCasesToPresent}`;
+}
+
+function generateReport() {
+    assessmentRunning = false;
+    const finalPercentage = score.max > 0 ? Math.max(0, Math.round((score.user / score.max) * 100)) : 0;
+    let performanceLevel, mainFeedback;
+
+    if (finalPercentage >= 95) {
+        performanceLevel = "Excellent";
+        mainFeedback = "Excellent work. Your decisions reflect a strong and reliable understanding of key legal and ethical principles.";
+    } else if (finalPercentage >= 80) {
+        performanceLevel = "Competent";
+        mainFeedback = "Good performance. You have a solid grasp of most principles, with minor areas for review.";
+    } else {
+        performanceLevel = "Needs Improvement";
+        mainFeedback = "This assessment indicates a need for further study. Review the principles listed below to strengthen your understanding.";
+    }
+    
+    let principleFeedback = "There are no specific areas for review. Great job!";
+    if (missedPrinciples.size > 0) {
+        principleFeedback = `Focus your review on the following principles: <strong>${[...missedPrinciples].join(', ')}</strong>.`;
+    }
+
+    document.getElementById('finalScore').textContent = `${finalPercentage}%`;
+    document.getElementById('performance-level').textContent = performanceLevel;
+    document.getElementById('feedback-main').textContent = mainFeedback;
+    document.getElementById('feedback-principles').innerHTML = principleFeedback;
+    
+    assessmentWrapper.classList.add('hidden');
+    reportScreen.classList.remove('hidden');
+}
+
+// --- Event Listeners ---
+startButton.addEventListener('click', startAssessment);
+restartButton.addEventListener('click', init);
+caseFileEl.addEventListener('click', handleCaseFileClick);
+
+// --- Initial Call ---
+init();
+</script>
+</body>
+</html>
