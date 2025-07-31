@@ -17,6 +17,7 @@
         button { width: 100%; padding: 12px; font-size: 1.1em; font-weight: 700; background-color: #1d4ed8; color: white; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.2s; margin-top: 10px; }
         button:hover:not(:disabled) { background-color: #1e40af; }
         button:disabled { background-color: #9ca3af; cursor: not-allowed; }
+        .hidden { display: none; }
         
         .display-panel { padding: 20px; }
         .budget-tracker { text-align: center; font-size: 1.5em; font-family: 'Roboto Mono', monospace; margin-bottom: 20px; padding: 10px; border-radius: 5px; background-color: #f3f4f6; border: 1px solid #dbeafe; }
@@ -36,23 +37,23 @@
         
         /* Modal and Report Styles */
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 100; }
-        .modal-content { background: #fff; border-radius: 10px; padding: 2rem; width: 90%; max-width: 800px; max-height: 90vh; overflow-y: auto; }
-        .report-section h4 { font-family: 'Roboto Mono', monospace; font-size: 1.2em; border-bottom: 2px solid #e5e7eb; padding-bottom: 5px; margin-bottom: 10px; }
+        .modal-content { background: #fff; border-radius: 10px; padding: 2rem; width: 90%; max-width: 800px; max-height: 90vh; overflow-y: auto; text-align: center; }
+        .report-section h4 { font-family: 'Roboto Mono', monospace; font-size: 1.2em; border-bottom: 2px solid #e5e7eb; padding-bottom: 5px; margin-bottom: 10px; text-align: left;}
         .report-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
-        .report-card { background: #f9fafb; padding: 1rem; border-radius: 5px; border: 1px solid #e5e7eb;}
+        .report-card { background: #f9fafb; padding: 1rem; border-radius: 5px; border: 1px solid #e5e7eb; text-align: left;}
         .report-card p { font-size: 0.9em; margin-bottom: 0.5rem; display: flex; justify-content: space-between; }
         .report-card strong { color: #374151; }
 
         @media print {
             body { background: #fff; }
-            .console, #finalize-button, .modal-content button { display: none; }
-            #reportScreen { position: static; background: none; }
+            .console, #finalize-button, .modal-content button, #startScreen { display: none; }
+            #reportScreen { position: static; background: none; display: flex !important; }
             .modal-content { box-shadow: none; border: 1px solid #ccc; width: 100%; max-width: 100%; max-height: none; }
         }
     </style>
 </head>
 <body>
-    <div class="console">
+    <div class="console hidden">
         <div class="controls-panel">
             <h3>Vault Design Parameters</h3>
             <div class="control-group">
@@ -98,6 +99,14 @@
             </table>
         </div>
     </div>
+
+    <div id="startScreen" class="modal">
+        <div class="modal-content">
+            <h2 class="text-2xl font-bold text-center mb-4">Vault Construction Simulator</h2>
+            <p>Welcome! Your task is to design a safe and cost-effective radiation vault. Select each wall, choose the appropriate shielding parameters, and construct the vault while staying within your budget.</p>
+            <button id="startButton">Start Simulator</button>
+        </div>
+    </div>
     
     <div id="reportScreen" class="modal hidden">
         <div class="modal-content">
@@ -122,6 +131,9 @@ const CONSTANTS = {
 };
 
 // --- DOM Elements ---
+const consoleEl = document.querySelector('.console');
+const startScreen = document.getElementById('startScreen');
+const startButton = document.getElementById('startButton');
 const buildBtn = document.getElementById('build-button');
 const finalizeBtn = document.getElementById('finalize-button');
 const budgetDisplay = document.getElementById('budget-display');
@@ -231,6 +243,31 @@ canvas.addEventListener('click', (e) => {
 });
 
 finalizeBtn.addEventListener('click', generateReport);
+startButton.addEventListener('click', startSimulator);
+
+// --- Core Functions ---
+function init() {
+    consoleEl.classList.add('hidden');
+    startScreen.classList.remove('hidden');
+    reportScreen.classList.add('hidden');
+    
+    resetState();
+    drawBlueprint();
+    updateUI();
+    clearReportTable();
+    finalizeBtn.classList.add('hidden');
+    reportTitle.textContent = "Design Report (No Wall Selected)";
+    buildBtn.disabled = true;
+    materialSelect.disabled = true;
+    occupancySelect.disabled = true;
+    workloadInput.disabled = false;
+    workloadInput.value = 50;
+}
+
+function startSimulator() {
+    startScreen.classList.add('hidden');
+    consoleEl.classList.remove('hidden');
+}
 
 // --- Animation & Drawing ---
 function animateBuild(wallId, targetThickness, cost) {
@@ -311,7 +348,6 @@ function drawWall(id, wall) {
         ctx.setLineDash([]);
         ctx.strokeRect(x,y,w,h);
         
-        // Concrete brick texture
         if (wall.material === 'concrete') {
             ctx.strokeStyle = 'rgba(0,0,0,0.1)';
             for (let i = 0; i < h; i += 10) { ctx.beginPath(); ctx.moveTo(x, y + i); ctx.lineTo(x + w, y + i); ctx.stroke(); }
@@ -364,7 +400,6 @@ function generateReport() {
     });
     reportHTML += `</div></div><div class="report-section"><h4 class="text-gray-800">Alternative Options</h4><div class="report-grid">`;
 
-    // Add alternative options analysis
     Object.keys(vaultState.walls).forEach(id => {
         const wall = vaultState.walls[id];
         const workload = parseInt(workloadInput.value) * CONSTANTS.dose_per_patient_cgy * 5;
@@ -385,21 +420,7 @@ function generateReport() {
     reportScreen.classList.remove('hidden');
 }
 
-
 // --- Initial Call ---
-function init() {
-    resetState();
-    drawBlueprint();
-    updateUI();
-    clearReportTable();
-    finalizeBtn.classList.add('hidden');
-    reportScreen.classList.add('hidden');
-    reportTitle.textContent = "Design Report (No Wall Selected)";
-    buildBtn.disabled = true;
-    materialSelect.disabled = true;
-    occupancySelect.disabled = true;
-    workloadInput.disabled = false;
-}
 init();
 
 </script>
