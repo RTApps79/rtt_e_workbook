@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RT Modality Match Activity</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #0d1128; }
+        .game-title { font-family: 'Orbitron', sans-serif; }
+        .draggable-card { cursor: grab; }
+        .draggable-card:active { cursor: grabbing; }
+        .drop-zone { border-style: dashed; }
+        .drop-hover { border-color: #22D3EE; background-color: #1e293b; }
+        .correct-match {
+            border-style: solid;
+            border-color: #10B981;
+            background-color: #052e16;
+            opacity: 0.7;
+        }
+        .correct-match .drag-handle { visibility: hidden; }
+        .disabled-card {
+            opacity: 0.5;
+            cursor: default;
+            background-color: #1e293b;
+        }
+        
+        /* Certificate / Report Styles */
+        .report-modal-content { background-color: #f8fafc; color: #1e293b; }
+        .certificate { border: 10px solid #1e40af; background-color: #f0f9ff; padding: 2rem; position: relative; }
+        .certificate::before {
+            content: ''; position: absolute; top: -15px; left: -15px; right: -15px; bottom: -15px;
+            border: 2px solid #60a5fa;
+        }
+        .certificate-title { font-family: 'Orbitron', serif; color: #1e3a8a; }
+        .certificate-seal {
+            position: absolute; bottom: 2rem; right: 2rem; width: 100px; height: 100px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%23bfdbfe' d='M50,0 L61.8,38.2 L100,38.2 L69.1,61.8 L79.5,100 L50,75 L20.5,100 L30.9,61.8 L0,38.2 L38.2,38.2 Z'/%3E%3Cpath fill='%2360a5fa' d='M50,10 L58.3,42.1 L90.5,42.1 L65.1,61.8 L72.4,93.9 L50,75 L27.6,93.9 L34.9,61.8 L9.5,42.1 L41.7,42.1 Z'/%3E%3Ccircle fill='%231e40af' cx='50' cy='50' r='15'/%3E%3C/svg%3E");
+            background-size: contain;
+        }
+
+        /* Print Styles */
+        @media print {
+            body { background: #fff; }
+            #game-container, #header-nav, #report-actions button:last-child { display: none !important; }
+            .report-modal { position: static; height: auto; }
+            .report-modal-content { box-shadow: none; border: 1px solid #ccc; }
+            #reportScreen { display: flex !important; }
+        }
+    </style>
+</head>
+<body class="text-slate-200">
+
+    <header id="header-nav" class="sticky top-0 z-50 bg-slate-900/50 backdrop-blur-sm">
+        <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <h1 class="text-xl font-bold game-title text-cyan-400">Modality Match Activity</h1>
+            <div class="flex space-x-2">
+                <a href="./index.html" class="text-xs sm:text-sm bg-purple-600 text-white font-medium py-2 px-3 rounded-lg hover:bg-purple-700 transition-colors">
+                    &larr; Back to Lesson
+                </a>
+                <a href="../../index.html" class="text-xs sm:text-sm bg-slate-600 text-white font-medium py-2 px-3 rounded-lg hover:bg-slate-700 transition-colors">
+                    &larr; Back to Main Workbook
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main id="game-container" class="container mx-auto max-w-7xl px-4 sm:px-6 py-8 flex-grow">
+        <div id="start-screen" class="bg-slate-800 p-6 sm:p-8 rounded-xl shadow-2xl border border-slate-700">
+            <h2 class="text-3xl font-bold game-title text-cyan-300 mb-6 text-center">Welcome to the Modality Match!</h2>
+            <div class="grid md:grid-cols-3 gap-4 text-sm">
+                <div class="bg-slate-900 p-4 rounded-lg border border-cyan-500/30">
+                    <h3 class="text-lg font-semibold text-cyan-400 mb-2">Purpose</h3>
+                    <p class="text-slate-300">This activity will test your ability to connect different radiation therapy modalities and equipment with their primary function or description, a key skill for clinical practice.</p>
+                </div>
+                <div class="bg-slate-900 p-4 rounded-lg border border-purple-500/30">
+                    <h3 class="text-lg font-semibold text-purple-400 mb-2">Task</h3>
+                    <p class="text-slate-300">You will be presented with a set of descriptions. Your task is to **drag and drop** the correct modality or equipment term from the bank onto its corresponding description box.</p>
+                </div>
+                <div class="bg-slate-900 p-4 rounded-lg border border-pink-500/30">
+                    <h3 class="text-lg font-semibold text-pink-400 mb-2">Criteria</h3>
+                    <p class="text-slate-300">Success is measured by the number of correct matches. A score of 80% or higher earns a Certificate of Mastery. If you make a mistake, the term will reset for you to try again.</p>
+                </div>
+            </div>
+            <div class="text-center mt-8">
+                <button id="startButton" class="bg-cyan-500 hover:bg-cyan-600 text-slate-900 font-bold py-3 px-8 rounded-lg text-xl game-title transition-transform hover:scale-105">Start Matching</button>
+            </div>
+        </div>
+
+        <div id="game-area" class="hidden">
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold text-center text-cyan-300 mb-2 game-title">Term Bank</h3>
+                <div id="term-bank" class="flex flex-wrap justify-center gap-3 bg-slate-900/50 p-4 rounded-lg">
+                    </div>
+            </div>
+            <div id="description-area" class="grid md:grid-cols-2 gap-4">
+                </div>
+        </div>
+    </main>
+
+    <div id="reportScreen" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center hidden report-modal p-4">
+        <div class="report-modal-content rounded-lg shadow-xl w-full max-w-3xl">
+            <div id="certificate-content" class="p-4 sm:p-8">
+                </div>
+            <div id="report-actions" class="text-center p-4 bg-slate-100 border-t border-slate-200">
+                <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg mr-2">Print / Save Certificate</button>
+                <button onclick="window.location.reload()" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded-lg">Try Again</button>
+            </div>
+        </div>
+    </div>
+
+
+<script>
+// --- STATE MANAGEMENT ---
+let score = 0;
+let attempts = 0;
+let correctMatches = 0;
+let gameData = [];
+const totalMatches = 8; // How many pairs to present in the game
+
+// --- UI ELEMENTS ---
+const startScreen = document.getElementById('start-screen');
+const gameArea = document.getElementById('game-area');
+const termBankEl = document.getElementById('term-bank');
+const descriptionAreaEl = document.getElementById('description-area');
+const startButton = document.getElementById('startButton');
+const reportScreenEl = document.getElementById('reportScreen');
+
+// --- DATA SOURCE from index (56).html ---
+const allPairs = [
+    { name: "3D-CRT", description: "Uses multiple beams shaped by MLCs to match the tumor's 3D shape." },
+    { name: "IMRT", description: "Varies the radiation intensity within each beam for highly precise dose sculpting." },
+    { name: "VMAT", description: "Delivers radiation as the gantry rotates continuously around the patient." },
+    { name: "SBRT/SRS", description: "Delivers very high doses in 1-5 fractions to small, well-defined tumors." },
+    { name: "Proton Therapy", description: "Uses charged particles that stop at a specific depth (Bragg peak) to spare tissue behind the tumor." },
+    { name: "Electron Beam", description: "Treats lesions on or near the skin surface due to its limited range in tissue." },
+    { name: "Brachytherapy", description: "Places radioactive sources directly inside or very close to the tumor." },
+    { name:gname: "IGRT", description: "General term for using imaging to verify patient position before and/or during treatment." },
+    { name: "Thermoplastic Mask", description: "A custom-molded device used to immobilize the head and neck region." },
+    { name: "CBCT", description: "An IGRT modality that provides a 3D volumetric image for soft tissue alignment." },
+    { name: "MLCs", description: "Dozens of individually controlled metal 'leaves' that shape the radiation beam." },
+    { name: "Simulation", description: "The process of acquiring CT images to create a map for treatment planning." }
+];
+
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+
+// --- GAME LOGIC ---
+function setupGame() {
+    shuffleArray(allPairs);
+    gameData = allPairs.slice(0, totalMatches);
+    
+    let terms = gameData.map(p => p.name);
+    let descriptions = gameData.map(p => p.description);
+    shuffleArray(terms); // Shuffle one list but not the other
+
+    termBankEl.innerHTML = terms.map(term => `
+        <div class="draggable-card bg-slate-700 p-3 rounded-lg border-2 border-slate-600 shadow-lg" draggable="true" data-term="${term}">
+            <span class="drag-handle text-cyan-400 font-bold game-title">${term}</span>
+        </div>
+    `).join('');
+
+    descriptionAreaEl.innerHTML = descriptions.map((desc, i) => {
+        const correctTerm = gameData.find(p => p.description === desc).name;
+        return `
+            <div class="drop-zone bg-slate-800 p-4 rounded-lg border-2 border-slate-700 min-h-[100px] flex items-center justify-center text-center" data-correct="${correctTerm}">
+                <p class="text-slate-400 text-sm">${desc}</p>
+            </div>
+        `
+    }).join('');
+
+    addDragDropListeners();
+}
+
+function addDragDropListeners() {
+    const draggables = document.querySelectorAll('.draggable-card');
+    const dropZones = document.querySelectorAll('.drop-zone');
+
+    draggables.forEach(card => {
+        card.addEventListener('dragstart', e => {
+            e.dataTransfer.setData('text/plain', e.target.dataset.term);
+            setTimeout(() => e.target.classList.add('opacity-0'), 0);
+        });
+        card.addEventListener('dragend', e => e.target.classList.remove('opacity-0'));
+    });
+
+    dropZones.forEach(zone => {
+        zone.addEventListener('dragover', e => {
+            e.preventDefault();
+            zone.classList.add('drop-hover');
+        });
+        zone.addEventListener('dragleave', () => zone.classList.remove('drop-hover'));
+        zone.addEventListener('drop', e => {
+            e.preventDefault();
+            zone.classList.remove('drop-hover');
+            
+            const droppedTerm = e.dataTransfer.getData('text/plain');
+            const correctTerm = zone.dataset.correct;
+            const droppedCard = document.querySelector(`.draggable-card[data-term="${droppedTerm}"]`);
+            
+            attempts++;
+
+            if (droppedTerm === correctTerm) {
+                correctMatches++;
+                zone.innerHTML = `<p class="text-xl font-bold game-title text-green-400">${correctTerm}</p>`;
+                zone.classList.add('correct-match');
+                zone.classList.remove('drop-zone');
+                droppedCard.classList.add('disabled-card');
+                droppedCard.setAttribute('draggable', 'false');
+
+                if (correctMatches === totalMatches) {
+                    setTimeout(generateReport, 500);
+                }
+            } else {
+                // Shake animation for incorrect drop
+                zone.animate([
+                    { transform: 'translateX(0px)' },
+                    { transform: 'translateX(-10px)' },
+                    { transform: 'translateX(10px)' },
+                    { transform: 'translateX(0px)' }
+                ], { duration: 300, iterations: 1 });
+            }
+        });
+    });
+}
+
+
+function startGame() {
+    startScreen.classList.add('hidden');
+    gameArea.classList.remove('hidden');
+    setupGame();
+}
+
+function generateReport() {
+    gameArea.classList.add('hidden');
+    // A more forgiving score - rewarding accuracy over first-try perfection
+    const finalScorePercent = Math.round((correctMatches / attempts) * 100); 
+    const passed = finalScorePercent >= 80;
+    
+    let certificateHTML = '';
+    if (passed) {
+        certificateHTML = `
+            <div class="certificate">
+                <div class="certificate-seal"></div>
+                <h2 class="text-3xl font-bold certificate-title text-center mb-4">Certificate of Mastery</h2>
+                <p class="text-center text-lg">This certificate is awarded to</p>
+                <p class="text-center text-2xl font-semibold my-4 border-b-2 border-slate-400 pb-2">${"Valued Learner"}</p>
+                <p class="text-center text-lg">for successfully completing the</p>
+                <p class="text-center text-xl font-bold my-2 text-purple-700">RT Modality Match Activity</p>
+                <p class="text-center">with a score of <strong class="text-lg">${finalScorePercent}%</strong> on ${new Date().toLocaleDateString()}</p>
+            </div>
+        `;
+    } else {
+        certificateHTML = `
+            <div class="p-4">
+                <h2 class="text-3xl font-bold text-red-600 text-center mb-4">Assessment Complete</h2>
+                <p class="text-center text-xl">Your Score: <strong class="text-2xl">${finalScorePercent}%</strong></p>
+                <p class="text-center text-slate-600 mt-4">A score of 80% is required to pass. Please review the lesson material on modalities and try again.</p>
+            </div>
+        `;
+    }
+    
+    let feedbackHTML = `<div class="mt-6 text-left p-4 bg-slate-100 rounded-lg">
+        <h4 class="font-bold text-slate-800">Performance Feedback</h4>
+        <p class="text-sm text-slate-600">You correctly matched ${correctMatches} out of ${totalMatches} modalities in ${attempts} attempts. Your accuracy score is <strong>${finalScorePercent}%</strong>.</p>
+        ${!passed && attempts > correctMatches ? '<p class="text-sm text-slate-600 mt-1">Focus on carefully reading each description to distinguish between similar techniques like IMRT and VMAT, or SBRT and conventional therapy.</p>' : '<p class="text-sm text-slate-600 mt-1">Excellent work distinguishing between the various treatment types!</p>'}
+    </div>`;
+    
+    document.getElementById('certificate-content').innerHTML = certificateHTML + feedbackHTML;
+    reportScreenEl.classList.remove('hidden');
+}
+
+
+// --- EVENT LISTENERS ---
+startButton.addEventListener('click', startGame);
+
+</script>
+
+</body>
+</html>
