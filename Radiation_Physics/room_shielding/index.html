@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vault Construction Simulator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f0f2f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .console { background: #ffffff; width: 1000px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); display: grid; grid-template-columns: 320px 1fr; border: 1px solid #d1d5db; }
+        .controls-panel { background: #f3f4f6; padding: 20px; border-right: 1px solid #d1d5db; border-top-left-radius: 10px; border-bottom-left-radius: 10px; display: flex; flex-direction: column; }
+        .control-group { margin-bottom: 18px; }
+        .control-group label { display: block; margin-bottom: 8px; font-weight: 700; font-size: 0.9em; color: #374151; }
+        select, input { width: 100%; padding: 10px; font-size: 1em; border: 1px solid #d1d5db; border-radius: 5px; background-color: #fff; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; font-size: 1.1em; font-weight: 700; background-color: #1d4ed8; color: white; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.2s; margin-top: 10px; }
+        button:hover:not(:disabled) { background-color: #1e40af; }
+        button:disabled { background-color: #9ca3af; cursor: not-allowed; }
+        
+        .display-panel { padding: 20px; }
+        .budget-tracker { text-align: center; font-size: 1.5em; font-family: 'Roboto Mono', monospace; margin-bottom: 20px; padding: 10px; border-radius: 5px; background-color: #f3f4f6; border: 1px solid #dbeafe; }
+        .budget-tracker .label { font-size: 0.6em; color: #6b7280; text-transform: uppercase; letter-spacing: 1px; }
+        #canvas-container { background-color: #e2e8f0; border-radius: 5px; padding: 10px; margin-bottom: 20px; cursor: pointer; }
+        #blueprint-canvas { width: 100%; background-color: #fff; }
+        
+        .report-table { width: 100%; border-collapse: collapse; font-family: 'Roboto Mono', monospace; }
+        .report-table th, .report-table td { border: 1px solid #d1d5db; padding: 10px; text-align: left; }
+        .report-table th { background-color: #f9fafb; }
+        .report-table td:last-child { font-weight: 700; text-align: right; }
+        .status-pass { color: #15803d; }
+        .status-fail { color: #b91c1c; }
+        .status-pending { color: #6b7280; }
+
+        .instructions { margin-top: auto; font-size: 0.8em; text-align: center; color: #4b5568; background: #e5e7eb; padding: 10px; border-radius: 5px;}
+        
+        /* Modal and Report Styles */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 100; }
+        .modal-content { background: #fff; border-radius: 10px; padding: 2rem; width: 90%; max-width: 800px; max-height: 90vh; overflow-y: auto; }
+        .report-section h4 { font-family: 'Roboto Mono', monospace; font-size: 1.2em; border-bottom: 2px solid #e5e7eb; padding-bottom: 5px; margin-bottom: 10px; }
+        .report-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
+        .report-card { background: #f9fafb; padding: 1rem; border-radius: 5px; border: 1px solid #e5e7eb;}
+        .report-card p { font-size: 0.9em; margin-bottom: 0.5rem; display: flex; justify-content: space-between; }
+        .report-card strong { color: #374151; }
+
+        @media print {
+            body { background: #fff; }
+            .console, #finalize-button, .modal-content button { display: none; }
+            #reportScreen { position: static; background: none; }
+            .modal-content { box-shadow: none; border: 1px solid #ccc; width: 100%; max-width: 100%; max-height: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="console">
+        <div class="controls-panel">
+            <h3>Vault Design Parameters</h3>
+            <div class="control-group">
+                <label for="workload-input">Workload (Patients/Day)</label>
+                <input type="number" id="workload-input" value="50" min="10">
+            </div>
+            <div class="control-group">
+                <label for="material-select">Shielding Material</label>
+                <select id="material-select" disabled>
+                    <option value="concrete">Concrete</option>
+                    <option value="lead">Lead</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="occupancy-select">Adjacent Area Occupancy</label>
+                <select id="occupancy-select" disabled>
+                    <option value="1">Controlled (Office)</option>
+                    <option value="0.2">Uncontrolled (Corridor)</option>
+                    <option value="0.05">Uncontrolled (Exterior)</option>
+                </select>
+            </div>
+            <button id="build-button" disabled>Build Wall</button>
+            <button id="finalize-button" class="hidden" style="background-color: #16a34a;">Finalize Vault Design</button>
+            <div class="instructions">
+                <p><strong>Instructions:</strong><br>1. Click a wall on the blueprint to select it.<br>2. Choose its material and adjacent occupancy.<br>3. Click "Build Wall".<br>4. Repeat for all walls, staying under budget.</p>
+            </div>
+        </div>
+        <div class="display-panel">
+            <div class="budget-tracker">
+                <div class="label">REMAINING BUDGET</div>
+                <div id="budget-display">$1,500,000</div>
+            </div>
+            <div id="canvas-container">
+                <canvas id="blueprint-canvas" width="600" height="320"></canvas>
+            </div>
+            <table class="report-table">
+                <thead><tr><th colspan="2" id="report-title">Design Report (No Wall Selected)</th></tr></thead>
+                <tbody>
+                    <tr><td>Required Thickness</td><td id="thickness-val">--</td></tr>
+                    <tr><td>Wall Cost</td><td id="cost-val">--</td></tr>
+                    <tr><td>Design Status</td><td id="status-val">--</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div id="reportScreen" class="modal hidden">
+        <div class="modal-content">
+            <h2 class="text-2xl font-bold text-center mb-4">Final Vault Construction Report</h2>
+            <div id="report-content"></div>
+            <div class="text-center mt-6">
+                <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700">Print Report</button>
+                <button onclick="init()">Restart Simulator</button>
+            </div>
+        </div>
+    </div>
+
+<script>
+// --- Constants (NCRP 151 values and assumptions) ---
+const CONSTANTS = {
+    initialBudget: 1500000, dose_per_patient_cgy: 400,
+    wall_area_m2: { primary: 24, secondary: 24, ceiling: 48 },
+    primary_dist_m: 6, secondary_dist_m: 4, ceiling_dist_m: 3,
+    limit_public_gy_wk: 0.02 / 52, limit_occ_gy_wk: 0.1 / 52,
+    costs: { concrete: 500, lead: 25000 },
+    tvl: { concrete: 37, lead: 5.7 }
+};
+
+// --- DOM Elements ---
+const buildBtn = document.getElementById('build-button');
+const finalizeBtn = document.getElementById('finalize-button');
+const budgetDisplay = document.getElementById('budget-display');
+const canvas = document.getElementById('blueprint-canvas');
+const ctx = canvas.getContext('2d');
+const reportTitle = document.getElementById('report-title');
+const thicknessVal = document.getElementById('thickness-val');
+const costVal = document.getElementById('cost-val');
+const statusVal = document.getElementById('status-val');
+const materialSelect = document.getElementById('material-select');
+const occupancySelect = document.getElementById('occupancy-select');
+const workloadInput = document.getElementById('workload-input');
+const reportScreen = document.getElementById('reportScreen');
+const reportContent = document.getElementById('report-content');
+
+// --- State ---
+let vaultState;
+
+function resetState() {
+    vaultState = {
+        budget: CONSTANTS.initialBudget,
+        walls: {
+            primary: { built: false, thicknessCM: 0, material: null, cost: 0, animProgress: 0, occupancy: 0 },
+            secondary: { built: false, thicknessCM: 0, material: null, cost: 0, animProgress: 0, occupancy: 0 },
+            ceiling: { built: false, thicknessCM: 0, material: null, cost: 0, animProgress: 0, occupancy: 0 }
+        },
+        selectedWallId: null
+    };
+}
+
+// --- Calculation Helper ---
+function calculateShielding(wallId, workload, material, occupancyT) {
+    let useFactorU, distance, area;
+    if (wallId === 'primary') {
+        useFactorU = 1; distance = CONSTANTS.primary_dist_m; area = CONSTANTS.wall_area_m2.primary;
+    } else {
+        useFactorU = 0.25;
+        distance = (wallId === 'secondary') ? CONSTANTS.secondary_dist_m : CONSTANTS.ceiling_dist_m;
+        area = (wallId === 'secondary') ? CONSTANTS.wall_area_m2.secondary : CONSTANTS.wall_area_m2.ceiling;
+    }
+    const doseLimitP = (occupancyT < 1) ? CONSTANTS.limit_public_gy_wk : CONSTANTS.limit_occ_gy_wk;
+    const transmissionB = (doseLimitP * Math.pow(distance, 2)) / (workload * useFactorU * occupancyT * 0.01);
+    const numTVLs = -Math.log10(transmissionB);
+    const requiredThicknessCM = numTVLs * CONSTANTS.tvl[material];
+    const volumeM3 = (requiredThicknessCM / 100) * area;
+    const totalCost = volumeM3 * CONSTANTS.costs[material];
+    return { requiredThicknessCM, totalCost, useFactorU, distance };
+}
+
+// --- Event Listeners ---
+buildBtn.addEventListener('click', () => {
+    const wallId = vaultState.selectedWallId;
+    if (!wallId || vaultState.walls[wallId].built) return;
+
+    const workload = parseInt(workloadInput.value) * CONSTANTS.dose_per_patient_cgy * 5;
+    const material = materialSelect.value;
+    const occupancyT = parseFloat(occupancySelect.value);
+
+    const { requiredThicknessCM, totalCost } = calculateShielding(wallId, workload, material, occupancyT);
+
+    updateReportTable(requiredThicknessCM, totalCost);
+
+    if (totalCost > vaultState.budget) {
+        statusVal.textContent = "FAIL (Over Budget)";
+        statusVal.className = 'status-fail';
+        return;
+    }
+
+    buildBtn.disabled = true;
+    materialSelect.disabled = true;
+    occupancySelect.disabled = true;
+    workloadInput.disabled = true;
+
+    const wall = vaultState.walls[wallId];
+    wall.material = material;
+    wall.thicknessCM = requiredThicknessCM;
+    wall.cost = totalCost;
+    wall.occupancy = occupancyT;
+    
+    animateBuild(wallId, requiredThicknessCM, totalCost);
+});
+
+canvas.addEventListener('click', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left; const y = e.clientY - rect.top;
+
+    if (x > 500 && x < 580 && y > 40 && y < 280) vaultState.selectedWallId = 'primary';
+    else if (x > 120 && x < 500 && y > 280 && y < 320) vaultState.selectedWallId = 'ceiling';
+    else if (x > 40 && x < 120 && y > 40 && y < 280) vaultState.selectedWallId = 'secondary';
+    else return;
+
+    const wall = vaultState.walls[vaultState.selectedWallId];
+    if (wall.built) {
+        updateReportTable(wall.thicknessCM, wall.cost, true);
+        materialSelect.disabled = true;
+        occupancySelect.disabled = true;
+        buildBtn.disabled = true;
+    } else {
+        materialSelect.disabled = false;
+        occupancySelect.disabled = false;
+        buildBtn.disabled = false;
+        clearReportTable();
+    }
+    
+    reportTitle.textContent = `Design Report (${vaultState.selectedWallId.toUpperCase()} WALL)`;
+    drawBlueprint();
+});
+
+finalizeBtn.addEventListener('click', generateReport);
+
+// --- Animation & Drawing ---
+function animateBuild(wallId, targetThickness, cost) {
+    let start = null; const duration = 1500;
+    const wall = vaultState.walls[wallId];
+    const startBudget = vaultState.budget;
+    const endBudget = startBudget - cost;
+
+    function step(timestamp) {
+        if (!start) start = timestamp;
+        const progress = Math.min((timestamp - start) / duration, 1);
+        
+        wall.animProgress = progress * targetThickness;
+        vaultState.budget = startBudget - (progress * cost);
+        
+        drawBlueprint();
+        updateUI();
+
+        if (progress < 1) {
+            requestAnimationFrame(step);
+        } else {
+            wall.animProgress = 0;
+            wall.built = true;
+            vaultState.budget = endBudget;
+            buildBtn.disabled = true;
+            workloadInput.disabled = false;
+            updateUI(); checkCompletion();
+        }
+    }
+    requestAnimationFrame(step);
+}
+
+function drawBlueprint() {
+    const w = canvas.width; const h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = "#2563eb";
+    ctx.fillRect(170, h / 2 - 20, 40, 40);
+    ctx.beginPath(); ctx.arc(210, h / 2, 40, 0, 2 * Math.PI); ctx.fill();
+
+    Object.keys(vaultState.walls).forEach(id => drawWall(id, vaultState.walls[id]));
+}
+
+function drawWall(id, wall) {
+    const thickness = wall.animProgress > 0 ? wall.animProgress : wall.thicknessCM;
+    const visualThickness = Math.min(thickness * 0.5, 80);
+    
+    let x, y, w, h;
+    if (id === 'primary') { [x, y, w, h] = [500, 40, visualThickness, 240]; }
+    else if (id === 'secondary') { [x, y, w, h] = [120 - visualThickness, 40, visualThickness, 240]; }
+    else { [x, y, w, h] = [120, 280, 380, visualThickness]; }
+
+    ctx.save();
+    ctx.strokeStyle = '#9ca3af'; ctx.lineWidth = 2; ctx.setLineDash([5, 5]);
+    if (id === 'primary') ctx.strokeRect(500, 40, 80, 240);
+    if (id === 'secondary') ctx.strokeRect(40, 40, 80, 240);
+    if (id === 'ceiling') ctx.strokeRect(120, 280, 380, 40);
+    
+    if (vaultState.selectedWallId === id && !wall.built) {
+        ctx.fillStyle = 'rgba(29, 78, 216, 0.2)';
+        if (id === 'primary') ctx.fillRect(500, 40, 80, 240);
+        if (id === 'secondary') ctx.fillRect(40, 40, 80, 240);
+        if (id === 'ceiling') ctx.fillRect(120, 280, 380, 40);
+    }
+    
+    if (wall.built || wall.animProgress > 0) {
+        if (wall.material === 'lead') {
+            const gradient = ctx.createLinearGradient(x, y, x + w, y + h);
+            gradient.addColorStop(0, '#64748b');
+            gradient.addColorStop(0.5, '#94a3b8');
+            gradient.addColorStop(1, '#64748b');
+            ctx.fillStyle = gradient;
+        } else { // Concrete
+            ctx.fillStyle = '#a1a1aa';
+        }
+        ctx.fillRect(x, y, w, h);
+        ctx.strokeStyle = '#4b5568';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([]);
+        ctx.strokeRect(x,y,w,h);
+        
+        // Concrete brick texture
+        if (wall.material === 'concrete') {
+            ctx.strokeStyle = 'rgba(0,0,0,0.1)';
+            for (let i = 0; i < h; i += 10) { ctx.beginPath(); ctx.moveTo(x, y + i); ctx.lineTo(x + w, y + i); ctx.stroke(); }
+            for (let i = 0; i < w; i += 20) { ctx.beginPath(); ctx.moveTo(x + i, y); ctx.lineTo(x + i, y + h); ctx.stroke(); }
+        }
+    }
+    ctx.restore();
+}
+
+// --- UI & Report ---
+function updateUI() { budgetDisplay.textContent = `$${Math.round(vaultState.budget).toLocaleString()}`; }
+function updateReportTable(thickness, cost, isBuilt = false) {
+    thicknessVal.textContent = `${thickness.toFixed(1)} cm`;
+    costVal.textContent = `$${Math.round(cost).toLocaleString()}`;
+    statusVal.className = isBuilt ? 'status-pass' : 'status-pending';
+    statusVal.textContent = isBuilt ? "BUILT" : "PENDING BUILD";
+}
+function clearReportTable() {
+    thicknessVal.textContent = '--'; costVal.textContent = '--'; statusVal.textContent = '--'; statusVal.className = '';
+}
+function checkCompletion() {
+    if (Object.values(vaultState.walls).every(wall => wall.built)) {
+        finalizeBtn.classList.remove('hidden');
+    }
+}
+function generateReport() {
+    const totalCost = CONSTANTS.initialBudget - vaultState.budget;
+    let reportHTML = `
+        <div class="report-section mb-6">
+            <h4 class="text-gray-800">Final Summary</h4>
+            <div class="report-card">
+                <p><span>Initial Budget:</span> <strong>$${CONSTANTS.initialBudget.toLocaleString()}</strong></p>
+                <p><span>Total Construction Cost:</span> <strong>$${Math.round(totalCost).toLocaleString()}</strong></p>
+                <p><span>Budget Remaining:</span> <strong class="${vaultState.budget >= 0 ? 'status-pass' : 'status-fail'}">$${Math.round(vaultState.budget).toLocaleString()}</strong></p>
+            </div>
+        </div>
+        <div class="report-section mb-6">
+            <h4 class="text-gray-800">Wall Specifications</h4>
+            <div class="report-grid">`;
+
+    Object.keys(vaultState.walls).forEach(id => {
+        const wall = vaultState.walls[id];
+        reportHTML += `<div class="report-card">
+            <h5 class="font-bold text-lg mb-2">${id.toUpperCase()} WALL</h5>
+            <p><span>Material:</span> <strong>${wall.material}</strong></p>
+            <p><span>Adjacent Occupancy:</span> <strong>${wall.occupancy < 1 ? 'Uncontrolled' : 'Controlled'}</strong></p>
+            <p><span>Final Thickness:</span> <strong>${wall.thicknessCM.toFixed(1)} cm</strong></p>
+            <p><span>Final Cost:</span> <strong>$${Math.round(wall.cost).toLocaleString()}</strong></p>
+        </div>`;
+    });
+    reportHTML += `</div></div><div class="report-section"><h4 class="text-gray-800">Alternative Options</h4><div class="report-grid">`;
+
+    // Add alternative options analysis
+    Object.keys(vaultState.walls).forEach(id => {
+        const wall = vaultState.walls[id];
+        const workload = parseInt(workloadInput.value) * CONSTANTS.dose_per_patient_cgy * 5;
+        const alternativeMaterial = wall.material === 'concrete' ? 'lead' : 'concrete';
+        const alt = calculateShielding(id, workload, alternativeMaterial, wall.occupancy);
+        
+        reportHTML += `<div class="report-card">
+            <h5 class="font-bold text-lg mb-2">${id.toUpperCase()} WALL (Alternative)</h5>
+            <p><span>Material:</span> <strong>${alternativeMaterial}</strong></p>
+            <p><span>Required Thickness:</span> <strong>${alt.requiredThicknessCM.toFixed(1)} cm</strong></p>
+            <p><span>Estimated Cost:</span> <strong>$${Math.round(alt.totalCost).toLocaleString()}</strong></p>
+            <p><span>Cost Difference:</span> <strong class="${alt.totalCost > wall.cost ? 'status-fail' : 'status-pass'}">${(alt.totalCost - wall.cost).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</strong></p>
+        </div>`;
+    });
+    reportHTML += `</div></div>`;
+    
+    reportContent.innerHTML = reportHTML;
+    reportScreen.classList.remove('hidden');
+}
+
+
+// --- Initial Call ---
+function init() {
+    resetState();
+    drawBlueprint();
+    updateUI();
+    clearReportTable();
+    finalizeBtn.classList.add('hidden');
+    reportScreen.classList.add('hidden');
+    reportTitle.textContent = "Design Report (No Wall Selected)";
+    buildBtn.disabled = true;
+    materialSelect.disabled = true;
+    occupancySelect.disabled = true;
+    workloadInput.disabled = false;
+}
+init();
+
+</script>
+</body>
+</html>
