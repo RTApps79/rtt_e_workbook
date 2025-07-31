@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RT Terminology Challenge</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #0d1128; }
+        .game-title { font-family: 'Orbitron', sans-serif; }
+        .feedback-correct { background-color: #10B981; color: white; }
+        .feedback-incorrect { background-color: #EF4444; color: white; }
+        .selected { background-color: #60A5FA; border-color: #2563EB; color: white; }
+        .disabled { pointer-events: none; opacity: 0.6; }
+        .droppable-hover { border-color: #3B82F6; background-color: #1e293b; }
+
+        /* Certificate / Report Styles */
+        .report-modal-content { background-color: #f8fafc; color: #1e293b; }
+        .certificate { border: 10px solid #1e40af; background-color: #f0f9ff; padding: 2rem; position: relative; }
+        .certificate::before {
+            content: ''; position: absolute; top: -15px; left: -15px; right: -15px; bottom: -15px;
+            border: 2px solid #60a5fa;
+        }
+        .certificate-title { font-family: 'Orbitron', serif; color: #1e3a8a; }
+        .certificate-seal {
+            position: absolute; bottom: 2rem; right: 2rem; width: 100px; height: 100px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%23bfdbfe' d='M50,0 L61.8,38.2 L100,38.2 L69.1,61.8 L79.5,100 L50,75 L20.5,100 L30.9,61.8 L0,38.2 L38.2,38.2 Z'/%3E%3Cpath fill='%2360a5fa' d='M50,10 L58.3,42.1 L90.5,42.1 L65.1,61.8 L72.4,93.9 L50,75 L27.6,93.9 L34.9,61.8 L9.5,42.1 L41.7,42.1 Z'/%3E%3Ccircle fill='%231e40af' cx='50' cy='50' r='15'/%3E%3C/svg%3E");
+            background-size: contain;
+        }
+
+        /* Print Styles */
+        @media print {
+            body { background: #fff; }
+            #game-container, #header-nav, #report-actions button:last-child { display: none !important; }
+            .report-modal { position: static; height: auto; }
+            .report-modal-content { box-shadow: none; border: 1px solid #ccc; }
+            #reportScreen { display: flex !important; }
+        }
+    </style>
+</head>
+<body class="text-slate-200">
+
+    <header id="header-nav" class="sticky top-0 z-50 bg-slate-900/50 backdrop-blur-sm">
+        <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <h1 class="text-xl font-bold game-title text-cyan-400">Terminology Challenge</h1>
+            <div class="flex space-x-2">
+                <a href="./index.html" class="text-xs sm:text-sm bg-purple-600 text-white font-medium py-2 px-3 rounded-lg hover:bg-purple-700 transition-colors">
+                    &larr; Back to Lesson
+                </a>
+                <a href="../../index.html" class="text-xs sm:text-sm bg-slate-600 text-white font-medium py-2 px-3 rounded-lg hover:bg-slate-700 transition-colors">
+                    &larr; Back to Main Workbook
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main id="game-container" class="container mx-auto max-w-4xl px-4 sm:px-6 py-8 flex-grow">
+        <div id="start-screen" class="bg-slate-800 p-6 sm:p-8 rounded-xl shadow-2xl border border-slate-700">
+            <h2 class="text-3xl font-bold game-title text-cyan-300 mb-6 text-center">Welcome to the Terminology Challenge!</h2>
+            <div class="grid md:grid-cols-3 gap-4 text-sm">
+                <div class="bg-slate-900 p-4 rounded-lg border border-cyan-500/30">
+                    <h3 class="text-lg font-semibold text-cyan-400 mb-2">Purpose</h3>
+                    <p class="text-slate-300">This activity is designed to help you master the essential vocabulary of radiation therapy. Strong terminology is crucial for safe clinical practice, clear communication with your team, and success on your board exams.</p>
+                </div>
+                <div class="bg-slate-900 p-4 rounded-lg border border-purple-500/30">
+                    <h3 class="text-lg font-semibold text-purple-400 mb-2">Task</h3>
+                    <p class="text-slate-300">You will complete a series of interactive challenges, including matching terms to definitions and filling in the blanks. Read each question carefully and select the best possible answer.</p>
+                </div>
+                <div class="bg-slate-900 p-4 rounded-lg border border-pink-500/30">
+                    <h3 class="text-lg font-semibold text-pink-400 mb-2">Criteria</h3>
+                    <p class="text-slate-300">Your performance will be scored based on accuracy. A score of 80% or higher will earn you a Certificate of Achievement. Pay attention to the feedback after each question to learn from your mistakes.</p>
+                </div>
+            </div>
+            <div class="text-center mt-8">
+                <button id="startButton" class="bg-cyan-500 hover:bg-cyan-600 text-slate-900 font-bold py-3 px-8 rounded-lg text-xl game-title transition-transform hover:scale-105">Start Challenge</button>
+            </div>
+        </div>
+
+        <div id="game-area" class="hidden">
+            <div class="mb-4 bg-slate-900/50 p-2 rounded-lg flex justify-between items-center text-sm">
+                <div id="question-counter" class="font-bold game-title">Question 1 / 10</div>
+                <div class="w-1/2 bg-slate-700 rounded-full h-2.5">
+                    <div id="progress-bar" class="bg-cyan-400 h-2.5 rounded-full" style="width: 0%"></div>
+                </div>
+                <div id="score-display" class="font-bold game-title">Score: 0</div>
+            </div>
+            <div id="question-render-area" class="bg-slate-800 p-6 rounded-xl shadow-2xl border border-slate-700 min-h-[400px]">
+                </div>
+            <div id="feedback-bar" class="mt-4 p-3 rounded-lg text-center font-semibold transition-opacity duration-300 opacity-0"></div>
+        </div>
+    </main>
+
+    <div id="reportScreen" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center hidden report-modal p-4">
+        <div class="report-modal-content rounded-lg shadow-xl w-full max-w-3xl">
+            <div id="certificate-content" class="p-4 sm:p-8">
+                </div>
+            <div id="report-actions" class="text-center p-4 bg-slate-100 border-t border-slate-200">
+                <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg mr-2">Print / Save Certificate</button>
+                <button onclick="window.location.reload()" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded-lg">Try Again</button>
+            </div>
+        </div>
+    </div>
+
+
+<script>
+// --- STATE MANAGEMENT ---
+let score = 0;
+let questionIndex = 0;
+let questions = [];
+const totalQuestionsToAsk = 10;
+let missedTerms = [];
+
+// --- UI ELEMENTS ---
+const startScreen = document.getElementById('start-screen');
+const gameArea = document.getElementById('game-area');
+const questionRenderArea = document.getElementById('question-render-area');
+const startButton = document.getElementById('startButton');
+const questionCounterEl = document.getElementById('question-counter');
+const scoreDisplayEl = document.getElementById('score-display');
+const progressBarEl = document.getElementById('progress-bar');
+const feedbackBarEl = document.getElementById('feedback-bar');
+const reportScreenEl = document.getElementById('reportScreen');
+
+// --- VOCABULARY & QUESTION DATA ---
+const vocab = [
+    { term: "Anterior", definition: "Front of the body" },
+    { term: "Posterior", definition: "Back of the body" },
+    { term: "Superior", definition: "Towards the head" },
+    { term: "Inferior", definition: "Away from the head" },
+    { term: "Medial", definition: "Toward the midline" },
+    { term: "Lateral", definition: "Away from the midline" },
+    { term: "Metastasis", definition: "The spread of cancer cells from the primary site" },
+    { term: "Benign", definition: "Not cancerous; does not invade nearby tissue" },
+    { term: "Malignant", definition: "Cancerous; can invade and destroy nearby tissue" },
+    { term: "Fraction (Fx)", definition: "A single radiation treatment session" },
+    { term: "Gray (Gy)", definition: "The standard unit of absorbed radiation dose" },
+    { term: "MLC", definition: "Device with individual leaves to shape the radiation beam" },
+    { term: "Gantry", definition: "The rotating part of the Linac housing the treatment head" },
+    { term: "IMRT", definition: "Technique that varies radiation intensity within each beam" },
+    { term: "VMAT", definition: "Technique delivering radiation as the gantry rotates" },
+    { term: "SBRT/SRS", definition: "Technique using high doses in 1-5 fractions for small tumors" },
+    { term: "IGRT", definition: "Using imaging to verify patient position before/during treatment" },
+    { term: "CBCT", definition: "Provides a 3D image of the patient for alignment" },
+    { term: "Brachytherapy", definition: "Placing radioactive sources directly inside or near a tumor" },
+    { term: "Palliative", definition: "Treatment given to relieve symptoms and improve quality of life" },
+    { term: "Adjuvant", definition: "Treatment given after the primary treatment to kill remaining cells" },
+    { term: "Hypo-", definition: "A prefix meaning 'deficient' or 'below'" },
+    { term: "-oma", definition: "A suffix meaning 'tumor' or 'mass'" },
+    { term: "Simulation", definition: "The process of mapping the tumor to plan treatment" }
+];
+
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+
+function generateQuestions() {
+    shuffleArray(vocab);
+    let generatedQuestions = [];
+    
+    // Generate Matching Questions (3 sets)
+    for (let i = 0; i < 3; i++) {
+        const start = i * 4;
+        const pairs = vocab.slice(start, start + 4);
+        if (pairs.length === 4) {
+            generatedQuestions.push({ type: 'matching', title: `Match the Term to its Definition (Set ${i+1})`, pairs: pairs });
+        }
+    }
+    
+    // Generate Fill-in-the-Blank Questions
+    const fillInBlankCandidates = [
+        { sentence: "The spread of cancer from its primary site is called ____.", answer: "Metastasis" },
+        { sentence: "A non-cancerous tumor that does not invade other tissues is known as ____.", answer: "Benign" },
+        { sentence: "____ is the most common unit of absorbed radiation dose.", answer: "Gray (Gy)" },
+        { sentence: "The treatment technique that delivers radiation as the gantry rotates is called ____.", answer: "VMAT" },
+        { sentence: "____ is the use of imaging to verify patient position.", answer: "IGRT" },
+        { sentence: "Treatment given to relieve symptoms is known as ____ care.", answer: "Palliative" },
+        { sentence: "The ____ is the large rotating part of the linear accelerator.", answer: "Gantry" }
+    ];
+    shuffleArray(fillInBlankCandidates);
+    generatedQuestions.push(...fillInBlankCandidates.slice(0, 5).map(q => ({...q, type: 'fill-in-the-blank'})));
+    
+    shuffleArray(generatedQuestions);
+    questions = generatedQuestions.slice(0, totalQuestionsToAsk);
+}
+
+// --- RENDERING LOGIC ---
+function renderQuestion() {
+    const q = questions[questionIndex];
+    questionRenderArea.innerHTML = '';
+    if (q.type === 'matching') renderMatching(q);
+    if (q.type === 'fill-in-the-blank') renderFillInBlank(q);
+}
+
+function renderMatching(q) {
+    let terms = q.pairs.map(p => p.term);
+    let definitions = q.pairs.map(p => p.definition);
+    shuffleArray(definitions);
+
+    questionRenderArea.innerHTML = `
+        <h3 class="text-xl font-semibold text-cyan-300 mb-4 text-center">${q.title}</h3>
+        <p class="text-sm text-center text-slate-400 mb-4">Click a term on the left, then click its matching definition on the right.</p>
+        <div class="flex justify-around">
+            <div id="terms-col" class="space-y-3 flex flex-col">${terms.map(term => `<button class="term-option p-3 bg-slate-700 rounded-lg border-2 border-slate-600 hover:bg-slate-600">${term}</button>`).join('')}</div>
+            <div id="defs-col" class="space-y-3 flex flex-col">${definitions.map(def => `<button class="def-option p-3 bg-slate-900 rounded-lg border-2 border-slate-700 hover:bg-slate-600">${def}</button>`).join('')}</div>
+        </div>
+    `;
+    setupMatchingInteraction(q);
+}
+
+function renderFillInBlank(q) {
+    const wrongAnswers = vocab.filter(v => v.term !== q.answer).map(v => v.term);
+    shuffleArray(wrongAnswers);
+    const options = [q.answer, ...wrongAnswers.slice(0, 2)];
+    shuffleArray(options);
+
+    questionRenderArea.innerHTML = `
+        <h3 class="text-xl font-semibold text-cyan-300 mb-6 text-center">Fill in the Blank</h3>
+        <p class="text-center text-lg bg-slate-900 p-6 rounded-lg mb-6">${q.sentence.replace('____', '<span class="font-bold text-cyan-400">[BLANK]</span>')}</p>
+        <p class="text-sm text-center text-slate-400 mb-4">Select the correct term to fill in the blank.</p>
+        <div class="flex justify-center gap-4">
+            ${options.map(opt => `<button class="fill-option p-3 bg-slate-700 rounded-lg border-2 border-slate-600 hover:bg-slate-600">${opt}</button>`).join('')}
+        </div>
+    `;
+    setupFillInBlankInteraction(q);
+}
+
+// --- INTERACTION LOGIC ---
+let selectedTermEl = null;
+let matchedPairs = 0;
+
+function setupMatchingInteraction(q) {
+    matchedPairs = 0;
+    document.querySelectorAll('.term-option').forEach(btn => btn.addEventListener('click', e => {
+        if (selectedTermEl) selectedTermEl.classList.remove('selected');
+        selectedTermEl = e.target;
+        selectedTermEl.classList.add('selected');
+    }));
+
+    document.querySelectorAll('.def-option').forEach(btn => btn.addEventListener('click', e => {
+        if (!selectedTermEl) return;
+        const selectedDefEl = e.target;
+        const termText = selectedTermEl.textContent;
+        const defText = selectedDefEl.textContent;
+        
+        const correctDef = q.pairs.find(p => p.term === termText)?.definition;
+        
+        if (defText === correctDef) {
+            score += 25;
+            selectedTermEl.classList.add('feedback-correct', 'disabled');
+            selectedDefEl.classList.add('feedback-correct', 'disabled');
+            matchedPairs++;
+            if (matchedPairs === q.pairs.length) {
+                showFeedback("All pairs matched correctly!", true);
+                setTimeout(nextQuestion, 1500);
+            }
+        } else {
+            const incorrectTerm = q.pairs.find(p => p.definition === defText)?.term;
+            missedTerms.push(termText, incorrectTerm);
+            selectedTermEl.classList.add('feedback-incorrect');
+            selectedDefEl.classList.add('feedback-incorrect');
+            showFeedback(`Incorrect. ${termText} does not match that definition. Try again.`, false);
+            setTimeout(() => {
+                selectedTermEl.classList.remove('feedback-incorrect');
+                selectedDefEl.classList.remove('feedback-incorrect');
+            }, 1000);
+        }
+        selectedTermEl.classList.remove('selected');
+        selectedTermEl = null;
+        updateUI();
+    }));
+}
+
+function setupFillInBlankInteraction(q) {
+    document.querySelectorAll('.fill-option').forEach(btn => btn.addEventListener('click', e => {
+        const choice = e.target.textContent;
+        document.querySelector('#question-render-area').classList.add('disabled');
+
+        if (choice === q.answer) {
+            score += 100;
+            e.target.classList.add('feedback-correct');
+            showFeedback("Correct!", true);
+        } else {
+            missedTerms.push(q.answer);
+            e.target.classList.add('feedback-incorrect');
+            document.querySelectorAll('.fill-option').forEach(b => {
+                if(b.textContent === q.answer) b.classList.add('feedback-correct');
+            });
+            showFeedback(`Incorrect. The correct answer was ${q.answer}.`, false);
+        }
+        updateUI();
+        setTimeout(nextQuestion, 2000);
+    }));
+}
+
+// --- GAME FLOW & UI ---
+function startGame() {
+    startScreen.classList.add('hidden');
+    gameArea.classList.remove('hidden');
+    generateQuestions();
+    renderQuestion();
+    updateUI();
+}
+
+function nextQuestion() {
+    questionIndex++;
+    if (questionIndex < totalQuestionsToAsk) {
+        renderQuestion();
+        updateUI();
+        feedbackBarEl.classList.add('opacity-0');
+    } else {
+        generateReport();
+    }
+}
+
+function showFeedback(message, isCorrect) {
+    feedbackBarEl.textContent = message;
+    feedbackBarEl.className = `mt-4 p-3 rounded-lg text-center font-semibold transition-opacity duration-300 opacity-100 ${isCorrect ? 'feedback-correct' : 'feedback-incorrect'}`;
+}
+
+function updateUI() {
+    scoreDisplayEl.textContent = `Score: ${score}`;
+    questionCounterEl.textContent = `Question ${questionIndex + 1} / ${totalQuestionsToAsk}`;
+    progressBarEl.style.width = `${((questionIndex) / totalQuestionsToAsk) * 100}%`;
+}
+
+function generateReport() {
+    gameArea.classList.add('hidden');
+    const finalScorePercent = Math.round((score / (totalQuestionsToAsk * 100)) * 100);
+    const passed = finalScorePercent >= 80;
+    
+    let certificateHTML = '';
+    if (passed) {
+        certificateHTML = `
+            <div class="certificate">
+                <div class="certificate-seal"></div>
+                <h2 class="text-3xl font-bold certificate-title text-center mb-4">Certificate of Achievement</h2>
+                <p class="text-center text-lg">This certificate is awarded to</p>
+                <p class="text-center text-2xl font-semibold my-4 border-b-2 border-slate-400 pb-2">${"Valued Learner"}</p>
+                <p class="text-center text-lg">for successfully completing the</p>
+                <p class="text-center text-xl font-bold my-2 text-purple-700">RT Terminology Challenge</p>
+                <p class="text-center">with a score of <strong class="text-lg">${finalScorePercent}%</strong> on ${new Date().toLocaleDateString()}</p>
+            </div>
+        `;
+    } else {
+        certificateHTML = `
+            <div class="p-4">
+                <h2 class="text-3xl font-bold text-red-600 text-center mb-4">Assessment Complete</h2>
+                <p class="text-center text-xl">Your Score: <strong class="text-2xl">${finalScorePercent}%</strong></p>
+                <p class="text-center text-slate-600 mt-4">A score of 80% is required to pass. Please review the material and try again.</p>
+            </div>
+        `;
+    }
+    
+    const uniqueMissedTerms = [...new Set(missedTerms)];
+    let feedbackHTML = `<div class="mt-6 text-left p-4 bg-slate-100 rounded-lg">
+        <h4 class="font-bold text-slate-800">Feedback Summary</h4>
+        ${uniqueMissedTerms.length > 0 ? 
+            `<p class="text-sm text-slate-600">Consider reviewing the following terms: <strong>${uniqueMissedTerms.join(', ')}</strong></p>` :
+            '<p class="text-sm text-slate-600">You showed excellent command of all terminology. Great work!</p>'
+        }
+    </div>`;
+    
+    document.getElementById('certificate-content').innerHTML = certificateHTML + feedbackHTML;
+    reportScreenEl.classList.remove('hidden');
+}
+
+
+// --- EVENT LISTENERS ---
+startButton.addEventListener('click', startGame);
+
+</script>
+
+</body>
+</html>
