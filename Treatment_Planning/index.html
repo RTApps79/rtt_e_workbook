@@ -4,71 +4,85 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Treatment Planning - Main Menu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 20px;
-            background-color: #f4f4f4;
-            color: #333;
+            font-family: 'Inter', sans-serif;
         }
-        .container {
-            max-width: 800px;
-            margin: auto;
-            background: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #0056b3;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        nav ul {
-            list-style: none;
-            padding: 0;
-            text-align: center;
-        }
-        nav ul li {
-            margin-bottom: 10px;
-        }
-        nav ul li a {
-            display: block;
-            background-color: #007bff;
-            color: white;
-            padding: 12px 20px;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-        }
-        nav ul li a:hover {
-            background-color: #0056b3;
-        }
-        footer {
-            text-align: center;
-            margin-top: 40px;
-            font-size: 0.9em;
-            color: #777;
+        .hero-banner-planning {
+            background: linear-gradient(to right, #6D28D9, #4F46E5); /* A violet-to-indigo gradient */
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1>Treatment Planning Resources</h1>
+<body class="bg-slate-100 text-slate-800 flex flex-col min-h-screen">
 
-        <nav>
-            <ul>
-                <li><a href="Beam_Energy_and_Dmax/">Beam Energy and Dmax</a></li>
-                <li><a href="MU_Calculator/">MU Calculator</a></li>
-                <li><a href="treatment_techniques_mu_lesson/">Treatment Techniques MU Lesson</a></li>
-                 <li><a href="TPS_Simulator/">Make a Treatment Plan</a></li>
-            </ul>
-        </nav>
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4 flex flex-col sm:flex-row justify-between items-center">
+            <h1 class="text-2xl font-bold text-violet-800">Treatment Planning Modules</h1>
+            <a href="../index.html" class="mt-2 sm:mt-0 text-sm bg-slate-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-slate-700 transition-colors duration-300">
+                &larr; Back to Main Workbook
+            </a>
+        </div>
+    </header>
 
-        <footer>
-            <p>&copy; 2025 Treatment Planning Resources</p>
-        </footer>
-    </div>
+    <section class="hero-banner-planning text-white py-16 px-6 text-center">
+        <div class="container mx-auto">
+            <h2 class="text-4xl font-bold mb-4">Core Concepts in Treatment Planning</h2>
+            <p class="text-lg mb-8">Dive into the essential tools, calculations, and techniques that form the foundation of modern radiation therapy treatment planning.</p>
+        </div>
+    </section>
+
+    <main class="container mx-auto px-6 py-12 flex-grow">
+        <h2 class="text-3xl font-semibold mb-10 text-center text-slate-700">Planning Resources</h2>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            
+            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col">
+                <h3 class="text-xl font-semibold mb-3 text-violet-700">Beam Energy and Dmax</h3>
+                <p class="text-slate-600 mb-4 text-sm flex-grow">Explore the relationship between beam energy, depth of maximum dose (Dmax), and its impact on treatment depth.</p>
+                <a href="Beam_Energy_and_Dmax/" class="mt-auto inline-block bg-violet-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-violet-700 transition-colors duration-300 text-center">
+                    Learn about Dmax
+                </a>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col">
+                <h3 class="text-xl font-semibold mb-3 text-violet-700">MU Calculator</h3>
+                <p class="text-slate-600 mb-4 text-sm flex-grow">A practical tool for calculating the Monitor Units (MU) required to deliver a prescribed radiation dose.</p>
+                <a href="MU_Calculator/" class="mt-auto inline-block bg-violet-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-violet-700 transition-colors duration-300 text-center">
+                    Calculate MUs
+                </a>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col">
+                <h3 class="text-xl font-semibold mb-3 text-violet-700">Treatment Techniques MU Lesson</h3>
+                <p class="text-slate-600 mb-4 text-sm flex-grow">An interactive lesson on how different treatment techniques (SAD, SSD) affect monitor unit calculations.</p>
+                <a href="treatment_techniques_mu_lesson/" class="mt-auto inline-block bg-violet-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-violet-700 transition-colors duration-300 text-center">
+                    Start Lesson
+                </a>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col">
+                <h3 class="text-xl font-semibold mb-3 text-violet-700">Make a Treatment Plan</h3>
+                <p class="text-slate-600 mb-4 text-sm flex-grow">A simulator that walks you through the process of creating a basic treatment plan from start to finish.</p>
+                <a href="TPS_Simulator/" class="mt-auto inline-block bg-violet-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-violet-700 transition-colors duration-300 text-center">
+                    Launch Simulator
+                </a>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="bg-slate-800 text-slate-300 py-8 mt-12 text-center">
+        <div class="container mx-auto px-6">
+            <p>&copy; <span id="currentYear"></span> Treatment Planning Resources. All Rights Reserved.</p>
+            <p class="text-sm mt-1">Treatment Planning Module</p>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+    </script>
+
 </body>
 </html>
