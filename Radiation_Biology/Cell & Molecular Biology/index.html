@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Cell Biology Activities</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        .activity-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: all 0.3s ease;
+        }
+        .activity-card:hover {
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
+        }
+        .tab-button {
+            transition: all 0.3s ease;
+        }
+        .tab-button.active {
+            color: #4f46e5;
+            border-bottom-color: #4f46e5;
+        }
+        .draggable {
+            cursor: grab;
+            user-select: none;
+        }
+        .dragging {
+            opacity: 0.5;
+            background-color: #e0e7ff;
+        }
+        .drop-zone {
+            border: 2px dashed #cbd5e1;
+            transition: background-color 0.3s ease;
+        }
+        .drop-zone.hovered {
+            background-color: #e0e7ff;
+            border-color: #4f46e5;
+        }
+        .feedback {
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        .feedback.correct {
+            color: #16a34a;
+        }
+        .feedback.incorrect {
+            color: #dc2626;
+        }
+        .quiz-option.correct {
+            background-color: #dcfce7;
+            border-left: 4px solid #22c55e;
+        }
+        .quiz-option.incorrect {
+            background-color: #fee2e2;
+            border-left: 4px solid #ef4444;
+        }
+        .label-dot {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: rgba(79, 70, 229, 0.8);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .label-dot:hover {
+            transform: scale(1.2);
+            background-color: rgba(99, 102, 241, 1);
+        }
+        .label-popup {
+            position: absolute;
+            background-color: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            z-index: 10;
+            width: 200px;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            pointer-events: none;
+        }
+        .label-popup.visible {
+            visibility: visible;
+            opacity: 1;
+        }
+        .diagram-container svg {
+            width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+        }
+    </style>
+</head>
+<body class="antialiased text-slate-800">
+
+    <div class="container mx-auto p-4 md:p-8">
+        <header class="text-center mb-10">
+            <h1 class="text-4xl md:text-5xl font-bold text-slate-900">Cell & Molecular Biology</h1>
+            <p class="text-lg text-slate-600 mt-2">Interactive Learning Activities</p>
+        </header>
+
+        <!-- Tabs for different activities -->
+        <div class="mb-8 border-b border-slate-200">
+            <nav class="-mb-px flex space-x-6" aria-label="Tabs">
+                <button onclick="showActivity('matching')" class="tab-button active whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">Matching Game</button>
+                <button onclick="showActivity('quiz')" class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">Multiple Choice</button>
+                <button onclick="showActivity('fill-in-blank')" class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">Fill in the Blank</button>
+                <button onclick="showActivity('labeling')" class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">Diagram Labeling</button>
+            </nav>
+        </div>
+
+        <!-- Activity Sections -->
+        <div id="activities">
+            <!-- Matching Activity -->
+            <div id="matching" class="activity-content">
+                <div class="activity-card p-6 md:p-8">
+                    <h2 class="text-2xl font-semibold mb-4">Exercise 1: Matching</h2>
+                    <p class="text-slate-600 mb-6">Drag the terms on the left to their correct definitions on the right.</p>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div id="terms-container" class="space-y-3">
+                            <!-- Terms will be dynamically inserted here -->
+                        </div>
+                        <div id="definitions-container" class="space-y-3">
+                            <!-- Definitions will be dynamically inserted here -->
+                        </div>
+                    </div>
+                    <div class="mt-8 text-center">
+                        <button onclick="checkMatchingAnswers()" class="bg-indigo-600 text-white font-semibold py-2 px-6 rounded-lg hover:bg-indigo-700 transition-colors">Check Answers</button>
+                        <button onclick="resetMatching()" class="ml-4 bg-slate-200 text-slate-800 font-semibold py-2 px-6 rounded-lg hover:bg-slate-300 transition-colors">Reset</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Multiple Choice Quiz -->
+            <div id="quiz" class="activity-content hidden">
+                <div class="activity-card p-6 md:p-8">
+                    <h2 class="text-2xl font-semibold mb-4">Exercise 2: Multiple Choice Quiz</h2>
+                    <p class="text-slate-600 mb-6">Select the best answer for each question.</p>
+                    <div id="quiz-container" class="space-y-8">
+                        <!-- Quiz questions will be dynamically inserted here -->
+                    </div>
+                    <div class="mt-8 text-center">
+                        <button onclick="submitQuiz()" class="bg-indigo-600 text-white font-semibold py-2 px-6 rounded-lg hover:bg-indigo-700 transition-colors">Submit Quiz</button>
+                        <p id="quiz-result" class="mt-4 font-semibold text-lg"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fill in the Blank Activity -->
+            <div id="fill-in-blank" class="activity-content hidden">
+                <div class="activity-card p-6 md:p-8">
+                    <h2 class="text-2xl font-semibold mb-4">Exercise 4: Fill in the Blank</h2>
+                    <p class="text-slate-600 mb-6">Fill in the blanks with the correct words from the word bank.</p>
+                    <div id="word-bank" class="mb-6 p-4 bg-indigo-50 border border-indigo-200 rounded-lg flex flex-wrap gap-2">
+                        <!-- Word bank will be dynamically inserted here -->
+                    </div>
+                    <div id="fill-in-blank-container" class="space-y-4 text-lg leading-relaxed">
+                        <!-- Sentences will be dynamically inserted here -->
+                    </div>
+                     <div class="mt-8 text-center">
+                        <button onclick="checkFillInBlank()" class="bg-indigo-600 text-white font-semibold py-2 px-6 rounded-lg hover:bg-indigo-700 transition-colors">Check Answers</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Diagram Labeling Activity -->
+            <div id="labeling" class="activity-content hidden">
+                <div class="activity-card p-6 md:p-8">
+                    <h2 class="text-2xl font-semibold mb-4">Exercise 5: Diagram Labeling</h2>
+                    <p class="text-slate-600 mb-6">Hover over the numbered dots to reveal the name of the cell component.</p>
+                    <div class="flex flex-col lg:flex-row gap-8 items-center justify-center">
+                        <!-- Typical Cell Diagram -->
+                        <div class="relative diagram-container w-full max-w-lg">
+                            <h3 class="text-xl font-semibold text-center mb-4">A. Typical Cell</h3>
+                            <svg viewBox="0 0 500 400" aria-labelledby="cell-title" role="img">
+                                <title id="cell-title">A diagram of a typical animal cell.</title>
+                                <!-- Cytoplasm -->
+                                <ellipse cx="250" cy="200" rx="240" ry="180" class="fill-indigo-100" />
+                                <!-- Rough ER -->
+                                <path d="M 180 150 C 160 120, 220 110, 240 130 S 180 160, 200 180 S 260 170, 280 190 S 220 220, 240 240" stroke="#a5b4fc" stroke-width="8" fill="none" stroke-linecap="round"/>
+                                <!-- Smooth ER -->
+                                <path d="M 340 250 C 320 220, 380 210, 400 230 S 340 260, 360 280" stroke="#c7d2fe" stroke-width="8" fill="none" stroke-linecap="round"/>
+                                <!-- Nucleus -->
+                                <circle cx="250" cy="200" r="80" class="fill-indigo-300" />
+                                <circle cx="250" cy="200" r="75" class="fill-indigo-400" stroke="#4f46e5" stroke-width="2"/>
+                                <!-- Nucleolus -->
+                                <circle cx="280" cy="180" r="25" class="fill-indigo-600" />
+                                <!-- Golgi Apparatus -->
+                                <path d="M 120 280 C 150 270, 160 300, 140 320" stroke="#a5b4fc" stroke-width="6" fill="none" stroke-linecap="round"/>
+                                <path d="M 110 290 C 140 280, 150 310, 130 330" stroke="#a5b4fc" stroke-width="6" fill="none" stroke-linecap="round"/>
+                                <path d="M 100 300 C 130 290, 140 320, 120 340" stroke="#a5b4fc" stroke-width="6" fill="none" stroke-linecap="round"/>
+                                <!-- Mitochondria -->
+                                <ellipse cx="120" cy="100" rx="40" ry="20" class="fill-pink-400" />
+                                <path d="M 100 100 C 110 90, 130 90, 140 100" stroke="#fff" fill="none" stroke-width="2" />
+                                <ellipse cx="380" cy="120" rx="40" ry="20" class="fill-pink-400" />
+                                <path d="M 360 120 C 370 110, 390 110, 400 120" stroke="#fff" fill="none" stroke-width="2" />
+                                <!-- Lysosome -->
+                                <circle cx="150" cy="230" r="15" class="fill-yellow-400" />
+                                <!-- Centrosome/Centrioles -->
+                                <g transform="translate(100, 180) rotate(45)">
+                                    <rect x="-15" y="-5" width="30" height="10" rx="5" class="fill-purple-500" />
+                                    <rect x="-5" y="-15" width="10" height="30" rx="5" class="fill-purple-500" />
+                                </g>
+                            </svg>
+                            <!-- Interactive Dots -->
+                            <div id="cell-labels-container"></div>
+                        </div>
+                        <!-- Cellular Life Cycle Diagram -->
+                        <div class="relative diagram-container w-full max-w-sm">
+                            <h3 class="text-xl font-semibold text-center mb-4">B. Cellular Life Cycle</h3>
+                            <svg viewBox="0 0 400 400" aria-labelledby="cycle-title" role="img">
+                                <title id="cycle-title">A diagram of the cellular life cycle.</title>
+                                <defs>
+                                    <path id="g1-path" d="M 200, 50 A 150 150 0 0 1 350 200" />
+                                    <path id="s-path" d="M 350, 200 A 150 150 0 0 1 200 350" />
+                                    <path id="g2-path" d="M 200, 350 A 150 150 0 0 1 50 200" />
+                                    <path id="m-path" d="M 50, 200 A 150 150 0 0 1 200 50" />
+                                </defs>
+                                <!-- Segments -->
+                                <path d="M 200 50 A 150 150 0 0 1 350 200 L 200 200 Z" fill="#e0e7ff"/>
+                                <path d="M 350 200 A 150 150 0 0 1 200 350 L 200 200 Z" fill="#c7d2fe"/>
+                                <path d="M 200 350 A 150 150 0 0 1 50 200 L 200 200 Z" fill="#a5b4fc"/>
+                                <path d="M 50 200 A 150 150 0 0 1 200 50 L 200 200 Z" fill="#818cf8"/>
+                                <!-- Center circle -->
+                                <circle cx="200" cy="200" r="60" fill="#f0f4f8" />
+                                <text x="200" y="215" font-size="40" text-anchor="middle" font-weight="bold" class="fill-slate-700">M</text>
+                                <!-- Labels -->
+                                <text font-size="24" font-weight="500" class="fill-slate-600">
+                                    <textPath xlink:href="#g1-path" startOffset="50%" text-anchor="middle">G1</textPath>
+                                    <textPath xlink:href="#s-path" startOffset="50%" text-anchor="middle">S</textPath>
+                                    <textPath xlink:href="#g2-path" startOffset="50%" text-anchor="middle">G2</textPath>
+                                </text>
+                                <!-- Mitosis sub-phase labels -->
+                                <text x="125" y="45" font-size="16" text-anchor="middle">Prophase</text>
+                                <text x="200" y="25" font-size="16" text-anchor="middle">Metaphase</text>
+                                <text x="275" y="45" font-size="16" text-anchor="middle">Anaphase</text>
+                                <text x="330" y="100" font-size="16" text-anchor="middle">Telophase</text>
+                                <text x="200" y="385" font-size="20" text-anchor="middle" font-weight="bold" class="fill-slate-700">Interphase</text>
+                            </svg>
+                            <!-- Interactive Dots -->
+                            <div id="cycle-labels-container"></div>
+                        </div>
+                    </div>
+                    <div id="label-popup" class="label-popup"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Data from PDF ---
+        const matchingData = [
+            { id: 1, term: 'Electrolytes', definition: 'Mineral salts' },
+            { id: 2, term: 'Antibodies', definition: 'Protein molecules produced by specialized cells in the bone marrow called B lymphocytes' },
+            { id: 3, term: 'Human genome', definition: 'The total amount of genetic material (DNA) contained within the chromosomes of a human being' },
+            { id: 4, term: 'Cytosine and thymine', definition: 'Compounds called pyrimidines' },
+            { id: 5, term: 'Mapping', definition: 'Process of locating and identifying the genes in the genome' },
+            { id: 6, term: 'Enzymatic proteins', definition: 'Moderate or control the cell\'s various physiologic activities' },
+            { id: 7, term: 'Cell division', definition: 'Multiplication process whereby one cell divides to form two or more cells' },
+            { id: 8, term: 'Protoplasm', definition: 'The chemical building material for all living things' },
+            { id: 9, term: 'Anaphase', definition: 'The phase of mitosis during which the centromeres are severed and the sister chromatids move apart and are subsequently pulled toward opposite poles of the mitotic spindle' },
+            { id: 10, term: 'Protein synthesis', definition: 'Process of protein production within a cell' },
+        ];
+
+        const quizData = [
+            {
+                question: "In humans, approximately how many genes are contained in all 46 chromosomes?",
+                options: ["300", "3,000", "30,000", "300,000"],
+                answer: "30,000"
+            },
+            {
+                question: "In the human cell, protein synthesis occurs in which of the following locations?",
+                options: ["Nucleus", "Mitochondria", "Ribosomes", "Endoplasmic reticulum"],
+                answer: "Ribosomes"
+            },
+            {
+                question: "Interphase consists of which of the following phases?",
+                options: ["M, G1, and S", "G1, S, and G2", "S, G2, and M", "G2, M, and G1"],
+                answer: "G1, S, and G2"
+            },
+            {
+                question: "Which of the following is a process of reduction cell division?",
+                options: ["Mitosis", "Meiosis", "Molecular synthesis", "Amniocentesis"],
+                answer: "Meiosis"
+            },
+            {
+                question: "Which of the following cellular organelles function(s) as a cellular garbage disposal?",
+                options: ["Endoplasmic reticulum", "Mitochondria", "Lysosomes", "Ribosomes"],
+                answer: "Lysosomes"
+            }
+        ];
+
+        const fillInBlankData = {
+            wordBank: ["amino acids", "cell", "DNA", "endoplasmic reticulum", "four", "homeostasis", "hormones", "liver", "lysosomes", "macromolecules", "metabolism", "muscle", "nucleus", "osmotic", "oxidative", "repair enzymes", "replication", "ribosomes", "salts", "water"],
+            sentences: [
+                "The {cell} is the fundamental element of structure, development, growth, and life processes in the human body.",
+                "Proper cell function enables the body as a whole to maintain {homeostasis}, or equilibrium.",
+                "The biomolecules that constitute protoplasm are formed from many elements, among which there are {four} primary elements.",
+                "Proteins are formed when organic compounds called {amino acids} combine into long, chain-like molecular complexes.",
+                "If radiation damage is excessive because of a large delivered equivalent dose, the cellular harm will be too severe for {repair enzymes} to have enough positive effect.",
+                "{Hormones} regulate body functions such as growth and development.",
+                "Although carbohydrates are found throughout the human body, they are most abundant in the {liver} and in {muscle} tissue.",
+                "The primary purpose of carbohydrates is to provide fuel for cell {metabolism}.",
+                "{Ribosomes} manufacture (synthesize) the various proteins that cells require by using the blueprints provided by mRNA.",
+                "By directing protein synthesis, the {nucleus} plays an essential role in active transport, metabolism, growth, and heredity."
+            ]
+        };
+        
+        const cellLabelData = [
+            { id: 1, name: 'Ribosomes (dots on Rough ER)', top: '42%', left: '48%' },
+            { id: 2, name: 'Mitochondria', top: '25%', left: '22%' },
+            { id: 3, name: 'Smooth endoplasmic reticulum', top: '65%', left: '85%' },
+            { id: 4, name: 'Golgi apparatus', top: '75%', left: '25%' },
+            { id: 5, name: 'Nucleolus', top: '45%', left: '55%' },
+            { id: 6, name: 'Nucleus', top: '50%', left: '50%' },
+            { id: 7, name: 'Nuclear envelope', top: '68%', left: '50%' },
+            { id: 8, name: 'Rough endoplasmic reticulum', top: '55%', left: '30%' },
+            { id: 9, name: 'Lysosome', top: '58%', left: '28%' },
+            { id: 11, name: 'Centrioles', top: '45%', left: '20%' },
+            { id: 12, name: 'Centrosome', top: '45%', left: '20%' },
+        ];
+        
+        const cycleLabelData = [
+            { id: 1, name: 'Metaphase', top: '6%', left: '48%' },
+            { id: 2, name: 'Anaphase', top: '10%', left: '67%' },
+            { id: 3, name: 'Telophase', top: '23%', left: '80%' },
+            { id: 4, name: 'G1', top: '50%', left: '80%' },
+            { id: 5, name: 'S', top: '78%', left: '50%' },
+            { id: 6, name: 'G2', top: '50%', left: '18%' },
+        ];
+
+
+        // --- Tab Navigation ---
+        const activities = document.querySelectorAll('.activity-content');
+        const tabButtons = document.querySelectorAll('.tab-button');
+
+        function showActivity(activityId) {
+            activities.forEach(activity => {
+                activity.classList.add('hidden');
+            });
+            document.getElementById(activityId).classList.remove('hidden');
+
+            tabButtons.forEach(button => {
+                button.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        // --- Matching Activity Logic ---
+        const termsContainer = document.getElementById('terms-container');
+        const definitionsContainer = document.getElementById('definitions-container');
+        let draggedItem = null;
+
+        function initializeMatching() {
+            termsContainer.innerHTML = '';
+            definitionsContainer.innerHTML = '';
+            
+            const shuffledTerms = [...matchingData].sort(() => Math.random() - 0.5);
+            const shuffledDefs = [...matchingData].sort(() => Math.random() - 0.5);
+
+            shuffledTerms.forEach(item => {
+                const termEl = document.createElement('div');
+                termEl.classList.add('p-3', 'bg-slate-100', 'rounded-lg', 'draggable');
+                termEl.textContent = item.term;
+                termEl.draggable = true;
+                termEl.dataset.id = item.id;
+                termsContainer.appendChild(termEl);
+            });
+
+            shuffledDefs.forEach(item => {
+                const defContainer = document.createElement('div');
+                defContainer.classList.add('flex', 'items-center', 'gap-3');
+
+                const dropZone = document.createElement('div');
+                dropZone.classList.add('w-48', 'h-12', 'drop-zone', 'rounded-lg', 'flex', 'items-center', 'justify-center', 'text-slate-500', 'text-sm', 'p-2');
+                dropZone.dataset.id = item.id;
+                dropZone.textContent = 'Drop here';
+
+                const defText = document.createElement('div');
+                defText.classList.add('flex-1');
+                defText.textContent = item.definition;
+
+                defContainer.appendChild(dropZone);
+                defContainer.appendChild(defText);
+                definitionsContainer.appendChild(defContainer);
+            });
+            addMatchingEventListeners();
+        }
+        
+        function resetMatching() {
+            initializeMatching();
+            const feedbacks = document.querySelectorAll('.feedback');
+            feedbacks.forEach(f => f.remove());
+        }
+
+        function addMatchingEventListeners() {
+            const draggables = document.querySelectorAll('.draggable');
+            const dropZones = document.querySelectorAll('.drop-zone');
+
+            draggables.forEach(draggable => {
+                draggable.addEventListener('dragstart', () => {
+                    draggedItem = draggable;
+                    setTimeout(() => draggable.classList.add('dragging'), 0);
+                });
+
+                draggable.addEventListener('dragend', () => {
+                    draggedItem.classList.remove('dragging');
+                    draggedItem = null;
+                });
+            });
+
+            dropZones.forEach(zone => {
+                zone.addEventListener('dragover', e => {
+                    e.preventDefault();
+                    zone.classList.add('hovered');
+                });
+
+                zone.addEventListener('dragleave', () => {
+                    zone.classList.remove('hovered');
+                });
+
+                zone.addEventListener('drop', e => {
+                    e.preventDefault();
+                    zone.classList.remove('hovered');
+                    if (draggedItem) {
+                        // If zone already has a term, move it back
+                        if (zone.children.length > 0) {
+                            termsContainer.appendChild(zone.firstElementChild);
+                        }
+                        zone.innerHTML = '';
+                        zone.appendChild(draggedItem);
+                        draggedItem.classList.remove('draggable', 'bg-slate-100');
+                        draggedItem.classList.add('bg-indigo-100');
+                        draggedItem.draggable = false; // Prevent dragging out of drop zone for simplicity
+                    }
+                });
+            });
+        }
+        
+        function checkMatchingAnswers() {
+            const dropZones = document.querySelectorAll('.drop-zone');
+            dropZones.forEach(zone => {
+                const droppedItem = zone.querySelector('div');
+                const isCorrect = droppedItem && zone.dataset.id === droppedItem.dataset.id;
+                
+                // Remove previous feedback
+                const oldFeedback = zone.parentElement.querySelector('.feedback');
+                if(oldFeedback) oldFeedback.remove();
+
+                const feedback = document.createElement('span');
+                feedback.classList.add('feedback');
+                if (isCorrect) {
+                    feedback.textContent = 'Correct!';
+                    feedback.classList.add('correct');
+                    zone.style.borderColor = '#22c55e';
+                } else {
+                    feedback.textContent = 'Incorrect';
+                    feedback.classList.add('incorrect');
+                    zone.style.borderColor = '#ef4444';
+                }
+                zone.parentElement.appendChild(feedback);
+            });
+        }
+
+
+        // --- Multiple Choice Quiz Logic ---
+        const quizContainer = document.getElementById('quiz-container');
+
+        function initializeQuiz() {
+            quizData.forEach((q, index) => {
+                const questionBlock = document.createElement('div');
+                questionBlock.classList.add('quiz-question');
+
+                const questionText = document.createElement('p');
+                questionText.classList.add('font-semibold', 'mb-3');
+                questionText.textContent = `${index + 1}. ${q.question}`;
+                questionBlock.appendChild(questionText);
+
+                const optionsList = document.createElement('div');
+                optionsList.classList.add('space-y-2');
+                
+                q.options.forEach(option => {
+                    const optionLabel = document.createElement('label');
+                    optionLabel.classList.add('quiz-option', 'flex', 'items-center', 'p-3', 'border', 'border-slate-200', 'rounded-lg', 'cursor-pointer', 'hover:bg-slate-50');
+                    
+                    const radioInput = document.createElement('input');
+                    radioInput.type = 'radio';
+                    radioInput.name = `question${index}`;
+                    radioInput.value = option;
+                    radioInput.classList.add('h-4', 'w-4', 'text-indigo-600', 'border-gray-300', 'focus:ring-indigo-500');
+
+                    const optionText = document.createElement('span');
+                    optionText.classList.add('ml-3');
+                    optionText.textContent = option;
+
+                    optionLabel.appendChild(radioInput);
+                    optionLabel.appendChild(optionText);
+                    optionsList.appendChild(optionLabel);
+                });
+
+                questionBlock.appendChild(optionsList);
+                quizContainer.appendChild(questionBlock);
+            });
+        }
+        
+        function submitQuiz() {
+            let score = 0;
+            quizData.forEach((q, index) => {
+                const radios = document.getElementsByName(`question${index}`);
+                const questionOptions = radios[0].closest('.space-y-2').querySelectorAll('label');
+                
+                questionOptions.forEach(label => {
+                    label.classList.remove('correct', 'incorrect');
+                });
+
+                for (const radio of radios) {
+                    const label = radio.parentElement;
+                    if (radio.checked) {
+                        if (radio.value === q.answer) {
+                            score++;
+                            label.classList.add('correct');
+                        } else {
+                            label.classList.add('incorrect');
+                        }
+                    }
+                    // Also highlight the correct answer if an incorrect one was chosen
+                    if (radio.value === q.answer) {
+                       if (!label.classList.contains('correct')) {
+                           label.classList.add('correct');
+                       }
+                    }
+                }
+            });
+            const resultEl = document.getElementById('quiz-result');
+            resultEl.textContent = `You scored ${score} out of ${quizData.length}!`;
+        }
+
+        // --- Fill in the Blank Logic ---
+        const wordBankContainer = document.getElementById('word-bank');
+        const sentencesContainer = document.getElementById('fill-in-blank-container');
+
+        function initializeFillInBlank() {
+            // Populate word bank
+            fillInBlankData.wordBank.forEach(word => {
+                const wordEl = document.createElement('span');
+                wordEl.classList.add('bg-white', 'px-2', 'py-1', 'rounded', 'text-sm', 'font-medium', 'cursor-pointer', 'border', 'border-slate-300');
+                wordEl.textContent = word;
+                wordEl.onclick = (e) => {
+                    const activeInput = document.querySelector('input.active-blank');
+                    if (activeInput) {
+                        activeInput.value = e.target.textContent;
+                    }
+                };
+                wordBankContainer.appendChild(wordEl);
+            });
+
+            // Create sentences with blanks
+            fillInBlankData.sentences.forEach((sentence, index) => {
+                const p = document.createElement('p');
+                const parts = sentence.split(/(\{[^}]+\})/); // Split by {word}
+                parts.forEach(part => {
+                    if (part.startsWith('{') && part.endsWith('}')) {
+                        const answer = part.slice(1, -1);
+                        const input = document.createElement('input');
+                        input.type = 'text';
+                        input.dataset.answer = answer.toLowerCase();
+                        input.classList.add('inline-block', 'w-36', 'mx-1', 'px-2', 'py-1', 'border-b-2', 'border-slate-300', 'focus:border-indigo-500', 'focus:outline-none', 'transition', 'bg-slate-50', 'rounded-t-md');
+                        input.onfocus = (e) => {
+                            document.querySelectorAll('input.active-blank').forEach(el => el.classList.remove('active-blank'));
+                            e.target.classList.add('active-blank');
+                        }
+                        p.appendChild(input);
+                    } else {
+                        p.appendChild(document.createTextNode(part));
+                    }
+                });
+                sentencesContainer.appendChild(p);
+            });
+        }
+        
+        function checkFillInBlank() {
+            const inputs = sentencesContainer.querySelectorAll('input');
+            inputs.forEach(input => {
+                if (input.value.trim().toLowerCase() === input.dataset.answer) {
+                    input.style.borderColor = '#22c55e';
+                    input.style.backgroundColor = '#dcfce7';
+                } else {
+                    input.style.borderColor = '#ef4444';
+                    input.style.backgroundColor = '#fee2e2';
+                }
+            });
+        }
+        
+        // --- Diagram Labeling Logic ---
+        const cellLabelsContainer = document.getElementById('cell-labels-container');
+        const cycleLabelsContainer = document.getElementById('cycle-labels-container');
+        const popup = document.getElementById('label-popup');
+
+        function createLabelDot(container, data) {
+            const parentContainer = container.parentElement;
+            data.forEach(item => {
+                const dot = document.createElement('div');
+                dot.classList.add('label-dot');
+                dot.style.top = item.top;
+                dot.style.left = item.left;
+                dot.textContent = item.id;
+                
+                dot.addEventListener('mouseenter', (e) => {
+                    popup.textContent = `${item.id}. ${item.name}`;
+                    const parentRect = parentContainer.getBoundingClientRect();
+                    const dotRect = e.target.getBoundingClientRect();
+                    
+                    let top = dotRect.top - parentRect.top + dotRect.height + 5;
+                    let left = dotRect.left - parentRect.top + (dotRect.width / 2) - (popup.offsetWidth / 2);
+
+                    // Boundary checks
+                    if (left < 0) left = 5;
+                    if (left + popup.offsetWidth > parentRect.width) left = parentRect.width - popup.offsetWidth - 5;
+                    if (top + popup.offsetHeight > parentRect.height) top = dotRect.top - parentRect.top - popup.offsetHeight - 5;
+
+                    popup.style.top = `${top}px`;
+                    popup.style.left = `${left}px`;
+                    popup.classList.add('visible');
+                });
+                
+                dot.addEventListener('mouseleave', () => {
+                    popup.classList.remove('visible');
+                });
+
+                container.appendChild(dot);
+            });
+        }
+        
+        function initializeLabeling() {
+            createLabelDot(cellLabelsContainer, cellLabelData);
+            createLabelDot(cycleLabelsContainer, cycleLabelData);
+        }
+
+
+        // --- Initial Load ---
+        window.onload = () => {
+            initializeMatching();
+            initializeQuiz();
+            initializeFillInBlank();
+            initializeLabeling();
+        };
+
+    </script>
+</body>
+</html>
