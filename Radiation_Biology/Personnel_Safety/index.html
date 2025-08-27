@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Personnel Safety & Dose Limit Activities</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        .activity-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: all 0.3s ease;
+        }
+        .activity-card:hover {
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
+        }
+        .tab-button {
+            transition: all 0.3s ease;
+        }
+        .tab-button.active {
+            color: #059669; /* Emerald */
+            border-bottom-color: #059669;
+        }
+        .draggable {
+            cursor: grab;
+            user-select: none;
+        }
+        .dragging {
+            opacity: 0.5;
+            background-color: #d1fae5;
+        }
+        .drop-zone {
+            border: 2px dashed #cbd5e1;
+            transition: background-color 0.3s ease;
+        }
+        .drop-zone.hovered {
+            background-color: #d1fae5;
+            border-color: #059669;
+        }
+        .feedback {
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        .feedback.correct {
+            color: #16a34a;
+        }
+        .feedback.incorrect {
+            color: #dc2626;
+        }
+        .quiz-option.correct {
+            background-color: #dcfce7;
+            border-left: 4px solid #22c55e;
+        }
+        .quiz-option.incorrect {
+            background-color: #fee2e2;
+            border-left: 4px solid #ef4444;
+        }
+        .label-dot {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background-color: rgba(5, 150, 105, 0.8);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .label-dot:hover {
+            transform: scale(1.2);
+            background-color: rgba(16, 185, 129, 1);
+        }
+        .label-popup {
+            position: absolute;
+            background-color: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            z-index: 10;
+            width: 220px;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            pointer-events: none;
+        }
+        .label-popup.visible {
+            visibility: visible;
+            opacity: 1;
+        }
+        .diagram-container svg {
+            width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+        }
+    </style>
+</head>
+<body class="antialiased text-slate-800">
+
+    <div class="container mx-auto p-4 md:p-8">
+        <header class="text-center mb-10">
+            <h1 class="text-4xl md:text-5xl font-bold text-slate-900">Personnel Safety & Dose Limits</h1>
+            <p class="text-lg text-slate-600 mt-2">Interactive Learning Activities</p>
+        </header>
+
+        <!-- Tabs for different activities -->
+        <div class="mb-8 border-b border-slate-200">
+            <nav class="-mb-px flex space-x-6" aria-label="Tabs">
+                <button onclick="showActivity('matching')" class="tab-button active whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">Matching Game</button>
+                <button onclick="showActivity('quiz')" class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">Multiple Choice</button>
+                <button onclick="showActivity('fill-in-blank')" class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">Fill in the Blank</button>
+                <button onclick="showActivity('labeling')" class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">Diagram Labeling</button>
+            </nav>
+        </div>
+
+        <!-- Activity Sections -->
+        <div id="activities">
+            <!-- Matching Activity -->
+            <div id="matching" class="activity-content">
+                <div class="activity-card p-6 md:p-8">
+                    <h2 class="text-2xl font-semibold mb-4">Exercise 1: Matching</h2>
+                    <p class="text-slate-600 mb-6">Drag the terms on the left to their correct definitions on the right.</p>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div id="terms-container" class="space-y-3">
+                            <!-- Terms will be dynamically inserted here -->
+                        </div>
+                        <div id="definitions-container" class="space-y-3">
+                            <!-- Definitions will be dynamically inserted here -->
+                        </div>
+                    </div>
+                    <div class="mt-8 text-center">
+                        <button onclick="checkMatchingAnswers()" class="bg-emerald-600 text-white font-semibold py-2 px-6 rounded-lg hover:bg-emerald-700 transition-colors">Check Answers</button>
+                        <button onclick="resetMatching()" class="ml-4 bg-slate-200 text-slate-800 font-semibold py-2 px-6 rounded-lg hover:bg-slate-300 transition-colors">Reset</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Multiple Choice Quiz -->
+            <div id="quiz" class="activity-content hidden">
+                <div class="activity-card p-6 md:p-8">
+                    <h2 class="text-2xl font-semibold mb-4">Exercise 2: Multiple Choice Quiz</h2>
+                    <p class="text-slate-600 mb-6">Select the best answer for each question.</p>
+                    <div id="quiz-container" class="space-y-8">
+                        <!-- Quiz questions will be dynamically inserted here -->
+                    </div>
+                    <div class="mt-8 text-center">
+                        <button onclick="submitQuiz()" class="bg-emerald-600 text-white font-semibold py-2 px-6 rounded-lg hover:bg-emerald-700 transition-colors">Submit Quiz</button>
+                        <p id="quiz-result" class="mt-4 font-semibold text-lg"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fill in the Blank Activity -->
+            <div id="fill-in-blank" class="activity-content hidden">
+                <div class="activity-card p-6 md:p-8">
+                    <h2 class="text-2xl font-semibold mb-4">Exercise 4: Fill in the Blank</h2>
+                    <p class="text-slate-600 mb-6">Fill in the blanks with the correct words from the word bank.</p>
+                    <div id="word-bank" class="mb-6 p-4 bg-emerald-50 border border-emerald-200 rounded-lg flex flex-wrap gap-2">
+                        <!-- Word bank will be dynamically inserted here -->
+                    </div>
+                    <div id="fill-in-blank-container" class="space-y-4 text-lg leading-relaxed">
+                        <!-- Sentences will be dynamically inserted here -->
+                    </div>
+                     <div class="mt-8 text-center">
+                        <button onclick="checkFillInBlank()" class="bg-emerald-600 text-white font-semibold py-2 px-6 rounded-lg hover:bg-emerald-700 transition-colors">Check Answers</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Diagram Labeling Activity -->
+            <div id="labeling" class="activity-content hidden">
+                <div class="activity-card p-6 md:p-8">
+                    <h2 class="text-2xl font-semibold mb-4">Exercise 5: Diagram Labeling</h2>
+                    <p class="text-slate-600 mb-6">Hover over the numbered dots to reveal the radiation protection principles in an x-ray room.</p>
+                    <div class="flex flex-col items-center justify-center">
+                        <div class="relative diagram-container w-full max-w-4xl">
+                            <h3 class="text-xl font-semibold text-center mb-4">Radiation Protection in a Diagnostic X-Ray Suite</h3>
+                            <svg viewBox="0 0 800 500" aria-labelledby="protection-title" role="img">
+                                <title id="protection-title">A diagram illustrating radiation protection principles in an x-ray room.</title>
+                                <!-- Room walls -->
+                                <rect x="50" y="50" width="700" height="400" fill="#f1f5f9" stroke="#94a3b8" stroke-width="2"/>
+                                <!-- Control Booth -->
+                                <rect x="50" y="50" width="200" height="250" fill="#e2e8f0" stroke="#94a3b8" stroke-width="2"/>
+                                <rect x="130" y="70" width="100" height="80" fill="#bfdbfe" stroke="#60a5fa" stroke-width="2"/>
+                                <text x="150" y="280" font-weight="bold" class="fill-slate-700">Control Booth</text>
+                                <!-- X-ray tube -->
+                                <g transform="translate(450, 100)">
+                                    <rect x="-50" y="-20" width="100" height="40" rx="5" fill="#64748b"/>
+                                    <rect x="-10" y="20" width="20" height="30" fill="#94a3b8"/>
+                                </g>
+                                <text x="450" y="80" text-anchor="middle" class="fill-slate-600">X-Ray Source</text>
+                                <!-- Patient Table -->
+                                <rect x="350" y="300" width="200" height="40" fill="#cbd5e1"/>
+                                <circle cx="450" cy="280" r="30" fill="#a78bfa"/>
+                                <text x="450" y="360" text-anchor="middle" class="fill-slate-600">Patient</text>
+                                <!-- Primary Beam -->
+                                <polygon points="440,150 460,150 500,260 400,260" fill="rgba(253, 224, 71, 0.5)"/>
+                                <!-- Scatter Radiation -->
+                                <path d="M450,280 C 400,230 350,280" stroke="#fb923c" stroke-width="2" fill="none" stroke-dasharray="5,5"/>
+                                <path d="M450,280 C 500,230 550,280" stroke="#fb923c" stroke-width="2" fill="none" stroke-dasharray="5,5"/>
+                                <path d="M450,280 C 450,200 380,200" stroke="#fb923c" stroke-width="2" fill="none" stroke-dasharray="5,5"/>
+                                <!-- Radiographer -->
+                                <circle cx="180" y="200" r="20" fill="#34d399"/>
+                                <rect x="170" y="220" width="20" height="30" fill="#34d399"/>
+                            </svg>
+                             <!-- Interactive Dots -->
+                            <div id="protection-labels-container"></div>
+                        </div>
+                    </div>
+                    <div id="label-popup" class="label-popup"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Data from PDF ---
+        const matchingData = [
+            { id: 1, term: 'ALARA concept', definition: 'Principle that occupational exposure should be kept "as low as reasonably achievable."' },
+            { id: 2, term: 'Inverse square law (ISL)', definition: 'The intensity of radiation is inversely proportional to the square of the distance from the source.' },
+            { id: 3, term: 'CumEfD limit', definition: 'A radiation worker\'s lifetime effective dose should not exceed 10 mSv times the person\'s age in years.' },
+            { id: 4, term: 'Workload (W)', definition: 'The radiation output weighted time that the unit is actually delivering radiation during the week.' },
+            { id: 5, term: 'Use factor (U)', definition: 'The fraction of the work week during which the radiation beam is directed at a particular barrier.' },
+            { id: 6, term: 'Occupancy factor (T)', definition: 'Used to account for the fraction of the work week that a space beyond a barrier is occupied.' },
+            { id: 7, term: 'Primary protective barrier', definition: 'Prevents direct, or unscattered, radiation from reaching personnel or the public on the other side.' },
+            { id: 8, term: 'Secondary radiation', definition: 'Consists of leakage radiation from the tube housing and scatter radiation from the patient.' },
+            { id: 9, term: '50 mSv', definition: 'Annual occupational effective dose limit for whole-body exposure.' },
+            { id: 10, term: '0.5 mSv', definition: 'Monthly allowable equivalent dose to the embryo-fetus from an occupationally exposed pregnant technologist.' },
+        ];
+
+        const quizData = [
+            {
+                question: "Which of the following is the most effective means of protection from ionizing radiation?",
+                options: ["Reducing time", "Increasing distance", "Using shielding", "Wearing a dosimeter"],
+                answer: "Increasing distance"
+            },
+            {
+                question: "A facility that employs a pregnant radiographer should provide an additional monitor to ensure the monthly EqD to the embryo-fetus does not exceed:",
+                options: ["50 mSv", "5 mSv", "1 mSv", "0.5 mSv"],
+                answer: "0.5 mSv"
+            },
+            {
+                question: "If a radiographer stands 1 m away from an x-ray tube and receives an exposure rate of 4.0 mGy/hr, what will the exposure rate be at 2 m?",
+                options: ["1 mGy/hr", "2 mGy/hr", "8 mGy/hr", "16 mGy/hr"],
+                answer: "1 mGy/hr"
+            },
+            {
+                question: "The NCRP recommends a lifetime effective dose limit for an occupationally exposed individual, which is calculated as:",
+                options: ["Age in years x 1 mSv", "Age in years x 10 mSv", "Age in years x 50 mSv", "A flat limit of 1000 mSv"],
+                answer: "Age in years x 10 mSv"
+            },
+            {
+                question: "Which agency is responsible for regulations regarding an employee's 'right to know' about hazards in the workplace?",
+                options: ["NRC", "FDA", "EPA", "OSHA"],
+                answer: "OSHA"
+            }
+        ];
+
+        const fillInBlankData = {
+            wordBank: ["0.5 mSv", "5.0 mSv", "ALARA", "Compton scatter", "distance", "embryo-fetus", "four", "patient", "perpendicular", "right angles", "scattered", "shielding", "time"],
+            sentences: [
+                "The three basic principles of radiation protection are {time}, {distance}, and {shielding}.",
+                "{Scattered} radiation poses the most significant occupational hazard in diagnostic radiology.",
+                "The most effective means of protection from ionizing radiation is {distance}.",
+                "When the distance from a point source of radiation is doubled, the intensity decreases by a factor of {four}.",
+                "The EqD to the {embryo-fetus} from occupational exposure of the mother must not exceed the monthly limit of {0.5 mSv}.",
+                "To ensure protection from scattered radiation from the patient, the radiographer should stand as far from the {patient} as practical.",
+                "The radiographer should attempt to stand at {right angles} (90 degrees) to the x-ray beam-scattering object line.",
+                "The ALARA concept holds that occupational exposure should be kept as low as reasonably achievable."
+            ]
+        };
+        
+        const protectionLabelData = [
+            { id: 1, name: 'Principle of Time', description: 'Minimize the duration of exposure. The radiographer spends most of their time in the shielded control booth.', top: '45%', left: '22.5%' },
+            { id: 2, name: 'Principle of Distance', description: 'Maximize distance from the radiation source. The inverse square law states that doubling the distance reduces dose to 1/4.', top: '65%', left: '75%' },
+            { id: 3, name: 'Principle of Shielding', description: 'Use protective barriers. The control booth walls and leaded glass window act as a primary barrier.', top: '20%', left: '25%' },
+            { id: 4, name: 'Primary Beam', description: 'The useful, unscattered beam directed at the patient. Personnel should never be in the primary beam.', top: '45%', left: '56%' },
+            { id: 5, name: 'Scatter Radiation', description: 'The primary source of occupational exposure. It emanates from the patient after the primary beam interacts with them.', top: '45%', left: '40%' },
+            { id: 6, name: 'Primary Barrier', description: 'A barrier designed to intercept the primary beam. The wall behind the patient table must be a primary barrier.', top: '80%', left: '50%' },
+            { id: 7, name: 'Secondary Barrier', description: 'A barrier that only intercepts scatter and leakage radiation, like the control booth wall not in the direct line of the beam.', top: '55%', left: '6.5%' },
+        ];
+
+        // --- Tab Navigation ---
+        const activities = document.querySelectorAll('.activity-content');
+        const tabButtons = document.querySelectorAll('.tab-button');
+
+        function showActivity(activityId) {
+            activities.forEach(activity => activity.classList.add('hidden'));
+            document.getElementById(activityId).classList.remove('hidden');
+            tabButtons.forEach(button => button.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // --- Matching Activity Logic ---
+        const termsContainer = document.getElementById('terms-container');
+        const definitionsContainer = document.getElementById('definitions-container');
+        let draggedItem = null;
+
+        function initializeMatching() {
+            termsContainer.innerHTML = '';
+            definitionsContainer.innerHTML = '';
+            const shuffledTerms = [...matchingData].sort(() => Math.random() - 0.5);
+            const shuffledDefs = [...matchingData].sort(() => Math.random() - 0.5);
+
+            shuffledTerms.forEach(item => {
+                const termEl = document.createElement('div');
+                termEl.className = 'p-3 bg-slate-100 rounded-lg draggable';
+                termEl.textContent = item.term;
+                termEl.draggable = true;
+                termEl.dataset.id = item.id;
+                termsContainer.appendChild(termEl);
+            });
+
+            shuffledDefs.forEach(item => {
+                const defContainer = document.createElement('div');
+                defContainer.className = 'flex items-center gap-3';
+                const dropZone = document.createElement('div');
+                dropZone.className = 'w-48 h-12 drop-zone rounded-lg flex items-center justify-center text-slate-500 text-sm p-2';
+                dropZone.dataset.id = item.id;
+                dropZone.textContent = 'Drop here';
+                const defText = document.createElement('div');
+                defText.className = 'flex-1';
+                defText.textContent = item.definition;
+                defContainer.append(dropZone, defText);
+                definitionsContainer.appendChild(defContainer);
+            });
+            addMatchingEventListeners();
+        }
+        
+        function resetMatching() {
+            initializeMatching();
+            document.querySelectorAll('.feedback').forEach(f => f.remove());
+        }
+
+        function addMatchingEventListeners() {
+            const draggables = document.querySelectorAll('.draggable');
+            const dropZones = document.querySelectorAll('.drop-zone');
+
+            draggables.forEach(draggable => {
+                draggable.addEventListener('dragstart', () => {
+                    draggedItem = draggable;
+                    setTimeout(() => draggable.classList.add('dragging'), 0);
+                });
+                draggable.addEventListener('dragend', () => {
+                    draggedItem.classList.remove('dragging');
+                    draggedItem = null;
+                });
+            });
+
+            dropZones.forEach(zone => {
+                zone.addEventListener('dragover', e => {
+                    e.preventDefault();
+                    zone.classList.add('hovered');
+                });
+                zone.addEventListener('dragleave', () => zone.classList.remove('hovered'));
+                zone.addEventListener('drop', e => {
+                    e.preventDefault();
+                    zone.classList.remove('hovered');
+                    if (draggedItem) {
+                        if (zone.children.length > 0) {
+                            termsContainer.appendChild(zone.firstElementChild);
+                        }
+                        zone.innerHTML = '';
+                        zone.appendChild(draggedItem);
+                        draggedItem.classList.remove('draggable', 'bg-slate-100');
+                        draggedItem.classList.add('bg-emerald-100');
+                        draggedItem.draggable = false;
+                    }
+                });
+            });
+        }
+        
+        function checkMatchingAnswers() {
+            document.querySelectorAll('.drop-zone').forEach(zone => {
+                const droppedItem = zone.querySelector('div');
+                const isCorrect = droppedItem && zone.dataset.id === droppedItem.dataset.id;
+                const oldFeedback = zone.parentElement.querySelector('.feedback');
+                if(oldFeedback) oldFeedback.remove();
+                const feedback = document.createElement('span');
+                feedback.className = 'feedback';
+                if (isCorrect) {
+                    feedback.textContent = 'Correct!';
+                    feedback.classList.add('correct');
+                    zone.style.borderColor = '#22c55e';
+                } else {
+                    feedback.textContent = 'Incorrect';
+                    feedback.classList.add('incorrect');
+                    zone.style.borderColor = '#ef4444';
+                }
+                zone.parentElement.appendChild(feedback);
+            });
+        }
+
+        // --- Multiple Choice Quiz Logic ---
+        const quizContainer = document.getElementById('quiz-container');
+
+        function initializeQuiz() {
+            quizData.forEach((q, index) => {
+                const questionBlock = document.createElement('div');
+                questionBlock.className = 'quiz-question';
+                const questionText = document.createElement('p');
+                questionText.className = 'font-semibold mb-3';
+                questionText.textContent = `${index + 1}. ${q.question}`;
+                questionBlock.appendChild(questionText);
+                const optionsList = document.createElement('div');
+                optionsList.className = 'space-y-2';
+                q.options.forEach(option => {
+                    const optionLabel = document.createElement('label');
+                    optionLabel.className = 'quiz-option flex items-center p-3 border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-50';
+                    const radioInput = document.createElement('input');
+                    radioInput.type = 'radio';
+                    radioInput.name = `question${index}`;
+                    radioInput.value = option;
+                    radioInput.className = 'h-4 w-4 text-emerald-600 border-gray-300 focus:ring-emerald-500';
+                    const optionText = document.createElement('span');
+                    optionText.className = 'ml-3';
+                    optionText.textContent = option;
+                    optionLabel.append(radioInput, optionText);
+                    optionsList.appendChild(optionLabel);
+                });
+                questionBlock.appendChild(optionsList);
+                quizContainer.appendChild(questionBlock);
+            });
+        }
+        
+        function submitQuiz() {
+            let score = 0;
+            quizData.forEach((q, index) => {
+                const radios = document.getElementsByName(`question${index}`);
+                radios[0].closest('.space-y-2').querySelectorAll('label').forEach(label => label.classList.remove('correct', 'incorrect'));
+                for (const radio of radios) {
+                    const label = radio.parentElement;
+                    if (radio.checked) {
+                        if (radio.value === q.answer) {
+                            score++;
+                            label.classList.add('correct');
+                        } else {
+                            label.classList.add('incorrect');
+                        }
+                    }
+                    if (radio.value === q.answer && !label.classList.contains('correct')) {
+                       label.classList.add('correct');
+                    }
+                }
+            });
+            document.getElementById('quiz-result').textContent = `You scored ${score} out of ${quizData.length}!`;
+        }
+
+        // --- Fill in the Blank Logic ---
+        const wordBankContainer = document.getElementById('word-bank');
+        const sentencesContainer = document.getElementById('fill-in-blank-container');
+
+        function initializeFillInBlank() {
+            wordBankContainer.innerHTML = '';
+            sentencesContainer.innerHTML = '';
+            fillInBlankData.wordBank.forEach(word => {
+                const wordEl = document.createElement('span');
+                wordEl.className = 'bg-white px-2 py-1 rounded text-sm font-medium cursor-pointer border border-slate-300';
+                wordEl.textContent = word;
+                wordEl.onclick = e => {
+                    const activeInput = document.querySelector('input.active-blank');
+                    if (activeInput) activeInput.value = e.target.textContent;
+                };
+                wordBankContainer.appendChild(wordEl);
+            });
+
+            fillInBlankData.sentences.forEach(sentence => {
+                const p = document.createElement('p');
+                const parts = sentence.split(/(\{[^}]+\})/);
+                parts.forEach(part => {
+                    if (part.startsWith('{') && part.endsWith('}')) {
+                        const answer = part.slice(1, -1);
+                        const input = document.createElement('input');
+                        input.type = 'text';
+                        input.dataset.answer = answer.toLowerCase();
+                        input.className = 'inline-block w-36 mx-1 px-2 py-1 border-b-2 border-slate-300 focus:border-emerald-500 focus:outline-none transition bg-slate-50 rounded-t-md';
+                        input.onfocus = e => {
+                            document.querySelectorAll('input.active-blank').forEach(el => el.classList.remove('active-blank'));
+                            e.target.classList.add('active-blank');
+                        }
+                        p.appendChild(input);
+                    } else {
+                        p.appendChild(document.createTextNode(part));
+                    }
+                });
+                sentencesContainer.appendChild(p);
+            });
+        }
+        
+        function checkFillInBlank() {
+            sentencesContainer.querySelectorAll('input').forEach(input => {
+                if (input.value.trim().toLowerCase() === input.dataset.answer) {
+                    input.style.borderColor = '#22c55e';
+                    input.style.backgroundColor = '#dcfce7';
+                } else {
+                    input.style.borderColor = '#ef4444';
+                    input.style.backgroundColor = '#fee2e2';
+                }
+            });
+        }
+        
+        // --- Diagram Labeling Logic ---
+        const protectionLabelsContainer = document.getElementById('protection-labels-container');
+        const popup = document.getElementById('label-popup');
+
+        function createLabelDot(container, data) {
+            const parentContainer = container.parentElement;
+            data.forEach(item => {
+                const dot = document.createElement('div');
+                dot.className = 'label-dot';
+                dot.style.top = item.top;
+                dot.style.left = item.left;
+                dot.textContent = item.id;
+                
+                dot.addEventListener('mouseenter', e => {
+                    popup.innerHTML = `<strong class="text-emerald-700">${item.name}</strong><p class="text-sm mt-1">${item.description}</p>`;
+                    const parentRect = parentContainer.getBoundingClientRect();
+                    const dotRect = e.target.getBoundingClientRect();
+                    
+                    let top = dotRect.top - parentRect.top + dotRect.height + 8;
+                    let left = dotRect.left - parentRect.top + (dotRect.width / 2) - (popup.offsetWidth / 2);
+
+                    if (left < 0) left = 5;
+                    if (left + popup.offsetWidth > parentRect.width) left = parentRect.width - popup.offsetWidth - 5;
+                    if (top + popup.offsetHeight > parentRect.height) top = dotRect.top - parentRect.top - popup.offsetHeight - 8;
+
+                    popup.style.top = `${top}px`;
+                    popup.style.left = `${left}px`;
+                    popup.classList.add('visible');
+                });
+                
+                dot.addEventListener('mouseleave', () => popup.classList.remove('visible'));
+                container.appendChild(dot);
+            });
+        }
+        
+        function initializeLabeling() {
+            createLabelDot(protectionLabelsContainer, protectionLabelData);
+        }
+
+        // --- Initial Load ---
+        window.onload = () => {
+            initializeMatching();
+            initializeQuiz();
+            initializeFillInBlank();
+            initializeLabeling();
+        };
+    </script>
+</body>
+</html>
