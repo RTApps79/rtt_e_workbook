@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Radiation Effects Activities</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        .activity-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: all 0.3s ease;
+        }
+        .activity-card:hover {
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
+        }
+        .tab-button {
+            transition: all 0.3s ease;
+        }
+        .tab-button.active {
+            color: #c026d3; /* Fuchsia */
+            border-bottom-color: #c026d3;
+        }
+        .draggable {
+            cursor: grab;
+            user-select: none;
+        }
+        .dragging {
+            opacity: 0.5;
+            background-color: #fae8ff;
+        }
+        .drop-zone {
+            border: 2px dashed #cbd5e1;
+            transition: background-color 0.3s ease;
+        }
+        .drop-zone.hovered {
+            background-color: #fae8ff;
+            border-color: #c026d3;
+        }
+        .feedback {
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        .feedback.correct {
+            color: #16a34a;
+        }
+        .feedback.incorrect {
+            color: #dc2626;
+        }
+        .quiz-option.correct {
+            background-color: #dcfce7;
+            border-left: 4px solid #22c55e;
+        }
+        .quiz-option.incorrect {
+            background-color: #fee2e2;
+            border-left: 4px solid #ef4444;
+        }
+        .label-dot {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background-color: rgba(192, 38, 211, 0.8);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .label-dot:hover {
+            transform: scale(1.2);
+            background-color: rgba(217, 70, 239, 1);
+        }
+        .label-popup {
+            position: absolute;
+            background-color: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            z-index: 10;
+            width: 220px;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            pointer-events: none;
+        }
+        .label-popup.visible {
+            visibility: visible;
+            opacity: 1;
+        }
+        .diagram-container svg {
+            width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+        }
+    </style>
+</head>
+<body class="antialiased text-slate-800">
+
+    <div class="container mx-auto p-4 md:p-8">
+        <header class="text-center mb-10">
+            <h1 class="text-4xl md:text-5xl font-bold text-slate-900">Radiation Effects on Organ Systems</h1>
+            <p class="text-lg text-slate-600 mt-2">Interactive Learning Activities</p>
+        </header>
+
+        <!-- Tabs for different activities -->
+        <div class="mb-8 border-b border-slate-200">
+            <nav class="-mb-px flex space-x-6" aria-label="Tabs">
+                <button onclick="showActivity('matching')" class="tab-button active whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">Matching Game</button>
+                <button onclick="showActivity('quiz')" class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">Multiple Choice</button>
+                <button onclick="showActivity('fill-in-blank')" class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">Fill in the Blank</button>
+                <button onclick="showActivity('labeling')" class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">Diagram Labeling</button>
+            </nav>
+        </div>
+
+        <!-- Activity Sections -->
+        <div id="activities">
+            <!-- Matching Activity -->
+            <div id="matching" class="activity-content">
+                <div class="activity-card p-6 md:p-8">
+                    <h2 class="text-2xl font-semibold mb-4">Exercise 1: Matching</h2>
+                    <p class="text-slate-600 mb-6">Drag the terms on the left to their correct definitions on the right.</p>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div id="terms-container" class="space-y-3">
+                            <!-- Terms will be dynamically inserted here -->
+                        </div>
+                        <div id="definitions-container" class="space-y-3">
+                            <!-- Definitions will be dynamically inserted here -->
+                        </div>
+                    </div>
+                    <div class="mt-8 text-center">
+                        <button onclick="checkMatchingAnswers()" class="bg-fuchsia-600 text-white font-semibold py-2 px-6 rounded-lg hover:bg-fuchsia-700 transition-colors">Check Answers</button>
+                        <button onclick="resetMatching()" class="ml-4 bg-slate-200 text-slate-800 font-semibold py-2 px-6 rounded-lg hover:bg-slate-300 transition-colors">Reset</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Multiple Choice Quiz -->
+            <div id="quiz" class="activity-content hidden">
+                <div class="activity-card p-6 md:p-8">
+                    <h2 class="text-2xl font-semibold mb-4">Exercise 2: Multiple Choice Quiz</h2>
+                    <p class="text-slate-600 mb-6">Select the best answer for each question.</p>
+                    <div id="quiz-container" class="space-y-8">
+                        <!-- Quiz questions will be dynamically inserted here -->
+                    </div>
+                    <div class="mt-8 text-center">
+                        <button onclick="submitQuiz()" class="bg-fuchsia-600 text-white font-semibold py-2 px-6 rounded-lg hover:bg-fuchsia-700 transition-colors">Submit Quiz</button>
+                        <p id="quiz-result" class="mt-4 font-semibold text-lg"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fill in the Blank Activity -->
+            <div id="fill-in-blank" class="activity-content hidden">
+                <div class="activity-card p-6 md:p-8">
+                    <h2 class="text-2xl font-semibold mb-4">Exercise 4: Fill in the Blank</h2>
+                    <p class="text-slate-600 mb-6">Fill in the blanks with the correct words from the word bank.</p>
+                    <div id="word-bank" class="mb-6 p-4 bg-fuchsia-50 border border-fuchsia-200 rounded-lg flex flex-wrap gap-2">
+                        <!-- Word bank will be dynamically inserted here -->
+                    </div>
+                    <div id="fill-in-blank-container" class="space-y-4 text-lg leading-relaxed">
+                        <!-- Sentences will be dynamically inserted here -->
+                    </div>
+                     <div class="mt-8 text-center">
+                        <button onclick="checkFillInBlank()" class="bg-fuchsia-600 text-white font-semibold py-2 px-6 rounded-lg hover:bg-fuchsia-700 transition-colors">Check Answers</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Diagram Labeling Activity -->
+            <div id="labeling" class="activity-content hidden">
+                <div class="activity-card p-6 md:p-8">
+                    <h2 class="text-2xl font-semibold mb-4">Exercise 5: Diagram Labeling</h2>
+                    <p class="text-slate-600 mb-6">Hover over the numbered dots to reveal information about each stage of Acute Radiation Syndrome (ARS).</p>
+                    <div class="flex flex-col items-center justify-center">
+                        <!-- ARS Diagram -->
+                        <div class="relative diagram-container w-full max-w-3xl">
+                            <h3 class="text-xl font-semibold text-center mb-4">Acute Radiation Syndrome (ARS) Stages</h3>
+                            <svg viewBox="0 0 800 300" aria-labelledby="ars-title" role="img">
+                                <title id="ars-title">A timeline diagram of the four stages of Acute Radiation Syndrome.</title>
+                                <!-- Timeline arrow -->
+                                <defs>
+                                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+                                        <polygon points="0 0, 10 3.5, 0 7" fill="#64748b" />
+                                    </marker>
+                                </defs>
+                                <line x1="50" y1="150" x2="750" y2="150" stroke="#64748b" stroke-width="3" marker-end="url(#arrowhead)" />
+                                
+                                <!-- Stages -->
+                                <g>
+                                    <circle cx="120" cy="150" r="15" fill="#d946ef" />
+                                    <text x="120" y="120" text-anchor="middle" font-weight="bold" class="fill-slate-700">Prodromal</text>
+                                </g>
+                                <g>
+                                    <circle cx="300" cy="150" r="15" fill="#c026d3" />
+                                    <text x="300" y="120" text-anchor="middle" font-weight="bold" class="fill-slate-700">Latent</text>
+                                </g>
+                                <g>
+                                    <circle cx="480" cy="150" r="15" fill="#a21caf" />
+                                    <text x="480" y="120" text-anchor="middle" font-weight="bold" class="fill-slate-700">Manifest Illness</text>
+                                </g>
+                                <g>
+                                    <circle cx="660" cy="150" r="15" fill="#86198f" />
+                                    <text x="660" y="120" text-anchor="middle" font-weight="bold" class="fill-slate-700">Recovery or Death</text>
+                                </g>
+                                
+                                <text x="400" y="280" text-anchor="middle" class="fill-slate-500 text-sm">Time After High-Dose Exposure</text>
+                            </svg>
+                            <!-- Interactive Dots -->
+                            <div id="ars-labels-container"></div>
+                        </div>
+                    </div>
+                    <div id="label-popup" class="label-popup"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Data from PDF ---
+        const matchingData = [
+            { id: 1, term: 'LD 50/30', definition: 'Signifies the whole-body dose of ionizing radiation that can be lethal to 50% of an exposed population within 30 days' },
+            { id: 2, term: 'ARS', definition: 'Radiation sickness that occurs in humans after whole-body reception of large doses of ionizing radiation (1 Gy or more) delivered over a short time' },
+            { id: 3, term: 'Atrophy', definition: 'Shrinkage of organs and tissues after a high radiation dose' },
+            { id: 4, term: 'Epilation', definition: 'Loss of hair (alopecia)' },
+            { id: 5, term: 'Somatic effects', definition: 'Effects upon the body that was irradiated' },
+            { id: 6, term: 'Genetic effects', definition: 'Effects upon future generations due to irradiation of germ cells' },
+            { id: 7, term: 'Prodromal stage', definition: 'The first stage of ARS, occurring within hours after a whole-body absorbed dose of 1 Gy or more' },
+            { id: 8, term: 'Latent period', definition: 'The period after the initial stage of ARS during which no visible effects or symptoms of radiation exposure occur' },
+            { id: 9, term: 'Karyotyping', definition: 'The process of mapping chromosomes to observe radiation-induced aberrations' },
+            { id: 10, term: 'Radiodermatitis', definition: 'Reddening of the skin caused by exposure to ionizing radiation, often seen in early radiologists' },
+        ];
+
+        const quizData = [
+            {
+                question: "After a high radiation dose, the shrinkage of organs and tissues is referred to as:",
+                options: ["Atrophy", "Desquamation", "Erythema", "Radiodermatitis"],
+                answer: "Atrophy"
+            },
+            {
+                question: "Which of the following measures of lethality is perhaps the most accurate for human survival?",
+                options: ["LD 10/30", "LD 50/30", "LD 50/60", "LD 100/60"],
+                answer: "LD 50/60"
+            },
+            {
+                question: "In humans with the gastrointestinal form of ARS, the part of the body most severely affected is the:",
+                options: ["Brain", "Heart", "Large intestine", "Small intestine"],
+                answer: "Small intestine"
+            },
+            {
+                question: "Without medical support, the LD 50/30 for adult humans is estimated to be:",
+                options: ["1.0 to 2.0 Gy", "2.0 to 3.0 Gy", "3.0 to 4.0 Gy", "4.0 to 5.0 Gy"],
+                answer: "3.0 to 4.0 Gy"
+            },
+            {
+                question: "The hematopoietic, gastrointestinal, and cerebrovascular syndromes are three separate dose-related syndromes that are part of the:",
+                options: ["Bone marrow syndrome", "Cytogenetic syndrome", "Prodromal syndrome", "Acute radiation syndrome"],
+                answer: "Acute radiation syndrome"
+            }
+        ];
+
+        const fillInBlankData = {
+            wordBank: ["atrophy", "death", "early", "functional", "gonadal", "high", "ionizing radiation", "late", "menstruation", "radiosensitive", "repair", "repopulation", "somatic", "substantial dose"],
+            sentences: [
+                "A {substantial dose} of ionizing radiation is required to produce biologic effects soon after irradiation.",
+                "Depending on the length of time from the moment of irradiation to the first appearance of symptoms, effects are classified as either {early} or {late} somatic effects.",
+                "The processes of {repair} and {repopulation} permit an organ that has sustained functional damage to regain some or most of its useful ability.",
+                "A destructive response in biologic tissue is likely to occur when any part of the human body receives a {high} radiation dose.",
+                "Human germ cells are relatively {radiosensitive}.",
+                "If an ovum is not fertilized by a male sperm, it will be lost during {menstruation} and not replaced.",
+                "Significant cell death usually results from high radiation doses, leading to the shrinkage of organs and tissues, a process referred to as {atrophy}.",
+                "{Somatic} effects are effects upon the body that was irradiated.",
+                "Whole-body radiation doses greater than 6 Gy will cause the {death} of the entire population in 30 days without medical support."
+            ]
+        };
+        
+        const arsLabelData = [
+            { id: 1, name: 'Prodromal Stage', description: 'Occurs hours after exposure (≥1 Gy). Symptoms include nausea, vomiting, diarrhea, fatigue, and leukopenia.', top: '50%', left: '15%' },
+            { id: 2, name: 'Latent Period', description: 'A period of well-being where no visible symptoms occur. Can last from hours to weeks depending on the dose.', top: '50%', left: '37.5%' },
+            { id: 3, name: 'Manifest Illness', description: 'Symptoms return and are specific to the syndrome (hematopoietic, gastrointestinal, or cerebrovascular).', top: '50%', left: '60%' },
+            { id: 4, name: 'Recovery or Death', description: 'The final stage. Recovery can take weeks to months. Higher doses lead to death.', top: '50%', left: '82.5%' },
+        ];
+
+        // --- Tab Navigation ---
+        const activities = document.querySelectorAll('.activity-content');
+        const tabButtons = document.querySelectorAll('.tab-button');
+
+        function showActivity(activityId) {
+            activities.forEach(activity => activity.classList.add('hidden'));
+            document.getElementById(activityId).classList.remove('hidden');
+            tabButtons.forEach(button => button.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // --- Matching Activity Logic ---
+        const termsContainer = document.getElementById('terms-container');
+        const definitionsContainer = document.getElementById('definitions-container');
+        let draggedItem = null;
+
+        function initializeMatching() {
+            termsContainer.innerHTML = '';
+            definitionsContainer.innerHTML = '';
+            const shuffledTerms = [...matchingData].sort(() => Math.random() - 0.5);
+            const shuffledDefs = [...matchingData].sort(() => Math.random() - 0.5);
+
+            shuffledTerms.forEach(item => {
+                const termEl = document.createElement('div');
+                termEl.className = 'p-3 bg-slate-100 rounded-lg draggable';
+                termEl.textContent = item.term;
+                termEl.draggable = true;
+                termEl.dataset.id = item.id;
+                termsContainer.appendChild(termEl);
+            });
+
+            shuffledDefs.forEach(item => {
+                const defContainer = document.createElement('div');
+                defContainer.className = 'flex items-center gap-3';
+                const dropZone = document.createElement('div');
+                dropZone.className = 'w-48 h-12 drop-zone rounded-lg flex items-center justify-center text-slate-500 text-sm p-2';
+                dropZone.dataset.id = item.id;
+                dropZone.textContent = 'Drop here';
+                const defText = document.createElement('div');
+                defText.className = 'flex-1';
+                defText.textContent = item.definition;
+                defContainer.append(dropZone, defText);
+                definitionsContainer.appendChild(defContainer);
+            });
+            addMatchingEventListeners();
+        }
+        
+        function resetMatching() {
+            initializeMatching();
+            document.querySelectorAll('.feedback').forEach(f => f.remove());
+        }
+
+        function addMatchingEventListeners() {
+            const draggables = document.querySelectorAll('.draggable');
+            const dropZones = document.querySelectorAll('.drop-zone');
+
+            draggables.forEach(draggable => {
+                draggable.addEventListener('dragstart', () => {
+                    draggedItem = draggable;
+                    setTimeout(() => draggable.classList.add('dragging'), 0);
+                });
+                draggable.addEventListener('dragend', () => {
+                    draggedItem.classList.remove('dragging');
+                    draggedItem = null;
+                });
+            });
+
+            dropZones.forEach(zone => {
+                zone.addEventListener('dragover', e => {
+                    e.preventDefault();
+                    zone.classList.add('hovered');
+                });
+                zone.addEventListener('dragleave', () => zone.classList.remove('hovered'));
+                zone.addEventListener('drop', e => {
+                    e.preventDefault();
+                    zone.classList.remove('hovered');
+                    if (draggedItem) {
+                        if (zone.children.length > 0) {
+                            termsContainer.appendChild(zone.firstElementChild);
+                        }
+                        zone.innerHTML = '';
+                        zone.appendChild(draggedItem);
+                        draggedItem.classList.remove('draggable', 'bg-slate-100');
+                        draggedItem.classList.add('bg-fuchsia-100');
+                        draggedItem.draggable = false;
+                    }
+                });
+            });
+        }
+        
+        function checkMatchingAnswers() {
+            document.querySelectorAll('.drop-zone').forEach(zone => {
+                const droppedItem = zone.querySelector('div');
+                const isCorrect = droppedItem && zone.dataset.id === droppedItem.dataset.id;
+                const oldFeedback = zone.parentElement.querySelector('.feedback');
+                if(oldFeedback) oldFeedback.remove();
+                const feedback = document.createElement('span');
+                feedback.className = 'feedback';
+                if (isCorrect) {
+                    feedback.textContent = 'Correct!';
+                    feedback.classList.add('correct');
+                    zone.style.borderColor = '#22c55e';
+                } else {
+                    feedback.textContent = 'Incorrect';
+                    feedback.classList.add('incorrect');
+                    zone.style.borderColor = '#ef4444';
+                }
+                zone.parentElement.appendChild(feedback);
+            });
+        }
+
+        // --- Multiple Choice Quiz Logic ---
+        const quizContainer = document.getElementById('quiz-container');
+
+        function initializeQuiz() {
+            quizData.forEach((q, index) => {
+                const questionBlock = document.createElement('div');
+                questionBlock.className = 'quiz-question';
+                const questionText = document.createElement('p');
+                questionText.className = 'font-semibold mb-3';
+                questionText.textContent = `${index + 1}. ${q.question}`;
+                questionBlock.appendChild(questionText);
+                const optionsList = document.createElement('div');
+                optionsList.className = 'space-y-2';
+                q.options.forEach(option => {
+                    const optionLabel = document.createElement('label');
+                    optionLabel.className = 'quiz-option flex items-center p-3 border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-50';
+                    const radioInput = document.createElement('input');
+                    radioInput.type = 'radio';
+                    radioInput.name = `question${index}`;
+                    radioInput.value = option;
+                    radioInput.className = 'h-4 w-4 text-fuchsia-600 border-gray-300 focus:ring-fuchsia-500';
+                    const optionText = document.createElement('span');
+                    optionText.className = 'ml-3';
+                    optionText.textContent = option;
+                    optionLabel.append(radioInput, optionText);
+                    optionsList.appendChild(optionLabel);
+                });
+                questionBlock.appendChild(optionsList);
+                quizContainer.appendChild(questionBlock);
+            });
+        }
+        
+        function submitQuiz() {
+            let score = 0;
+            quizData.forEach((q, index) => {
+                const radios = document.getElementsByName(`question${index}`);
+                radios[0].closest('.space-y-2').querySelectorAll('label').forEach(label => label.classList.remove('correct', 'incorrect'));
+                for (const radio of radios) {
+                    const label = radio.parentElement;
+                    if (radio.checked) {
+                        if (radio.value === q.answer) {
+                            score++;
+                            label.classList.add('correct');
+                        } else {
+                            label.classList.add('incorrect');
+                        }
+                    }
+                    if (radio.value === q.answer && !label.classList.contains('correct')) {
+                       label.classList.add('correct');
+                    }
+                }
+            });
+            document.getElementById('quiz-result').textContent = `You scored ${score} out of ${quizData.length}!`;
+        }
+
+        // --- Fill in the Blank Logic ---
+        const wordBankContainer = document.getElementById('word-bank');
+        const sentencesContainer = document.getElementById('fill-in-blank-container');
+
+        function initializeFillInBlank() {
+            fillInBlankData.wordBank.forEach(word => {
+                const wordEl = document.createElement('span');
+                wordEl.className = 'bg-white px-2 py-1 rounded text-sm font-medium cursor-pointer border border-slate-300';
+                wordEl.textContent = word;
+                wordEl.onclick = e => {
+                    const activeInput = document.querySelector('input.active-blank');
+                    if (activeInput) activeInput.value = e.target.textContent;
+                };
+                wordBankContainer.appendChild(wordEl);
+            });
+
+            fillInBlankData.sentences.forEach(sentence => {
+                const p = document.createElement('p');
+                const parts = sentence.split(/(\{[^}]+\})/);
+                parts.forEach(part => {
+                    if (part.startsWith('{') && part.endsWith('}')) {
+                        const answer = part.slice(1, -1);
+                        const input = document.createElement('input');
+                        input.type = 'text';
+                        input.dataset.answer = answer.toLowerCase();
+                        input.className = 'inline-block w-36 mx-1 px-2 py-1 border-b-2 border-slate-300 focus:border-fuchsia-500 focus:outline-none transition bg-slate-50 rounded-t-md';
+                        input.onfocus = e => {
+                            document.querySelectorAll('input.active-blank').forEach(el => el.classList.remove('active-blank'));
+                            e.target.classList.add('active-blank');
+                        }
+                        p.appendChild(input);
+                    } else {
+                        p.appendChild(document.createTextNode(part));
+                    }
+                });
+                sentencesContainer.appendChild(p);
+            });
+        }
+        
+        function checkFillInBlank() {
+            sentencesContainer.querySelectorAll('input').forEach(input => {
+                if (input.value.trim().toLowerCase() === input.dataset.answer) {
+                    input.style.borderColor = '#22c55e';
+                    input.style.backgroundColor = '#dcfce7';
+                } else {
+                    input.style.borderColor = '#ef4444';
+                    input.style.backgroundColor = '#fee2e2';
+                }
+            });
+        }
+        
+        // --- Diagram Labeling Logic ---
+        const arsLabelsContainer = document.getElementById('ars-labels-container');
+        const popup = document.getElementById('label-popup');
+
+        function createLabelDot(container, data) {
+            const parentContainer = container.parentElement;
+            data.forEach(item => {
+                const dot = document.createElement('div');
+                dot.className = 'label-dot';
+                dot.style.top = item.top;
+                dot.style.left = item.left;
+                dot.textContent = item.id;
+                
+                dot.addEventListener('mouseenter', e => {
+                    popup.innerHTML = `<strong class="text-fuchsia-700">${item.name}</strong><p class="text-sm mt-1">${item.description}</p>`;
+                    const parentRect = parentContainer.getBoundingClientRect();
+                    const dotRect = e.target.getBoundingClientRect();
+                    
+                    let top = dotRect.top - parentRect.top + dotRect.height + 8;
+                    let left = dotRect.left - parentRect.top + (dotRect.width / 2) - (popup.offsetWidth / 2);
+
+                    if (left < 0) left = 5;
+                    if (left + popup.offsetWidth > parentRect.width) left = parentRect.width - popup.offsetWidth - 5;
+                    if (top + popup.offsetHeight > parentRect.height) top = dotRect.top - parentRect.top - popup.offsetHeight - 8;
+
+                    popup.style.top = `${top}px`;
+                    popup.style.left = `${left}px`;
+                    popup.classList.add('visible');
+                });
+                
+                dot.addEventListener('mouseleave', () => popup.classList.remove('visible'));
+                container.appendChild(dot);
+            });
+        }
+        
+        function initializeLabeling() {
+            createLabelDot(arsLabelsContainer, arsLabelData);
+        }
+
+        // --- Initial Load ---
+        window.onload = () => {
+            initializeMatching();
+            initializeQuiz();
+            initializeFillInBlank();
+            initializeLabeling();
+        };
+    </script>
+</body>
+</html>
