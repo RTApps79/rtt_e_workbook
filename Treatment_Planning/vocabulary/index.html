@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introduction to Treatment Planning Terminology</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0KOVEMeaCssLdsgcjpvpC0lwqotC_spEtOTuI9D4ddfnjcCNCIhE0" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzOKNHGgnmgFnQC3LQ9t4GgBTMMPCAZ72Bb" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+        onload="renderMathInElement(document.body);"></script>
+    <style>
+        :root {
+            --primary-color: #005A9C;
+            --secondary-color: #00A3E0;
+            --accent-color: #FDB813;
+            --text-color: #333;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --border-color: #dee2e6;
+            --header-font: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            --body-font: 'Roboto', 'Open Sans', sans-serif;
+        }
+        body {
+            font-family: var(--body-font);
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        header {
+            text-align: center;
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            font-family: var(--header-font);
+            font-size: 2.8em;
+            color: var(--primary-color);
+            margin: 0;
+        }
+        header p {
+            font-size: 1.1em;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+        h2 {
+            font-family: var(--header-font);
+            font-size: 2em;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+            margin-top: 40px;
+        }
+        h3 {
+            font-family: var(--header-font);
+            font-size: 1.5em;
+            color: var(--secondary-color);
+            margin-top: 30px;
+        }
+        .key-terms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .term-card {
+            background-color: #fdfdfd;
+            border: 1px solid var(--border-color);
+            border-left: 5px solid var(--secondary-color);
+            padding: 15px;
+            border-radius: 8px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .term-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 12px rgba(0,0,0,0.08);
+        }
+        .term-card strong {
+            font-size: 1.1em;
+            color: var(--primary-color);
+        }
+        .formula {
+            background-color: #e9ecef;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+            font-size: 1.2em;
+            overflow-x: auto;
+        }
+        .definition-box {
+            background-color: #f0f8ff;
+            border: 1px solid #bde0fe;
+            border-left: 5px solid var(--primary-color);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .definition-box p {
+            margin: 0;
+        }
+        .example {
+            background-color: #fffbe6;
+            border: 1px solid #ffeeba;
+            border-left: 5px solid var(--accent-color);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .example-title {
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+        }
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            font-family: var(--header-font);
+        }
+        tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        li {
+            background: url('data:image/svg+xml;charset=US-ASCII,<svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><path d="M5 10l4 4 6-6" stroke="%23005A9C" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>') no-repeat left center;
+            padding-left: 30px;
+            margin-bottom: 10px;
+        }
+        .flex-container {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .flex-item {
+            flex: 1;
+            min-width: 300px;
+        }
+        .svg-diagram {
+            width: 100%;
+            height: auto;
+            background: #fdfdfd;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Introduction to Treatment Planning Terminology</h1>
+        <p>RADT 4820 Radiation Oncology Dosimetry | Augusta University</p>
+        <p>Kevin Kindle, MBA, RT(T)</p>
+    </header>
+
+    <main>
+        <section id="key-terms">
+            <h2>Key Terms</h2>
+            <div class="key-terms-grid">
+                <div class="term-card"><strong>Dose:</strong> The energy deposited at a specific point in a medium.</div>
+                <div class="term-card"><strong>Depth (d):</strong> The distance beneath the skin surface where the prescribed dose is delivered.</div>
+                <div class="term-card"><strong>Separation (IFD):</strong> The measurement of a patient's thickness from beam entry to beam exit.</div>
+                <div class="term-card"><strong>D<sub>max</sub>:</strong> The depth at which electronic equilibrium is reached and the maximum dose occurs.</div>
+                <div class="term-card"><strong>Source-Skin Distance (SSD):</strong> Distance from the radiation source to the patient's skin.</div>
+                <div class="term-card"><strong>Source-Axis Distance (SAD):</strong> Distance from the radiation source to the isocenter.</div>
+                <div class="term-card"><strong>Isocenter:</strong> A fixed point in space around which the gantry, collimator, and couch rotate.</div>
+                <div class="term-card"><strong>Dose Rate / Machine Output:</strong> The amount of radiation exposure produced by a machine at a reference point.</div>
+                <div class="term-card"><strong>Percentage Depth Dose (PDD):</strong> The ratio of the absorbed dose at a given depth to the absorbed dose at D<sub>max</sub>.</div>
+                <div class="term-card"><strong>Tissue-Air Ratio (TAR):</strong> The ratio of the dose in tissue to the dose in free air at the same point.</div>
+                <div class="term-card"><strong>Tissue-Phantom Ratio (TPR):</strong> The ratio of the absorbed dose at a depth in a phantom to the dose at a reference depth in the same phantom.</div>
+                <div class="term-card"><strong>Tissue-Maximum Ratio (TMR):</strong> A special case of TPR where the reference depth is D<sub>max</sub>.</div>
+                <div class="term-card"><strong>Backscatter Factor (BSF):</strong> The ratio of the dose rate at D<sub>max</sub> with a scattering medium to the dose rate in air.</div>
+                <div class="term-card"><strong>Collimator Scatter Factor (S<sub>c</sub>):</strong> Scatter radiation originating in the collimator system.</div>
+                <div class="term-card"><strong>Phantom Scatter Factor (S<sub>p</sub>):</strong> Scatter radiation originating from within the patient or phantom.</div>
+                <div class="term-card"><strong>Equivalent Square (EqSq):</strong> The side length of a square field that has the same scatter characteristics as a given rectangular or irregular field.</div>
+            </div>
+        </section>
+
+        <section id="dose">
+            <h2>What is Dose?</h2>
+            <div class="flex-container">
+                <div class="flex-item">
+                     <div class="definition-box">
+                        [cite_start]<p><strong>Dose</strong> refers to the energy deposited at a specific point in a medium[cite: 28, 29]. It is a measure of the absorbed energy per unit mass of tissue.</p>
+                    </div>
+                    <ul>
+                        [cite_start]<li>Measured in <strong>Gray (Gy)</strong>[cite: 30].</li>
+                        [cite_start]<li>$1 \text{ Gy} = 100 \text{ rads}$ [cite: 31]</li>
+                        [cite_start]<li>$1 \text{ Gy} = 1 \text{ Joule/kg}$ [cite: 32]</li>
+                        [cite_start]<li>$1 \text{ rad} = 100 \text{ erg/g}$ [cite: 33]</li>
+                    </ul>
+                </div>
+                <div class="flex-item">
+                    <svg class="svg-diagram" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+                        <title>Concept of Radiation Dose</title>
+                        <rect width="200" height="150" fill="#f0f8ff"/>
+                        <defs>
+                            <radialGradient id="grad1" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+                                <stop offset="0%" style="stop-color:rgb(255,255,0);stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:rgb(255,165,0);stop-opacity:0" />
+                            </radialGradient>
+                        </defs>
+                        <path d="M 10,10 L 40,75 L 10,140" stroke="#005A9C" stroke-width="2" fill="none" stroke-dasharray="4 2" />
+                        <text x="15" y="80" font-family="sans-serif" font-size="10" fill="#005A9C" transform="rotate(-90 15 80)">Radiation Beam</text>
+                        <rect x="70" y="25" width="100" height="100" fill="#d3d3d3" stroke="#666" stroke-width="1"/>
+                        <text x="120" y="20" text-anchor="middle" font-family="sans-serif" font-size="10">Medium (Tissue)</text>
+                        <circle cx="120" cy="75" r="15" fill="url(#grad1)"/>
+                        <circle cx="120" cy="75" r="2" fill="black"/>
+                        <text x="125" y="80" font-family="sans-serif" font-size="10" fill="black" font-weight="bold">Point of Measurement</text>
+                        <text x="120" y="105" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#333">Energy Deposited (Dose)</text>
+                    </svg>
+                </div>
+            </div>
+            
+            <h3>The Prescription</h3>
+            [cite_start]<p>The Radiation Oncologist provides a treatment prescription that specifies the treatment plan[cite: 36]. This includes:</p>
+            <ul>
+                [cite_start]<li><strong>Treatment Site:</strong> The region of the tumor and any presumed surrounding tumor cells[cite: 37].</li>
+                [cite_start]<li><strong>Total Tumor Dose:</strong> The total amount of radiation to be delivered[cite: 38].</li>
+                [cite_start]<li><strong>Number of Treatments (Fractions):</strong> How many sessions the total dose is divided into[cite: 39].</li>
+                [cite_start]<li><strong>Dose per Treatment:</strong> The dose delivered in each session[cite: 40].</li>
+                [cite_start]<li><strong>Frequency:</strong> How often treatments are given (e.g., daily)[cite: 41].</li>
+            </ul>
+            <div class="formula">
+                [cite_start]$$ \text{Number of Treatments} = \frac{\text{Total Dose}}{\text{Dose per Fraction}} $$ [cite: 43, 44]
+            </div>
+            <div class="example">
+                <p class="example-title">Example Calculation</p>
+                [cite_start]<p>If the Total Dose is 60 Gy and the Dose per Fraction is 2.0 Gy: [cite: 45]</p>
+                [cite_start]<p>$$ \frac{60 \text{ Gy}}{2.0 \text{ Gy/Fraction}} = 30 \text{ Treatments} $$ [cite: 46]</p>
+                [cite_start]<p>The patient receives 30 treatments at 2.0 Gy per fraction for a total dose of 60 Gy[cite: 47].</p>
+            </div>
+        </section>
+
+        <section id="geometry">
+            <h2>Patient and Beam Geometry</h2>
+            <h3>Separation (IFD)</h3>
+            <div class="definition-box">
+                [cite_start]<p><strong>Separation</strong>, also known as Intrafield Distance (IFD), is the measurement of the patient's thickness from the point of beam entry to the point of beam exit, measured along the beam's central axis[cite: 49, 50].</p>
+            </div>
+
+            <h3>Depth (d)</h3>
+            <div class="definition-box">
+                [cite_start]<p><strong>Depth</strong> is the distance beneath the skin surface where the prescribed dose is to be delivered[cite: 55]. [cite_start]This can be a specified depth, at the midplane, or at the isocenter [cite: 56-58].</p>
+            </div>
+
+            <h3>D<sub>max</sub> (Depth of Maximum Dose)</h3>
+            <div class="flex-container">
+                <div class="flex-item">
+                    [cite_start]<p>D<sub>max</sub> is the depth where the maximum radiation dose occurs[cite: 61]. [cite_start]It's the point where secondary electrons, set in motion by high-energy photons, reach a state of equilibrium[cite: 62, 66].</p>
+                    <ul>
+                        [cite_start]<li>The region before D<sub>max</sub> is called the <strong>buildup region</strong>[cite: 63].</li>
+                        [cite_start]<li>The phenomenon of the dose being lower on the skin surface and building up to D<sub>max</sub> is known as the <strong>skin-sparing effect</strong>[cite: 64].</li>
+                    </ul>
+                </div>
+                <div class="flex-item">
+                    <svg class="svg-diagram" viewBox="0 0 250 200" xmlns="http://www.w3.org/2000/svg">
+                        <title>Dmax and Buildup Region</title>
+                        <path d="M 125,10 L 50,200 L 200,200 Z" fill="rgba(0,163,224,0.1)" />
+                        <path d="M 125,10 L 50,200" stroke="#00A3E0" stroke-width="1.5"/>
+                        <path d="M 125,10 L 200,200" stroke="#00A3E0" stroke-width="1.5"/>
+                        <line x1="125" y1="10" x2="125" y2="200" stroke="#333" stroke-width="1" stroke-dasharray="4 2"/>
+                        <text x="125" y="5" text-anchor="middle" font-size="10" font-family="sans-serif">Source</text>
+                        <rect x="50" y="50" width="150" height="150" fill="#eee" stroke="#999" />
+                        <text x="45" y="55" text-anchor="end" font-size="10" font-family="sans-serif">Skin Surface</text>
+                        <line x1="45" y1="50" x2="205" y2="50" stroke="#333" stroke-width="1.5" />
+                        
+                        <rect x="50" y="50" width="150" height="30" fill="rgba(253,184,19,0.3)" />
+                        <text x="125" y="70" text-anchor="middle" font-size="10" font-family="sans-serif">Buildup Region</text>
+                        <line x1="130" y1="65" x2="160" y2="65" stroke="#333" stroke-width="1" marker-end="url(#arrow)"/>
+                        
+                        <circle cx="125" cy="80" r="3" fill="#c00" />
+                        <line x1="130" y1="80" x2="160" y2="95" stroke="#c00" stroke-width="1.5" />
+                        <text x="165" y="100" font-size="12" fill="#c00" font-weight="bold">Dmax</text>
+                        <line x1="50" y1="80" x2="200" y2="80" stroke="#c00" stroke-width="1" stroke-dasharray="2 2" />
+                        <text x="45" y="85" text-anchor="end" font-size="10" font-family="sans-serif">Depth of Max Dose</text>
+                        
+                        <circle cx="125" cy="140" r="3" fill="#005A9C" />
+                        <line x1="130" y1="140" x2="160" y2="155" stroke="#005A9C" stroke-width="1.5" />
+                        <text x="165" y="160" font-size="12" fill="#005A9C" font-weight="bold">Depth (d)</text>
+                    </svg>
+                </div>
+            </div>
+            
+            <h4>Approximate Depths of D<sub>max</sub></h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Beam Energy</th>
+                        <th>Depth of D<sub>max</sub> (cm)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    [cite_start]<tr><td>≤ 200 kV</td><td>0.0 [cite: 71, 72]</td></tr>
+                    [cite_start]<tr><td>1.25 MV (Cobalt-60)</td><td>0.5 [cite: 73, 74]</td></tr>
+                    [cite_start]<tr><td>4 MV</td><td>1.0 [cite: 75, 76]</td></tr>
+                    [cite_start]<tr><td>6 MV</td><td>1.5 [cite: 77, 78]</td></tr>
+                    [cite_start]<tr><td>10 MV</td><td>2.5 [cite: 79, 80]</td></tr>
+                    [cite_start]<tr><td>18 MV</td><td>3.5 [cite: 81, 82]</td></tr>
+                    [cite_start]<tr><td>24 MV</td><td>4.0 [cite: 83, 84]</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="output">
+            <h2>Machine Output / Dose Rate</h2>
+            <div class="definition-box">
+                [cite_start]<p><strong>Dose Rate</strong>, or <strong>Machine Output</strong>, is the amount of radiation exposure produced by a treatment machine, specified at a reference field size and distance[cite: 86, 93, 95]. [cite_start]It's typically measured in a tissue-equivalent material[cite: 94]. [cite_start]The standard dose rate for LINACs is often calibrated as 1 cGy/MU for a 10x10 cm field at D<sub>max</sub> at a 100 cm distance[cite: 97].</p>
+            </div>
+            <h3>Factors Affecting Dose Rate</h3>
+            <ul>
+                [cite_start]<li><strong>Field Size:</strong> As field size increases, dose rate increases due to increased scatter radiation from the collimator (S<sub>c</sub>) and the phantom/patient (S<sub>p</sub>)[cite: 104, 105, 107, 109].</li>
+                [cite_start]<li><strong>Distance:</strong> As distance from the source increases, dose rate decreases due to the divergence of the beam (Inverse Square Law)[cite: 112, 113].</li>
+                <li><strong>Beam Energy:</strong> Higher energy beams have different scatter and penetration characteristics, affecting the dose rate.</li>
+            </ul>
+
+            <h3>Inverse Square Law (ISL)</h3>
+             <div class="flex-container">
+                <div class="flex-item">
+                     [cite_start]<p>The Inverse Square Law describes how the intensity of radiation decreases with the square of the distance from the source[cite: 127]. If you double the distance, the intensity becomes one-quarter of the original.</p>
+                     <div class="formula">
+                        [cite_start]$$ \frac{I_1}{I_2} = \frac{(d_2)^2}{(d_1)^2} $$ [cite: 129]
+                        <p>This can also be written as:</p>
+                        [cite_start]$$ I_2 = I_1 \left( \frac{d_1}{d_2} \right)^2 $$ [cite: 191]
+                    </div>
+                </div>
+                <div class="flex-item">
+                    <svg class="svg-diagram" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+                        <title>Inverse Square Law Diagram</title>
+                        <circle cx="150" cy="20" r="5" fill="#FDB813" />
+                        <text x="150" y="15" text-anchor="middle" font-size="10">Source</text>
+                        
+                        <path d="M 150 20 L 50 280 L 250 280 Z" fill="rgba(0,163,224,0.1)" stroke="#00A3E0" stroke-width="1" />
+                        
+                        <rect x="125" y="80" width="50" height="50" fill="rgba(0,90,156,0.3)" stroke="#005A9C" />
+                        <text x="100" y="105" text-anchor="middle" font-size="12">Dose = 1</text>
+                        <line x1="175" y1="105" x2="200" y2="105" stroke="black" stroke-dasharray="2,2"/>
+                        <text x="210" y="108" font-size="12">Distance = x</text>
+
+                        <rect x="100" y="150" width="100" height="100" fill="rgba(0,90,156,0.3)" stroke="#005A9C" />
+                        <line x1="100" y1="200" x2="200" y2="200" stroke="#005A9C" />
+                        <line x1="150" y1="150" x2="150" y2="250" stroke="#005A9C" />
+                        <text x="75" y="200" text-anchor="middle" font-size="12">Dose = 1/4</text>
+                        <line x1="200" y1="200" x2="225" y2="200" stroke="black" stroke-dasharray="2,2"/>
+                        <text x="235" y="203" font-size="12">Distance = 2x</text>
+
+                        <rect x="75" y="220" width="150" height="2" fill="rgba(0,90,156,0.0)" stroke="none"/> <text x="50" y="250" text-anchor="middle" font-size="12">Dose = 1/9</text>
+                        <line x1="225" y1="250" x2="250" y2="250" stroke="black" stroke-dasharray="2,2"/>
+                        <text x="260" y="253" font-size="12">Distance = 3x</text>
+                    </svg>
+                </div>
+            </div>
+        </section>
+        
+        <section id="eq-square">
+            <h2>Equivalent Squares of Rectangular Fields</h2>
+            <p>For dose calculation purposes, rectangular fields are often converted to their equivalent square field size, which is the square field that has the same scatter characteristics.</p>
+            <h3>Sterling’s Approximation Formula</h3>
+            <div class="definition-box">
+                [cite_start]<p>A common method to calculate the equivalent square (EqSq) of a rectangular field[cite: 134].</p>
+            </div>
+            <div class="formula">
+                [cite_start]$$ \text{EqSq} = \frac{4 \times \text{Area}}{\text{Perimeter}} = \frac{4 \times (W \times L)}{2 \times (W + L)} = \frac{2 \times (W \times L)}{W + L} $$ [cite: 135, 138-141]
+            </div>
+            <div class="example">
+                [cite_start]<p class="example-title">Example: Calculate Equivalent Square for a 25 x 5 cm field [cite: 145]</p>
+                $$ \text{EqSq} = \frac{2 \times (25 \times 5)}{25 + 5} = \frac{2 \times 125}{30} = \frac{250}{30} \approx 8.33 \text{ cm} $$
+                [cite_start]<p>So, a 25x5 cm field is equivalent to an 8.33 x 8.33 cm square field[cite: 146].</p>
+            </div>
+            <h3>Effective Field Size (FSeff)</h3>
+            <p>When blocks are used to shape the beam, the field size is reduced. [cite_start]The effective field size is the equivalent square of the open (unblocked) area of the field[cite: 152, 179].</p>
+        </section>
+
+        <section id="absorption-factors">
+            <h2>Tissue Absorption Factors</h2>
+            <p>These factors account for how the radiation dose is attenuated and scattered within the patient. The choice of which factor to use depends on the treatment technique.</p>
+            <div class="flex-container">
+                <div class="flex-item term-card">
+                    <strong>For Nonisocentric (SSD) Technique:</strong>
+                    <ul>
+                        [cite_start]<li>Percentage Depth Dose (PDD) [cite: 194, 195]</li>
+                    </ul>
+                </div>
+                <div class="flex-item term-card">
+                    <strong>For Isocentric (SAD) Technique:</strong>
+                    <ul>
+                        [cite_start]<li>Tissue-Air Ratio (TAR) [cite: 197]</li>
+                        [cite_start]<li>Tissue-Phantom Ratio (TPR) [cite: 199]</li>
+                        [cite_start]<li>Tissue-Maximum Ratio (TMR) [cite: 198]</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>SSD vs. SAD Technique</h3>
+             <div class="flex-container">
+                <div class="flex-item">
+                    <h4>Source-Skin Distance (SSD)</h4>
+                    <p>The distance from the machine's source to the patient's skin is kept constant (e.g., 100 cm). The patient is moved for each new beam angle. [cite_start]Dose is specified at a certain depth[cite: 208, 210].</p>
+                </div>
+                 <div class="flex-item">
+                    <h4>Source-Axis Distance (SAD)</h4>
+                    <p>The distance from the source to the isocenter is constant. The isocenter is placed within the patient, and the machine rotates around this point. The SSD changes with each beam angle. [cite_start]Dose is normalized to the isocenter[cite: 211, 212].</p>
+                </div>
+            </div>
+            <div class="flex-container">
+                <div class="flex-item">
+                    <svg class="svg-diagram" viewBox="0 0 200 250" xmlns="http://www.w3.org/2000/svg">
+                        <title>SSD Technique</title>
+                        <path d="M 100 0 L 25 250 L 175 250 Z" stroke="#00A3E0" fill="rgba(0,163,224,0.1)" stroke-width="1.5" />
+                        <text x="100" y="10" text-anchor="middle" font-size="10">Source</text>
+                        <ellipse cx="100" cy="150" rx="70" ry="30" fill="#eee" stroke="#666"/>
+                        <line x1="100" y1="0" x2="100" y2="120" stroke="black"/>
+                        <path d="M95 115 L 100 120 L 105 115" fill="none" stroke="black"/>
+                        <path d="M95 5 L 100 0 L 105 5" fill="none" stroke="black"/>
+                        <text x="105" y="60" font-size="10" font-weight="bold">100 cm SSD</text>
+                        <text x="100" y="200" text-anchor="middle" font-size="12" font-weight="bold">SSD Setup</text>
+                    </svg>
+                </div>
+                <div class="flex-item">
+                    <svg class="svg-diagram" viewBox="0 0 200 250" xmlns="http://www.w3.org/2000/svg">
+                        <title>SAD Technique</title>
+                        <path d="M 100 0 L 25 250 L 175 250 Z" stroke="#005A9C" fill="rgba(0,90,156,0.1)" stroke-width="1.5" />
+                        <text x="100" y="10" text-anchor="middle" font-size="10">Source</text>
+                        <circle cx="100" cy="150" r="3" fill="red"/>
+                        <line x1="80" y1="150" x2="120" y2="150" stroke="red" stroke-width="1"/>
+                        <line x1="100" y1="130" x2="100" y2="170" stroke="red" stroke-width="1"/>
+                        <text x="105" y="145" font-size="10" fill="red" font-weight="bold">Isocenter</text>
+                        <ellipse cx="100" cy="150" rx="70" ry="30" fill="#eee" stroke="#666"/>
+                        <line x1="100" y1="0" x2="100" y2="150" stroke="black"/>
+                        <path d="M95 145 L 100 150 L 105 145" fill="none" stroke="black"/>
+                        <path d="M95 5 L 100 0 L 105 5" fill="none" stroke="black"/>
+                        <text x="105" y="75" font-size="10" font-weight="bold">100 cm SAD</text>
+                        <text x="100" y="200" text-anchor="middle" font-size="12" font-weight="bold">SAD Setup</text>
+                    </svg>
+                </div>
+            </div>
+
+            <h3>Percentage Depth Dose (PDD)</h3>
+            <div class="definition-box">
+                <p><strong>PDD</strong> is the ratio, expressed as a percentage, of the absorbed dose at a given depth (d) to the absorbed dose at a fixed reference depth of D<sub>max</sub>, measured along the central axis of the beam.</p>
+            </div>
+            <div class="formula">
+                $$ PDD = \frac{\text{Dose at depth d}}{\text{Dose at } D_{max}} \times 100\% $$
+            </div>
+            <p>PDD is dependent on the following factors:</p>
+            <ul>
+                [cite_start]<li><strong>Increases with:</strong> Energy, Field Size, SSD [cite: 223-226]</li>
+                [cite_start]<li><strong>Decreases with:</strong> Depth [cite: 227, 228]</li>
+            </ul>
+            
+            <h4>Mayneord’s F Factor</h4>
+            [cite_start]<p>This factor is used to convert the PDD from a standard SSD to a new, non-standard (often extended) SSD[cite: 230, 231].</p>
+            <div class="formula">
+                 $$ PDD_{new} = PDD_{old} \times F_{\text{factor}} $$
+                 $$ F_{\text{factor}} = \frac{[(SSD_1 + d) / (SSD_1 + D_{max})]^2}{[(SSD_2 + d) / (SSD_2 + D_{max})]^2} $$
+            </div>
+
+            <h3>Tissue-Air Ratio (TAR)</h3>
+            <div class="definition-box">
+                <p><strong>TAR</strong> is the ratio of the dose at a given point in a phantom to the dose measured in free air at the same point. [cite_start]It is used for calculations in SAD treatments, particularly with lower-energy machines like Cobalt-60[cite: 238].</p>
+            </div>
+            <div class="formula">
+                $$ TAR = \frac{\text{Dose in tissue}}{\text{Dose in air}} $$
+            </div>
+            <p>TAR is dependent on the following factors:</p>
+             <ul>
+                [cite_start]<li><strong>Increases with:</strong> Energy, Field Size [cite: 239-241]</li>
+                [cite_start]<li><strong>Decreases with:</strong> Depth [cite: 242, 243]</li>
+            </ul>
+
+            <h3>Tissue-Phantom Ratio (TPR) and Tissue-Maximum Ratio (TMR)</h3>
+            <div class="definition-box">
+                [cite_start]<p><strong>TPR</strong> is the ratio of the dose at a given depth in a phantom to the dose at a fixed reference depth in the same phantom[cite: 246].</p>
+                <p><strong>TMR</strong> is a special case of TPR where the reference depth is D<sub>max</sub>. [cite_start]TMR is the most commonly used factor for high-energy linac calculations (SAD technique)[cite: 247].</p>
+            </div>
+            <div class="formula">
+                 $$ TPR = \frac{\text{Dose in tissue at depth d}}{\text{Dose in phantom at ref. depth}} $$
+                 $$ TMR = \frac{\text{Dose in tissue at depth d}}{\text{Dose in phantom at } D_{max}} $$
+            </div>
+            <p>TMR/TPR are dependent on the following factors:</p>
+            <ul>
+                [cite_start]<li><strong>Increases with:</strong> Energy, Field Size [cite: 248-250]</li>
+                [cite_start]<li><strong>Decreases with:</strong> Depth [cite: 251, 252]</li>
+            </ul>
+        </section>
+
+        <section id="scatter">
+            <h2>Scatter and Backscatter</h2>
+            <h3>Scatter-Air Ratio (SAR)</h3>
+            [cite_start]<p>This is the ratio of the scattered dose at a point in a phantom to the dose in free space at the same point[cite: 259]. It helps in calculating dose for irregular fields.</p>
+
+            <h3>Backscatter Factor (BSF)</h3>
+            <div class="definition-box">
+                [cite_start]<p><strong>BSF</strong> is the ratio of the dose rate at D<sub>max</sub> in a phantom to the dose rate at the same point in air[cite: 262]. [cite_start]It is essentially the TAR measured at the depth of D<sub>max</sub>[cite: 263].</p>
+            </div>
+            <ul>
+                [cite_start]<li>Dependent on energy and field size, but not SSD[cite: 264].</li>
+                [cite_start]<li>BSF is higher for low energies and decreases as beam energy increases[cite: 265, 266].</li>
+            </ul>
+        </section>
+
+        <section id="advanced-calcs">
+            <h2>Advanced Calculations</h2>
+            <h3>Gap Calculation for Abutting Fields</h3>
+            [cite_start]<p>When two radiation fields are placed next to each other, a gap must be calculated on the patient's skin to ensure the fields meet seamlessly at a specific depth, preventing hot or cold spots due to beam divergence[cite: 285, 288].</p>
+             <div class="flex-container">
+                <div class="flex-item">
+                    <div class="formula">
+                         [cite_start]$$ \text{Gap} = \left( \frac{L_1}{2} \times \frac{d}{SSD_1} \right) + \left( \frac{L_2}{2} \times \frac{d}{SSD_2} \right) $$ [cite: 290]
+                    </div>
+                    <div class="example">
+                        <p class="example-title">Example Gap Calculation</p>
+                        [cite_start]<p>Find the gap on the skin to match two fields at a depth (d) of 8 cm[cite: 291].</p>
+                        <ul>
+                            [cite_start]<li>Field 1: L<sub>1</sub> = 20 cm, SSD<sub>1</sub> = 100 cm [cite: 292, 293]</li>
+                            [cite_start]<li>Field 2: L<sub>2</sub> = 30 cm, SSD<sub>2</sub> = 100 cm [cite: 294, 295]</li>
+                        </ul>
+                        <p>$$ \text{Gap} = \left( \frac{20}{2} \times \frac{8}{100} \right) + \left( \frac{30}{2} \times \frac{8}{100} \right) $$</p>
+                        <p>$$ \text{Gap} = (10 \times 0.08) + (15 \times 0.08) $$</p>
+                        [cite_start]<p>$$ \text{Gap} = 0.8 \text{ cm} + 1.2 \text{ cm} = 2.0 \text{ cm} $$ [cite: 298]</p>
+                    </div>
+                </div>
+                <div class="flex-item">
+                     <svg class="svg-diagram" viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg">
+                        <title>Gap Calculation for Abutting Fields</title>
+                        <path d="M 100 0 L 0 250 L 150 250 Z" stroke="#005A9C" fill="rgba(0,90,156,0.1)" />
+                        <text x="100" y="15" text-anchor="middle" font-size="10" fill="#005A9C">Source 1</text>
+                        <line x1="100" y1="0" x2="100" y2="50" stroke="#005A9C" stroke-dasharray="2,2" />
+                        <path d="M 300 0 L 250 250 L 400 250 Z" stroke="#c00" fill="rgba(192,0,0,0.1)" />
+                        <text x="300" y="15" text-anchor="middle" font-size="10" fill="#c00">Source 2</text>
+                        <line x1="300" y1="0" x2="300" y2="50" stroke="#c00" stroke-dasharray="2,2" />
+                        <line x1="0" y1="50" x2="400" y2="50" stroke="green" stroke-width="2" />
+                        <text x="380" y="45" font-size="10" fill="green">Surface</text>
+                        <line x1="130" y1="50" x2="270" y2="50" stroke="black" stroke-width="1.5" />
+                        <line x1="130" y1="45" x2="130" y2="55" stroke="black" />
+                        <line x1="270" y1="45" x2="270" y2="55" stroke="black" />
+                        <text x="200" y="40" text-anchor="middle" font-weight="bold">Skin Gap</text>
+                        <line x1="0" y1="150" x2="400" y2="150" stroke="#333" stroke-dasharray="3,3" />
+                        <text x="15" y="145" font-size="10">Match Line (at depth d)</text>
+                        <circle cx="200" cy="150" r="4" fill="#FDB813" stroke="black" />
+                        <text x="200" y="165" text-anchor="middle" font-size="10">Beams abut here</text>
+                    </svg>
+                </div>
+            </div>
+            
+            <h3>Wedge Pairs</h3>
+            <p>Wedges are beam modifiers that create a dose gradient across the field. [cite_start]They are often used in pairs to treat volumes with angled beams, creating a more uniform dose distribution[cite: 300].</p>
+            <div class="flex-container">
+                <div class="flex-item">
+                    <p>The <strong>Hinge Angle</strong> is the angle between the central axes of two beams. The required <strong>Wedge Angle</strong> is related to the hinge angle.</p>
+                     <div class="formula">
+                         [cite_start]<p>$$ \text{Wedge Angle} = 90^\circ - (0.5 \times \text{Hinge Angle}) $$ [cite: 301]</p>
+                         [cite_start]<p>$$ \text{Hinge Angle} = 180^\circ - (2 \times \text{Wedge Angle}) $$ [cite: 302]</p>
+                    </div>
+                </div>
+                <div class="flex-item">
+                     <svg class="svg-diagram" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+                        <title>Wedge Pair Hinge Angle</title>
+                        <path d="M 50 20 L 20 120 L 80 120 Z" fill="#ccc" stroke="#333" />
+                        <line x1="50" y1="20" x2="50" y2="100" stroke="black" stroke-dasharray="4,2"/>
+                        <text x="40" y="15" font-size="10">Beam 1</text>
+                        <path d="M 150 20 L 120 120 L 180 120 Z" fill="#ccc" stroke="#333" />
+                        <line x1="150" y1="20" x2="150" y2="100" stroke="black" stroke-dasharray="4,2"/>
+                        <text x="160" y="15" font-size="10">Beam 2</text>
+                        <path d="M 50 100 L 100 130 L 150 100" stroke="none" fill="none" />
+                        <path d="M 70 112 A 30 30 0 0 1 130 112" stroke="#005A9C" stroke-width="2" fill="none"/>
+                        <text x="100" y="120" text-anchor="middle" font-weight="bold" fill="#005A9C">Hinge Angle</text>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+    </main>
+</div>
+<script>
+    // This script will be executed by the auto-render extension
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "$", right: "$", display: false},
+                {left: "\\(", right: "\\)", display: false},
+                {left: "\\[", right: "\\]", display: true}
+            ]
+        });
+    });
+</script>
+</body>
+</html>
