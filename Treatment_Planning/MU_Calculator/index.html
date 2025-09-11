@@ -335,6 +335,7 @@
     <script>
         // --- Global Variables ---
         let canvas, ctx, currentImage;
+        const PHOTON_STANDARD_SSD = 100.0; 
         const beamDim = 500; // Canvas dimensions
         const scale = 10.0;  // Pixels per cm at isocenter for visualization
 
@@ -370,7 +371,61 @@
         // Ensure the window.onload logic initializes your calculator correctly.
         // --- Start: JS functions from user's file (condensed for brevity in this example) ---
         function displayError(message) { document.getElementById('output').innerHTML = `<p class="error">Error: ${message}</p>`; document.getElementById('printEmailButtons').style.display = 'none'; }
-        function displayResult(mu, params) { const outputDiv = document.getElementById('output'); outputDiv.dataset.resultsText = formatResultsForText(mu, params); let html = `<h3>Calculation Results</h3><p><strong>Planner:</strong> ${params.plannerName||'N/A'}</p><p><strong>Rad Onc:</strong> ${params.radOncName||'N/A'}</p><p><strong>Field:</strong> ${params.fieldName||'N/A'}</p><hr><p><strong>Technique:</strong> ${params.technique}</p>`; if (params.technique === 'SSD' || params.technique === 'SAD') { html += `<p>Energy: ${params.energy} MV</p><p>FS: <span class="math-inline">\{params\.fieldWidth?\.toFixed\(1\)\}x</span>{params.fieldHeight?.toFixed(1)}cm (EqSq: ${params.fieldSize?.toFixed(2)})</p><p>Depth: ${params.depth}cm</p>`; html += params.technique === 'SSD' ? `<p>SSD: ${params.ssd}cm</p>` : `<p>SAD: ${params.sad}cm</p>`; html += `<p>Wedge: <span class="math-inline">\{params\.wedgeAngle\}° \(WF\:</span>{params.wedge?.toFixed(4)})</p><p>Tray: <span class="math-inline">\{params\.trayType\|\|'None'\} \(TF\:</span>{params.tray?.toFixed(4)})</p><hr><p><i>Details:</i> K:${params.K?.toFixed(4)}`; html += params.technique === 'SSD' ? ` PDD:<span class="math-inline">\{params\.PDD?\.toFixed\(4\)\} ISF\:</span>{params.ISF?.toFixed(4)}` : ` TMR:<span class="math-inline">\{params\.TMR?\.toFixed\(4\)\} ISF\:</span>{params.ISF?.toFixed(4)}`; html += ` Sc:<span class="math-inline">\{params\.Sc?\.toFixed\(4\)\} Sp\:</span>{params.Sp?.toFixed(4)}</p>`; } else if (params.technique === 'electron') { html += `<p>Energy: ${params.energy}MeV</p><p>Applicator: ${params.applicator||'N/A'}</p><p>Depth: ${params.depth}cm</p><p>SSD: <span class="math-inline">\{params\.ssd\_actual\}cm</p\><hr\><p\><i\>Details\:</i\> D0'/MU\:</span>{params.calibRate?.toFixed(4)} OF:<span class="math-inline">\{params\.OF?\.toFixed\(4\)\} PDD\:</span>{params.PDD?.toFixed(4)} EffSSD:<span class="math-inline">\{params\.SSD\_eff?\.toFixed\(1\)\} Dmax\:</span>{params.dmax?.toFixed(1)} Gap:<span class="math-inline">\{params\.gap?\.toFixed\(1\)\} ISF\:</span>{params.ISF?.toFixed(4)}</p>`; if(params.pddWarning) html+=`<div class="error" style="font-size:0.8em; padding:5px; background-color:#fff3cd; color:#856404; border-color:#ffeeba;">${params.pddWarning}</div>`} html += `<hr><p>Rx Dose: <span class="math-inline">\{params\.Rx\}cGy</p\><p\><strong\>Required MUs\: <span class\="final\-mu"\></span>{mu.toFixed(1)}</span></strong></p>`; outputDiv.innerHTML = html; document.getElementById('printEmailButtons').style.display = 'block'; }
+        function displayResult(mu, params) {
+    const outputDiv = document.getElementById('output');
+    outputDiv.dataset.resultsText = formatResultsForText(mu, params);
+
+    let html = `<h3>Calculation Results</h3>
+                <p><strong>Planner:</strong> ${params.plannerName || 'N/A'}</p>
+                <p><strong>Rad Onc:</strong> ${params.radOncName || 'N/A'}</p>
+                <p><strong>Field:</strong> ${params.fieldName || 'N/A'}</p>
+                <hr>
+                <p><strong>Technique:</strong> ${params.technique}</p>`;
+
+    if (params.technique === 'SSD' || params.technique === 'SAD') {
+        html += `<p>Energy: ${params.energy} MV</p>
+                 <p>FS: ${params.fieldWidth?.toFixed(1)}x${params.fieldHeight?.toFixed(1)}cm (EqSq: ${params.fieldSize?.toFixed(2)})</p>
+                 <p>Depth: ${params.depth}cm</p>`;
+        html += params.technique === 'SSD' ? `<p>SSD: ${params.ssd}cm</p>` : `<p>SAD: ${params.sad}cm</p>`;
+        html += `<p>Wedge: ${params.wedgeAngle}° (WF: ${params.wedge?.toFixed(4)})</p>
+                 <p>Tray: ${params.trayType || 'None'} (TF: ${params.tray?.toFixed(4)})</p>
+                 <hr>
+                 <p><i>Details:</i> K: ${params.K?.toFixed(4)}`;
+
+        // --- START: MODIFICATION ---
+        // This block now checks if Mayneord's F was used and displays the result accordingly.
+        if (params.technique === 'SSD') {
+            if (params.fFactor && params.fFactor !== 1.0) {
+                html += ` Mayneord's F: ${params.fFactor.toFixed(4)} PDD (Corrected): ${params.PDD?.toFixed(4)} ISF: ${params.ISF?.toFixed(4)}`;
+            } else {
+                html += ` PDD: ${params.PDD?.toFixed(4)} ISF: ${params.ISF?.toFixed(4)}`;
+            }
+        } else { // SAD technique
+            html += ` TMR: ${params.TMR?.toFixed(4)} ISF: ${params.ISF?.toFixed(4)}`;
+        }
+        // --- END: MODIFICATION ---
+
+        html += ` Sc: ${params.Sc?.toFixed(4)} Sp: ${params.Sp?.toFixed(4)}</p>`;
+
+    } else if (params.technique === 'electron') {
+        html += `<p>Energy: ${params.energy} MeV</p>
+                 <p>Applicator: ${params.applicator || 'N/A'}</p>
+                 <p>Depth: ${params.depth}cm</p>
+                 <p>SSD: ${params.ssd_actual}cm</p>
+                 <hr>
+                 <p><i>Details:</i> D0'/MU: ${params.calibRate?.toFixed(4)} OF: ${params.OF?.toFixed(4)} PDD: ${params.PDD?.toFixed(4)} EffSSD: ${params.SSD_eff?.toFixed(1)} Dmax: ${params.dmax?.toFixed(1)} Gap: ${params.gap?.toFixed(1)} ISF: ${params.ISF?.toFixed(4)}</p>`;
+        if (params.pddWarning) {
+            html += `<div class="error" style="font-size:0.8em; padding:5px; background-color:#fff3cd; color:#856404; border-color:#ffeeba;">${params.pddWarning}</div>`
+        }
+    }
+
+    html += `<hr>
+             <p>Rx Dose: ${params.Rx} cGy</p>
+             <p><strong>Required MUs: <span class="final-mu">${mu.toFixed(1)}</span></strong></p>`;
+
+    outputDiv.innerHTML = html;
+    document.getElementById('printEmailButtons').style.display = 'block';
+}
         function formatResultsForText(mu, params) { let text = `MU Calculation Results...\nField: ${params.fieldName||'N/A'}\nTechnique: ${params.technique}\nPrescription Dose: ${params.Rx} cGy\nRequired MUs: ${mu.toFixed(1)}\n`; return text; } // Simplified
         function updatePhotonDefaults(){updateDmax(); updateWedgeFactor(); updateTrayFactor();}
         function updateElectronDefaults(){ const e=document.getElementById('electronEnergy').value, a=document.getElementById('applicatorSize').value; const dV=getElectronDmax(e); document.getElementById('dmaxElectron').value=(dV!==undefined&&!isNaN(dV))?dV.toFixed(1):'N/A'; const effSsdV=getEffectiveSSD(e,a); document.getElementById('effectiveSSDElectron').value=(effSsdV!==undefined&&!isNaN(effSsdV))?effSsdV.toFixed(1):'N/A'; const oF=getElectronOutputFactor(e,a); document.getElementById('outputFactorElectron').value=(oF!==undefined&&!isNaN(oF))?oF.toFixed(4):'N/A';}
@@ -391,7 +446,136 @@
         function drawLine(x1,y1,x2,y2,c='white',lW=2){if(!ctx)return; ctx.strokeStyle=c; ctx.lineWidth=lW; ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();}
         function drawBeam(){if(!ctx)return; ctx.fillStyle="#111"; ctx.fillRect(0,0,beamDim,beamDim); if(currentImage&&currentImage.complete&&currentImage.naturalHeight!==0){try{const hR=beamDim/currentImage.naturalWidth,vR=beamDim/currentImage.naturalHeight,r=Math.min(hR,vR); const cSX=(beamDim-currentImage.naturalWidth*r)/2,cSY=(beamDim-currentImage.naturalHeight*r)/2; ctx.drawImage(currentImage,0,0,currentImage.naturalWidth,currentImage.naturalHeight,cSX,cSY,currentImage.naturalWidth*r,currentImage.naturalHeight*r);}catch(e){console.error("Err drawing img:",e); ctx.fillStyle="#111"; ctx.fillRect(0,0,beamDim,beamDim);}} const rC='#666',tL=4,tECm=20; drawLine(beamDim/2,0,beamDim/2,beamDim,rC,0.5); drawLine(0,beamDim/2,beamDim,beamDim/2,rC,0.5); ctx.font="10px Arial"; ctx.fillStyle=rC; for(let i=-tECm;i<=tECm;i++){if(i===0)continue; const tPx_x=beamDim/2+i*scale,tPx_y=beamDim/2-i*scale; const lT=(i%5===0),cTL=lT?tL*1.5:tL; drawLine(tPx_x,beamDim/2-cTL,tPx_x,beamDim/2+cTL,rC,0.5); drawLine(beamDim/2-cTL,tPx_y,beamDim/2+cTL,tPx_y,rC,0.5); if(lT){ctx.textAlign="center";ctx.textBaseline="top"; ctx.fillText(i,tPx_x,beamDim/2+cTL+2); ctx.textAlign="right";ctx.textBaseline="middle"; ctx.fillText(i,beamDim/2-cTL-4,tPx_y);}} const x1_cm=parseFloat(document.getElementById('x1').value)||0,x2_cm=parseFloat(document.getElementById('x2').value)||0,y1_cm=parseFloat(document.getElementById('y1').value)||0,y2_cm=parseFloat(document.getElementById('y2').value)||0; const rotD=parseFloat(document.getElementById('collimatorAngle').value)||0,rotR=rotD*(Math.PI/180.0); ctx.save(); ctx.translate(beamDim/2,beamDim/2); ctx.rotate(rotR); const xJC="rgba(255,255,0,0.7)",yJC="rgba(0,255,255,0.7)",jWPx=3; const x1_px=x1_cm*scale,x2_px=x2_cm*scale,y1_px=-y1_cm*scale,y2_px=-y2_cm*scale,ext_px=beamDim*0.6; drawLine(-ext_px,y1_px,ext_px,y1_px,yJC,jWPx); drawLine(-ext_px,y2_px,ext_px,y2_px,yJC,jWPx); drawLine(x1_px,-ext_px,x1_px,ext_px,xJC,jWPx); drawLine(x2_px,-ext_px,x2_px,ext_px,xJC,jWPx); ctx.restore();}
         function handleImageSelection(){const sV=document.querySelector('input[name="beamImage"]:checked').value,url=imageUrls[sV]; if(url){currentImage=new Image();currentImage.crossOrigin="Anonymous"; currentImage.onload=()=>{drawBeam();}; currentImage.onerror=()=>{console.error("Fail load img:",url);currentImage=null;drawBeam();}; currentImage.src=url;}else{currentImage=null;drawBeam();}}
-        function calculateMU(){const oD=document.getElementById('output'); oD.innerHTML='Calculating...'; document.getElementById('printEmailButtons').style.display='none'; setTimeout(()=>{const p={}; let MU=NaN; try{p.plannerName=document.getElementById('plannerName').value;p.radOncName=document.getElementById('radOncName').value;p.fieldName=document.getElementById('fieldName').value;p.technique=document.getElementById('technique').value; if(p.technique==='SSD'||p.technique==='SAD'){p.energy=document.getElementById('energy').value; if(p.technique==='SSD'){p.Rx=parseFloat(document.getElementById('rxDose').value);p.depth=parseFloat(document.getElementById('depth').value);p.ssd=parseFloat(document.getElementById('ssd').value);p.dmax=parseFloat(document.getElementById('dmax').value);}else{p.Rx=parseFloat(document.getElementById('rxDoseSAD').value);p.depth=parseFloat(document.getElementById('depthSAD').value);p.sad=parseFloat(document.getElementById('sad').value);p.dmax=referenceData[p.energy]?.dmax;} p.fieldSize=parseFloat(document.getElementById('fieldSize').value); const x1=parseFloat(document.getElementById('x1').value),x2=parseFloat(document.getElementById('x2').value),y1=parseFloat(document.getElementById('y1').value),y2=parseFloat(document.getElementById('y2').value); p.fieldWidth=(!isNaN(x1)&&!isNaN(x2))?(x2-x1):NaN; p.fieldHeight=(!isNaN(y1)&&!isNaN(y2))?(y2-y1):NaN; p.trayType=document.getElementById('trayType').value;p.tray=parseFloat(document.getElementById('trayFactor').value);p.wedgeAngle=document.getElementById('wedgeAngle').value;p.wedge=parseFloat(document.getElementById('wedgeFactor').value); const iTV=[p.Rx,p.depth,p.fieldSize,p.tray,p.wedge]; if(p.technique==='SSD')iTV.push(p.ssd,p.dmax); if(p.technique==='SAD')iTV.push(p.sad); if(iTV.some(v=>isNaN(v)||v===null))throw new Error(`Invalid photon input(s).`); if(p.Rx<=0||p.fieldSize<=0||(p.technique==='SSD'&&p.ssd<=0))throw new Error(`Photon inputs must be positive.`); if(p.depth<0)throw new Error(`Depth negative.`); p.K=referenceData[p.energy]?.[p.technique]; if(p.K===undefined||isNaN(p.K))throw new Error(`K not found for ${p.energy}MV ${p.technique}.`); p.Sc=getFactor1D(scData,p.energy,p.fieldSize);p.Sp=getFactor1D(spData,p.energy,p.fieldSize); if(isNaN(p.Sc)||isNaN(p.Sp))throw new Error(`No Sc/Sp for EqSq ${p.fieldSize.toFixed(2)}.`); p.PDD=NaN;p.TMR=NaN;p.ISF=NaN; let den; if(p.technique==='SSD'){p.PDD=interpolate2D(pddData,p.energy,p.fieldSize,p.depth); if(isNaN(p.PDD))throw new Error(`No PDD for EqSq ${p.fieldSize.toFixed(2)}, D ${p.depth}.`); p.PDD/=100.0; if(p.ssd+p.depth<=0)throw new Error("Invalid SSD/Depth for ISF."); p.ISF=Math.pow((p.ssd+p.dmax)/(p.ssd+p.depth),2); if(isNaN(p.ISF))throw new Error("Fail ISF SSD."); den=p.K*p.PDD*p.Sc*p.Sp*p.tray*p.wedge*p.ISF;}else{p.TMR=interpolate2D(tmrData,p.energy,p.fieldSize,p.depth); if(isNaN(p.TMR))throw new Error(`No TMR for EqSq ${p.fieldSize.toFixed(2)}, D ${p.depth}.`); p.ISF=1.0; den=p.K*p.TMR*p.Sc*p.Sp*p.tray*p.wedge*p.ISF;} if(den===0||isNaN(den))throw new Error(`Photon calc fail - den zero/invalid (${den?.toFixed(4)}).`); MU=p.Rx/den;}else if(p.technique==='electron'){p.energy=document.getElementById('electronEnergy').value;p.applicator=document.getElementById('applicatorSize').value;p.Rx=parseFloat(document.getElementById('rxDoseElectron').value);p.depth=parseFloat(document.getElementById('depthElectron').value);p.ssd_actual=parseFloat(document.getElementById('ssdElectron').value); if(isNaN(p.Rx)||isNaN(p.depth)||isNaN(p.ssd_actual))throw new Error(`Invalid electron input(s).`); if(p.Rx<=0||p.ssd_actual<=0)throw new Error(`Electron Rx/SSD must be positive.`); if(p.depth<0)throw new Error(`Depth negative.`); p.calibRate=ELECTRON_CALIBRATION_DOSE_RATE;p.OF=getElectronOutputFactor(p.energy,p.applicator);p.SSD_eff=getEffectiveSSD(p.energy,p.applicator);p.dmax=getElectronDmax(p.energy); const{value:pV,warning:pW}=getApproxElectronPDD(p.energy,p.applicator,p.depth);p.PDD=pV/100.0;p.pddWarning=pW; if(p.OF===undefined||isNaN(p.OF))throw new Error(`OF not found for ${p.energy}MeV, ${p.applicator}.`); if(p.SSD_eff===undefined||isNaN(p.SSD_eff))throw new Error(`Eff SSD not found for ${p.energy}MeV, ${p.applicator}.`); if(p.dmax===undefined||isNaN(p.dmax))throw new Error(`Dmax not found for ${p.energy}MeV.`); if(isNaN(p.PDD))throw new Error(p.pddWarning||`No approx PDD for ${p.energy}MeV, ${p.applicator}, D ${p.depth}cm.`); p.gap=p.ssd_actual-ELECTRON_STANDARD_SSD; const isf_n=p.SSD_eff+p.dmax, isf_d=p.SSD_eff+p.depth+p.gap; if(isf_d<=0)throw new Error("Invalid geom for ISF (den<=0)."); p.ISF=Math.pow(isf_n/isf_d,2); if(isNaN(p.ISF))throw new Error("Fail ISF Electron."); const den=p.calibRate*p.OF*p.PDD*p.ISF; if(den===0||isNaN(den))throw new Error(`Electron calc fail - den zero/invalid (${den?.toFixed(4)}).`); MU=p.Rx/den;}else{throw new Error("Invalid technique.");} if(isNaN(MU))throw new Error("Calc resulted in NaN."); displayResult(MU,p);}catch(err){console.error("Calc Err:",err);displayError(err.message);}finally{drawBeam();}},0);}
+       function calculateMU() {
+    const oD = document.getElementById('output');
+    oD.innerHTML = 'Calculating...';
+    document.getElementById('printEmailButtons').style.display = 'none';
+    
+    // Define the standard SSD for photon calculations
+    const PHOTON_STANDARD_SSD = 100.0;
+
+    setTimeout(() => {
+        const p = {};
+        let MU = NaN;
+        try {
+            p.plannerName = document.getElementById('plannerName').value;
+            p.radOncName = document.getElementById('radOncName').value;
+            p.fieldName = document.getElementById('fieldName').value;
+            p.technique = document.getElementById('technique').value;
+
+            if (p.technique === 'SSD' || p.technique === 'SAD') {
+                p.energy = document.getElementById('energy').value;
+                if (p.technique === 'SSD') {
+                    p.Rx = parseFloat(document.getElementById('rxDose').value);
+                    p.depth = parseFloat(document.getElementById('depth').value);
+                    p.ssd = parseFloat(document.getElementById('ssd').value);
+                    p.dmax = parseFloat(document.getElementById('dmax').value);
+                } else {
+                    p.Rx = parseFloat(document.getElementById('rxDoseSAD').value);
+                    p.depth = parseFloat(document.getElementById('depthSAD').value);
+                    p.sad = parseFloat(document.getElementById('sad').value);
+                    p.dmax = referenceData[p.energy]?.dmax;
+                }
+                p.fieldSize = parseFloat(document.getElementById('fieldSize').value);
+                const x1 = parseFloat(document.getElementById('x1').value),
+                    x2 = parseFloat(document.getElementById('x2').value),
+                    y1 = parseFloat(document.getElementById('y1').value),
+                    y2 = parseFloat(document.getElementById('y2').value);
+                p.fieldWidth = (!isNaN(x1) && !isNaN(x2)) ? (x2 - x1) : NaN;
+                p.fieldHeight = (!isNaN(y1) && !isNaN(y2)) ? (y2 - y1) : NaN;
+                p.trayType = document.getElementById('trayType').value;
+                p.tray = parseFloat(document.getElementById('trayFactor').value);
+                p.wedgeAngle = document.getElementById('wedgeAngle').value;
+                p.wedge = parseFloat(document.getElementById('wedgeFactor').value);
+                const iTV = [p.Rx, p.depth, p.fieldSize, p.tray, p.wedge];
+                if (p.technique === 'SSD') iTV.push(p.ssd, p.dmax);
+                if (p.technique === 'SAD') iTV.push(p.sad);
+                if (iTV.some(v => isNaN(v) || v === null)) throw new Error(`Invalid photon input(s).`);
+                if (p.Rx <= 0 || p.fieldSize <= 0 || (p.technique === 'SSD' && p.ssd <= 0)) throw new Error(`Photon inputs must be positive.`);
+                if (p.depth < 0) throw new Error(`Depth negative.`);
+                p.K = referenceData[p.energy]?.[p.technique];
+                if (p.K === undefined || isNaN(p.K)) throw new Error(`K not found for ${p.energy}MV ${p.technique}.`);
+                p.Sc = getFactor1D(scData, p.energy, p.fieldSize);
+                p.Sp = getFactor1D(spData, p.energy, p.fieldSize);
+                if (isNaN(p.Sc) || isNaN(p.Sp)) throw new Error(`No Sc/Sp for EqSq ${p.fieldSize.toFixed(2)}.`);
+                p.PDD = NaN;
+                p.TMR = NaN;
+                p.ISF = NaN;
+                let den;
+
+                if (p.technique === 'SSD') {
+                    p.PDD = interpolate2D(pddData, p.energy, p.fieldSize, p.depth);
+                    if (isNaN(p.PDD)) throw new Error(`No PDD for EqSq ${p.fieldSize.toFixed(2)}, D ${p.depth}.`);
+                    p.PDD /= 100.0;
+                    
+                    // --- START: MODIFICATION ---
+                    // Add Mayneord's F-factor correction for non-standard SSD
+                    p.fFactor = 1.0; // Default to 1.0
+                    if (p.ssd !== PHOTON_STANDARD_SSD) {
+                        const f_num = Math.pow((PHOTON_STANDARD_SSD + p.depth) / (PHOTON_STANDARD_SSD + p.dmax), 2);
+                        const f_den = Math.pow((p.ssd + p.dmax) / (p.ssd + p.depth), 2);
+                        p.fFactor = f_num * f_den;
+
+                        // Apply the correction to the PDD value
+                        p.PDD = p.PDD * p.fFactor;
+                    }
+                    // --- END: MODIFICATION ---
+
+                    if (p.ssd + p.depth <= 0) throw new Error("Invalid SSD/Depth for ISF.");
+                    p.ISF = Math.pow((p.ssd + p.dmax) / (p.ssd + p.depth), 2);
+                    if (isNaN(p.ISF)) throw new Error("Fail ISF SSD.");
+                    den = p.K * p.PDD * p.Sc * p.Sp * p.tray * p.wedge * p.ISF;
+
+                } else { // SAD technique
+                    p.TMR = interpolate2D(tmrData, p.energy, p.fieldSize, p.depth);
+                    if (isNaN(p.TMR)) throw new Error(`No TMR for EqSq ${p.fieldSize.toFixed(2)}, D ${p.depth}.`);
+                    p.ISF = 1.0;
+                    den = p.K * p.TMR * p.Sc * p.Sp * p.tray * p.wedge * p.ISF;
+                }
+                if (den === 0 || isNaN(den)) throw new Error(`Photon calc fail - den zero/invalid (${den?.toFixed(4)}).`);
+                MU = p.Rx / den;
+            } else if (p.technique === 'electron') {
+                p.energy = document.getElementById('electronEnergy').value;
+                p.applicator = document.getElementById('applicatorSize').value;
+                p.Rx = parseFloat(document.getElementById('rxDoseElectron').value);
+                p.depth = parseFloat(document.getElementById('depthElectron').value);
+                p.ssd_actual = parseFloat(document.getElementById('ssdElectron').value);
+                if (isNaN(p.Rx) || isNaN(p.depth) || isNaN(p.ssd_actual)) throw new Error(`Invalid electron input(s).`);
+                if (p.Rx <= 0 || p.ssd_actual <= 0) throw new Error(`Electron Rx/SSD must be positive.`);
+                if (p.depth < 0) throw new Error(`Depth negative.`);
+                p.calibRate = ELECTRON_CALIBRATION_DOSE_RATE;
+                p.OF = getElectronOutputFactor(p.energy, p.applicator);
+                p.SSD_eff = getEffectiveSSD(p.energy, p.applicator);
+                p.dmax = getElectronDmax(p.energy);
+                const { value: pV, warning: pW } = getApproxElectronPDD(p.energy, p.applicator, p.depth);
+                p.PDD = pV / 100.0;
+                p.pddWarning = pW;
+                if (p.OF === undefined || isNaN(p.OF)) throw new Error(`OF not found for ${p.energy}MeV, ${p.applicator}.`);
+                if (p.SSD_eff === undefined || isNaN(p.SSD_eff)) throw new Error(`Eff SSD not found for ${p.energy}MeV, ${p.applicator}.`);
+                if (p.dmax === undefined || isNaN(p.dmax)) throw new Error(`Dmax not found for ${p.energy}MeV.`);
+                if (isNaN(p.PDD)) throw new Error(p.pddWarning || `No approx PDD for ${p.energy}MeV, ${p.applicator}, D ${p.depth}cm.`);
+                p.gap = p.ssd_actual - ELECTRON_STANDARD_SSD;
+                const isf_n = p.SSD_eff + p.dmax,
+                    isf_d = p.SSD_eff + p.depth + p.gap;
+                if (isf_d <= 0) throw new Error("Invalid geom for ISF (den<=0).");
+                p.ISF = Math.pow(isf_n / isf_d, 2);
+                if (isNaN(p.ISF)) throw new Error("Fail ISF Electron.");
+                const den = p.calibRate * p.OF * p.PDD * p.ISF;
+                if (den === 0 || isNaN(den)) throw new Error(`Electron calc fail - den zero/invalid (${den?.toFixed(4)}).`);
+                MU = p.Rx / den;
+            } else {
+                throw new Error("Invalid technique.");
+            }
+            if (isNaN(MU)) throw new Error("Calc resulted in NaN.");
+            displayResult(MU, p);
+        } catch (err) {
+            console.error("Calc Err:", err);
+            displayError(err.message);
+        } finally {
+            drawBeam();
+        }
+    }, 0);
+}
         function printResults(){document.getElementById('controlButtons').style.visibility='hidden'; document.getElementById('printEmailButtons').style.visibility='hidden'; window.print(); document.getElementById('controlButtons').style.visibility='visible'; document.getElementById('printEmailButtons').style.visibility='visible';}
         function emailResults(){const oD=document.getElementById('output'); const rT=oD.dataset.resultsText||oD.innerText||"MU Calc Results N/A."; const subj="MU Calc Results: "+(document.getElementById('fieldName').value||"Unnamed Field"); const body=encodeURIComponent(rT); window.location.href=`mailto:?subject=<span class="math-inline">\{encodeURIComponent\(subj\)\}&body\=</span>{body}`;}
         function resetForm(){document.getElementById('plannerName').value=''; document.getElementById('radOncName').value=''; document.getElementById('fieldName').value=''; document.getElementById('technique').value='SSD'; document.getElementById('energy').value='6'; document.getElementById('rxDose').value='180'; document.getElementById('depth').value='5'; document.getElementById('ssd').value='100'; document.getElementById('rxDoseSAD').value='180'; document.getElementById('depthSAD').value='10'; document.getElementById('xsym').checked=true; document.getElementById('ysym').checked=true; document.getElementById('xwidth').value='10'; document.getElementById('ywidth').value='10'; document.getElementById('trayType').value='none'; document.getElementById('wedgeAngle').value='0'; document.getElementById('collimatorAngle').value='0'; document.getElementById('imgNone').checked=true; document.getElementById('electronEnergy').value='6'; document.getElementById('applicatorSize').value='10x10'; document.getElementById('rxDoseElectron').value='200'; document.getElementById('depthElectron').value='2.0'; document.getElementById('ssdElectron').value='100'; changeTechnique(); updatePhotonDefaults(); updateJawInputs(); handleImageSelection(); document.getElementById('output').innerHTML='Results...'; document.getElementById('printEmailButtons').style.display='none';}
