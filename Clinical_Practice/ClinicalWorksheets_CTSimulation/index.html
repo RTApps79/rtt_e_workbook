@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CT Simulation Clinical Worksheets</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            line-height: 1.6; color: #333; background-color: #f4f7f9; margin: 0; padding: 20px;
+        }
+        .container {
+            max-width: 900px; margin: 0 auto; background: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        h1, h2 { color: #2c3e50; }
+        h1 { text-align: center; margin-bottom: 20px; }
+        h2 { border-bottom: 2px solid #16a085; padding-bottom: 10px; }
+        details {
+            background: #f0f5f5; border-radius: 5px; margin-bottom: 15px; border: 1px solid #a3b1b2;
+        }
+        summary {
+            font-weight: bold; font-size: 1.2em; padding: 15px; cursor: pointer; background-color: #d1e0e0; border-radius: 5px 5px 0 0;
+        }
+        details[open] summary { border-bottom: 1px solid #a3b1b2; }
+        summary::marker { color: #16a085; }
+        .worksheet-content { padding: 20px; }
+        fieldset {
+            border: 1px solid #ccc; border-radius: 4px; margin-bottom: 20px; padding: 15px;
+        }
+        legend { font-weight: bold; color: #16a085; padding: 0 10px; }
+        label { display: block; margin-bottom: 8px; font-weight: 500; }
+        input[type="text"], input[type="date"], input[type="number"], input[type="file"], select, textarea {
+            width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; background-color: #fff;
+        }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
+        th, td { text-align: left; padding: 12px; border: 1px solid #ddd; }
+        th { background-color: #eaf2f8; }
+        .media-preview { max-width: 100%; max-height: 400px; margin-top: 10px; display: none; border: 1px solid #ddd; border-radius: 4px; }
+        /* Class to hide sections */
+        .hidden-section { display: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>CT Simulation Clinical Worksheets</h1>
+        <p>Complete one worksheet per week, focusing on a single comprehensive patient case.</p>
+
+        <details>
+            <summary>Week 1: Pre-Simulation, Patient Interaction, and Room Prep</summary>
+            <div class="worksheet-content"><p>Content for Week 1 remains the same.</p></div>
+        </details>
+        <details>
+            <summary>Week 2: Patient Positioning and Immobilization</summary>
+            <div class="worksheet-content"><p>Content for Week 2 remains the same.</p></div>
+        </details>
+
+        <details>
+            <summary>Week 3: CT Scanning and Contrast Administration</summary>
+            <div class="worksheet-content">
+                <h2>Week 3 Simulation Case Study</h2>
+                <form>
+                     <fieldset>
+                        <legend>Case Details</legend>
+                        <label for="w3-date-sim">Date:</label>
+                        <input type="date" id="w3-date-sim" name="w3-date-sim">
+                        <label for="w3-competency-sim">CT Simulation Competency Category:</label>
+                        <select id="w3-competency-sim" name="w3-competency-sim">
+                            <option value="">-- Select a Category --</option>
+                            <option value="head-neck">Head and Neck</option>
+                            <option value="brain">Brain</option>
+                            <option value="thorax">Thorax</option>
+                            <option value="breast">Breast</option>
+                            <option value="abdomen">Abdomen</option>
+                            <option value="pelvis">Pelvis</option>
+                            <option value="spine">Spine</option>
+                            <option value="extremity">Extremity</option>
+                        </select>
+                        <label for="w3-equipment-sim">CT Scanner Make/Model:</label>
+                        <input type="text" id="w3-equipment-sim" name="w3-equipment-sim" placeholder="e.g., Philips Big Bore">
+                    </fieldset>
+                    
+                    <fieldset>
+                        <legend>Section 1: CT Scanner Operation 💻</legend>
+                        <label for="w3-scan-range">How were the scan borders determined?</label>
+                        <input type="text" id="w3-scan-range" name="w3-scan-range">
+                        <label>What were the key scan parameters?</label>
+                        <table>
+                           <tbody>
+                               <tr><td>Slice Thickness (mm)</td><td><input type="number" step="0.1" name="w3-slice"></td></tr>
+                               <tr><td>kVp</td><td><input type="number" name="w3-kvp"></td></tr>
+                               <tr><td>mAs</td><td><input type="number" name="w3-mas"></td></tr>
+                           </tbody>
+                        </table>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Section 2: Contrast Administration 💉</legend>
+                        <label for="w3-contrast-used">Was IV or oral contrast used?</label>
+                        <select id="w3-contrast-used" name="w3-contrast-used" onchange="toggleContrastSection()">
+                            <option value="none">None Used</option>
+                            <option value="iv">IV Contrast</option>
+                            <option value="oral">Oral Contrast</option>
+                            <option value="both">Both IV and Oral</option>
+                        </select>
+                        
+                        <div id="w3-contrast-details" class="hidden-section">
+                             <hr>
+                            <label for="w3-contrast-type">What was the type and amount of contrast?</label>
+                            <input type="text" id="w3-contrast-type" name="w3-contrast-type" placeholder="e.g., 100 mL of Isovue-370">
+                            <label for="w3-screening">What screening questions were asked before administering IV contrast? (e.g., allergies, kidney function)</label>
+                            <textarea id="w3-screening" name="w3-screening"></textarea>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </details>
+        
+        <details>
+            <summary>Week 4: Post-Scan, Data Management, and Special Procedures</summary>
+            <div class="worksheet-content">
+                <h2>Week 4 Simulation Case Study</h2>
+                 <form>
+                    <fieldset>
+                        <legend>Case Details</legend>
+                         <label for="w4-date-sim">Date:</label>
+                        <input type="date" id="w4-date-sim" name="w4-date-sim">
+                        <label for="w4-competency-sim">CT Simulation Competency Category:</label>
+                        <select id="w4-competency-sim" name="w4-competency-sim">
+                           <option value="">-- Select a Category --</option>
+                            <option value="head-neck">Head and Neck</option>
+                            <option value="brain">Brain</option>
+                            <option value="thorax">Thorax</option>
+                            <option value="breast">Breast</option>
+                            <option value="abdomen">Abdomen</option>
+                            <option value="pelvis">Pelvis</option>
+                            <option value="spine">Spine</option>
+                            <option value="extremity">Extremity</option>
+                            <option value="4d-gating">4D CT / Gating Simulation</option>
+                            <option value="sbrt-srs">SBRT/SRS Simulation</option>
+                        </select>
+                        <label for="w4-equipment-sim">CT Scanner Make/Model:</label>
+                        <input type="text" id="w4-equipment-sim" name="w4-equipment-sim" placeholder="e.g., Philips Big Bore">
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Section 1: Data Management & Documentation 💾</legend>
+                        <label for="w4-transfer">Describe the process of transferring the CT dataset to the treatment planning system.</label>
+                        <textarea id="w4-transfer" name="w4-transfer"></textarea>
+                        <label for="w4-documentation">What information did the therapist document after the simulation was complete?</label>
+                        <textarea id="w4-documentation" name="w4-documentation"></textarea>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Section 2: Special Procedures Observation 🌟</legend>
+                        <label for="w4-special-proc">Did you observe a special simulation this week (e.g., 4D CT, SBRT setup, gating)?</label>
+                         <select id="w4-special-proc" name="w4-special-proc" onchange="toggleSection('w4-special-proc', 'w4-special-details', 'yes')">
+                            <option value="no">No</option>
+                            <option value="yes">Yes</option>
+                        </select>
+                        
+                        <div id="w4-special-details" class="hidden-section">
+                            <hr>
+                            <label for="w4-special-desc">Describe the procedure and explain what made it different from a standard simulation.</label>
+                            <textarea id="w4-special-desc" name="w4-special-desc" placeholder="e.g., Observed a 4D CT for a lung patient. An RPM block was placed on the abdomen to track breathing motion..."></textarea>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </details>
+    </div>
+
+    <script>
+        function toggleSection(selectId, sectionId, triggerValue) {
+            const selectElement = document.getElementById(selectId);
+            const sectionElement = document.getElementById(sectionId);
+            if (selectElement.value === triggerValue) {
+                sectionElement.style.display = 'block';
+            } else {
+                sectionElement.style.display = 'none';
+            }
+        }
+
+        function toggleContrastSection() {
+            const selectElement = document.getElementById('w3-contrast-used');
+            const sectionElement = document.getElementById('w3-contrast-details');
+            if (selectElement.value === 'none') {
+                sectionElement.style.display = 'none';
+            } else {
+                sectionElement.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
