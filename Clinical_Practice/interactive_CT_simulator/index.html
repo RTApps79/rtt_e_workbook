@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive CT Scanner Emulator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="emulator-container">
+        <div class="scanner-body">
+            <div class="gantry-shell">
+                <div class="gantry-bore"></div>
+            </div>
+            <div class="couch-base">
+                <div class="couch-top"></div>
+            </div>
+        </div>
+        <div class="console-desk"></div>
+        
+        <div class="hotspot" style="top: 50%; left: 35%;" data-modal="gantry-modal">?</div>
+        <div class="hotspot" style="top: 59%; left: 65%;" data-modal="couch-modal">?</div>
+        <div class="hotspot" style="top: 25%; left: 15%;" data-modal="lasers-modal">?</div>
+        <div class="hotspot" style="top: 50%; left: 88%;" data-modal="console-modal">?</div>
+
+    </div>
+
+    <div id="modal-overlay" class="hidden"></div>
+    
+    <div id="gantry-modal" class="modal hidden">
+        <button class="close-btn">&times;</button>
+        <h2>The Gantry</h2>
+        <p>The gantry is the large, ring-shaped part of the scanner that houses the main imaging components. The opening is called the <strong>bore</strong>.</p>
+        <ul>
+            <li>For radiation therapy, the bore should be large (80-90 cm) to accommodate patients and immobilization devices.</li>
+        </ul>
+        <button id="see-inside-btn">See Inside Gantry</button>
+        <div id="gantry-cutaway" class="hidden">
+             <svg viewBox="0 0 400 400">
+                <defs>
+                    <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                      <path d="M 0 0 L 10 5 L 0 10 z" fill="#333" />
+                    </marker>
+                </defs>
+                <circle cx="200" cy="200" r="180" fill="#f0f0f0" stroke="#ccc" stroke-width="5"/>
+                <circle cx="200" cy="200" r="100" fill="white" stroke="#ccc" stroke-width="2"/>
+                <text x="200" y="200" text-anchor="middle" dy=".3em" font-size="20">Bore</text>
+                
+                <g id="rotator" transform="rotate(0, 200, 200)">
+                    <rect x="175" y="50" width="50" height="30" fill="#a0a0a0" stroke="#333"/>
+                    <text x="200" y="40" text-anchor="middle" font-size="14">X-Ray Tube</text>
+                    
+                    <path d="M 125,350 A 140,140 0 0,1 275,350" fill="#c0c0c0" stroke="#333"/>
+                    <text x="200" y="370" text-anchor="middle" font-size="14">Detector Array</text>
+                </g>
+
+                <circle cx="200" cy="200" r="120" fill="none" stroke="#f39c12" stroke-width="8" stroke-dasharray="10,5"/>
+                <line x1="280" y1="280" x2="225" y2="225" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+                <text x="285" y="285" font-size="14">Slip Ring</text>
+            </svg>
+        </div>
+    </div>
+
+    <div id="couch-modal" class="modal hidden">
+        <button class="close-btn">&times;</button>
+        <h2>The Couch (Patient Table)</h2>
+        <p>The couch, or Patient Support Assembly (PSA), is the movable table the patient lies on. It must mimic the couch on the treatment machine.</p>
+        <ul>
+            <li>Features a <strong>flat top</strong>, often an insert over a standard curved diagnostic table.</li>
+            <li>Made of a low atomic number material, typically <strong>carbon fiber</strong>, to minimize x-ray beam attenuation.</li>
+        </ul>
+        <div id="couch-3d-container"></div>
+    </div>
+    
+    <div id="lasers-modal" class="modal hidden">
+        <button class="close-btn">&times;</button>
+        <h2>Positioning Lasers</h2>
+        <p>A system of wall- and ceiling-mounted lasers used for precise patient positioning and marking.</p>
+        <ul>
+            <li>Projects lines (sagittal, coronal, transverse) that intersect at the machine's <strong>isocenter</strong>.</li>
+            <li>The goal is to align the patient's tumor with this isocenter.</li>
+            <li>Daily QA checks ensure accuracy to within <strong>± 2 mm</strong>.</li>
+        </ul>
+    </div>
+    
+    <div id="console-modal" class="modal hidden">
+        <button class="close-btn">&times;</button>
+        <h2>Control Console</h2>
+        <p>The computer workstation where the therapist operates the scanner, sets scan parameters, and views the images.</p>
+        <ul>
+            <li>Uses powerful processors to reconstruct images from raw data.</li>
+            <li>After the scan, images are exported to a <strong>treatment planning system</strong> or a <strong>PACS</strong> (Picture Archiving and Communication System).</li>
+        </ul>
+    </div>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.157.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.157.0/examples/jsm/"
+            }
+        }
+    </script>
+    <script type="module" src="script.js"></script>
+</body>
+</html>
