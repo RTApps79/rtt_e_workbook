@@ -572,11 +572,12 @@ function createTreatmentBeam() {
 }
 
 function updateTreatmentBeamPosition() {
+    // This 'if' check prevents errors by ensuring all objects exist first
     if (gantryGroup && tubeMesh && treatmentBeamHelper && detectorMesh) {
-        // Position beam at tube mesh location
+        // 1. Move the beam's origin to the x-ray tube's current position
         treatmentBeamHelper.position.copy(tubeMesh.position);
 
-        // Aim beam directly toward detector mesh
+        // 2. Aim the beam's "forward" direction at the detector's current position
         treatmentBeamHelper.lookAt(detectorMesh.position);
     }
 }
