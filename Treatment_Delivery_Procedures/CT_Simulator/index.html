@@ -120,6 +120,7 @@ let patientRelativeBaseY;
 let motionEnabled = false;
 let motionAmplitude = 0.5;
 let motionSpeedFactor = 1.0;
+let detectorWorldPosition = new THREE.Vector3();
 
 function getCTWidth() { return window.innerWidth - 245; }
 function getCTAspect() { return getCTWidth() / window.innerHeight; }
@@ -572,13 +573,18 @@ function createTreatmentBeam() {
 }
 
 function updateTreatmentBeamPosition() {
-    // This 'if' check prevents errors by ensuring all objects exist first
+    // This 'if' check prevents errors by ensuring all objects exist
     if (gantryGroup && tubeMesh && treatmentBeamHelper && detectorMesh) {
-        // 1. Move the beam's origin to the x-ray tube's current position
+        
+        // 1. Set the beam's origin (the cone's apex) to the tube's position.
+        // Since the beam and tube are both children of gantryGroup, we can use local positions.
         treatmentBeamHelper.position.copy(tubeMesh.position);
 
-        // 2. Aim the beam's "forward" direction at the detector's current position
-        treatmentBeamHelper.lookAt(detectorMesh.position);
+        // 2. Get the detector's true position in the 3D world.
+        detectorMesh.getWorldPosition(detectorWorldPosition);
+        
+        // 3. Aim the beam's "forward" direction at the detector's world position.
+        treatmentBeamHelper.lookAt(detectorWorldPosition);
     }
 }
 
