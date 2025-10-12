@@ -562,7 +562,7 @@ function createTreatmentBeam() {
     const coneBaseRadius = ((3 / 2) / GANTRY_RADIUS) * coneHeight;
     const beamGeo = new THREE.ConeGeometry(coneBaseRadius, coneHeight, 32, 1, true);
     beamGeo.rotateY(Math.PI);
-    beamGeo.translate(0, coneHeight / 2, 0);
+    beamGeo.translate(0, -coneHeight / 2, 0);
     const beamMat = new THREE.MeshBasicMaterial({ color: 0x00ff00, transparent: true, opacity: 0.25, depthWrite: false, side: THREE.DoubleSide });
     treatmentBeamHelper = new THREE.Mesh(beamGeo, beamMat);
     treatmentBeamHelper.visible = false;
