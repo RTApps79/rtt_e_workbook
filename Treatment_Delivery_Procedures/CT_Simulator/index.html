@@ -506,16 +506,6 @@ function createLimbs(group, material, gender, bodyShape, immobType, handlePositi
     rightUpperLeg.position.x = -3.0;
     group.add(rightUpperLeg);
 }
-function createTrunkOrgans(group, bodyShape, gender) { /* Omitted for brevity */ }
-function createBrainAndEyes(group) { /* Omitted for brevity */ }
-function createSpinalCord(group) { /* Omitted for brevity */ }
-function createImmobilization(group, gender, bodyShape, dimensions, immobType) {
-    if (immobType === 'none') return null;
-    if (immobType === 'mask') return createMaskImmobilization(group, gender, bodyShape, dimensions);
-    if (immobType === 'wingboard') return createWingboardImmobilization(group, gender, bodyShape, dimensions);
-    if (immobType === 'legcradle') return createLegCradleImmobilization(group, gender, bodyShape, dimensions);
-    return null;
-}
 
         function createTrunkOrgans(group, bodyShape, gender) {
         const organOpacity = 0.85;
