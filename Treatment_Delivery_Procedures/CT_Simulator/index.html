@@ -218,14 +218,6 @@ function createCouch() {
     couchTop.position.y = 6;
     couchTop.receiveShadow = true;
     couchGroup.add(couchTop);
-
-    const legGeo = new THREE.CylinderGeometry(1, 1, 6, 16);
-    const legPositions = [ {x: 10, z: 27}, {x: -10, z: 27}, {x: 10, z: -27}, {x: -10, z: -27} ];
-    legPositions.forEach(pos => {
-        const leg = new THREE.Mesh(legGeo, couchTopMat);
-        leg.position.set(pos.x, 3, pos.z);
-        couchGroup.add(leg);
-    });
     scene.add(couchGroup);
 }
 
@@ -569,8 +561,8 @@ function createTreatmentBeam() {
     const coneHeight = GANTRY_RADIUS * 1.8;
     const coneBaseRadius = ((3 / 2) / GANTRY_RADIUS) * coneHeight;
     const beamGeo = new THREE.ConeGeometry(coneBaseRadius, coneHeight, 32, 1, true);
+    beamGeo.rotateY(Math.PI);
     beamGeo.translate(0, coneHeight / 2, 0);
-    beamGeo.rotateX(Math.PI);
     const beamMat = new THREE.MeshBasicMaterial({ color: 0x00ff00, transparent: true, opacity: 0.25, depthWrite: false, side: THREE.DoubleSide });
     treatmentBeamHelper = new THREE.Mesh(beamGeo, beamMat);
     treatmentBeamHelper.visible = false;
