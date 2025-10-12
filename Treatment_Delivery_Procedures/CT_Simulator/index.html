@@ -289,7 +289,7 @@ function createAnatomy(gender, bodyShape, immobType) {
     createHeadAndNeck(skinGroup, skinMaterial, skeletonGroup, boneMaterial, gender);
     createVertebralColumn(skeletonGroup, boneMaterial, bodyShape);
     createAppendicularSkeleton(skeletonGroup, boneMaterial, gender, bodyShape);
-    createTrunkOrgans(organsGroup, bodyShape, gender);
+  
     createBrainAndEyes(organsGroup);
     createSpinalCord(organsGroup);
     createTumors(tumorsGroup, gender, bodyShape, { scaleZ });
@@ -683,25 +683,77 @@ function createImmobilization(group, gender, bodyShape, dimensions, immobType) {
     }
 
     
-function createMaskImmobilization(group, gender, bodyShape, dimensions) {
-    const maskMaterial = new THREE.MeshStandardMaterial({ color: 0x90ee90, wireframe: true, transparent: true, opacity: 0.6 });
-    const maskHead = new THREE.Mesh(new THREE.SphereGeometry(3.6, 32, 24), maskMaterial);
-    maskHead.position.set(0, 16, 0);
-    group.add(maskHead);
-    return null;
-}
-function createWingboardImmobilization(group, gender, bodyShape, dimensions) {
-    const immobMaterial = new THREE.MeshStandardMaterial({ color: 0x6495ED, roughness: 0.4, metalness: 0.1 });
-    const shoulderWidth = (gender === 'male' ? 7.5 : 7.0);
-    const mainBoard = new THREE.Mesh(new RoundedBoxGeometry(shoulderWidth * 2.5, 14, 1.5, 4, 0.5), immobMaterial);
-    mainBoard.position.set(0, 4, -dimensions.topRadius - 0.75);
-    group.add(mainBoard);
-    const leftHandlePos = new THREE.Vector3(shoulderWidth * 0.7, 19, 3);
-    const rightHandlePos = new THREE.Vector3(-shoulderWidth * 0.7, 19, 3);
-    return { leftHandlePos, rightHandlePos };
-}
-function createLegCradleImmobilization(group, gender, bodyShape, dimensions) { /* Omitted for brevity */ }
+ function createImmobilization(group, gender, bodyShape, dimensions, immobType) {
+        if (immobType === 'none') return null;
+        if (immobType === 'mask') return createMaskImmobilization(group, gender, bodyShape, dimensions);
+        if (immobType === 'wingboard') return createWingboardImmobilization(group, gender, bodyShape, dimensions);
+        if (immobType === 'legcradle') return createLegCradleImmobilization(group, gender, bodyShape, dimensions);
+        return null;
+    }
 
+    function createMaskImmobilization(group, gender, bodyShape, dimensions) {
+        const maskMaterial = new THREE.MeshStandardMaterial({ color: 0x90ee90, wireframe: true, transparent: true, opacity: 0.6 });
+        const { topRadius, scaleZ } = dimensions;
+        
+        const headBaseY = 12;
+        const headGeo = new THREE.SphereGeometry(3.6, 32, 24);
+        const maskHead = new THREE.Mesh(headGeo, maskMaterial);
+        maskHead.position.set(0, headBaseY + 4, 0);
+        maskHead.scale.set(1.05, 1.05, 1.15);
+        group.add(maskHead);
+
+        const neckGeo = new THREE.CylinderGeometry(1.85, 2.2, 3.5, 16, 1, true);
+        const maskNeck = new THREE.Mesh(neckGeo, maskMaterial);
+        maskNeck.position.set(0, headBaseY + 1, 0);
+        group.add(maskNeck);
+
+        const shoulderGeo = new THREE.CylinderGeometry(topRadius * 1.05, topRadius * 1.1, 8, 32, 1, true);
+        const maskShoulders = new THREE.Mesh(shoulderGeo, maskMaterial);
+        maskShoulders.position.set(0, 8, 0);
+        maskShoulders.scale.z = scaleZ;
+        group.add(maskShoulders);
+        return null;
+    }
+
+    function createWingboardImmobilization(group, gender, bodyShape, dimensions) {
+        const immobMaterial = new THREE.MeshStandardMaterial({ color: 0x6495ED, roughness: 0.4, metalness: 0.1 });
+        const { topRadius } = dimensions;
+        const shoulderWidth = (gender === 'male' ? 7.5 : 7.0);
+
+        const boardGeo = new RoundedBoxGeometry(shoulderWidth * 2.5, 14, 1.5, 4, 0.5);
+        const mainBoard = new THREE.Mesh(boardGeo, immobMaterial);
+        mainBoard.position.set(0, 4, -topRadius - 0.75); 
+        group.add(mainBoard);
+
+        const handleGeo = new THREE.CylinderGeometry(0.4, 0.4, 5, 16);
+        
+        const leftHandlePos = new THREE.Vector3(shoulderWidth * 0.7, 19, 3);
+        const rightHandlePos = new THREE.Vector3(-shoulderWidth * 0.7, 19, 3);
+
+        const leftHandle = new THREE.Mesh(handleGeo, immobMaterial);
+        leftHandle.position.copy(leftHandlePos);
+        leftHandle.rotation.z = Math.PI / 2;
+        group.add(leftHandle);
+        
+        const rightHandle = new THREE.Mesh(handleGeo, immobMaterial);
+        rightHandle.position.copy(rightHandlePos);
+        rightHandle.rotation.z = Math.PI / 2;
+        group.add(rightHandle);
+
+        return { leftHandlePos, rightHandlePos };
+    }
+
+    function createLegCradleImmobilization(group, gender, bodyShape, dimensions) {
+        const immobMaterial = new THREE.MeshStandardMaterial({ color: 0xc3e88d, roughness: 0.6 });
+        const legRadius = bodyShape === 'obese' ? 2.8 : (bodyShape === 'skinny' ? 1.8 : 2.2);
+        
+        const cradleGeo = new RoundedBoxGeometry(legRadius * 5, 14, 3, 4, 1);
+        const cradle = new THREE.Mesh(cradleGeo, immobMaterial);
+        
+        cradle.position.set(0, -17, -legRadius * 0.8 - 1); 
+        group.add(cradle);
+        return null;
+    }
 
 // --- Gantry and Beam ---
 function createGantry() {
