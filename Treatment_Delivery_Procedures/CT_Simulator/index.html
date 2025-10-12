@@ -561,12 +561,26 @@ function createTreatmentBeam() {
     const coneHeight = GANTRY_RADIUS * 1.8;
     const coneBaseRadius = ((3 / 2) / GANTRY_RADIUS) * coneHeight;
     const beamGeo = new THREE.ConeGeometry(coneBaseRadius, coneHeight, 32, 1, true);
-    beamGeo.rotateZ(Math.PI);
-    beamGeo.translate(0, -coneHeight / 2, 0);
+
+    // Rotate geometry so cone tip points in Z+ axis direction
+    beamGeo.rotateX(Math.PI / 2); // Z+ axis becomes "forward"
+
     const beamMat = new THREE.MeshBasicMaterial({ color: 0x00ff00, transparent: true, opacity: 0.25, depthWrite: false, side: THREE.DoubleSide });
     treatmentBeamHelper = new THREE.Mesh(beamGeo, beamMat);
-    // Position the beam at the tube position
-    treatmentBeamHelper.position.copy(tubeMesh.position);
+    treatmentBeamHelper.visible = false;
+
+    gantryGroup.add(treatmentBeamHelper);
+}
+
+function updateTreatmentBeamPosition() {
+    if (gantryGroup && tubeMesh && treatmentBeamHelper && detectorMesh) {
+        // Position beam at tube mesh location
+        treatmentBeamHelper.position.copy(tubeMesh.position);
+
+        // Aim beam directly toward detector mesh
+        treatmentBeamHelper.lookAt(detectorMesh.position);
+    }
+}
 
    // Aim the beam from the tube through the isocenter (gantry center) to detector
    const gantryCenter = gantryGroup.position.clone(); // usually isocenter
