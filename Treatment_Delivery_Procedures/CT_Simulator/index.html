@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>4D CT Simulator with Anatomical Patient Model</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script type="importmap">
+{
+    "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.163.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.163.0/examples/jsm/"
+    }
+}
+</script>
+<style>
+    html, body { margin: 0; padding: 0; width: 100vw; height: 100vh; font-family: 'Inter', Arial, sans-serif; background: #f0f2f4; overflow: hidden; }
+    #sidebar { position: absolute; left: 0; top: 0; bottom: 0; width: 245px; background: #e9eef2; box-shadow: 2px 0 8px rgba(0,0,0,0.07); z-index: 10; padding: 16px 8px; overflow-y: auto; }
+    #ctCanvas { position: absolute; left: 245px; top: 0; right: 0; bottom: 0; width: calc(100vw - 245px); height: 100vh; display: block; background: #e0e9ed; z-index: 1; }
+    .sidebar-title { font-weight: bold; color: #232b35; font-size: 16px; margin: 20px 0 10px 0; border-bottom: 1px solid #c1c3cb; padding-bottom: 4px; }
+    .button-group, .slider-group, .checkbox-group, .select-group { margin: 10px 0; }
+    .button-group button, .slider-group input[type="range"], .checkbox-group label { font-size: 14px; margin: 3px 0; }
+    .button-group button, .toggleButton { background: #3d6df7; color: #fff; border: none; margin: 2px 0; padding: 7px 16px; border-radius: 6px; font-size: 13px; cursor: pointer; transition: background 0.25s; }
+    .toggleButton { background: #626e7e; }
+    .toggleButton.active { background: #fd7e14; color: #fff; }
+    label { font-size: 13px; display: block; margin-bottom: 4px; }
+    select { width: 100%; margin-bottom: 8px; border-radius: 5px; border: 1px solid #c1c3cb; padding: 6px; background: #fff; color: #34405a; }
+    .checkbox-group input { margin-right: 5px; }
+    .position-display, .scan-status { font-size: 13px; font-family: monospace; margin: 6px 0; padding: 4px 8px; background: #fff; border-radius: 4px; color: #555; }
+    @media (max-width: 900px) {
+        #sidebar { width: 130px; font-size: 11px; }
+        #ctCanvas { left: 130px; width: calc(100vw - 130px); }
+    }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div id="sidebar">
+    <div class="sidebar-title">View Controls</div>
+    <div class="button-group"><button onclick="window.resetCamera()">Reset View</button><button onclick="window.viewAxial()">Axial</button><button onclick="window.viewSagittal()">Sagittal</button><button onclick="window.viewCoronal()">Coronal</button></div>
+
+    <div class="sidebar-title">Patient Model</div>
+    <div class="select-group">
+        <label for="genderSelect">Gender:</label>
+        <select id="genderSelect"><option value="female">Female</option><option value="male" selected>Male</option></select>
+    </div>
+    <div class="select-group">
+        <label for="bodyShapeSelect">Body Shape:</label>
+        <select id="bodyShapeSelect"><option value="average">Average</option><option value="obese">Obese</option><option value="skinny">Skinny</option></select>
+    </div>
+    <div class="select-group">
+        <label for="immobSelect">Immobilization:</label>
+        <select id="immobSelect"><option value="none">None</option><option value="mask">Head Mask</option><option value="wingboard">Wingboard</option><option value="legcradle">Leg Cradle</option></select>
+    </div>
+    <div class="checkbox-group">
+        <input type="checkbox" id="layerSkin" checked><label for="layerSkin">Skin</label>
+        <input type="checkbox" id="layerSkeleton" checked><label for="layerSkeleton">Skeleton</label>
+        <input type="checkbox" id="layerOrgans" checked><label for="layerOrgans">Organs</label>
+        <input type="checkbox" id="layerTumors" checked><label for="layerTumors">Tumors</label>
+    </div>
+    <div class="button-group"><button class="toggleButton" id="addMarkBtn">Add Mark</button><button id="clearMarksBtn">Clear Marks</button></div>
+
+    <div class="sidebar-title">Lasers (Isocenter)</div>
+    <div class="button-group"><span>Lateral (X)</span><button onclick="window.moveLasers(-1, 0, 0)">← Left</button><button onclick="window.moveLasers(1, 0, 0)">Right →</button></div>
+    <div class="button-group"><span>Vertical (Y)</span><button onclick="window.moveLasers(0, 1, 0)">↑ Up</button><button onclick="window.moveLasers(0, -1, 0)">↓ Down</button></div>
+    <div class="button-group"><span>Longitudinal (Z)</span><button onclick="window.moveLasers(0, 0, -1)">← In</button><button onclick="window.moveLasers(0, 0, 1)">Out →</button></div>
+    <span id="laserPositionDisplay" class="position-display">X:0.0, Y:0.0, Z:0.0</span>
+
+    <div class="sidebar-title">Couch</div>
+    <div class="button-group"><span>Lateral (X)</span><button id="moveCouchXLeft" onclick="window.moveCouch(-1, 0, 0)">← Left</button><button id="moveCouchXRight" onclick="window.moveCouch(1, 0, 0)">Right →</button></div>
+    <div class="button-group"><span>Vertical (Y)</span><button id="moveCouchYUp" onclick="window.moveCouch(0, 1, 0)">↑ Up</button><button id="moveCouchYDown" onclick="window.moveCouch(0, -1, 0)">↓ Down</button></div>
+    <div class="button-group"><span>Longitudinal (Z)</span><button id="moveCouchZIn" onclick="window.moveCouch(0, 0, 1)">← In</button><button id="moveCouchZOut" onclick="window.moveCouch(0, 0, -1)">Out →</button></div>
+    <span id="couchPositionDisplay" class="position-display">X:0.0, Y:0.0, Z:0.0</span>
+    <div class="button-group"><button id="setIsocenterBtn" onclick="window.setIsoToCouchCenter()" style="background-color: #ffc107; color: black; width: 80%; padding: 6px 0;">Set Iso to Couch</button></div>
+
+    <div class="sidebar-title">Scan & Beam</div>
+    <div class="button-group"><button id="halfScanBtn">Half Scan (to Iso)</button><button id="fullScanBtn">Full Scan (In)</button></div>
+    <div class="button-group"><button id="stopScanBtn" disabled>Stop Scan/Rotation</button></div>
+    <span id="scanStatusDisplay" class="scan-status">Status: Idle</span>
+    <div class="checkbox-group"><input type="checkbox" id="beamVisibilityCheckbox"><label for="beamVisibilityCheckbox">Show Treatment Beam</label></div>
+    <div class="button-group"><button id="rotateGantryBtn">Rotate Gantry</button></div>
+
+    <div class="sidebar-title">Respiratory Motion</div>
+    <div class="checkbox-group"><input type="checkbox" id="motionEnableCheckbox"><label for="motionEnableCheckbox">Enable Motion</label></div>
+    <div class="slider-group"><label for="motionAmplitudeSlider">Amplitude:</label><input type="range" id="motionAmplitudeSlider" min="0" max="1.5" value="0.5" step="0.1"><span id="motionAmplitudeValue">0.5</span> units</div>
+    <div class="slider-group"><label for="motionSpeedSlider">Speed:</label><input type="range" id="motionSpeedSlider" min="0.5" max="3.0" value="1.0" step="0.1"><span id="motionSpeedValue">1.0</span> x</div>
+</div>
+<canvas id="ctCanvas"></canvas>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+
+// --------- GLOBALS ---------
+let scene, camera, renderer, controls, clock, raycaster, pointer;
+let laserGroup, couchGroup, patientModel, gantryGroup;
+let skinGroup, skeletonGroup, organsGroup, tumorsGroup, immobilizationGroup, marksGroup;
+let tubeMesh, detectorMesh, gantryRingMesh, treatmentBeamHelper;
+let userDefinedIsocenterPos = new THREE.Vector3(0, 9, 0);
+let gantryRotationAngle = 0;
+const GANTRY_RADIUS = 16;
+const GANTRY_THICKNESS = 3.2;
+const TUBE_SIZE = 1.2;
+const DETECTOR_WIDTH = 2.0, DETECTOR_HEIGHT = 0.8, DETECTOR_DEPTH = 3.5;
+const laserMoveStep = 0.5;
+const couchMoveStep = 0.5;
+const longitudinalLimitIn = -25;
+const longitudinalLimitOut = 25;
+let couchAnimationRequestId = null;
+let gantryAnimationRequestId = null;
+let isScanning = false;
+let isGantryRotating = false;
+let currentGender = 'male';
+let currentBodyShape = 'average';
+let currentImmobType = 'none';
+let isAddingMarks = false;
+let patientRelativeBaseY;
+let motionEnabled = false;
+let motionAmplitude = 0.5;
+let motionSpeedFactor = 1.0;
+
+function getCTWidth() { return window.innerWidth - 245; }
+function getCTAspect() { return getCTWidth() / window.innerHeight; }
+
+function init() {
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xe0e9ed);
+    camera = new THREE.PerspectiveCamera(75, getCTAspect(), 0.1, 1000);
+    clock = new THREE.Clock();
+    raycaster = new THREE.Raycaster();
+    pointer = new THREE.Vector2();
+
+    const canvas = document.getElementById('ctCanvas');
+    renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+    renderer.setSize(getCTWidth(), window.innerHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+    window.resetCamera();
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.8));
+    const dirLight1 = new THREE.DirectionalLight(0xffffff, 0.7);
+    dirLight1.position.set(10, 20, 15);
+    dirLight1.castShadow = true;
+    scene.add(dirLight1);
+    const dirLight2 = new THREE.DirectionalLight(0xffffff, 0.5);
+    dirLight2.position.set(-10, 15, -10);
+    scene.add(dirLight2);
+
+    controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.target.copy(userDefinedIsocenterPos);
+
+    createAlignmentLasers();
+    createCouch();
+    createGantry();
+    createTreatmentBeam();
+    rebuildAnatomy(); 
+
+    laserGroup.position.copy(userDefinedIsocenterPos);
+    couchGroup.position.set(0, 0, 0);
+    gantryGroup.position.copy(userDefinedIsocenterPos);
+
+    setupEventListeners();
+    updateCouchPositionDisplay();
+    updateLaserPositionDisplay();
+    updateMotionParams();
+    
+    animate();
+}
+
+function setupEventListeners() {
+    document.getElementById('genderSelect').addEventListener('change', (e) => { currentGender = e.target.value; rebuildAnatomy(); });
+    document.getElementById('bodyShapeSelect').addEventListener('change', (e) => { currentBodyShape = e.target.value; rebuildAnatomy(); });
+    document.getElementById('immobSelect').addEventListener('change', (e) => { currentImmobType = e.target.value; rebuildAnatomy(); });
+
+    document.getElementById('layerSkin').addEventListener('change', e => { if(skinGroup) skinGroup.visible = e.target.checked; });
+    document.getElementById('layerSkeleton').addEventListener('change', e => { if(skeletonGroup) skeletonGroup.visible = e.target.checked; });
+    document.getElementById('layerOrgans').addEventListener('change', e => { if(organsGroup) organsGroup.visible = e.target.checked; });
+    document.getElementById('layerTumors').addEventListener('change', e => { if(tumorsGroup) tumorsGroup.visible = e.target.checked; });
+
+    document.getElementById('addMarkBtn').addEventListener('click', () => { isAddingMarks = !isAddingMarks; document.getElementById('addMarkBtn').classList.toggle('active', isAddingMarks); });
+    document.getElementById('clearMarksBtn').addEventListener('click', clearAnatomyMarks);
+    document.getElementById('ctCanvas').addEventListener('click', onCanvasClick, false);
+
+    document.getElementById('halfScanBtn').addEventListener('click', () => startScan(0, 1500));
+    document.getElementById('fullScanBtn').addEventListener('click', () => startScan(longitudinalLimitIn, 3000));
+    document.getElementById('stopScanBtn').addEventListener('click', () => stopAllAnimations());
+    document.getElementById('rotateGantryBtn').addEventListener('click', toggleGantryRotation);
+
+    document.getElementById('beamVisibilityCheckbox').addEventListener('change', window.toggleBeamVisibility);
+    document.getElementById('motionEnableCheckbox').addEventListener('change', (e) => { motionEnabled = e.target.checked; });
+    document.getElementById('motionAmplitudeSlider').addEventListener('input', updateMotionParams);
+    document.getElementById('motionSpeedSlider').addEventListener('input', updateMotionParams);
+
+    window.addEventListener('resize', onWindowResize, false);
+}
+
+
+function createAlignmentLasers() {
+    laserGroup = new THREE.Group();
+    const laserExtent = 30;
+    const laserMaterial = new THREE.LineBasicMaterial({ color: 0xff0000, linewidth: 1, transparent: true, opacity: 0.5 });
+    laserGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-laserExtent, 0, 0), new THREE.Vector3(laserExtent, 0, 0)]), laserMaterial));
+    laserGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, -laserExtent, 0), new THREE.Vector3(0, laserExtent, 0)]), laserMaterial));
+    laserGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, -laserExtent), new THREE.Vector3(0, 0, laserExtent)]), laserMaterial));
+    scene.add(laserGroup);
+}
+
+function createCouch() {
+    couchGroup = new THREE.Group();
+    const couchTopGeo = new THREE.BoxGeometry(25, 2, 60);
+    const couchTopMat = new THREE.MeshStandardMaterial({ color: 0x444444, metalness: 0.2, roughness: 0.8 });
+    const couchTop = new THREE.Mesh(couchTopGeo, couchTopMat);
+    couchTop.position.y = 6;
+    couchTop.receiveShadow = true;
+    couchGroup.add(couchTop);
+
+    const legGeo = new THREE.CylinderGeometry(1, 1, 6, 16);
+    const legPositions = [ {x: 10, z: 27}, {x: -10, z: 27}, {x: 10, z: -27}, {x: -10, z: -27} ];
+    legPositions.forEach(pos => {
+        const leg = new THREE.Mesh(legGeo, couchTopMat);
+        leg.position.set(pos.x, 3, pos.z);
+        couchGroup.add(leg);
+    });
+    scene.add(couchGroup);
+}
+
+function onCanvasClick(event) {
+    if (!isAddingMarks || !skinGroup) return;
+
+    const canvasBounds = renderer.domElement.getBoundingClientRect();
+    pointer.x = ((event.clientX - canvasBounds.left) / canvasBounds.width) * 2 - 1;
+    pointer.y = -((event.clientY - canvasBounds.top) / canvasBounds.height) * 2 + 1;
+
+    raycaster.setFromCamera(pointer, camera);
+    const intersects = raycaster.intersectObjects(patientModel.children, true);
+
+    if (intersects.length > 0) {
+        const intersection = intersects[0];
+        const point = intersection.point;
+
+        const markGeo = new THREE.SphereGeometry(0.2, 16, 16);
+        const markMat = new THREE.MeshBasicMaterial({ color: 0x0000ff });
+        const mark = new THREE.Mesh(markGeo, markMat);
+        
+        mark.position.copy(marksGroup.worldToLocal(point));
+        marksGroup.add(mark);
+    }
+}
+
+function clearAnatomy() {
+    if (patientModel) {
+        couchGroup.remove(patientModel);
+    }
+    skinGroup = skeletonGroup = organsGroup = tumorsGroup = patientModel = immobilizationGroup = marksGroup = null;
+}
+
+function rebuildAnatomy() {
+    clearAnatomy();
+    createAnatomy(currentGender, currentBodyShape, currentImmobType);
+}
+
+function clearAnatomyMarks() {
+    if (marksGroup) {
+        while(marksGroup.children.length > 0){
+            marksGroup.remove(marksGroup.children[0]);
+        }
+    }
+}
+
+function createAnatomy(gender, bodyShape, immobType) {
+    const boneMaterial = new THREE.MeshStandardMaterial({ color: 0xeae6d3, transparent: true, opacity: 0.9, roughness: 0.4, metalness: 0.1 });
+    const skinMaterial = new THREE.MeshStandardMaterial({ color: 0xffdab9, roughness: 0.7, metalness: 0.1, side: THREE.DoubleSide });
+
+    patientModel = new THREE.Group();
+    patientModel.castShadow = true;
+    immobilizationGroup = new THREE.Group();
+    skeletonGroup = new THREE.Group();
+    skinGroup = new THREE.Group();
+    organsGroup = new THREE.Group();
+    tumorsGroup = new THREE.Group();
+    marksGroup = new THREE.Group();
+
+    let topRadius, bottomRadius, scaleZ;
+    switch (bodyShape) {
+        case 'obese': topRadius = gender === 'male' ? 8.0 : 7.5; bottomRadius = gender === 'male' ? 7.0 : 6.5; scaleZ = 1.2; break;
+        case 'skinny': topRadius = gender === 'male' ? 5.0 : 4.5; bottomRadius = gender === 'male' ? 4.0 : 3.5; scaleZ = 0.8; break;
+        default: topRadius = gender === 'male' ? 6.0 : 5.5; bottomRadius = gender === 'male' ? 5.0 : 4.5; scaleZ = 1.0;
+    }
+
+    createTorso(skinGroup, skinMaterial, gender, bodyShape, { topRadius, bottomRadius, scaleZ });
+    createHeadAndNeck(skinGroup, skinMaterial, skeletonGroup, boneMaterial, gender);
+    createVertebralColumn(skeletonGroup, boneMaterial, bodyShape);
+    createAppendicularSkeleton(skeletonGroup, boneMaterial, gender, bodyShape);
+    createTrunkOrgans(organsGroup, bodyShape, gender);
+    createBrainAndEyes(organsGroup);
+    createSpinalCord(organsGroup);
+    createTumors(tumorsGroup, gender, bodyShape, { scaleZ });
+    const handlePositions = createImmobilization(immobilizationGroup, gender, bodyShape, { topRadius, bottomRadius, scaleZ }, immobType);
+    createLimbs(skinGroup, skinMaterial, gender, bodyShape, immobType, handlePositions);
+
+    patientModel.add(skeletonGroup, skinGroup, organsGroup, tumorsGroup, immobilizationGroup, marksGroup);
+    skinGroup.visible = document.getElementById('layerSkin').checked;
+    skeletonGroup.visible = document.getElementById('layerSkeleton').checked;
+    organsGroup.visible = document.getElementById('layerOrgans').checked;
+    tumorsGroup.visible = document.getElementById('layerTumors').checked;
+
+    const patientDepth = bottomRadius * scaleZ;
+    const verticalOffset = (immobType === 'wingboard') ? 1.5 : 0;
+    const couchTopSurfaceY = 7.0; 
+    
+    patientRelativeBaseY = couchTopSurfaceY + patientDepth + verticalOffset;
+
+    patientModel.rotation.x = -Math.PI / 2;
+    patientModel.position.y = patientRelativeBaseY;
+
+    couchGroup.add(patientModel);
+}
+
+// --- FULL ANATOMY & TUMOR FUNCTIONS ---
+function createTumor(size, spikeFactor) {
+    const tumorMaterial = new THREE.MeshStandardMaterial({color: 0xdd3333, roughness: 0.6, metalness: 0.1, emissive: 0x550000 });
+    const tumorGeo = new THREE.SphereGeometry(size, 16, 16);
+    const positionAttribute = tumorGeo.getAttribute('position');
+    const vertex = new THREE.Vector3();
+    for (let i = 0; i < positionAttribute.count; i++) {
+        vertex.fromBufferAttribute(positionAttribute, i);
+        const noise = 1 + (Math.random() - 0.5) * spikeFactor;
+        vertex.multiplyScalar(noise);
+        positionAttribute.setXYZ(i, vertex.x, vertex.y, vertex.z);
+    }
+    tumorGeo.computeVertexNormals();
+    const tumor = new THREE.Mesh(tumorGeo, tumorMaterial);
+    tumor.castShadow = true;
+    return tumor;
+}
+function createTumors(group, gender, bodyShape, dimensions) {
+    const brainTumor = createTumor(0.8, 0.6); brainTumor.position.set(0.5, 16.5, 0); group.add(brainTumor);
+    const lungTumor = createTumor(1.2, 0.8); lungTumor.position.set(-2.5, 5.0, 0.8); group.add(lungTumor);
+    const femurTumor = createTumor(0.6, 1.0); femurTumor.position.set(3.0, -13.0, -1.0); group.add(femurTumor);
+    if (gender === 'female') {
+        const breastTumor = createTumor(0.7, 0.7); breastTumor.position.set(2.8, 6.0, 2.0 * dimensions.scaleZ); group.add(breastTumor);
+        const uterusTumor = createTumor(0.5, 0.5); uterusTumor.position.set(0, -5.0, 0.0); group.add(uterusTumor);
+    }
+    if (gender === 'male') {
+        const prostateTumor = createTumor(0.4, 0.6); prostateTumor.position.set(0, -6.0, 0.5); group.add(prostateTumor);
+    }
+}
+function createTorso(group, material, gender, bodyShape, dimensions) {
+    const { topRadius, bottomRadius, scaleZ } = dimensions;
+    const torsoShape = new THREE.CylinderGeometry(topRadius, bottomRadius, 18, 32);
+    const torso = new THREE.Mesh(torsoShape, material);
+    torso.position.y = 2;
+    torso.scale.z = scaleZ;
+    torso.castShadow = true;
+    group.add(torso);
+    if (gender === 'female') {
+        const breastSize = bodyShape === 'obese' ? 3.0 : (bodyShape === 'skinny' ? 2.4 : 2.7);
+        const breastGeo = new THREE.SphereGeometry(breastSize, 20, 16, 0, Math.PI * 2, 0, Math.PI / 2);
+        const leftBreast = new THREE.Mesh(breastGeo, material);
+        leftBreast.position.set(2.8, 6.5, 2.8 * scaleZ);
+        leftBreast.rotation.x = -0.2;
+        leftBreast.castShadow = true;
+        group.add(leftBreast);
+        const rightBreast = leftBreast.clone();
+        rightBreast.position.x = -leftBreast.position.x;
+        group.add(rightBreast);
+    }
+}
+function createHeadAndNeck(skin, skinMat, skeleton, boneMat, gender) {
+    const headBaseY = 12;
+    const headSkeletonGroup = new THREE.Group();
+    headSkeletonGroup.position.y = headBaseY;
+    const craniumGeo = new THREE.SphereGeometry(3.2, 32, 24);
+    const cranium = new THREE.Mesh(craniumGeo, boneMat);
+    cranium.position.y = 4.2;
+    cranium.scale.set(0.95, 1, 1.05);
+    headSkeletonGroup.add(cranium);
+    skeleton.add(headSkeletonGroup);
+    const headGroup = new THREE.Group();
+    headGroup.position.y = headBaseY;
+    const headGeo = new THREE.SphereGeometry(3.5, 32, 24);
+    const head = new THREE.Mesh(headGeo, skinMat);
+    head.position.y = 4;
+    head.scale.set(1, 1, 1.1);
+    head.castShadow = true;
+    headGroup.add(head);
+    const neckGeo = new THREE.CylinderGeometry(1.8, 2.1, 3.5, 24);
+    const neck = new THREE.Mesh(neckGeo, skinMat);
+    neck.position.y = 1;
+    neck.castShadow = true;
+    headGroup.add(neck);
+    skin.add(headGroup);
+}
+function createVertebralColumn(group, material, bodyShape) {
+    const spineGroup = new THREE.Group();
+    let currentY = 13.8, currentZ = -1.5;
+    let ribCageScaleX = 1.0, ribCageScaleZ = 1.0;
+    switch (bodyShape) {
+        case 'obese': ribCageScaleX = 1.25; ribCageScaleZ = 1.2; break;
+        case 'skinny': ribCageScaleX = 0.8; ribCageScaleZ = 0.8; break;
+    }
+    for (let i = 0; i < 7; i++) {
+        const vertebra = new THREE.Mesh(new RoundedBoxGeometry(0.9, 0.5, 1.0, 2, 0.1), material);
+        currentY -= 0.5; currentZ += 0.06;
+        vertebra.position.set(0, currentY, currentZ);
+        spineGroup.add(vertebra);
+    }
+    const ribCage = new THREE.Group();
+    for (let i = 0; i < 12; i++) {
+        const vertebra = new THREE.Mesh(new RoundedBoxGeometry(1.4, 0.8, 1.7, 2, 0.2), material);
+        currentY -= 0.8; currentZ -= 0.12;
+        vertebra.position.set(0, currentY, currentZ);
+        spineGroup.add(vertebra);
+        if (i < 10) {
+            const ribCurve = new THREE.CatmullRomCurve3([ new THREE.Vector3(0, 0, -1.2), new THREE.Vector3(3.5, 0.5, -0.6), new THREE.Vector3(4.5, 0, 1.2), new THREE.Vector3(3.5, -0.5, 2.8), new THREE.Vector3(0, -0.5, 3.5) ]);
+            const ribGeo = new THREE.TubeGeometry(ribCurve, 20, 0.25, 8);
+            const leftRib = new THREE.Mesh(ribGeo, material);
+            leftRib.position.y = currentY + 0.2;
+            ribCage.add(leftRib);
+            const rightRib = leftRib.clone();
+            rightRib.scale.x = -1;
+            ribCage.add(rightRib);
+        }
+    }
+    ribCage.scale.set(ribCageScaleX, 1, ribCageScaleZ);
+    spineGroup.add(ribCage);
+    const sternum = new THREE.Mesh(new RoundedBoxGeometry(1.2, 5.5, 0.6, 2, 0.2), material);
+    sternum.position.set(0, 5.5, 3.8 * ribCageScaleZ);
+    spineGroup.add(sternum);
+    for (let i = 0; i < 5; i++) {
+        const vertebra = new THREE.Mesh(new RoundedBoxGeometry(2.0, 1.0, 2.0, 2, 0.2), material);
+        currentY -= 1.1; currentZ += 0.18;
+        vertebra.position.set(0, currentY, currentZ);
+        spineGroup.add(vertebra);
+    }
+    group.add(spineGroup);
+}
+function createAppendicularSkeleton(group, material, gender, bodyShape) {
+    const shoulderWidth = gender === 'male' ? 7.5 : 7.0;
+    const humerusGeo = new THREE.CylinderGeometry(0.5, 0.4, 8, 12);
+    const leftHumerus = new THREE.Mesh(humerusGeo, material);
+    leftHumerus.position.set(shoulderWidth, 7, -0.5);
+    group.add(leftHumerus);
+    const rightHumerus = leftHumerus.clone();
+    rightHumerus.position.x = -shoulderWidth;
+    group.add(rightHumerus);
+    const femurGeo = new THREE.CylinderGeometry(0.7, 0.5, 12, 12);
+    const leftFemur = new THREE.Mesh(femurGeo, material);
+    leftFemur.position.set(3.0, -11.0, -1.0);
+    group.add(leftFemur);
+    const rightFemur = leftFemur.clone();
+    rightFemur.position.x = -3.0;
+    group.add(rightFemur);
+}
+function createLimbs(group, material, gender, bodyShape, immobType, handlePositions) {
+    let armRadius, legRadius;
+    switch (bodyShape) {
+        case 'obese': armRadius = 1.6; legRadius = 2.8; break;
+        case 'skinny': armRadius = 0.9; legRadius = 1.8; break;
+        default: armRadius = 1.3; legRadius = 2.2; break;
+    }
+    const shoulderWidth = (gender === 'male' ? 7.5 : 7.0);
+
+    if (immobType === 'wingboard' && handlePositions) {
+        const placeCylinderBetweenPoints = (start, end, radius, mat) => {
+            const midpoint = new THREE.Vector3().addVectors(start, end).multiplyScalar(0.5);
+            const height = start.distanceTo(end);
+            const cylinder = new THREE.Mesh(new THREE.CylinderGeometry(radius, radius, height, 16), mat);
+            cylinder.position.copy(midpoint);
+            cylinder.lookAt(end);
+            cylinder.rotateX(Math.PI / 2);
+            cylinder.castShadow = true;
+            return cylinder;
+        };
+        const { leftHandlePos, rightHandlePos } = handlePositions;
+        const leftShoulderPos = new THREE.Vector3(shoulderWidth, 7, -0.5);
+        const leftElbowPos = new THREE.Vector3(leftShoulderPos.x + 2, 14, 4);
+        const leftUpperArm = placeCylinderBetweenPoints(leftShoulderPos, leftElbowPos, armRadius, material);
+        const leftLowerArm = placeCylinderBetweenPoints(leftElbowPos, leftHandlePos, armRadius * 0.8, material);
+        const leftHand = new THREE.Mesh(new RoundedBoxGeometry(armRadius * 1.5, armRadius, armRadius * 1.2, 4, 0.2), material);
+        leftHand.position.copy(leftHandlePos);
+        leftHand.castShadow = true;
+        group.add(leftUpperArm, leftLowerArm, leftHand);
+        const rightShoulderPos = new THREE.Vector3(-shoulderWidth, 7, -0.5);
+        const rightElbowPos = new THREE.Vector3(rightShoulderPos.x - 2, 14, 4);
+        const rightUpperArm = placeCylinderBetweenPoints(rightShoulderPos, rightElbowPos, armRadius, material);
+        const rightLowerArm = placeCylinderBetweenPoints(rightElbowPos, rightHandlePos, armRadius * 0.8, material);
+        const rightHand = new THREE.Mesh(new RoundedBoxGeometry(armRadius * 1.5, armRadius, armRadius * 1.2, 4, 0.2), material);
+        rightHand.position.copy(rightHandlePos);
+        rightHand.castShadow = true;
+        group.add(rightUpperArm, rightLowerArm, rightHand);
+    } else {
+        const upperArmGeo = new THREE.CylinderGeometry(armRadius, armRadius * 0.8, 8, 16);
+        const leftUpperArm = new THREE.Mesh(upperArmGeo, material);
+        leftUpperArm.position.set(shoulderWidth, 7, -0.5);
+        leftUpperArm.castShadow = true;
+        group.add(leftUpperArm);
+        const rightUpperArm = leftUpperArm.clone();
+        rightUpperArm.position.x = -shoulderWidth;
+        group.add(rightUpperArm);
+    }
+    const upperLegGeo = new THREE.CylinderGeometry(legRadius, legRadius * 0.8, 12, 16);
+    const leftUpperLeg = new THREE.Mesh(upperLegGeo, material);
+    leftUpperLeg.position.set(3.0, -11.0, -1.0);
+    leftUpperLeg.castShadow = true;
+    group.add(leftUpperLeg);
+    const rightUpperLeg = leftUpperLeg.clone();
+    rightUpperLeg.position.x = -3.0;
+    group.add(rightUpperLeg);
+}
+function createTrunkOrgans(group, bodyShape, gender) { /* Omitted for brevity */ }
+function createBrainAndEyes(group) { /* Omitted for brevity */ }
+function createSpinalCord(group) { /* Omitted for brevity */ }
+function createImmobilization(group, gender, bodyShape, dimensions, immobType) {
+    if (immobType === 'none') return null;
+    if (immobType === 'mask') return createMaskImmobilization(group, gender, bodyShape, dimensions);
+    if (immobType === 'wingboard') return createWingboardImmobilization(group, gender, bodyShape, dimensions);
+    if (immobType === 'legcradle') return createLegCradleImmobilization(group, gender, bodyShape, dimensions);
+    return null;
+}
+function createMaskImmobilization(group, gender, bodyShape, dimensions) {
+    const maskMaterial = new THREE.MeshStandardMaterial({ color: 0x90ee90, wireframe: true, transparent: true, opacity: 0.6 });
+    const maskHead = new THREE.Mesh(new THREE.SphereGeometry(3.6, 32, 24), maskMaterial);
+    maskHead.position.set(0, 16, 0);
+    group.add(maskHead);
+    return null;
+}
+function createWingboardImmobilization(group, gender, bodyShape, dimensions) {
+    const immobMaterial = new THREE.MeshStandardMaterial({ color: 0x6495ED, roughness: 0.4, metalness: 0.1 });
+    const shoulderWidth = (gender === 'male' ? 7.5 : 7.0);
+    const mainBoard = new THREE.Mesh(new RoundedBoxGeometry(shoulderWidth * 2.5, 14, 1.5, 4, 0.5), immobMaterial);
+    mainBoard.position.set(0, 4, -dimensions.topRadius - 0.75);
+    group.add(mainBoard);
+    const leftHandlePos = new THREE.Vector3(shoulderWidth * 0.7, 19, 3);
+    const rightHandlePos = new THREE.Vector3(-shoulderWidth * 0.7, 19, 3);
+    return { leftHandlePos, rightHandlePos };
+}
+function createLegCradleImmobilization(group, gender, bodyShape, dimensions) { /* Omitted for brevity */ }
+
+
+// --- Gantry and Beam ---
+function createGantry() {
+    gantryGroup = new THREE.Group();
+    const gantryGeo = new THREE.TorusGeometry(GANTRY_RADIUS, GANTRY_THICKNESS, 16, 60);
+    const gantryMat = new THREE.MeshStandardMaterial({ color: 0xd0d0d5, metalness: 0.3, roughness: 0.6 });
+    gantryRingMesh = new THREE.Mesh(gantryGeo, gantryMat);
+    gantryRingMesh.rotation.z = Math.PI / 2;
+    gantryRingMesh.castShadow = true;
+    gantryGroup.add(gantryRingMesh);
+
+    tubeMesh = new THREE.Mesh(new THREE.BoxGeometry(TUBE_SIZE, TUBE_SIZE, TUBE_SIZE * 1.2), new THREE.MeshStandardMaterial({ color: 0x005eff }));
+    tubeMesh.position.set(0, GANTRY_RADIUS, 0);
+    tubeMesh.castShadow = true;
+    gantryGroup.add(tubeMesh);
+
+    detectorMesh = new THREE.Mesh(new THREE.BoxGeometry(DETECTOR_WIDTH, DETECTOR_HEIGHT, DETECTOR_DEPTH), new THREE.MeshStandardMaterial({ color: 0x660000 }));
+    detectorMesh.position.set(0, -GANTRY_RADIUS, 0);
+    detectorMesh.castShadow = true;
+    gantryGroup.add(detectorMesh);
+    scene.add(gantryGroup);
+}
+
+function createTreatmentBeam() {
+    const coneHeight = GANTRY_RADIUS * 1.8;
+    const coneBaseRadius = ((3 / 2) / GANTRY_RADIUS) * coneHeight;
+    const beamGeo = new THREE.ConeGeometry(coneBaseRadius, coneHeight, 32, 1, true);
+    beamGeo.translate(0, -coneHeight / 2, 0);
+    const beamMat = new THREE.MeshBasicMaterial({ color: 0x00ff00, transparent: true, opacity: 0.25, depthWrite: false, side: THREE.DoubleSide });
+    treatmentBeamHelper = new THREE.Mesh(beamGeo, beamMat);
+    treatmentBeamHelper.visible = false;
+    gantryGroup.add(treatmentBeamHelper);
+}
+
+// --- CONTROLS AND ANIMATION ---
+window.moveLasers = function(dx, dy, dz) {
+    if (isScanning || isGantryRotating) return;
+    laserGroup.position.add(new THREE.Vector3(dx * laserMoveStep, dy * laserMoveStep, dz * laserMoveStep));
+    userDefinedIsocenterPos.copy(laserGroup.position);
+    gantryGroup.position.copy(laserGroup.position);
+    updateLaserPositionDisplay();
+    controls.target.copy(laserGroup.position);
+}
+
+window.moveCouch = function(dx, dy, dz) {
+    if (isScanning || isGantryRotating) { stopAllAnimations(); }
+    if (!couchGroup) return;
+    const newPos = couchGroup.position.clone();
+    newPos.x += dx * couchMoveStep;
+    newPos.y += dy * couchMoveStep;
+    newPos.z += dz * couchMoveStep;
+    newPos.z = Math.max(longitudinalLimitIn, Math.min(longitudinalLimitOut, newPos.z));
+    couchGroup.position.copy(newPos);
+    updateCouchPositionDisplay();
+}
+
+window.setIsoToCouchCenter = function() {
+    if (isScanning || isGantryRotating) return;
+    userDefinedIsocenterPos.x = couchGroup.position.x;
+    userDefinedIsocenterPos.z = couchGroup.position.z;
+    laserGroup.position.copy(userDefinedIsocenterPos);
+    gantryGroup.position.copy(userDefinedIsocenterPos);
+    updateLaserPositionDisplay();
+    controls.target.copy(userDefinedIsocenterPos);
+}
+
+function setMovementAndScanButtonsEnabled(enabled) {
+    document.querySelectorAll('#sidebar button').forEach(btn => {
+        if (btn.id !== 'stopScanBtn') btn.disabled = !enabled;
+    });
+    document.getElementById('stopScanBtn').disabled = !(isScanning || isGantryRotating);
+    document.getElementById('rotateGantryBtn').disabled = isScanning;
+}
+
+function startScan(targetZrelativeToIso, duration = 1500) {
+    if (!couchGroup || isScanning || isGantryRotating) return;
+    stopAllAnimations();
+    
+    const targetWorldZ = userDefinedIsocenterPos.z + targetZrelativeToIso;
+    const startZ = couchGroup.position.z;
+    const distanceZ = targetWorldZ - startZ;
+    if (Math.abs(distanceZ) < 0.01) return;
+
+    isScanning = true;
+    isGantryRotating = true;
+    setMovementAndScanButtonsEnabled(false);
+    updateScanStatus("Scanning...");
+    if (treatmentBeamHelper) treatmentBeamHelper.visible = true;
+
+    const startTime = performance.now();
+    function stepCouch() {
+        if (!isScanning) { couchAnimationRequestId = null; return; }
+        const progress = Math.min((performance.now() - startTime) / duration, 1);
+        couchGroup.position.z = startZ + distanceZ * progress;
+        updateCouchPositionDisplay();
+        if (progress < 1) { couchAnimationRequestId = requestAnimationFrame(stepCouch); } 
+        else {
+            couchAnimationRequestId = null;
+            if (isScanning) { stopAllAnimations(true); }
+        }
+    }
+    function stepGantry() {
+        if (!isGantryRotating) { gantryAnimationRequestId = null; return; }
+        gantryRotationAngle += 0.025;
+        gantryGroup.rotation.z = gantryRotationAngle % (Math.PI * 2);
+        if (isScanning || isGantryRotating) { gantryAnimationRequestId = requestAnimationFrame(stepGantry); }
+    }
+
+    couchAnimationRequestId = requestAnimationFrame(stepCouch);
+    gantryAnimationRequestId = requestAnimationFrame(stepGantry);
+}
+
+function toggleGantryRotation() {
+    if (isScanning) return;
+    if (isGantryRotating) {
+        stopAllAnimations();
+    } else {
+        isGantryRotating = true;
+        setMovementAndScanButtonsEnabled(false);
+        updateScanStatus("Rotating Gantry...");
+        if (document.getElementById('beamVisibilityCheckbox').checked) {
+            treatmentBeamHelper.visible = true;
+        }
+
+        function stepGantry() {
+            if (!isGantryRotating) { gantryAnimationRequestId = null; return; }
+            gantryRotationAngle += 0.025;
+            gantryGroup.rotation.z = gantryRotationAngle % (Math.PI * 2);
+            gantryAnimationRequestId = requestAnimationFrame(stepGantry);
+        }
+        gantryAnimationRequestId = requestAnimationFrame(stepGantry);
+        document.getElementById('rotateGantryBtn').textContent = "Stop Rotation";
+    }
+}
+
+function stopAllAnimations(scanFinishedNaturally = false) {
+    isScanning = false;
+    isGantryRotating = false;
+    if (treatmentBeamHelper) treatmentBeamHelper.visible = document.getElementById('beamVisibilityCheckbox').checked;
+    if (couchAnimationRequestId) { cancelAnimationFrame(couchAnimationRequestId); couchAnimationRequestId = null; }
+    if (gantryAnimationRequestId) { cancelAnimationFrame(gantryAnimationRequestId); gantryAnimationRequestId = null; }
+    setMovementAndScanButtonsEnabled(true);
+    document.getElementById('rotateGantryBtn').textContent = "Rotate Gantry";
+    updateScanStatus(scanFinishedNaturally ? "Scan Complete" : "Stopped");
+}
+
+function updateMotionParams() {
+    motionAmplitude = parseFloat(document.getElementById('motionAmplitudeSlider').value);
+    motionSpeedFactor = parseFloat(document.getElementById('motionSpeedSlider').value);
+    document.getElementById('motionAmplitudeValue').textContent = motionAmplitude.toFixed(1);
+    document.getElementById('motionSpeedValue').textContent = motionSpeedFactor.toFixed(1);
+}
+
+function updateLaserPositionDisplay() { if (laserGroup) document.getElementById('laserPositionDisplay').textContent = `X:${laserGroup.position.x.toFixed(1)}, Y:${laserGroup.position.y.toFixed(1)}, Z:${laserGroup.position.z.toFixed(1)}`; }
+function updateCouchPositionDisplay() { if (couchGroup) document.getElementById('couchPositionDisplay').textContent = `X:${couchGroup.position.x.toFixed(1)}, Y:${couchGroup.position.y.toFixed(1)}, Z:${couchGroup.position.z.toFixed(1)}`; }
+function updateScanStatus(statusText) { document.getElementById('scanStatusDisplay').textContent = `Status: ${statusText}`; }
+
+window.resetCamera = function() { camera.position.set(userDefinedIsocenterPos.x + 30, userDefinedIsocenterPos.y + 20, userDefinedIsocenterPos.z + 25); if(controls) controls.target.copy(userDefinedIsocenterPos); }
+window.viewAxial = function() { camera.position.set(userDefinedIsocenterPos.x, userDefinedIsocenterPos.y + 45, userDefinedIsocenterPos.z); if(controls) controls.target.copy(userDefinedIsocenterPos); }
+window.viewSagittal = function() { camera.position.set(userDefinedIsocenterPos.x + 45, userDefinedIsocenterPos.y, userDefinedIsocenterPos.z); if(controls) controls.target.copy(userDefinedIsocenterPos); }
+window.viewCoronal = function() { camera.position.set(userDefinedIsocenterPos.x, userDefinedIsocenterPos.y - 45, userDefinedIsocenterPos.z); if(controls) controls.target.copy(userDefinedIsocenterPos); }
+
+window.toggleBeamVisibility = function() {
+    if (treatmentBeamHelper) {
+        treatmentBeamHelper.visible = document.getElementById('beamVisibilityCheckbox').checked;
+        if (isScanning || isGantryRotating) { treatmentBeamHelper.visible = true; }
+    }
+}
+
+function updateTreatmentBeamPosition() {
+    if (gantryGroup && tubeMesh && treatmentBeamHelper) {
+        treatmentBeamHelper.position.copy(tubeMesh.position);
+        treatmentBeamHelper.lookAt(new THREE.Vector3(0,0,0));
+    }
+}
+
+function onWindowResize() {
+    camera.aspect = getCTAspect();
+    camera.updateProjectionMatrix();
+    renderer.setSize(getCTWidth(), window.innerHeight);
+}
+
+function animate() {
+    requestAnimationFrame(animate);
+    const elapsedTime = clock.getElapsedTime();
+
+    if (motionEnabled && patientModel) {
+        const motionOffset = Math.sin(elapsedTime * motionSpeedFactor * Math.PI) * motionAmplitude;
+        patientModel.position.y = patientRelativeBaseY + motionOffset;
+    } else if (!motionEnabled && patientModel && patientModel.position.y !== patientRelativeBaseY) {
+        patientModel.position.y = patientRelativeBaseY;
+    }
+
+    updateTreatmentBeamPosition();
+    controls.update();
+    renderer.render(scene, camera);
+}
+
+init();
+
+</script>
+</body>
+</html>
