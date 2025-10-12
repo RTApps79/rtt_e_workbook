@@ -721,13 +721,6 @@ window.toggleBeamVisibility = function() {
     }
 }
 
-function updateTreatmentBeamPosition() {
-    if (gantryGroup && tubeMesh && treatmentBeamHelper) {
-        treatmentBeamHelper.position.copy(tubeMesh.position);
-        treatmentBeamHelper.lookAt(new THREE.Vector3(0,0,0));
-    }
-}
-
 function onWindowResize() {
     camera.aspect = getCTAspect();
     camera.updateProjectionMatrix();
