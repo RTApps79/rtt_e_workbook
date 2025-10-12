@@ -565,8 +565,12 @@ function createTreatmentBeam() {
     beamGeo.translate(0, -coneHeight / 2, 0);
     const beamMat = new THREE.MeshBasicMaterial({ color: 0x00ff00, transparent: true, opacity: 0.25, depthWrite: false, side: THREE.DoubleSide });
     treatmentBeamHelper = new THREE.Mesh(beamGeo, beamMat);
-    treatmentBeamHelper.visible = false;
-    gantryGroup.add(treatmentBeamHelper);
+    // Position the beam at the tube position
+    treatmentBeamHelper.position.copy(tubeMesh.position);
+
+   // Aim the beam from the tube through the isocenter (gantry center) to detector
+   const gantryCenter = gantryGroup.position.clone(); // usually isocenter
+   treatmentBeamHelper.lookAt(gantryCenter);
 }
 
 // --- CONTROLS AND ANIMATION ---
