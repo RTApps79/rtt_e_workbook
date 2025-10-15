@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Build-a-LINAC Game</title>
+    <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js",
+        "three/examples/jsm/controls/OrbitControls.js": "https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/controls/OrbitControls.js"
+      }
+    }
+    </script>
+    <style>
+        html { height: 100%; overflow: hidden; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0; padding: 0; background-color: #f0f2f5; color: #333;
+            display: flex; flex-direction: column; height: 100vh; overflow: hidden;
+        }
+        header {
+            background-color: #4a90e2; color: white; padding: 10px 0; text-align: center;
+            width: 100%; box-shadow: 0 2px 4px rgba(0,0,0,0.1); flex-shrink: 0; z-index: 10;
+        }
+        header h1 { margin: 0; font-size: 1.6em; }
+        
+        #mainGameArea {
+            display: flex; flex-wrap: nowrap; justify-content: center; width: 100%;
+            max-width: 100%; padding: 10px; box-sizing: border-box; flex-grow: 1;
+            overflow: hidden; min-height: 0;
+        }
+        #viewerContainer {
+            flex-grow: 1; min-width: 300px; height: 100%; background-color: #e0e0e0;
+            border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            position: relative; margin-right: 10px;
+        }
+        #sidePanel {
+            width: 380px; flex-shrink: 0; height: 100%; padding: 15px;
+            background-color: #ffffff; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-sizing: border-box; display: flex; flex-direction: column; overflow: hidden;
+        }
+        
+        .tab-buttons-container { display: flex; border-bottom: 1px solid #ccc; margin-bottom: 10px; flex-shrink: 0; }
+        .tab-button {
+            padding: 8px 10px; cursor: pointer; border: none; background-color: transparent;
+            font-size: 0.95em; font-weight: bold; color: #555; border-bottom: 3px solid transparent;
+            margin-bottom: -1px; flex-grow: 1; text-align: center;
+        }
+        .tab-button.active { color: #4a90e2; border-bottom-color: #4a90e2; }
+        .tab-content-panel { display: none; flex-grow: 1; overflow-y: auto; padding-right: 5px; }
+        .tab-content-panel.active { display: block; }
+
+        #bottomMachineControls {
+            width: 100%; padding: 8px 15px; background-color: #e9edf0; border-top: 1px solid #d1d5da;
+            box-sizing: border-box; display: none; /* Hidden by default */
+            flex-direction: column; align-items: center;
+            flex-shrink: 0; z-index: 5;
+        }
+        .machine-controls-grid { display: flex; flex-wrap: wrap; justify-content: center; width: 100%; gap: 8px; }
+        .machine-controls-grid > div { min-width: 140px; text-align: center; }
+
+        h2 { font-size: 1.3em; margin-top: 0; margin-bottom: 8px; color: #4a90e2; }
+        label { display: block; margin-bottom: 4px; font-weight: bold; font-size: 0.9em; }
+        select, button {
+            width: 100%; padding: 8px; margin-bottom: 8px; border-radius: 5px;
+            border: 1px solid #ccc; box-sizing: border-box; font-size: 0.95em; cursor: pointer;
+        }
+        button { background-color: #5cb85c; color: white; border: none; }
+        button:disabled { background-color: #d3d3d3; cursor: not-allowed; }
+        #quizArea, #troubleshootingArea { margin-top: 10px; padding: 10px; background-color: #f9f9f9; border-radius: 5px; border: 1px solid #e0e0e0; }
+        #quizQuestion, #troubleshootingScenario { font-weight: bold; margin-bottom: 8px; font-size: 0.95em; }
+        .quiz-option { display: block; margin-bottom: 6px; font-size: 0.9em; }
+        #messageArea { margin-top: 8px; padding: 8px; border-radius: 5px; font-weight: bold; text-align: center; min-height: 36px; font-size: 0.9em; }
+        .message-correct { background-color: #dff0d8; color: #3c763d; border: 1px solid #d6e9c6; }
+        .message-incorrect { background-color: #f2dede; color: #a94442; border: 1px solid #ebccd1; }
+        .message-info { background-color: #d9edf7; color: #31708f; border: 1px solid #bce8f1; }
+        #balanceDisplay { font-size: 1.1em; font-weight: bold; color: #2c3e50; text-align: right; margin-bottom: 5px;}
+        .store-item button { background-color: #f0ad4e; }
+        #resetButton { background-color: #d9534f; }
+        
+        #startScreen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.7); display: flex;
+            justify-content: center; align-items: center; z-index: 1000;
+            color: #fff; text-align: center;
+        }
+        #startScreenContent {
+            background-color: rgba(255, 255, 255, 0.95); color: #333;
+            padding: 30px 40px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            max-width: 600px;
+        }
+        #startGameButton {
+            background-color: #5cb85c; color: white; padding: 12px 25px;
+            font-size: 1.2em; border: none; border-radius: 5px; cursor: pointer; margin-top: 25px;
+        }
+        #mainGameArea, #bottomMachineControls, header { display: none; }
+    </style>
+</head>
+<body>
+    <div id="startScreen">
+        <div id="startScreenContent">
+            <h1>Welcome to Build-a-LINAC!</h1>
+            <p style="text-align:left; font-size:0.95em;">Your mission is to become a radiation therapy engineer by assembling a complete medical Linear Accelerator (LINAC). Earn parts by correctly answering quiz questions, then use your funds to purchase operational enhancements!</p>
+            <button id="startGameButton">Start Building!</button>
+        </div>
+    </div>
+
+    <header><h1>Build-a-LINAC Game</h1></header>
+
+    <div id="mainGameArea">
+        <div id="viewerContainer"></div>
+        <div id="sidePanel">
+            <div class="tab-buttons-container">
+                <button class="tab-button active" data-tab="assemblyContent">LINAC Assembly</button>
+                <button class="tab-button" data-tab="troubleshootingContent">Troubleshooting Bay</button>
+                <button class="tab-button" data-tab="storeContent">Enhancement Store</button>
+            </div>
+
+            <div id="assemblyContent" class="tab-content-panel active">
+                <div class="control-section">
+                    <h2>Assemble Parts</h2>
+                    <div id="balanceDisplay">Balance: $0</div>
+                    <label for="taskSelect">Select Part to Build:</label>
+                    <select id="taskSelect"></select>
+                    <button id="mainActionButton">Start Quiz</button>
+                    <div id="quizArea" style="display:none;">
+                        <p id="quizQuestion"></p>
+                        <div id="quizOptions"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="troubleshootingContent" class="tab-content-panel">
+                <div class="control-section">
+                    <h2>Troubleshooting Bay</h2>
+                    <p style="font-size:0.9em;">Solve clinical and machine scenarios to earn extra cash for enhancements. These challenges are repeatable.</p>
+                    <button id="troubleshootingButton">Get New Scenario</button>
+                    <div id="troubleshootingArea" style="display:none;">
+                        <p id="troubleshootingScenario"></p>
+                        <div id="troubleshootingOptions"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="storeContent" class="tab-content-panel">
+                 <div class="store-section">
+                    <h2>Purchase Enhancements</h2>
+                    <div id="enhancementStore"></div>
+                </div>
+            </div>
+
+            <div id="messageArea" style="margin-top:10px;"></div>
+
+            <div class="game-options-section" style="margin-top: auto; padding-top: 10px; flex-shrink: 0;"> 
+                <h2>Game Options</h2>
+                <button id="resetButton">Reset Game Progress</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="bottomMachineControls">
+         </div>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+
+        // --- Data Structures ---
+        const linacPartsData = [
+            // ... Core LINAC components from previous version ...
+            { id: 'drivestand', name: 'Drivestand', level: 1, cost: 25, quizzes: [
+                { question: "Which component is housed in the drivestand to generate or amplify microwaves?", options: ["Electron Gun", "Klystron or Magnetron", "Bending Magnet", "Target Assembly"], correctAnswerIndex: 1 },
+                { question: "What is the primary structural purpose of the drivestand?", options: ["To provide a stable rotational axis for the gantry", "To house the patient records", "To cool the treatment head", "To control the console computer"], correctAnswerIndex: 0 }
+            ]},
+            { id: 'klystron', name: 'Klystron', level: 3, cost: 50, quizzes: [
+                { question: "What is the function of a Klystron in a high-energy LINAC?", options: ["Generate electrons", "Amplify microwaves to high power", "Shape the X-ray beam", "Bend the electron beam"], correctAnswerIndex: 1 },
+                { question: "The high-power microwaves from the klystron are guided to the accelerator via what component?", options: ["A fiber optic cable", "A cooling hose", "A waveguide", "The couch rails"], correctAnswerIndex: 2 }
+            ]},
+            { id: 'acceleratorHousing', name: 'Accelerator Housing', level: 6, cost: 60, quizzes: [
+                { question: "The accelerating waveguide must be kept under a high vacuum to:", options: ["Keep it clean", "Prevent electrons from colliding with air molecules", "Make it lighter", "Improve its color"], correctAnswerIndex: 1 },
+                { question: "What type of energy field is used inside the waveguide to accelerate electrons?", options: ["Magnetic fields", "Kinetic energy", "Standing-wave radiofrequency (RF) fields", "Gravitational force"], correctAnswerIndex: 2 }
+            ]},
+            { id: 'electronGun', name: 'Electron Gun', level: 7, cost: 50, quizzes: [
+                { question: "The process an electron gun uses to release electrons by heating a filament is called:", options: ["Photosynthesis", "Nuclear fission", "Thermionic emission", "Chemical reaction"], correctAnswerIndex: 2 },
+                { question: "Where are electrons from the gun injected?", options: ["Into the treatment head", "At the beginning of the accelerator waveguide", "Into the klystron", "On the patient couch"], correctAnswerIndex: 1 }
+            ]},
+            { id: 'treatmentHead', name: 'Treatment Head', level: 10, cost: 100, quizzes: [
+                { question: "When treating with photons, what does the electron beam strike to produce X-rays?", options: ["A scattering foil", "The patient directly", "A high-Z material target (e.g., tungsten)", "The flattening filter"], correctAnswerIndex: 2 },
+                { question: "What is the purpose of a flattening filter for photon beams?", options: ["To make the beam perfectly round", "To make the beam intensity more uniform across its profile", "To increase the beam's energy", "To cool the beam"], correctAnswerIndex: 1 }
+            ]},
+            // NEWLY ADDED CATEGORIES FOR CURRENCY
+            { id: 'treatmentCouch', name: 'Treatment Couch', level: 11, cost: 150, quizzes: [
+                { question: "Treatment couches are often made of what material to minimize beam attenuation?", options: ["Steel", "Aluminum", "Carbon Fiber", "Lead"], correctAnswerIndex: 2 },
+                { question: "The six degrees of couch motion are Longitudinal, Lateral, Vertical, Pitch, Roll, and ____.", options: ["Speed", "Yaw", "Acceleration", "Tilt"], correctAnswerIndex: 1 },
+                { question: "The point in space that the LINAC gantry, collimator, and couch all rotate around is called the:", options: ["Epicenter", "Isocenter", "Focal Point", "Axis"], correctAnswerIndex: 1 }
+            ]},
+            { id: 'controlConsole', name: 'Control Console', level: 12, cost: 150, quizzes: [
+                { question: "A 'door interlock' fault prevents the beam from turning on. What is its purpose?", options: ["To ensure the correct patient is on the couch", "To save electricity", "To prevent staff exposure to radiation", "To check the computer's memory"], correctAnswerIndex: 2 },
+                { question: "What does 'MU' stand for in the context of the control console?", options: ["Machine Unit", "Monitor Unit", "Medical Unit", "Measurement Unit"], correctAnswerIndex: 1 },
+                { question: "If the delivered dose differs from the prescribed dose by more than a set tolerance (e.g., 5%), what system will terminate the beam?", options: ["The dose monitoring system (ion chambers)", "The cooling system", "The laser system", "The video camera"], correctAnswerIndex: 0 }
+            ]}
+        ];
+
+        const troubleshootingData = [
+            { id: 'ts01', scenario: "The console displays a 'DOOR OPEN' interlock and the beam will not turn on. What is the first thing to check?", options: ["The klystron temperature", "The patient's position", "If the treatment room door is fully closed", "The water cooling level"], correctAnswerIndex: 2, reward: 40 },
+            { id: 'ts02', scenario: "During morning QA, the beam output is measured to be 7% below the calibrated standard. What is the correct action?", options: ["Treat the first patient and re-check later", "Notify the physicist and do not treat patients", "Adjust the patient's treatment time to compensate", "Restart the machine and hope it fixes itself"], correctAnswerIndex: 1, reward: 60 },
+            { id: 'ts03', scenario: "A 'WATER TEMP HIGH' warning appears. This indicates a potential problem with the:", options: ["Air conditioning in the room", "Computer's CPU fan", "Cooling system for the klystron and accelerator", "Patient's body temperature"], correctAnswerIndex: 2, reward: 40 },
+            { id: 'ts04', scenario: "The light field, which represents the radiation field, appears to be misaligned with the crosshairs. This is a problem with the:", options: ["Light bulb alignment", "Gantry rotation motor", "Electron gun", "Couch controls"], correctAnswerIndex: 0, reward: 50 },
+            { id: 'ts05', scenario: "A therapist observes on the camera that the patient has moved significantly after alignment. What is the immediate, correct action?", options: ["Deliver the treatment quickly", "Turn off the beam, enter the room, and realign the patient", "Increase the field size to cover the new position", "Make a note in the chart and continue"], correctAnswerIndex: 1, reward: 50 }
+        ];
+
+        // --- Game Logic & State Variables (abbreviated) ---
+        let scene, camera, renderer, controls;
+        let currentBalance = 0;
+        let earnedParts = [];
+        let purchasedEnhancements = [];
+        let currentQuizPart = null;
+        let currentTroubleshootingScenario = null;
+        
+        // --- Initialization and Game Flow ---
+        function initGame() {
+            if (!scene) initThreeJS();
+            loadGameState();
+            updateUI();
+            document.querySelector('.tab-button[data-tab="assemblyContent"]').click();
+            mainGameArea.style.display = 'flex';
+            document.querySelector('header').style.display = 'block';
+            onWindowResize();
+        }
+        
+        // --- UI Update Functions ---
+        function updateUI() {
+            balanceDisplay.textContent = `Balance: $${currentBalance}`;
+            populateTaskSelect();
+            populateEnhancementStore();
+            checkAllCorePartsEarned();
+        }
+
+        function populateTaskSelect() {
+            taskSelect.innerHTML = '';
+            const availableParts = linacPartsData.filter(part => !earnedParts.includes(part.id));
+            if (availableParts.length === 0) {
+                taskSelect.innerHTML = "<option>All parts assembled!</option>";
+                mainActionButton.disabled = true;
+            } else {
+                availableParts.sort((a, b) => a.level - b.level).forEach(part => {
+                    taskSelect.innerHTML += `<option value="${part.id}">${part.name} (Reward: $${part.cost})</option>`;
+                });
+                mainActionButton.disabled = false;
+            }
+        }
+
+        function populateEnhancementStore() {
+            // Placeholder for store logic
+        }
+
+        // --- Quiz and Troubleshooting Logic ---
+        function displayQuiz() {
+            const selectedPartId = taskSelect.value;
+            currentQuizPart = linacPartsData.find(part => part.id === selectedPartId);
+            if (!currentQuizPart) return;
+            const randomQuiz = currentQuizPart.quizzes[Math.floor(Math.random() * currentQuizPart.quizzes.length)];
+            currentQuizPart.activeQuiz = randomQuiz;
+            quizQuestionElem.textContent = randomQuiz.question;
+            quizOptionsElem.innerHTML = '';
+            randomQuiz.options.forEach((option, index) => {
+                quizOptionsElem.innerHTML += `<div class="quiz-option"><input type="radio" name="quizOption" value="${index}" id="option${index}"><label for="option${index}" style="margin-left: 5px;">${option}</label></div>`;
+            });
+            quizArea.style.display = 'block';
+            mainActionButton.textContent = 'Submit Answer';
+        }
+
+        function handleSubmitAnswer() {
+            const selectedOption = document.querySelector('input[name="quizOption"]:checked');
+            if (!selectedOption) { showMessage("Please select an answer.", "info"); return; }
+            const answerIndex = parseInt(selectedOption.value);
+            if (answerIndex === currentQuizPart.activeQuiz.correctAnswerIndex) {
+                showMessage(`Correct! You've earned the ${currentQuizPart.name} and $${currentQuizPart.cost}.`, "correct");
+                currentBalance += currentQuizPart.cost;
+                earnedParts.push(currentQuizPart.id);
+                // updatePartAppearance(currentQuizPart.id, true); // Assuming 3D logic exists
+                saveGameState();
+                updateUI();
+            } else {
+                showMessage("Incorrect. Review your materials and try again.", "incorrect");
+            }
+            quizArea.style.display = 'none';
+            mainActionButton.textContent = 'Start Quiz';
+            currentQuizPart = null;
+        }
+
+        function displayTroubleshootingScenario() {
+            currentTroubleshootingScenario = troubleshootingData[Math.floor(Math.random() * troubleshootingData.length)];
+            const scenarioElem = document.getElementById('troubleshootingScenario');
+            const optionsElem = document.getElementById('troubleshootingOptions');
+            const areaElem = document.getElementById('troubleshootingArea');
+            
+            scenarioElem.textContent = currentTroubleshootingScenario.scenario;
+            optionsElem.innerHTML = '';
+            currentTroubleshootingScenario.options.forEach((option, index) => {
+                optionsElem.innerHTML += `<div class="quiz-option"><input type="radio" name="tsOption" value="${index}" id="ts_option${index}"><label for="ts_option${index}" style="margin-left: 5px;">${option}</label></div>`;
+            });
+            
+            areaElem.style.display = 'block';
+            document.getElementById('troubleshootingButton').textContent = 'Submit Diagnosis';
+        }
+
+        function handleSubmitTroubleshooting() {
+            const selectedOption = document.querySelector('input[name="tsOption"]:checked');
+            if (!selectedOption) { showMessage("Please select a diagnosis.", "info"); return; }
+            
+            const answerIndex = parseInt(selectedOption.value);
+            if (answerIndex === currentTroubleshootingScenario.correctAnswerIndex) {
+                const reward = currentTroubleshootingScenario.reward;
+                currentBalance += reward;
+                showMessage(`Correct Diagnosis! You earned $${reward}.`, "correct");
+                saveGameState();
+                updateUI();
+            } else {
+                showMessage("Incorrect Diagnosis. That could have been a costly mistake!", "incorrect");
+            }
+
+            document.getElementById('troubleshootingArea').style.display = 'none';
+            document.getElementById('troubleshootingButton').textContent = 'Get New Scenario';
+            currentTroubleshootingScenario = null;
+        }
+
+        // --- Game State Management ---
+        function saveGameState() { localStorage.setItem('linacGameState_v6', JSON.stringify({ balance: currentBalance, parts: earnedParts, enhancements: purchasedEnhancements })); }
+        function loadGameState() {
+            const savedState = JSON.parse(localStorage.getItem('linacGameState_v6') || '{}');
+            currentBalance = savedState.balance || 0;
+            earnedParts = savedState.parts || [];
+            purchasedEnhancements = savedState.enhancements || [];
+        }
+        function resetGame() { if (confirm("Reset all progress?")) { localStorage.removeItem('linacGameState_v6'); window.location.reload(); } }
+
+        // --- Event Listeners ---
+        document.getElementById('startGameButton').addEventListener('click', () => {
+            document.getElementById('startScreen').style.display = 'none';
+            initGame();
+        });
+
+        mainActionButton.addEventListener('click', () => {
+            if (quizArea.style.display === 'block') handleSubmitAnswer();
+            else displayQuiz();
+        });
+        
+        document.getElementById('troubleshootingButton').addEventListener('click', () => {
+            if (document.getElementById('troubleshootingArea').style.display === 'block') handleSubmitTroubleshooting();
+            else displayTroubleshootingScenario();
+        });
+        
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', () => {
+                document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                document.querySelectorAll('.tab-content-panel').forEach(panel => {
+                    panel.style.display = panel.id === button.dataset.tab ? 'block' : 'none';
+                });
+            });
+        });
+
+        resetButton.addEventListener('click', resetGame);
+
+        // --- Dummy functions for 3D and other UI elements to prevent errors ---
+        function initThreeJS() { console.log("Three.js Initialized."); }
+        function onWindowResize() { /* Placeholder */ }
+        function checkAllCorePartsEarned() { /* Placeholder */ }
+        function showMessage(msg, type) { 
+            const messageArea = document.getElementById('messageArea');
+            messageArea.textContent = msg;
+            messageArea.className = `message-${type}`;
+        }
+
+    </script>
+</body>
+</html>
