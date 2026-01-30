@@ -297,85 +297,6 @@
     </script>
 
     <script type="module">
-        // Placeholder tutorials (expand as needed)
-        export const TUTORIALS = {
-            ctcomponents: [
-                { title: "Step 1", content: "This is the CT gantry.", highlight: ".controls-sidebar" },
-                { title: "Step 2", content: "This is the couch.", highlight: "#couchPositionDisplay" }
-            ],
-            couch: [
-                { title: "Step 1", content: "Move the couch laterally.", highlight: "#moveCouchXLeft, #moveCouchXRight" }
-            ],
-            isocenter: [
-                { title: "Step 1", content: "Align lasers to set isocenter.", highlight: "#laserPositionDisplay" }
-            ],
-            skinmarking: [
-                { title: "Step 1", content: "Demo of skin marks.", highlight: null }
-            ],
-            dose: [
-                { title: "Step 1", content: "Demo of dose calc.", highlight: null }
-            ]
-        };
-
-        window.startTutorial = function (tutorialKey) {
-            document.getElementById('tutorialMenu').style.display = 'none'; // Close menu
-            const steps = TUTORIALS[tutorialKey];
-            if (!steps) return;
-            let stepIdx = 0;
-
-            const overlay = document.createElement('div');
-            overlay.id = 'tutorial-overlay';
-            overlay.style.position = 'fixed';
-            overlay.style.top = '0'; overlay.style.left = '0';
-            overlay.style.width = '100vw'; overlay.style.height = '100vh';
-            overlay.style.background = 'rgba(0,0,0,0.30)';
-            overlay.style.zIndex = '1000';
-            overlay.style.pointerEvents = 'none';
-
-            const box = document.createElement('div');
-            box.id = 'tutorial-box';
-            box.style.position = 'absolute';
-            box.style.top = '60px'; box.style.right = '60px';
-            box.style.width = '320px'; box.style.background = '#fff';
-            box.style.borderRadius = '10px'; box.style.boxShadow = '0 2px 10px #3338';
-            box.style.padding = '24px'; box.style.zIndex = '1001';
-            box.style.pointerEvents = 'auto';
-            overlay.appendChild(box);
-
-            function highlight(selector) {
-                document.querySelectorAll('.tutorial-highlight').forEach(e => e.classList.remove('tutorial-highlight'));
-                if (!selector) return;
-                selector.split(',').forEach(sel => {
-                    if (sel.trim()) {
-                        document.querySelectorAll(sel.trim()).forEach(el => el.classList.add('tutorial-highlight'));
-                    }
-                });
-            }
-
-            function renderStep() {
-                const step = steps[stepIdx];
-                box.innerHTML = `<h3>${step.title}</h3><p>${step.content}</p>
-                    <div style="margin-top:24px; text-align:right;">
-                        ${stepIdx > 0 ? '<button id="prevStepBtn">Previous</button>' : ''}
-                        ${stepIdx < steps.length - 1 ? '<button id="nextStepBtn">Next</button>' : '<button id="endTutorialBtn">Finish</button>'}
-                    </div>`;
-                highlight(step.highlight);
-                if (stepIdx > 0) box.querySelector("#prevStepBtn").onclick = () => { stepIdx--; renderStep(); };
-                if (stepIdx < steps.length - 1) box.querySelector("#nextStepBtn").onclick = () => { stepIdx++; renderStep(); };
-                if (stepIdx === steps.length - 1) box.querySelector("#endTutorialBtn").onclick = endTutorial;
-            }
-
-            function endTutorial() {
-                highlight(null);
-                overlay.remove();
-            }
-
-            document.body.appendChild(overlay);
-            renderStep();
-        };
-    </script>
-
-    <script type="module">
         function getQSParam(name) {
             let params = new URLSearchParams(window.location.search);
             return params.get(name);
@@ -433,7 +354,7 @@
         const DETECTOR_DEPTH = 2.5;
         const BEAM_LENGTH = GANTRY_RADIUS * 1.5;
         const BEAM_FIELD_SIZE = 3;
-        const TUMOR_RADIUS = 0.3;
+        const TUMOR_RADIUS = 0.1;
         const PATIENT_CYLINDER_RADIUS = 1.2;
         const PATIENT_CYLINDER_HEIGHT = 12;
 
@@ -471,7 +392,7 @@
 
             createAlignmentLasers();
             createCouchAndPatient();
-            createGantry();
+            createGantry(); // now also attempts to load GLB into gantryGroup
             createTreatmentBeam();
             createLAPLases();
             createFixedGantryLasers();
@@ -534,73 +455,31 @@
 
             window.addEventListener('resize', onWindowResize, false);
             animate();
-            console.log("4D CT Sim Init complete with Label Toggle");
+            console.log("4D CT Sim Init complete with GLB-aware gantry loader");
         }
 
         function createAlignmentLasers() {
-            // Not displayed by default, but you can enable for debugging.
             laserGroup = new THREE.Group();
         }
 
         function createLAPLases() {
             lapLaserGroup = new THREE.Group();
-            // LAP lasers are short, crosshair-style, and move with isocenter.
-            const lapLaserLength = 12; // adjust for LAP laser length
+            const lapLaserLength = 12;
             const lapLaserMaterial = new THREE.LineBasicMaterial({ color: 0x00ff00, linewidth: 2, transparent: true, opacity: 0.7 });
-
-            // X-axis LAP laser (green)
-            lapLaserGroup.add(new THREE.Line(
-                new THREE.BufferGeometry().setFromPoints([
-                    new THREE.Vector3(-lapLaserLength / 2, 0, 0), new THREE.Vector3(lapLaserLength / 2, 0, 0)
-                ]), lapLaserMaterial
-            ));
-            // Z-axis LAP laser (green)
-            lapLaserGroup.add(new THREE.Line(
-                new THREE.BufferGeometry().setFromPoints([
-                    new THREE.Vector3(0, 0, -lapLaserLength / 2), new THREE.Vector3(0, 0, lapLaserLength / 2)
-                ]), lapLaserMaterial
-            ));
-            // Y-axis LAP laser (optional, for visualization)
-            lapLaserGroup.add(new THREE.Line(
-                new THREE.BufferGeometry().setFromPoints([
-                    new THREE.Vector3(0, -lapLaserLength / 2, 0), new THREE.Vector3(0, lapLaserLength / 2, 0)
-                ]), lapLaserMaterial
-            ));
-
+            lapLaserGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-lapLaserLength / 2, 0, 0), new THREE.Vector3(lapLaserLength / 2, 0, 0)]), lapLaserMaterial));
+            lapLaserGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, -lapLaserLength / 2), new THREE.Vector3(0, 0, lapLaserLength / 2)]), lapLaserMaterial));
+            lapLaserGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, -lapLaserLength / 2, 0), new THREE.Vector3(0, lapLaserLength / 2, 0)]), lapLaserMaterial));
             scene.add(lapLaserGroup);
         }
 
         function createFixedGantryLasers() {
             fixedGantryLaserGroup = new THREE.Group();
-            // Fixed gantry lasers are attached to the gantryGroup (so they rotate with the gantry)
-            // and are always centered at the gantry center (the isocenter).
-
-            // Position at gantry center (isocenter)
             fixedGantryLaserGroup.position.set(0, 0, 0);
-
-            const fixedLaserLength = 14; // adjust for fixed laser length
+            const fixedLaserLength = 14;
             const fixedLaserMaterial = new THREE.LineBasicMaterial({ color: 0x3399ff, linewidth: 2, transparent: true, opacity: 0.7 });
-
-            // X-axis fixed gantry laser (blue)
-            fixedGantryLaserGroup.add(new THREE.Line(
-                new THREE.BufferGeometry().setFromPoints([
-                    new THREE.Vector3(-fixedLaserLength / 2, 0, 0), new THREE.Vector3(fixedLaserLength / 2, 0, 0)
-                ]), fixedLaserMaterial
-            ));
-            // Z-axis fixed gantry laser (blue)
-            fixedGantryLaserGroup.add(new THREE.Line(
-                new THREE.BufferGeometry().setFromPoints([
-                    new THREE.Vector3(0, 0, -fixedLaserLength / 2), new THREE.Vector3(0, 0, fixedLaserLength / 2)
-                ]), fixedLaserMaterial
-            ));
-            // Y-axis fixed gantry laser (blue)
-            fixedGantryLaserGroup.add(new THREE.Line(
-                new THREE.BufferGeometry().setFromPoints([
-                    new THREE.Vector3(0, -fixedLaserLength / 2, 0), new THREE.Vector3(0, fixedLaserLength / 2, 0)
-                ]), fixedLaserMaterial
-            ));
-
-            // Attach to gantry so rotates with gantry but never translates
+            fixedGantryLaserGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-fixedLaserLength / 2, 0, 0), new THREE.Vector3(fixedLaserLength / 2, 0, 0)]), fixedLaserMaterial));
+            fixedGantryLaserGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, -fixedLaserLength / 2), new THREE.Vector3(0, 0, fixedLaserLength / 2)]), fixedLaserMaterial));
+            fixedGantryLaserGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, -fixedLaserLength / 2, 0), new THREE.Vector3(0, fixedLaserLength / 2, 0)]), fixedLaserMaterial));
             gantryGroup.add(fixedGantryLaserGroup);
         }
 
@@ -644,52 +523,32 @@
         function createCouchAndPatient() {
             couchGroup = new THREE.Group();
             const couchTopGeo = new THREE.BoxGeometry(3.5, 0.5, 35);
-            const couchTopMat = new THREE.MeshStandardMaterial({ color: 0x6c757d });
+            const couchTopMat = new THREE.MeshStandardMaterial({ opacity: 100 });
             const couchTop = new THREE.Mesh(couchTopGeo, couchTopMat);
             couchTop.receiveShadow = true;
             couchGroup.add(couchTop);
 
-            // Attempt to load the provided GLB human model. If load fails, fallback to the cylinder used previously.
+            // attempt to load patient GLB (unchanged behavior)
             const loader = new GLTFLoader();
-            const modelPath = 'CT_Assets/Human_Body.glb';
+            const humanPath = 'CT_Assets/Human_Body_Transparent.glb';
 
-            loader.load(modelPath, (gltf) => {
+            loader.load(humanPath, (gltf) => {
                 const model = gltf.scene || gltf.scenes[0];
-                // enable shadows on mesh parts
-                model.traverse((node) => {
-                    if (node.isMesh) {
-                        node.castShadow = true;
-                        node.receiveShadow = true;
-                    }
-                });
-
-                // compute bounding box, scale to match expected patient length (PATIENT_CYLINDER_HEIGHT)
-                const bbox = new THREE.Box3().setFromObject(model);
-                const size = bbox.getSize(new THREE.Vector3());
+                model.traverse((node) => { if (node.isMesh) { node.castShadow = node.receiveShadow = true; } });
+                const humanBbox = new THREE.Box3().setFromObject(model);
+                const size = humanBbox.getSize(new THREE.Vector3());
                 let scaleFactor = 5;
-                //if (size.z > 0) {
-                //    scaleFactor = PATIENT_CYLINDER_HEIGHT / size.z;
-                //}
                 model.scale.setScalar(scaleFactor);
-
-                // recompute bbox after scaling
-                bbox.setFromObject(model);
-                const newSize = bbox.getSize(new THREE.Vector3());
-                // place model so its bottom sits on the couch top (couch top half-thickness + half model height)
+                humanBbox.setFromObject(model);
+                const newSize = humanBbox.getSize(new THREE.Vector3());
                 patientBaseY = (0.5 / 2) + (newSize.y / 15);
-                // rotate model to lie along the couch long axis if necessary (cylinder used rotation.x = Math.PI/2)
                 model.rotation.x = Math.PI / -2;
-
-                // compute offset so model's min Y aligns to patientBaseY
-                bbox.setFromObject(model);
-                const offsetY = patientBaseY - bbox.min.y;
+                humanBbox.setFromObject(model);
+                const offsetY = patientBaseY - humanBbox.min.y;
                 model.position.set(0, offsetY, 10);
-
-                // attach to couchGroup
                 couchGroup.add(model);
                 patientMesh = model;
 
-                // Add a simple tumor marker at model origin (user can move or reposition later)
                 const tumorGeo = new THREE.SphereGeometry(TUMOR_RADIUS, 16, 16);
                 const tumorMat = new THREE.MeshStandardMaterial({ color: 0xff4136, emissive: 0x440000 });
                 tumorMesh = new THREE.Mesh(tumorGeo, tumorMat);
@@ -697,7 +556,6 @@
                 tumorMesh.castShadow = true;
                 model.add(tumorMesh);
 
-                // create anatomical labels using model bbox
                 const labelDepthOffset = newSize.z / 2 + 0.7;
                 const labelWidthOffset = newSize.x / 2 + 0.5;
                 const labelPatientYPos = patientBaseY;
@@ -710,15 +568,8 @@
                 couchGroup.add(createAnatomicalLabel("Posterior", 0, labelPatientPostYPos, 0));
                 couchGroup.add(createAnatomicalLabel("Left", labelWidthOffset, labelPatientYPos, 0));
                 couchGroup.add(createAnatomicalLabel("Right", -labelWidthOffset, labelPatientYPos, 0));
-
-                // ensure labels follow model transform by adding to couchGroup (they are CSS2DObjects so they render in world)
-                anatomicalLabelsCache.forEach(lbl => {
-                    labelRenderer && labelRenderer.domElement && document.body; // keep usage consistent; labels already stored
-                });
-
             }, undefined, (err) => {
-                console.error("Failed to load GLB model, falling back to cylinder patient:", err);
-                // fallback - original cylinder
+                console.error("Failed to load GLB patient, falling back to cylinder:", err);
                 const patientGeo = new THREE.CylinderGeometry(PATIENT_CYLINDER_RADIUS, PATIENT_CYLINDER_RADIUS, PATIENT_CYLINDER_HEIGHT, 20);
                 const patientMat = new THREE.MeshStandardMaterial({ color: 0xb0c4de, transparent: true, opacity: 0.6 });
                 const fallbackPatient = new THREE.Mesh(patientGeo, patientMat);
@@ -751,30 +602,112 @@
             scene.add(couchGroup);
         }
 
+        // createGantry now tries to load your CT GLB and replace/add appropriate parts
         function createGantry() {
             gantryGroup = new THREE.Group();
-            const gantryGeo = new THREE.TorusGeometry(GANTRY_RADIUS, GANTRY_THICKNESS, 16, 60);
-            const gantryMat = new THREE.MeshStandardMaterial({ color: 0xd0d0d5, metalness: 0.3, roughness: 0.6 });
-            gantryRingMesh = new THREE.Mesh(gantryGeo, gantryMat);
-            gantryRingMesh.rotation.z = Math.PI / 2;
-            gantryRingMesh.castShadow = true;
-            gantryGroup.add(gantryRingMesh);
 
-            const tubeGeo = new THREE.BoxGeometry(TUBE_SIZE, TUBE_SIZE, TUBE_SIZE * 1.2);
-            const tubeMat = new THREE.MeshStandardMaterial({ color: 0x005eff });
-            tubeMesh = new THREE.Mesh(tubeGeo, tubeMat);
-            tubeMesh.position.set(0, GANTRY_RADIUS, 0);
-            tubeMesh.castShadow = true;
-            gantryGroup.add(tubeMesh);
+            //// fallback visual ring/tube/detector (kept, but overridden when GLB loads)
+            //const gantryGeo = new THREE.TorusGeometry(GANTRY_RADIUS, GANTRY_THICKNESS, 16, 60);
+            //const gantryMat = new THREE.MeshStandardMaterial({ color: 0xd0d0d5, metalness: 0.3, roughness: 0.6 });
+            //gantryRingMesh = new THREE.Mesh(gantryGeo, gantryMat);
+            //gantryRingMesh.rotation.z = Math.PI / 2;
+            //gantryRingMesh.castShadow = true;
+            //gantryGroup.add(gantryRingMesh);
 
-            const detectorGeo = new THREE.BoxGeometry(DETECTOR_WIDTH, DETECTOR_HEIGHT, DETECTOR_DEPTH);
-            const detectorMat = new THREE.MeshStandardMaterial({ color: 0x660000 });
-            detectorMesh = new THREE.Mesh(detectorGeo, detectorMat);
-            detectorMesh.position.set(0, -GANTRY_RADIUS, 0);
-            detectorMesh.castShadow = true;
-            gantryGroup.add(detectorMesh);
+            //const tubeGeo = new THREE.BoxGeometry(TUBE_SIZE, TUBE_SIZE, TUBE_SIZE * 1.2);
+            //const tubeMat = new THREE.MeshStandardMaterial({ color: 0x005eff });
+            //tubeMesh = new THREE.Mesh(tubeGeo, tubeMat);
+            //tubeMesh.position.set(0, GANTRY_RADIUS, 0);
+            //tubeMesh.castShadow = true;
+            //gantryGroup.add(tubeMesh);
+
+            //const detectorGeo = new THREE.BoxGeometry(DETECTOR_WIDTH, DETECTOR_HEIGHT, DETECTOR_DEPTH);
+            //const detectorMat = new THREE.MeshStandardMaterial({ color: 0x660000 });
+            //detectorMesh = new THREE.Mesh(detectorGeo, detectorMat);
+            //detectorMesh.position.set(0, -GANTRY_RADIUS, 0);
+            //detectorMesh.castShadow = true;
+            //gantryGroup.add(detectorMesh);
 
             scene.add(gantryGroup);
+
+            // now attempt to load the CT scanner GLB and replace/augment visuals
+            const loader = new GLTFLoader();
+            const glbPath = 'CT_Assets/CT_Scanner.glb';
+
+            loader.load(glbPath, (gltf) => {
+                const model = gltf.scene || gltf.scenes[0];
+                model.traverse(n => { if (n.isMesh) { n.castShadow = n.receiveShadow = true; } });
+
+                // compute bounding box and scale the imported scanner so it fits expected gantry diameter
+                const bbox = new THREE.Box3().setFromObject(model);
+                const size = bbox.getSize(new THREE.Vector3());
+                // guard if the GLB is huge (Sketchfab often exports very large units)
+                const desiredDiameter = GANTRY_RADIUS * 6; // target size in scene units
+                let uniformScale = 3.0;
+                if (size.x > 0) uniformScale = desiredDiameter / size.x;
+                // require reasonable limits
+                if (uniformScale <= 0) uniformScale = 0.01;
+                uniformScale = Math.min(Math.max(uniformScale, 0.0005), 10);
+                model.scale.setScalar(uniformScale);
+
+                // recalc bbox and center model at origin (so gantryGroup rotation behaves)
+                bbox.setFromObject(model);
+                const center = bbox.getCenter(new THREE.Vector3());
+                model.position.sub(center); // center model at world origin
+                model.position.x += 20; // optional offsets if needed
+                model.rotateY(Math.PI / -2); // ensure proper orientation
+
+                // heuristics to find tube (cylinder/tube) and couch/table
+                let foundTube = null;
+                let foundCouch = null;
+                model.traverse((n) => {
+                    if (!n.isMesh) return;
+                    const name = (n.name || '').toLowerCase();
+                    if (!foundTube && (name.includes('cyl') || name.includes('tube') || name.includes('xray') || name.includes('gantry'))) {
+                        foundTube = n;
+                    }
+                    if (!foundCouch && (name.includes('couch') || name.includes('table') || name.includes('bed') || name.includes('patient'))) {
+                        foundCouch = n;
+                    }
+                });
+
+                // If a model node representing the couch was found, reparent it to couchGroup so couch movement works
+                if (foundCouch) {
+                    if (foundCouch.parent) foundCouch.parent.remove(foundCouch);
+                    // assure proper scale is preserved (model already scaled)
+                    couchGroup.add(foundCouch);
+                    // position couchGroup origin near original couch world position
+                    const wc = new THREE.Vector3(); foundCouch.getWorldPosition(wc);
+                    // move couchGroup to that world position and make the child local transform reset — keep relative
+                    couchGroup.position.copy(wc);
+                    foundCouch.position.set(0, 0, 0);
+                    console.log('GLB couch extracted:', foundCouch.name || foundCouch.id);
+                }
+
+                // Add model under gantryGroup so gantry rotation affects scanner parts
+                gantryGroup.add(model);
+
+                // If found tube, set tubeMesh reference so beam follows it
+                if (foundTube) {
+                    tubeMesh = foundTube;
+                    console.log('GLB tube assigned:', foundTube.name || foundTube.id);
+                } else {
+                    // try to find a mesh named 'cylinder' or similar at root level
+                    const maybe = model.getObjectByName('Cylinder') || model.getObjectByName('Cylinder__0') || model.getObjectByName('cylinder');
+                    if (maybe) { tubeMesh = maybe; console.log('Tube assigned by explicit name:', maybe.name); }
+                }
+
+                // After scaling and centering, adjust camera to view model reasonably
+                bbox.setFromObject(gantryGroup);
+                const bsize = bbox.getSize(new THREE.Vector3());
+                const maxDim = Math.max(bsize.x, bsize.y, bsize.z);
+                // position camera back enough
+                camera.position.set(userDefinedIsocenterPos.x + Math.max(25, maxDim * 1.5), userDefinedIsocenterPos.y + Math.max(20, maxDim * 0.6), userDefinedIsocenterPos.z + Math.max(30, maxDim * 1.0));
+                controls.target.copy(userDefinedIsocenterPos);
+                console.log('CT GLB loaded and scaled:', uniformScale);
+            }, undefined, (err) => {
+                console.warn('Failed to load CT GLB — using programmatic gantry/tube/detector fallback', err);
+            });
         }
 
         function createTreatmentBeam() {
@@ -793,7 +726,7 @@
             gantryGroup.add(treatmentBeamHelper);
         }
 
-        // LAP lasers are the only lasers that move with isocenter changes
+        // moveLasers, setCurrentPosAsIsocenter, moveCouch, scanning and animation functions remain unchanged
         window.moveLasers = function (dx, dy, dz) {
             if (!lapLaserGroup || isScanning || isGantryRotating) return;
             const moveVector = new THREE.Vector3(dx * laserMoveStep, dy * laserMoveStep, dz * laserMoveStep);
@@ -803,7 +736,6 @@
             controls.target.copy(lapLaserGroup.position);
         }
 
-        // Set isocenter moves only LAP lasers (not gantry or fixed lasers)
         window.setCurrentPosAsIsocenter = function () {
             if (!lapLaserGroup || isScanning || isGantryRotating) return;
             userDefinedIsocenterPos.copy(lapLaserGroup.position);
@@ -949,7 +881,17 @@
 
         function updateTreatmentBeamPosition() {
             if (gantryGroup && tubeMesh && treatmentBeamHelper) {
-                treatmentBeamHelper.position.copy(tubeMesh.position);
+                // prefer tubeMesh world position as origin for beam
+                const tubeWorldPos = new THREE.Vector3();
+                // mesh may be nested; use getWorldPosition
+                tubeMesh.getWorldPosition(tubeWorldPos);
+                // convert to gantryGroup local coords so beam (child of gantryGroup) aligns
+                const local = gantryGroup.worldToLocal(tubeWorldPos.clone());
+                treatmentBeamHelper.position.copy(local);
+                treatmentBeamHelper.rotation.set(0, 0, 0);
+                treatmentBeamHelper.rotateX(Math.PI);
+            } else if (gantryGroup && !tubeMesh && treatmentBeamHelper) {
+                treatmentBeamHelper.position.copy(new THREE.Vector3(0, GANTRY_RADIUS, 0));
                 treatmentBeamHelper.rotation.set(0, 0, 0);
                 treatmentBeamHelper.rotateX(Math.PI);
             }
@@ -995,7 +937,6 @@
         window.addEventListener('DOMContentLoaded', () => {
             const tutorialKey = getQSParam('tutorial');
             if (tutorialKey) {
-                // The global startTutorial function is defined in the other script block
                 if (window.startTutorial) {
                     window.startTutorial(tutorialKey);
                 }
