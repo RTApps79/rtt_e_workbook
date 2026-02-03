@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Module 06: Simulation, Planning & Beam Physics</title>
+    <title>Module 6: Simulation, Planning & Beam Physics Master Class</title>
     <style>
         :root {
             --primary: #2c3e50;
             --accent: #8e44ad;
-            --highlight: #d35400;
-            --teal: #16a085;
+            --highlight: #d35400; /* Burnt Orange for Physics/Warn */
+            --teal: #16a085; /* Teal for Sim/Planning */
             --bg-light: #fdfefe;
             --white: #ffffff;
         }
@@ -22,28 +22,110 @@
             padding: 20px;
             background-color: var(--bg-light);
         }
-        h1 { text-align: center; color: var(--primary); border-bottom: 3px solid var(--accent); padding-bottom: 15px; margin-bottom: 40px; }
-        .module-header { background: linear-gradient(90deg, var(--accent), var(--primary)); color: var(--white); padding: 15px 20px; border-radius: 8px; margin-top: 50px; display:flex; align-items:center; }
-        .sim-header { background: linear-gradient(90deg, var(--teal), var(--primary)); }
-        .module-number { background:var(--white); color:var(--accent); width:30px; height:30px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:bold; margin-right:15px; }
-        .concept-block { background:var(--white); border-radius:8px; padding:25px; margin:20px 0; box-shadow:0 4px 6px rgba(0,0,0,0.05); border-left:5px solid var(--accent); }
-        table { width:100%; border-collapse:collapse; margin-top:15px; }
-        th { background-color:var(--accent); color:white; padding:10px; text-align:left; }
-        td { border:1px solid #ddd; padding:10px; }
-        tr:nth-child(even) { background-color:#f8f9f9; }
-        .visual-aid { text-align:center; margin:20px 0; background:#fff; padding:20px; border:1px solid #eee; border-radius:8px; }
-        .formula-box { background-color:#eef6fc; padding:14px; border-radius:6px; font-family:'Courier New', monospace; font-weight:bold; color:var(--primary); text-align:center; margin:15px 0; border:1px dashed #9cc4e5; }
-        .watch-out { background-color:#fff8e1; border:1px solid #ffe0b2; border-radius:5px; padding:15px; margin-top:15px; font-size:0.9em; }
+        
+        /* Headers */
+        h1 {
+            text-align: center;
+            color: var(--primary);
+            border-bottom: 3px solid var(--accent);
+            padding-bottom: 15px;
+            margin-bottom: 40px;
+        }
+        .module-header {
+            background: linear-gradient(90deg, var(--accent), var(--primary));
+            color: var(--white);
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-top: 50px;
+            display: flex;
+            align-items: center;
+        }
+        /* Alternative Header color for Sim/Planning sections to distinguish */
+        .sim-header {
+            background: linear-gradient(90deg, var(--teal), var(--primary));
+        }
+
+        .module-number {
+            background: var(--white);
+            color: var(--accent);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        /* Content Blocks */
+        .concept-block {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--accent);
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th {
+            background-color: var(--accent);
+            color: white;
+            padding: 10px;
+            text-align: left;
+        }
+        td {
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+        tr:nth-child(even) {background-color: #f8f9f9;}
+
+        /* Visual Aids */
+        .visual-aid {
+            text-align: center;
+            margin: 20px 0;
+            background: #fff;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+        }
+        .volume-circle {
+            fill: none;
+            stroke-width: 2;
+        }
+
+        /* "Watch Out" Tips */
+        .watch-out {
+            background-color: #fff8e1;
+            border: 1px solid #ffe0b2;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 15px;
+            font-size: 0.9em;
+        }
+        .watch-out strong {
+            color: #d35400;
+        }
     </style>
 </head>
 <body>
-    <h1>Module 06: Simulation, Planning & Beam Physics</h1>
-    <p style="text-align:center; font-size:1.1em;">Comprehensive guide from ICRU Volumes to Photon/Electron Characteristics.</p>
+
+    <h1>Module 6: Simulation, Planning & Beam Physics</h1>
+    <p style="text-align: center; font-size: 1.1em;">
+        Comprehensive guide from ICRU Volumes to Photon/Electron Characteristics.
+    </p>
 
     <div class="module-header sim-header">
         <span class="module-number">1</span>
         <h2>ICRU 50 & 62 Definitions</h2>
     </div>
+    <p>You must know the "nesting doll" order of these volumes.</p>
 
     <div class="concept-block">
         <h3>1.1 The Volume Hierarchy</h3>
@@ -51,25 +133,256 @@
             <svg width="300" height="300" viewBox="0 0 300 300">
                 <circle cx="150" cy="150" r="140" stroke="#95a5a6" fill="#ecf0f1" opacity="0.5" />
                 <text x="150" y="20" font-size="10" fill="#7f8c8d" text-anchor="middle">Irradiated Vol (IV)</text>
+                
                 <circle cx="150" cy="150" r="110" stroke="#34495e" fill="#bdc3c7" opacity="0.5" />
                 <text x="150" y="55" font-size="10" fill="#2c3e50" text-anchor="middle">Treated Vol (TV)</text>
-                <circle cx="150" cy="150" r="80" stroke="#e67e22" fill="#f39c12" fill-opacity="0.2" />
+
+                <circle cx="150" cy="150" r="80" stroke="#e67e22" fill="#f39c12" fill-opacity="0.2" class="volume-circle"/>
                 <text x="150" y="85" font-size="12" fill="#d35400" font-weight="bold" text-anchor="middle">PTV</text>
-                <circle cx="150" cy="150" r="50" stroke="#2980b9" fill="#3498db" fill-opacity="0.2" />
+
+                <circle cx="150" cy="150" r="50" stroke="#2980b9" fill="#3498db" fill-opacity="0.2" class="volume-circle"/>
                 <text x="150" y="120" font-size="12" fill="#2980b9" font-weight="bold" text-anchor="middle">CTV</text>
+
                 <circle cx="150" cy="150" r="25" stroke="#c0392b" fill="#e74c3c" class="volume-circle"/>
                 <text x="150" y="155" font-size="12" fill="white" font-weight="bold" text-anchor="middle">GTV</text>
             </svg>
         </div>
+
         <table>
-            <tr><th>Volume</th><th>Definition</th><th>Purpose</th></tr>
-            <tr><td><strong>GTV</strong></td><td>Gross visible tumor</td><td>What you can see</td></tr>
-            <tr><td><strong>CTV</strong></td><td>GTV + microscopic disease</td><td>Cover invisible spread</td></tr>
-            <tr><td><strong>PTV</strong></td><td>CTV + setup margins</td><td>Account for motion/setup error</td></tr>
+            <tr>
+                <th>Volume</th>
+                <th>Definition</th>
+                <th>Purpose</th>
+            </tr>
+            <tr>
+                <td><strong>GTV</strong> (Gross Tumor Volume)</td>
+                <td>Palpable or visible extent of tumor.</td>
+                <td>What you can see on the scan.</td>
+            </tr>
+            <tr>
+                <td><strong>CTV</strong> (Clinical Target Volume)</td>
+                <td>GTV + Microscopic disease.</td>
+                <td>Covers invisible spread. (e.g., margins around a lumpectomy).</td>
+            </tr>
+            <tr>
+                <td><strong>PTV</strong> (Planning Target Volume)</td>
+                <td>CTV + Setup Margins.</td>
+                <td>Accounts for patient movement and setup error.</td>
+            </tr>
+            <tr>
+                <td><strong>Treated Volume</strong></td>
+                <td>Volume enclosed by the prescribed isodose line (e.g., the 95% line).</td>
+                <td>Usually larger than PTV.</td>
+            </tr>
+            <tr>
+                <td><strong>Irradiated Volume</strong></td>
+                <td>Volume receiving significant dose (usually >50%).</td>
+                <td>Includes normal tissue.</td>
+            </tr>
         </table>
     </div>
 
-    <!-- (Module 6 continues with CT simulation, HU, photon/electron characteristics, bolus, normalization, wedges, etc.) -->
+    <div class="module-header sim-header">
+        <span class="module-number">2</span>
+        <h2>CT Simulation Physics</h2>
+    </div>
+
+    <div class="concept-block">
+        <h3>2.1 Hounsfield Units (CT Numbers)</h3>
+        <p>CT scanners measure density (attenuation) and assign a number. The Treatment Planning System (TPS) needs this to calculate dose absorption.</p>
+        
+        <table>
+            <tr>
+                <th>Material</th>
+                <th>Hounsfield Unit (HU)</th>
+            </tr>
+            <tr>
+                <td><strong>Dense Bone</strong></td>
+                <td>+1000</td>
+            </tr>
+            <tr>
+                <td><strong>Muscle / Tissue</strong></td>
+                <td>+10 to +50</td>
+            </tr>
+            <tr>
+                <td><strong>Water</strong></td>
+                <td><strong>0</strong> (Baseline)</td>
+            </tr>
+            <tr>
+                <td><strong>Fat</strong></td>
+                <td>-50 to -100</td>
+            </tr>
+            <tr>
+                <td><strong>Air</strong></td>
+                <td>-1000</td>
+            </tr>
+        </table>
+        <div class="watch-out">
+            <strong>Key Concept:</strong> If you treat through a hip replacement (Metal), the HU is extremely high (streak artifact). The TPS might miscalculate dose unless you "override" the density.
+        </div>
+    </div>
+
+    <div class="concept-block">
+        <h3>2.2 Contrast Media</h3>
+        <ul>
+            <li><strong>Barium Sulfate:</strong> Used for GI tract. Not water soluble. <strong>Do NOT use</strong> if perforation is suspected (use Gastrografin).</li>
+            <li><strong>Iodinated Contrast (IV):</strong> Used to visualize vessels/organs.
+                <ul>
+                    <li><em>Ionic:</em> High osmolality (higher risk of reaction).</li>
+                    <li><em>Non-Ionic:</em> Low osmolality (safer, less toxic).</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <div class="module-header">
+        <span class="module-number">3</span>
+        <h2>Photon Beam Characteristics</h2>
+    </div>
+
+    <div class="concept-block">
+        <h3>3.1 The PDD Curve & Dmax</h3>
+        <p>Photons penetrate through the body. Dmax is the depth of electronic equilibrium (100% dose).</p>
+        <div class="visual-aid">
+            <svg width="400" height="200" viewBox="0 0 400 200">
+                <line x1="40" y1="20" x2="40" y2="180" stroke="#333" stroke-width="2"/>
+                <line x1="40" y1="180" x2="380" y2="180" stroke="#333" stroke-width="2"/>
+                <path d="M 40 160 Q 60 40 80 40 Q 150 80 380 170" fill="none" stroke="#e74c3c" stroke-width="3"/>
+                <circle cx="80" cy="40" r="5" fill="#c0392b"/>
+                <text x="85" y="35" font-size="12" font-weight="bold" fill="#c0392b">Dmax (100%)</text>
+                <text x="200" y="120" font-size="12" fill="#555">Deep Penetration (Fall-off)</text>
+            </svg>
+        </div>
+        <table>
+            <tr>
+                <th>Energy</th>
+                <th>Dmax Depth</th>
+                <th>Surface Dose</th>
+            </tr>
+            <tr>
+                <td><strong>6 MV</strong></td>
+                <td>1.5 cm</td>
+                <td>~30-40%</td>
+            </tr>
+            <tr>
+                <td><strong>10 MV</strong></td>
+                <td>2.5 cm</td>
+                <td>~25%</td>
+            </tr>
+            <tr>
+                <td><strong>15 MV</strong></td>
+                <td>3.0 cm</td>
+                <td>~15%</td>
+            </tr>
+            <tr>
+                <td><strong>18 MV</strong></td>
+                <td>3.5 cm</td>
+                <td>~15%</td>
+            </tr>
+        </table>
+        <div class="watch-out"><strong>Skin Sparing:</strong> Higher Energy = Deeper Dmax = Lower Skin Dose (Better Sparing).</div>
+    </div>
+
+    <div class="module-header">
+        <span class="module-number">4</span>
+        <h2>Electron Beam Characteristics</h2>
+    </div>
+    <p>Electrons behave differently than photons. They have a finite range and are used for superficial tumors.</p>
+
+    <div class="concept-block">
+        <h3>4.1 Electron Isodose Distribution</h3>
+        <p>Unlike the penetrating photon beam, electrons balloon out and stop quickly.</p>
+        
+        <div class="visual-aid">
+            <svg width="300" height="200" viewBox="0 0 300 200">
+                <line x1="20" y1="20" x2="280" y2="20" stroke="#333" stroke-width="2"/>
+                <text x="250" y="15" font-size="10">Skin Surface</text>
+                
+                <path d="M 100 20 Q 110 80 150 80 Q 190 80 200 20" fill="none" stroke="#e74c3c" stroke-width="2"/>
+                <text x="150" y="70" font-size="10" fill="#e74c3c" text-anchor="middle">90%</text>
+
+                <path d="M 60 20 Q 40 150 150 150 Q 260 150 240 20" fill="none" stroke="#3498db" stroke-width="2" stroke-dasharray="4"/>
+                <text x="150" y="140" font-size="10" fill="#3498db" text-anchor="middle">20% (Ballooning)</text>
+            </svg>
+        </div>
+
+        <ul>
+            <li><strong>Ballooning:</strong> Low isodose lines (10-20%) bulge OUT laterally at depth.</li>
+            <li><strong>Constriction:</strong> High isodose lines (90%) pull IN (taper).</li>
+            <li><strong>Surface Dose:</strong> Electrons have a HIGH surface dose (80-90%) compared to photons. Skin sparing is minimal.</li>
+        </ul>
+    </div>
+
+    <div class="concept-block">
+        <h3>4.2 Rules of Thumb (Memorize These)</h3>
+        <p>You must be able to select the correct energy for a tumor depth.</p>
+        <table>
+            <tr>
+                <th>Rule</th>
+                <th>Formula</th>
+                <th>Use Case</th>
+            </tr>
+            <tr>
+                <td><strong>Therapeutic Range</strong> (90% Line)</td>
+                <td><strong>E / 4</strong></td>
+                <td>"The tumor is 3cm deep. What energy do you use?" <br><em>3cm x 4 = 12 MeV needed.</em></td>
+            </tr>
+            <tr>
+                <td><strong>80% Isodose Line</strong></td>
+                <td><strong>E / 3</strong></td>
+                <td>Often used as the standard prescription line.</td>
+            </tr>
+            <tr>
+                <td><strong>Practical Range (Rp)</strong></td>
+                <td><strong>E / 2</strong></td>
+                <td>Where the beam effectively stops (dose &lt;10%). <br><em>For 12 MeV, range is 6cm.</em></td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="module-header">
+        <span class="module-number">5</span>
+        <h2>Bolus, Modifiers & Normalization</h2>
+    </div>
+
+    <div class="concept-block">
+        <h3>5.1 Physics of Bolus</h3>
+        <p>Material with density similar to tissue (water equivalent) placed on the skin.</p>
+        <table>
+            <tr><th>Effect</th><th>Description</th></tr>
+            <tr>
+                <td><strong>1. Eliminates Skin Sparing</strong></td>
+                <td>It brings Dmax closer to the skin surface. <br><em>Result:</em> Increases skin dose (Erythema).</td>
+            </tr>
+            <tr>
+                <td><strong>2. Compensates for Irregularity</strong></td>
+                <td>Fills in gaps (e.g., nose, ear) to make the surface flat for the beam.</td>
+            </tr>
+            <tr>
+                <td><strong>3. Decreases Penetration</strong></td>
+                <td>The beam spends its energy in the bolus, so it doesn't go as deep into the patient.</td>
+            </tr>
+        </table>
+        <div class="watch-out">
+            <strong>Calculation:</strong> If you add 1cm of bolus to a 6MV beam (Dmax 1.5cm), the new Dmax is at 0.5cm depth in the patient (1.5 - 1.0).
+        </div>
+    </div>
+
+    <div class="concept-block">
+        <h3>5.2 Normalization</h3>
+        <p><strong>Definition:</strong> The process of defining where "100%" of the dose is.</p>
+        <ul>
+            <li><strong>Normalize to Max (Dmax):</strong> The hottest point in the plan is 100%. All other points are < 100%.</li>
+            <li><strong>Normalize to Isocenter:</strong> The isocenter receives 100%. Points elsewhere might be hotter (e.g., 105% or 110%).</li>
+        </ul>
+    </div>
+
+    <div class="concept-block">
+        <h3>5.3 Wedge Pairs</h3>
+        <ul>
+            <li><strong>Heel-to-Heel:</strong> Wedges are always placed "Heel to Heel" to compensate for the hot spot created by overlapping beams (like in a breast tangent or 90-degree plan).</li>
+        </ul>
+    </div>
 
 </body>
 </html>
