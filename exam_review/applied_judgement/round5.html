@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARRT Clinical Simulator (Part 5)</title>
+    <style>
+        :root {
+            --bg: #f4f7f6;
+            --card-bg: #ffffff;
+            --primary: #2c3e50;
+            --accent: #16a085; /* Teal for Part 5 (Precision) */
+            --care: #27ae60;
+            --safety: #d35400;
+            --proc: #8e44ad;
+            --text: #333;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .sim-container {
+            max-width: 950px;
+            width: 100%;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header-panel {
+            background: var(--primary);
+            color: white;
+            padding: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header-info h1 { margin: 0; font-size: 1.6em; }
+        .score-badge {
+            background: rgba(255,255,255,0.1);
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .score-number { font-size: 1.5em; font-weight: bold; display: block; }
+
+        /* Progress */
+        .progress-track { height: 8px; background: #e0e0e0; width: 100%; }
+        .progress-fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.4s ease; }
+
+        /* Content */
+        .scenario-area { padding: 30px; }
+
+        /* Category Badge */
+        .category-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+        .cat-care { background-color: var(--care); }
+        .cat-safety { background-color: var(--safety); }
+        .cat-proc { background-color: var(--proc); }
+
+        /* Chart */
+        .chart-card {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-left: 6px solid #555;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 25px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.95em;
+            position: relative;
+        }
+        .chart-title {
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: var(--primary);
+            color: white;
+            padding: 2px 10px;
+            font-size: 0.8em;
+            border-radius: 4px;
+        }
+        .chart-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            border-bottom: 1px dashed #e0e0e0;
+            padding-bottom: 4px;
+        }
+        
+        /* Question & Options */
+        .question-text {
+            font-size: 1.25em;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: var(--primary);
+        }
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .option-btn {
+            background: white;
+            border: 2px solid #e0e0e0;
+            padding: 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
+            font-size: 1em;
+            color: var(--text);
+        }
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--accent);
+            background: #f0f8ff;
+            transform: translateY(-2px);
+        }
+        .option-btn:disabled { cursor: default; opacity: 0.7; }
+        
+        /* Feedback */
+        .correct-choice { background-color: #d4edda !important; border-color: #28a745 !important; color: #155724; }
+        .wrong-choice { background-color: #f8d7da !important; border-color: #dc3545 !important; color: #721c24; }
+        .feedback-panel {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 8px;
+            display: none;
+        }
+        .fb-correct { background: #e8f5e9; border: 1px solid #c3e6cb; }
+        .fb-wrong { background: #fce4ec; border: 1px solid #f5c6cb; }
+
+        /* Nav & Start */
+        .footer-nav { padding: 20px 30px; border-top: 1px solid #eee; display: flex; justify-content: flex-end; }
+        .next-btn { background: var(--primary); color: white; border: none; padding: 12px 30px; border-radius: 6px; cursor: pointer; display: none; }
+        .start-screen { text-align: center; padding: 50px; }
+        .start-btn { background: var(--accent); color: white; padding: 15px 40px; border: none; border-radius: 30px; font-size: 1.2em; cursor: pointer; margin-top: 30px; }
+
+    </style>
+</head>
+<body>
+
+<div class="sim-container">
+    <div class="header-panel">
+        <div class="header-info">
+            <h1>ARRT Simulator (Part 5)</h1>
+            <p>Physics QA, Lab Values, and Brachytherapy</p>
+        </div>
+        <div class="score-badge">
+            <span class="score-number" id="score-display">0/0</span>
+        </div>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progress"></div></div>
+
+    <div id="main-interface">
+        <div class="start-screen">
+            <h2>Round 5: Precision & Physics</h2>
+            <p>12 Scenarios focusing on Renal Function, Mechanical QA, and Internal Shielding.</p>
+            <button class="start-btn" onclick="startSim()">Start Part 5</button>
+        </div>
+    </div>
+
+    <div class="footer-nav">
+        <button id="next-btn" class="next-btn" onclick="nextScenario()">Next Scenario &rarr;</button>
+    </div>
+</div>
+
+<script>
+    const scenarios = [
+        
+        // --- PATIENT CARE ---
+        {
+            category: "1. Patient Care",
+            type: "care",
+            title: "Sim Prep: Contrast Safety",
+            chart: `
+                <div class="chart-row"><strong>Pt:</strong> J. Black (70M)</div>
+                <div class="chart-row"><strong>History:</strong> Diabetes Type 2.</div>
+                <div class="chart-row"><strong>Lab Results:</strong> BUN 25, Creatinine 1.8.</div>
+                <div class="chart-row"><strong>Order:</strong> CT Sim with IV Contrast.</div>
+            `,
+            question: "Evaluate the kidney function. Can you proceed with the IV contrast injection?",
+            options: [
+                { text: "Proceed. Values are within normal limits for a 70-year-old.", correct: false, feedback: "Incorrect. Creatinine 1.8 is elevated (Normal 0.6-1.2). This indicates renal impairment." },
+                { text: "Hold contrast. Notify the radiologist/physician.", correct: true, feedback: "Correct. High Creatinine + Diabetes places this patient at high risk for Contrast-Induced Nephropathy (Renal Failure)." },
+                { text: "Proceed, but tell patient to drink water afterwards.", correct: false, feedback: "Incorrect. Hydration helps, but injecting a patient with Creatinine 1.8 requires physician approval first." },
+                { text: "Proceed, but use a lower flow rate.", correct: false, feedback: "Incorrect. Flow rate affects vein integrity, not kidney toxicity. The load on the kidneys remains the same." }
+            ]
+        },
+        {
+            category: "1. Patient Care",
+            type: "care",
+            title: "Medications: Brain Mets",
+            chart: `
+                <div class="chart-row"><strong>Pt:</strong> S. White (55F)</div>
+                <div class="chart-row"><strong>Dx:</strong> Multiple Brain Metastases.</div>
+                <div class="chart-row"><strong>Symptoms:</strong> Headache, Nausea, Balance issues.</div>
+                <div class="chart-row"><strong>Cause:</strong> Cerebral Edema (Swelling).</div>
+            `,
+            question: "Which medication is standard of care to reduce intracranial inflammation/edema?",
+            options: [
+                { text: "Zofran (Ondansetron)", correct: false, feedback: "Incorrect. Zofran is an anti-emetic. It treats the nausea but doesn't solve the root cause (swelling)." },
+                { text: "Decadron (Dexamethasone)", correct: true, feedback: "Correct. Dexamethasone is a corticosteroid used to rapidly reduce inflammation and swelling in the brain." },
+                { text: "Coumadin (Warfarin)", correct: false, feedback: "Incorrect. This is a blood thinner. It would be dangerous if the tumor bleeds." },
+                { text: "Dilantin (Phenytoin)", correct: false, feedback: "Incorrect. This is an anti-seizure med. While useful, it doesn't reduce swelling." }
+            ]
+        },
+        {
+            category: "1. Patient Care",
+            type: "care",
+            title: "Infection: Neutropenia",
+            chart: `
+                <div class="chart-row"><strong>Pt:</strong> Leukemia Patient.</div>
+                <div class="chart-row"><strong>Lab:</strong> ANC (Absolute Neutrophil Count) = 400.</div>
+                <div class="chart-row"><strong>Precaution:</strong> Neutropenic (Reverse) Isolation.</div>
+            `,
+            question: "What is the primary goal of 'Reverse Isolation'?",
+            options: [
+                { text: "To protect the staff from the patient's infection.", correct: false, feedback: "Incorrect. That is standard isolation. Reverse isolation is the opposite." },
+                { text: "To protect the immunocompromised patient from the staff/environment.", correct: true, feedback: "Correct. With an ANC < 500, the patient cannot fight infection. YOU are the danger to THEM." },
+                { text: "To prevent the spread of MRSA.", correct: false, feedback: "Incorrect. That is Contact Precaution." },
+                { text: "To protect the family from radiation.", correct: false, feedback: "Incorrect." }
+            ]
+        },
+
+        // --- SAFETY & QA ---
+        {
+            category: "2. Safety & QA",
+            type: "safety",
+            title: "QA: Mechanical Isocenter",
+            chart: `
+                <div class="chart-row"><strong>Test:</strong> Annual Star Shot (Gantry/Collimator/Couch).</div>
+                <div class="chart-row"><strong>Method:</strong> Film exposed at multiple angles.</div>
+                <div class="chart-row"><strong>Result:</strong> All lines intersect within a 1.5 mm diameter circle.</div>
+            `,
+            question: "Is this machine acceptable for standard IMRT treatments (Non-SRS)?",
+            options: [
+                { text: "Pass. Tolerance is 2 mm diameter.", correct: true, feedback: "Correct. For standard linear accelerators, the mechanical isocenter must be within a 2mm diameter circle. (1mm for SRS)." },
+                { text: "Fail. Tolerance is 1 mm diameter.", correct: false, feedback: "Incorrect. 1mm is strict SRS tolerance. 1.5mm is acceptable for general IMRT." },
+                { text: "Fail. Lines must intersect at a single perfect point.", correct: false, feedback: "Incorrect. Mechanical parts (bearings/gears) have flex. A perfect point is impossible. We accept a small 'circle of confusion'." },
+                { text: "Pass. Tolerance is 3 mm diameter.", correct: false, feedback: "Incorrect. 3mm is too sloppy for IMRT." }
+            ]
+        },
+        {
+            category: "2. Safety & Regulations",
+            type: "safety",
+            title: "Safety: Package Receipt",
+            chart: `
+                <div class="chart-row"><strong>Event:</strong> Delivery of I-131 Capsules.</div>
+                <div class="chart-row"><strong>Label:</strong> Yellow II.</div>
+                <div class="chart-row"><strong>Action:</strong> Check for leakage/contamination.</div>
+            `,
+            question: "Which test must be performed on the PACKAGE SURFACE upon receipt?",
+            options: [
+                { text: "Geiger Counter survey at 1 meter.", correct: false, feedback: "Incorrect. That verifies the Transport Index (TI). Contamination requires a wipe." },
+                { text: "Wipe Test (Swab) of the exterior surface.", correct: true, feedback: "Correct. You must wipe 300 cm² of the surface and count it to ensure no radioactive material leaked out during transport." },
+                { text: "Open the box and count the capsules.", correct: false, feedback: "Incorrect. Never open a potentially contaminated box until the exterior wipe test is clear." },
+                { text: "Immersion test in water.", correct: false, feedback: "Incorrect. That damages the package." }
+            ]
+        },
+        {
+            category: "2. Safety & QA",
+            type: "safety",
+            title: "Brachytherapy: Leak Test",
+            chart: `
+                <div class="chart-row"><strong>Source:</strong> Sealed Cs-137 Tubes (LDR).</div>
+                <div class="chart-row"><strong>Inventory:</strong> Stored in the hot lab safe.</div>
+                <div class="chart-row"><strong>Regulation:</strong> NRC requirement for leak testing.</div>
+            `,
+            question: "How often must sealed sources be leak tested?",
+            options: [
+                { text: "Every month.", correct: false, feedback: "Incorrect." },
+                { text: "Every 6 months.", correct: true, feedback: "Correct. Sealed sources must be inventoried and leak tested every 6 months. Limit is < 0.005 microcuries of removable contamination." },
+                { text: "Every year.", correct: false, feedback: "Incorrect." },
+                { text: "Only before use.", correct: false, feedback: "Incorrect. They must be tested regularly even in storage." }
+            ]
+        },
+
+        // --- PROCEDURES & PHYSICS ---
+        {
+            category: "3. Procedures & Physics",
+            type: "proc",
+            title: "Electron Physics: Internal Shielding",
+            chart: `
+                <div class="chart-row"><strong>Site:</strong> Eyelid (Skin Cancer).</div>
+                <div class="chart-row"><strong>Modality:</strong> 6 MeV Electrons.</div>
+                <div class="chart-row"><strong>Shielding:</strong> Lead shield placed UNDER the eyelid (on top of the lens).</div>
+            `,
+            question: "Why must the lead shield be coated in wax or acrylic?",
+            options: [
+                { text: "To make it comfortable for the eye.", correct: false, feedback: "Incorrect. While true, the *Physics* reason is safety from radiation, not comfort." },
+                { text: "To absorb the intense backscatter electrons coming off the lead.", correct: true, feedback: "Correct. High Z materials (Lead) reflect electrons back toward the source (Backscatter). Without the wax to absorb them, the eyelid undersurface would receive a massive overdose." },
+                { text: "To prevent the lead from getting cold.", correct: false, feedback: "Incorrect." },
+                { text: "To filter the low energy x-rays.", correct: false, feedback: "Incorrect." }
+            ]
+        },
+        {
+            category: "3. Procedures",
+            type: "proc",
+            title: "Gyn Brachy: Point A",
+            chart: `
+                <div class="chart-row"><strong>Procedure:</strong> Cervix Brachytherapy (LDR).</div>
+                <div class="chart-row"><strong>Applicator:</strong> Tandem & Ovoids.</div>
+                <div class="chart-row"><strong>Prescription Point:</strong> Point A.</div>
+            `,
+            question: "Where is Point A defined anatomically?",
+            options: [
+                { text: "2cm superior to cervical os, 2cm lateral to uterine canal.", correct: true, feedback: "Correct. Point A represents the crossing of the uterine artery and ureter. It is the critical dose-limiting point for the ureter." },
+                { text: "5cm lateral to the midline at the pelvic wall.", correct: false, feedback: "Incorrect. That is Point B (Pelvic Nodes)." },
+                { text: "At the surface of the ovoids.", correct: false, feedback: "Incorrect. That is vaginal mucosa dose." },
+                { text: "1cm inferior to the lowest source.", correct: false, feedback: "Incorrect." }
+            ]
+        },
+        {
+            category: "3. Procedures",
+            type: "proc",
+            title: "TD 5/5: Kidney",
+            chart: `
+                <div class="chart-row"><strong>Plan:</strong> Pancreatic Cancer (AP/PA fields).</div>
+                <div class="chart-row"><strong>Dose:</strong> 45 Gy total.</div>
+                <div class="chart-row"><strong>Risk:</strong> Both kidneys are partially in the field.</div>
+            `,
+            question: "What is the TD 5/5 (tolerance dose for 5% complication rate in 5 years) for the Whole Kidney?",
+            options: [
+                { text: "45 Gy", correct: false, feedback: "Incorrect. That's Spinal Cord tolerance. Kidneys are much more sensitive." },
+                { text: "23 Gy", correct: true, feedback: "Correct. 23 Gy is the standard threshold for radiation nephritis. Exceeding this to the whole kidney leads to renal failure." },
+                { text: "10 Gy", correct: false, feedback: "Incorrect. Too low. That's lens of the eye territory." },
+                { text: "60 Gy", correct: false, feedback: "Incorrect. Way too high." }
+            ]
+        },
+        {
+            category: "3. Procedures",
+            type: "proc",
+            title: "Anatomy: Pituitary Adenoma",
+            chart: `
+                <div class="chart-row"><strong>Pt:</strong> A. Lincoln (40M)</div>
+                <div class="chart-row"><strong>Complaint:</strong> 'Tunnel Vision' (bitemporal hemianopsia).</div>
+                <div class="chart-row"><strong>Scan:</strong> Mass in the Sella Turcica.</div>
+            `,
+            question: "The patient's vision loss is caused by the tumor compressing which structure?",
+            options: [
+                { text: "Optic Nerve", correct: false, feedback: "Incorrect. Compression of the nerve causes blindness in ONE eye." },
+                { text: "Optic Chiasm", correct: true, feedback: "Correct. The Chiasm sits directly above the Pituitary gland. Compression here affects the crossing fibers, causing loss of peripheral vision in BOTH eyes (Tunnel Vision)." },
+                { text: "Visual Cortex", correct: false, feedback: "Incorrect. That is in the occipital lobe (back of head)." },
+                { text: "Retina", correct: false, feedback: "Incorrect." }
+            ]
+        },
+        {
+            category: "3. Procedures",
+            type: "proc",
+            title: "Prostate Sim Instructions",
+            chart: `
+                <div class="chart-row"><strong>Site:</strong> Prostate.</div>
+                <div class="chart-row"><strong>Setup:</strong> Supine, Vac-lok.</div>
+                <div class="chart-row"><strong>Goal:</strong> Minimize Small Bowel in field.</div>
+            `,
+            question: "What represents the standard bladder/rectal prep for Prostate Sim?",
+            options: [
+                { text: "Full Bladder, Full Rectum.", correct: false, feedback: "Incorrect. A full rectum shifts the prostate unpredictably." },
+                { text: "Empty Bladder, Empty Rectum.", correct: false, feedback: "Incorrect. Empty bladder allows small bowel to fall into the pelvis." },
+                { text: "Full Bladder, Empty Rectum.", correct: true, feedback: "Correct. Full bladder pushes bowel UP (out of field). Empty rectum ensures reproducible prostate position." },
+                { text: "Empty Bladder, Full Rectum.", correct: false, feedback: "Incorrect. Worst possible setup." }
+            ]
+        },
+        {
+            category: "3. Math & Physics",
+            type: "proc",
+            title: "Calc: Wedge Transmission",
+            chart: `
+                <div class="chart-row"><strong>Plan:</strong> 6 MV beam.</div>
+                <div class="chart-row"><strong>Wedge:</strong> 45-degree wedge inserted.</div>
+                <div class="chart-row"><strong>Wedge Factor:</strong> 0.65</div>
+                <div class="chart-row"><strong>Open MU:</strong> 100 MU (without wedge).</div>
+            `,
+            question: "How many MUs are required WITH the wedge to deliver the same dose?",
+            options: [
+                { text: "65 MU", correct: false, feedback: "Incorrect. You multiplied (100 * 0.65). Wedges absorb radiation, so you need MORE MUs to get the same dose out." },
+                { text: "154 MU", correct: true, feedback: "Correct. MU = Dose / Factor. 100 / 0.65 = 153.8. You need roughly 50% more beam on time to punch through the wedge." },
+                { text: "100 MU", correct: false, feedback: "Incorrect." },
+                { text: "135 MU", correct: false, feedback: "Incorrect." }
+            ]
+        }
+    ];
+
+    // --- GAME ENGINE ---
+    let currentIdx = 0;
+    let score = 0;
+
+    function startSim() {
+        document.getElementById('main-interface').innerHTML = "";
+        currentIdx = 0;
+        score = 0;
+        updateScore();
+        loadScenario(0);
+    }
+
+    function loadScenario(index) {
+        if (index >= scenarios.length) {
+            endSim();
+            return;
+        }
+
+        const s = scenarios[index];
+        const container = document.getElementById('main-interface');
+        document.getElementById('progress').style.width = ((index / scenarios.length) * 100) + "%";
+
+        let badge = "cat-care", border = "#27ae60";
+        if(s.type === "safety") { badge = "cat-safety"; border = "#d35400"; }
+        if(s.type === "proc") { badge = "cat-proc"; border = "#8e44ad"; }
+
+        container.innerHTML = `
+            <div class="scenario-area">
+                <span class="category-badge ${badge}">${s.category}</span>
+                <div class="chart-card" style="border-left-color: ${border}">
+                    <div class="chart-title">MEDICAL RECORD</div>
+                    ${s.chart}
+                </div>
+                <div class="question-text">${s.question}</div>
+                <div class="options-grid">
+                    ${s.options.map((opt, i) => `
+                        <button class="option-btn" id="opt-${i}" onclick="check(${i})">${opt.text}</button>
+                    `).join('')}
+                </div>
+                <div id="feedback" class="feedback-panel"></div>
+            </div>
+        `;
+        document.getElementById('next-btn').style.display = 'none';
+    }
+
+    function check(idx) {
+        const s = scenarios[currentIdx];
+        const fb = document.getElementById('feedback');
+        const correct = s.options.findIndex(o => o.correct);
+        const isRight = (idx === correct);
+
+        document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+
+        if(isRight) {
+            document.getElementById(`opt-${idx}`).classList.add('correct-choice');
+            fb.classList.add('fb-correct');
+            fb.innerHTML = `<strong>Correct!</strong> ${s.options[idx].feedback}`;
+            score++;
+        } else {
+            document.getElementById(`opt-${idx}`).classList.add('wrong-choice');
+            document.getElementById(`opt-${correct}`).classList.add('correct-choice');
+            fb.classList.add('fb-wrong');
+            fb.innerHTML = `<strong>Incorrect.</strong> ${s.options[idx].feedback}`;
+        }
+        fb.style.display = 'block';
+        updateScore();
+        document.getElementById('next-btn').style.display = 'block';
+    }
+
+    function nextScenario() {
+        currentIdx++;
+        loadScenario(currentIdx);
+    }
+
+    function updateScore() {
+        document.getElementById('score-display').innerText = `${score}/${scenarios.length}`;
+    }
+
+    function endSim() {
+        const percent = Math.round((score/scenarios.length)*100);
+        document.getElementById('main-interface').innerHTML = `
+            <div class="start-screen">
+                <h2 style="color: var(--primary)">Part 5 Complete</h2>
+                <div style="font-size: 3em; font-weight:bold; color: var(--accent); margin: 20px 0;">${percent}%</div>
+                <button class="start-btn" onclick="startSim()">Restart</button>
+            </div>
+        `;
+        document.getElementById('next-btn').style.display = 'none';
+    }
+</script>
+
+</body>
+</html>
