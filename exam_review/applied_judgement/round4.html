@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARRT Clinical Simulator (Part 4)</title>
+    <style>
+        :root {
+            --bg: #f4f7f6;
+            --card-bg: #ffffff;
+            --primary: #2c3e50;
+            --accent: #e67e22; /* Orange for Part 4 (Specialties) */
+            --care: #27ae60;
+            --safety: #c0392b;
+            --proc: #2980b9;
+            --text: #333;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .sim-container {
+            max-width: 950px;
+            width: 100%;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header-panel {
+            background: var(--primary);
+            color: white;
+            padding: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header-info h1 { margin: 0; font-size: 1.6em; }
+        .score-badge {
+            background: rgba(255,255,255,0.1);
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .score-number { font-size: 1.5em; font-weight: bold; display: block; }
+
+        /* Progress */
+        .progress-track { height: 8px; background: #e0e0e0; width: 100%; }
+        .progress-fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.4s ease; }
+
+        /* Content */
+        .scenario-area { padding: 30px; }
+
+        /* Category Badge */
+        .category-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+        .cat-care { background-color: var(--care); }
+        .cat-safety { background-color: var(--safety); }
+        .cat-proc { background-color: var(--proc); }
+
+        /* Chart */
+        .chart-card {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-left: 6px solid #555;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 25px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.95em;
+            position: relative;
+        }
+        .chart-title {
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: var(--primary);
+            color: white;
+            padding: 2px 10px;
+            font-size: 0.8em;
+            border-radius: 4px;
+        }
+        .chart-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            border-bottom: 1px dashed #e0e0e0;
+            padding-bottom: 4px;
+        }
+        
+        /* Question & Options */
+        .question-text {
+            font-size: 1.25em;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: var(--primary);
+        }
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .option-btn {
+            background: white;
+            border: 2px solid #e0e0e0;
+            padding: 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
+            font-size: 1em;
+            color: var(--text);
+        }
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--accent);
+            background: #f0f8ff;
+            transform: translateY(-2px);
+        }
+        .option-btn:disabled { cursor: default; opacity: 0.7; }
+        
+        /* Feedback */
+        .correct-choice { background-color: #d4edda !important; border-color: #28a745 !important; color: #155724; }
+        .wrong-choice { background-color: #f8d7da !important; border-color: #dc3545 !important; color: #721c24; }
+        .feedback-panel {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 8px;
+            display: none;
+        }
+        .fb-correct { background: #e8f5e9; border: 1px solid #c3e6cb; }
+        .fb-wrong { background: #fce4ec; border: 1px solid #f5c6cb; }
+
+        /* Nav & Start */
+        .footer-nav { padding: 20px 30px; border-top: 1px solid #eee; display: flex; justify-content: flex-end; }
+        .next-btn { background: var(--primary); color: white; border: none; padding: 12px 30px; border-radius: 6px; cursor: pointer; display: none; }
+        .start-screen { text-align: center; padding: 50px; }
+        .start-btn { background: var(--accent); color: white; padding: 15px 40px; border: none; border-radius: 30px; font-size: 1.2em; cursor: pointer; margin-top: 30px; }
+
+    </style>
+</head>
+<body>
+
+<div class="sim-container">
+    <div class="header-panel">
+        <div class="header-info">
+            <h1>ARRT Simulator (Part 4)</h1>
+            <p>MRI Safety, High-Tech Procedures, and Coordinate Math</p>
+        </div>
+        <div class="score-badge">
+            <span class="score-number" id="score-display">0/0</span>
+        </div>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progress"></div></div>
+
+    <div id="main-interface">
+        <div class="start-screen">
+            <h2>Round 4: High-Tech & Special Proc</h2>
+            <p>12 Scenarios focusing on MRI Safety, SRS/SBRT, and TBI.</p>
+            <button class="start-btn" onclick="startSim()">Start Part 4</button>
+        </div>
+    </div>
+
+    <div class="footer-nav">
+        <button id="next-btn" class="next-btn" onclick="nextScenario()">Next Scenario &rarr;</button>
+    </div>
+</div>
+
+<script>
+    const scenarios = [
+        
+        // --- PATIENT CARE ---
+        {
+            category: "1. Patient Care",
+            type: "care",
+            title: "Emergency: Seizure Management",
+            chart: `
+                <div class="chart-row"><strong>Pt:</strong> G. Brain (45M)</div>
+                <div class="chart-row"><strong>Dx:</strong> GBM (Glioblastoma).</div>
+                <div class="chart-row"><strong>Event:</strong> Patient begins convulsing on treatment table.</div>
+                <div class="chart-row"><strong>Status:</strong> Unconscious, rhythmic shaking.</div>
+            `,
+            question: "What is the correct immediate response?",
+            options: [
+                { text: "Restrain the patient's limbs to prevent falling.", correct: false, feedback: "Incorrect. Never restrain a seizing patient; it can cause bone fractures or muscle injury." },
+                { text: "Insert a tongue depressor to protect the airway.", correct: false, feedback: "Incorrect. Never put anything in the mouth. It is a choking hazard and they will not swallow their tongue." },
+                { text: "Lower table if possible, cushion head, do not restrain.", correct: true, feedback: "Correct. Safety first: Prevent fall (lower table or rails), protect head from banging, and allow the seizure to run its course. Call for help." },
+                { text: "Administer oral anti-convulsant medication immediately.", correct: false, feedback: "Incorrect. NPO during seizure. Aspiration risk is 100%." }
+            ]
+        },
+        {
+            category: "1. Patient Care",
+            type: "care",
+            title: "Skin Care: Moist Desquamation",
+            chart: `
+                <div class="chart-row"><strong>Pt:</strong> L. Skin (50F) - Breast Ca</div>
+                <div class="chart-row"><strong>Reaction:</strong> Grade 3 Dermatitis.</div>
+                <div class="chart-row"><strong>Presentation:</strong> Weeping, sloughing skin, serous fluid.</div>
+                <div class="chart-row"><strong>Patient Request:</strong> Wants to apply lotion.</div>
+            `,
+            question: "What is the appropriate wound care recommendation for moist desquamation?",
+            options: [
+                { text: "Apply Aquaphor or oil-based lotion heavily.", correct: false, feedback: "Incorrect. Oil/petroleum products trap heat and bacteria in open wounds. They are for dry desquamation only." },
+                { text: "Apply Silvadene (Silver Sulfadiazine) and a non-adherent dressing.", correct: true, feedback: "Correct. Silvadene is antimicrobial and soothing. A non-adherent (telfa) dressing protects the raw skin and absorbs fluid." },
+                { text: "Clean with alcohol wipes to disinfect.", correct: false, feedback: "Incorrect. Alcohol is painful and damages regenerating cells." },
+                { text: "Apply cornstarch to dry the area.", correct: false, feedback: "Incorrect. Cornstarch/powder creates a 'cake' medium for bacterial growth in moist wounds." }
+            ]
+        },
+
+        // --- SAFETY & QA ---
+        {
+            category: "2. Safety & MRI",
+            type: "safety",
+            title: "MRI Safety: Zone IV",
+            chart: `
+                <div class="chart-row"><strong>Modality:</strong> MRI-Linac Simulation.</div>
+                <div class="chart-row"><strong>Zone:</strong> Entering Zone IV (Scanner Room).</div>
+                <div class="chart-row"><strong>Pt History:</strong> Machinist (metal worker).</div>
+                <div class="chart-row"><strong>Screening:</strong> Patient says 'I think I got a metal sliver in my eye 20 years ago.'</div>
+            `,
+            question: "How do you proceed with the MRI Sim?",
+            options: [
+                { text: "Proceed; 20 years is long enough for the body to encapsulate it.", correct: false, feedback: "Incorrect. The magnetic field exerts torque regardless of time. A metal fragment can rip through the retina/optic nerve." },
+                { text: "Stop. Order orbital X-rays (2 views) to rule out foreign body.", correct: true, feedback: "Correct. Intra-ocular metallic foreign bodies are an absolute contraindication until cleared by X-ray. The magnet will move the metal." },
+                { text: "Proceed but use a lower field strength (0.35T).", correct: false, feedback: "Incorrect. Even low field MRI can move ferromagnetic objects in sensitive tissues like the eye." },
+                { text: "Proceed if the patient signs a waiver.", correct: false, feedback: "Incorrect. You cannot waive safety protocols for blinding injuries." }
+            ]
+        },
+        {
+            category: "2. Safety & Signage",
+            type: "safety",
+            title: "Radiation Signs",
+            chart: `
+                <div class="chart-row"><strong>Area:</strong> Treatment Vault Interior.</div>
+                <div class="chart-row"><strong>Dose Rate:</strong> Measured at 120 mrem/hr (1.2 mSv/hr).</div>
+                <div class="chart-row"><strong>Regulation:</strong> NRC 10 CFR 20.</div>
+            `,
+            question: "Which sign is required for this area?",
+            options: [
+                { text: "'Caution: Radiation Area'", correct: false, feedback: "Incorrect. This is for areas > 5 mrem/hr." },
+                { text: "'Caution: High Radiation Area'", correct: true, feedback: "Correct. 'High Radiation Area' is required if dose > 100 mrem (1 mSv) in 1 hour. This vault measures 120 mrem/hr." },
+                { text: "'Grave Danger: Very High Radiation Area'", correct: false, feedback: "Incorrect. This is for > 500 rads (5 Gy) per hour. Usually only inside the head of the machine or source drawer." },
+                { text: "'Authorized Personnel Only'", correct: false, feedback: "Incorrect. Too vague. Must specify radiation level." }
+            ]
+        },
+
+        // --- PHYSICS & PROCEDURES ---
+        {
+            category: "3. Procedures",
+            type: "proc",
+            title: "TBI: Beam Spoilers",
+            chart: `
+                <div class="chart-row"><strong>Technique:</strong> Total Body Irradiation (TBI).</div>
+                <div class="chart-row"><strong>Goal:</strong> Treat Leukemia (Bone Marrow) and Skin reservoirs.</div>
+                <div class="chart-row"><strong>Energy:</strong> 18 MV (for penetration).</div>
+                <div class="chart-row"><strong>Accessory:</strong> Lucite 'Beam Spoiler' placed near patient.</div>
+            `,
+            question: "Why do we use a Beam Spoiler for TBI when using high energy photons?",
+            options: [
+                { text: "To harden the beam further.", correct: false, feedback: "Incorrect. 18MV is already hard." },
+                { text: "To increase skin dose.", correct: true, feedback: "Correct. High energy (18MV) has deep skin sparing (3.5cm). Leukemia cells live in the skin. The spoiler creates scatter to shift Dmax to the surface, dosing the skin." },
+                { text: "To block the lungs.", correct: false, feedback: "Incorrect. Lung blocks are lead/cerrobend, not lucite." },
+                { text: "To reduce neutron contamination.", correct: false, feedback: "Incorrect. Spoilers actually *generate* electron contamination (which is the goal here)." }
+            ]
+        },
+        {
+            category: "3. Procedures",
+            type: "proc",
+            title: "Sarcoma: Strip Sparing",
+            chart: `
+                <div class="chart-row"><strong>Pt:</strong> B. Banner (30M)</div>
+                <div class="chart-row"><strong>Site:</strong> Soft Tissue Sarcoma (Thigh).</div>
+                <div class="chart-row"><strong>Plan:</strong> Extremity Radiation.</div>
+                <div class="chart-row"><strong>Rule:</strong> Spare a 1-2cm strip of skin longitudinally.</div>
+            `,
+            question: "What is the specific physiological reason for the 'corridor' or 'strip' sparing technique?",
+            options: [
+                { text: "To prevent bone fracture.", correct: false, feedback: "Incorrect." },
+                { text: "To maintain lymphatic drainage and prevent lymphedema.", correct: true, feedback: "Correct. If you irradiate the entire circumference of the limb, you fibrosis the lymphatic channels, causing permanent, massive swelling (Lymphedema) distal to the site." },
+                { text: "To spare the femoral artery.", correct: false, feedback: "Incorrect. Arteries are radio-resistant." },
+                { text: "To allow for future re-treatment.", correct: false, feedback: "Incorrect. While true, the immediate risk is lymphedema." }
+            ]
+        },
+        {
+            category: "3. Procedures",
+            type: "proc",
+            title: "Prostate: SpaceOAR",
+            chart: `
+                <div class="chart-row"><strong>Procedure:</strong> Prostate SBRT.</div>
+                <div class="chart-row"><strong>Prep:</strong> Urologist injects Hydrogel spacer.</div>
+                <div class="chart-row"><strong>Location:</strong> Between Prostate and Rectum.</div>
+            `,
+            question: "What is the primary dosimetric benefit of the SpaceOAR hydrogel?",
+            options: [
+                { text: "It shrinks the prostate gland.", correct: false, feedback: "Incorrect." },
+                { text: "It physically pushes the anterior rectal wall away from the high-dose PTV.", correct: true, feedback: "Correct. By creating a 1cm gap, the rapid dose fall-off of SBRT drops significantly before hitting the rectal wall, reducing toxicity." },
+                { text: "It acts as a fiducial marker for imaging.", correct: false, feedback: "Incorrect. While visible, gold seeds are the fiducials. SpaceOAR is a spacer." },
+                { text: "It immobilizes the prostate.", correct: false, feedback: "Incorrect. The prostate can still move." }
+            ]
+        },
+        {
+            category: "3. Procedures",
+            type: "proc",
+            title: "SRS: Margins",
+            chart: `
+                <div class="chart-row"><strong>Technique:</strong> Cranial Stereotactic Radiosurgery (SRS).</div>
+                <div class="chart-row"><strong>Immobilization:</strong> Rigid Halo or Thermoplastic Mask.</div>
+                <div class="chart-row"><strong>Target:</strong> 1.5 cm Brain Met.</div>
+            `,
+            question: "Because of the high precision and immobilization, what is the typical PTV margin added to the GTV?",
+            options: [
+                { text: "0 mm to 1 mm.", correct: true, feedback: "Correct. In SRS, we treat the lesion with almost zero margin because the dose gradient is so steep and immobilization is rigid. 1cm would fry normal brain." },
+                { text: "5 mm (0.5 cm).", correct: false, feedback: "Incorrect. 5mm is a standard IMRT margin. SRS is tighter." },
+                { text: "10 mm (1.0 cm).", correct: false, feedback: "Incorrect. Too large for SRS." },
+                { text: "20 mm (2.0 cm).", correct: false, feedback: "Incorrect." }
+            ]
+        },
+        
+        // --- MATH & PHYSICS ---
+        {
+            category: "3. Math & Physics",
+            type: "proc",
+            title: "Physics: Interactions",
+            chart: `
+                <div class="chart-row"><strong>Image:</strong> Simulator CT Scan (kV).</div>
+                <div class="chart-row"><strong>Treatment:</strong> Linac Beam (MV).</div>
+                <div class="chart-row"><strong>Contrast:</strong> Bones look white on CT, but gray on Port Film.</div>
+            `,
+            question: "Which interaction dominates in Diagnostic (kV) imaging vs Therapy (MV) beams?",
+            options: [
+                { text: "kV = Compton; MV = Photoelectric.", correct: false, feedback: "Incorrect. Reverse it." },
+                { text: "kV = Photoelectric; MV = Compton.", correct: true, feedback: "Correct. Photoelectric (kV) depends on Z# (Bone absorbs more). Compton (MV) is independent of Z# (Bone and Tissue absorb similarly), resulting in low contrast port films." },
+                { text: "Both are Pair Production.", correct: false, feedback: "Incorrect. Pair Production requires > 1.02 MeV." },
+                { text: "Both are Coherent Scatter.", correct: false, feedback: "Incorrect. Coherent happens only at very low energies." }
+            ]
+        },
+        {
+            category: "3. Math & Physics",
+            type: "proc",
+            title: "Calc: Coordinate Shift",
+            chart: `
+                <div class="chart-row"><strong>Setup:</strong> Patients aligned to skin tattoos (Triangulation).</div>
+                <div class="chart-row"><strong>Tattoo Reads:</strong> Vert: -10.0, Long: 100.0, Lat: 0.0.</div>
+                <div class="chart-row"><strong>Plan Shift:</strong> 'Shift 2cm Posterior, 3cm Superior, 1cm Right'.</div>
+            `,
+            question: "What are the new Isocenter coordinates? (IEC Scale: Sup = +Long, Right = -Lat, Post = -Vert).",
+            options: [
+                { text: "Vert -12.0, Long 103.0, Lat -1.0", correct: true, feedback: "Correct. Posterior is negative/down (-10 - 2 = -12). Superior is positive (100 + 3 = 103). Right is negative (0 - 1 = -1)." },
+                { text: "Vert -8.0, Long 103.0, Lat +1.0", correct: false, feedback: "Incorrect. Posterior means table goes DOWN (reading gets more negative), not up. Right is usually negative." },
+                { text: "Vert -12.0, Long 97.0, Lat -1.0", correct: false, feedback: "Incorrect. Superior means moving toward the head (Value increases). 97 would be Inferior." },
+                { text: "Vert -12.0, Long 103.0, Lat +1.0", correct: false, feedback: "Incorrect. Right is negative Lat." }
+            ]
+        },
+        {
+            category: "3. Math & Physics",
+            type: "proc",
+            title: "Calc: Gap Calculation",
+            chart: `
+                <div class="chart-row"><strong>Field 1:</strong> 20cm Length. SSD 100.</div>
+                <div class="chart-row"><strong>Field 2:</strong> 30cm Length. SSD 100.</div>
+                <div class="chart-row"><strong>Match Depth:</strong> 5 cm.</div>
+                <div class="chart-row"><strong>Formula:</strong> Gap = 0.5 * L * (d/SSD).</div>
+            `,
+            question: "Calculate the total skin gap required.",
+            options: [
+                { text: "1.25 cm", correct: true, feedback: "Correct. F1: 0.5*20*(5/100) = 0.5. F2: 0.5*30*(5/100) = 0.75. Total = 1.25 cm." },
+                { text: "0.50 cm", correct: false, feedback: "Incorrect. That's just Field 1's contribution." },
+                { text: "2.50 cm", correct: false, feedback: "Incorrect. Check decimal points. 5/100 is 0.05." },
+                { text: "1.00 cm", correct: false, feedback: "Incorrect." }
+            ]
+        },
+        {
+            category: "3. Procedures",
+            type: "proc",
+            title: "Physics: Electron Cutout",
+            chart: `
+                <div class="chart-row"><strong>Cone:</strong> 10x10.</div>
+                <div class="chart-row"><strong>Block:</strong> Custom lead cutout (2x2 cm opening).</div>
+                <div class="chart-row"><strong>Effect:</strong> Small field dosimetry.</div>
+            `,
+            question: "When the electron field size becomes very small (blocked heavily), what happens to the dose output and the dmax?",
+            options: [
+                { text: "Output increases, dmax gets deeper.", correct: false, feedback: "Incorrect." },
+                { text: "Output decreases, dmax moves closer to surface.", correct: true, feedback: "Correct. When the field size is smaller than the range of the electrons (lateral scatter equilibrium is lost), the output drops significantly, and dmax shifts toward the surface." },
+                { text: "Output stays the same.", correct: false, feedback: "Incorrect. Small cutouts require a large MU factor increase." },
+                { text: "Beam energy increases.", correct: false, feedback: "Incorrect." }
+            ]
+        }
+    ];
+
+    // --- GAME ENGINE (Same as previous) ---
+    let currentIdx = 0;
+    let score = 0;
+
+    function startSim() {
+        document.getElementById('main-interface').innerHTML = "";
+        currentIdx = 0;
+        score = 0;
+        updateScore();
+        loadScenario(0);
+    }
+
+    function loadScenario(index) {
+        if (index >= scenarios.length) {
+            endSim();
+            return;
+        }
+
+        const s = scenarios[index];
+        const container = document.getElementById('main-interface');
+        document.getElementById('progress').style.width = ((index / scenarios.length) * 100) + "%";
+
+        let badge = "cat-care", border = "#27ae60";
+        if(s.type === "safety") { badge = "cat-safety"; border = "#c0392b"; }
+        if(s.type === "proc") { badge = "cat-proc"; border = "#2980b9"; }
+
+        container.innerHTML = `
+            <div class="scenario-area">
+                <span class="category-badge ${badge}">${s.category}</span>
+                <div class="chart-card" style="border-left-color: ${border}">
+                    <div class="chart-title">MEDICAL RECORD</div>
+                    ${s.chart}
+                </div>
+                <div class="question-text">${s.question}</div>
+                <div class="options-grid">
+                    ${s.options.map((opt, i) => `
+                        <button class="option-btn" id="opt-${i}" onclick="check(${i})">${opt.text}</button>
+                    `).join('')}
+                </div>
+                <div id="feedback" class="feedback-panel"></div>
+            </div>
+        `;
+        document.getElementById('next-btn').style.display = 'none';
+    }
+
+    function check(idx) {
+        const s = scenarios[currentIdx];
+        const fb = document.getElementById('feedback');
+        const correct = s.options.findIndex(o => o.correct);
+        const isRight = (idx === correct);
+
+        document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+
+        if(isRight) {
+            document.getElementById(`opt-${idx}`).classList.add('correct-choice');
+            fb.classList.add('fb-correct');
+            fb.innerHTML = `<strong>Correct!</strong> ${s.options[idx].feedback}`;
+            score++;
+        } else {
+            document.getElementById(`opt-${idx}`).classList.add('wrong-choice');
+            document.getElementById(`opt-${correct}`).classList.add('correct-choice');
+            fb.classList.add('fb-wrong');
+            fb.innerHTML = `<strong>Incorrect.</strong> ${s.options[idx].feedback}`;
+        }
+        fb.style.display = 'block';
+        updateScore();
+        document.getElementById('next-btn').style.display = 'block';
+    }
+
+    function nextScenario() {
+        currentIdx++;
+        loadScenario(currentIdx);
+    }
+
+    function updateScore() {
+        document.getElementById('score-display').innerText = `${score}/${scenarios.length}`;
+    }
+
+    function endSim() {
+        const percent = Math.round((score/scenarios.length)*100);
+        document.getElementById('main-interface').innerHTML = `
+            <div class="start-screen">
+                <h2 style="color: var(--primary)">Part 4 Complete</h2>
+                <div style="font-size: 3em; font-weight:bold; color: var(--accent); margin: 20px 0;">${percent}%</div>
+                <button class="start-btn" onclick="startSim()">Restart</button>
+            </div>
+        `;
+        document.getElementById('next-btn').style.display = 'none';
+    }
+</script>
+
+</body>
+</html>
