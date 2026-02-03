@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Module 01: Math & Calculations Master Class</title>
+    <title>Module 1: Math & Calculations Master Class</title>
     <style>
         :root {
             --primary: #2c3e50;
@@ -21,71 +21,414 @@
             padding: 20px;
             background-color: var(--bg-light);
         }
-        h1 { text-align:center; color:var(--primary); border-bottom:3px solid var(--accent); padding-bottom:15px; margin-bottom:40px; }
-        .module-header { background: linear-gradient(90deg, var(--accent), var(--primary)); color:var(--white); padding:15px 20px; border-radius:8px; margin-top:50px; display:flex; align-items:center; }
-        .module-number { background:var(--white); color:var(--accent); width:30px; height:30px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:bold; margin-right:15px; }
-        .concept-block { background:var(--white); border-radius:8px; padding:25px; margin:20px 0; box-shadow:0 4px 6px rgba(0,0,0,0.05); border-left:5px solid var(--accent); }
-        .formula-box { background-color:#ecf0f1; padding:15px; border-radius:5px; font-family:'Courier New', monospace; font-weight:bold; color:var(--primary); text-align:center; margin:15px 0; border:1px dashed #bdc3c7; }
-        .explanation { font-size:0.95em; color:#555; margin-top:10px; }
-        .watch-out { background-color:#fff5f5; border:1px solid #ffcccc; border-radius:5px; padding:15px; margin-top:15px; font-size:0.9em; }
-        .watch-out strong { color:var(--highlight); text-transform:uppercase; font-size:0.85em; letter-spacing:1px; }
-        .visual-aid { text-align:center; margin:20px 0; background:var(--white); padding:20px; border-radius:8px; border:1px solid #eee; }
+        
+        /* Scaffolding Headers */
+        h1 {
+            text-align: center;
+            color: var(--primary);
+            border-bottom: 3px solid var(--accent);
+            padding-bottom: 15px;
+            margin-bottom: 40px;
+        }
+        .module-header {
+            background: linear-gradient(90deg, var(--accent), var(--primary));
+            color: var(--white);
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-top: 50px;
+            display: flex;
+            align-items: center;
+        }
+        .module-number {
+            background: var(--white);
+            color: var(--accent);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        /* Content Boxes */
+        .concept-block {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--accent);
+        }
+        .formula-box {
+            background-color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: var(--primary);
+            text-align: center;
+            margin: 15px 0;
+            border: 1px dashed #bdc3c7;
+        }
+        .explanation {
+            font-size: 0.95em;
+            color: #555;
+            margin-top: 10px;
+        }
+        
+        /* "Watch Out" Tips */
+        .watch-out {
+            background-color: #fff5f5;
+            border: 1px solid #ffcccc;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 15px;
+            font-size: 0.9em;
+        }
+        .watch-out strong {
+            color: var(--highlight);
+            text-transform: uppercase;
+            font-size: 0.85em;
+            letter-spacing: 1px;
+        }
+
+        /* Graphics Container */
+        .visual-aid {
+            text-align: center;
+            margin: 20px 0;
+            background: var(--white);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0% { r: 5; opacity: 1; }
+            50% { r: 7; opacity: 0.6; }
+            100% { r: 5; opacity: 1; }
+        }
+        @keyframes flow {
+            0% { stroke-dashoffset: 20; }
+            100% { stroke-dashoffset: 0; }
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        .source-dot { animation: pulse 2s infinite; }
+        .beam-line { animation: flow 1s linear infinite; }
+        .gap-indicator { animation: blink 3s infinite; }
+
     </style>
 </head>
 <body>
-    <h1>Module 01: Math & Calculations Master Class</h1>
-    <p style="text-align:center; font-size:1.1em;">Inverse Square, Gap Calculation, and Trigonometry for Field Matching.</p>
+
+    <h1>Module 1: Math & Calculations Master Class</h1>
+    <p style="text-align: center; font-size: 1.1em;">
+        Inverse Square, Gap Calculation, and Trigonometry for Field Matching.
+    </p>
 
     <div class="module-header">
         <span class="module-number">1</span>
         <h2>The Physics of the Beam (Intensity & Geometry)</h2>
     </div>
+    <p>Before we can treat a patient, we must understand how the radiation beam behaves as it leaves the machine. It spreads out, it gets weaker with distance, and it has fuzzy edges.</p>
 
     <div class="concept-block">
         <h3>1.1 The Inverse Square Law (ISL)</h3>
         <p><strong>The Concept:</strong> Imagine a flashlight. Close to the bulb, the light is intense. As you step back, the light spreads out to cover a larger area, but it becomes dimmer. Radiation works exactly the same way.</p>
+        
+        
         <div class="visual-aid">
             <svg width="400" height="220" viewBox="0 0 400 220">
-                <circle cx="20" cy="110" r="6" fill="#e74c3c" />
+                <circle cx="20" cy="110" class="source-dot" fill="#e74c3c" />
                 <text x="15" y="90" font-size="12" fill="#e74c3c" font-weight="bold">Source</text>
-                <line x1="20" y1="110" x2="380" y2="10" stroke="#3498db" stroke-width="1" stroke-dasharray="5"/>
-                <line x1="20" y1="110" x2="380" y2="210" stroke="#3498db" stroke-width="1" stroke-dasharray="5"/>
+                
+                <line x1="20" y1="110" x2="380" y2="10" stroke="#3498db" stroke-width="1" class="beam-line" stroke-dasharray="5"/>
+                <line x1="20" y1="110" x2="380" y2="210" stroke="#3498db" stroke-width="1" class="beam-line" stroke-dasharray="5"/>
+                
                 <rect x="120" y="80" width="2" height="60" fill="#3498db"/>
                 <text x="115" y="70" font-size="12" fill="#333">Distance 1</text>
                 <text x="130" y="115" font-size="14" fill="#333" font-weight="bold">I₁</text>
+                
                 <rect x="240" y="50" width="2" height="120" fill="#3498db" opacity="0.5"/>
                 <text x="235" y="40" font-size="12" fill="#333">Distance 2</text>
                 <text x="250" y="115" font-size="14" fill="#333" font-weight="bold">I₂</text>
             </svg>
         </div>
-        <div class="formula-box">(I₁ / I₂) = (d₂ / d₁)²</div>
-        <div class="explanation"><strong>Translation:</strong> The intensity ratio is equal to the <em>inverse</em> distance ratio, <em>squared</em>. If you double the distance intensity drops to 1/4.</div>
-        <div class="watch-out"><strong>Exam Trap:</strong> Don’t forget the SQUARE.</div>
+
+        <div class="formula-box">
+            (I₁ / I₂) = (d₂ / d₁)²
+        </div>
+        
+        <div class="explanation">
+            <strong>Translation:</strong> The intensity ratio is equal to the <em>inverse</em> distance ratio, <em>squared</em>.
+            <ul>
+                <li>If you double the distance (2x), intensity drops to 1/4.</li>
+                <li>If you halve the distance (0.5x), intensity shoots up to 4x.</li>
+            </ul>
+        </div>
+
+        <div class="watch-out">
+            <strong>Exam Trap:</strong> Don't forget the SQUARE. Calculating d2/d1 is only half the work. You must square that result to get the intensity change.
+        </div>
     </div>
 
     <div class="concept-block">
         <h3>1.2 Magnification Factor</h3>
-        <div class="formula-box">Mag Factor = SID / SOD</div>
-        <div class="explanation">Actual Size = Image Size / Mag Factor</div>
+        <p><strong>The Concept:</strong> Because beams diverge, objects inside the body (like a tumor or block) cast a larger shadow on the film. We must calculate this magnification to determine the actual size.</p>
+        
+
+        <div class="formula-box">
+            Mag Factor = SID / SOD <br>
+            (Source-Image Dist / Source-Object Dist)
+        </div>
+        
+        <div class="explanation">
+            <strong>Finding Actual Size:</strong> <br>
+            Actual Size = Image Size / Mag Factor
+        </div>
+        <div class="watch-out">
+            <strong>Tip:</strong> The "Object" is always closer to the source than the "Image" is. Therefore, SOD is always smaller than SID, and Mag Factor is always > 1.0.
+        </div>
     </div>
 
     <div class="concept-block">
         <h3>1.3 Geometric Penumbra</h3>
+        <p><strong>The Concept:</strong> The radiation source isn't a perfect, tiny dot—it has physical size (usually millimeters). Because of this, the edge of the beam isn't sharp; it's blurry. This blur is called penumbra.</p>
+        
+
         <div class="visual-aid">
             <svg width="400" height="200" viewBox="0 0 400 200">
                 <rect x="180" y="10" width="40" height="10" fill="#e74c3c" />
                 <text x="175" y="35" font-size="10" fill="#e74c3c">Source (s)</text>
+                
                 <line x1="120" y1="90" x2="180" y2="90" stroke="#333" stroke-width="4"/>
                 <line x1="220" y1="90" x2="280" y2="90" stroke="#333" stroke-width="4"/>
                 <text x="290" y="95" font-size="10" fill="#333">Collimator (SDD)</text>
+                
                 <line x1="50" y1="170" x2="350" y2="170" stroke="#3498db" stroke-width="2"/>
                 <text x="355" y="175" font-size="10" fill="#3498db">Depth (d)</text>
-                <rect x="215" y="170" width="40" height="6" fill="#e74c3c" opacity="0.6"/>
+                
+                <line x1="180" y1="20" x2="215" y2="90" stroke="#aaa" stroke-width="1"/>
+                <line x1="215" y1="90" x2="255" y2="170" stroke="#aaa" stroke-width="1" stroke-dasharray="3"/>
+                
+                <line x1="220" y1="20" x2="215" y2="90" stroke="#aaa" stroke-width="1"/>
+                <line x1="215" y1="90" x2="215" y2="170" stroke="#aaa" stroke-width="1" stroke-dasharray="3"/>
+                
+                <rect x="215" y="170" width="40" height="6" fill="#e74c3c" opacity="0.6" class="gap-indicator"/>
                 <text x="220" y="190" font-size="12" fill="#e74c3c" font-weight="bold">Blur Zone (P)</text>
             </svg>
         </div>
-        <div class="formula-box">P = s × (SSD + d - SDD) / SDD</div>
-        <div class="explanation">To reduce penumbra: use smaller source, move collimators closer to patient, decrease SSD.</div>
+
+        <div class="formula-box">
+            P = s × (SSD + d - SDD) / SDD
+        </div>
+
+        <div class="explanation">
+            To reduce the blur (Penumbra), you can:
+            <ol>
+                <li>Use a smaller source (Small Focal Spot).</li>
+                <li>Move the collimators closer to the patient (Increase SDD).</li>
+                <li>Decrease the distance to the patient (Decrease SSD).</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="module-header">
+        <span class="module-number">2</span>
+        <h2>Modifying the Beam (Factors)</h2>
+    </div>
+    <p>We rarely use a "raw" open beam. We put things in the way to shape it or flatten it. Every time we put something in the beam's path, it absorbs radiation, so we must adjust our calculation.</p>
+
+    <div class="concept-block">
+        <h3>2.1 Equivalent Square (Sterling's Formula)</h3>
+        <p><strong>The Concept:</strong> Radiation scatter depends on the field area. Data tables usually only list square fields (10x10, 15x15). If you have a rectangle (10x20), you must calculate which "Square" acts like your rectangle.</p>
+        
+        <div class="formula-box">
+            EqSq = (4 × Area) / Perimeter
+        </div>
+        <div class="explanation">
+            <strong>Simplified Rule:</strong> (2 × Length × Width) / (Length + Width)
+        </div>
+        <div class="watch-out">
+            <strong>Quick Check:</strong> The answer will always be <em>between</em> the short side and the long side. (e.g., for a 10x20, the EqSq is 13.3. If you get 8 or 25, you made a math error).
+        </div>
+    </div>
+
+    <div class="concept-block">
+        <h3>2.2 Interpolation</h3>
+        <p><strong>The Concept:</strong> What if your field size is 12x12, but the PDD table only lists 10x10 and 15x15? You must mathematically find the value "in the middle."</p>
+        
+
+        <div class="formula-box">
+            y = y1 + [ (x - x1) / (x2 - x1) ] × (y2 - y1)
+        </div>
+        <div class="explanation">
+             Where <strong>x</strong> is your field size, and <strong>y</strong> is the unknown PDD factor.
+        </div>
+    </div>
+
+    <div class="concept-block">
+        <h3>2.3 Wedge Factors & Hinge Angles</h3>
+        <p><strong>The Concept:</strong> When two beams enter a patient at an angle (like 90°), their overlap creates a hot spot. We use "Wedges" (thick on one end, thin on the other) to even out the dose.</p>
+        
+
+        <div class="visual-aid">
+            <svg width="300" height="150" viewBox="0 0 300 150">
+                <path d="M 50 20 L 150 130" stroke="#3498db" stroke-width="3" opacity="0.7"/>
+                <path d="M 250 20 L 150 130" stroke="#3498db" stroke-width="3" opacity="0.7"/>
+                
+                <path d="M 120 100 Q 150 80 180 100" stroke="#e67e22" stroke-width="2" fill="none"/>
+                <text x="135" y="80" font-size="12" fill="#e67e22">Hinge Angle</text>
+                
+                <polygon points="50,20 80,20 50,50" fill="#2c3e50" opacity="0.8"/>
+                <polygon points="250,20 220,20 250,50" fill="#2c3e50" opacity="0.8"/>
+            </svg>
+        </div>
+
+        <div class="formula-box">
+            Wedge Angle = 90° - (Hinge Angle / 2)
+        </div>
+        
+        <div class="explanation">
+            If your beams are 90° apart (Hinge = 90):<br>
+            Wedge = 90 - (45) = <strong>45° Wedge needed.</strong>
+        </div>
+    </div>
+
+    <div class="module-header">
+        <span class="module-number">3</span>
+        <h2>Calculating the Dose (Monitor Units)</h2>
+    </div>
+    <p>This is the final step. How long do we leave the machine on? We measure this in "Monitor Units" (MU).</p>
+
+    <div class="concept-block">
+        <h3>3.1 Mayneord F Factor</h3>
+        <p><strong>The Concept:</strong> Used to find the <strong>New PDD</strong> when treating at an extended distance (e.g., TBI at 400cm SSD). PDD increases as distance increases.</p>
+        <div class="formula-box">
+             F = [ (SSD2 + dmax) / (SSD1 + dmax) ]² × [ (SSD1 + depth) / (SSD2 + depth) ]²
+        </div>
+        <div class="explanation">
+            <strong>New PDD</strong> = Old PDD × F Factor
+        </div>
+    </div>
+
+    <div class="concept-block">
+        <h3>3.2 The Universal MU Logic</h3>
+        <p>Think of the MU formula as a fraction. The <strong>Top</strong> is what you WANT (The Dose). The <strong>Bottom</strong> is what you HAVE (The machine output modified by all the factors).</p>
+
+        <div class="formula-box">
+            MU = Dose / (Output × Factors...)
+        </div>
+
+        <table style="width:100%; border-collapse: collapse; margin-top: 15px;">
+            <tr style="background-color: #ecf0f1;">
+                <td style="padding: 10px; border: 1px solid #ddd;"><strong>SAD (Isocentric)</strong></td>
+                <td style="padding: 10px; border: 1px solid #ddd;"><strong>SSD (Non-Isocentric)</strong></td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; border: 1px solid #ddd;">
+                    Uses <strong>TMR</strong> (Tissue Maximum Ratio)<br>
+                    <em>Distance is fixed at the tumor.</em>
+                </td>
+                <td style="padding: 10px; border: 1px solid #ddd;">
+                    Uses <strong>PDD</strong> (Percentage Depth Dose)<br>
+                    <em>Distance is fixed at the skin.</em>
+                </td>
+            </tr>
+        </table>
+
+        <div class="watch-out">
+            <strong>Key Difference:</strong> If you are doing an <strong>SSD</strong> setup, you must calculate the Inverse Square Factor if you are treating at an extended distance (like 110cm). In SAD setups, the inverse square is usually built into the TMR data.
+        </div>
+    </div>
+
+    <div class="module-header">
+        <span class="module-number">4</span>
+        <h2>Advanced Field Matching</h2>
+    </div>
+
+    <div class="concept-block">
+        <h3>4.1 Trigonometry for Field Matching</h3>
+        <p><strong>The Concept:</strong> When we treat a Cranio-Spinal Axis (CSI), the beams diverge and overlap. We must rotate the couch and the collimator to make the beam edges parallel so they match perfectly without overlapping.</p>
+        
+
+        <div class="visual-aid">
+            <svg width="400" height="250" viewBox="0 0 400 250">
+                <path d="M 50 200 L 350 200 L 200 50 Z" fill="none" stroke="#ccc" stroke-dasharray="4"/>
+                <line x1="200" y1="50" x2="200" y2="200" stroke="#333" stroke-width="2"/>
+                <text x="210" y="120" font-size="12">SSD</text>
+                
+                <polygon points="200,50 350,200 200,200" fill="rgba(52, 152, 219, 0.2)" stroke="#3498db" stroke-width="2"/>
+                <text x="250" y="220" font-size="12" fill="#3498db">½ Length (Opp)</text>
+                <text x="205" y="70" font-size="12" fill="#e74c3c">θ</text>
+                
+                <text x="280" y="100" font-size="14" font-weight="bold">Tan(θ) = Opp/Adj</text>
+            </svg>
+        </div>
+
+        <table style="width:100%; border-collapse: collapse; margin-top: 15px;">
+            <tr>
+                <th style="padding: 10px; border: 1px solid #ddd; background-color: #3498db; color: white;">Rotation Type</th>
+                <th style="padding: 10px; border: 1px solid #ddd; background-color: #3498db; color: white;">Formula (To match divergence of...)</th>
+            </tr>
+            <tr>
+                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Collimator Rotation</strong></td>
+                <td style="padding: 10px; border: 1px solid #ddd;">
+                    Matches the <strong>Spine Field</strong> divergence.<br>
+                    <em>Formula:</em> invTan (½ Length of Spine / SSD)
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Couch Rotation</strong> (Kick)</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">
+                    Matches the <strong>Brain Field</strong> divergence.<br>
+                    <em>Formula:</em> invTan (½ Length of Brain / SSD)
+                </td>
+            </tr>
+        </table>
+        <div class="watch-out">
+            <strong>Memory Trick:</strong> Collimator matches the Spine (Long field). Couch matches the Brain (Short field).
+        </div>
+    </div>
+
+    <div class="concept-block">
+        <h3>4.2 Gap Calculation</h3>
+        <p><strong>The Problem:</strong> When treating a long area (like the spine), one field isn't big enough. We use two. But because beams diverge, if we put them side-by-side on the skin, they will overlap deep inside the body and burn the spinal cord.</p>
+        <p><strong>The Solution:</strong> We leave a calculated "Gap" on the skin so the edges meet perfectly at the depth of the cord.</p>
+        
+
+        <div class="visual-aid">
+            <svg width="400" height="200" viewBox="0 0 400 200">
+                <line x1="20" y1="60" x2="380" y2="60" stroke="#333" stroke-width="2"/>
+                <text x="340" y="50" font-size="12" fill="#333">Skin Surface</text>
+                
+                <line x1="100" y1="60" x2="160" y2="160" stroke="#e74c3c" stroke-width="2"/>
+                <line x1="300" y1="60" x2="160" y2="160" stroke="#27ae60" stroke-width="2"/>
+                
+                <line x1="100" y1="40" x2="300" y2="40" stroke="#3498db" stroke-width="3" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+                <text x="180" y="30" font-size="14" fill="#3498db" font-weight="bold">The Gap</text>
+                
+                <line x1="160" y1="60" x2="160" y2="160" stroke="#aaa" stroke-dasharray="4"/>
+                <text x="165" y="110" font-size="12" fill="#555">Depth (d)</text>
+            </svg>
+        </div>
+
+        <div class="formula-box">
+            Gap = ½L₁ × (d/SSD₁) + ½L₂ × (d/SSD₂)
+        </div>
+
+        <div class="explanation">
+            <strong>Breakdown:</strong>
+            1. Take half the length of Field 1.
+            2. Multiply by the ratio of Depth over Distance.
+            3. Do the same for Field 2.
+            4. Add them together.
+        </div>
     </div>
 
 </body>
