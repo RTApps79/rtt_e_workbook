@@ -1,61 +1,685 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Module 09: Treatment Delivery & IGRT Master Class</title>
-<style>
-:root {
---primary: #2c3e50;
---accent: #2980b9;
---highlight: #e74c3c;
---bg-light: #fdfefe;
---white: #ffffff;
-}
-body { font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height:1.6; color:var(--primary); max-width:900px; margin:0 auto; padding:20px; background-color:var(--bg-light); }
-h1 { text-align:center; color:var(--primary); border-bottom:3px solid var(--accent); padding-bottom:15px; margin-bottom:40px; }
-.module-header { background: linear-gradient(90deg, var(--accent), var(--primary)); color:var(--white); padding:15px 20px; border-radius:8px; margin-top:50px; display:flex; align-items:center; }
-.module-number { background:var(--white); color:var(--accent); width:30px; height:30px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:bold; margin-right:15px; }
-.concept-block { background:var(--white); border-radius:8px; padding:25px; margin:20px 0; box-shadow:0 4px 6px rgba(0,0,0,0.05); border-left:5px solid var(--accent); }
-.visual-aid { text-align:center; margin:20px 0; background:#fff; padding:20px; border:1px solid #eee; border-radius:8px; }
-.formula-box { background-color:#eef6fc; padding:14px; border-radius:6px; font-family:'Courier New', monospace; font-weight:bold; color:var(--primary); text-align:center; margin:15px 0; border:1px dashed #9cc4e5; }
-.watch-out { background-color:#fff8e1; border:1px solid #ffe0b2; border-radius:5px; padding:15px; margin-top:15px; font-size:0.9em; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module 9: Treatment Delivery & IGRT Master Class</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #2980b9; /* Blue for Technology/Computing */
+            --highlight: #e74c3c;
+            --bg-light: #fdfefe;
+            --white: #ffffff;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--primary);
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: var(--bg-light);
+        }
+
+        /* Headers */
+        h1 {
+            text-align: center;
+            color: var(--primary);
+            border-bottom: 3px solid var(--accent);
+            padding-bottom: 15px;
+            margin-bottom: 40px;
+        }
+        .module-header {
+            background: linear-gradient(90deg, var(--accent), var(--primary));
+            color: var(--white);
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-top: 50px;
+            display: flex;
+            align-items: center;
+        }
+        .module-number {
+            background: var(--white);
+            color: var(--accent);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex: 0 0 30px;
+        }
+
+        /* Content Blocks */
+        .concept-block {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--accent);
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th {
+            background-color: var(--accent);
+            color: white;
+            padding: 10px;
+            text-align: left;
+        }
+        td {
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+        tr:nth-child(even) {background-color: #f4f8fb;}
+
+        /* Visual Aids */
+        .visual-aid {
+            text-align: center;
+            margin: 20px 0;
+            background: #fff;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+        }
+
+        /* Formula Box (added for calculation clarity) */
+        .formula-box {
+            background-color: #eef6fc;
+            padding: 14px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: var(--primary);
+            text-align: center;
+            margin: 15px 0;
+            border: 1px dashed #9cc4e5;
+        }
+
+        /* "Watch Out" Tips */
+        .watch-out {
+            background-color: #fff8e1;
+            border: 1px solid #ffe0b2;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 15px;
+            font-size: 0.9em;
+        }
+        .watch-out strong {
+            color: #d35400;
+        }
+
+        /* Micro-checklist */
+        .checklist {
+            margin: 12px 0 0 0;
+            padding: 0 0 0 18px;
+        }
+        .checklist li { margin: 6px 0; }
+        .tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-size: 0.85em;
+            font-weight: bold;
+            border: 1px solid #d6e6f5;
+            background: #f4f8fb;
+            color: #1f5d8d;
+            margin-right: 6px;
+        }
+
+        /* Details/summary for collapsible drills */
+        details {
+            background: #f4f8fb;
+            border: 1px solid #d6e6f5;
+            border-radius: 6px;
+            padding: 10px 12px;
+            margin-top: 12px;
+        }
+        details summary {
+            cursor: pointer;
+            font-weight: bold;
+            color: #1f5d8d;
+        }
+        details summary::-webkit-details-marker { display: none; }
+
+        /* SVG animations */
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.95; }
+            50% { transform: scale(1.15); opacity: 0.55; }
+            100% { transform: scale(1); opacity: 0.95; }
+        }
+        @keyframes dash {
+            0% { stroke-dashoffset: 100; }
+            100% { stroke-dashoffset: 0; }
+        }
+        .pulse-dot { transform-origin: center; animation: pulse 2.2s infinite; }
+        .flow-line { stroke-dasharray: 8 6; animation: dash 2.5s linear infinite; }
+        .rotate-arrow {
+            transform-origin: 200px 95px;
+            animation: pulse 2.8s infinite;
+        }
+
+        /* Print-friendly */
+        @media print {
+            body { background: #ffffff; }
+            .concept-block, .visual-aid { box-shadow: none; }
+            details { border: 1px solid #ccc; }
+        }
+    </style>
 </head>
 <body>
-<h1>Module 09: Treatment Delivery & IGRT Master Class</h1>
-<p style="text-align:center; font-size:1.1em;">Focusing on simulation-to-treatment workflow, IGRT modalities, motion management, plan verification, and key calculation concepts.</p>
 
-<div class="module-header">
-<span class="module-number">0</span>
-<h2>From CT Simulation to Daily Treatment</h2>
-</div>
+    <h1>Module 9: Treatment Delivery & IGRT Master Class</h1>
+    <p style="text-align: center; font-size: 1.1em;">
+        Focusing on simulation-to-treatment workflow, IGRT modalities, motion management, plan verification, and key calculation concepts.
+    </p>
 
-<div class="concept-block">
-<h3>0.1 CT Simulation Procedure</h3>
-<p><strong>Goal:</strong> Create a reproducible setup + accurate CT dataset for planning.</p>
-<ul>
-<li>Immobilization and indexing</li>
-<li>Scan range and slice thickness</li>
-<li>Reference marks/tattoos</li>
-<li>Set-up photos</li>
-</ul>
-<div class="watch-out"><strong>High-frequency exam pitfall:</strong> Great plan can fail if setup is not reproducible.</div>
-</div>
+    <!-- Added Section: Simulation + Treatment Procedures Overview -->
+    <div class="module-header">
+        <span class="module-number">0</span>
+        <h2>From CT Simulation to Daily Treatment</h2>
+    </div>
+    <p>
+        A big portion of “Procedures” questions test whether you understand <strong>how the whole process fits together</strong>:
+        what gets done at CT simulation, what gets verified before the first fraction, and what gets checked every day at the console.
+    </p>
 
-<div class="module-header"><span class="module-number">1</span><h2>IGRT (Image Guided Radiation Therapy)</h2></div>
-<div class="concept-block">
-<h3>1.1 kV vs MV Imaging</h3>
-<table>
-<tr><th>Modality</th><th>Source</th><th>Contrast</th><th>Dose</th></tr>
-<tr><td><strong>kV OBI</strong></td><td>Diagnostic X-ray tube</td><td>High</td><td>Low (mGy)</td></tr>
-<tr><td><strong>EPID (MV)</strong></td><td>Treatment beam</td><td>Low</td><td>Higher (cGy)</td></tr>
-<tr><td><strong>CBCT</strong></td><td>kV rotating source</td><td>3D volumetric (soft tissue)</td><td>Intermediate</td></tr>
-</table>
-<div class="watch-out"><strong>Exam tip:</strong> For soft-tissue alignment (prostate), CBCT is often the correct answer.</div>
-</div>
+    <div class="concept-block">
+        <h3>0.1 CT Simulation Procedure (what must be done and documented)</h3>
+        <p><span class="tag">Goal</span> Create a reproducible setup + accurate CT dataset so the plan can be built and delivered safely.</p>
 
-<!-- (Module 9 continues with motion management, IMRT/VMAT, systematic vs random errors, R&V systems, off-axis calculations, examples) -->
+        <div class="visual-aid">
+            <svg width="440" height="190" viewBox="0 0 440 190" role="img" aria-label="Workflow from physician order to daily treatment">
+                <defs>
+                    <marker id="arrowHead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#2980b9"></polygon>
+                    </marker>
+                </defs>
+
+                <!-- nodes -->
+                <rect x="15" y="25" rx="8" ry="8" width="90" height="45" fill="#eef6fc" stroke="#2980b9"/>
+                <text x="60" y="52" text-anchor="middle" font-size="12" fill="#2c3e50" font-weight="bold">MD Order</text>
+
+                <rect x="125" y="25" rx="8" ry="8" width="90" height="45" fill="#eef6fc" stroke="#2980b9"/>
+                <text x="170" y="45" text-anchor="middle" font-size="12" fill="#2c3e50" font-weight="bold">CT Sim</text>
+                <text x="170" y="61" text-anchor="middle" font-size="10" fill="#2c3e50">Immobilize</text>
+
+                <rect x="235" y="25" rx="8" ry="8" width="90" height="45" fill="#eef6fc" stroke="#2980b9"/>
+                <text x="280" y="45" text-anchor="middle" font-size="12" fill="#2c3e50" font-weight="bold">Planning</text>
+                <text x="280" y="61" text-anchor="middle" font-size="10" fill="#2c3e50">Contours + Plan</text>
+
+                <rect x="345" y="25" rx="8" ry="8" width="80" height="45" fill="#eef6fc" stroke="#2980b9"/>
+                <text x="385" y="45" text-anchor="middle" font-size="12" fill="#2c3e50" font-weight="bold">QA</text>
+                <text x="385" y="61" text-anchor="middle" font-size="10" fill="#2c3e50">Checks</text>
+
+                <rect x="95" y="110" rx="8" ry="8" width="110" height="55" fill="#f4f8fb" stroke="#2980b9"/>
+                <text x="150" y="134" text-anchor="middle" font-size="12" fill="#2c3e50" font-weight="bold">R&amp;V Load</text>
+                <text x="150" y="151" text-anchor="middle" font-size="10" fill="#2c3e50">Parameters locked</text>
+
+                <rect x="245" y="110" rx="8" ry="8" width="180" height="55" fill="#f4f8fb" stroke="#2980b9"/>
+                <text x="335" y="132" text-anchor="middle" font-size="12" fill="#2c3e50" font-weight="bold">Daily Setup + IGRT</text>
+                <text x="335" y="149" text-anchor="middle" font-size="10" fill="#2c3e50">Match → Shift → Treat → Document</text>
+
+                <!-- connecting lines -->
+                <line x1="105" y1="48" x2="125" y2="48" stroke="#2980b9" stroke-width="2" marker-end="url(#arrowHead)" class="flow-line"/>
+                <line x1="215" y1="48" x2="235" y2="48" stroke="#2980b9" stroke-width="2" marker-end="url(#arrowHead)" class="flow-line"/>
+                <line x1="325" y1="48" x2="345" y2="48" stroke="#2980b9" stroke-width="2" marker-end="url(#arrowHead)" class="flow-line"/>
+
+                <line x1="170" y1="70" x2="150" y2="110" stroke="#2980b9" stroke-width="2" marker-end="url(#arrowHead)" class="flow-line"/>
+                <line x1="385" y1="70" x2="150" y2="110" stroke="#2980b9" stroke-width="2" marker-end="url(#arrowHead)" opacity="0.6"/>
+
+                <line x1="205" y1="138" x2="245" y2="138" stroke="#2980b9" stroke-width="2" marker-end="url(#arrowHead)" class="flow-line"/>
+
+                <!-- animated dots -->
+                <circle cx="60" cy="25" r="5" fill="#e74c3c" class="pulse-dot" style="animation-delay:0.1s"></circle>
+                <circle cx="170" cy="25" r="5" fill="#e74c3c" class="pulse-dot" style="animation-delay:0.5s"></circle>
+                <circle cx="280" cy="25" r="5" fill="#e74c3c" class="pulse-dot" style="animation-delay:0.9s"></circle>
+                <circle cx="385" cy="25" r="5" fill="#e74c3c" class="pulse-dot" style="animation-delay:1.3s"></circle>
+                <circle cx="150" cy="110" r="5" fill="#e74c3c" class="pulse-dot" style="animation-delay:1.7s"></circle>
+                <circle cx="335" cy="110" r="5" fill="#e74c3c" class="pulse-dot" style="animation-delay:2.1s"></circle>
+            </svg>
+            <p style="margin: 0; font-size: 0.9em; color:#555;">
+                Think “workflow”: <strong>order → sim → planning → QA → R&amp;V → daily IGRT → delivery/documentation</strong>.
+            </p>
+        </div>
+
+        <ul class="checklist">
+            <li><strong>Implement per physician order:</strong> correct site, laterality, intent, immobilization needs, contrast needs, and scanning extent.</li>
+            <li><strong>Reproducible anatomic position:</strong> head/arms/leg supports, indexing, consistent bladder/rectum instructions when applicable.</li>
+            <li><strong>Equipment orientation & accessories:</strong> immobilization device type, couch insert, knee sponge, belly board, breast board, etc.</li>
+            <li><strong>Field parameters captured for planning:</strong> isocenter approach (planned isocenter vs reference point), scan range, scan thickness/slice spacing.</li>
+            <li><strong>Reference marks:</strong> temporary marks and/or permanent tattoos; clearly labeled and verified.</li>
+            <li><strong>Documentation that supports safe treatment:</strong> set-up instructions, set-up photos, notes about patient limitations, and any special monitoring needs.</li>
+        </ul>
+
+        <div class="watch-out">
+            <strong>High-frequency exam pitfall:</strong> “A great plan” can still fail if the <strong>setup is not reproducible</strong>. Consistency beats perfection.
+        </div>
+
+        <details>
+            <summary>Quick drill: What would you document at CT sim?</summary>
+            <ul class="checklist">
+                <li>Immobilization device type and <strong>index</strong> position</li>
+                <li>Patient position (supine/prone), arm position, head tilt, knee support</li>
+                <li>Any special instructions (full bladder/empty rectum, fasting, pain meds timing)</li>
+                <li>Scan range (superior/inferior limits) and contrast details (if used)</li>
+                <li>Reference marks/tattoo locations and how to align</li>
+                <li>Set-up photo(s) showing arm/leg position and immobilization placement</li>
+            </ul>
+        </details>
+    </div>
+
+    <div class="concept-block">
+        <h3>0.2 Daily Treatment Procedure (what happens every fraction)</h3>
+        <p><span class="tag">Goal</span> Confirm you have the right patient + right plan + right geometry before the beam is on.</p>
+
+        <ol style="margin-top:10px;">
+            <li><strong>Verify patient identity</strong> (use two identifiers) and confirm treatment site/laterality.</li>
+            <li><strong>Recreate the setup</strong> using reference marks + immobilization + indexing.</li>
+            <li><strong>Acquire IGRT imaging</strong> (kV/MV/CBCT as ordered) and perform registration to the reference dataset.</li>
+            <li><strong>Apply couch shifts</strong> (translations and, if available/approved, rotations) within institutional tolerances.</li>
+            <li><strong>Confirm treatment parameters</strong> via record &amp; verify: energy, MUs, gantry/collimator angles, field sizes, accessories, gating status.</li>
+            <li><strong>Deliver treatment + monitor</strong> (visual/audio, motion management), then document what was done.</li>
+        </ol>
+        <p style="margin-top:12px;">
+            <span class="tag">Dose verification</span>
+            <strong>In vivo dosimetry (e.g., diodes)</strong> may be used to confirm delivered dose at the patient’s surface/entrance for selected fields.
+            If a reading is out of tolerance, think: <em>setup/SSD, accessory placement (bolus), energy/field parameters, detector placement, and chart/plan selection</em> before treating again.
+        </p>
+
+
+        <details>
+            <summary>Console safety checklist (use this logic on exam questions)</summary>
+            <ul class="checklist">
+                <li><strong>Stop &amp; clarify</strong> if identity, site, or plan version is uncertain.</li>
+                <li>Confirm immobilization and indexing match the sim documentation.</li>
+                <li>Verify imaging match quality before shifting (don’t “shift first, think later”).</li>
+                <li>Re-check shifts after a major patient adjustment (arms moved, coughing fit, reposition).</li>
+                <li>Make sure accessories are correct (bolus, blocks, wedge mode, immobilization attachments).</li>
+                <li>Document anything outside the routine workflow (re-imaging, large shifts, interruptions).</li>
+            </ul>
+        </details>
+
+        <div class="watch-out">
+            <strong>Exam framing:</strong> If a question asks “what should you do FIRST?”, the safest answer is often
+            <strong>verify patient/plan</strong> or <strong>repeat imaging/reassess setup</strong> before proceeding.
+        </div>
+    </div>
+
+    <div class="module-header">
+        <span class="module-number">1</span>
+        <h2>IGRT (Image Guided Radiation Therapy)</h2>
+    </div>
+    <p>You must distinguish between the imaging beams used at the console.</p>
+
+    <div class="concept-block">
+        <h3>1.1 kV vs. MV Imaging</h3>
+        <table>
+            <tr>
+                <th>Modality</th>
+                <th>Source</th>
+                <th>Contrast/Quality</th>
+                <th>Dose to Patient</th>
+            </tr>
+            <tr>
+                <td><strong>On-Board Imager (OBI) - kV</strong></td>
+                <td>Diagnostic X-ray tube mounted 90° from treatment head.</td>
+                <td><strong>High Contrast:</strong> Excellent for bone and soft tissue markers.</td>
+                <td>Low (mGy range).</td>
+            </tr>
+            <tr>
+                <td><strong>Portal Imaging (EPID) - MV</strong></td>
+                <td>The Treatment Beam (Megavoltage).</td>
+                <td><strong>Low Contrast:</strong> "Compton Scattering" dominates. Good for verifying field shape (port film) but poor for soft tissue.</td>
+                <td>High (cGy range).</td>
+            </tr>
+            <tr>
+                <td><strong>CBCT (Cone Beam CT)</strong></td>
+                <td>kV source rotates 360° around patient.</td>
+                <td><strong>3D Volumetric:</strong> Allows visualization of soft tissue (prostate, bladder fill) before treatment.</td>
+                <td>Higher than single kV shot, but critical for soft tissue alignment.</td>
+            </tr>
+        </table>
+
+        <div class="watch-out">
+            <strong>Exam Tip:</strong> If the question asks about aligning <em>soft tissue</em> (prostate, head &amp; neck tumor) and not bony anatomy, the answer is often <strong>CBCT</strong> (3D alignment).
+            <br><br>
+            <strong>Quick translation:</strong>
+            <ul class="checklist">
+                <li><strong>kV (2D)</strong> = great contrast, low dose → best for bones, fiducials, quick daily checks.</li>
+                <li><strong>MV (2D)</strong> = uses treatment beam, poorer contrast → best for field shape verification (ports), not soft tissue.</li>
+                <li><strong>CBCT (3D)</strong> = volumetric anatomy → best for soft tissue alignment + anatomy-of-the-day changes.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Added: IGRT geometry + registration concepts -->
+    <div class="concept-block">
+        <h3>1.2 How the images line up (registration) — what you’re actually comparing</h3>
+        <p>
+            The core idea of IGRT is <strong>comparison to a reference</strong>:
+            you compare today’s image to the reference dataset (planning CT and/or digitally reconstructed radiographs).
+        </p>
+
+        <div class="visual-aid">
+            <svg width="460" height="220" viewBox="0 0 460 220" role="img" aria-label="kV imaging, MV portal imaging, and CBCT geometry around a patient">
+                <!-- patient -->
+                <rect x="210" y="75" width="40" height="70" rx="18" fill="#ecf0f1" stroke="#2c3e50"/>
+                <text x="230" y="165" font-size="10" fill="#2c3e50" text-anchor="middle">Patient</text>
+
+                <!-- linac head / MV -->
+                <rect x="190" y="15" width="80" height="30" rx="6" fill="#eef6fc" stroke="#2980b9"/>
+                <text x="230" y="35" font-size="11" fill="#2c3e50" text-anchor="middle" font-weight="bold">Linac Head</text>
+
+                <line x1="230" y1="45" x2="230" y2="75" stroke="#e74c3c" stroke-width="3"/>
+                <text x="242" y="65" font-size="10" fill="#c0392b">MV beam</text>
+
+                <!-- EPID -->
+                <rect x="185" y="150" width="90" height="24" rx="6" fill="#f4f8fb" stroke="#2980b9"/>
+                <text x="230" y="166" font-size="10" fill="#2c3e50" text-anchor="middle">EPID (MV)</text>
+
+                <!-- kV source/detector -->
+                <circle cx="85" cy="110" r="14" fill="#eef6fc" stroke="#2980b9"/>
+                <text x="85" y="114" font-size="10" fill="#2c3e50" text-anchor="middle">kV</text>
+
+                <rect x="355" y="95" width="60" height="30" rx="6" fill="#f4f8fb" stroke="#2980b9"/>
+                <text x="385" y="114" font-size="10" fill="#2c3e50" text-anchor="middle">kV Det.</text>
+
+                <line x1="99" y1="110" x2="210" y2="110" stroke="#2980b9" stroke-width="2" stroke-dasharray="6 4"/>
+                <line x1="250" y1="110" x2="355" y2="110" stroke="#2980b9" stroke-width="2" stroke-dasharray="6 4"/>
+
+                <text x="135" y="98" font-size="10" fill="#1f5d8d">kV beam</text>
+
+                <!-- CBCT arc -->
+                <path d="M 140 60 A 110 110 0 0 1 140 160" fill="none" stroke="#2980b9" stroke-width="2" stroke-dasharray="5 6"/>
+                <path d="M 320 60 A 110 110 0 0 0 320 160" fill="none" stroke="#2980b9" stroke-width="2" stroke-dasharray="5 6"/>
+                <text x="230" y="58" font-size="10" fill="#1f5d8d" text-anchor="middle">CBCT rotation (kV)</text>
+
+                <polygon class="rotate-arrow" points="318,58 332,63 320,74" fill="#e74c3c" opacity="0.7"/>
+            </svg>
+            <p style="margin:0; font-size:0.9em; color:#555;">
+                kV imaging is typically orthogonal to MV delivery hardware; CBCT is a kV rotation producing a 3D dataset.
+            </p>
+        </div>
+
+        <ul class="checklist">
+            <li><strong>2D-2D match</strong> (kV-kV or kV-MV): compare bony anatomy and/or fiducials to reference images/DRRs.</li>
+            <li><strong>3D match</strong> (CBCT): compare soft tissue and “anatomy-of-the-day” (bladder/rectum, tumor shrinkage, weight loss).</li>
+            <li><strong>Registration output</strong> is a couch shift: translation (x/y/z) and sometimes rotation (pitch/roll/yaw).</li>
+        </ul>
+
+        <div class="watch-out">
+            <strong>Common trap:</strong> If the question emphasizes <strong>soft tissue</strong> (prostate/bladder filling, head &amp; neck weight loss),
+            the most appropriate imaging answer is often <strong>CBCT</strong> rather than a single 2D kV image.
+        </div>
+    </div>
+
+    <div class="module-header">
+        <span class="module-number">2</span>
+        <h2>Motion Management</h2>
+    </div>
+    <p>Tumors in the thorax and abdomen move. If we don't manage this, we miss the target.</p>
+
+    <div class="concept-block">
+        <h3>2.1 Managing the Moving Target</h3>
+        <div class="visual-aid">
+
+            <svg width="400" height="150" viewBox="0 0 400 150">
+                <path d="M 0 100 Q 20 20 40 100 T 80 100 T 120 100 T 160 100" fill="none" stroke="#bdc3c7" stroke-width="2"/>
+                <path d="M 160 100 Q 180 20 200 100 T 240 100" fill="none" stroke="#2c3e50" stroke-width="3"/> <path d="M 240 100 Q 260 20 280 100 T 320 100 T 360 100" fill="none" stroke="#bdc3c7" stroke-width="2"/>
+
+                <rect x="170" y="20" width="60" height="110" fill="#2ecc71" opacity="0.2"/>
+                <text x="200" y="140" font-size="12" fill="#27ae60" text-anchor="middle" font-weight="bold">Beam ON (Gated)</text>
+
+                <text x="50" y="140" font-size="10" fill="#7f8c8d">Exhale</text>
+                <text x="350" y="140" font-size="10" fill="#7f8c8d">Inhale</text>
+            </svg>
+        </div>
+
+        <table>
+            <tr>
+                <th>Technique</th>
+                <th>Description</th>
+                <th>Best Use Case</th>
+            </tr>
+            <tr>
+                <td><strong>4D CT</strong></td>
+                <td>CT scan that captures "Time" (breathing cycle). Sorts images into "bins" (0% Inhale to 100% Exhale).</td>
+                <td>Lung tumors (NSCLC) to determine the full extent of motion (ITV).</td>
+            </tr>
+            <tr>
+                <td><strong>Respiratory Gating</strong></td>
+                <td>The beam turns ON only when the tumor is in a specific "window" (usually Exhale).</td>
+                <td>Left breast (DIBH) or Lung. Spares heart/normal lung.</td>
+            </tr>
+            <tr>
+                <td><strong>Abdominal Compression</strong></td>
+                <td>A paddle/belt forces the patient to breathe shallowly.</td>
+                <td>SBRT (Liver/Lung) to physically limit tumor excursion.</td>
+            </tr>
+            <tr>
+                <td><strong>SGRT (Surface Guided)</strong></td>
+                <td>Cameras monitor skin surface (e.g., VisionRT). No radiation dose.</td>
+                <td>Breast DIBH (tracks chest rise) or SRS (detects head motion).</td>
+            </tr>
+        </table>
+
+        <details>
+            <summary>Mini-case logic: picking a motion management strategy</summary>
+            <ul class="checklist">
+                <li><strong>Lung SBRT + large excursion:</strong> 4DCT to quantify motion + consider gating or compression.</li>
+                <li><strong>Left breast heart sparing:</strong> DIBH (often with SGRT) + kV imaging as needed.</li>
+                <li><strong>Patient can’t hold breath:</strong> consider compression or an ITV strategy depending on site.</li>
+            </ul>
+        </details>
+    </div>
+
+    <div class="module-header">
+        <span class="module-number">3</span>
+        <h2>IMRT vs. VMAT</h2>
+    </div>
+    <p>How does the machine deliver complex dose distributions?</p>
+
+    <div class="concept-block">
+        <h3>3.1 Shaping the Dose</h3>
+        <ul>
+            <li><strong>IMRT (Intensity Modulated Radiation Therapy):</strong>
+                <ul>
+                    <li><strong>"Step and Shoot":</strong> Gantry stops → MLCs move → Beam ON → Beam OFF → Gantry moves.</li>
+                    <li><strong>"Sliding Window":</strong> MLCs move <em>while</em> the beam is ON. (Dynamic MLC).</li>
+                    <li><em>Goal:</em> Creates concave dose distributions (carves out OARs like the spinal cord).</li>
+                </ul>
+            </li>
+            <li><strong>VMAT (Volumetric Modulated Arc Therapy):</strong>
+                <ul>
+                    <li>The Gantry rotates <em>while</em> the Beam is ON <em>and</em> MLCs move <em>and</em> Dose Rate changes.</li>
+                    <li><em>Advantage:</em> Much faster treatment time (better for patient comfort/less intrafraction motion).</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <div class="module-header">
+        <span class="module-number">4</span>
+        <h2>Setup Errors: Random vs. Systematic</h2>
+    </div>
+    <p>This is a classic registry concept. You must know the difference.</p>
+
+    <div class="concept-block">
+        <h3>4.1 Classifying Errors</h3>
+        <table>
+            <tr>
+                <th>Error Type</th>
+                <th>Definition</th>
+                <th>Example</th>
+                <th>Fix</th>
+            </tr>
+            <tr>
+                <td><strong>Systematic Error</strong></td>
+                <td>An error that happens in the <strong>same direction/magnitude</strong> every day.</td>
+                <td>The lasers were aligned incorrectly at Sim. The isocenter was shifted 1cm right in the plan but not on the patient.</td>
+                <td>Requires replanning or shifting the reference marks. <strong>(Hard to detect without imaging).</strong></td>
+            </tr>
+            <tr>
+                <td><strong>Random Error</strong></td>
+                <td>An error that changes <strong>unpredictably</strong> day-to-day.</td>
+                <td>Patient bloat, muscle tension, slightly different arm position, coughing.</td>
+                <td>Managed by PTV margins and daily IGRT. <strong>(Cannot be "fixed," only minimized).</strong></td>
+            </tr>
+        </table>
+        <div class="watch-out">
+            <strong>Exam Tip:</strong> If the error is inherent to the <em>process</em> (Sim/Planning), it is <strong>Systematic</strong>. If it is inherent to the <em>patient's state</em> on a specific day, it is <strong>Random</strong>.
+        </div>
+
+        <details>
+            <summary>Safety tie-in: what prevents errors?</summary>
+            <ul class="checklist">
+                <li><strong>Systematic</strong> → caught by simulation documentation, plan checks, and first-day imaging/verification.</li>
+                <li><strong>Random</strong> → reduced by daily imaging, good immobilization, and motion management.</li>
+            </ul>
+        </details>
+    </div>
+
+    <!-- Added: Record & Verify systems -->
+    <div class="module-header">
+        <span class="module-number">5</span>
+        <h2>Record &amp; Verify Systems</h2>
+    </div>
+    <p>
+        Record &amp; Verify (R&amp;V) systems are a major safety layer in daily treatment delivery. They store and enforce the planned parameters
+        at the treatment console, but they are <strong>not a replacement</strong> for therapist verification.
+    </p>
+
+    <div class="concept-block">
+        <h3>5.1 What an R&amp;V system does (and does not do)</h3>
+        <ul class="checklist">
+            <li><strong>Does:</strong> link patient → course → plan/fields; load parameters (energy, MUs, gantry/collimator angles, field size/MLC pattern, imaging instructions); record delivered fractions.</li>
+            <li><strong>Does:</strong> enforce interlocks/tolerances (e.g., prevents beam-on if wrong energy/angle beyond tolerance, depending on configuration).</li>
+            <li><strong>Does:</strong> support documentation (treatment record, imaging record, notes, approvals).</li>
+            <li><strong>Does NOT:</strong> confirm you positioned the patient correctly or that the immobilization is correct.</li>
+            <li><strong>Does NOT:</strong> guarantee the correct patient if the wrong chart is opened—therapist ID checks still matter.</li>
+        </ul>
+
+        <div class="watch-out">
+            <strong>Exam concept:</strong> When something “doesn’t match,” the safest action is to <strong>stop</strong>, re-verify identity/plan,
+            and follow department policy (re-image, contact physics/dosimetry, document).
+        </div>
+    </div>
+
+    <div class="concept-block">
+        <h3>5.2 Common R&amp;V safety checks (practical console logic)</h3>
+
+        <table>
+            <tr>
+                <th>Check</th>
+                <th>What you’re confirming</th>
+                <th>Why it matters</th>
+            </tr>
+            <tr>
+                <td><strong>Patient/Plan Verification</strong></td>
+                <td>Correct patient, correct course, correct plan version, correct site/laterality.</td>
+                <td>Prevents wrong-patient or wrong-course treatments.</td>
+            </tr>
+            <tr>
+                <td><strong>Setup Instructions</strong></td>
+                <td>Immobilization, indexing, bolus, accessories, special instructions.</td>
+                <td>Reproducibility + dose accuracy depends on geometry.</td>
+            </tr>
+            <tr>
+                <td><strong>Parameter Match</strong></td>
+                <td>Energy, MUs, gantry/collimator angles, jaw settings/MLC, wedges/FFF, couch parameters.</td>
+                <td>Incorrect parameters can cause large dose errors quickly.</td>
+            </tr>
+            <tr>
+                <td><strong>Imaging Order</strong></td>
+                <td>kV/MV/CBCT per fraction schedule; match + shift tolerances.</td>
+                <td>Ensures IGRT is performed as prescribed and documented.</td>
+            </tr>
+            <tr>
+                <td><strong>Overrides &amp; Interruptions</strong></td>
+                <td>Any overrides are justified, authorized, and documented; beam interruptions are handled per policy.</td>
+                <td>Overrides are high-risk and must be traceable.</td>
+            </tr>
+        </table>
+
+        <details>
+            <summary>Mini-case: R&amp;V shows the wrong energy (what do you do?)</summary>
+            <ul class="checklist">
+                <li><strong>Do not treat.</strong> Stop and verify you have the correct patient and correct plan opened.</li>
+                <li>Verify the prescription and the plan approval status.</li>
+                <li>Check whether the displayed parameters are from a different field or plan version.</li>
+                <li>Escalate per policy (lead therapist/physicist/dosimetry) and document the issue.</li>
+            </ul>
+        </details>
+    </div>
+
+    <!-- Added: Off-axis calculation -->
+    <div class="module-header">
+        <span class="module-number">6</span>
+        <h2>Off-Axis Calculation</h2>
+    </div>
+    <p>
+        Off-axis calculations appear when the point of interest is <strong>not on the central axis</strong> of the beam.
+        Because beam intensity changes across the field (beam profile), you may need an <strong>off-axis factor/ratio</strong>.
+    </p>
+
+    <div class="concept-block">
+        <h3>6.1 The concept (what the exam is testing)</h3>
+        <ul class="checklist">
+            <li><strong>Central axis</strong> is usually the reference for depth dose and output data.</li>
+            <li><strong>Off-axis</strong> points may receive slightly different dose because of the beam profile (flatness/symmetry limits).</li>
+            <li>When the exam gives an <strong>off-axis ratio (OAR/OAF)</strong> table/graph, you use it like any other factor:
+                <strong>multiply</strong> dose by the factor (or <strong>divide</strong> MUs by the factor), depending on how the question is framed.</li>
+            <li><strong>Key rule:</strong> Use the <em>values provided in the question</em> (off-axis factors are machine/energy/depth specific).</li>
+        </ul>
+
+        <div class="watch-out">
+            <strong>Exam wording tip:</strong>
+            <ul class="checklist">
+                <li>If you need the <strong>dose at an off-axis point</strong> → central-axis dose × off-axis factor.</li>
+                <li>If you need the <strong>MUs to deliver a fixed dose</strong> at an off-axis point → central-axis MU ÷ off-axis factor.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="concept-block">
+        <h3>6.2 One worked example (MU adjustment using an off-axis factor)</h3>
+        <p><strong>Scenario:</strong> Your independent check calculates <strong>180 MU</strong> to deliver <strong>200 cGy</strong> on central axis.
+           The calculation point is actually <strong>4 cm off-axis</strong>, and the question provides an <strong>off-axis factor = 0.98</strong>
+           for that location/depth/energy.</p>
+
+        <div class="formula-box">
+            MU<sub>off-axis</sub> = MU<sub>central</sub> ÷ OAF
+        </div>
+
+        <p><strong>Step-by-step:</strong></p>
+        <ol style="margin-top:10px;">
+            <li>Write what you have: MU<sub>central</sub> = 180; OAF = 0.98</li>
+            <li>Compute: 180 ÷ 0.98 = 183.673...</li>
+            <li>Round appropriately (per typical clinical rounding): <strong>184 MU</strong></li>
+        </ol>
+
+        <div class="watch-out">
+            <strong>Reasonableness check:</strong> If OAF is < 1.0, the off-axis point receives <em>less</em> dose per MU,
+            so you need <strong>more MU</strong> to deliver the same dose at that point.
+        </div>
+
+        <details>
+            <summary>Extra practice prompt</summary>
+            <p style="margin-top:10px;">
+                A point 6 cm off-axis has OAF = 0.95. Your central-axis MU is 220. What MU is needed to deliver the same dose at that point?
+                (Use: MU = 220 ÷ 0.95.)
+            </p>
+        </details>
+    </div>
 
 </body>
 </html>
