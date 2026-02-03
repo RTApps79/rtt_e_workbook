@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module 01: Math & Calculations Master Class</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #3498db;
+            --highlight: #e74c3c;
+            --bg-light: #f4f6f7;
+            --white: #ffffff;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--primary);
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: var(--bg-light);
+        }
+        h1 { text-align:center; color:var(--primary); border-bottom:3px solid var(--accent); padding-bottom:15px; margin-bottom:40px; }
+        .module-header { background: linear-gradient(90deg, var(--accent), var(--primary)); color:var(--white); padding:15px 20px; border-radius:8px; margin-top:50px; display:flex; align-items:center; }
+        .module-number { background:var(--white); color:var(--accent); width:30px; height:30px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:bold; margin-right:15px; }
+        .concept-block { background:var(--white); border-radius:8px; padding:25px; margin:20px 0; box-shadow:0 4px 6px rgba(0,0,0,0.05); border-left:5px solid var(--accent); }
+        .formula-box { background-color:#ecf0f1; padding:15px; border-radius:5px; font-family:'Courier New', monospace; font-weight:bold; color:var(--primary); text-align:center; margin:15px 0; border:1px dashed #bdc3c7; }
+        .explanation { font-size:0.95em; color:#555; margin-top:10px; }
+        .watch-out { background-color:#fff5f5; border:1px solid #ffcccc; border-radius:5px; padding:15px; margin-top:15px; font-size:0.9em; }
+        .watch-out strong { color:var(--highlight); text-transform:uppercase; font-size:0.85em; letter-spacing:1px; }
+        .visual-aid { text-align:center; margin:20px 0; background:var(--white); padding:20px; border-radius:8px; border:1px solid #eee; }
+    </style>
+</head>
+<body>
+    <h1>Module 01: Math & Calculations Master Class</h1>
+    <p style="text-align:center; font-size:1.1em;">Inverse Square, Gap Calculation, and Trigonometry for Field Matching.</p>
+
+    <div class="module-header">
+        <span class="module-number">1</span>
+        <h2>The Physics of the Beam (Intensity & Geometry)</h2>
+    </div>
+
+    <div class="concept-block">
+        <h3>1.1 The Inverse Square Law (ISL)</h3>
+        <p><strong>The Concept:</strong> Imagine a flashlight. Close to the bulb, the light is intense. As you step back, the light spreads out to cover a larger area, but it becomes dimmer. Radiation works exactly the same way.</p>
+        <div class="visual-aid">
+            <svg width="400" height="220" viewBox="0 0 400 220">
+                <circle cx="20" cy="110" r="6" fill="#e74c3c" />
+                <text x="15" y="90" font-size="12" fill="#e74c3c" font-weight="bold">Source</text>
+                <line x1="20" y1="110" x2="380" y2="10" stroke="#3498db" stroke-width="1" stroke-dasharray="5"/>
+                <line x1="20" y1="110" x2="380" y2="210" stroke="#3498db" stroke-width="1" stroke-dasharray="5"/>
+                <rect x="120" y="80" width="2" height="60" fill="#3498db"/>
+                <text x="115" y="70" font-size="12" fill="#333">Distance 1</text>
+                <text x="130" y="115" font-size="14" fill="#333" font-weight="bold">I₁</text>
+                <rect x="240" y="50" width="2" height="120" fill="#3498db" opacity="0.5"/>
+                <text x="235" y="40" font-size="12" fill="#333">Distance 2</text>
+                <text x="250" y="115" font-size="14" fill="#333" font-weight="bold">I₂</text>
+            </svg>
+        </div>
+        <div class="formula-box">(I₁ / I₂) = (d₂ / d₁)²</div>
+        <div class="explanation"><strong>Translation:</strong> The intensity ratio is equal to the <em>inverse</em> distance ratio, <em>squared</em>. If you double the distance intensity drops to 1/4.</div>
+        <div class="watch-out"><strong>Exam Trap:</strong> Don’t forget the SQUARE.</div>
+    </div>
+
+    <div class="concept-block">
+        <h3>1.2 Magnification Factor</h3>
+        <div class="formula-box">Mag Factor = SID / SOD</div>
+        <div class="explanation">Actual Size = Image Size / Mag Factor</div>
+    </div>
+
+    <div class="concept-block">
+        <h3>1.3 Geometric Penumbra</h3>
+        <div class="visual-aid">
+            <svg width="400" height="200" viewBox="0 0 400 200">
+                <rect x="180" y="10" width="40" height="10" fill="#e74c3c" />
+                <text x="175" y="35" font-size="10" fill="#e74c3c">Source (s)</text>
+                <line x1="120" y1="90" x2="180" y2="90" stroke="#333" stroke-width="4"/>
+                <line x1="220" y1="90" x2="280" y2="90" stroke="#333" stroke-width="4"/>
+                <text x="290" y="95" font-size="10" fill="#333">Collimator (SDD)</text>
+                <line x1="50" y1="170" x2="350" y2="170" stroke="#3498db" stroke-width="2"/>
+                <text x="355" y="175" font-size="10" fill="#3498db">Depth (d)</text>
+                <rect x="215" y="170" width="40" height="6" fill="#e74c3c" opacity="0.6"/>
+                <text x="220" y="190" font-size="12" fill="#e74c3c" font-weight="bold">Blur Zone (P)</text>
+            </svg>
+        </div>
+        <div class="formula-box">P = s × (SSD + d - SDD) / SDD</div>
+        <div class="explanation">To reduce penumbra: use smaller source, move collimators closer to patient, decrease SSD.</div>
+    </div>
+
+</body>
+</html>
