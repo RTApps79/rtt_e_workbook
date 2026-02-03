@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARRT Clinical Simulator (Part 3)</title>
+    <style>
+        :root {
+            --bg: #f4f7f6;
+            --card-bg: #ffffff;
+            --primary: #2c3e50;
+            --accent: #e74c3c; /* Red for Part 3 (Critical Thinking) */
+            --care: #27ae60;
+            --safety: #d35400;
+            --proc: #2980b9;
+            --text: #333;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .sim-container {
+            max-width: 950px;
+            width: 100%;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header-panel {
+            background: var(--primary);
+            color: white;
+            padding: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header-info h1 { margin: 0; font-size: 1.6em; }
+        .score-badge {
+            background: rgba(255,255,255,0.1);
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .score-number { font-size: 1.5em; font-weight: bold; display: block; }
+
+        /* Progress */
+        .progress-track { height: 8px; background: #e0e0e0; width: 100%; }
+        .progress-fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.4s ease; }
+
+        /* Content */
+        .scenario-area { padding: 30px; }
+
+        /* Category Badge */
+        .category-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+        .cat-care { background-color: var(--care); }
+        .cat-safety { background-color: var(--safety); }
+        .cat-proc { background-color: var(--proc); }
+
+        /* Chart */
+        .chart-card {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-left: 6px solid #555;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 25px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.95em;
+            position: relative;
+        }
+        .chart-title {
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: var(--primary);
+            color: white;
+            padding: 2px 10px;
+            font-size: 0.8em;
+            border-radius: 4px;
+        }
+        .chart-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            border-bottom: 1px dashed #e0e0e0;
+            padding-bottom: 4px;
+        }
+        
+        /* Question & Options */
+        .question-text {
+            font-size: 1.25em;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: var(--primary);
+        }
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .option-btn {
+            background: white;
+            border: 2px solid #e0e0e0;
+            padding: 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
+            font-size: 1em;
+            color: var(--text);
+        }
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--accent);
+            background: #f0f8ff;
+            transform: translateY(-2px);
+        }
+        .option-btn:disabled { cursor: default; opacity: 0.7; }
+        
+        /* Feedback */
+        .correct-choice { background-color: #d4edda !important; border-color: #28a745 !important; color: #155724; }
+        .wrong-choice { background-color: #f8d7da !important; border-color: #dc3545 !important; color: #721c24; }
+        .feedback-panel {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 8px;
+            display: none;
+        }
+        .fb-correct { background: #e8f5e9; border: 1px solid #c3e6cb; }
+        .fb-wrong { background: #fce4ec; border: 1px solid #f5c6cb; }
+
+        /* Nav & Start */
+        .footer-nav { padding: 20px 30px; border-top: 1px solid #eee; display: flex; justify-content: flex-end; }
+        .next-btn { background: var(--primary); color: white; border: none; padding: 12px 30px; border-radius: 6px; cursor: pointer; display: none; }
+        .start-screen { text-align: center; padding: 50px; }
+        .start-btn { background: var(--accent); color: white; padding: 15px 40px; border: none; border-radius: 30px; font-size: 1.2em; cursor: pointer; margin-top: 30px; }
+
+    </style>
+</head>
+<body>
+
+<div class="sim-container">
+    <div class="header-panel">
+        <div class="header-info">
+            <h1>ARRT Simulator (Part 3)</h1>
+            <p>Radiobiology, Extended Distance Math, and Regulations</p>
+        </div>
+        <div class="score-badge">
+            <span class="score-number" id="score-display">0/0</span>
+        </div>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progress"></div></div>
+
+    <div id="main-interface">
+        <div class="start-screen">
+            <h2>Round 3: Advanced Concepts</h2>
+            <p>12 Scenarios focusing on Radiobiology, Physics, and Regulatory Compliance.</p>
+            <button class="start-btn" onclick="startSim()">Start Part 3</button>
+        </div>
+    </div>
+
+    <div class="footer-nav">
+        <button id="next-btn" class="next-btn" onclick="nextScenario()">Next Scenario &rarr;</button>
+    </div>
+</div>
+
+<script>
+    const scenarios = [
+        // --- PATIENT CARE & SAFETY ---
+        {
+            category: "1. Patient Care",
+            type: "care",
+            title: "Emergency: SVC Syndrome",
+            chart: `
+                <div class="chart-row"><strong>Pt:</strong> R. Waters (59M)</div>
+                <div class="chart-row"><strong>Presentation:</strong> Dyspnea, facial swelling, distended neck veins.</div>
+                <div class="chart-row"><strong>Dx:</strong> Lung Mass compressing Superior Vena Cava.</div>
+                <div class="chart-row"><strong>Order:</strong> Emergent RT.</div>
+            `,
+            question: "For an SVC emergency, what is the typical fractionation/dosage strategy for the first few treatments?",
+            options: [
+                { text: "Low dose per fraction (150-180 cGy) to prevent tumor lysis.", correct: false, feedback: "Incorrect. We need a rapid response. Low doses won't shrink the tumor fast enough to relieve the obstruction." },
+                { text: "High dose per fraction (300-400 cGy) for 2-3 fractions.", correct: true, feedback: "Correct. We use 'hypofractionation' (high daily dose) initially to rapidly shrink the tumor and relieve the compression, then normalize the dose later." },
+                { text: "Standard fractionation (200 cGy) with a boost planned.", correct: false, feedback: "Incorrect. Standard fractionation is too slow for an airway/vascular emergency." },
+                { text: "SBRT (2000 cGy x 1) immediately.", correct: false, feedback: "Incorrect. While SBRT is high dose, the planning takes too long. SVC patients are treated emergently, often with simple fields first." }
+            ]
+        },
+        {
+            category: "2. Safety & Regulations",
+            type: "safety",
+            title: "Regulatory: Medical Event (NRC)",
+            chart: `
+                <div class="chart-row"><strong>Modality:</strong> HDR Brachytherapy.</div>
+                <div class="chart-row"><strong>Plan:</strong> 500 cGy to depth of 5mm.</div>
+                <div class="chart-row"><strong>Error:</strong> Wrong dwell position entered.</div>
+                <div class="chart-row"><strong>Result:</strong> Wrong site received 550 cGy.</div>
+                <div class="chart-row"><strong>Threshold:</strong> NRC defines 'Medical Event' as >50% dose deviation to wrong site.</div>
+            `,
+            question: "The patient received 550 cGy instead of 0 cGy to a specific wrong organ (Dose deviation >50%). Is this a Recordable or Reportable event?",
+            options: [
+                { text: "Recordable Event only (internal log).", correct: false, feedback: "Incorrect. 'Recordable' events are usually deviations <20% or <50% depending on the license. This was a massive overdose to a wrong site." },
+                { text: "Reportable Medical Event.", correct: true, feedback: "Correct. A dose to the wrong site that exceeds 50% of the expected dose (or a total dose >0.5 Sv) is a Reportable Medical Event to the NRC/State." },
+                { text: "Neither, because the dose difference (50 cGy) is small.", correct: false, feedback: "Incorrect. The percentage deviation (Infinite, since expected was 0) is what matters." },
+                { text: "Malpractice only, not a regulatory issue.", correct: false, feedback: "Incorrect. While it may be malpractice, the NRC strictly regulates isotope misadministration." }
+            ]
+        },
+        {
+            category: "2. Safety & QA",
+            type: "safety",
+            title: "QA: Door Interlock Failure",
+            chart: `
+                <div class="chart-row"><strong>Time:</strong> 07:00 AM (Morning Warm-up).</div>
+                <div class="chart-row"><strong>Test:</strong> Door Interlock Functional Check.</div>
+                <div class="chart-row"><strong>Action:</strong> Therapist opens door while beam is ON.</div>
+                <div class="chart-row"><strong>Result:</strong> Beam continues to run.</div>
+            `,
+            question: "The beam failed to terminate when the door opened. What is the immediate required action?",
+            options: [
+                { text: "Note it in the logbook and treat patients, but keep the door locked.", correct: false, feedback: "Incorrect. This is a critical safety failure. You cannot rely on a lock. If someone enters, they could be killed." },
+                { text: "Press 'Beam Off', remove the key, and post 'Do Not Use' signage.", correct: true, feedback: "Correct. The machine is unsafe. You must Lock Out / Tag Out the machine and notify engineering/physics immediately." },
+                { text: "Retest 3 times to ensure it wasn't a glitch.", correct: false, feedback: "Incorrect. While retesting is sometimes okay, a safety interlock failure is a 'hard stop'. Do not expose yourself to radiation to 'test' it again." },
+                { text: "Proceed with warm-up, but stand guard at the door.", correct: false, feedback: "Incorrect. Never bypass safety interlocks with human procedures." }
+            ]
+        },
+
+        // --- RADIOBIOLOGY & PHYSICS ---
+        {
+            category: "2. Radiobiology",
+            type: "safety",
+            title: "Biology: The Oxygen Effect",
+            chart: `
+                <div class="chart-row"><strong>Tumor:</strong> Large Necrotic Mass (6cm).</div>
+                <div class="chart-row"><strong>Environment:</strong> Hypoxic Core.</div>
+                <div class="chart-row"><strong>Treatment:</strong> X-Rays (Low LET).</div>
+            `,
+            question: "Why are hypoxic (low oxygen) tumors resistant to standard X-ray therapy?",
+            options: [
+                { text: "Hypoxia prevents the direct ionization of DNA.", correct: false, feedback: "Incorrect. Direct action happens regardless of oxygen. X-rays rely on INDIRECT action." },
+                { text: "Oxygen is needed to 'fix' the free radical damage on the DNA.", correct: true, feedback: "Correct. The 'Oxygen Fixation Hypothesis'. Without oxygen, the chemical damage caused by free radicals can be chemically repaired by the cell. Oxygen makes the damage permanent." },
+                { text: "Hypoxic cells divide faster than oxygenated cells.", correct: false, feedback: "Incorrect. Hypoxic cells usually divide slower or are quiescent (G0), which also makes them resistant, but the chemical fixation is the primary OER reason." },
+                { text: "X-rays cannot penetrate necrotic tissue.", correct: false, feedback: "Incorrect. X-rays penetrate tissue regardless of its biological status." }
+            ]
+        },
+        {
+            category: "2. Radiobiology",
+            type: "safety",
+            title: "Biology: Repopulation",
+            chart: `
+                <div class="chart-row"><strong>Pt:</strong> J. Smith (H&N Cancer)</div>
+                <div class="chart-row"><strong>Plan:</strong> 70 Gy in 35 fractions.</div>
+                <div class="chart-row"><strong>Issue:</strong> Patient missed 5 days due to holidays/illness.</div>
+            `,
+            question: "According to the '4 R's', why is a treatment break detrimental to tumor control?",
+            options: [
+                { text: "Reoxygenation: The tumor becomes hypoxic during the break.", correct: false, feedback: "Incorrect. Reoxygenation is usually GOOD for treatment. Breaks actually allow reoxygenation, which is the one benefit, but it's outweighed by the negatives." },
+                { text: "Repopulation: Surviving tumor cells divide rapidly to fill the gap.", correct: true, feedback: "Correct. Tumors react to cell kill by triggering accelerated repopulation. A break gives them free time to grow back, requiring extra dose to compensate." },
+                { text: "Repair: The tumor cells lose the ability to repair DNA.", correct: false, feedback: "Incorrect. Repair refers to NORMAL tissue repairing sublethal damage (which is good). Tumor repair is bad." },
+                { text: "Redistribution: Cells move into the resistant S-phase.", correct: false, feedback: "Incorrect. Redistribution happens constantly. Repopulation is the specific risk of prolonged time." }
+            ]
+        },
+        
+        // --- PROCEDURES & CALCULATIONS ---
+        {
+            category: "3. Procedures & Math",
+            type: "proc",
+            title: "Calc: Mayneord F Factor",
+            chart: `
+                <div class="chart-row"><strong>Setup:</strong> Extended Distance (TBI).</div>
+                <div class="chart-row"><strong>Standard PDD:</strong> 70% at 100cm SSD (depth 10).</div>
+                <div class="chart-row"><strong>New SSD:</strong> 400 cm.</div>
+            `,
+            question: "Without doing the full math, what happens to the PDD when you increase SSD from 100cm to 400cm?",
+            options: [
+                { text: "PDD Increases significantly.", correct: true, feedback: "Correct. The Mayneord F Factor proves that as distance increases, the beam becomes more penetrating (harder), so the percentage of dose at depth INCREASES." },
+                { text: "PDD Decreases significantly.", correct: false, feedback: "Incorrect. Output decreases (Inverse Square), but the PDD (percentage ratio) increases." },
+                { text: "PDD remains unchanged.", correct: false, feedback: "Incorrect. PDD is dependent on SSD." },
+                { text: "PDD drops to zero.", correct: false, feedback: "Incorrect." }
+            ]
+        },
+        {
+            category: "3. Procedures & Math",
+            type: "proc",
+            title: "Calc: Wedge Angle",
+            chart: `
+                <div class="chart-row"><strong>Plan:</strong> 3-Field Pelvis (Anterior, Left Lat, Right Lat).</div>
+                <div class="chart-row"><strong>Modification:</strong> Using wedges on the laterals.</div>
+                <div class="chart-row"><strong>Hinge Angle:</strong> The angle between the Anterior beam and Lateral beam is 90°.</div>
+            `,
+            question: "Calculate the optimal Wedge Angle. Formula: 90 - (Hinge/2).",
+            options: [
+                { text: "15 degree wedge", correct: false, feedback: "Incorrect. 90 - (90/2) = 90 - 45 = 45." },
+                { text: "30 degree wedge", correct: false, feedback: "Incorrect." },
+                { text: "45 degree wedge", correct: true, feedback: "Correct. Formula: 90 - (Hinge Angle / 2). 90 - 45 = 45 degree wedge." },
+                { text: "60 degree wedge", correct: false, feedback: "Incorrect." }
+            ]
+        },
+        {
+            category: "3. Procedures & Math",
+            type: "proc",
+            title: "Calc: Magnification Factor",
+            chart: `
+                <div class="chart-row"><strong>Task:</strong> Verify block width on film.</div>
+                <div class="chart-row"><strong>SID (Source-Image):</strong> 140 cm.</div>
+                <div class="chart-row"><strong>SOD (Source-Object):</strong> 100 cm.</div>
+                <div class="chart-row"><strong>Measure:</strong> Block measures 7.0 cm on the film.</div>
+            `,
+            question: "What is the ACTUAL size of the block? (Mag Factor = SID/SOD).",
+            options: [
+                { text: "5.0 cm", correct: true, feedback: "Correct. Mag Factor = 140/100 = 1.4. Actual Size = Image / Mag = 7.0 / 1.4 = 5.0 cm." },
+                { text: "9.8 cm", correct: false, feedback: "Incorrect. You multiplied by the Mag Factor (7 * 1.4). The actual object is always SMALLER than the X-ray shadow." },
+                { text: "7.0 cm", correct: false, feedback: "Incorrect. There is always magnification." },
+                { text: "2.0 cm", correct: false, feedback: "Incorrect. Check your math." }
+            ]
+        },
+        {
+            category: "3. Procedures",
+            type: "proc",
+            title: "Anatomy: Breast Lymphatics",
+            chart: `
+                <div class="chart-row"><strong>Pt:</strong> C. Danvers (35F)</div>
+                <div class="chart-row"><strong>Tumor Site:</strong> Right Breast, Inner Quadrant (3:00 position).</div>
+                <div class="chart-row"><strong>Stage:</strong> T2 N1 M0.</div>
+            `,
+            question: "Because of the tumor location (Inner Quadrant), which specific lymph node chain is at high risk and likely requires a separate field?",
+            options: [
+                { text: "Axillary Level I", correct: false, feedback: "Incorrect. Axillary nodes are the primary drainage for the outer quadrants. Inner quadrants drain medially." },
+                { text: "Internal Mammary Nodes (IMN)", correct: true, feedback: "Correct. Inner quadrant tumors drain deeply toward the sternum into the IMN chain. This often requires an electrons field or wide tangent." },
+                { text: "Inguinal Nodes", correct: false, feedback: "Incorrect. These are in the groin." },
+                { text: "Popliteal Nodes", correct: false, feedback: "Incorrect. These are in the knee." }
+            ]
+        },
+        {
+            category: "3. Procedures",
+            type: "proc",
+            title: "Technique: CSI Feathering",
+            chart: `
+                <div class="chart-row"><strong>Technique:</strong> Craniospinal Irradiation (CSI).</div>
+                <div class="chart-row"><strong>Action:</strong> Every 3 fractions, the junction point between the Brain and Spine fields is shifted superiorly by 1cm.</div>
+            `,
+            question: "What is the purpose of this 'Feathering' technique?",
+            options: [
+                { text: "To increase the dose to the spinal cord.", correct: false, feedback: "Incorrect. We want to limit cord dose." },
+                { text: "To smear out the dose inhomogeneity (hot/cold spots) at the junction.", correct: true, feedback: "Correct. Even with perfect gaps, setups vary. Feathering moves the junction so any hot spot or cold spot is blurred out over a larger area, preventing cord injury." },
+                { text: "To treat more of the brain tissue.", correct: false, feedback: "Incorrect. The field sizes remain the same, only the match line moves." },
+                { text: "To account for patient growth during treatment.", correct: false, feedback: "Incorrect." }
+            ]
+        },
+        {
+            category: "3. Procedures",
+            type: "proc",
+            title: "Calc: Interpolation",
+            chart: `
+                <div class="chart-row"><strong>Task:</strong> Find PDD for 12x12 field.</div>
+                <div class="chart-row"><strong>Table Data:</strong> 10x10 = 50%. 15x15 = 60%.</div>
+            `,
+            question: "Using linear interpolation, what is the PDD for a 12x12 field?",
+            options: [
+                { text: "52%", correct: false, feedback: "Incorrect. The range is 10% (50 to 60). The step is 5cm (10 to 15). So PDD changes 2% per cm. 12 is 2cm larger than 10. 50 + (2*2) = 54." },
+                { text: "54%", correct: true, feedback: "Correct. Difference in PDD is 10%. Difference in size is 5cm. Rate is 2% per cm. 12x12 is 2cm larger than 10x10. So add 4% to the base. 50 + 4 = 54%." },
+                { text: "55%", correct: false, feedback: "Incorrect. That would be for a 12.5x12.5 field (midpoint)." },
+                { text: "58%", correct: false, feedback: "Incorrect." }
+            ]
+        },
+        {
+            category: "3. Procedures",
+            type: "proc",
+            title: "Sim: Gating vs. DIBH",
+            chart: `
+                <div class="chart-row"><strong>Pt:</strong> Left Breast Cancer.</div>
+                <div class="chart-row"><strong>Goal:</strong> Spare the Heart.</div>
+                <div class="chart-row"><strong>Technique:</strong> DIBH (Deep Inspiration Breath Hold).</div>
+            `,
+            question: "Why does Deep Inspiration spare the heart in Left Breast treatment?",
+            options: [
+                { text: "It shrinks the heart muscle.", correct: false, feedback: "Incorrect." },
+                { text: "It inflates the lungs, physically pushing the heart posterior and inferior, away from the chest wall.", correct: true, feedback: "Correct. The expanded lung volume acts as a spacer, creating distance between the breast tissue (target) and the heart (OAR)." },
+                { text: "It reduces patient movement.", correct: false, feedback: "Incorrect. While true, the dosimetric goal is heart spacing." },
+                { text: "It allows for a smaller field size.", correct: false, feedback: "Incorrect." }
+            ]
+        }
+    ];
+
+    let currentIndex = 0;
+    let score = 0;
+
+    function startSim() {
+        document.getElementById('main-interface').innerHTML = "";
+        currentIndex = 0;
+        score = 0;
+        updateScore();
+        loadScenario(0);
+    }
+
+    function loadScenario(index) {
+        if (index >= scenarios.length) {
+            endSim();
+            return;
+        }
+
+        const s = scenarios[index];
+        const container = document.getElementById('main-interface');
+        document.getElementById('progress').style.width = ((index / scenarios.length) * 100) + "%";
+
+        // Colors
+        let badgeClass = "cat-care";
+        let borderClass = "#27ae60";
+        if(s.type === "safety") { badgeClass = "cat-safety"; borderClass = "#d35400"; }
+        if(s.type === "proc") { badgeClass = "cat-proc"; borderClass = "#2980b9"; }
+
+        // HTML
+        container.innerHTML = `
+            <div class="scenario-area">
+                <span class="category-badge ${badgeClass}">${s.category}</span>
+                <div class="chart-card" style="border-left-color: ${borderClass}">
+                    <div class="chart-title">MEDICAL RECORD</div>
+                    ${s.chart}
+                </div>
+                <div class="question-text">${s.question}</div>
+                <div class="options-grid">
+                    ${s.options.map((opt, i) => `
+                        <button class="option-btn" id="opt-${i}" onclick="check(${i})">${opt.text}</button>
+                    `).join('')}
+                </div>
+                <div id="feedback" class="feedback-panel"></div>
+            </div>
+        `;
+        document.getElementById('next-btn').style.display = 'none';
+    }
+
+    function check(selectedIndex) {
+        const s = scenarios[currentIndex];
+        const fb = document.getElementById('feedback');
+        const correctIndex = s.options.findIndex(o => o.correct);
+        const isCorrect = (selectedIndex === correctIndex);
+
+        document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+
+        if (isCorrect) {
+            document.getElementById(`opt-${selectedIndex}`).classList.add('correct-choice');
+            fb.classList.add('fb-correct');
+            fb.innerHTML = `<strong>Correct!</strong> ${s.options[selectedIndex].feedback}`;
+            score++;
+        } else {
+            document.getElementById(`opt-${selectedIndex}`).classList.add('wrong-choice');
+            document.getElementById(`opt-${correctIndex}`).classList.add('correct-choice');
+            fb.classList.add('fb-wrong');
+            fb.innerHTML = `<strong>Incorrect.</strong> ${s.options[selectedIndex].feedback}`;
+        }
+
+        fb.style.display = 'block';
+        updateScore();
+        document.getElementById('next-btn').style.display = 'block';
+    }
+
+    function nextScenario() {
+        currentIndex++;
+        loadScenario(currentIndex);
+    }
+
+    function updateScore() {
+        document.getElementById('score-display').innerText = `${score}/${scenarios.length}`;
+    }
+
+    function endSim() {
+        document.getElementById('progress').style.width = "100%";
+        const percent = Math.round((score / scenarios.length) * 100);
+        document.getElementById('main-interface').innerHTML = `
+            <div class="start-screen">
+                <h2 style="color: var(--primary)">Part 3 Complete</h2>
+                <div style="font-size: 3em; font-weight:bold; color: var(--accent); margin: 20px 0;">${percent}%</div>
+                <p>Review the feedback for any missed questions.</p>
+                <button class="start-btn" onclick="startSim()">Restart</button>
+            </div>
+        `;
+        document.getElementById('next-btn').style.display = 'none';
+    }
+</script>
+
+</body>
+</html>
