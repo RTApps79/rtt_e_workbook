@@ -1,84 +1,1621 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Module 03: Equipment & Radiation Safety</title>
+
+<title>Module 3: Equipment & Radiation Safety Master Class</title>
+
 <style>
+
 :root {
+
 --primary: #2c3e50;
---accent: #8e44ad;
+
+--accent: #8e44ad; /* Purple for Physics/Machinery */
+
 --highlight: #f1c40f;
+
 --bg-light: #fcfbfd;
+
 --white: #ffffff;
+
 }
+
 body {
+
 font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
 line-height: 1.6;
+
 color: var(--primary);
+
 max-width: 900px;
+
 margin: 0 auto;
+
 padding: 20px;
+
 background-color: var(--bg-light);
+
 }
-h1 { text-align: center; color: var(--primary); border-bottom: 3px solid var(--accent); padding-bottom: 15px; margin-bottom: 40px; }
-.module-header { background: linear-gradient(90deg, var(--accent), var(--primary)); color: var(--white); padding: 15px 20px; border-radius: 8px; margin-top: 50px; display: flex; align-items: center; }
-.module-number { background: var(--white); color: var(--accent); width: 30px; height: 30px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 15px; }
-.concept-block { background: var(--white); border-radius: 8px; padding: 25px; margin: 20px 0; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 5px solid var(--accent); }
-.formula-box { background-color: #f4ecf7; padding: 15px; border-radius: 5px; font-family: 'Courier New', monospace; font-weight: bold; color: var(--primary); text-align: center; margin: 15px 0; border: 1px dashed var(--accent); }
-.table-box { margin: 15px 0; overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; font-size: 0.95em; }
-th { background-color: var(--accent); color: white; padding: 10px; text-align: left; }
-td { border: 1px solid #ddd; padding: 10px; }
+
+/* Scaffolding Headers */
+
+h1 {
+
+text-align: center;
+
+color: var(--primary);
+
+border-bottom: 3px solid var(--accent);
+
+padding-bottom: 15px;
+
+margin-bottom: 40px;
+
+}
+
+.module-header {
+
+background: linear-gradient(90deg, var(--accent), var(--primary));
+
+color: var(--white);
+
+padding: 15px 20px;
+
+border-radius: 8px;
+
+margin-top: 50px;
+
+display: flex;
+
+align-items: center;
+
+}
+
+.module-number {
+
+background: var(--white);
+
+color: var(--accent);
+
+width: 30px;
+
+height: 30px;
+
+border-radius: 50%;
+
+display: inline-flex;
+
+align-items: center;
+
+justify-content: center;
+
+font-weight: bold;
+
+margin-right: 15px;
+
+}
+
+/* Content Boxes */
+
+.concept-block {
+
+background: var(--white);
+
+border-radius: 8px;
+
+padding: 25px;
+
+margin: 20px 0;
+
+box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+
+border-left: 5px solid var(--accent);
+
+}
+
+.formula-box {
+
+background-color: #f4ecf7; /* Slight purple tint for formulas */
+
+padding: 15px;
+
+border-radius: 5px;
+
+font-family: 'Courier New', monospace;
+
+font-weight: bold;
+
+color: var(--primary);
+
+text-align: center;
+
+margin: 15px 0;
+
+border: 1px dashed var(--accent);
+
+}
+
+.table-box {
+
+margin: 15px 0;
+
+overflow-x: auto;
+
+}
+
+table {
+
+width: 100%;
+
+border-collapse: collapse;
+
+font-size: 0.95em;
+
+}
+
+th {
+
+background-color: var(--accent);
+
+color: white;
+
+padding: 10px;
+
+text-align: left;
+
+}
+
+td {
+
+border: 1px solid #ddd;
+
+padding: 10px;
+
+}
+
 tr:nth-child(even) {background-color: #f9f9f9;}
-.watch-out { background-color: #fffcf5; border: 1px solid #ffeeba; border-radius: 5px; padding: 15px; margin-top: 15px; font-size: 0.9em; }
-.mnemonic { background-color: #f4ecf7; border: 1px dashed var(--accent); border-radius: 5px; padding: 15px; margin-top: 15px; font-weight: bold; color: var(--primary); }
-.visual-aid { text-align: center; margin: 20px 0; background: var(--white); padding: 20px; border-radius: 8px; border: 1px solid #eee; }
+
+/* "Watch Out" Tips */
+
+.watch-out {
+
+background-color: #fffcf5;
+
+border: 1px solid #ffeeba;
+
+border-radius: 5px;
+
+padding: 15px;
+
+margin-top: 15px;
+
+font-size: 0.9em;
+
+}
+
+.watch-out strong {
+
+color: #d35400;
+
+text-transform: uppercase;
+
+font-size: 0.85em;
+
+letter-spacing: 1px;
+
+}
+
+/* Mnemonics */
+
+.mnemonic {
+
+background-color: #f4ecf7;
+
+border: 1px dashed var(--accent);
+
+border-radius: 5px;
+
+padding: 15px;
+
+margin-top: 15px;
+
+font-weight: bold;
+
+color: var(--primary);
+
+}
+
+/* Graphics Container */
+
+.visual-aid {
+
+text-align: center;
+
+margin: 20px 0;
+
+background: var(--white);
+
+padding: 20px;
+
+border-radius: 8px;
+
+border: 1px solid #eee;
+
+}
+
+/* Animations */
+
+@keyframes electron-flow {
+
+0% { offset-distance: 0%; }
+
+100% { offset-distance: 100%; }
+
+}
+
+.electron {
+
+offset-path: path('M 50 100 L 250 100 Q 300 100 300 150 L 300 200');
+
+animation: electron-flow 2s linear infinite;
+
+}
+
+
+
+/* Interactive checklists */
+
+.checklist-table input[type="checkbox"] {
+
+transform: scale(1.15);
+
+margin-right: 10px;
+
+}
+
+.checklist-table label {
+
+display: inline-flex;
+
+align-items: center;
+
+gap: 6px;
+
+cursor: pointer;
+
+}
+
+details {
+
+background: var(--white);
+
+border-radius: 8px;
+
+padding: 12px 15px;
+
+margin: 12px 0;
+
+border-left: 5px solid var(--accent);
+
+box-shadow: 0 3px 6px rgba(0,0,0,0.04);
+
+}
+
+details summary {
+
+cursor: pointer;
+
+font-weight: bold;
+
+color: var(--primary);
+
+}
+
+details summary::marker {
+
+color: var(--accent);
+
+}
+
+
 </style>
+
 </head>
+
 <body>
-<h1>Module 03: Equipment & Radiation Safety</h1>
-<p style="text-align: center; font-size: 1.1em;">Understanding the Linear Accelerator, Dosimetry Physics, QA, and Dose Limits.</p>
+
+<h1>Module 3: Equipment & Radiation Safety</h1>
+
+<p style="text-align: center; font-size: 1.1em;">
+
+Understanding the Linear Accelerator, Dosimetry Physics, QA, and Dose
+Limits.
+
+</p>
 
 <div class="module-header">
+
 <span class="module-number">1</span>
+
 <h2>Inside the Linear Accelerator</h2>
+
 </div>
 
 <div class="concept-block">
+
 <h3>1.1 The Path of the Electron</h3>
-<p>To create a treatment beam, electrons must be produced, accelerated, and steered. You must know the order of components.</p>
+
+<p>To create a treatment beam, electrons must be produced, accelerated,
+and steered. You must know the order of components.</p>
 
 <div class="visual-aid">
+
 <svg width="400" height="250" viewBox="0 0 400 250">
+
 <rect x="10" y="80" width="40" height="40" fill="#e74c3c" rx="5"/>
+
 <text x="15" y="70" font-size="10" font-weight="bold">Gun</text>
-<rect x="60" y="90" width="200" height="20" fill="#ecf0f1" stroke="#333" stroke-dasharray="5"/>
-<text x="100" y="80" font-size="10" fill="#555">Accelerating Waveguide</text>
-<path d="M 270 90 Q 320 90 320 140 L 320 150" fill="none" stroke="#2980b9" stroke-width="15" opacity="0.5"/>
-<text x="330" y="120" font-size="10" fill="#2980b9">Bending Magnet</text>
+
+<rect x="60" y="90" width="200" height="20" fill="#ecf0f1" stroke="#333"
+stroke-dasharray="5"/>
+
+<text x="100" y="80" font-size="10" fill="#555">Accelerating
+Waveguide</text>
+
+<path d="M 270 90 Q 320 90 320 140 L 320 150" fill="none"
+stroke="#2980b9" stroke-width="15" opacity="0.5"/>
+
+<text x="330" y="120" font-size="10" fill="#2980b9">Bending
+Magnet</text>
+
 <rect x="300" y="160" width="40" height="10" fill="#f1c40f"/>
-<text x="350" y="170" font-size="10" fill="#f39c12">Target (X-rays)</text>
+
+<text x="350" y="170" font-size="10" fill="#f39c12">Target
+(X-rays)</text>
+
 <polygon points="300,180 340,180 330,220 310,220" fill="#95a5a6"/>
+
 <text x="350" y="200" font-size="10" fill="#7f8c8d">Collimator</text>
-<circle r="4" fill="#e74c3c" />
+
+<circle r="4" fill="#e74c3c" class="electron"/>
+
 </svg>
+
 </div>
 
 <div class="table-box">
+
 <table>
-<tr><th>Component</th><th>Function</th></tr>
-<tr><td><strong>Klystron / Magnetron</strong></td><td>Provides the <strong>Microwave Power</strong> to accelerate electrons. (Mnemonic: Magnetron = Microwave (Lower energy units). Klystron = High Energy for high MV machines).</td></tr>
-<tr><td><strong>Circulator</strong></td><td>Prevents microwaves from reflecting back and damaging the Klystron.</td></tr>
-<tr><td><strong>Waveguide</strong></td><td>Copper pipe where electrons surf on microwaves to gain speed.</td></tr>
-<tr><td><strong>Bending Magnet</strong></td><td>Turns the electron beam to point down at the patient and filters energy spectrum.</td></tr>
-<tr><td><strong>Target</strong></td><td><strong>Tungsten</strong> target. Electrons hit it -> photons produced. Retracted for electron therapy.</td></tr>
-<tr><td><strong>Flattening Filter</strong></td><td>Makes the forward-peaked beam uniform. Retracted for FFF modes.</td></tr>
+
+<tr>
+
+<th>Component</th>
+
+<th>Function</th>
+
+</tr>
+
+<tr>
+
+<td><strong>Klystron / Magnetron</strong></td>
+
+<td>Provides the <strong>Microwave Power</strong> to accelerate
+electrons.<br><em>Mnemonic:</em> Magnetron = Microwave (Lower energy
+units). Klystron = High Energy (Linear accelerators > 10MV).</td>
+
+</tr>
+
+<tr>
+
+<td><strong>Circulator</strong></td>
+
+<td>Prevents microwaves from bouncing back and damaging the Klystron
+(One-way valve).</td>
+
+</tr>
+
+<tr>
+
+<td><strong>Waveguide</strong></td>
+
+<td>Copper pipe where electrons surf on microwaves to gain speed.</td>
+
+</tr>
+
+<tr>
+
+<td><strong>Bending Magnet</strong></td>
+
+<td>Turns the electron beam 90° or 270° to point down at the patient.
+Also filters energy spectrum.</td>
+
+</tr>
+
+<tr>
+
+<td><strong>Target</strong></td>
+
+<td><strong>Tungsten</strong> target. Electrons hit it →Bremsstrahlung
+interactions →Photons (X-rays) created. <br><em>Note:</em> Retracted for
+Electron therapy mode.</td>
+
+</tr>
+
+<tr>
+
+<td><strong>Flattening Filter</strong></td>
+
+<td>Cone-shaped metal. Makes the forward-peaked beam uniform (flat)
+across the field. <br><em>Note:</em> Retracted for "Port Films" or FFF
+(Flattening Filter Free) modes.</td>
+
+</tr>
+
 </table>
-</div>
+
 </div>
 
-<!-- (Module 3 continues with QA, detectors, protection, and other sections matching the workbook) -->
+</div>
+
+<div class="module-header">
+
+<span class="module-number">2</span>
+
+<h2>Dosimetry & Calibration Physics</h2>
+
+</div>
+
+<div class="concept-block">
+
+<h3>2.1 Temperature & Pressure Correction (Ctp)</h3>
+
+<p><strong>The Context:</strong> Ionization chambers used for
+calibration (like Farmer chambers) are usually <strong>vented</strong>
+to the outside air. This means the mass of air inside the chamber
+changes with the weather.</p>
+
+<ul>
+
+<li><strong>Standard Conditions:</strong> Calibration labs use 22°C
+(295.2 K) and 760 mmHg (1 atm).</li>
+
+<li><strong>The Problem:</strong> If the air in the room is hotter or
+has lower pressure than standard, the number of air molecules in the
+chamber changes, affecting the reading. We must mathematically "correct"
+the reading back to standard conditions.</li>
+
+</ul>
+
+<div class="formula-box">
+
+Ctp = [(273.2 + T) / 295.2] × [760 / P]
+
+</div>
+
+<div class="table-box">
+
+<table>
+
+<tr>
+
+<th>Scenario</th>
+
+<th>Physical Effect on Air</th>
+
+<th>Meter Reading</th>
+
+<th>Action Items (Logic)</th>
+
+</tr>
+
+<tr>
+
+<td><strong>Temperature INCREASES</strong> (Hotter)</td>
+
+<td>Air <strong>Expands</strong> (Less air molecules in chamber).</td>
+
+<td>Decreases (Reads Low)</td>
+
+<td><strong>Ctp > 1.0</strong>. You must <em>multiply</em> by a factor
+greater than 1 to boost the result up to the correct value.</td>
+
+</tr>
+
+<tr>
+
+<td><strong>Pressure INCREASES</strong> (High Pressure)</td>
+
+<td>Air <strong>Compresses</strong> (More air molecules in
+chamber).</td>
+
+<td>Increases (Reads High)</td>
+
+<td><strong>Ctp < 1.0</strong>. You must <em>multiply</em> by a factor
+less than 1 to scale the result down.</td>
+
+</tr>
+
+</table>
+
+</div>
+
+<div class="watch-out">
+
+<strong>Calculation Rule:</strong> Always convert Temperature to Kelvin
+(C + 273.2) for the ratio. Pressure remains in mmHg.
+
+</div>
+
+</div>
+
+<div class="module-header">
+
+<span class="module-number">3</span>
+
+<h2>Quality Assurance (QA) Tolerances</h2>
+
+</div>
+
+<p>You must know the difference between Daily and Monthly checks, and
+the "2 vs 3" rule.</p>
+
+<div class="concept-block">
+
+<h3>3.1 Daily QA (The Therapist's Job)</h3>
+
+<p>These checks affect patient safety <strong>immediately</strong>.</p>
+
+<div class="table-box">
+
+<table>
+
+<tr>
+
+<th>Test</th>
+
+<th>Tolerance</th>
+
+</tr>
+
+<tr>
+
+<td><strong>Audio / Visual Monitors</strong></td>
+
+<td>Functional (Pass/Fail)</td>
+
+</tr>
+
+<tr>
+
+<td><strong>Door Interlock</strong></td>
+
+<td>Functional (Beam must stop)</td>
+
+</tr>
+
+<tr>
+
+<td><strong>X-Ray Output Constancy</strong></td>
+
+<td>3%</td>
+
+</tr>
+
+<tr>
+
+<td><strong>Lasers</strong></td>
+
+<td>2 mm</td>
+
+</tr>
+
+<tr>
+
+<td><strong>ODI (Optical Distance Indicator)</strong></td>
+
+<td>2 mm</td>
+
+</tr>
+
+</table>
+
+</div>
+
+<div class="mnemonic">
+
+<strong>Rule of Thumb:</strong> Mechanical checks (Lasers, ODI) are
+usually <strong>2 mm</strong>. Dosimetric checks (Output) are usually
+<strong>3%</strong> daily (and 2% monthly).
+
+</div>
+
+</div>
+
+
+
+<div class="concept-block">
+
+<h3>3.2 Linac Warm-Up & Safety Inspection (Daily Start-Up)</h3>
+
+<p>Before a single patient is treated, the therapist must confirm the system is safe to operate and that the machine is behaving normally. Think of this as a <strong>“safety + readiness + alignment”</strong> checklist.</p>
+
+<div class="table-box">
+
+<table>
+
+<tr>
+
+<th>Start-Up Check</th>
+
+<th>What you are verifying</th>
+
+<th>Why it matters</th>
+
+</tr>
+
+<tr>
+
+<td><strong>Interlock systems</strong> (door, beam-on, motion, imaging)</td>
+
+<td>Interlocks stop beam when a safety condition is violated.</td>
+
+<td>Prevents unintended irradiation when the room is not secured.</td>
+
+</tr>
+
+<tr>
+
+<td><strong>Safety lights / status indicators</strong></td>
+
+<td>Correct “beam-on / ready / in-use” indications.</td>
+
+<td>Provides clear visual cues for staff inside/outside the vault.</td>
+
+</tr>
+
+<tr>
+
+<td><strong>Emergency switches</strong> (E‑stop, beam hold/off)</td>
+
+<td>Emergency controls function and are accessible.</td>
+
+<td>Critical for immediate response to patient distress or collision risk.</td>
+
+</tr>
+
+<tr>
+
+<td><strong>Laser alignment</strong> (including isocenter lasers/sidelights)</td>
+
+<td>Lasers coincide with expected reference positions.</td>
+
+<td>Laser drift can create systematic set‑up errors for every patient.</td>
+
+</tr>
+
+<tr>
+
+<td><strong>Critical machine parameters</strong> (e.g., pressure, temperature)</td>
+
+<td>System values are within normal operating ranges.</td>
+
+<td>Abnormal parameters can indicate instability affecting output or safety.</td>
+
+</tr>
+
+<tr>
+
+<td><strong>Electrical / mechanical hazards</strong></td>
+
+<td>No unusual noises/odors, loose panels, obstruction on rails, collision concerns.</td>
+
+<td>Protects patients/staff and prevents treatment interruption.</td>
+
+</tr>
+
+<tr>
+
+<td><strong>Imaging systems</strong> (kV/MV/CBCT as applicable)</td>
+
+<td>Imaging arms move correctly, panels respond, image acquisition works.</td>
+
+<td>Image guidance is part of safe delivery and verification.</td>
+
+</tr>
+
+<tr>
+
+<td><strong>Audio/visual communication</strong></td>
+
+<td>Cameras and microphones provide reliable monitoring.</td>
+
+<td>Patient monitoring is required during beam delivery.</td>
+
+</tr>
+
+</table>
+
+</div>
+
+<div class="watch-out">
+
+<strong>Clinical decision point:</strong> If a required safety check fails, <strong>do not treat</strong>. Escalate per department policy (physics/service) and document the issue and your actions.
+
+</div>
+
+</div>
+
+<div class="concept-block">
+
+<h3>3.3 CT Simulator Warm-Up & QC Water Phantom (Accuracy Foundations)</h3>
+
+<p>CT simulation quality control supports accurate contours, isocenter placement, and density (HU) integrity used by the treatment planning system. The ARRT outline specifically calls out a <strong>QC water phantom</strong> check.</p>
+
+<div class="table-box">
+
+<table>
+
+<tr>
+
+<th>CT Sim Daily/Start-Up Focus</th>
+
+<th>Examples</th>
+
+<th>What it protects</th>
+
+</tr>
+
+<tr>
+
+<td><strong>Safety readiness</strong></td>
+
+<td>Safety lights, emergency switches, room clear, table motion verified.</td>
+
+<td>Prevents injury/collisions and ensures safe patient scanning.</td>
+
+</tr>
+
+<tr>
+
+<td><strong>Laser alignment</strong></td>
+
+<td>Wall/ceiling lasers match the CT reference position.</td>
+
+<td>Prevents systematic isocenter/marking errors.</td>
+
+</tr>
+
+<tr>
+
+<td><strong>Tube warm-up</strong></td>
+
+<td>Complete manufacturer warm‑up sequence before scanning.</td>
+
+<td>Improves tube stability and image consistency.</td>
+
+</tr>
+
+<tr>
+
+<td><strong>QC water phantom</strong></td>
+
+<td><strong>CT number (HU)</strong> for water, <strong>noise</strong>, basic uniformity/artifacts.</td>
+
+<td>Protects HU accuracy and image quality used for planning.</td>
+
+</tr>
+
+</table>
+
+</div>
+
+<div class="visual-aid">
+
+<svg width="520" height="180" viewBox="0 0 520 180" role="img" aria-label="CT water phantom concept: measure HU and noise">
+
+<!-- CT gantry -->
+
+<rect x="20" y="20" width="200" height="140" rx="18" fill="#ecf0f1" stroke="#2c3e50"/>
+
+<circle cx="120" cy="90" r="45" fill="#ffffff" stroke="#2c3e50" stroke-width="2"/>
+
+<text x="60" y="30" font-size="12" font-weight="bold" fill="#2c3e50">CT Gantry</text>
+
+<!-- Phantom -->
+
+<circle cx="120" cy="90" r="20" fill="#3498db" opacity="0.65"/>
+
+<text x="92" y="140" font-size="12" fill="#2c3e50">Water Phantom</text>
+
+<!-- Readout box -->
+
+<rect x="260" y="35" width="240" height="110" rx="10" fill="#ffffff" stroke="#8e44ad"/>
+
+<text x="280" y="62" font-size="12" font-weight="bold" fill="#8e44ad">QC Readouts</text>
+
+<text x="280" y="90" font-size="12" fill="#2c3e50">• Water HU ≈ 0</text>
+
+<text x="280" y="112" font-size="12" fill="#2c3e50">• Noise (SD) trending</text>
+
+<text x="280" y="134" font-size="12" fill="#2c3e50">• Uniformity / artifacts</text>
+
+</svg>
+
+</div>
+
+<div class="watch-out">
+
+<strong>Exam focus:</strong> Know <em>what</em> the water phantom checks (CT number and noise) and <em>why</em> that matters (density + image quality for planning).
+
+</div>
+
+</div>
+
+<div class="concept-block">
+
+<h3>3.4 Radiation Output Verification: Methods, Frequency, and Humidity Effects</h3>
+
+<p>Output constancy checks confirm that the machine is delivering dose consistently. Output verification can range from daily constancy checks to periodic reference calibrations. The content outline also highlights that <strong>environment</strong> (including <strong>humidity</strong>) can affect measurements.</p>
+
+<ul>
+
+<li><strong>Common measurement approach:</strong> Ion chamber in a phantom (water or solid water) at a defined geometry and depth.</li>
+
+<li><strong>Frequency concept:</strong> <em>Constancy</em> checks are more frequent (e.g., daily) than full <em>calibration</em> checks (performed by physics per policy).</li>
+
+<li><strong>Environmental effects:</strong> Temperature/pressure changes affect <em>vented</em> chambers (connect to Ctp above). <strong>Humidity</strong> can influence electronics/leakage, detector response, and phantom conditions—so trends should be evaluated with awareness of the environment.</li>
+
+</ul>
+
+<div class="mnemonic">
+
+<strong>Quick recall:</strong> Think <strong>T‑P‑H</strong> (Temperature, Pressure, Humidity) whenever you interpret constancy data.
+
+</div>
+
+</div>
+
+<div class="concept-block">
+
+<h3>3.5 Light & Treatment Field Agreement, Collimator Indicators, and MLC Performance</h3>
+
+<p>Field agreement checks confirm that what you <strong>set</strong> (numbers and light field) is what the machine <strong>delivers</strong> (radiation field). The outline calls out <strong>light/radiation agreement</strong>, <strong>collimator indicators</strong>, <strong>MLC performance</strong>, and <strong>laser/isocenter</strong> accuracy.</p>
+
+<div class="visual-aid">
+
+<svg width="520" height="220" viewBox="0 0 520 220" role="img" aria-label="Light field vs radiation field agreement diagram">
+
+<!-- Light field box -->
+
+<rect x="70" y="55" width="160" height="120" fill="#f9f9f9" stroke="#2c3e50" stroke-width="2"/>
+
+<text x="92" y="48" font-size="12" fill="#2c3e50">Light Field</text>
+
+<!-- Radiation field (slightly shifted) -->
+
+<rect x="90" y="70" width="160" height="120" fill="#8e44ad" opacity="0.18" stroke="#8e44ad" stroke-width="2" stroke-dasharray="6 4"/>
+
+<text x="262" y="105" font-size="12" fill="#8e44ad">Radiation Field</text>
+
+<!-- Isocenter cross -->
+
+<line x1="150" y1="105" x2="150" y2="125" stroke="#e74c3c" stroke-width="2"/>
+
+<line x1="140" y1="115" x2="160" y2="115" stroke="#e74c3c" stroke-width="2"/>
+
+<text x="122" y="200" font-size="12" fill="#e74c3c">Isocenter</text>
+
+<!-- MLC bank -->
+
+<rect x="320" y="60" width="140" height="110" fill="#ecf0f1" stroke="#2c3e50"/>
+
+<text x="330" y="50" font-size="12" fill="#2c3e50">MLC Check</text>
+
+<!-- Leaves -->
+
+
+<line x1="330" y1="80" x2="450" y2="80" stroke="#2c3e50"/>
+
+<line x1="330" y1="100" x2="450" y2="100" stroke="#2c3e50"/>
+
+<line x1="330" y1="120" x2="450" y2="120" stroke="#2c3e50"/>
+
+<line x1="330" y1="140" x2="450" y2="140" stroke="#2c3e50"/>
+
+<!-- Picket fence stripes -->
+
+<rect x="360" y="60" width="8" height="110" fill="#f1c40f" opacity="0.8"/>
+
+<rect x="395" y="60" width="8" height="110" fill="#f1c40f" opacity="0.8"/>
+
+<rect x="430" y="60" width="8" height="110" fill="#f1c40f" opacity="0.8"/>
+
+</svg>
+
+</div>
+
+<div class="table-box">
+
+<table>
+
+<tr>
+
+<th>Check</th>
+
+<th>How it is commonly verified</th>
+
+<th>What a problem looks like</th>
+
+</tr>
+
+<tr>
+
+<td><strong>Light vs. radiation field agreement</strong></td>
+
+<td>Compare light field edges and radiation field edges (e.g., EPID/film).</td>
+
+<td>Radiation field shifted relative to light field → systematic geometric error.</td>
+
+</tr>
+
+<tr>
+
+<td><strong>Collimator indicator agreement</strong> (jaw readouts / angle indicators)</td>
+
+<td>Set a known field/angle and confirm the indicator/reading matches the delivered geometry.</td>
+
+<td>Mismatch between digital readout and delivered field size/angle.</td>
+
+</tr>
+
+<tr>
+
+<td><strong>MLC performance</strong></td>
+
+<td>Picket‑fence or leaf position tests to confirm leaf positioning repeatability.</td>
+
+<td>Leaf offset, sticking leaves, or pattern misalignment.</td>
+
+</tr>
+
+<tr>
+
+<td><strong>Sidelight/laser isocenter accuracy</strong></td>
+
+<td>Verify lasers intersect at isocenter and remain stable through couch/gantry motions as applicable.</td>
+
+<td>Laser drift or non‑coincidence → set‑up shift risk.</td>
+
+</tr>
+
+</table>
+
+</div>
+
+<div class="watch-out">
+
+<strong>Practical takeaway:</strong> The exam often targets the <em>concept</em>: you are ensuring the machine’s <strong>geometry</strong> (light field, indicators, MLC, lasers) matches the radiation that will actually be delivered.
+
+</div>
+
+</div>
+
+<div class="concept-block">
+
+<h3>3.6 Rotation Checks: Gantry / Collimator / Couch</h3>
+
+<p>Rotation checks confirm safe motion and accurate angles. They also reduce collision risk and support treatments that rely on multiple angles or arcs.</p>
+
+<ul>
+
+<li><strong>Safety procedures:</strong> Ensure the room is clear, verify collision zones, and confirm emergency stops work before sweeping rotations.</li>
+
+<li><strong>Operation (gantry/console):</strong> Confirm smooth motion, correct directionality, accurate readouts, and that the system responds appropriately to beam‑hold and stop commands.</li>
+
+<li><strong>Angle accuracy concept:</strong> If an angle indicator is off, then every planned beam angle can be systematically wrong.</li>
+
+</ul>
+
+<div class="visual-aid">
+
+<svg width="520" height="190" viewBox="0 0 520 190" role="img" aria-label="Rotation checks diagram">
+
+<!-- Isocenter -->
+
+<circle cx="170" cy="95" r="6" fill="#e74c3c"/>
+
+<text x="150" y="125" font-size="12" fill="#2c3e50">Isocenter</text>
+
+<!-- Gantry arc -->
+
+<path d="M 170 95 m -70 0 a 70 70 0 1 1 140 0" fill="none" stroke="#8e44ad" stroke-width="6" opacity="0.35"/>
+
+<text x="70" y="55" font-size="12" fill="#8e44ad">Gantry rotation</text>
+
+<!-- Couch rotation -->
+
+<circle cx="360" cy="95" r="55" fill="none" stroke="#2c3e50" stroke-dasharray="6 4"/>
+
+<rect x="330" y="90" width="60" height="12" fill="#ecf0f1" stroke="#2c3e50"/>
+
+<text x="315" y="55" font-size="12" fill="#2c3e50">Couch rotation</text>
+
+<!-- Collimator rotation -->
+
+<rect x="240" y="70" width="70" height="50" rx="8" fill="#f9f9f9" stroke="#2c3e50"/>
+
+<path d="M 275 60 A 20 20 0 0 1 295 80" fill="none" stroke="#f1c40f" stroke-width="5"/>
+
+<text x="230" y="140" font-size="12" fill="#2c3e50">Collimator</text>
+
+</svg>
+
+</div>
+
+</div>
+
+<div class="concept-block">
+
+<h3>3.7 What to Document for QA (And What to Do When It Fails)</h3>
+
+<p>QA is not only performing checks—it’s also proving they were done and recording the response when something is out of tolerance.</p>
+
+<div class="table-box">
+
+<table>
+
+<tr>
+
+<th>Documentation Element</th>
+
+<th>Examples</th>
+
+</tr>
+
+<tr>
+
+<td><strong>Who / When / Which unit</strong></td>
+
+<td>Date/time, machine ID, therapist initials/signature.</td>
+
+</tr>
+
+<tr>
+
+<td><strong>What test</strong></td>
+
+<td>Output constancy, laser alignment, ODI, door interlock, imaging check.</td>
+
+</tr>
+
+<tr>
+
+<td><strong>Expected tolerance</strong></td>
+
+<td>The pass/fail criterion used by your department policy.</td>
+
+</tr>
+
+<tr>
+
+<td><strong>Measured value + pass/fail</strong></td>
+
+<td>Numeric result when applicable + whether it met tolerance.</td>
+
+</tr>
+
+<tr>
+
+<td><strong>Action taken</strong></td>
+
+<td>Repeat measurement, remove from clinical use, notify physics/service, corrective action note.</td>
+
+</tr>
+
+<tr>
+
+<td><strong>Follow‑up</strong></td>
+
+<td>Post‑fix recheck results, clearance to treat, incident/medical‑event documentation if required.</td>
+
+</tr>
+
+</table>
+
+</div>
+
+<div class="watch-out">
+
+<strong>Pattern to remember:</strong> <strong>Measure → Compare → Decide → Document → Escalate</strong> (when needed).
+
+</div>
+
+</div>
+
+
+
+<div class="module-header">
+
+<span class="module-number">4</span>
+
+<h2>Radiation Protection & Limits</h2>
+
+</div>
+
+<div class="concept-block">
+
+<h3>4.1 Detectors: Which tool for which job?</h3>
+
+<ul>
+
+<li><strong>Ionization Chamber (Cutie Pie):</strong> High accuracy. Used
+for measuring machine output (calibration) or assessing exposure rates
+outside a treatment room.</li>
+
+<li><strong>Geiger-Muller (GM) Counter:</strong> High sensitivity. Used
+for "finding" radiation (e.g., locating a lost seed, finding a spill).
+NOT accurate for measuring exact dose.</li>
+
+<li><strong>OSL / TLD:</strong> Personnel monitoring. OSL (Aluminum
+Oxide) is more common now than TLD (Lithium Fluoride).</li>
+
+<li><strong>Diodes:</strong> Semiconductor detectors used for <strong>in‑vivo dosimetry</strong> and constancy checks (e.g., verifying entrance dose or day‑to‑day output trends). Very sensitive and fast, but require appropriate setup and awareness of energy/angle dependence.</li>
+
+<li><strong>Neutron Detectors:</strong> Specialized survey instruments used to detect <strong>neutrons</strong> (e.g., photoneutrons from high‑energy linacs). Important for <strong>radiation protection</strong> assessments because neutron dose equivalent and shielding considerations differ from photons.</li>
+
+
+
+</ul>
+
+</div>
+
+<div class="concept-block">
+
+<h3>4.2 NCRP Report #116 Dose Limits</h3>
+
+<p>Memorize these numbers. They are guaranteed test questions.</p>
+
+<div class="table-box">
+
+<table>
+
+<tr>
+
+<th>Group</th>
+
+<th>Annual Limit (mSv)</th>
+
+<th>Cumulative Limit</th>
+
+</tr>
+
+<tr>
+
+<td><strong>Occupational (Worker)</strong></td>
+
+<td><strong>50 mSv</strong> (5 rem)</td>
+
+<td>10 mSv × Age</td>
+
+</tr>
+
+<tr>
+
+<td><strong>Public (Continuous)</strong></td>
+
+<td>1 mSv (0.1 rem)</td>
+
+<td>-</td>
+
+</tr>
+
+<tr>
+
+<td><strong>Public (Infrequent)</strong></td>
+
+<td>5 mSv (0.5 rem)</td>
+
+<td>-</td>
+
+</tr>
+
+<tr>
+
+<td><strong>Embryo/Fetus (Total)</strong></td>
+
+<td><strong>5 mSv</strong> (0.5 rem)</td>
+
+<td>(Entire gestation)</td>
+
+</tr>
+
+<tr>
+
+<td><strong>Embryo/Fetus (Monthly)</strong></td>
+
+<td>0.5 mSv (0.05 rem)</td>
+
+<td>-</td>
+
+</tr>
+
+</table>
+
+</div>
+
+<div class="watch-out">
+
+<strong>Exam Trap:</strong> Notice the difference between the
+<strong>Annual</strong> limit for a worker (50) and the
+<strong>Total</strong> limit for a fetus (5). The fetus limit is 1/10th
+of the worker limit.
+
+</div>
+
+</div>
+
+<div class="concept-block">
+
+<h3>4.3 Shielding Concepts (HVL & TVL)</h3>
+
+<p>We use barriers to reduce intensity.</p>
+
+<ul>
+
+<li><strong>HVL (Half Value Layer):</strong> Thickness required to
+reduce intensity to 50%.</li>
+
+<li><strong>TVL (Tenth Value Layer):</strong> Thickness required to
+reduce intensity to 10%.</li>
+
+</ul>
+
+<div class="formula-box">
+
+1 TVL ≈3.3 HVL
+
+</div>
+
+<div class="explanation">
+
+<strong>Example:</strong> If a beam is 100%, 1 HVL makes it 50%. 2 HVLs
+make it 25%. 3 HVLs make it 12.5%.
+
+</div>
+
+</div>
+
+
+
+<div class="concept-block">
+
+<h3>4.4 Facilities, Area Classification, and Postings (10 CFR Parts 20 & 35)</h3>
+
+<p>Radiation therapy departments operate under regulatory frameworks that define <strong>who may enter</strong> an area, <strong>what postings are required</strong>, and <strong>how exposure is controlled</strong>. On the exam, you are typically tested on vocabulary and practical meaning more than the exact regulatory text.</p>
+
+<div class="table-box">
+
+<table>
+
+<tr>
+
+<th>Area Term</th>
+
+<th>Practical meaning</th>
+
+<th>Therapy‑department examples</th>
+
+</tr>
+
+<tr>
+
+<td><strong>Restricted area</strong></td>
+
+<td>Access is intentionally limited by the facility for radiation protection.</td>
+
+<td>Treatment vault and areas where radiation could be present during operation.</td>
+
+</tr>
+
+<tr>
+
+<td><strong>Controlled area</strong></td>
+
+<td>Area where the facility can limit access for the purpose of controlling exposure, but it is typically <em>outside</em> the restricted area.</td>
+
+<td>Hallway immediately outside a vault door, console area with controlled access.</td>
+
+</tr>
+
+<tr>
+
+<td><strong>Unrestricted area</strong></td>
+
+<td>Access is not limited/controlled by the facility; must meet <strong>public dose limits</strong>.</td>
+
+<td>Public corridors, waiting areas, and administrative spaces.</td>
+
+</tr>
+
+</table>
+
+</div>
+
+<div class="mnemonic">
+
+<strong>Memory cue:</strong> <strong>R‑C‑U</strong> is a “from most controlled to least controlled” ladder: <strong>Restricted → Controlled → Unrestricted</strong>.
+
+</div>
+
+<details>
+
+<summary>Common posting categories you should recognize</summary>
+
+<ul>
+
+<li><strong>Radiation area / high radiation area / very high radiation area</strong> postings (area‑based warnings).</li>
+
+<li><strong>Radioactive materials</strong> postings (storage/handling locations, e.g., brachytherapy sources).</li>
+
+<li><strong>Instructions or notices to employees</strong> (facility postings required by regulation/policy).</li>
+
+</ul>
+
+<p style="margin-top:10px;">For exam purposes, know the <em>category</em> and what it communicates: <strong>hazard type</strong>, <strong>access control</strong>, and <strong>required precautions</strong>.</p>
+
+</details>
+
+<div class="visual-aid">
+
+<svg width="520" height="220" viewBox="0 0 520 220" role="img" aria-label="Restricted, controlled, and unrestricted area diagram">
+
+<!-- Unrestricted area -->
+
+<rect x="20" y="40" width="150" height="150" rx="12" fill="#ecf0f1" stroke="#2c3e50"/>
+
+<text x="40" y="65" font-size="12" font-weight="bold" fill="#2c3e50">Unrestricted</text>
+
+<text x="40" y="88" font-size="12" fill="#2c3e50">Public access</text>
+
+<text x="40" y="110" font-size="12" fill="#2c3e50">Public dose limits</text>
+
+<!-- Controlled area -->
+
+<rect x="190" y="40" width="150" height="150" rx="12" fill="#f9f9f9" stroke="#8e44ad" stroke-width="2"/>
+
+<text x="210" y="65" font-size="12" font-weight="bold" fill="#8e44ad">Controlled</text>
+
+<text x="210" y="88" font-size="12" fill="#2c3e50">Facility limits access</text>
+
+<text x="210" y="110" font-size="12" fill="#2c3e50">Staff/escorted entry</text>
+
+<!-- Restricted area -->
+
+<rect x="360" y="40" width="140" height="150" rx="12" fill="#fffcf5" stroke="#c0392b" stroke-width="2"/>
+
+<text x="380" y="65" font-size="12" font-weight="bold" fill="#c0392b">Restricted</text>
+
+<text x="380" y="88" font-size="12" fill="#2c3e50">Vault / beam on risk</text>
+
+<text x="380" y="110" font-size="12" fill="#2c3e50">Interlocks & postings</text>
+
+<!-- Arrows -->
+
+<path d="M 170 115 L 190 115" stroke="#2c3e50" stroke-width="3" marker-end="url(#arrow)"/>
+
+<path d="M 340 115 L 360 115" stroke="#2c3e50" stroke-width="3" marker-end="url(#arrow)"/>
+
+<defs>
+
+<marker id="arrow" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto">
+
+<path d="M0,0 L0,6 L6,3 z" fill="#2c3e50" />
+
+</marker>
+
+</defs>
+
+</svg>
+
+</div>
+
+</div>
+
+<div class="concept-block">
+
+<h3>4.5 Primary vs Secondary Barriers (And What “Area Monitoring” Means)</h3>
+
+<p>Shielding design and area monitoring work together: barriers reduce exposure, and monitoring confirms areas remain safe over time.</p>
+
+<div class="table-box">
+
+<table>
+
+<tr>
+
+<th>Concept</th>
+
+<th>Definition</th>
+
+<th>Example in therapy</th>
+
+</tr>
+
+<tr>
+
+<td><strong>Primary barrier</strong></td>
+
+<td>Shielding designed to stop the <strong>direct (primary) beam</strong>.</td>
+
+<td>Concrete wall section in the direction of gantry angles used for treatment beams.</td>
+
+</tr>
+
+<tr>
+
+<td><strong>Secondary barrier</strong></td>
+
+<td>Shielding designed for <strong>scatter + leakage</strong> radiation.</td>
+
+<td>Vault door, control room wall, or walls not struck by the direct beam.</td>
+
+</tr>
+
+<tr>
+
+<td><strong>Area monitoring devices</strong></td>
+
+<td>Instruments installed/used to survey radiation levels in/around controlled areas.</td>
+
+<td>Fixed vault monitors, portable survey meters for periodic checks, and records/trending.</td>
+
+</tr>
+
+</table>
+
+</div>
+
+<div class="watch-out">
+
+<strong>Exam connection:</strong> If a question mentions <em>primary vs secondary</em>, translate it to <strong>direct beam</strong> vs <strong>scatter/leakage</strong>.
+
+</div>
+
+</div>
+
+<div class="concept-block">
+
+<h3>4.6 MRI Magnetic Field Screening Checklist (Safety “Must‑Know”)</h3>
+
+<p>MRI hazards are different from ionizing radiation hazards: the <strong>static magnetic field is always on</strong>. Screening prevents projectile accidents, implant malfunctions, and thermal injury risks.</p>
+
+<div class="visual-aid">
+
+<svg width="520" height="190" viewBox="0 0 520 190" role="img" aria-label="MRI magnet screening warning graphic">
+
+<!-- Magnet -->
+
+<path d="M 80 140 L 80 70 Q 80 40 110 40 L 160 40 Q 190 40 190 70 L 190 140" fill="#ecf0f1" stroke="#2c3e50" stroke-width="3"/>
+
+<rect x="80" y="135" width="45" height="18" fill="#e74c3c"/>
+
+<rect x="145" y="135" width="45" height="18" fill="#3498db"/>
+
+<text x="95" y="110" font-size="14" font-weight="bold" fill="#2c3e50">MRI</text>
+
+<!-- Warning sign -->
+
+<polygon points="300,45 430,45 365,160" fill="#fffcf5" stroke="#c0392b" stroke-width="3"/>
+
+<text x="345" y="100" font-size="34" font-weight="bold" fill="#c0392b">!</text>
+
+<text x="270" y="28" font-size="12" fill="#2c3e50">Screen BEFORE entering magnet room</text>
+
+<!-- Projectile arrow -->
+
+<path d="M 240 95 L 190 95" stroke="#2c3e50" stroke-width="4" marker-end="url(#arrow2)"/>
+
+<circle cx="250" cy="95" r="10" fill="#95a5a6"/>
+
+<text x="235" y="122" font-size="12" fill="#2c3e50">Ferromagnetic item</text>
+
+<defs>
+
+<marker id="arrow2" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto">
+
+<path d="M0,0 L0,6 L6,3 z" fill="#2c3e50" />
+
+</marker>
+
+</defs>
+
+</svg>
+
+</div>
+
+<p style="margin-bottom: 8px;"><strong>Study tip:</strong> Know the <em>screening buckets</em> the exam lists, and be able to recognize examples.</p>
+
+<div class="table-box">
+
+<table class="checklist-table">
+
+<tr>
+
+<th style="width: 38%;">Screening Category</th>
+
+<th>Examples to remember</th>
+
+</tr>
+
+<tr>
+
+<td><label><input type="checkbox"> <strong>Biomedical implants</strong></label></td>
+
+<td>Pacemakers/ICDs, neurostimulators, aneurysm clips, cochlear implants (screen status and MRI compatibility).</td>
+
+</tr>
+
+<tr>
+
+<td><label><input type="checkbox"> <strong>Ferrous foreign bodies</strong></label></td>
+
+<td>Metal fragments (especially eye), shrapnel, retained metal from prior injury.</td>
+
+</tr>
+
+<tr>
+
+<td><label><input type="checkbox"> <strong>Medical conditions</strong> (e.g., pregnancy)</label></td>
+
+<td>Pregnancy status and conditions that affect safe positioning/monitoring.</td>
+
+</tr>
+
+<tr>
+
+<td><label><input type="checkbox"> <strong>Prior diagnostic/surgical procedures</strong></label></td>
+
+<td>History that suggests implants, clips, stents, or retained hardware.</td>
+
+</tr>
+
+<tr>
+
+<td><label><input type="checkbox"> <strong>Topical / externally applied items</strong></label></td>
+
+<td>Tattoos, medication patches, body‑piercing jewelry, monitoring devices, certain clothing items.</td>
+
+</tr>
+
+<tr>
+
+<td><label><input type="checkbox"> <strong>Ancillary equipment</strong></label></td>
+
+<td>Oxygen tanks, IV poles, stretchers/wheelchairs—only MRI‑safe/conditional equipment allowed.</td>
+
+</tr>
+
+</table>
+
+</div>
+
+<div class="watch-out">
+
+<strong>High‑yield concept:</strong> In MRI, the biggest “gotcha” is bringing a ferromagnetic object or non‑compatible device into the magnet environment. <strong>Screen, remove, verify, and document.</strong>
+
+</div>
+
+</div>
+
+
 
 </body>
+
 </html>
