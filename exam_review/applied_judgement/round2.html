@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARRT Clinical Simulator (Part 2)</title>
+    <style>
+        :root {
+            --bg: #f4f7f6;
+            --card-bg: #ffffff;
+            --primary: #2c3e50;
+            --accent: #8e44ad; /* Purple for Part 2 */
+            --care: #27ae60;
+            --safety: #d35400;
+            --proc: #2980b9;
+            --text: #333;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .sim-container {
+            max-width: 950px;
+            width: 100%;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header-panel {
+            background: var(--primary);
+            color: white;
+            padding: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header-info h1 { margin: 0; font-size: 1.6em; }
+        .score-badge {
+            background: rgba(255,255,255,0.1);
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .score-number { font-size: 1.5em; font-weight: bold; display: block; }
+
+        /* Progress */
+        .progress-track { height: 8px; background: #e0e0e0; width: 100%; }
+        .progress-fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.4s ease; }
+
+        /* Content */
+        .scenario-area { padding: 30px; }
+
+        /* Category Badge */
+        .category-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+        .cat-care { background-color: var(--care); }
+        .cat-safety { background-color: var(--safety); }
+        .cat-proc { background-color: var(--proc); }
+
+        /* Chart */
+        .chart-card {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-left: 6px solid #555;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 25px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.95em;
+            position: relative;
+        }
+        .chart-title {
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: var(--primary);
+            color: white;
+            padding: 2px 10px;
+            font-size: 0.8em;
+            border-radius: 4px;
+        }
+        .chart-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            border-bottom: 1px dashed #e0e0e0;
+            padding-bottom: 4px;
+        }
+        
+        /* Question & Options */
+        .question-text {
+            font-size: 1.25em;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: var(--primary);
+        }
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .option-btn {
+            background: white;
+            border: 2px solid #e0e0e0;
+            padding: 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
+            font-size: 1em;
+            color: var(--text);
+        }
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--accent);
+            background: #f0f8ff;
+            transform: translateY(-2px);
+        }
+        .option-btn:disabled { cursor: default; opacity: 0.7; }
+        
+        /* Feedback */
+        .correct-choice { background-color: #d4edda !important; border-color: #28a745 !important; color: #155724; }
+        .wrong-choice { background-color: #f8d7da !important; border-color: #dc3545 !important; color: #721c24; }
+        .feedback-panel {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 8px;
+            display: none;
+        }
+        .fb-correct { background: #e8f5e9; border: 1px solid #c3e6cb; }
+        .fb-wrong { background: #fce4ec; border: 1px solid #f5c6cb; }
+
+        /* Nav & Start */
+        .footer-nav { padding: 20px 30px; border-top: 1px solid #eee; display: flex; justify-content: flex-end; }
+        .next-btn { background: var(--primary); color: white; border: none; padding: 12px 30px; border-radius: 6px; cursor: pointer; display: none; }
+        .start-screen { text-align: center; padding: 50px; }
+        .start-btn { background: var(--accent); color: white; padding: 15px 40px; border: none; border-radius: 30px; font-size: 1.2em; cursor: pointer; margin-top: 30px; }
+
+    </style>
+</head>
+<body>
+
+<div class="sim-container">
+    <div class="header-panel">
+        <div class="header-info">
+            <h1>ARRT Simulator (Part 2)</h1>
+            <p>Lab Values, DVH Analysis, and Advanced Safety</p>
+        </div>
+        <div class="score-badge">
+            <span class="score-number" id="score-display">0/0</span>
+        </div>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progress"></div></div>
+
+    <div id="main-interface">
+        <div class="start-screen">
+            <h2>Ready for Round 2?</h2>
+            <p>12 New Scenarios addressing topics not covered in Part 1.</p>
+            <p>Focus: Infection Control, Brachytherapy Emergencies, and Plan Evaluation.</p>
+            <button class="start-btn" onclick="startSim()">Start Part 2</button>
+        </div>
+    </div>
+
+    <div class="footer-nav">
+        <button id="next-btn" class="next-btn" onclick="nextScenario()">Next Scenario &rarr;</button>
+    </div>
+</div>
+
+<script>
+    const scenarios = [
+        // --- PATIENT CARE ---
+        {
+            category: "1. Patient Care",
+            type: "care",
+            title: "Infection Control: C. Diff",
+            chart: `
+                <div class="chart-row"><strong>Pt:</strong> B. Simpson (65M)</div>
+                <div class="chart-row"><strong>Status:</strong> Inpatient transport.</div>
+                <div class="chart-row"><strong>Alert:</strong> Contact Precautions (Clostridium Difficile).</div>
+                <div class="chart-row"><strong>Action:</strong> Patient helped off table. Therapist removes gloves.</div>
+            `,
+            question: "To properly adhere to C. Diff precautions, what is the specific requirement for hand hygiene?",
+            options: [
+                { text: "Use an alcohol-based hand rub (sanitizer) vigorously for 20 seconds.", correct: false, feedback: "Incorrect. Alcohol-based sanitizers DO NOT kill C. Diff spores. They are ineffective." },
+                { text: "Wash hands with soap and water.", correct: true, feedback: "Correct. C. Diff forms spores that are resistant to alcohol. Mechanical friction and rinsing with soap and water is the only way to remove them." },
+                { text: "Wear sterile gloves for the next patient to prevent cross-contamination.", correct: false, feedback: "Incorrect. You must clean your hands before donning new gloves. Gloves do not replace hygiene." },
+                { text: "Wipe hands with Sani-Cloths (Purple top) immediately.", correct: false, feedback: "Incorrect. Standard Sani-Cloths do not kill C. Diff spores. You need Bleach wipes for equipment and Soap/Water for hands." }
+            ]
+        },
+        {
+            category: "1. Patient Care",
+            type: "care",
+            title: "Lab Values: Myelosuppression",
+            chart: `
+                <div class="chart-row"><strong>Pt:</strong> J. Doe (40F) - Breast CA</div>
+                <div class="chart-row"><strong>Chemo:</strong> Concurrent Adriamycin/Taxol.</div>
+                <div class="chart-row"><strong>Today's CBC:</strong> WBC 2.0, Hgb 11.0.</div>
+                <div class="chart-row"><strong>Platelets:</strong> 18,000 /mm³.</div>
+            `,
+            question: "Reviewing the lab values, what is the appropriate action regarding today's radiation treatment?",
+            options: [
+                { text: "Proceed with treatment; values are low but within tolerance.", correct: false, feedback: "Incorrect. Platelets below 50,000 are a concern. Below 20,000 is a critical risk for spontaneous hemorrhage." },
+                { text: "Hold treatment and notify the Radiation Oncologist immediately.", correct: true, feedback: "Correct. A platelet count of 18k is critically low (Thrombocytopenia). Treatment could cause internal bleeding. The doctor must intervene." },
+                { text: "Treat the patient but require them to wear a mask (Neutropenia).", correct: false, feedback: "Incorrect. While WBC is low (2.0), the Platelets (18k) are the immediate life-threatening issue." },
+                { text: "Proceed with treatment but omit the boost field.", correct: false, feedback: "Incorrect. Therapists cannot change the prescription. The issue is systemic safety, not just field size." }
+            ]
+        },
+        {
+            category: "1. Patient Care",
+            type: "care",
+            title: "Ethics: HIPAA & Social Media",
+            chart: `
+                <div class="chart-row"><strong>Context:</strong> Lunch break.</div>
+                <div class="chart-row"><strong>Event:</strong> A coworker shows you a photo on their phone.</div>
+                <div class="chart-row"><strong>Image:</strong> It's a "funny" setup note from a patient's chart.</div>
+                <div class="chart-row"><strong>Detail:</strong> Patient Name is visible. Coworker posts it to "Snapchat Story."</div>
+            `,
+            question: "What is your ethical and legal obligation in this scenario?",
+            options: [
+                { text: "Ignore it; it's a private phone and disappears in 24 hours.", correct: false, feedback: "Incorrect. This is a HIPAA violation. Ignoring it makes you complicit in the culture of negligence." },
+                { text: "Report the violation to the Privacy Officer immediately.", correct: true, feedback: "Correct. Posting PHI (Protected Health Information) on social media is a federal violation. You have a duty to report." },
+                { text: "Ask the coworker to delete it, but do not report it.", correct: false, feedback: "Incorrect. While asking them to delete it is good, the breach has already occurred (it was posted). It must be reported." },
+                { text: "Comment on the post asking them to blur the name.", correct: false, feedback: "Incorrect. Engaging with the post links you to the violation. It should never have been posted." }
+            ]
+        },
+
+        // --- SAFETY & QA ---
+        {
+            category: "2. Safety & QA",
+            type: "safety",
+            title: "Emergency: Brachytherapy Source Stuck",
+            chart: `
+                <div class="chart-row"><strong>Procedure:</strong> HDR Cylinder (Vaginal Cuff).</div>
+                <div class="chart-row"><strong>Status:</strong> Treatment complete. Timer hits 0.</div>
+                <div class="chart-row"><strong>Alert:</strong> Console shows "Source Unsafe". Gamma Monitor is Alarming (Red).</div>
+                <div class="chart-row"><strong>Action:</strong> Source failed to retract.</div>
+            `,
+            question: "What is the FIRST step in the emergency sequence?",
+            options: [
+                { text: "Enter room and pull the emergency crank.", correct: false, feedback: "Incorrect. You must stop the machine first to ensure the motor isn't fighting you." },
+                { text: "Hit the Emergency Off button on the wall/console.", correct: true, feedback: "Correct. Step 1: Hit E-Stop. Step 2: Enter with Survey Meter. Step 3: Manually retract (Crank) if needed. Step 4: Remove Applicator." },
+                { text: "Call Physics and wait outside the door.", correct: false, feedback: "Incorrect. The patient is receiving a lethal dose every second you wait. You must act." },
+                { text: "Enter room and remove the applicator immediately.", correct: false, feedback: "Incorrect. You must attempt to retract the source (E-stop/Crank) first. Removing the applicator with a live source exposes the staff to massive dose." }
+            ]
+        },
+        {
+            category: "2. Safety & QA",
+            type: "safety",
+            title: "QA: Light Field vs. Radiation Field",
+            chart: `
+                <div class="chart-row"><strong>Test:</strong> Monthly Light/Rad Coincidence.</div>
+                <div class="chart-row"><strong>Method:</strong> Ready-Pack film.</div>
+                <div class="chart-row"><strong>Result:</strong> Light field edge is at 10.0cm. Radiation edge is at 10.4cm.</div>
+                <div class="chart-row"><strong>Difference:</strong> 4mm discrepancy.</div>
+            `,
+            question: "Is this result within TG-142 tolerance, and what is the implication?",
+            options: [
+                { text: "Pass. Tolerance is 5mm for monthly checks.", correct: false, feedback: "Incorrect. Tolerance is 2mm (or 1% on older machines). 5mm is way too large." },
+                { text: "Fail. Tolerance is 2mm. Treated areas may be larger than intended.", correct: true, feedback: "Correct. If the light (what you see) doesn't match the radiation (what you treat), you risk missing the tumor or overdosing normal tissue." },
+                { text: "Pass. Tolerance is 3mm for non-IMRT machines.", correct: false, feedback: "Incorrect. 2mm is the standard for modern linear accelerators." },
+                { text: "Fail. Tolerance is 1mm. This requires immediate shutdown.", correct: false, feedback: "Incorrect. 1mm is for Stereotactic (SRS), not general Monthly QA. But 4mm is still a Fail." }
+            ]
+        },
+        {
+            category: "2. Safety & QA",
+            type: "safety",
+            title: "Dose Limits: Pregnant Worker",
+            chart: `
+                <div class="chart-row"><strong>Staff:</strong> Therapist A (Declared Pregnant).</div>
+                <div class="chart-row"><strong>Badge Report:</strong> Current Month: 0.6 mSv.</div>
+                <div class="chart-row"><strong>Total Gestation:</strong> 1.2 mSv (Month 3).</div>
+            `,
+            question: "Evaluate the monthly exposure against NCRP limits.",
+            options: [
+                { text: "Within limits. The limit is 5 mSv per month.", correct: false, feedback: "Incorrect. 5 mSv is the TOTAL gestation limit. The monthly limit is much lower." },
+                { text: "Exceeded limit. The limit is 0.5 mSv per month.", correct: true, feedback: "Correct. The fetus is limited to 0.5 mSv (0.05 rem) per month. A reading of 0.6 mSv requires investigation/adjustment of duties." },
+                { text: "Within limits. The limit is 1 mSv per month.", correct: false, feedback: "Incorrect. 1 mSv is the annual public limit." },
+                { text: "Exceeded limit. Pregnant workers cannot receive ANY dose.", correct: false, feedback: "Incorrect. They can receive dose, just strictly limited amounts." }
+            ]
+        },
+
+        // --- PROCEDURES ---
+        {
+            category: "3. Procedures",
+            type: "proc",
+            title: "Plan Evaluation: Lung DVH",
+            chart: `
+                <div class="chart-row"><strong>Site:</strong> Right Lung SBRT.</div>
+                <div class="chart-row"><strong>Dose:</strong> 50 Gy / 5 fractions.</div>
+                <div class="chart-row"><strong>Metric:</strong> Total Lung V20 (Volume receiving 20Gy).</div>
+                <div class="chart-row"><strong>Value:</strong> V20 = 45%.</div>
+            `,
+            question: "Based on QUANTEC/Standard guidelines, is this plan acceptable?",
+            options: [
+                { text: "Acceptable. V20 limit is < 50%.", correct: false, feedback: "Incorrect. V20 > 30-35% carries a very high risk of radiation pneumonitis." },
+                { text: "Unacceptable. V20 should be < 10% for SBRT.", correct: false, feedback: "Incorrect. <10% is ideal (V5/V10), but for V20, the hard stop is usually around 30-35%." },
+                { text: "Unacceptable. High risk of Pneumonitis. V20 should be < 30-35%.", correct: true, feedback: "Correct. A V20 of 45% implies nearly half the lung is getting a toxic dose. This plan needs re-optimization." },
+                { text: "Acceptable. The lung is parallel tissue and can handle high dose.", correct: false, feedback: "Incorrect. While lung is parallel, it is very sensitive. Widespread low/medium dose (V20) causes fatal pneumonitis." }
+            ]
+        },
+        {
+            category: "3. Procedures",
+            type: "proc",
+            title: "Sim Setup: Rectal Cancer",
+            chart: `
+                <div class="chart-row"><strong>Pt:</strong> S. Green (58M)</div>
+                <div class="chart-row"><strong>Dx:</strong> Rectal Adenocarcinoma.</div>
+                <div class="chart-row"><strong>Instruction:</strong> Setup Prone on Belly Board.</div>
+                <div class="chart-row"><strong>Goal:</strong> Reduce toxicity to critical structure.</div>
+            `,
+            question: "What is the primary dosimetric advantage of using a Belly Board for rectal treatment?",
+            options: [
+                { text: "It displaces the Small Bowel anteriorly, out of the field.", correct: true, feedback: "Correct. Gravity pulls the small bowel down into the 'hole' of the board, moving it away from the high-dose posterior pelvic field." },
+                { text: "It compresses the bladder to reduce dose.", correct: false, feedback: "Incorrect. We usually want a FULL bladder to push bowel up. The board doesn't compress the bladder." },
+                { text: "It immobilizes the hips to prevent rotation.", correct: false, feedback: "Incorrect. While it helps alignment, the primary purpose is OAR (Organ At Risk) sparing." },
+                { text: "It brings the rectum closer to the surface (Skin sparing).", correct: false, feedback: "Incorrect. Depth isn't the issue. Small bowel toxicity is the dose-limiting factor." }
+            ]
+        },
+        {
+            category: "3. Procedures",
+            type: "proc",
+            title: "Calculation: Equivalent Square",
+            chart: `
+                <div class="chart-row"><strong>Field:</strong> PA Spine.</div>
+                <div class="chart-row"><strong>Dimensions:</strong> Width = 10 cm. Length = 20 cm.</div>
+                <div class="chart-row"><strong>Task:</strong> Find the Equivalent Square (EqSq) to look up PDD.</div>
+                <div class="chart-row"><strong>Formula:</strong> 4(Area) / Perimeter OR 2(L*W) / (L+W).</div>
+            `,
+            question: "Calculate the Equivalent Square for a 10 x 20 cm field.",
+            options: [
+                { text: "15.0 cm", correct: false, feedback: "Incorrect. That is the arithmetic mean. Use Sterling's Formula." },
+                { text: "13.3 cm", correct: true, feedback: "Correct. 2(10*20) / (10+20) = 400 / 30 = 13.3 cm. It is always closer to the smaller dimension." },
+                { text: "12.5 cm", correct: false, feedback: "Incorrect. Check your math. 400 / 30." },
+                { text: "14.1 cm", correct: false, feedback: "Incorrect. That would be the square root of the area (200), which is close but not the correct formula for scatter equivalence." }
+            ]
+        },
+        {
+            category: "3. Procedures",
+            type: "proc",
+            title: "Physics: Bolus Effect",
+            chart: `
+                <div class="chart-row"><strong>Beam:</strong> 6 MV Photon.</div>
+                <div class="chart-row"><strong>Dmax Depth:</strong> 1.5 cm (in water/tissue).</div>
+                <div class="chart-row"><strong>Modifier:</strong> 1.0 cm Bolus applied to surface.</div>
+                <div class="chart-row"><strong>Question:</strong> Where is the new Dmax depth relative to the patient's skin?</div>
+            `,
+            question: "With 1cm of bolus, at what depth *inside the patient* does the 100% dose (Dmax) occur?",
+            options: [
+                { text: "2.5 cm deep.", correct: false, feedback: "Incorrect. Bolus adds thickness, meaning the beam travels through 1cm BEFORE hitting skin. It pulls Dmax shallower, not deeper." },
+                { text: "0.5 cm deep.", correct: true, feedback: "Correct. Total Dmax is 1.5cm. The first 1.0cm happens in the bolus. 1.5 - 1.0 = 0.5cm remaining depth in the patient." },
+                { text: "At the skin surface (0.0 cm).", correct: false, feedback: "Incorrect. That would require 1.5cm of bolus (Full buildup)." },
+                { text: "1.5 cm deep.", correct: false, feedback: "Incorrect. This ignores the bolus entirely." }
+            ]
+        },
+        {
+            category: "3. Procedures",
+            type: "proc",
+            title: "Motion Management: 4D-CT",
+            chart: `
+                <div class="chart-row"><strong>Pt:</strong> F. Mercury (60M)</div>
+                <div class="chart-row"><strong>Site:</strong> Lung Tumor (Lower Lobe).</div>
+                <div class="chart-row"><strong>Issue:</strong> Tumor moves 2.5cm with breathing.</div>
+                <div class="chart-row"><strong>Sim Order:</strong> 4D-CT ordered.</div>
+            `,
+            question: "What is the primary purpose of the 4D-CT simulation in this case?",
+            options: [
+                { text: "To improve image resolution for small tumors.", correct: false, feedback: "Incorrect. 4D scans often have slightly lower resolution due to binning. The goal is temporal (time) resolution." },
+                { text: "To define the ITV (Internal Target Volume) capturing the full range of motion.", correct: true, feedback: "Correct. 4D-CT captures breathing phases (Inhale/Exhale). We contour the tumor on all phases to create an ITV that accounts for motion." },
+                { text: "To speed up the scanning process.", correct: false, feedback: "Incorrect. 4D scans take much longer (slow pitch) to capture breathing cycles." },
+                { text: "To allow the patient to breathe hold during treatment.", correct: false, feedback: "Incorrect. Breath hold (DIBH) is a different technique. 4D-CT is for free-breathing treatments." }
+            ]
+        },
+        {
+            category: "3. Procedures",
+            type: "proc",
+            title: "Device Safety: Pacemaker",
+            chart: `
+                <div class="chart-row"><strong>Pt:</strong> A. Stark (40M)</div>
+                <div class="chart-row"><strong>Site:</strong> Left Chest Wall.</div>
+                <div class="chart-row"><strong>Device:</strong> Pacemaker located in Left Pectoral region.</div>
+                <div class="chart-row"><strong>Plan:</strong> Anterior field goes directly through the device.</div>
+            `,
+            question: "What is the rule regarding radiation beams and pacemakers?",
+            options: [
+                { text: "Treat through it; modern pacemakers are radiation hardened.", correct: false, feedback: "Incorrect. Direct beams can fry the circuit instantly. NEVER treat directly through a pacemaker." },
+                { text: "Avoid direct beam. Cumulative dose to device must be < 2 Gy (or 5 Gy depending on model).", correct: true, feedback: "Correct. The pacemaker must be shielded or the fields angled to avoid it. Scatter dose is the only allowable dose." },
+                { text: "Remove the pacemaker before daily treatment.", correct: false, feedback: "Incorrect. It is surgically implanted." },
+                { text: "Shield it with 1cm lead bolus on the skin.", correct: false, feedback: "Incorrect. Placing lead ON the skin increases scatter dose to the device (backscatter) and bolus effect. It does not stop the primary beam." }
+            ]
+        }
+    ];
+
+    // --- LOGIC ENGINE ---
+    let currentIndex = 0;
+    let score = 0;
+
+    function startSim() {
+        document.getElementById('main-interface').innerHTML = "";
+        currentIndex = 0;
+        score = 0;
+        updateScore();
+        loadScenario(0);
+    }
+
+    function loadScenario(index) {
+        if (index >= scenarios.length) {
+            endSim();
+            return;
+        }
+
+        const s = scenarios[index];
+        const container = document.getElementById('main-interface');
+        document.getElementById('progress').style.width = ((index / scenarios.length) * 100) + "%";
+
+        // Colors
+        let badgeClass = "cat-care";
+        let borderClass = "#27ae60";
+        if(s.type === "safety") { badgeClass = "cat-safety"; borderClass = "#d35400"; }
+        if(s.type === "proc") { badgeClass = "cat-proc"; borderClass = "#2980b9"; }
+
+        // HTML
+        container.innerHTML = `
+            <div class="scenario-area">
+                <span class="category-badge ${badgeClass}">${s.category}</span>
+                <div class="chart-card" style="border-left-color: ${borderClass}">
+                    <div class="chart-title">MEDICAL RECORD</div>
+                    ${s.chart}
+                </div>
+                <div class="question-text">${s.question}</div>
+                <div class="options-grid">
+                    ${s.options.map((opt, i) => `
+                        <button class="option-btn" id="opt-${i}" onclick="check(${i})">${opt.text}</button>
+                    `).join('')}
+                </div>
+                <div id="feedback" class="feedback-panel"></div>
+            </div>
+        `;
+        document.getElementById('next-btn').style.display = 'none';
+    }
+
+    function check(selectedIndex) {
+        const s = scenarios[currentIndex];
+        const fb = document.getElementById('feedback');
+        const correctIndex = s.options.findIndex(o => o.correct);
+        const isCorrect = (selectedIndex === correctIndex);
+
+        // Disable buttons
+        document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+
+        // Styles
+        if (isCorrect) {
+            document.getElementById(`opt-${selectedIndex}`).classList.add('correct-choice');
+            fb.classList.add('fb-correct');
+            fb.innerHTML = `<strong>Correct!</strong> ${s.options[selectedIndex].feedback}`;
+            score++;
+        } else {
+            document.getElementById(`opt-${selectedIndex}`).classList.add('wrong-choice');
+            document.getElementById(`opt-${correctIndex}`).classList.add('correct-choice');
+            fb.classList.add('fb-wrong');
+            fb.innerHTML = `<strong>Incorrect.</strong> ${s.options[selectedIndex].feedback}`;
+        }
+
+        fb.style.display = 'block';
+        updateScore();
+        document.getElementById('next-btn').style.display = 'block';
+    }
+
+    function nextScenario() {
+        currentIndex++;
+        loadScenario(currentIndex);
+    }
+
+    function updateScore() {
+        document.getElementById('score-display').innerText = `${score}/${scenarios.length}`;
+    }
+
+    function endSim() {
+        document.getElementById('progress').style.width = "100%";
+        const percent = Math.round((score / scenarios.length) * 100);
+        document.getElementById('main-interface').innerHTML = `
+            <div class="start-screen">
+                <h2 style="color: var(--primary)">Simulation Part 2 Complete</h2>
+                <div style="font-size: 3em; font-weight:bold; color: var(--accent); margin: 20px 0;">${percent}%</div>
+                <p>Review the feedback for any missed questions.</p>
+                <button class="start-btn" onclick="startSim()">Restart</button>
+            </div>
+        `;
+        document.getElementById('next-btn').style.display = 'none';
+    }
+</script>
+
+</body>
+</html
