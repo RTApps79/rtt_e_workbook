@@ -1,68 +1,292 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Module 08: Isotopes, Shielding & Special Topics</title>
-<style>
-:root {
---primary: #2c3e50;
---accent: #8e44ad;
---highlight: #f1c40f;
---bg-light: #fdfefe;
---white: #ffffff;
-}
-body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height:1.6; color:var(--primary); max-width:900px; margin:0 auto; padding:20px; background-color:var(--bg-light); }
-h1 { text-align:center; color:var(--primary); border-bottom:3px solid var(--accent); padding-bottom:15px; margin-bottom:40px; }
-.module-header { background: linear-gradient(90deg, var(--accent), var(--primary)); color: var(--white); padding: 15px 20px; border-radius: 8px; margin-top: 50px; display:flex; align-items:center;}
-.module-number { background:var(--white); color:var(--accent); width:30px; height:30px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:bold; margin-right:15px; }
-.concept-block { background:var(--white); border-radius:8px; padding:25px; margin:20px 0; box-shadow:0 4px 6px rgba(0,0,0,0.05); border-left:5px solid var(--accent); }
-table { width:100%; border-collapse:collapse; margin-top:15px; }
-th { background-color:var(--accent); color:white; padding:10px; text-align:left; }
-td { border:1px solid #ddd; padding:10px; }
-.watch-out { background-color:#fff8e1; border:1px solid #ffe0b2; border-radius:5px; padding:15px; margin-top:15px; font-size:0.9em; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module 8: Isotopes, Shielding & Special Topics</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #8e44ad; /* Purple for Isotopes/Physics */
+            --highlight: #f1c40f;
+            --bg-light: #fdfefe;
+            --white: #ffffff;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--primary);
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: var(--bg-light);
+        }
+        
+        /* Headers */
+        h1 {
+            text-align: center;
+            color: var(--primary);
+            border-bottom: 3px solid var(--accent);
+            padding-bottom: 15px;
+            margin-bottom: 40px;
+        }
+        .module-header {
+            background: linear-gradient(90deg, var(--accent), var(--primary));
+            color: var(--white);
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-top: 50px;
+            display: flex;
+            align-items: center;
+        }
+        .module-number {
+            background: var(--white);
+            color: var(--accent);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        /* Content Blocks */
+        .concept-block {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--accent);
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th {
+            background-color: var(--accent);
+            color: white;
+            padding: 10px;
+            text-align: left;
+        }
+        td {
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+        tr:nth-child(even) {background-color: #f4f6f7;}
+
+        /* Visual Aids */
+        .visual-aid {
+            text-align: center;
+            margin: 20px 0;
+            background: #fff;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+        }
+
+        /* "Watch Out" Tips */
+        .watch-out {
+            background-color: #fff8e1;
+            border: 1px solid #ffe0b2;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 15px;
+            font-size: 0.9em;
+        }
+        .watch-out strong {
+            color: #d35400;
+        }
+    </style>
 </head>
 <body>
-<h1>Module 08: Isotopes, Shielding & Special Topics</h1>
-<p style="text-align:center; font-size:1.1em;">Brachytherapy Isotopes, Barrier Calculation Factors, and Pharmacology.</p>
 
-<div class="module-header"><span class="module-number">1</span><h2>Radioactive Isotopes (Brachytherapy)</h2></div>
-<div class="concept-block">
-<h3>1.1 Common Clinical Isotopes</h3>
-<table>
-<tr><th>Isotope</th><th>Half-Life (T½)</th><th>Common Use</th></tr>
-<tr><td><strong>Cobalt-60</strong></td><td>5.26 years</td><td>External Beam (Gamma Knife), HDR.</td></tr>
-<tr><td><strong>Cesium-137</strong></td><td>30 years</td><td>LDR GYN (Tandem & Ovoids).</td></tr>
-<tr><td><strong>Iridium-192</strong></td><td>74 days</td><td>HDR sources.</td></tr>
-<tr><td><strong>Iodine-125</strong></td><td>60 days</td><td>Permanent Prostate Seeds (LDR).</td></tr>
-<tr><td><strong>Palladium-103</strong></td><td>17 days</td><td>Permanent Prostate Seeds.</td></tr>
-<tr><td><strong>Gold-198</strong></td><td>2.7 days</td><td>Permanent Implants (historical).</td></tr>
-</table>
-<div class="watch-out"><strong>Formula:</strong> Activity = Initial × (0.5)^(time / T½)</div>
-</div>
+    <h1>Module 8: Isotopes, Shielding & Special Topics</h1>
+    <p style="text-align: center; font-size: 1.1em;">
+        Brachytherapy Isotopes, Barrier Calculation Factors, and Pharmacology.
+    </p>
 
-<div class="module-header"><span class="module-number">2</span><h2>Shielding Calculation Factors</h2></div>
-<div class="concept-block">
-<p><strong>Barrier variables:</strong> W (workload), U (use factor), T (occupancy)</p>
-<table>
-<tr><th>Factor</th><th>Name</th><th>Definition</th></tr>
-<tr><td>W</td><td>Workload</td><td>How much the machine is on (cGy/week)</td></tr>
-<tr><td>U</td><td>Use Factor</td><td>Fraction of beam time pointed at a specific wall</td></tr>
-<tr><td>T</td><td>Occupancy Factor</td><td>Who is on the other side (office vs corridor)</td></tr>
-</table>
-</div>
+    <div class="module-header">
+        <span class="module-number">1</span>
+        <h2>Radioactive Isotopes (Brachytherapy)</h2>
+    </div>
+    <p>Memorize these numbers. They are pure recall questions.</p>
 
-<div class="module-header"><span class="module-number">3</span><h2>Chemotherapy & Pharmacology</h2></div>
-<div class="concept-block">
-<p><strong>Radiosensitizers vs Radioprotectors</strong></p>
-<table>
-<tr><th>Class</th><th>Drug</th><th>Effect</th></tr>
-<tr><td>Radiosensitizer</td><td>Doxorubicin</td><td>Increases tumor radiosensitivity (cardiotoxic risk)</td></tr>
-<tr><td>Radioprotector</td><td>Amifostine</td><td>Protects normal tissues (salivary glands)</td></tr>
-</table>
-<div class="watch-out"><strong>Toxicities:</strong> Bleomycin → lung; Doxorubicin → heart; Vincristine → neuro; Cisplatin → kidney/hearing</div>
-</div>
+    <div class="concept-block">
+        <h3>1.1 Common Clinical Isotopes</h3>
+        <table>
+            <tr>
+                <th>Isotope</th>
+                <th>Half-Life (T½)</th>
+                <th>Common Use</th>
+            </tr>
+            <tr>
+                <td><strong>Cobalt-60</strong> (Co-60)</td>
+                <td>5.26 years</td>
+                <td>External Beam (Gamma Knife), HDR.</td>
+            </tr>
+            <tr>
+                <td><strong>Cesium-137</strong> (Cs-137)</td>
+                <td>30 years</td>
+                <td>LDR GYN (Tandem & Ovoids).</td>
+            </tr>
+            <tr>
+                <td><strong>Iridium-192</strong> (Ir-192)</td>
+                <td>74 days</td>
+                <td>HDR (High Dose Rate) sources.</td>
+            </tr>
+            <tr>
+                <td><strong>Iodine-125</strong> (I-125)</td>
+                <td>60 days</td>
+                <td>Permanent Prostate Seed Implants (LDR).</td>
+            </tr>
+            <tr>
+                <td><strong>Palladium-103</strong> (Pd-103)</td>
+                <td>17 days</td>
+                <td>Permanent Prostate Seed Implants (Aggressive).</td>
+            </tr>
+            <tr>
+                <td><strong>Gold-198</strong> (Au-198)</td>
+                <td>2.7 days</td>
+                <td>Permanent Implants (Historical).</td>
+            </tr>
+        </table>
+        
+        <div class="watch-out">
+            <strong>Formula Reminder:</strong> To calculate remaining activity:
+            <br><em>Activity = Initial Activity × (0.5)^(Time / Half-life)</em>
+        </div>
+    </div>
+
+    <div class="module-header">
+        <span class="module-number">2</span>
+        <h2>Shielding Calculation Factors</h2>
+    </div>
+    <p>When designing a vault, how thick must the walls be? This depends on three factors: <strong>W, U, and T</strong>.</p>
+
+    <div class="concept-block">
+        <h3>2.1 The Barrier Formula Variables</h3>
+        <p><strong>Formula:</strong> <em>Barrier Thickness ∝ (W × U × T)</em></p>
+        
+        <table>
+            <tr>
+                <th>Factor</th>
+                <th>Name</th>
+                <th>Definition</th>
+            </tr>
+            <tr>
+                <td><strong>W</strong></td>
+                <td><strong>Workload</strong></td>
+                <td>How much is the machine on?
+                    <br><em>Unit:</em> cGy/week or mA-min/week.
+                </td>
+            </tr>
+            <tr>
+                <td><strong>U</strong></td>
+                <td><strong>Use Factor</strong></td>
+                <td>How often is the beam pointed at <em>this specific wall</em>?
+                    <br><em>Floors:</em> U = 1 (Beam points down often).
+                    <br><em>Walls:</em> U = 0.25 (Beam rotates).
+                </td>
+            </tr>
+            <tr>
+                <td><strong>T</strong></td>
+                <td><strong>Occupancy Factor</strong></td>
+                <td>Who is on the other side of the wall?
+                    <br><em>T=1:</em> Offices, Control Rooms (Full occupancy).
+                    <br><em>T=1/5:</em> Hallways, Corridors (Partial).
+                    <br><em>T=1/20:</em> Toilets, Parking Lots (Occasional).
+                </td>
+            </tr>
+        </table>
+        <div class="visual-aid">
+            
+            <svg width="300" height="200" viewBox="0 0 300 200">
+                <rect x="50" y="20" width="200" height="160" fill="none" stroke="#333" stroke-width="4"/>
+                <circle cx="150" cy="100" r="10" fill="#e74c3c"/>
+                <line x1="150" y1="100" x2="250" y2="100" stroke="#e74c3c" stroke-width="2" stroke-dasharray="4"/>
+                <text x="160" y="90" font-size="10" fill="#e74c3c">Primary Beam</text>
+                
+                <rect x="250" y="60" width="10" height="80" fill="#2c3e50"/>
+                <text x="265" y="100" font-size="10">Primary Barrier (Thicker)</text>
+                
+                <text x="100" y="190" font-size="10">Secondary Barrier (Scatter/Leakage)</text>
+            </svg>
+        </div>
+    </div>
+
+    <div class="module-header">
+        <span class="module-number">3</span>
+        <h2>Protons vs. Photons</h2>
+    </div>
+
+    <div class="concept-block">
+        <h3>3.1 The Bragg Peak</h3>
+        <p>Why use Protons? Because they stop.</p>
+        
+        <div class="visual-aid">
+            <svg width="300" height="150" viewBox="0 0 300 150">
+                <line x1="20" y1="130" x2="280" y2="130" stroke="#333"/>
+                <line x1="20" y1="130" x2="20" y2="20" stroke="#333"/>
+                <text x="250" y="145" font-size="10">Depth</text>
+                
+                <path d="M 20 100 Q 40 40 60 40 Q 120 80 280 120" fill="none" stroke="#95a5a6" stroke-dasharray="4"/>
+                <text x="80" y="60" font-size="10" fill="#95a5a6">X-Ray (Exit Dose)</text>
+
+                <path d="M 20 120 L 180 110 L 190 30 L 195 130" fill="none" stroke="#2980b9" stroke-width="2"/>
+                <text x="195" y="25" font-size="10" fill="#2980b9" font-weight="bold">Bragg Peak</text>
+            </svg>
+        </div>
+
+        <ul>
+            <li><strong>Photons (X-rays):</strong> Have an exit dose (pass through the patient).</li>
+            <li><strong>Protons:</strong> Deposit most energy at a specific depth (Bragg Peak) and then stop immediately. Zero exit dose. Ideal for Pediatric tumors and Spine.</li>
+        </ul>
+    </div>
+
+    <div class="module-header">
+        <span class="module-number">4</span>
+        <h2>Chemotherapy & Pharmacology</h2>
+    </div>
+    <p>Drugs that interact with radiation.</p>
+
+    <div class="concept-block">
+        <h3>4.1 Radiosensitizers vs. Radioprotectors</h3>
+        <table>
+            <tr>
+                <th>Class</th>
+                <th>Drug Example</th>
+                <th>Function</th>
+            </tr>
+            <tr>
+                <td><strong>Radiosensitizer</strong></td>
+                <td><strong>Doxorubicin</strong> (Adriamycin)</td>
+                <td>Increases the effect of radiation on the tumor (but also increases toxicity).
+                    <br><em>Warning:</em> Doxorubicin is cardiotoxic (heart damage).</td>
+            </tr>
+            <tr>
+                <td><strong>Radioprotector</strong></td>
+                <td><strong>Amifostine</strong> (Ethyol)</td>
+                <td>Protects normal tissue (specifically salivary glands) from radiation damage.</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="concept-block">
+        <h3>4.2 Specific Toxicities</h3>
+        <p>Memorize these drug-organ associations:</p>
+        <ul>
+            <li><strong>Bleomycin</strong> → <span style="color:red;">Lung Toxicity</span> (Pulmonary Fibrosis).</li>
+            <li><strong>Adriamycin (Doxorubicin)</strong> → <span style="color:red;">Heart Toxicity</span> (Cardiotoxicity).</li>
+            <li><strong>Vincristine</strong> → <span style="color:red;">Neurotoxicity</span> (Nerve damage).</li>
+            <li><strong>Cisplatin</strong> → <span style="color:red;">Kidney & Hearing</span> Toxicity (Nephro/Ototoxicity).</li>
+        </ul>
+    </div>
 
 </body>
 </html>
