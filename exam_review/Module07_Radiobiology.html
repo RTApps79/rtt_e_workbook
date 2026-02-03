@@ -1,72 +1,426 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Module 07: Radiobiology Master Class</title>
-<style>
-:root {
---primary: #2c3e50;
---accent: #d35400;
---highlight: #f1c40f;
---bg-light: #fdfefe;
---white: #ffffff;
-}
-body {
-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-line-height: 1.6;
-color: var(--primary);
-max-width: 900px;
-margin: 0 auto;
-padding: 20px;
-background-color: var(--bg-light);
-}
-h1 { text-align:center; color:var(--primary); border-bottom:3px solid var(--accent); padding-bottom:15px; margin-bottom:40px; }
-.module-header { background: linear-gradient(90deg, var(--accent), var(--primary)); color: var(--white); padding:15px 20px; border-radius:8px; margin-top:50px; display:flex; align-items:center; }
-.module-number { background:var(--white); color:var(--accent); width:30px; height:30px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:bold; margin-right:15px; }
-.concept-block { background:var(--white); border-radius:8px; padding:25px; margin:20px 0; box-shadow:0 4px 6px rgba(0,0,0,0.05); border-left:5px solid var(--accent); }
-table { width:100%; border-collapse:collapse; margin-top:15px; }
-th { background-color:var(--accent); color:white; padding:10px; text-align:left; }
-td { border:1px solid #ddd; padding:10px; }
-tr:nth-child(even) { background-color:#fdf2e9; }
-.visual-aid { text-align:center; margin:20px 0; background:#fff; padding:20px; border:1px solid #eee; border-radius:8px; }
-.watch-out { background-color:#fff8e1; border:1px solid #ffe0b2; border-radius:5px; padding:15px; margin-top:15px; font-size:0.9em; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module 7: Radiobiology</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #d35400; /* Burnt Orange for Biology/Damage */
+            --highlight: #f1c40f;
+            --bg-light: #fdfefe;
+            --white: #ffffff;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--primary);
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: var(--bg-light);
+        }
+        
+        /* Headers */
+        h1 {
+            text-align: center;
+            color: var(--primary);
+            border-bottom: 3px solid var(--accent);
+            padding-bottom: 15px;
+            margin-bottom: 40px;
+        }
+        .module-header {
+            background: linear-gradient(90deg, var(--accent), var(--primary));
+            color: var(--white);
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-top: 50px;
+            display: flex;
+            align-items: center;
+        }
+        .module-number {
+            background: var(--white);
+            color: var(--accent);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        /* Content Blocks */
+        .concept-block {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--accent);
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th {
+            background-color: var(--accent);
+            color: white;
+            padding: 10px;
+            text-align: left;
+        }
+        td {
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+        tr:nth-child(even) {background-color: #fdf2e9;}
+
+        /* Visual Aids */
+        .visual-aid {
+            text-align: center;
+            margin: 20px 0;
+            background: #fff;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+        }
+
+        /* "Watch Out" Tips */
+        .watch-out {
+            background-color: #fff8e1;
+            border: 1px solid #ffe0b2;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 15px;
+            font-size: 0.9em;
+        }
+        .watch-out strong {
+            color: #d35400;
+        }
+    </style>
 </head>
 <body>
-<h1>Module 07: Radiobiology Master Class</h1>
-<p style="text-align:center; font-size:1.1em;">From Cell Structure to Total Body Syndromes.</p>
 
-<div class="module-header">
-<span class="module-number">1</span>
-<h2>The Cell: Structure & Function</h2>
-</div>
+    <h1>Module 7: Radiobiology</h1>
+    <p style="text-align: center; font-size: 1.1em;">
+        From Cell Structure to Total Body Syndromes.
+    </p>
 
-<div class="concept-block">
-<h3>1.1 Cell Organelles</h3>
-<p>[Image of human cell structure with organelles labeled]</p>
-<table>
-<tr><th>Organelle</th><th>Function</th><th>Radiobiology Significance</th></tr>
-<tr><td><strong>Nucleus</strong></td><td>Control center; contains DNA/Chromosomes.</td><td><strong>The Master Target.</strong> Direct hits here cause cell death or mutation.</td></tr>
-<tr><td><strong>Cytoplasm</strong></td><td>Fluid (Protoplasm) outside the nucleus. Mostly water (80%).</td><td>Site of <strong>Indirect Action</strong> (Radiolysis of water).</td></tr>
-<tr><td><strong>Mitochondria</strong></td><td>Powerhouse (Energy/ATP production).</td><td>Damage here reduces cell function but is rarely fatal alone.</td></tr>
-<tr><td><strong>Ribosomes</strong></td><td>Protein synthesis.</td><td>Site of translation (mRNA -> Protein).</td></tr>
-<tr><td><strong>Lysosomes</strong></td><td>"Garbage disposal." Contains enzymes.</td><td>If ruptured by radiation, enzymes leak and digest the cell (Autolysis).</td></tr>
-<tr><td><strong>Cell Membrane</strong></td><td>Selectively permeable barrier.</td><td>Holds the cell together. High doses can rupture it.</td></tr>
-</table>
-</div>
+    <div class="module-header">
+        <span class="module-number">1</span>
+        <h2>The Cell: Structure & Function</h2>
+    </div>
+    <p>To understand how radiation kills cells, we must identify the targets within the cell.</p>
 
-<div class="module-header"><span class="module-number">2</span><h2>Direct vs. Indirect Action</h2></div>
-<div class="concept-block">
-<h3>2.1 The Mechanisms</h3>
-<div class="visual-aid"><svg width="400" height="200" viewBox="0 0 400 200"><path d="M 50 100 Q 100 50 150 100 T 250 100 T 350 100" fill="none" stroke="#2c3e50" stroke-width="4"/></svg></div>
-<table><tr><th>Action Type</th><th>Process</th><th>Radiation Type</th></tr>
-<tr><td><strong>Direct Action</strong></td><td>Radiation hits the DNA nucleus directly.</td><td><strong>High LET</strong> (Neutrons, Alphas, Protons).</td></tr>
-<tr><td><strong>Indirect Action</strong></td><td>Radiation hits water → free radicals → DNA damage.</td><td><strong>Low LET</strong> (X-rays, Gamma rays).</td></tr>
-</table>
-</div>
+    <div class="concept-block">
+        <h3>1.1 Cell Organelles</h3>
+        
 
-<!-- (Module 7 continues with the 4 R's, Bergonie & Tribondeau, LET/RBE/OER, dose-response, ARS) -->
+[Image of human cell structure with organelles labeled]
+
+        
+        <table>
+            <tr>
+                <th>Organelle</th>
+                <th>Function</th>
+                <th>Radiobiology Significance</th>
+            </tr>
+            <tr>
+                <td><strong>Nucleus</strong></td>
+                <td>Control center; contains DNA/Chromosomes.</td>
+                <td><strong>The Master Target.</strong> Direct hits here cause cell death or mutation.</td>
+            </tr>
+            <tr>
+                <td><strong>Cytoplasm</strong></td>
+                <td>Fluid (Protoplasm) outside the nucleus. Mostly water (80%).</td>
+                <td>Site of <strong>Indirect Action</strong> (Radiolysis of water).</td>
+            </tr>
+            <tr>
+                <td><strong>Mitochondria</strong></td>
+                <td>Powerhouse (Energy/ATP production).</td>
+                <td>Damage here reduces cell function but is rarely fatal alone.</td>
+            </tr>
+            <tr>
+                <td><strong>Ribosomes</strong></td>
+                <td>Protein synthesis.</td>
+                <td>Site of translation (mRNA -> Protein).</td>
+            </tr>
+            <tr>
+                <td><strong>Lysosomes</strong></td>
+                <td>"Garbage disposal." Contains enzymes.</td>
+                <td>If ruptured by radiation, enzymes leak and digest the cell (Autolysis).</td>
+            </tr>
+            <tr>
+                <td><strong>Cell Membrane</strong></td>
+                <td>Selectively permeable barrier.</td>
+                <td>Holds the cell together. High doses can rupture it.</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="module-header">
+        <span class="module-number">2</span>
+        <h2>Direct vs. Indirect Action</h2>
+    </div>
+    <p>Radiation damages DNA, but it does so in two different ways depending on the type of radiation.</p>
+
+    <div class="concept-block">
+        <h3>2.1 The Mechanisms</h3>
+        <div class="visual-aid">
+            <svg width="400" height="200" viewBox="0 0 400 200">
+                <path d="M 50 100 Q 100 50 150 100 T 250 100 T 350 100" fill="none" stroke="#2c3e50" stroke-width="4"/>
+                <path d="M 50 120 Q 100 70 150 120 T 250 120 T 350 120" fill="none" stroke="#2c3e50" stroke-width="4"/>
+                
+                <line x1="20" y1="20" x2="100" y2="80" stroke="#c0392b" stroke-width="3" stroke-dasharray="4"/>
+                <text x="30" y="20" font-size="10" fill="#c0392b">High LET (Direct)</text>
+                <circle cx="100" cy="80" r="5" fill="#c0392b"/> <line x1="380" y1="20" x2="300" y2="60" stroke="#3498db" stroke-width="2"/>
+                <text x="320" y="20" font-size="10" fill="#3498db">Low LET (Indirect)</text>
+                <circle cx="300" cy="60" r="10" fill="#3498db" opacity="0.3"/> <text x="300" y="65" font-size="8" fill="white" text-anchor="middle">H2O</text>
+                <path d="M 295 65 Q 280 80 260 100" fill="none" stroke="#3498db" stroke-width="1" stroke-dasharray="2"/>
+                <text x="280" y="90" font-size="10" fill="#3498db">Free Radical (OH*)</text>
+            </svg>
+        </div>
+
+        <table>
+            <tr>
+                <th>Action Type</th>
+                <th>Process</th>
+                <th>Radiation Type</th>
+            </tr>
+            <tr>
+                <td><strong>Direct Action</strong></td>
+                <td>Radiation hits the DNA nucleus directly. No middle-man.</td>
+                <td><strong>High LET</strong> (Neutrons, Alphas, Protons).</td>
+            </tr>
+            <tr>
+                <td><strong>Indirect Action</strong></td>
+                <td>Radiation hits a water molecule → creates <strong>Free Radicals</strong> (Radiolysis of water) → Radicals poison the DNA.</td>
+                <td><strong>Low LET</strong> (X-rays, Gamma rays). *Most common in Radiation Therapy.*</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="module-header">
+        <span class="module-number">3</span>
+        <h2>The 4 R's of Radiobiology</h2>
+    </div>
+    <p>This explains why we <strong>fractionate</strong> (split dose into small daily treatments) rather than giving it all at once.</p>
+
+    <div class="concept-block">
+        <h3>3.1 Why we fractionate</h3>
+        <table>
+            <tr>
+                <th>The "R"</th>
+                <th>What happens?</th>
+                <th>Good or Bad for Therapy?</th>
+            </tr>
+            <tr>
+                <td><strong>Repair</strong></td>
+                <td>Normal cells repair sub-lethal damage between fractions (within 6-24 hours).</td>
+                <td><strong>Good:</strong> Spares healthy tissue.</td>
+            </tr>
+            <tr>
+                <td><strong>Repopulation</strong></td>
+                <td>Tumor cells (and normal cells) divide and regrow if treatment is prolonged.</td>
+                <td><strong>Bad:</strong> If we take too many breaks, the tumor grows back.</td>
+            </tr>
+            <tr>
+                <td><strong>Reoxygenation</strong></td>
+                <td>Hypoxic (low oxygen) tumor cells get access to oxygen as the outer tumor layers die off.</td>
+                <td><strong>Good:</strong> Oxygen makes radiation more effective (OER).</td>
+            </tr>
+            <tr>
+                <td><strong>Reassortment</strong> (Redistribution)</td>
+                <td>Cells move into different phases of the cell cycle. We wait for tumor cells to enter a "sensitive" phase.</td>
+                <td><strong>Good:</strong> synchronizes tumor kill.</td>
+            </tr>
+        </table>
+        <div class="watch-out">
+            <strong>Cell Cycle Sensitivity:</strong>
+            <ul>
+                <li><strong>M Phase (Mitosis):</strong> MOST Sensitive.</li>
+                <li><strong>S Phase (Synthesis):</strong> LEAST Sensitive (Most resistant).</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="module-header">
+        <span class="module-number">4</span>
+        <h2>Law of Bergonie & Tribondeau</h2>
+    </div>
+    <p>This law predicts which tissues will be damaged most by radiation.</p>
+
+    <div class="concept-block">
+        <h3>4.1 The Rules of Sensitivity</h3>
+        <p>Cells are <strong>MOST radiosensitive</strong> if they are:</p>
+        <ol>
+            <li><strong>Rapidly Dividing</strong> (High mitotic rate).</li>
+            <li><strong>Undifferentiated</strong> (Stem cells/Immature).</li>
+            <li><strong>Have a Long Mitotic Future</strong>.</li>
+        </ol>
+
+        <div class="visual-aid">
+            <table>
+                <tr>
+                    <th>High Sensitivity (Radio-sensitive)</th>
+                    <th>Low Sensitivity (Radio-resistant)</th>
+                </tr>
+                <tr>
+                    <td>Lymphocytes (White blood cells)</td>
+                    <td>Nerve Cells</td>
+                </tr>
+                <tr>
+                    <td>Spermatogonia (Germ cells)</td>
+                    <td>Muscle Cells</td>
+                </tr>
+                <tr>
+                    <td>Basal Cells (Skin)</td>
+                    <td>Brain Cells</td>
+                </tr>
+                <tr>
+                    <td>Crypt Cells (GI lining)</td>
+                    <td>Bone Cells</td>
+                </tr>
+            </table>
+        </div>
+        <div class="watch-out">
+            <strong>Exception:</strong> <strong>Lymphocytes</strong> are the MOST radiosensitive cell in the body, even though they don't always divide rapidly. They die via apoptosis (programmed cell suicide) at very low doses (0.25 Gy).
+        </div>
+    </div>
+
+    <div class="module-header">
+        <span class="module-number">5</span>
+        <h2>Physics Factors (LET, RBE, OER)</h2>
+    </div>
+
+    <div class="concept-block">
+        <h3>5.1 OER (Oxygen Enhancement Ratio)</h3>
+        <p><strong>Concept:</strong> Oxygen is a radiosensitizer. It "fixes" the damage, making it permanent. Without oxygen, damage can be repaired.</p>
+        <ul>
+            <li><strong>OER Formula:</strong> Dose Hypoxic / Dose Oxygenated (to achieve same effect).</li>
+            <li><strong>Value:</strong> For X-rays, OER is approx <strong>2.5 - 3.0</strong>. (You need 3x the dose to kill hypoxic cells).</li>
+        </ul>
+    </div>
+
+    <div class="concept-block">
+        <h3>5.2 LET vs. RBE</h3>
+        <p>They are directly related. As LET increases, RBE increases.</p>
+        <ul>
+            <li><strong>LET (Linear Energy Transfer):</strong> How much energy is deposited per micron of tissue.
+                <ul>
+                    <li><em>High LET:</em> Alphas, Neutrons (Bulldozers - massive damage).</li>
+                    <li><em>Low LET:</em> X-rays, Gammas (BB guns - sparse damage).</li>
+                </ul>
+            </li>
+            <li><strong>RBE (Relative Biological Effectiveness):</strong> Comparison of a test radiation to a standard (250 kVp x-rays).
+                <ul>
+                    <li><em>Formula:</em> Dose Standard / Dose Test.</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <div class="module-header">
+        <span class="module-number">6</span>
+        <h2>Dose Response & Effects</h2>
+    </div>
+    <p>How we plot risk and categorize radiation damage.</p>
+
+    <div class="concept-block">
+        <h3>6.1 Stochastic vs. Deterministic (Non-Stochastic)</h3>
+        <p>This is the single most important classification system in radiobiology.</p>
+        <table>
+            <tr>
+                <th>Characteristic</th>
+                <th>Stochastic (Probabilistic)</th>
+                <th>Deterministic (Non-Stochastic)</th>
+            </tr>
+            <tr>
+                <td><strong>Definition</strong></td>
+                <td>Random effects. Probability increases with dose.</td>
+                <td>Certain effects. Severity increases with dose.</td>
+            </tr>
+            <tr>
+                <td><strong>Threshold?</strong></td>
+                <td><strong>NO Threshold.</strong> Any dose carries risk.</td>
+                <td><strong>HAS a Threshold.</strong> Below this dose, no effect occurs.</td>
+            </tr>
+            <tr>
+                <td><strong>Examples</strong></td>
+                <td>Cancer, Genetic mutations.</td>
+                <td>Cataracts, Erythema, Epilation, Sterility.</td>
+            </tr>
+            <tr>
+                <td><strong>Protection Standard</strong></td>
+                <td>Basis for ALARA (Linear Non-Threshold model).</td>
+                <td>Basis for Dose Limits (to prevent effect entirely).</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="concept-block">
+        <h3>6.2 Dose Response Curves</h3>
+        
+        <ul>
+            <li><strong>Linear Non-Threshold (LNT):</strong> A straight line starting at 0. Used for radiation protection standards (Stochastic effects). Assumes no dose is safe.</li>
+            <li><strong>Sigmoid (S-shaped) Threshold:</strong> Used for Radiation Therapy. Shows that at low doses tissues repair (shoulder), then rapid cell kill, then plateaus. Deterministic response.</li>
+            <li><strong>Linear Quadratic:</strong> Curved line. Fits the data for low-dose cell survival best (Dual-target theory).</li>
+        </ul>
+    </div>
+
+    <div class="concept-block">
+        <h3>6.3 Genetic Effects</h3>
+        <p>Damage to the germ cells (sperm/ova) passed to future generations.</p>
+        <ul>
+            <li><strong>Doubling Dose:</strong> The dose of radiation required to double the spontaneous mutation rate in a population. Approx <strong>1 Sv (100 rem)</strong>.</li>
+            <li><strong>Genetically Significant Dose (GSD):</strong> An average calculated dose to the gonads of the reproductive-age population.</li>
+        </ul>
+    </div>
+
+    <div class="module-header">
+        <span class="module-number">7</span>
+        <h2>Total Body Acute Radiation Syndromes (ARS)</h2>
+    </div>
+    <p>What happens when the <strong>whole body</strong> receives a massive dose at once.</p>
+
+    <div class="concept-block">
+        <h3>7.1 The Three Syndromes</h3>
+        <p>Occurs in stages: Prodromal (Nausea) → Latent (False calm) → Manifest Illness → Death/Recovery.</p>
+        <table>
+            <tr>
+                <th>Syndrome</th>
+                <th>Dose Range (Gy)</th>
+                <th>System Failure</th>
+                <th>Survival Time</th>
+            </tr>
+            <tr>
+                <td><strong>Hematopoietic</strong> (Bone Marrow)</td>
+                <td>1 - 10 Gy</td>
+                <td>Destruction of WBC, RBC, Platelets. Death via infection or hemorrhage.</td>
+                <td>3 - 6 Weeks (Survivable with care).</td>
+            </tr>
+            <tr>
+                <td><strong>Gastrointestinal</strong> (GI)</td>
+                <td>10 - 50 Gy</td>
+                <td>Destruction of intestinal crypt cells. Electrolyte imbalance, dehydration, bacteria enter blood.</td>
+                <td>3 - 10 Days (Fatal).</td>
+            </tr>
+            <tr>
+                <td><strong>Central Nervous System</strong> (CNS/Cerebrovascular)</td>
+                <td>> 50 Gy</td>
+                <td>Fluid leakage in brain, increased intracranial pressure (ICP), vasculitis.</td>
+                <td>Hours - 3 Days (Fatal).</td>
+            </tr>
+        </table>
+        <div class="watch-out">
+            <strong>LD 50/30:</strong> The Lethal Dose to kill 50% of the population in 30 days without medical support. For humans, it is approx <strong>3 - 4 Gy</strong>.
+        </div>
+    </div>
 
 </body>
 </html>
