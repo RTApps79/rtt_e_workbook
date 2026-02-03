@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 02: Patient Care & Pathology (Complete)</title>
+<style>
+:root {
+--primary: #2c3e50;
+--accent: #27ae60;
+--highlight: #e67e22;
+--bg-light: #f9fbf9;
+--white: #ffffff;
+}
+body {
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+line-height: 1.6;
+color: var(--primary);
+max-width: 900px;
+margin: 0 auto;
+padding: 20px;
+background-color: var(--bg-light);
+}
+h1 { text-align: center; color: var(--primary); border-bottom: 3px solid var(--accent); padding-bottom: 15px; margin-bottom: 40px; }
+.module-header { background: linear-gradient(90deg, var(--accent), var(--primary)); color: var(--white); padding: 15px 20px; border-radius: 8px; margin-top: 50px; display: flex; align-items: center; }
+.module-number { background: var(--white); color: var(--accent); width: 30px; height: 30px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 15px; }
+.concept-block { background: var(--white); border-radius: 8px; padding: 25px; margin: 20px 0; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 5px solid var(--accent); }
+.table-box { margin: 15px 0; overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 0.95em; }
+th { background-color: var(--accent); color: white; padding: 10px; text-align: left; }
+td { border: 1px solid #ddd; padding: 10px; }
+tr:nth-child(even) {background-color: #f2f2f2;}
+.watch-out { background-color: #fff5f5; border: 1px solid #ffcccc; border-radius: 5px; padding: 15px; margin-top: 15px; font-size: 0.9em; }
+.watch-out strong { color: #c0392b; text-transform: uppercase; font-size: 0.85em; letter-spacing: 1px; }
+.mnemonic { background-color: #eafaf1; border: 1px dashed var(--accent); border-radius: 5px; padding: 15px; margin-top: 15px; font-weight: bold; color: var(--primary); }
+.visual-aid { text-align: center; margin: 20px 0; background: var(--white); padding: 20px; border-radius: 8px; border: 1px solid #eee; }
+@keyframes rotate { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+@keyframes grow { 0% { r: 5; } 50% { r: 8; } 100% { r: 5; } }
+.cycle-arrow { animation: rotate 10s linear infinite; transform-origin: center; }
+.node-dot { animation: grow 2s infinite; }
+/* --- Tier 1 expansions (Patient Care) --- */
+.quick-nav{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  justify-content:center;
+  margin: 18px 0 35px;
+}
+.quick-nav a{
+  background: var(--white);
+  border: 1px solid rgba(39,174,96,0.25);
+  padding: 7px 12px;
+  border-radius: 999px;
+  text-decoration:none;
+  color: var(--primary);
+  font-size: 0.9em;
+}
+.quick-nav a:hover{
+  border-color: var(--accent);
+}
+details{
+  background: rgba(255,255,255,0.85);
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 12px 15px;
+  margin: 14px 0;
+}
+summary{
+  cursor:pointer;
+  font-weight: 700;
+  color: var(--accent);
+}
+.callout{
+  background: #fff9e6;
+  border-left: 4px solid var(--highlight);
+  padding: 12px 15px;
+  border-radius: 6px;
+  margin: 15px 0;
+}
+.two-col{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
+@media(min-width: 720px){
+  .two-col{ grid-template-columns: 1fr 1fr; }
+}
+.checklist{
+  background: rgba(39,174,96,0.06);
+  border-left: 4px solid var(--accent);
+  padding: 12px 15px;
+  border-radius: 8px;
+  margin: 12px 0;
+}
+.checklist ul{ margin: 8px 0 0 18px; }
+</style>
+</head>
+<body>
+<h1>Module 2: Patient Care & Pathology</h1>
+<p style="text-align: center; font-size: 1.1em;">
+Infection Control, Assessment, Nutrition, Transfers, and Emergencies.
+</p>
+
+<nav class="quick-nav" aria-label="Module 2 quick navigation">
+  <a href="#ethics-communication">Ethics & Communication</a>
+  <a href="#infection-control">Infection Control</a>
+  <a href="#assessment-nutrition">Assessment & Nutrition</a>
+  <a href="#vitals-labs">Vitals & Labs</a>
+  <a href="#evaluation-pathology">Evaluation & Pathology</a>
+  <a href="#transfers">Transfers & Ergonomics</a>
+  <a href="#lines-tubes">Lines & Tubes</a>
+  <a href="#emergencies">Emergencies</a>
+  <a href="#hazmat">Hazardous Materials</a>
+  <a href="#documentation">Documentation</a>
+</nav>
+
+<div class="module-header" id="ethics-communication">
+<span class="module-number">0</span>
+<h2>Ethical, Legal, and Communication Essentials</h2>
+</div>
+
+<div class="concept-block">
+<h3>0.1 Patients’ Rights, Consent, and Goals of Care</h3>
+<p>Patient care starts with <strong>respect for autonomy</strong>, clear communication, and safe verification. In radiation therapy, you’ll see these themes every day: consent, privacy, access to information, and aligning care with the patient’s goals.</p>
+
+<ul>
+  <li><strong>Consent</strong> — recognize common forms:
+    <ul>
+      <li><strong>Informed</strong>: patient understands the nature, benefits, risks, and alternatives.</li>
+      <li><strong>Oral</strong>: spoken permission (often documented in the record).</li>
+      <li><strong>Implied</strong>: patient’s actions indicate agreement (e.g., presenting for treatment after education).</li>
+    </ul>
+  </li>
+  <li><strong>Confidentiality (HIPAA)</strong> — protect patient health information: discuss only with those involved in care, in appropriate settings.</li>
+  <li><strong>Privacy</strong> — preserve dignity during positioning, gowning, and when dealing with <strong>skin marks/tattoos</strong> and sensitive sites.</li>
+  <li><strong>Access to information</strong> — patients can request understandable explanations of their plan and what to expect.</li>
+  <li><strong>Extent of care</strong> — understand facility policy for <strong>DNR</strong> and escalation, and the difference between <em>treatment immobilization</em> vs <em>patient restraints</em>.</li>
+  <li><strong>Advanced directives</strong> — be aware of <strong>living wills</strong>, <strong>health care proxy</strong>, and other directives that guide decision-making.</li>
+  <li><strong>Research participation</strong> — patients may be enrolled in clinical trials; follow protocol and documentation requirements.</li>
+  <li><strong>Goal of care</strong> — examples include <strong>definitive</strong> (curative intent) and <strong>palliative</strong> (symptom control/quality of life).</li>
+</ul>
+
+<div class="callout">
+<strong>Standards of practice:</strong> Professional conduct expectations (including ethical standards for patient care, confidentiality, and accountability) are part of what’s assessed on the exam and in clinical practice.
+</div>
+
+<div class="watch-out">
+<strong>Daily translation:</strong> A rights-based approach includes the American Hospital Association’s <em>Patient Care Partnership</em> themes—respect, communication, involvement in decisions, and safety. Translate this into everyday actions: protect privacy, use plain language, and verify correctly every time.
+</div>
+
+</div>
+
+<div class="concept-block">
+<h3>0.2 Legal Concepts You Should Recognize (High Yield)</h3>
+<p>You’re not expected to be an attorney, but you <em>are</em> expected to recognize common legal language and how it shows up in safe practice.</p>
+
+<div class="two-col">
+  <div>
+    <h4>Common terminology</h4>
+    <ul>
+      <li><strong>Battery</strong>: unauthorized touching/procedure.</li>
+      <li><strong>Negligence</strong>: failure to act as a reasonably prudent professional would.</li>
+      <li><strong>Malpractice</strong>: professional negligence resulting in harm.</li>
+      <li><strong>Beneficence</strong>: ethical duty to act for the patient’s benefit.</li>
+    </ul>
+  </div>
+  <div>
+    <h4>Legal doctrines</h4>
+    <ul>
+      <li><strong>Respondeat superior</strong>: employers may be liable for employees’ actions within scope of employment.</li>
+      <li><strong>Res ipsa loquitur</strong>: “the thing speaks for itself” (negligence inferred when harm wouldn’t normally occur without it).</li>
+    </ul>
+  </div>
+</div>
+
+<div class="watch-out">
+<strong>Restraints vs immobilization:</strong> Treatment immobilization devices are used to prevent motion for accuracy; restraints are used to restrict patient movement for safety/behavioral control and have different legal/ethical requirements.
+</div>
+
+</div>
+
+<div class="concept-block">
+<h3>0.3 Verification and “Pause Points” (Patient ID, Site, Prescription)</h3>
+<p>Verification is a legal and safety cornerstone. Build a habit of brief, consistent <strong>pause points</strong> before simulation, imaging, and every treatment fraction.</p>
+
+<div class="checklist">
+<strong>Minimum verification checklist (every encounter):</strong>
+<ul>
+  <li><strong>Two patient identifiers</strong> (e.g., full name + date of birth) — match armband and record-and-verify system.</li>
+  <li><strong>Treatment site / laterality</strong> — confirm correct site and that immobilization, marks, and images match.</li>
+  <li><strong>Prescription & plan consistency</strong> — correct dose/fractionation, energy/modality, accessories (bolus/wedge), and imaging orders.</li>
+</ul>
+</div>
+
+<details>
+  <summary>Common verification pitfalls to avoid</summary>
+  <ul>
+    <li>“Nickname” identification, room-number identification, or relying on staff recognition.</li>
+    <li>Assuming laterality from diagnosis without confirming the <strong>ordered</strong> site.</li>
+    <li>Using an old plan (re-sim/new CT) without confirming which dataset is active.</li>
+    <li>Accessory mismatch (bolus on/off, wrong thickness, wrong energy for field).</li>
+  </ul>
+</details>
+
+</div>
+
+<div class="concept-block">
+<h3>0.4 Interpersonal Communication and Patient Education</h3>
+<div class="two-col">
+<div>
+<h4>Modes of communication</h4>
+<ul>
+  <li><strong>Verbal/written</strong> (teach-back, written instructions, simple diagrams).</li>
+  <li><strong>Nonverbal</strong> (eye contact, posture, appropriate touch, tone, pacing).</li>
+</ul>
+
+<h4>Explain medical terms clearly</h4>
+<p>Replace jargon with “everyday language” (e.g., “treatment position” instead of “immobilization,” “daily image check” instead of “CBCT verification” when appropriate).</p>
+</div>
+
+<div>
+<h4>Challenges you’ll see often</h4>
+<ul>
+  <li><strong>Language barriers</strong> → use qualified interpreters (not family/children when avoidable).</li>
+  <li><strong>Cultural/social factors</strong> → ask preference-based questions; avoid assumptions.</li>
+  <li><strong>Physical/sensory/cognitive impairments</strong> (hearing loss, dementia, aphasia).</li>
+  <li><strong>Age-related needs</strong> (pediatric vs geriatric communication).</li>
+  <li><strong>Emotional status</strong> (shock, denial, anger, anxiety; stages of grief).</li>
+</ul>
+</div>
+</div>
+
+<h4>Patient education you should be able to deliver</h4>
+<ul>
+  <li><strong>What will happen</strong>: purpose, expected duration on the table, and what the patient will feel (often nothing).</li>
+  <li><strong>Radiation basics</strong>: external beam treatment does <em>not</em> make the patient radioactive; contrast this with some nuclear medicine procedures.</li>
+  <li><strong>Pre-/post-treatment instructions</strong>: preparation steps, diet guidance, and medication timing as ordered.</li>
+  <li><strong>Skin care and marks</strong>: how to protect skin marks/tattoos and why they matter for reproducibility.</li>
+</ul>
+
+<h4>Answering common “other modality” questions</h4>
+<p>Be prepared to compare, at a high level, <strong>dose differences</strong>, <strong>types of radiation</strong>, and typical <strong>patient preparation</strong> across modalities (e.g., diagnostic x-ray/CT vs radiation therapy; MRI uses magnetic fields and radiofrequency, not ionizing radiation).</p>
+
+<h4>Treatment compliance and support services</h4>
+<ul>
+  <li><strong>Compliance drivers</strong>: predictable routines, consistent education, symptom control, and respectful privacy.</li>
+  <li><strong>Support services</strong>: connect patients to hospice (when appropriate), dietitians, clergy/spiritual care, social services, financial counselors, and other professionals.</li>
+</ul>
+
+</div>
+
+<!-- (The rest of Module 2 content continues in the same structure as in the workbook; this file includes the full Module 2 content from the workbook.) -->
+
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 03: Equipment & Radiation Safety</title>
+<style>
+:root {
+--primary: #2c3e50;
+--accent: #8e44ad;
+--highlight: #f1c40f;
+--bg-light: #fcfbfd;
+--white: #ffffff;
+}
+body {
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+line-height: 1.6;
+color: var(--primary);
+max-width: 900px;
+margin: 0 auto;
+padding: 20px;
+background-color: var(--bg-light);
+}
+h1 { text-align: center; color: var(--primary); border-bottom: 3px solid var(--accent); padding-bottom: 15px; margin-bottom: 40px; }
+.module-header { background: linear-gradient(90deg, var(--accent), var(--primary)); color: var(--white); padding: 15px 20px; border-radius: 8px; margin-top: 50px; display: flex; align-items: center; }
+.module-number { background: var(--white); color: var(--accent); width: 30px; height: 30px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 15px; }
+.concept-block { background: var(--white); border-radius: 8px; padding: 25px; margin: 20px 0; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 5px solid var(--accent); }
+.formula-box { background-color: #f4ecf7; padding: 15px; border-radius: 5px; font-family: 'Courier New', monospace; font-weight: bold; color: var(--primary); text-align: center; margin: 15px 0; border: 1px dashed var(--accent); }
+.table-box { margin: 15px 0; overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 0.95em; }
+th { background-color: var(--accent); color: white; padding: 10px; text-align: left; }
+td { border: 1px solid #ddd; padding: 10px; }
+tr:nth-child(even) {background-color: #f9f9f9;}
+.watch-out { background-color: #fffcf5; border: 1px solid #ffeeba; border-radius: 5px; padding: 15px; margin-top: 15px; font-size: 0.9em; }
+.mnemonic { background-color: #f4ecf7; border: 1px dashed var(--accent); border-radius: 5px; padding: 15px; margin-top: 15px; font-weight: bold; color: var(--primary); }
+.visual-aid { text-align: center; margin: 20px 0; background: var(--white); padding: 20px; border-radius: 8px; border: 1px solid #eee; }
+</style>
+</head>
+<body>
+<h1>Module 03: Equipment & Radiation Safety</h1>
+<p style="text-align: center; font-size: 1.1em;">Understanding the Linear Accelerator, Dosimetry Physics, QA, and Dose Limits.</p>
+
+<div class="module-header">
+<span class="module-number">1</span>
+<h2>Inside the Linear Accelerator</h2>
+</div>
+
+<div class="concept-block">
+<h3>1.1 The Path of the Electron</h3>
+<p>To create a treatment beam, electrons must be produced, accelerated, and steered. You must know the order of components.</p>
+
+<div class="visual-aid">
+<svg width="400" height="250" viewBox="0 0 400 250">
+<rect x="10" y="80" width="40" height="40" fill="#e74c3c" rx="5"/>
+<text x="15" y="70" font-size="10" font-weight="bold">Gun</text>
+<rect x="60" y="90" width="200" height="20" fill="#ecf0f1" stroke="#333" stroke-dasharray="5"/>
+<text x="100" y="80" font-size="10" fill="#555">Accelerating Waveguide</text>
+<path d="M 270 90 Q 320 90 320 140 L 320 150" fill="none" stroke="#2980b9" stroke-width="15" opacity="0.5"/>
+<text x="330" y="120" font-size="10" fill="#2980b9">Bending Magnet</text>
+<rect x="300" y="160" width="40" height="10" fill="#f1c40f"/>
+<text x="350" y="170" font-size="10" fill="#f39c12">Target (X-rays)</text>
+<polygon points="300,180 340,180 330,220 310,220" fill="#95a5a6"/>
+<text x="350" y="200" font-size="10" fill="#7f8c8d">Collimator</text>
+<circle r="4" fill="#e74c3c" />
+</svg>
+</div>
+
+<div class="table-box">
+<table>
+<tr><th>Component</th><th>Function</th></tr>
+<tr><td><strong>Klystron / Magnetron</strong></td><td>Provides the <strong>Microwave Power</strong> to accelerate electrons. (Mnemonic: Magnetron = Microwave (Lower energy units). Klystron = High Energy for high MV machines).</td></tr>
+<tr><td><strong>Circulator</strong></td><td>Prevents microwaves from reflecting back and damaging the Klystron.</td></tr>
+<tr><td><strong>Waveguide</strong></td><td>Copper pipe where electrons surf on microwaves to gain speed.</td></tr>
+<tr><td><strong>Bending Magnet</strong></td><td>Turns the electron beam to point down at the patient and filters energy spectrum.</td></tr>
+<tr><td><strong>Target</strong></td><td><strong>Tungsten</strong> target. Electrons hit it -> photons produced. Retracted for electron therapy.</td></tr>
+<tr><td><strong>Flattening Filter</strong></td><td>Makes the forward-peaked beam uniform. Retracted for FFF modes.</td></tr>
+</table>
+</div>
+</div>
+
+<!-- (Module 3 continues with QA, detectors, protection, and other sections matching the workbook) -->
+
+</body>
+</html>
