@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARRT Applied Judgement Simulator (Expansion)</title>
+  <style>
+    :root{
+      --bg:#f4f7f6;
+      --card-bg:#ffffff;
+      --primary:#2c3e50;
+      --accent:#16a085; /* teal */
+      --care:#27ae60;
+      --safety:#d35400;
+      --proc:#2980b9;
+      --text:#333;
+    }
+    body{
+      font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+      background-color:var(--bg);
+      color:var(--text);
+      margin:0;
+      padding:20px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      min-height:100vh;
+    }
+    .sim-container{
+      max-width:980px;
+      width:100%;
+      background:var(--card-bg);
+      border-radius:12px;
+      box-shadow:0 8px 20px rgba(0,0,0,0.1);
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+    }
+    .header-panel{
+      background:var(--primary);
+      color:white;
+      padding:22px 25px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:15px;
+    }
+    .header-info h1{margin:0;font-size:1.55em;}
+    .header-info p{margin:6px 0 0; opacity:0.85; font-size:0.9em; line-height:1.25;}
+    .score-badge{
+      background:rgba(255,255,255,0.1);
+      padding:10px 18px;
+      border-radius:10px;
+      text-align:center;
+      min-width:120px;
+    }
+    .score-number{font-size:1.6em;font-weight:700;display:block;}
+    .score-label{font-size:0.75em;text-transform:uppercase;letter-spacing:1px;opacity:0.9;}
+    .progress-track{height:8px;background:#e0e0e0;width:100%;}
+    .progress-fill{height:100%;background:var(--accent);width:0%;transition:width 0.35s ease;}
+    .scenario-area{padding:26px 30px;}
+    .category-badge{
+      display:inline-block;
+      padding:6px 12px;
+      border-radius:20px;
+      font-size:0.85em;
+      font-weight:700;
+      color:white;
+      margin-bottom:14px;
+      text-transform:uppercase;
+      letter-spacing:0.6px;
+    }
+    .cat-care{background-color:var(--care);}
+    .cat-safety{background-color:var(--safety);}
+    .cat-proc{background-color:var(--proc);}
+    .title{
+      font-size:1.25em;
+      font-weight:800;
+      color:var(--primary);
+      margin:6px 0 12px;
+      line-height:1.25;
+    }
+    .chart{
+      background:#f8fafb;
+      border:1px solid #e6e8ea;
+      border-radius:10px;
+      padding:16px 16px;
+      margin:12px 0 18px;
+    }
+    .chart-row{margin:6px 0; line-height:1.25;}
+    .question{
+      font-size:1.05em;
+      font-weight:700;
+      margin:12px 0 12px;
+      line-height:1.25;
+    }
+    .options{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
+      margin-top:10px;
+    }
+    .option-btn{
+      text-align:left;
+      padding:13px 14px;
+      border-radius:10px;
+      border:1px solid #dfe3e6;
+      background:white;
+      cursor:pointer;
+      font-size:1em;
+      line-height:1.25;
+      transition:transform 0.04s ease, box-shadow 0.12s ease;
+    }
+    .option-btn:hover{box-shadow:0 6px 14px rgba(0,0,0,0.08); transform:translateY(-1px);}
+    .option-btn:disabled{cursor:not-allowed; opacity:0.95;}
+    .correct-choice{border-color:#2ecc71; background:#eafaf1;}
+    .wrong-choice{border-color:#e74c3c; background:#fdecea;}
+    .feedback{
+      display:none;
+      margin-top:14px;
+      padding:14px 14px;
+      border-radius:10px;
+      line-height:1.3;
+      border:1px solid #e6e8ea;
+      background:#fbfbfc;
+    }
+    .fb-correct{border-color:#2ecc71; background:#eafaf1;}
+    .fb-wrong{border-color:#e74c3c; background:#fdecea;}
+    .footer-nav{
+      padding:18px 22px;
+      display:flex;
+      justify-content:flex-end;
+      gap:12px;
+      border-top:1px solid #eef1f3;
+      background:#fff;
+    }
+    .next-btn, .start-btn{
+      background:var(--accent);
+      color:white;
+      border:none;
+      border-radius:999px;
+      padding:12px 20px;
+      font-size:1em;
+      cursor:pointer;
+      font-weight:700;
+    }
+    .next-btn{display:none;}
+    .start-screen{
+      padding:36px 30px 42px;
+      text-align:center;
+    }
+    .start-screen h2{margin:0 0 10px; color:var(--primary); font-size:1.7em;}
+    .start-screen p{margin:0 auto; max-width:720px; opacity:0.9; line-height:1.35;}
+    .pill-row{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:16px;}
+    .pill{
+      background:#eef7f5;
+      border:1px solid #d9efe9;
+      color:#0e5c4f;
+      padding:6px 12px;
+      border-radius:999px;
+      font-size:0.9em;
+      font-weight:700;
+    }
+    .subtle{
+      font-size:0.92em;
+      opacity:0.85;
+      margin-top:14px;
+    }
+    .start-btn{margin-top:24px; padding:14px 34px; font-size:1.1em;}
+    .end-card{
+      text-align:center;
+      padding:38px 22px 44px;
+    }
+    .end-card h2{margin:0; color:var(--primary);}
+    .percent{font-size:3em; font-weight:900; color:var(--accent); margin:18px 0 10px;}
+    .small-note{opacity:0.85; margin:0 auto; max-width:760px; line-height:1.35;}
+    .restart-row{display:flex; justify-content:center; gap:12px; margin-top:24px;}
+  </style>
+</head>
+<body>
+
+<div class="sim-container">
+  <div class="header-panel">
+    <div class="header-info">
+      <h1>ARRT Applied Judgement Simulator (Expansion)</h1>
+      <p>Additional scenarios targeting “missing” high-yield topics: site-specific oncology (epi/etiology/path/lymphatics), common dose/fx patterns, OARs, toxicity recognition & management, and delivery safety.</p>
+    </div>
+    <div class="score-badge">
+      <span class="score-number" id="score-display">0/0</span>
+      <span class="score-label">Score</span>
+    </div>
+  </div>
+
+  <div class="progress-track"><div class="progress-fill" id="progress"></div></div>
+
+  <div id="main-interface">
+    <div class="start-screen">
+      <h2>New Scenario Bank</h2>
+      <p>Work through realistic clinical decision points you can see on the exam and in clinic. Read the record, make your best choice, then study the feedback (it explains the “why,” not just the answer).</p>
+      <div class="pill-row">
+        <div class="pill">Epidemiology & Etiology</div>
+        <div class="pill">Histology & Typical Locations</div>
+        <div class="pill">Lymphatic Drainage</div>
+        <div class="pill">Dose / Fraction Patterns</div>
+        <div class="pill">OARs & Toxicity Management</div>
+        <div class="pill">IGRT / R&V / QA Safety</div>
+      </div>
+      <div class="subtle">36 scenarios total • Category badge colors: Patient Care (green), Safety & QA (orange), Procedures (blue)</div>
+      <button class="start-btn" onclick="startSim()">Start</button>
+    </div>
+  </div>
+
+  <div class="footer-nav">
+    <button id="next-btn" class="next-btn" onclick="nextScenario()">Next Scenario →</button>
+  </div>
+</div>
+
+<script>
+  const scenarios = [
+
+    // =========================================================
+    //  SITE-SPECIFIC ONCOLOGY + TOXICITY + LYMPHATICS (NEW)
+    // =========================================================
+
+    {
+      category: "3. Procedures",
+      type: "proc",
+      title: "Head & Neck: HPV+ Oropharynx — Nodal Levels",
+      chart: `
+        <div class="chart-row"><strong>Pt:</strong> 52M</div>
+        <div class="chart-row"><strong>Dx:</strong> HPV16+ squamous cell carcinoma (SCC), right tonsil (oropharynx), T2N2b.</div>
+        <div class="chart-row"><strong>Typical pattern:</strong> Early spread to upper jugular chain.</div>
+        <div class="chart-row"><strong>Plan:</strong> Definitive IMRT 70 Gy/35 fx + concurrent chemo.</div>
+      `,
+      question: "For tonsillar/oropharyngeal SCC, which nodal levels are most commonly at risk first and typically prioritized for elective coverage?",
+      options: [
+        { text: "Level I only (submental/submandibular)", correct: false, feedback: "Level I is most associated with oral cavity drainage (lips/anterior floor of mouth). Oropharynx more commonly spreads to upper jugular levels." },
+        { text: "Levels II–IV (± retropharyngeal, depending on subsite)", correct: true, feedback: "Yes. Oropharynx commonly drains to Level II (jugulodigastric) and can involve Levels III–IV. Retropharyngeal nodes are also a consideration for certain subsites (e.g., posterior pharyngeal wall, nasopharyngeal proximity)." },
+        { text: "Inguinal nodes", correct: false, feedback: "Inguinal nodes are associated with lower extremity, vulvar, and anal canal drainage—not oropharynx." },
+        { text: "Para-aortic nodes", correct: false, feedback: "Para-aortic nodes are abdominal/retroperitoneal drainage (e.g., testes, kidneys, GI). Not typical first echelon for oropharynx." }
+      ]
+    },
+
+    {
+      category: "1. Patient Care",
+      type: "care",
+      title: "Head & Neck: Dental Clearance & Osteoradionecrosis Risk",
+      chart: `
+        <div class="chart-row"><strong>Pt:</strong> 60M</div>
+        <div class="chart-row"><strong>Dx:</strong> Oral cavity SCC (floor of mouth), planned 66–70 Gy.</div>
+        <div class="chart-row"><strong>Finding:</strong> Poor mandibular dentition, multiple infected teeth.</div>
+        <div class="chart-row"><strong>Key OAR:</strong> Mandible (risk of osteoradionecrosis at high dose).</div>
+      `,
+      question: "What pre-treatment step most directly reduces the risk of mandibular osteoradionecrosis during/after high-dose head & neck RT?",
+      options: [
+        { text: "Delay all dental work until after RT so teeth are not disturbed", correct: false, feedback: "High-dose RT impairs healing; extractions after RT greatly increase osteoradionecrosis risk. High-risk dental issues should be addressed before RT when possible." },
+        { text: "Complete dental evaluation and extract non-restorable/infected teeth BEFORE RT with adequate healing time", correct: true, feedback: "Correct. Dental clearance (including extractions of non-restorable teeth) before RT reduces infection risk and lowers osteoradionecrosis risk. Also reinforce fluoride and meticulous oral hygiene." },
+        { text: "Increase dose per fraction to finish faster (hypofractionate)", correct: false, feedback: "Higher dose per fraction can worsen late effects. It does not address the underlying dental source of infection." },
+        { text: "Use MV portal imaging instead of kV imaging", correct: false, feedback: "Imaging choice does not address osteoradionecrosis risk. The driver is high dose to mandible + dental infection/trauma." }
+      ]
+    },
+
+    {
+      category: "3. Procedures",
+      type: "proc",
+      title: "Head & Neck: Nasopharynx — Etiology, Location, Nodes",
+      chart: `
+        <div class="chart-row"><strong>Pt:</strong> 45F</div>
+        <div class="chart-row"><strong>Dx:</strong> Nasopharyngeal carcinoma.</div>
+        <div class="chart-row"><strong>Risk association:</strong> EBV (common association).</div>
+        <div class="chart-row"><strong>Imaging:</strong> Primary in nasopharynx with retropharyngeal + Level II nodes.</div>
+      `,
+      question: "Which nodal group is classically involved early in nasopharyngeal carcinoma and should be expected on imaging?",
+      options: [
+        { text: "Retropharyngeal nodes (nodes of Rouvière)", correct: true, feedback: "Correct. Nasopharyngeal tumors commonly involve retropharyngeal nodes and upper jugular (Level II) nodes early." },
+        { text: "Level I nodes only", correct: false, feedback: "Level I is more typical for oral cavity/anterior structures. Nasopharynx preferentially spreads to retropharyngeal and upper jugular nodes." },
+        { text: "Inguinal nodes", correct: false, feedback: "Inguinal nodes are lower body drainage—not head & neck." },
+        { text: "Para-aortic nodes", correct: false, feedback: "Para-aortic nodes are abdominal drainage (e.g., testes) and not an expected early site for nasopharynx." }
+      ]
+    },
+
+    {
+      category: "3. Procedures",
+      type: "proc",
+      title: "Larynx: Early Glottic SCC — Technique & Nodal Risk",
+      chart: `
+        <div class="chart-row"><strong>Pt:</strong> 68M (long smoking history)</div>
+        <div class="chart-row"><strong>Dx:</strong> T1a glottic SCC (single vocal cord), N0.</div>
+        <div class="chart-row"><strong>Typical location:</strong> True vocal cord (glottis).</div>
+        <div class="chart-row"><strong>Clinical pearl:</strong> Glottis has relatively sparse lymphatics.</div>
+      `,
+      question: "Which approach best matches typical RT management for early-stage (T1) glottic SCC?",
+      options: [
+        { text: "Treat larynx only with small opposed laterals; elective neck nodes usually NOT treated", correct: true, feedback: "Correct. Early glottic cancers have low nodal risk due to sparse lymphatics; RT often uses small opposed laterals to the larynx with curative dose (institution-specific schedules)." },
+        { text: "Treat entire bilateral neck (Levels I–V) to 70 Gy", correct: false, feedback: "That would be excessive for T1 glottic with N0 disease and increases toxicity unnecessarily." },
+        { text: "Treat inguinal nodes electively", correct: false, feedback: "Inguinal nodes are unrelated to laryngeal drainage." },
+        { text: "Use electrons to treat the spinal cord", correct: false, feedback: "Electrons are superficial and are not used to treat deep midline structures like spinal cord." }
+      ]
+    },
+
+    {
+      category: "3. Procedures",
+      type: "proc",
+      title: "Lung SBRT: Central vs Peripheral — Fractionation Safety",
+      chart: `
+        <div class="chart-row"><strong>Pt:</strong> 72F</div>
+        <div class="chart-row"><strong>Dx:</strong> Stage I NSCLC.</div>
+        <div class="chart-row"><strong>Tumor:</strong> Centrally located (near proximal bronchial tree).</div>
+        <div class="chart-row"><strong>Goal:</strong> High local control while reducing high-dose injury to central airways.</div>
+      `,
+      question: "Compared with peripheral SBRT, what fractionation strategy is commonly used for CENTRAL lung lesions to reduce severe toxicity risk?",
+      options: [
+        { text: "Fewer fractions with higher dose per fraction (e.g., 54 Gy/3 fx)", correct: false, feedback: "Very high dose per fraction near central structures increases risk (airway necrosis, fistula, hemorrhage). Central SBRT often uses more fractions to spread out dose." },
+        { text: "More fractions with lower dose per fraction (e.g., 50 Gy/5 fx or 60 Gy/8 fx)", correct: true, feedback: "Correct. Central lesions are often treated with a more fractionated SBRT approach to reduce toxicity to proximal bronchi, esophagus, heart, and major vessels." },
+        { text: "Treat with electrons because the lesion is deep", correct: false, feedback: "Electrons are for superficial lesions and do not reliably reach deep central lung targets." },
+        { text: "Avoid imaging and treat based on skin marks only", correct: false, feedback: "SBRT requires high-precision IGRT. Treating based on skin marks alone is unsafe." }
+      ]
+    },
+
+    {
+      category: "3. Procedures",
+      type: "proc",
+      title: "Small Cell Lung Cancer: Brain Met Risk & PCI",
+      chart: `
+        <div class="chart-row"><strong>Pt:</strong> 60M</div>
+        <div class="chart-row"><strong>Dx:</strong> Limited-stage small cell lung cancer (SCLC).</div>
+        <div class="chart-row"><strong>Status:</strong> Completed chemoRT with good response; brain MRI negative.</div>
+        <div class="chart-row"><strong>Key fact:</strong> SCLC has a high propensity for brain metastases.</div>
+      `,
+      question: "Which prophylactic radiation treatment is commonly offered because of the high risk of occult brain metastases in SCLC?",
+      options: [
+        { text: "PCI (Prophylactic Cranial Irradiation)", correct: true, feedback: "Correct. PCI may be considered in responsive SCLC to reduce risk of future brain metastases (practice varies by patient factors and evolving evidence)." },
+        { text: "TBI (Total Body Irradiation)", correct: false, feedback: "TBI is used in specific transplant conditioning settings, not as prophylaxis for SCLC brain mets." },
+        { text: "Total skin electron therapy", correct: false, feedback: "Total skin electrons are for widespread cutaneous disease (e.g., mycosis fungoides), not for brain prophylaxis." },
+        { text: "Inguinal node irradiation", correct: false, feedback: "Inguinal nodes are not related to SCLC prophylaxis." }
+      ]
+    },
+
+    {
+      category: "3. Procedures",
+      type: "proc",
+      title: "Breast: Medial Tumor — Internal Mammary Nodes",
+      chart: `
+        <div class="chart-row"><strong>Pt:</strong> 55F</div>
+        <div class="chart-row"><strong>Dx:</strong> Left breast cancer, inner quadrant (medial) primary.</div>
+        <div class="chart-row"><strong>Nodes:</strong> Sentinel node positive.</div>
+        <div class="chart-row"><strong>Planning consideration:</strong> Lymphatic drainage differs by tumor quadrant.</div>
+      `,
+      question: "Which nodal chain is more strongly associated with MEDIAL/inner-quadrant breast drainage and is often considered for nodal coverage when indicated?",
+      options: [
+        { text: "Internal mammary chain", correct: true, feedback: "Correct. Medial breast tumors have more drainage toward the internal mammary nodes (along the internal mammary vessels) compared with lateral tumors, which more commonly drain to axillary nodes." },
+        { text: "Popliteal nodes", correct: false, feedback: "Popliteal nodes drain the lower leg, not the breast." },
+        { text: "Para-aortic nodes", correct: false, feedback: "Para-aortic nodes are abdominal drainage, not breast." },
+        { text: "Inguinal nodes", correct: false, feedback: "Inguinal nodes drain lower extremity, vulva, and anal canal regions—not breast." }
+      ]
+    },
+
+    {
+      category: "3. Procedures",
+      type: "proc",
+      title: "Breast: Tumor Bed Boost — Purpose & Typical Pattern",
+      chart: `
+        <div class="chart-row"><strong>Pt:</strong> 49F</div>
+        <div class="chart-row"><strong>Tx course:</strong> Whole breast RT completed (e.g., ~40 Gy/15 fx or ~50 Gy/25 fx).</div>
+        <div class="chart-row"><strong>Next order:</strong> “Boost to lumpectomy cavity.”</div>
+        <div class="chart-row"><strong>Setup:</strong> Clips mark surgical cavity/seroma.</div>
+      `,
+      question: "What is the main purpose of a tumor bed (lumpectomy cavity) boost after whole breast RT?",
+      options: [
+        { text: "To treat the entire lung because microscopic disease is assumed there", correct: false, feedback: "Breast boost targets the highest-risk area in the breast—not the lung." },
+        { text: "To deliver additional dose to the highest-risk region for local recurrence (tumor bed) while limiting dose to the rest of the breast", correct: true, feedback: "Correct. Local recurrence risk is greatest near the original tumor bed. A boost escalates dose to that region while sparing more normal tissue." },
+        { text: "To replace the need for imaging and daily setup", correct: false, feedback: "A boost does not replace imaging. Accurate localization remains important." },
+        { text: "To avoid any skin reaction by lowering surface dose", correct: false, feedback: "Boost can increase focal skin dose depending on technique; skin reactions may increase in the boost area." }
+      ]
+    },
+
+    {
+      category: "3. Procedures",
+      type: "proc",
+      title: "Esophagus: Distal Tumor — Risk Factors & Histology",
+      chart: `
+        <div class="chart-row"><strong>Pt:</strong> 63M</div>
+        <div class="chart-row"><strong>Symptom:</strong> Progressive dysphagia.</div>
+        <div class="chart-row"><strong>Tumor location:</strong> Distal esophagus / GE junction.</div>
+        <div class="chart-row"><strong>History:</strong> Chronic GERD, Barrett’s esophagus, obesity.</div>
+      `,
+      question: "Given the location and risk profile, what is the most likely histology?",
+      options: [
+        { text: "Adenocarcinoma", correct: true, feedback: "Correct. Distal esophagus/GE junction tumors are commonly adenocarcinoma and are associated with GERD and Barrett’s esophagus." },
+        { text: "Squamous cell carcinoma (SCC) of the proximal esophagus", correct: false, feedback: "SCC is more classically associated with upper/mid esophagus and risk factors like smoking and alcohol (location/risk profile here points to adenocarcinoma)." },
+        { text: "Basal cell carcinoma", correct: false, feedback: "Basal cell carcinoma is a skin cancer, not an esophageal cancer histology." },
+        { text: "Glioblastoma", correct: false, feedback: "Glioblastoma is a brain tumor, not an esophageal tumor." }
+      ]
+    },
+
+    {
+      category: "1. Patient Care",
+      type: "care",
+      title: "Thoracic RT: Esophagitis — Symptom Management",
+      chart: `
+        <div class="chart-row"><strong>Pt:</strong> 58F</div>
+        <div class="chart-row"><strong>Tx:</strong> Concurrent chemoRT for lung cancer (thorax).</div>
+        <div class="chart-row"><strong>Complaint:</strong> Painful swallowing (odynophagia), decreased oral intake.</div>
+        <div class="chart-row"><strong>Concern:</strong> Dehydration/weight loss → compliance and safety risk.</div>
+      `,
+      question: "What is the BEST immediate action for the therapist when a patient reports worsening odynophagia and reduced intake during thoracic chemoRT?",
+      options: [
+        { text: "Tell the patient esophagitis is expected and continue treatment without notifying anyone", correct: false, feedback: "Esophagitis can become severe and lead to dehydration, weight loss, or treatment breaks. The team should be notified so supportive interventions can be started." },
+        { text: "Notify the nurse/provider and document symptoms; arrange supportive care (hydration/nutrition/pain control as ordered)", correct: true, feedback: "Correct. Escalate to the care team and document. Management is multidisciplinary (nutrition strategies, hydration, topical/systemic pain control, evaluation for infection/weight loss)." },
+        { text: "Instruct the patient to stop all eating until symptoms resolve", correct: false, feedback: "Stopping intake worsens dehydration and malnutrition. Instead, coordinate supportive care and nutrition modifications." },
+        { text: "Apply bolus to the chest to reduce esophageal dose", correct: false, feedback: "Bolus increases surface dose and is not used to reduce internal esophageal dose." }
+      ]
+    },
+
+    {
+      category: "3. Procedures",
+      type: "proc",
+      title: "Anal Canal SCC: Lymphatics & Field Design",
+      chart: `
+        <div class="chart-row"><strong>Pt:</strong> 58F</div>
+        <div class="chart-row"><strong>Dx:</strong> Anal canal squamous cell carcinoma.</div>
+        <div class="chart-row"><strong>Common etiology:</strong> HPV association is common.</div>
+        <div class="chart-row"><strong>Planning note:</strong> Anal canal has distinct nodal drainage patterns.</div>
+      `,
+      question: "Which nodal basin is a classic elective coverage consideration for anal canal cancers due to lymphatic drainage?",
+      options: [
+        { text: "Inguinal nodes", correct: true, feedback: "Correct. Anal canal (especially distal) drains to inguinal nodes; elective coverage may include inguinals depending on stage/institutional practice." },
+        { text: "Retropharyngeal nodes", correct: false, feedback: "Retropharyngeal nodes are head & neck (nasopharynx/oropharynx), not anal canal." },
+        { text: "Axillary nodes", correct: false, feedback: "Axillary nodes are associated with breast/upper extremity drainage." },
+        { text: "Supraclavicular nodes only", correct: false, feedback: "Supraclavicular nodes are not typical first-echelon drainage for anal canal." }
+      ]
+    },
+
+    {
+      category: "3. Procedures",
+      type: "proc",
+      title: "Pancreas: SBRT Dose Limiter — Duodenum/Stomach",
+      chart: `
+        <div class="chart-row"><strong>Pt:</strong> 67M</div>
+        <div class="chart-row"><strong>Dx:</strong> Pancreatic adenocarcinoma (head of pancreas).</div>
+        <div class="chart-row"><strong>Technique:</strong> Highly conformal RT (IMRT/SBRT) considered.</div>
+        <div class="chart-row"><strong>Critical adjacency:</strong> Duodenum wraps around pancreatic head.</div>
+      `,
+      question: "For pancreatic HEAD SBRT, which nearby structure most commonly limits dose escalation because of ulcer/perforation risk?",
+      options: [
+        { text: "Duodenum (and adjacent stomach/small bowel)", correct: true, feedback: "Correct. Duodenum and other upper GI structures often drive constraints for pancreatic head SBRT because high dose can cause ulceration, bleeding, or perforation." },
+        { text: "Femoral heads", correct: false, feedback: "Femoral heads are pelvic/hip structures and not the primary dose limiter for pancreatic head targets." },
+        { text: "Retina", correct: false, feedback: "Retina is an ocular structure unrelated to pancreatic RT." },
+        { text: "Inguinal nodes", correct: false, feedback: "Nodes are not the immediate dose-limiting OAR for pancreatic head SBRT; the upper GI mucosa typically is." }
+      ]
+    },
+
+    {
+      category: "3. Procedures",
+      type: "proc",
+      title: "Liver SBRT: Functional OAR — Normal Liver Preservation",
+      chart: `
+        <div class="chart-row"><strong>Pt:</strong> 59M</div>
+        <div class="chart-row"><strong>Dx:</strong> Hepatocellular carcinoma (HCC) in cirrhotic liver (Hep C history).</div>
+        <div class="chart-row"><strong>Technique:</strong> SBRT considered (few fractions).</div>
+        <div class="chart-row"><strong>Key risk:</strong> Radiation-induced liver disease (RILD) if too much normal liver is irradiated.</div>
+      `,
+      question: "Which organ/consideration is the PRIMARY functional dose-limiting constraint in liver SBRT planning?",
+      options: [
+        { text: "Spare adequate uninvolved (normal) liver volume / keep mean liver dose within limits", correct: true, feedback: "Correct. For liver SBRT, preserving functional normal liver is critical, especially in cirrhosis. Constraints often include mean liver dose and minimum uninvolved liver volume spared." },
+        { text: "Treat the entire liver uniformly to maximize control", correct: false, feedback: "Whole-liver high-dose irradiation would be unsafe and risks liver failure." },
+        { text: "Always prioritize femoral head dose because it is nearest", correct: false, feedback: "Femoral heads are not the primary limiting OAR for liver targets." },
+        { text: "Ignore liver function because SBRT uses few fractions", correct: false, feedback: "Fewer fractions does not eliminate toxicity risk; high dose per fraction can increase normal tissue injury if constraints are violated." }
+      ]
+    },
+
+    {
+      category: "3. Procedures",
+      type: "proc",
+      title: "Prostate: High-Risk — Pelvic Nodal Chains",
+      chart: `
+        <div class="chart-row"><strong>Pt:</strong> 70M</div>
+        <div class="chart-row"><strong>Dx:</strong> High-risk prostate adenocarcinoma (PSA 25, Gleason 4+5).</div>
+        <div class="chart-row"><strong>Plan:</strong> Pelvic nodal IMRT + prostate boost.</div>
+        <div class="chart-row"><strong>Concept:</strong> Pelvic nodes follow predictable iliac/obturator pathways.</div>
+      `,
+      question: "Which nodal groups are most classically included for elective pelvic nodal coverage in high-risk prostate RT (institution-dependent but typical anatomy)?",
+      options: [
+        { text: "Obturator + internal/external iliac (± presacral/common iliac depending on risk)", correct: true, feedback: "Correct. Prostate drains primarily along obturator and iliac chains; coverage often includes internal/external iliac and obturator nodes, with additional chains depending on risk and physician preference." },
+        { text: "Inguinal nodes as the primary elective chain", correct: false, feedback: "Inguinals are not the primary first-echelon for prostate (exceptions are rare situations with lower urethra/perineum involvement)." },
+        { text: "Retropharyngeal nodes", correct: false, feedback: "Retropharyngeal nodes are head & neck drainage." },
+        { text: "Axillary nodes", correct: false, feedback: "Axillary nodes are upper extremity/breast drainage." }
+      ]
+    },
+
+    {
+      category: "1. Patient Care",
+      type: "care",
+      title: "Prostate RT: Acute GU Toxicity — Cystitis Pattern",
+      chart: `
+        <div class="chart-row"><strong>Pt:</strong> 66M</div>
+        <div class="chart-row"><strong>Tx:</strong> Prostate RT (multiple weeks).</div>
+        <div class="chart-row"><strong>Symptoms:</strong> Frequency, urgency, mild burning with urination.</div>
+        <div class="chart-row"><strong>Common acute effect:</strong> Irritation/inflammation of bladder lining.</div>
+      `,
+      question: "Which interpretation and next step best fits these symptoms during prostate RT?",
+      options: [
+        { text: "Likely acute radiation cystitis; notify care team and reinforce hydration + avoidance of bladder irritants (per clinic protocol)", correct: true, feedback: "Correct. Acute GU irritation is common during prostate RT. Therapists should communicate symptoms to the nurse/provider and document; management is typically supportive and individualized." },
+        { text: "This is an expected late effect that will not occur until years later, so no action is needed", correct: false, feedback: "GU frequency/urgency is a common acute effect during treatment. It should still be documented and communicated to the care team." },
+        { text: "Immediately stop RT permanently", correct: false, feedback: "Do not independently discontinue therapy. Escalate concerns to the care team to manage symptoms and determine if any treatment adjustment is required." },
+        { text: "Assume it is always a kidney infection and instruct antibiotics without evaluation", correct: false, feedback: "Infection is possible, but antibiotics require provider evaluation. The appropriate action is to notify the care team for assessment." }
+      ]
+    },
+
+    {
+      category: "3. Procedures",
+      type: "proc",
+      title: "Cervix Cancer: Why Brachytherapy Matters",
+      chart: `
+        <div class="chart-row"><strong>Pt:</strong> 46F</div>
+        <div class="chart-row"><strong>Dx:</strong> Cervical SCC, stage IIB.</div>
+        <div class="chart-row"><strong>Course:</strong> Pelvic EBRT (~45–50.4 Gy) + concurrent chemo planned.</div>
+        <div class="chart-row"><strong>Next:</strong> HDR brachytherapy boost scheduled.</div>
+      `,
+      question: "In definitive cervical cancer management, what is the key reason intracavitary/interstitial brachytherapy is commonly required for cure?",
+      options: [
+        { text: "It allows very high dose to the cervix/tumor region with rapid fall-off to spare bladder/rectum", correct: true, feedback: "Correct. Brachytherapy provides steep dose gradients—high tumor dose while limiting bladder/rectum/sigmoid dose—supporting curative dose escalation." },
+        { text: "It replaces the need for any EBRT", correct: false, feedback: "Brachytherapy is typically used in combination with pelvic EBRT (and often chemo) for definitive therapy." },
+        { text: "It primarily treats distant metastases in the liver", correct: false, feedback: "Brachytherapy is a local/regional treatment—not a systemic therapy for distant metastases." },
+        { text: "It eliminates the need for immobilization and imaging", correct: false, feedback: "Precise placement, imaging, and verification remain critical for brachytherapy." }
+      ]
+    },
+
+    {
+      category: "1. Patient Care",
+      type: "care",
+      title: "Pelvic RT: Diarrhea — Supportive Management",
+      chart: `
+        <div class="chart-row"><strong>Pt:</strong> 50F</div>
+        <div class="chart-row"><strong>Tx:</strong> Pelvic RT (cervix/rectum region).</div>
+        <div class="chart-row"><strong>Symptoms:</strong> 3–4 loose stools/day, mild cramping.</div>
+        <div class="chart-row"><strong>Likely cause:</strong> Acute bowel mucosal irritation during pelvic irradiation.</div>
+      `,
+      question: "Which guidance is most appropriate for a therapist to initiate (within scope) when a patient reports new diarrhea during pelvic RT?",
+      options: [
+        { text: "Encourage hydration, notify nurse/provider, and review diet adjustments (low-residue/avoid irritants) per clinic protocol", correct: true, feedback: "Correct. Diarrhea is a common acute pelvic RT effect. Hydration + diet modification are common, but escalation to the care team is important for assessment and medication guidance." },
+        { text: "Tell the patient to take any leftover antibiotics at home", correct: false, feedback: "Antibiotics should not be self-prescribed. The care team should evaluate for infection, medication needs, or dehydration." },
+        { text: "Stop all oral intake", correct: false, feedback: "Stopping intake risks dehydration and malnutrition. Instead, coordinate supportive care and safe diet changes." },
+        { text: "Ignore symptoms unless blood is present", correct: false, feedback: "Early reporting allows management to prevent worsening dehydration, electrolyte imbalance, or treatment interruptions." }
+      ]
+    },
+
+    {
+      category: "3. Procedures",
+      type: "proc",
+      title: "Testes: Seminoma — Lymphatic Drainage Pattern",
+      chart: `
+        <div class="chart-row"><strong>Pt:</strong> 32M</div>
+        <div class="chart-row"><strong>Dx:</strong> Stage I seminoma s/p orchiectomy.</div>
+        <div class="chart-row"><strong>Concept:</strong> Testes originate in abdomen embryologically.</div>
+        <div class="chart-row"><strong>High-yield:</strong> First-echelon nodes are retroperitoneal.</div>
+      `,
+      question: "What is the primary first-echelon nodal drainage for testicular tumors (absent scrotal violation)?",
+      options: [
+        { text: "Para-aortic (retroperitoneal) nodes near the renal hilum", correct: true, feedback: "Correct. Testicular lymphatics drain to retroperitoneal para-aortic nodes due to embryologic origin. Inguinal drainage is more typical of scrotal skin." },
+        { text: "Inguinal nodes", correct: false, feedback: "Inguinal nodes are typical for scrotal skin. Testes themselves drain to para-aortic nodes unless prior scrotal surgery/violation changes pathways." },
+        { text: "Axillary nodes", correct: false, feedback: "Axillary nodes drain upper extremity/breast." },
+        { text: "Retropharyngeal nodes", correct: false, feedback: "Retropharyngeal nodes are head & neck drainage." }
+      ]
+    },
+
+    {
+      category: "3. Procedures",
+      type: "proc",
+      title: "Hodgkin Lymphoma: Mediastinum — OAR Sparing",
+      chart: `
+        <div class="chart-row"><strong>Pt:</strong> 24F</div>
+        <div class="chart-row"><strong>Dx:</strong> Hodgkin lymphoma with mediastinal involvement.</div>
+        <div class="chart-row"><strong>Tx:</strong> Involved-site RT after chemo (dose varies by protocol).</div>
+        <div class="chart-row"><strong>Key OARs:</strong> Heart and lungs.</div>
+      `,
+      question: "Which technique is commonly used to reduce heart dose during mediastinal RT (especially in young patients)?",
+      options: [
+        { text: "Deep Inspiration Breath Hold (DIBH)", correct: true, feedback: "Correct. DIBH increases lung volume and can move the heart away from the mediastinal target, reducing cardiac dose (often paired with modern conformal planning)." },
+        { text: "Turn off all imaging to reduce dose", correct: false, feedback: "While imaging dose should be optimized, you cannot eliminate verification imaging; it’s essential for accurate delivery. DIBH directly reduces heart exposure." },
+        { text: "Use electron cutouts for a deep mediastinal target", correct: false, feedback: "Electrons are not ideal for deep mediastinal targets due to limited penetration and inhomogeneity." },
+        { text: "Treat prone to increase heart dose intentionally", correct: false, feedback: "The goal is heart sparing, not increasing dose." }
+      ]
+    },
+
+    {
+      category: "3. Procedures",
+      type: "proc",
+      title: "Palliative Bone Mets: Fractionation Choice",
+      chart: `
+        <div class="chart-row"><strong>Pt:</strong> 75M</div>
+        <div class="chart-row"><strong>Dx:</strong> Metastatic prostate cancer.</div>
+        <div class="chart-row"><strong>Problem:</strong> Painful lumbar spine metastasis; limited transportation.</div>
+        <div class="chart-row"><strong>Goal:</strong> Rapid pain relief with minimal visits.</div>
+      `,
+      question: "Which is a common, evidence-based single-fraction palliative RT regimen for painful bone metastases?",
+      options: [
+        { text: "8 Gy in 1 fraction", correct: true, feedback: "Correct. A single 8 Gy fraction is a common palliative regimen for painful bone metastases (other fractionations also exist depending on clinical factors)." },
+        { text: "70 Gy in 35 fractions", correct: false, feedback: "70 Gy/35 fx is typical of definitive head & neck dose escalation and is not appropriate for palliative bone pain." },
+        { text: "2 Gy in 1 fraction", correct: false, feedback: "2 Gy is a conventional fraction size, but a single 2 Gy fraction is generally insufficient for palliative bone pain control." },
+        { text: "100 Gy in 1 fraction", correct: false, feedback: "This is unsafe and not a clinical regimen." }
+      ]
+    },
+
+    {
+      category: "1. Patient Care",
+      type: "care",
+      title: "Palliation: Pain Flare After RT",
+      chart: `
+        <div class="chart-row"><strong>Pt:</strong> 75M</div>
+        <div class="chart-row"><strong>Tx:</strong> Received single-fraction RT to painful spine metastasis yesterday.</div>
+        <div class="chart-row"><strong>Today:</strong> Reports temporarily worse pain.</div>
+        <div class="chart-row"><strong>Concept:</strong> Acute inflammatory response can occur after RT.</div>
+      `,
+      question: "This temporary worsening is most consistent with what phenomenon, and what is the best therapist action?",
+      options: [
+        { text: "Pain flare; notify the care team and document so supportive meds can be considered", correct: true, feedback: "Correct. Pain flare can occur after palliative RT. Therapists should document and communicate symptoms to the care team for supportive management per protocol." },
+        { text: "Myelitis; call a code immediately", correct: false, feedback: "Radiation myelitis is a rare late effect, not an immediate next-day phenomenon after a single palliative fraction. Still, new neurologic deficits always require urgent escalation." },
+        { text: "Tumor lysis syndrome; give IV chemotherapy", correct: false, feedback: "Tumor lysis is related to systemic therapy and specific tumor types; therapists should not initiate chemo." },
+        { text: "An allergic contrast reaction; give epinephrine", correct: false, feedback: "Contrast reactions occur around contrast administration and present with hives, wheeze, hypotension, etc—not isolated pain flare." }
+      ]
+    },
+
+    {
+      category: "3. Procedures",
+      type: "proc",
+      title: "Oncologic Emergency: Spinal Cord Compression",
+      chart: `
+        <div class="chart-row"><strong>Pt:</strong> 66M (known lung cancer)</div>
+        <div class="chart-row"><strong>Symptoms:</strong> New severe back pain + leg weakness + urinary retention.</div>
+        <div class="chart-row"><strong>MRI:</strong> Epidural mass compressing cord at T7.</div>
+        <div class="chart-row"><strong>Risk:</strong> Permanent neurologic injury if delayed.</div>
+      `,
+      question: "What is the correct immediate priority response when spinal cord compression is suspected/confirmed?",
+      options: [
+        { text: "Escalate immediately to provider team for urgent management (often steroids + rapid RT/surgery planning); document", correct: true, feedback: "Correct. Spinal cord compression is an emergency. Therapists should urgently notify the physician/nurse team and document; clinical management is time-sensitive." },
+        { text: "Wait until the next weekly on-treatment visit to mention it", correct: false, feedback: "Delay risks irreversible paralysis. This must be escalated immediately." },
+        { text: "Proceed with routine treatment without informing anyone", correct: false, feedback: "Unsafe. The patient requires urgent evaluation and often emergent intervention." },
+        { text: "Tell the patient to drink more water and go home", correct: false, feedback: "This is not a hydration issue; it is a neurologic emergency." }
+      ]
+    },
+
+    {
+      category: "3. Procedures",
+      type: "proc",
+      title: "Total Skin Electron Therapy (TSEBT): Why Electrons?",
+      chart: `
+        <div class="chart-row"><strong>Pt:</strong> 57M</div>
+        <div class="chart-row"><strong>Dx:</strong> Mycosis fungoides (cutaneous T-cell lymphoma) — diffuse plaques.</div>
+        <div class="chart-row"><strong>Technique:</strong> Total Skin Electron Beam Therapy (TSEBT).</div>
+        <div class="chart-row"><strong>Goal:</strong> Treat skin while sparing deeper organs.</div>
+      `,
+      question: "Why are ELECTRONS used for TSEBT instead of megavoltage photons?",
+      options: [
+        { text: "Electrons have limited penetration and deliver high dose to superficial tissues (skin) with rapid falloff", correct: true, feedback: "Correct. Electron depth-dose characteristics make them ideal for widespread superficial disease—high surface dose with rapid falloff to spare deeper organs." },
+        { text: "Electrons always penetrate deeper than photons", correct: false, feedback: "Electrons generally have more limited penetration than MV photons. That’s why they are used for superficial targets." },
+        { text: "Electrons eliminate the need for shielding and radiation protection", correct: false, feedback: "Radiation protection is still required. Electron use changes depth distribution, not the need for safety." },
+        { text: "Electrons are only used for imaging, not treatment", correct: false, feedback: "Electrons are therapeutic particles and are commonly used for superficial lesions and TSEBT." }
+      ]
+    },
+
+    {
+      category: "3. Procedures",
+      type: "proc",
+      title: "Soft Tissue Sarcoma: Pre-op vs Post-op Dose Pattern",
+      chart: `
+        <div class="chart-row"><strong>Pt:</strong> 48F</div>
+        <div class="chart-row"><strong>Dx:</strong> Extremity soft tissue sarcoma.</div>
+        <div class="chart-row"><strong>Decision point:</strong> Pre-operative RT planned before limb-sparing surgery.</div>
+        <div class="chart-row"><strong>Concept:</strong> Pre-op dose is typically lower than post-op due to smaller target volumes.</div>
+      `,
+      question: "Which is a common pre-operative external beam RT dose pattern for extremity soft tissue sarcoma (institutional protocols vary)?",
+      options: [
+        { text: "About 50 Gy in 25 fractions", correct: true, feedback: "Correct. Pre-op RT is commonly ~50 Gy/25 fx. Post-op courses are often higher (e.g., ~60–66 Gy) because of larger volumes and scar bed considerations." },
+        { text: "8 Gy in 1 fraction", correct: false, feedback: "8 Gy x1 is a palliative regimen for bone mets; not typical for curative sarcoma pre-op RT." },
+        { text: "70 Gy in 35 fractions to the entire limb", correct: false, feedback: "That would be excessive and unsafe for an extremity sarcoma field." },
+        { text: "No fractionation needed because sarcoma is always benign", correct: false, feedback: "Sarcomas are malignant tumors and require curative-intent management when appropriate." }
+      ]
+    },
+
+    
+
+    {
+      category: "3. Procedures",
+      type: "proc",
+      title: "Motion Management: Abdominal Compression",
+      chart: `
+        <div class="chart-row"><strong>Pt:</strong> 71F</div>
+        <div class="chart-row"><strong>Tx:</strong> Liver SBRT (few fractions).</div>
+        <div class="chart-row"><strong>4D-CT:</strong> Tumor motion ~18 mm SI with free breathing.</div>
+        <div class="chart-row"><strong>Goal:</strong> Reduce motion amplitude and minimize PTV expansion.</div>
+      `,
+      question: "Which motion-management option physically REDUCES diaphragm/upper abdominal excursion in many patients during SBRT?",
+      options: [
+        { text: "Abdominal compression", correct: true, feedback: "Correct. Abdominal compression can reduce respiratory motion by limiting diaphragmatic excursion, often decreasing target motion and required margins." },
+        { text: "Increasing kVp for imaging", correct: false, feedback: "kVp affects image beam quality/contrast; it does not reduce internal organ motion." },
+        { text: "Using MV portal imaging instead of kV imaging", correct: false, feedback: "Changing planar imaging energy does not reduce respiratory motion." },
+        { text: "Turning off immobilization so the patient can relax", correct: false, feedback: "Immobilization and motion-management strategies are used to improve reproducibility and safety, not to increase motion." }
+      ]
+    },
+
+    {
+      category: "3. Procedures",
+      type: "proc",
+      title: "6DoF Couch: Rotational Correction & Re-Verification",
+      chart: `
+        <div class="chart-row"><strong>Pt:</strong> 68M</div>
+        <div class="chart-row"><strong>Tx:</strong> Prostate SBRT (high precision).</div>
+        <div class="chart-row"><strong>IGRT:</strong> CBCT match shows translations corrected, but yaw rotation remains ~2.5°.</div>
+        <div class="chart-row"><strong>Equipment:</strong> 6DoF couch available (can correct pitch/roll/yaw per protocol).</div>
+      `,
+      question: "What is the safest next step when a clinically significant rotational error is detected on CBCT for a high-precision treatment?",
+      options: [
+        { text: "Apply the appropriate rotational correction per protocol (if authorized) and re-verify with imaging before treatment", correct: true, feedback: "Correct. For high-precision treatments, rotational errors can cause target miss/OAR overdose. If a 6DoF correction is used, re-imaging verification is a key safety step." },
+        { text: "Ignore the rotation because translations were corrected", correct: false, feedback: "Rotation can still misalign the target/OARs, especially for small margins (e.g., SBRT/SRS). It should not be ignored." },
+        { text: "Rotate the collimator instead of the patient to ‘cancel’ the yaw", correct: false, feedback: "Collimator rotation changes beam orientation, not patient anatomy alignment. Correct the patient setup (or reposition) using approved methods." },
+        { text: "Proceed with treatment and document later if toxicity occurs", correct: false, feedback: "High-precision treatments require errors be resolved BEFORE delivery, not after." }
+      ]
+    },
+
+// =========================================================
+    //  SAFETY / QA / DELIVERY SYSTEMS (NEW)
+    // =========================================================
+
+    {
+      category: "2. Safety & QA",
+      type: "safety",
+      title: "MRI Screening: Orbital Metal Foreign Body",
+      chart: `
+        <div class="chart-row"><strong>Setting:</strong> MRI-based planning scan scheduled.</div>
+        <div class="chart-row"><strong>Pt history:</strong> Worked metal grinding; reports prior eye injury “years ago.”</div>
+        <div class="chart-row"><strong>Concern:</strong> Retained ferrous orbital fragment can move in the magnetic field.</div>
+        <div class="chart-row"><strong>Safety principle:</strong> Screen → verify → clear before entering higher MRI zones.</div>
+      `,
+      question: "What is the most appropriate next step before this patient proceeds to the MRI environment?",
+      options: [
+        { text: "Complete MRI screening and obtain appropriate clearance (e.g., orbital evaluation/imaging) before entering Zone IV", correct: true, feedback: "Correct. A history of possible orbital metal requires MRI safety clearance. Screening plus verification (often via prior imaging/orbital x-ray per policy) is essential before the patient enters the magnet room." },
+        { text: "Proceed to MRI; the magnetic field is too weak to move metal", correct: false, feedback: "Incorrect. The static magnetic field can exert strong forces on ferromagnetic objects and can cause serious injury." },
+        { text: "Cover the patient’s eye with lead shielding", correct: false, feedback: "Lead shielding does not prevent magnetic attraction and is not the solution." },
+        { text: "Use MV portal imaging instead of MRI to check for metal fragments", correct: false, feedback: "MV imaging is not a standard clearance method for MRI safety. Follow MRI screening/clearance protocols." }
+      ]
+    },
+
+    {
+      category: "2. Safety & QA",
+      type: "safety",
+      title: "MRI Screening: Medication Patch Burn Risk",
+      chart: `
+        <div class="chart-row"><strong>Setting:</strong> MRI simulation day.</div>
+        <div class="chart-row"><strong>Finding:</strong> Patient has a transdermal medication patch (foil backing) on upper chest.</div>
+        <div class="chart-row"><strong>Risk:</strong> RF heating → skin burn, plus artifact.</div>
+        <div class="chart-row"><strong>Principle:</strong> Remove/replace per policy and provider guidance before scanning.</div>
+      `,
+      question: "What is the safest action regarding a metallic/foil-backed medication patch prior to MRI?",
+      options: [
+        { text: "Remove the patch per MRI policy and coordinate replacement timing with the care team (do not discard without plan)", correct: true, feedback: "Correct. Some patches can heat and burn in MRI. Remove per policy and coordinate with the care team so the patient’s medication needs are safely managed." },
+        { text: "Leave it on; patches are always MRI-safe", correct: false, feedback: "Incorrect. Some patches contain metallic backing or components that can heat significantly." },
+        { text: "Tape it down tighter to prevent it from moving", correct: false, feedback: "Taping does not address RF heating risk." },
+        { text: "Place a lead block over the patch", correct: false, feedback: "Lead does not prevent RF heating and is not an MRI-safe solution." }
+      ]
+    },
+
+    {
+      category: "2. Safety & QA",
+      type: "safety",
+      title: "Area Classification & Postings: Restricted vs Unrestricted",
+      chart: `
+        <div class="chart-row"><strong>Scenario:</strong> A new staff member is unsure where public access is allowed.</div>
+        <div class="chart-row"><strong>Concept:</strong> Areas are classified to control exposure and access.</div>
+        <div class="chart-row"><strong>Vocabulary:</strong> Restricted / controlled / unrestricted areas; postings and access control.</div>
+        <div class="chart-row"><strong>Practice:</strong> Therapy vault access is controlled and becomes a radiation area when beam is on.</div>
+      `,
+      question: "Which statement best matches the concept of a RESTRICTED area in radiation protection programs?",
+      options: [
+        { text: "An area where access is controlled by the licensee to protect individuals from exposure (e.g., therapy vault controlled access)", correct: true, feedback: "Correct. Restricted areas are controlled by the facility to limit exposure and manage access; signage and controls reflect conditions (e.g., beam-on warnings)." },
+        { text: "Any place the public can enter freely without supervision", correct: false, feedback: "That describes an unrestricted area, not a restricted one." },
+        { text: "An area where radiation is impossible", correct: false, feedback: "Restricted refers to access control—not a guarantee of zero radiation." },
+        { text: "Only the physics office, because physicists are restricted", correct: false, feedback: "Restricted area classification is based on exposure/access control, not job roles." }
+      ]
+    },
+
+    {
+      category: "2. Safety & QA",
+      type: "safety",
+      title: "CT Simulator QC: Water Phantom & HU Drift",
+      chart: `
+        <div class="chart-row"><strong>QC check:</strong> CT water phantom scan.</div>
+        <div class="chart-row"><strong>Expected:</strong> Water ≈ 0 HU (within tolerance).</div>
+        <div class="chart-row"><strong>Observed:</strong> Water reads +25 HU and noise appears increased.</div>
+        <div class="chart-row"><strong>Why it matters:</strong> HU → electron density conversion affects dose calculation accuracy.</div>
+      `,
+      question: "What is the most important concern with a significant HU drift on CT simulator QC?",
+      options: [
+        { text: "It can distort electron density mapping and introduce systematic dose calculation errors", correct: true, feedback: "Correct. CT number accuracy supports proper density assignment for heterogeneity corrections; HU drift can systematically impact dose calculations." },
+        { text: "It only changes image color and has no dosimetric impact", correct: false, feedback: "Incorrect. HU values are used for electron density conversion in treatment planning." },
+        { text: "It improves target coverage automatically", correct: false, feedback: "QC drift does not improve coverage; it risks inaccurate calculations." },
+        { text: "It means the CT is safe to use as long as slice thickness is 5 mm", correct: false, feedback: "Slice thickness does not fix HU calibration drift. QC failure requires physics/engineering evaluation per policy." }
+      ]
+    },
+
+    {
+      category: "2. Safety & QA",
+      type: "safety",
+      title: "Output Verification: Environment & Documentation",
+      chart: `
+        <div class="chart-row"><strong>QC:</strong> Daily output constancy check with ion chamber.</div>
+        <div class="chart-row"><strong>Environment:</strong> Very humid day; room temp/pressure changed.</div>
+        <div class="chart-row"><strong>Reading:</strong> Output appears 2.5% low vs baseline.</div>
+        <div class="chart-row"><strong>Principle:</strong> Ion chamber measurements depend on temperature/pressure corrections; environment can affect readings.</div>
+      `,
+      question: "Before declaring the linac output out of tolerance, what is the most appropriate first step?",
+      options: [
+        { text: "Confirm appropriate measurement corrections/conditions (e.g., temperature/pressure) and repeat per QC procedure; document and escalate as needed", correct: true, feedback: "Correct. Verify measurement setup and corrections first, then repeat/confirm. If still out of tolerance, follow policy (notify physics, restrict use) and document findings." },
+        { text: "Ignore the result because humidity makes all readings invalid", correct: false, feedback: "Humidity can influence measurements, but you still must follow QC procedure (apply corrections, repeat, and escalate if needed)." },
+        { text: "Treat SRS patients first because they are most sensitive", correct: false, feedback: "If output is questionable, high-precision patients should not be treated until output is verified within tolerance." },
+        { text: "Change the prescription dose to compensate", correct: false, feedback: "Prescription changes are not the solution to machine output concerns. Output must be within tolerance before treatment." }
+      ]
+    },
+
+    {
+      category: "3. Procedures",
+      type: "proc",
+      title: "IGRT: kV vs MV vs CBCT — Know the Difference",
+      chart: `
+        <div class="chart-row"><strong>Need:</strong> Daily image guidance for precise setup.</div>
+        <div class="chart-row"><strong>Options named in outline:</strong> kV imaging, MV imaging, cone-beam CT (CBCT).</div>
+        <div class="chart-row"><strong>Key distinction:</strong> Planar vs volumetric; imaging source (kV tube vs MV treatment beam).</div>
+      `,
+      question: "Which pairing is MOST accurate?",
+      options: [
+        { text: "kV imaging = planar images from a diagnostic kV source; MV imaging = portal images using the treatment beam; CBCT = 3D volumetric kV imaging", correct: true, feedback: "Correct. kV planar uses a kV source/detector (good bony detail, often better contrast). MV portal uses the treatment beam (MV) and EPID. CBCT provides volumetric 3D localization (commonly kV-based on linacs)." },
+        { text: "MV imaging provides the best soft tissue contrast because energy is lower", correct: false, feedback: "MV beams are higher energy and generally provide poorer soft tissue contrast than kV. MV portal imaging is excellent for field verification but limited for soft tissue." },
+        { text: "CBCT is a 2D image and cannot show 3D anatomy", correct: false, feedback: "CBCT is a volumetric 3D dataset used for alignment to soft tissue/target and OARs depending on visibility." },
+        { text: "kV imaging uses the same MV beam as treatment but with a different filter", correct: false, feedback: "kV imaging typically uses a separate diagnostic kV x-ray source (not the MV treatment beam)." }
+      ]
+    },
+
+    {
+      category: "3. Procedures",
+      type: "proc",
+      title: "Record & Verify (R&V): Plan/Patient Safety Check",
+      chart: `
+        <div class="chart-row"><strong>Setting:</strong> First day of treatment.</div>
+        <div class="chart-row"><strong>R&V alert:</strong> “Plan UID mismatch / wrong version loaded.”</div>
+        <div class="chart-row"><strong>Risk:</strong> Delivering parameters from the wrong plan or wrong patient.</div>
+        <div class="chart-row"><strong>Safety principle:</strong> If identifiers/parameters don’t match → STOP and resolve.</div>
+      `,
+      question: "What is the safest and most appropriate response to a record-and-verify plan mismatch alert?",
+      options: [
+        { text: "Do NOT treat; stop and escalate to physics/dosimetry/provider to verify correct patient, correct plan, and correct parameters; document", correct: true, feedback: "Correct. R&V mismatch is a hard stop. Verify identifiers and plan version before any radiation is delivered; document per policy." },
+        { text: "Override the alert and treat to avoid schedule delays", correct: false, feedback: "Overriding a mismatch can cause a wrong-plan or wrong-patient event—one of the highest-risk errors in therapy." },
+        { text: "Change the patient’s name in the R&V system to match the plan", correct: false, feedback: "Never alter identifiers to ‘make it fit.’ Resolve the underlying mismatch correctly." },
+        { text: "Skip imaging so the R&V system will not notice", correct: false, feedback: "Imaging is not the issue; the mismatch must be resolved and imaging remains a key safety step." }
+      ]
+    },
+
+    {
+      category: "3. Procedures",
+      type: "proc",
+      title: "In-Vivo Dosimetry: Diode Reading Out of Range",
+      chart: `
+        <div class="chart-row"><strong>Tx:</strong> Conventional fractionated course (photons).</div>
+        <div class="chart-row"><strong>Safety tool:</strong> Entrance diode placed for first fraction.</div>
+        <div class="chart-row"><strong>Result:</strong> Diode reads ~8% LOWER than expected.</div>
+        <div class="chart-row"><strong>Concept:</strong> Diodes help detect setup/parameter errors early.</div>
+      `,
+      question: "What is the best next action when an in-vivo diode reading is significantly out of expected range?",
+      options: [
+        { text: "Escalate immediately (verify diode placement/setup/parameters; notify physics per protocol) before continuing", correct: true, feedback: "Correct. A significant discrepancy can indicate wrong setup, missing bolus, wrong SSD, wrong energy, wrong wedge, or diode placement issues. Investigate and document per policy." },
+        { text: "Ignore it because diodes are never accurate", correct: false, feedback: "Diodes have uncertainty, but large out-of-range readings require investigation—especially on first day." },
+        { text: "Increase MU for the next fraction to compensate without telling anyone", correct: false, feedback: "Never ‘correct’ dose independently. Fix the root cause with the care team/physics." },
+        { text: "Turn off the diode system permanently", correct: false, feedback: "The correct response is investigation and documentation, not disabling safety tools." }
+      ]
+    },
+
+    {
+      category: "2. Safety & QA",
+      type: "safety",
+      title: "Instrumentation: When Neutron Detectors Matter",
+      chart: `
+        <div class="chart-row"><strong>Machine:</strong> Linac operating with high photon energy (e.g., 15–18 MV).</div>
+        <div class="chart-row"><strong>Concept:</strong> Photoneutrons can be produced at higher energies.</div>
+        <div class="chart-row"><strong>Instrumentation:</strong> Standard ion chambers measure photons; specialized detectors are needed for neutrons.</div>
+        <div class="chart-row"><strong>Safety:</strong> Surveys/monitoring may require neutron-sensitive instrumentation.</div>
+      `,
+      question: "Which instrument type is specifically used to detect/assess neutron radiation around high-energy linac operations?",
+      options: [
+        { text: "Neutron detector (e.g., neutron rem meter / specialized neutron survey instrument)", correct: true, feedback: "Correct. Neutrons require dedicated detection methods; photon survey meters are not adequate for neutron assessment." },
+        { text: "Diagnostic kV tube", correct: false, feedback: "A kV tube produces x-rays; it is not a neutron detector." },
+        { text: "Standard optical distance indicator (ODI)", correct: false, feedback: "ODI is a distance measurement tool, not a radiation detector." },
+        { text: "Thermoplastic mask", correct: false, feedback: "Immobilization devices do not detect radiation." }
+      ]
+    },
+
+    {
+      category: "3. Procedures",
+      type: "proc",
+      title: "Off-Axis Calculation: Output Factor at a Point",
+      chart: `
+        <div class="chart-row"><strong>Concept named in outline:</strong> Off-axis calculation.</div>
+        <div class="chart-row"><strong>Setup:</strong> Photon field, point of interest is 5 cm off central axis.</div>
+        <div class="chart-row"><strong>Given:</strong> Planned MU would deliver 200 cGy on CAX.</div>
+        <div class="chart-row"><strong>Off-axis factor (OAF) at 5 cm:</strong> 0.97 (point receives 97% of central-axis dose).</div>
+      `,
+      question: "If you need 200 cGy at the OFF-AXIS point (OAF = 0.97) and everything else is unchanged, approximately what dose would the original MU deliver at that point?",
+      options: [
+        { text: "194 cGy", correct: true, feedback: "Correct. Off-axis dose = CAX dose × OAF. 200 cGy × 0.97 = 194 cGy. (If the goal were 200 cGy at that point, you would increase MU by about 1/0.97 ≈ 1.03.)" },
+        { text: "206 cGy", correct: false, feedback: "That would imply dose increases off-axis. With OAF 0.97, dose decreases slightly off-axis." },
+        { text: "200 cGy exactly", correct: false, feedback: "Off-axis factor means the point does NOT receive the same dose as central axis in this beam profile." },
+        { text: "97 cGy", correct: false, feedback: "You applied the factor incorrectly; 0.97 is a relative percentage of the CAX dose, not an absolute dose." }
+      ]
+    }
+
+  ];
+
+  let currentIndex = 0;
+  let score = 0;
+
+  function badgeClass(type){
+    if(type === "care") return "cat-care";
+    if(type === "safety") return "cat-safety";
+    return "cat-proc";
+  }
+
+  function badgeText(category){
+    // Keep the category text as provided (already includes numbering)
+    return category;
+  }
+
+  function startSim(){
+    currentIndex = 0;
+    score = 0;
+    updateScore();
+    loadScenario(currentIndex);
+  }
+
+  function loadScenario(i){
+    if(i >= scenarios.length){
+      endSim();
+      return;
+    }
+    const s = scenarios[i];
+    const percent = Math.round((i / scenarios.length) * 100);
+    document.getElementById('progress').style.width = percent + "%";
+
+    const badge = `<span class="category-badge ${badgeClass(s.type)}">${badgeText(s.category)}</span>`;
+
+    const optionsHtml = s.options.map((o, idx) =>
+      `<button class="option-btn" id="opt-${idx}" onclick="check(${idx})">${o.text}</button>`
+    ).join("");
+
+    document.getElementById('main-interface').innerHTML = `
+      <div class="scenario-area">
+        ${badge}
+        <div class="title">${s.title}</div>
+        <div class="chart">${s.chart}</div>
+        <div class="question">${s.question}</div>
+        <div class="options">${optionsHtml}</div>
+        <div class="feedback" id="feedback"></div>
+      </div>
+    `;
+
+    document.getElementById('next-btn').style.display = "none";
+  }
+
+  function check(selectedIndex){
+    const s = scenarios[currentIndex];
+    const fb = document.getElementById('feedback');
+    const correctIndex = s.options.findIndex(o => o.correct);
+
+    // disable all
+    document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+
+    if(selectedIndex === correctIndex){
+      document.getElementById(`opt-${selectedIndex}`).classList.add('correct-choice');
+      fb.className = "feedback fb-correct";
+      fb.innerHTML = `<strong>Correct!</strong> ${s.options[selectedIndex].feedback}`;
+      score++;
+    }else{
+      document.getElementById(`opt-${selectedIndex}`).classList.add('wrong-choice');
+      document.getElementById(`opt-${correctIndex}`).classList.add('correct-choice');
+      fb.className = "feedback fb-wrong";
+      fb.innerHTML = `<strong>Incorrect.</strong> ${s.options[selectedIndex].feedback}<br><br><strong>Best answer:</strong> ${s.options[correctIndex].text}<br>${s.options[correctIndex].feedback}`;
+    }
+    fb.style.display = "block";
+    updateScore();
+    document.getElementById('next-btn').style.display = "inline-block";
+  }
+
+  function nextScenario(){
+    currentIndex++;
+    loadScenario(currentIndex);
+  }
+
+  function updateScore(){
+    document.getElementById('score-display').innerText = `${score}/${scenarios.length}`;
+  }
+
+  function endSim(){
+    document.getElementById('progress').style.width = "100%";
+    const percent = Math.round((score / scenarios.length) * 100);
+
+    document.getElementById('main-interface').innerHTML = `
+      <div class="end-card">
+        <h2>Expansion Set Complete</h2>
+        <div class="percent">${percent}%</div>
+        <p class="small-note">Use missed-question feedback as your study guide: extract the keyword (site, histology, lymph chain, dose pattern, OAR, toxicity, or safety step) and write a one-sentence “rule” you’ll remember on test day.</p>
+        <div class="restart-row">
+          <button class="start-btn" onclick="startSim()">Restart</button>
+        </div>
+      </div>
+    `;
+    document.getElementById('next-btn').style.display = "none";
+  }
+
+  // initialize score display
+  updateScore();
+</script>
+
+</body>
+</html>
