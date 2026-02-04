@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 3B: Lower Body Procedures Master Sim</title>
+    <style>
+        :root {
+            --bg: #fdf2f8; /* Light Pink/Purple */
+            --card-bg: #ffffff;
+            --primary: #831843; /* Deep Maroon */
+            --accent: #db2777; /* Magenta */
+            --text: #333;
+            --border: #fbcfe8;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .sim-container {
+            max-width: 900px;
+            width: 100%;
+            background: var(--card-bg);
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border-top: 8px solid var(--accent);
+        }
+
+        /* Certificate Styles */
+        #certificate-area {
+            display: none;
+            text-align: center;
+            padding: 50px;
+            border: 15px solid var(--primary);
+            background: white;
+            color: #333;
+            font-family: 'Times New Roman', serif;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            box-sizing: border-box;
+        }
+        
+        @media print {
+            body * { visibility: hidden; }
+            #certificate-area, #certificate-area * { visibility: visible; }
+            #certificate-area { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+            .no-print { display: none !important; }
+        }
+
+        /* Header */
+        .header-panel {
+            background: var(--white);
+            padding: 30px;
+            border-bottom: 1px solid #eee;
+            text-align: center;
+        }
+        .spec-tracker {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .spec-badge {
+            background: #fce7f3;
+            color: var(--primary);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+            border: 1px solid var(--border);
+            opacity: 0.5;
+        }
+        .active-spec { background: var(--primary); color: white; opacity: 1; transform: scale(1.1); transition: all 0.3s; }
+
+        /* Progress */
+        .progress-container { width: 100%; height: 8px; background: #eee; }
+        .progress-bar { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s; }
+
+        /* Scenario Area */
+        .scenario-box { padding: 40px; }
+        
+        .chart-display {
+            background: #fafafa;
+            border-left: 5px solid var(--accent);
+            padding: 20px;
+            margin-bottom: 25px;
+            font-family: 'Courier New', monospace;
+            color: #444;
+            border-radius: 4px;
+        }
+        .chart-row { display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px dashed #ddd; }
+        
+        .question { font-size: 1.3em; font-weight: 600; color: var(--primary); margin-bottom: 25px; }
+
+        /* Options */
+        .options-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+        .option-btn {
+            background: white;
+            border: 2px solid #eee;
+            padding: 18px;
+            border-radius: 8px;
+            text-align: left;
+            font-size: 1.05em;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .option-btn:hover:not(:disabled) { border-color: var(--accent); background: #fdf2f8; }
+        .correct { background: #dcfce7 !important; border-color: #22c55e !important; color: #14532d; }
+        .incorrect { background: #fee2e2 !important; border-color: #ef4444 !important; color: #7f1d1d; }
+
+        /* Feedback */
+        .feedback {
+            margin-top: 25px;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border-left: 5px solid #64748b;
+            display: none;
+        }
+
+        /* Start Screen */
+        .start-screen { text-align: center; padding: 60px; }
+        .name-input { padding: 15px; font-size: 1.2em; border-radius: 8px; border: 2px solid #ddd; width: 60%; margin-top: 20px; }
+        .start-btn { background: var(--accent); color: white; padding: 15px 50px; font-size: 1.3em; border: none; border-radius: 50px; cursor: pointer; margin-top: 30px; }
+
+        /* Results Grid */
+        .results-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: left; margin-top: 30px; }
+        .result-item { background: #f9fafb; padding: 15px; border-radius: 8px; border-left: 4px solid #ccc; }
+        .high-score { border-left-color: #2ecc71; }
+        .low-score { border-left-color: #e74c3c; }
+
+    </style>
+</head>
+<body>
+
+<div id="certificate-area">
+    <div style="border: 5px double #831843; padding: 40px; height: 90%;">
+        <div style="font-size: 3em; font-weight: bold; margin-bottom: 10px; color: #831843;">Certificate of Achievement</div>
+        <div style="font-size: 1.5em; margin-bottom: 30px;">ARRT Procedures (Lower Body)</div>
+        <div style="width: 100px; height: 100px; background: #fce7f3; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 30px auto; font-size: 2em; font-weight: bold; color: #831843;">☢</div>
+        <div style="font-size: 1.2em;">This certifies that</div>
+        <div id="cert-name" style="font-size: 2.5em; font-weight: bold; margin: 20px 0; font-family: 'Segoe UI', sans-serif; border-bottom: 2px solid #333; display: inline-block; padding: 0 20px;">Student Name</div>
+        <div style="font-size: 1.2em; margin-top: 20px;">has successfully demonstrated competency in Section 3B: Lower Body Procedures.</div>
+        <div style="font-size: 1.2em; margin-top: 30px;">Final Score: <span id="cert-score" style="font-weight: bold;">--</span></div>
+        <div style="font-size: 1.2em;">Date: <span id="cert-date">--</span></div>
+        <div style="margin-top: 80px; display: flex; justify-content: space-around;">
+            <div style="border-top: 1px solid #333; width: 250px; padding-top: 10px;">Clinical Instructor Signature</div>
+            <div style="border-top: 1px solid #333; width: 250px; padding-top: 10px;">Simulation Director</div>
+        </div>
+    </div>
+</div>
+
+<div class="sim-container" id="game-ui">
+    <div class="header-panel">
+        <h1>Section 3B: Procedures (Lower)</h1>
+        <p>Abdomen, Pelvis, GU, GYN, and Sarcoma/Lymphoma</p>
+        <div class="spec-tracker">
+            <span class="spec-badge" id="badge-gi">Gastrointestinal</span>
+            <span class="spec-badge" id="badge-gu">Genitourinary</span>
+            <span class="spec-badge" id="badge-gyn">Gynecological</span>
+            <span class="spec-badge" id="badge-sys">Lymph/Sarcoma</span>
+            <span class="spec-badge" id="badge-path">Pathology</span>
+        </div>
+    </div>
+    <div class="progress-container"><div class="progress-bar" id="progress"></div></div>
+
+    <div id="game-area">
+        <div class="start-screen">
+            <h2>Procedures: Part B</h2>
+            <p>25 Scenarios focusing on the complex anatomy of the Lower Body.</p>
+            <input type="text" id="user-name" class="name-input" placeholder="Enter Your Name for Certificate">
+            <br>
+            <button class="start-btn" onclick="startSim()">Begin Section 3B</button>
+        </div>
+    </div>
+
+    <div class="footer" style="padding: 20px; display: flex; justify-content: flex-end;">
+        <button class="start-btn" id="next-btn" style="display:none; font-size:1em; padding: 10px 30px;" onclick="nextQuestion()">Next &rarr;</button>
+    </div>
+</div>
+
+<script>
+    // --- DATABASE: 25 LOWER BODY SCENARIOS ---
+    const questions = [
+        
+        // --- 1. GASTROINTESTINAL (GI) ---
+        {
+            spec: "badge-gi",
+            topic: "Pancreas Dose Limits",
+            chart: `<div class="chart-row"><strong>Plan:</strong> SBRT Pancreas Head.</div><div class="chart-row"><strong>OAR:</strong> Duodenum (Small Bowel).</div><div class="chart-row"><strong>Dose:</strong> 40 Gy in 5 fractions.</div>`,
+            q: "Why is the Duodenum the dose-limiting structure for Pancreatic SBRT?",
+            options: [
+                {text: "It is extremely sensitive to radiation nephritis.", correct: false, fb: "Incorrect. Nephritis affects the Kidneys."},
+                {text: "It wraps around the head of the pancreas and is prone to ulceration/perforation.", correct: true, fb: "Correct. The C-loop of the duodenum physically touches the pancreatic head. High dose here can cause fatal perforation or bleed."},
+                {text: "It causes severe nausea.", correct: false, fb: "Incorrect. While true, nausea is not the dose-limiting toxicity (perforation is)."},
+                {text: "It blocks the bile duct.", correct: false, fb: "Incorrect."}
+            ]
+        },
+        {
+            spec: "badge-gi",
+            topic: "Rectal Patient Position",
+            chart: `<div class="chart-row"><strong>Pt:</strong> Rectal Cancer (Mid-Rectum).</div><div class="chart-row"><strong>Setup:</strong> Prone on Belly Board.</div><div class="chart-row"><strong>Check:</strong> Lateral scout image.</div>`,
+            q: "What visual confirmation ensures the Belly Board is effective?",
+            options: [
+                {text: "The spine is straight.", correct: false, fb: "Incorrect."},
+                {text: "The small bowel loops are visible anterior to the treatment field (in the belly hole).", correct: true, fb: "Correct. The purpose of the board is to let gravity pull the small bowel anteriorly, out of the high-dose posterior pelvic field."},
+                {text: "The rectum is filled with contrast.", correct: false, fb: "Incorrect."},
+                {text: "The bladder is empty.", correct: false, fb: "Incorrect. A full bladder is usually preferred to push bowel up."}
+            ]
+        },
+        {
+            spec: "badge-gi",
+            topic: "Anal Cancer Nodes",
+            chart: `<div class="chart-row"><strong>Dx:</strong> Squamous Cell Carcinoma of the Anus.</div><div class="chart-row"><strong>Fields:</strong> AP/PA Pelvis + Inguinal Boost.</div>`,
+            q: "Why are the Inguinal (Groin) nodes treated for Anal Cancer but rarely for Rectal Cancer?",
+            options: [
+                {text: "Anal cancer spreads via the portal vein.", correct: false, fb: "Incorrect."},
+                {text: "The anal canal drains to the superficial inguinal nodes because it is below the dentate line.", correct: true, fb: "Correct. The lymphatic drainage changes at the dentate line. Above (Rectum) drains internally (IL/Sacral). Below (Anus) drains externally to the groin."},
+                {text: "Rectal cancer is radio-resistant.", correct: false, fb: "Incorrect."},
+                {text: "It is a precaution for all pelvic cancers.", correct: false, fb: "Incorrect. We spare groin nodes whenever possible due to lymphedema risk."}
+            ]
+        },
+        {
+            spec: "badge-gi",
+            topic: "Kidney Tolerance",
+            chart: `<div class="chart-row"><strong>Plan:</strong> Gastric (Stomach) Cancer.</div><div class="chart-row"><strong>Field:</strong> AP/PA.</div><div class="chart-row"><strong>Issue:</strong> Left Kidney is in the field.</div>`,
+            q: "If 100% of the Left Kidney receives 20 Gy, but the Right Kidney is shielded (0 Gy), is this acceptable?",
+            options: [
+                {text: "No. The total renal dose is too high.", correct: false, fb: "Incorrect. You only need 1/3 of one kidney to survive."},
+                {text: "Yes. Clinical tolerance is maintained if one kidney is spared.", correct: true, fb: "Correct. While we try to spare both, sacrificing one kidney is acceptable if the other is fully functional and shielded. The TD 5/5 for *whole* kidney (both) is 23 Gy."},
+                {text: "No. The limit is 10 Gy.", correct: false, fb: "Incorrect."},
+                {text: "Yes, kidneys regenerate.", correct: false, fb: "Incorrect. Nephrons do not regenerate."}
+            ]
+        },
+
+        // --- 2. GENITOURINARY (GU) ---
+        {
+            spec: "badge-gu",
+            topic: "Prostate IGRT",
+            chart: `<div class="chart-row"><strong>Pt:</strong> Prostate Cancer.</div><div class="chart-row"><strong>Setup:</strong> Daily CBCT.</div><div class="chart-row"><strong>Markers:</strong> 3 Gold Seeds (Fiducials) in prostate.</div><div class="chart-row"><strong>Image:</strong> Bones align perfectly. Seeds are 1cm posterior.</div>`,
+            q: "How do you shift?",
+            options: [
+                {text: "Match to the Bones.", correct: false, fb: "Incorrect. The prostate moves independently of the pelvis."},
+                {text: "Match to the Fiducials (Seeds).", correct: true, fb: "Correct. The seeds are implanted directly into the target organ. They represent the true position of the prostate, regardless of where the bones are."},
+                {text: "Split the difference.", correct: false, fb: "Incorrect. This ensures you miss both."},
+                {text: "Resimulate the patient.", correct: false, fb: "Incorrect. Prostate motion is normal day-to-day. Just shift to the seeds."}
+            ]
+        },
+        {
+            spec: "badge-gu",
+            topic: "Testicular Shielding",
+            chart: `<div class="chart-row"><strong>Dx:</strong> Seminoma (Left Testicle).</div><div class="chart-row"><strong>Field:</strong> Hockey Stick (Para-aortic + Iliac).</div><div class="chart-row"><strong>OAR:</strong> Remaining Right Testicle.</div>`,
+            q: "What device is used to reduce scatter dose to the remaining testicle?",
+            options: [
+                {text: "Bolus.", correct: false, fb: "Incorrect. Bolus increases dose."},
+                {text: "Clam-shell shield (Testicular shield).", correct: true, fb: "Correct. A lead cup/clam-shell is placed around the scrotum to reduce scatter dose, preserving fertility/hormonal function."},
+                {text: "Wedge.", correct: false, fb: "Incorrect."},
+                {text: "Rectal balloon.", correct: false, fb: "Incorrect."}
+            ]
+        },
+        {
+            spec: "badge-gu",
+            topic: "Bladder Filling",
+            chart: `<div class="chart-row"><strong>Site:</strong> Bladder Cancer.</div><div class="chart-row"><strong>Protocol:</strong> Treat 'Empty Bladder'.</div><div class="chart-row"><strong>Reason:</strong> Target is the bladder itself.</div>`,
+            q: "Why do we treat Bladder Cancer empty, but Prostate Cancer full?",
+            options: [
+                {text: "Empty bladder is smaller, allowing smaller fields (sparing bowel).", correct: true, fb: "Correct. For Bladder CA, the bladder IS the target. If full, the target is huge. If empty, the target is small. (Conversely, for Prostate, a full bladder pushes bowel away)."},
+                {text: "Full bladder dilutes the urine.", correct: false, fb: "Incorrect."},
+                {text: "Empty bladder is more comfortable.", correct: false, fb: "Incorrect."},
+                {text: "It doesn't matter.", correct: false, fb: "Incorrect."}
+            ]
+        },
+
+        // --- 3. GYNECOLOGICAL (GYN) ---
+        {
+            spec: "badge-gyn",
+            topic: "Brachytherapy Point A",
+            chart: `<div class="chart-row"><strong>Pt:</strong> Cervical Cancer.</div><div class="chart-row"><strong>Tx:</strong> HDR Tandem & Ovoids.</div><div class="chart-row"><strong>Rx:</strong> 600 cGy to Point A.</div>`,
+            q: "Point A is the critical dose-limiting point for which structure?",
+            options: [
+                {text: "Rectum.", correct: false, fb: "Incorrect."},
+                {text: "Uterine Artery & Ureter crossing.", correct: true, fb: "Correct. Point A (2cm sup, 2cm lat to os) is where the uterine artery crosses the ureter. Overdosing this point risks ureteral stricture (kidney failure)."},
+                {text: "Pelvic side wall nodes.", correct: false, fb: "Incorrect. That is Point B."},
+                {text: "Bladder neck.", correct: false, fb: "Incorrect."}
+            ]
+        },
+        {
+            spec: "badge-gyn",
+            topic: "Ovarian Spread",
+            chart: `<div class="chart-row"><strong>Dx:</strong> Ovarian Cancer.</div><div class="chart-row"><strong>Stage:</strong> III (Peritoneal seeding).</div>`,
+            q: "Why is Ovarian cancer often treated with Whole Abdominal Radiation (WAR) or chemo rather than local pelvic fields?",
+            options: [
+                {text: "It is radio-resistant.", correct: false, fb: "Incorrect."},
+                {text: "It seeds throughout the entire peritoneal cavity (Seeding).", correct: true, fb: "Correct. Ovarian cells float in the peritoneal fluid and can implant on the liver capsule, diaphragm, or bowel. Local fields miss the disease."},
+                {text: "It spreads to the brain.", correct: false, fb: "Incorrect."},
+                {text: "The ovaries move too much.", correct: false, fb: "Incorrect."}
+            ]
+        },
+        {
+            spec: "badge-gyn",
+            topic: "Vulvar Setup",
+            chart: `<div class="chart-row"><strong>Pt:</strong> Vulvar Cancer.</div><div class="chart-row"><strong>Body Habitus:</strong> Obese.</div><div class="chart-row"><strong>Skin Reaction:</strong> Moist desquamation in skin folds.</div>`,
+            q: "What setup instruction helps reduce the skin reaction (bolus effect) in the inguinal folds?",
+            options: [
+                {text: "Frog-leg position.", correct: true, fb: "Correct. Frog-leg (knees bent and out) eliminates the skin folds in the groin, removing the self-bolus effect and reducing skin reaction."},
+                {text: "Prone position.", correct: false, fb: "Incorrect."},
+                {text: "Full bladder.", correct: false, fb: "Incorrect."},
+                {text: "Apply powder.", correct: false, fb: "Incorrect. Powder causes caking/infection in moist wounds."}
+            ]
+        },
+
+        // --- 4. SYSTEMIC / SARCOMA ---
+        {
+            spec: "badge-sys",
+            topic: "Hodgkin's Lymphoma",
+            chart: `<div class="chart-row"><strong>Field:</strong> Mantle Field (Historical).</div><div class="chart-row"><strong>Blocks:</strong> Lung, Humeral Head, Larynx.</div>`,
+            q: "Why was the 'Mantle' field shape designed to block the Humeral Heads?",
+            options: [
+                {text: "To prevent lymphedema.", correct: false, fb: "Incorrect."},
+                {text: "To preserve bone marrow function.", correct: false, fb: "Incorrect."},
+                {text: "To prevent joint immobility/necrosis.", correct: true, fb: "Correct. The humeral head is a weight-bearing joint (shoulder). AVN (Avascular Necrosis) is a risk."},
+                {text: "To spare the brachial plexus.", correct: false, fb: "Incorrect. The plexus is often in the field."}
+            ]
+        },
+        {
+            spec: "badge-sys",
+            topic: "Total Body Irradiation (TBI)",
+            chart: `<div class="chart-row"><strong>Goal:</strong> Conditioning for Bone Marrow Transplant.</div><div class="chart-row"><strong>OAR:</strong> Lungs.</div><div class="chart-row"><strong>Dose:</strong> 12 Gy total.</div>`,
+            q: "What is the dose limit for the lungs in TBI to prevent Interstitial Pneumonitis?",
+            options: [
+                {text: "20 Gy", correct: false, fb: "Incorrect. Too high for whole lung."},
+                {text: "8-10 Gy (with blocks/compensation).", correct: true, fb: "Correct. While the body gets 12 Gy, we block the lungs to keep them < 10 Gy (often < 8 Gy) because whole-lung radiation is fatal at higher doses."},
+                {text: "2 Gy", correct: false, fb: "Incorrect. Too low."},
+                {text: "No limit.", correct: false, fb: "Incorrect."}
+            ]
+        },
+        {
+            spec: "badge-sys",
+            topic: "Sarcoma Positioning",
+            chart: `<div class="chart-row"><strong>Site:</strong> Soft Tissue Sarcoma (Thigh).</div><div class="chart-row"><strong>Plan:</strong> IMRT.</div><div class="chart-row"><strong>Constraint:</strong> Spare a strip of skin/lymphatics.</div>`,
+            q: "Why must the limb be rotated to avoid the surgical scar being 'tangential' to the beam?",
+            options: [
+                {text: "To increase skin dose.", correct: false, fb: "Incorrect."},
+                {text: "To ensure the scar receives full dose (Bolus effect).", correct: true, fb: "Correct. Scars are high-risk recurrence sites. If the beam skims the scar tangentially, it may be underdosed due to lack of buildup. We want the beam to hit the scar directly (en face) or use bolus."},
+                {text: "To spare the bone.", correct: false, fb: "Incorrect."},
+                {text: "To improve image quality.", correct: false, fb: "Incorrect."}
+            ]
+        },
+
+        // --- 5. PATHOLOGY ---
+        {
+            spec: "badge-path",
+            topic: "Colorectal Staging",
+            chart: `<div class="chart-row"><strong>Dx:</strong> Rectal Cancer.</div><div class="chart-row"><strong>Classification:</strong> Dukes Staging (Old) vs TNM.</div>`,
+            q: "Dukes C (or Stage III) implies nodal involvement. What is the standard treatment sequence?",
+            options: [
+                {text: "Surgery alone.", correct: false, fb: "Incorrect."},
+                {text: "Neoadjuvant Chemo/Rad -> Surgery.", correct: true, fb: "Correct. Pre-op (Neoadjuvant) radiation shrinks the tumor, increasing the chance of sphincter-sparing surgery (avoiding a permanent colostomy bag)."},
+                {text: "Surgery -> Radiation.", correct: false, fb: "Incorrect. Post-op radiation has higher toxicity due to small bowel falling into the pelvis."},
+                {text: "Radiation only.", correct: false, fb: "Incorrect. Surgery is curative."}
+            ]
+        },
+        {
+            spec: "badge-path",
+            topic: "Wilms Tumor",
+            chart: `<div class="chart-row"><strong>Pt:</strong> Pediatric (3 years old).</div><div class="chart-row"><strong>Mass:</strong> Abdominal (Kidney).</div><div class="chart-row"><strong>Field:</strong> Whole Abdomen?</div>`,
+            q: "If treating a Wilms Tumor (Nephroblastoma), why must the radiation field cover the entire width of the spine?",
+            options: [
+                {text: "To treat the spinal cord.", correct: false, fb: "Incorrect."},
+                {text: "To prevent scoliosis (Uneven growth).", correct: true, fb: "Correct. Treating only half the vertebral body in a growing child will stop growth on one side, causing severe curvature (Scoliosis). You must treat the full width to ensure symmetrical (stunted) growth."},
+                {text: "To treat para-aortic nodes.", correct: false, fb: "Incorrect."},
+                {text: "It is easier to set up.", correct: false, fb: "Incorrect."}
+            ]
+        },
+        
+        // --- 10 MORE QUESTIONS (MIXED) ---
+        {
+            spec: "badge-gi",
+            topic: "Esophagus Anatomy",
+            chart: `<div class="chart-row"><strong>Tumor:</strong> Distal Esophagus (GE Junction).</div><div class="chart-row"><strong>Histology:</strong> Adenocarcinoma.</div>`,
+            q: "This histology is most strongly associated with which condition?",
+            options: [
+                {text: "Smoking/Alcohol.", correct: false, fb: "Incorrect. That causes Squamous Cell (Upper Esophagus)."},
+                {text: "Barrett's Esophagus (GERD).", correct: true, fb: "Correct. Chronic acid reflux leads to metaplasia (Barrett's), which progresses to Adenocarcinoma in the lower esophagus."},
+                {text: "HPV.", correct: false, fb: "Incorrect."},
+                {text: "EBV.", correct: false, fb: "Incorrect."}
+            ]
+        },
+        {
+            spec: "badge-gu",
+            topic: "Ureteral Tolerance",
+            chart: `<div class="chart-row"><strong>Risk:</strong> Ureteral Stricture.</div><div class="chart-row"><strong>Source:</strong> Brachytherapy.</div>`,
+            q: "Which point dose correlates with ureteral toxicity?",
+            options: [
+                {text: "Point B.", correct: false, fb: "Incorrect."},
+                {text: "Point A.", correct: true, fb: "Correct. Point A lies directly over the ureter crossing."},
+                {text: "Vaginal Surface.", correct: false, fb: "Incorrect."},
+                {text: "ICRU Bladder Point.", correct: false, fb: "Incorrect."}
+            ]
+        },
+        {
+            spec: "badge-gyn",
+            topic: "Cervix Field Borders",
+            chart: `<div class="chart-row"><strong>Field:</strong> AP/PA Pelvis (Four Field Box).</div><div class="chart-row"><strong>Inferior Border:</strong> Obturator Foramen.</div>`,
+            q: "The inferior border must be placed at the bottom of the Obturator Foramen (or 3cm below the lowest disease) to cover which nodes?",
+            options: [
+                {text: "Common Iliac.", correct: false, fb: "Incorrect. Superior."},
+                {text: "Obturator Nodes.", correct: true, fb: "Correct. Obturator nodes are the lowest pelvic chain involved in early cervical spread."},
+                {text: "Para-aortic.", correct: false, fb: "Incorrect."},
+                {text: "Inguinal.", correct: false, fb: "Incorrect. Only if distal vagina involved."}
+            ]
+        },
+        {
+            spec: "badge-sys",
+            topic: "Keloid Energy",
+            chart: `<div class="chart-row"><strong>Site:</strong> C-Section Scar (Skin depth).</div><div class="chart-row"><strong>Pt Size:</strong> Large separation.</div>`,
+            q: "What modality is best for treating a superficial skin scar?",
+            options: [
+                {text: "15 MV Photons.", correct: false, fb: "Incorrect. Dmax is 3cm deep. Skin gets almost nothing."},
+                {text: "6 MeV or 9 MeV Electrons.", correct: true, fb: "Correct. Electrons treat the surface (90%) and fall off quickly, sparing the bowel beneath the scar."},
+                {text: "Protons.", correct: false, fb: "Incorrect. Overkill/Cost."},
+                {text: "6 MV Photons without bolus.", correct: false, fb: "Incorrect. Skin sparing would underdose the scar."}
+            ]
+        },
+        {
+            spec: "badge-gu",
+            topic: "Penile Cancer",
+            chart: `<div class="chart-row"><strong>Setup:</strong> Penile Box.</div><div class="chart-row"><strong>Accessory:</strong> Wax bolus box.</div>`,
+            q: "Why is the penis placed inside a wax box/cylinder?",
+            options: [
+                {text: "To keep it straight.", correct: false, fb: "Incorrect."},
+                {text: "To provide homogenous scattering and full dose to the surface.", correct: true, fb: "Correct. The penis is an irregular shape. Air gaps cause cold spots. Surrounding it with tissue-equivalent wax ensures the skin (target) gets 100% dose."},
+                {text: "To shield the testes.", correct: false, fb: "Incorrect."},
+                {text: "To compress the urethra.", correct: false, fb: "Incorrect."}
+            ]
+        },
+        {
+            spec: "badge-gi",
+            topic: "Liver Tolerance",
+            chart: `<div class="chart-row"><strong>Plan:</strong> Liver Mets.</div><div class="chart-row"><strong>Constraint:</strong> Mean Liver Dose.</div>`,
+            q: "Exceeding 30 Gy to the whole liver causes:",
+            options: [
+                {text: "Cirrhosis.", correct: false, fb: "Incorrect. That is chronic/alcohol."},
+                {text: "RILD (Radiation Induced Liver Disease).", correct: true, fb: "Correct. Symptoms: Hepatomegaly, ascites, elevated liver enzymes. It can be fatal."},
+                {text: "Jaundice only.", correct: false, fb: "Incorrect."},
+                {text: "Diabetes.", correct: false, fb: "Incorrect. That is Pancreas."}
+            ]
+        },
+        {
+            spec: "badge-sys",
+            topic: "Gap Calculation",
+            chart: `<div class="chart-row"><strong>Fields:</strong> Two spine fields (Upper/Lower).</div><div class="chart-row"><strong>L1:</strong> 20cm. <strong>L2:</strong> 30cm.</div><div class="chart-row"><strong>Depth:</strong> 5cm. <strong>SSD:</strong> 100cm.</div>`,
+            q: "Calc Gap: 0.5 * L * (d/SSD).",
+            options: [
+                {text: "1.25 cm", correct: true, fb: "Correct. (0.5*20*0.05) + (0.5*30*0.05) = 0.5 + 0.75 = 1.25."},
+                {text: "0.50 cm", correct: false, fb: "Incorrect."},
+                {text: "2.50 cm", correct: false, fb: "Incorrect."},
+                {text: "1.00 cm", correct: false, fb: "Incorrect."}
+            ]
+        },
+        {
+            spec: "badge-gyn",
+            topic: "Vaginal Cylinder",
+            chart: `<div class="chart-row"><strong>Site:</strong> Endometrial Cancer (Post-Hysterectomy).</div><div class="chart-row"><strong>Target:</strong> Vaginal Cuff.</div><div class="chart-row"><strong>Risk:</strong> Air gaps at top of cylinder.</div>`,
+            q: "What happens to the dose at the vaginal cuff if the cylinder is not seated firmly (Air gap)?",
+            options: [
+                {text: "Dose Increases.", correct: false, fb: "Incorrect."},
+                {text: "Dose Decreases significantly.", correct: true, fb: "Correct. Brachytherapy follows Inverse Square Law. Even a 2mm air gap causes a massive drop in dose to the tissue, potentially causing recurrence."},
+                {text: "Dose stays same.", correct: false, fb: "Incorrect."},
+                {text: "Rectal dose increases.", correct: false, fb: "Incorrect."}
+            ]
+        },
+        {
+            spec: "badge-gu",
+            topic: "Kidney Location",
+            chart: `<div class="chart-row"><strong>Anatomy:</strong> Retroperitoneal.</div><div class="chart-row"><strong>Vertebral Level:</strong> T12 - L3.</div>`,
+            q: "Which kidney is typically lower and why?",
+            options: [
+                {text: "Left, because of the spleen.", correct: false, fb: "Incorrect."},
+                {text: "Right, because of the liver.", correct: true, fb: "Correct. The massive liver pushes the Right kidney inferiorly."},
+                {text: "They are equal.", correct: false, fb: "Incorrect."},
+                {text: "Left, because of the heart.", correct: false, fb: "Incorrect."}
+            ]
+        },
+        {
+            spec: "badge-path",
+            topic: "Tumor Lysis Syndrome",
+            chart: `<div class="chart-row"><strong>Dx:</strong> Burkitt's Lymphoma (Bulky/Rapid growth).</div><div class="chart-row"><strong>Tx:</strong> Start of Chemo/Rad.</div>`,
+            q: "What is the metabolic risk of rapidly killing these tumor cells?",
+            options: [
+                {text: "Hypoglycemia.", correct: false, fb: "Incorrect."},
+                {text: "Tumor Lysis Syndrome (TLS).", correct: true, fb: "Correct. Cells burst, releasing Potassium, Uric Acid, and Phosphate into blood. Causes kidney failure and cardiac arrest. (High K+, High Uric Acid, Low Ca+)."},
+                {text: "Anemia.", correct: false, fb: "Incorrect."},
+                {text: "Sepsis.", correct: false, fb: "Incorrect."}
+            ]
+        }
+    ];
+
+    // --- GAME ENGINE ---
+    let currentIdx = 0;
+    let score = 0;
+    let userName = "";
+    
+    // Performance Tracking
+    let perf = { gi: {tot:0, cor:0}, gu: {tot:0, cor:0}, gyn: {tot:0, cor:0}, sys: {tot:0, cor:0}, path: {tot:0, cor:0} };
+
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    function startSim() {
+        const input = document.getElementById('user-name').value;
+        if(input.trim() === "") { alert("Please enter your name."); return; }
+        userName = input;
+        
+        document.getElementById('game-area').innerHTML = "";
+        loadQuestion(0);
+    }
+
+    function loadQuestion(idx) {
+        if(idx >= questions.length) {
+            finish();
+            return;
+        }
+        
+        const q = questions[idx];
+        const container = document.getElementById('game-area');
+        
+        document.querySelectorAll('.spec-badge').forEach(b => b.classList.remove('active-spec'));
+        if(document.getElementById(q.spec)) document.getElementById(q.spec).classList.add('active-spec');
+        document.getElementById('progress').style.width = ((idx/questions.length)*100) + "%";
+
+        const shuffledOptions = shuffleArray([...q.options]);
+
+        let specName = "";
+        if(q.spec === "badge-gi") specName = "Gastrointestinal";
+        if(q.spec === "badge-gu") specName = "Genitourinary";
+        if(q.spec === "badge-gyn") specName = "Gynecological";
+        if(q.spec === "badge-sys") specName = "Lymphoma / Sarcoma";
+        if(q.spec === "badge-path") specName = "Pathology";
+
+        let html = `
+            <div class="scenario-box">
+                <h3 style="color:var(--primary); border-bottom:2px solid #eee; padding-bottom:10px;">${specName} - ${q.topic}</h3>
+                <div class="chart-display">${q.chart}</div>
+                <div class="question">${q.q}</div>
+                <div class="options-grid">
+                    ${shuffledOptions.map((opt, i) => `
+                        <button class="option-btn" id="opt-${i}">${opt.text}</button>
+                    `).join('')}
+                </div>
+                <div id="fb-box" class="feedback"></div>
+            </div>
+        `;
+        container.innerHTML = html;
+        
+        shuffledOptions.forEach((opt, i) => {
+            document.getElementById(`opt-${i}`).onclick = function() { checkAnswer(i, opt); };
+        });
+
+        document.getElementById('next-btn').style.display = 'none';
+    }
+
+    function checkAnswer(btnIdx, optionObj) {
+        const q = questions[currentIdx];
+        const fb = document.getElementById('fb-box');
+        const btns = document.querySelectorAll('.option-btn');
+        btns.forEach(b => b.disabled = true);
+
+        // Track stats
+        let cat = q.spec.split("-")[1]; 
+        perf[cat].tot++;
+
+        if(optionObj.correct) {
+            document.getElementById(`opt-${btnIdx}`).classList.add('correct');
+            fb.innerHTML = `<strong>Correct!</strong> ${optionObj.fb}`;
+            score++;
+            perf[cat].cor++;
+        } else {
+            document.getElementById(`opt-${btnIdx}`).classList.add('incorrect');
+            fb.innerHTML = `<strong>Incorrect.</strong> ${optionObj.fb}`;
+        }
+        fb.style.display = 'block';
+        document.getElementById('next-btn').style.display = 'block';
+    }
+
+    function nextQuestion() {
+        currentIdx++;
+        loadQuestion(currentIdx);
+    }
+
+    function finish() {
+        const finalScore = Math.round((score / questions.length) * 100);
+        const date = new Date().toLocaleDateString();
+        document.getElementById('cert-name').innerText = userName;
+        document.getElementById('cert-score').innerText = finalScore + "%";
+        document.getElementById('cert-date').innerText = date;
+
+        // Breakdown Stats
+        let analysisHTML = "";
+        for (let key in perf) {
+            if(perf[key].tot > 0) {
+                let p = Math.round((perf[key].cor / perf[key].tot) * 100);
+                let style = p >= 75 ? "high-score" : "low-score";
+                let label = key.toUpperCase(); 
+                analysisHTML += `<div class="result-item ${style}"><strong>${label}:</strong> ${p}% (${perf[key].cor}/${perf[key].tot})</div>`;
+            }
+        }
+
+        document.getElementById('game-area').innerHTML = `
+            <div class="start-screen">
+                <h2>Simulation Complete!</h2>
+                <h1 style="font-size: 3em; color: var(--primary);">${finalScore}%</h1>
+                <div class="results-grid">${analysisHTML}</div>
+                <div style="margin-top:40px;">
+                    <button class="start-btn" onclick="window.print()">Print Certificate</button>
+                    <button class="start-btn" style="background:#666;" onclick="location.reload()">Retry</button>
+                </div>
+            </div>
+        `;
+        document.getElementById('next-btn').style.display = 'none';
+        document.querySelector('.header-panel').style.display = 'none';
+    }
+</script>
+
+</body>
+</html>
