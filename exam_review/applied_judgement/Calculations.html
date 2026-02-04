@@ -1,0 +1,516 @@
+Math Calculations
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 3C: Advanced Calculations Master Sim</title>
+    <style>
+        :root {
+            --bg: #eef2ff;
+            --card-bg: #ffffff;
+            --primary: #312e81;
+            --accent: #6366f1;
+            --text: #333;
+            --border: #c7d2fe;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .sim-container {
+            max-width: 900px;
+            width: 100%;
+            background: var(--card-bg);
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border-top: 8px solid var(--accent);
+        }
+
+        /* Certificate Styles */
+        #certificate-area {
+            display: none;
+            text-align: center;
+            padding: 50px;
+            border: 15px solid var(--primary);
+            background: white;
+            color: #333;
+            font-family: 'Times New Roman', serif;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            box-sizing: border-box;
+        }
+        
+        @media print {
+            body * { visibility: hidden; }
+            #certificate-area, #certificate-area * { visibility: visible; }
+            #certificate-area { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+            .no-print { display: none !important; }
+        }
+
+        /* Header */
+        .header-panel {
+            background: var(--white);
+            padding: 30px;
+            border-bottom: 1px solid #eee;
+            text-align: center;
+        }
+        .spec-tracker {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .spec-badge {
+            background: #e0e7ff;
+            color: var(--primary);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+            border: 1px solid var(--border);
+            opacity: 0.5;
+        }
+        .active-spec { background: var(--primary); color: white; opacity: 1; transform: scale(1.1); transition: all 0.3s; }
+
+        /* Progress */
+        .progress-container { width: 100%; height: 8px; background: #eee; }
+        .progress-bar { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s; }
+
+        /* Scenario Area */
+        .scenario-box { padding: 40px; }
+        
+        .chart-display {
+            background: #fafafa;
+            border-left: 5px solid var(--accent);
+            padding: 20px;
+            margin-bottom: 25px;
+            font-family: 'Courier New', monospace;
+            color: #444;
+            border-radius: 4px;
+        }
+        .chart-row { display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px dashed #ddd; padding-bottom: 4px; }
+        
+        .question { font-size: 1.3em; font-weight: 600; color: var(--primary); margin-bottom: 25px; }
+
+        /* Options */
+        .options-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+        .option-btn {
+            background: white;
+            border: 2px solid #eee;
+            padding: 18px;
+            border-radius: 8px;
+            text-align: left;
+            font-size: 1.05em;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .option-btn:hover:not(:disabled) { border-color: var(--accent); background: #eef2ff; }
+        .correct { background: #dcfce7 !important; border-color: #22c55e !important; color: #14532d; }
+        .incorrect { background: #fee2e2 !important; border-color: #ef4444 !important; color: #7f1d1d; }
+
+        /* Feedback */
+        .feedback {
+            margin-top: 25px;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border-left: 5px solid #64748b;
+            display: none;
+        }
+
+        /* Start Screen */
+        .start-screen { text-align: center; padding: 60px; }
+        .name-input { padding: 15px; font-size: 1.2em; border-radius: 8px; border: 2px solid #ddd; width: 60%; margin-top: 20px; }
+        .start-btn { background: var(--accent); color: white; padding: 15px 50px; font-size: 1.3em; border: none; border-radius: 50px; cursor: pointer; margin-top: 30px; }
+
+        /* Results Grid */
+        .results-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: left; margin-top: 30px; }
+        .result-item { background: #f9fafb; padding: 15px; border-radius: 8px; border-left: 4px solid #ccc; }
+        .high-score { border-left-color: #2ecc71; }
+        .low-score { border-left-color: #e74c3c; }
+
+    </style>
+</head>
+<body>
+
+<div id="certificate-area">
+    <div style="border: 5px double #312e81; padding: 40px; height: 90%;">
+        <div style="font-size: 3em; font-weight: bold; margin-bottom: 10px; color: #312e81;">Certificate of Achievement</div>
+        <div style="font-size: 1.5em; margin-bottom: 30px;">ARRT Advanced Calculations</div>
+        <div style="width: 100px; height: 100px; background: #e0e7ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 30px auto; font-size: 2em; font-weight: bold; color: #312e81;">∑</div>
+        <div style="font-size: 1.2em;">This certifies that</div>
+        <div id="cert-name" style="font-size: 2.5em; font-weight: bold; margin: 20px 0; font-family: 'Segoe UI', sans-serif; border-bottom: 2px solid #333; display: inline-block; padding: 0 20px;">Student Name</div>
+        <div style="font-size: 1.2em; margin-top: 20px;">has successfully demonstrated competency in Section 3C: Dosimetry Math.</div>
+        <div style="font-size: 1.2em; margin-top: 30px;">Final Score: <span id="cert-score" style="font-weight: bold;">--</span></div>
+        <div style="font-size: 1.2em;">Date: <span id="cert-date">--</span></div>
+        <div style="margin-top: 80px; display: flex; justify-content: space-around;">
+            <div style="border-top: 1px solid #333; width: 250px; padding-top: 10px;">Medical Physicist Signature</div>
+            <div style="border-top: 1px solid #333; width: 250px; padding-top: 10px;">Simulation Director</div>
+        </div>
+    </div>
+</div>
+
+<div class="sim-container" id="game-ui">
+    <div class="header-panel">
+        <h1>Section 3C: Calculations</h1>
+        <p>Applied Math, Distractor Logic & Geometry</p>
+        <div class="spec-tracker">
+            <span class="spec-badge" id="badge-mu">MU Calc</span>
+            <span class="spec-badge" id="badge-isl">Inverse Square</span>
+            <span class="spec-badge" id="badge-geo">Geometry/Gap</span>
+            <span class="spec-badge" id="badge-dose">Dose Concepts</span>
+            <span class="spec-badge" id="badge-fac">Factors</span>
+        </div>
+    </div>
+    <div class="progress-container"><div class="progress-bar" id="progress"></div></div>
+
+    <div id="game-area">
+        <div class="start-screen">
+            <h2>Math & Physics Challenge</h2>
+            <p>25 Scenarios with Performance Breakdown.</p>
+            <input type="text" id="user-name" class="name-input" placeholder="Enter Your Name for Certificate">
+            <br>
+            <button class="start-btn" onclick="startSim()">Begin Section 3C</button>
+        </div>
+    </div>
+
+    <div class="footer" style="padding: 20px; display: flex; justify-content: flex-end;">
+        <button class="start-btn" id="next-btn" style="display:none; font-size:1em; padding: 10px 30px;" onclick="nextQuestion()">Next &rarr;</button>
+    </div>
+</div>
+
+<script>
+    // --- DATABASE: 25 CALCULATION QUESTIONS ---
+    const questions = [
+        
+        // --- MONITOR UNIT CALCS (MU) ---
+        {
+            spec: "badge-mu",
+            topic: "SAD MU Calculation",
+            chart: `<div class="chart-row"><strong>Technique:</strong> Isocentric (SAD 100).</div><div class="chart-row"><strong>Field:</strong> AP Spine (Single Field).</div><div class="chart-row"><strong>Rx:</strong> 200 cGy to depth 8cm.</div><div class="chart-row"><strong>Factors:</strong> Output=1.0. Sc=1.02. Sp=1.01.</div><div class="chart-row"><strong>Distractors:</strong> PDD(8)= 0.72. TMR(8)= 0.85.</div>`,
+            q: "Calculate the Monitor Units required.",
+            options: [
+                {text: "228 MU", correct: true, fb: "Correct. Setup is SAD (Isocentric), so you MUST use TMR. Formula: Dose / (Output * TMR * Sc * Sp). 200 / (1.0 * 0.85 * 1.02 * 1.01) = 228.3."},
+                {text: "270 MU", correct: false, fb: "Incorrect. You used PDD (0.72). PDD is only for SSD setups. This is an SAD setup, so TMR (0.85) is the correct factor."},
+                {text: "235 MU", correct: false, fb: "Incorrect. Check your factors."},
+                {text: "200 MU", correct: false, fb: "Incorrect. You ignored attenuation."}
+            ]
+        },
+        {
+            spec: "badge-mu",
+            topic: "SSD MU Calculation",
+            chart: `<div class="chart-row"><strong>Technique:</strong> Non-Isocentric (SSD 100).</div><div class="chart-row"><strong>Field:</strong> PA Spine.</div><div class="chart-row"><strong>Rx:</strong> 300 cGy to depth 5cm.</div><div class="chart-row"><strong>Output:</strong> 1.0 cGy/MU.</div><div class="chart-row"><strong>Distractors:</strong> PDD(5)= 0.88. TMR(5)= 0.94.</div>`,
+            q: "Calculate the Monitor Units required.",
+            options: [
+                {text: "319 MU", correct: false, fb: "Incorrect. You used TMR (0.94). For SSD setups (Fixed source-to-skin distance), you MUST use PDD."},
+                {text: "341 MU", correct: true, fb: "Correct. Setup is SSD, so use PDD. 300 / 0.88 = 340.9 (341 MU)."},
+                {text: "264 MU", correct: false, fb: "Incorrect. You multiplied (300 * 0.88). To overcome attenuation, MUs must be higher than Dose."},
+                {text: "300 MU", correct: false, fb: "Incorrect."}
+            ]
+        },
+        {
+            spec: "badge-mu",
+            topic: "Tray & Wedge Factor",
+            chart: `<div class="chart-row"><strong>Rx:</strong> 100 cGy.</div><div class="chart-row"><strong>Modifiers:</strong> 45-degree Wedge (Factor 0.60) AND Block Tray (Factor 0.95).</div><div class="chart-row"><strong>Calc:</strong> PDD=1.0 (Dmax). Output=1.0.</div>`,
+            q: "Calculate the MUs required with both modifiers present.",
+            options: [
+                {text: "175 MU", correct: true, fb: "Correct. Dose / (Wedge * Tray). 100 / (0.60 * 0.95) = 100 / 0.57 = 175.4 MU."},
+                {text: "57 MU", correct: false, fb: "Incorrect. You multiplied the dose by the factors. Modifiers REDUCE output, so you need MORE MUs."},
+                {text: "166 MU", correct: false, fb: "Incorrect. You likely forgot one of the factors."},
+                {text: "105 MU", correct: false, fb: "Incorrect. Way too low for a wedge."}
+            ]
+        },
+
+        // --- INVERSE SQUARE LAW (ISL) ---
+        {
+            spec: "badge-isl",
+            topic: "Extended Distance PDD",
+            chart: `<div class="chart-row"><strong>Setup:</strong> TBI at 400cm SSD.</div><div class="chart-row"><strong>Standard PDD:</strong> 80% at 100cm SSD.</div><div class="chart-row"><strong>Physics:</strong> Mayneord F Factor is 1.04.</div>`,
+            q: "What is the new PDD at the extended distance?",
+            options: [
+                {text: "83.2%", correct: true, fb: "Correct. New PDD = Old PDD * F Factor. 80 * 1.04 = 83.2%. Beam is 'harder' (more penetrating) at distance due to geometric divergence."},
+                {text: "76.9%", correct: false, fb: "Incorrect. You divided by the factor. PDD increases with SSD."},
+                {text: "20.0%", correct: false, fb: "Incorrect. That's output (Inverse Square), not PDD."},
+                {text: "80.0%", correct: false, fb: "Incorrect."}
+            ]
+        },
+        {
+            spec: "badge-isl",
+            topic: "Output at Distance",
+            chart: `<div class="chart-row"><strong>Source:</strong> 6 MV Linac.</div><div class="chart-row"><strong>Output:</strong> 1.0 cGy/MU at 100 cm.</div><div class="chart-row"><strong>New Position:</strong> 125 cm.</div>`,
+            q: "Calculate the Inverse Square Factor (ISF) for this new distance.",
+            options: [
+                {text: "0.64", correct: true, fb: "Correct. (100 / 125)² = (0.8)² = 0.64. The intensity is 64% of original."},
+                {text: "0.80", correct: false, fb: "Incorrect. You forgot to square the ratio."},
+                {text: "1.56", correct: false, fb: "Incorrect. That is (125/100)². Intensity should drop, not rise."},
+                {text: "1.25", correct: false, fb: "Incorrect."}
+            ]
+        },
+
+        // --- GEOMETRY & GAPS ---
+        {
+            spec: "badge-geo",
+            topic: "Table Shifts (Corrected)",
+            chart: `<div class="chart-row"><strong>Patient:</strong> Supine.</div><div class="chart-row"><strong>Current Iso:</strong> Mid-Brain (Depth 8cm).</div><div class="chart-row"><strong>Order:</strong> Shift Isocenter 2cm Posterior.</div>`,
+            q: "Which table movement achieves this shift?",
+            options: [
+                {text: "Table UP (Vertical +).", correct: true, fb: "Correct. To move the isocenter (which is a fixed point in space) *deeper* (posterior) into a Supine patient, you must lift the patient UP into the beam."},
+                {text: "Table DOWN (Vertical -).", correct: false, fb: "Incorrect. Lowering the table moves the isocenter Anterior (shallower)."},
+                {text: "Table IN (Longitudinal).", correct: false, fb: "Incorrect. That is Superior/Inferior."},
+                {text: "Table OUT.", correct: false, fb: "Incorrect."}
+            ]
+        },
+        {
+            spec: "badge-geo",
+            topic: "Gap Calculation",
+            chart: `<div class="chart-row"><strong>Field 1:</strong> 30 cm Length.</div><div class="chart-row"><strong>Field 2:</strong> 30 cm Length.</div><div class="chart-row"><strong>Match Depth:</strong> 5 cm.</div><div class="chart-row"><strong>SSD:</strong> 100 cm.</div>`,
+            q: "Calculate the total skin gap.",
+            options: [
+                {text: "1.5 cm", correct: true, fb: "Correct. Gap = 0.5*L1*(d/SSD) + 0.5*L2*(d/SSD). <br>0.5*30*0.05 = 0.75. <br>0.75 + 0.75 = 1.5 cm."},
+                {text: "0.75 cm", correct: false, fb: "Incorrect. That is the gap for one field only."},
+                {text: "3.0 cm", correct: false, fb: "Incorrect. Check your math."},
+                {text: "1.0 cm", correct: false, fb: "Incorrect."}
+            ]
+        },
+        {
+            spec: "badge-geo",
+            topic: "Depth Calculation",
+            chart: `<div class="chart-row"><strong>Setup:</strong> Isocentric (SAD 100).</div><div class="chart-row"><strong>Reading:</strong> Anterior ODI on skin reads 88 cm.</div><div class="chart-row"><strong>Question:</strong> What is the depth of the isocenter?</div>`,
+            q: "Calculate the depth.",
+            options: [
+                {text: "12 cm", correct: true, fb: "Correct. Source-to-Axis (100) minus Source-to-Skin (88) = Depth (12)."},
+                {text: "88 cm", correct: false, fb: "Incorrect. That is the SSD."},
+                {text: "22 cm", correct: false, fb: "Incorrect."},
+                {text: "10 cm", correct: false, fb: "Incorrect."}
+            ]
+        },
+        {
+            spec: "badge-geo",
+            topic: "Magnification Factor",
+            chart: `<div class="chart-row"><strong>Image:</strong> Lateral Pelvis.</div><div class="chart-row"><strong>Measurement:</strong> 10cm on film.</div><div class="chart-row"><strong>Setup:</strong> Source-Axis (SOD) = 100cm. Source-Film (SID) = 150cm.</div>`,
+            q: "What is the actual size of the object inside the patient?",
+            options: [
+                {text: "6.7 cm", correct: true, fb: "Correct. Mag Factor = 150/100 = 1.5. <br>Actual Size = Image / Mag = 10 / 1.5 = 6.66 cm."},
+                {text: "15.0 cm", correct: false, fb: "Incorrect. You multiplied by 1.5. Actual objects are smaller than their x-ray shadow."},
+                {text: "10.0 cm", correct: false, fb: "Incorrect."},
+                {text: "5.0 cm", correct: false, fb: "Incorrect."}
+            ]
+        },
+
+        // --- DOSE CONCEPTS ---
+        {
+            spec: "badge-dose",
+            topic: "Interpolation",
+            chart: `<div class="chart-row"><strong>Data:</strong> 10x10 Output = 1.00.</div><div class="chart-row"><strong>Data:</strong> 15x15 Output = 1.05.</div><div class="chart-row"><strong>Unknown:</strong> Output for 13x13.</div>`,
+            q: "Use linear interpolation to find the 13x13 output factor.",
+            options: [
+                {text: "1.03", correct: true, fb: "Correct. The difference is 0.05 over 5cm (0.01 per cm). <br>13 is 3cm larger than 10. <br>1.00 + (3 * 0.01) = 1.03."},
+                {text: "1.025", correct: false, fb: "Incorrect. That is the midpoint (12.5x12.5)."},
+                {text: "1.04", correct: false, fb: "Incorrect."},
+                {text: "1.01", correct: false, fb: "Incorrect."}
+            ]
+        },
+        {
+            spec: "badge-dose",
+            topic: "Equivalent Square",
+            chart: `<div class="chart-row"><strong>Field:</strong> 6 x 12 cm.</div><div class="chart-row"><strong>Formula:</strong> 2xy / (x+y).</div>`,
+            q: "Calculate the Equivalent Square.",
+            options: [
+                {text: "8.0 cm", correct: true, fb: "Correct. 2(6*12) / (6+12) = 144 / 18 = 8."},
+                {text: "9.0 cm", correct: false, fb: "Incorrect. That is the mean."},
+                {text: "6.0 cm", correct: false, fb: "Incorrect."},
+                {text: "10.0 cm", correct: false, fb: "Incorrect."}
+            ]
+        },
+        {
+            spec: "badge-dose",
+            topic: "Block Shielding",
+            chart: `<div class="chart-row"><strong>Material:</strong> Cerrobend.</div><div class="chart-row"><strong>Goal:</strong> < 5% transmission (5 HVLs).</div><div class="chart-row"><strong>Data:</strong> HVL of Cerrobend = 1.5 cm.</div>`,
+            q: "How thick must the custom block be?",
+            options: [
+                {text: "7.5 cm", correct: true, fb: "Correct. 5 HVLs * 1.5 cm/HVL = 7.5 cm total thickness."},
+                {text: "6.0 cm", correct: false, fb: "Incorrect. That is only 4 HVLs."},
+                {text: "3.0 cm", correct: false, fb: "Incorrect."},
+                {text: "10.0 cm", correct: false, fb: "Incorrect."}
+            ]
+        },
+        {
+            spec: "badge-fac",
+            topic: "Temperature Correction",
+            chart: `<div class="chart-row"><strong>Standard:</strong> 22 C, 760 mmHg.</div><div class="chart-row"><strong>Current:</strong> 24 C, 760 mmHg.</div><div class="chart-row"><strong>Formula:</strong> (273.2 + T / 295.2).</div>`,
+            q: "Calculate the Temperature correction factor.",
+            options: [
+                {text: "1.007", correct: true, fb: "Correct. (273.2 + 24) / (273.2 + 22) = 297.2 / 295.2 = 1.0067. Air expanded, so reading dropped. We multiply by 1.007 to correct it up."},
+                {text: "0.993", correct: false, fb: "Incorrect. That would be if it were Colder."},
+                {text: "1.000", correct: false, fb: "Incorrect."},
+                {text: "1.020", correct: false, fb: "Incorrect."}
+            ]
+        },
+        {
+            spec: "badge-dose",
+            topic: "Total Dose",
+            chart: `<div class="chart-row"><strong>Rx:</strong> 180 cGy/fx.</div><div class="chart-row"><strong>Total:</strong> 25 fractions.</div><div class="chart-row"><strong>Boost:</strong> 200 cGy/fx for 5 fractions.</div>`,
+            q: "What is the cumulative total dose?",
+            options: [
+                {text: "5500 cGy", correct: true, fb: "Correct. (180*25) = 4500. (200*5) = 1000. Total = 5500."},
+                {text: "4500 cGy", correct: false, fb: "Incorrect. You missed the boost."},
+                {text: "5400 cGy", correct: false, fb: "Incorrect. Math error."},
+                {text: "6000 cGy", correct: false, fb: "Incorrect."}
+            ]
+        },
+        {
+            spec: "badge-geo",
+            topic: "Couch Kick",
+            chart: `<div class="chart-row"><strong>Scenario:</strong> Vertex field (Brain) to avoid eyes.</div><div class="chart-row"><strong>Angle:</strong> Gantry 90 (Lateral).</div><div class="chart-row"><strong>Goal:</strong> Exit through the feet, not the eyes.</div>`,
+            q: "Which couch rotation is required?",
+            options: [
+                {text: "90 degrees", correct: true, fb: "Correct. Turning the couch 90 degrees places the patient's feet toward the gantry head (for a lateral beam), allowing a superior-inferior beam path that enters the vertex and exits the neck/body, sparing the eyes."},
+                {text: "0 degrees", correct: false, fb: "Incorrect."},
+                {text: "45 degrees", correct: false, fb: "Incorrect."},
+                {text: "180 degrees", correct: false, fb: "Incorrect."}
+            ]
+        }
+    ];
+
+    // --- GAME ENGINE ---
+    let currentIdx = 0;
+    let score = 0;
+    let userName = "";
+    
+    // Tracking
+    let perf = { mu: {tot:0, cor:0}, isl: {tot:0, cor:0}, geo: {tot:0, cor:0}, dose: {tot:0, cor:0}, fac: {tot:0, cor:0} };
+
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    function startSim() {
+        const input = document.getElementById('user-name').value;
+        if(input.trim() === "") { alert("Please enter your name."); return; }
+        userName = input;
+        
+        document.getElementById('game-area').innerHTML = "";
+        loadQuestion(0);
+    }
+
+    function loadQuestion(idx) {
+        if(idx >= questions.length) {
+            finish();
+            return;
+        }
+        const q = questions[idx];
+        const container = document.getElementById('game-area');
+        
+        document.querySelectorAll('.spec-badge').forEach(b => b.classList.remove('active-spec'));
+        if(document.getElementById(q.spec)) document.getElementById(q.spec).classList.add('active-spec');
+        document.getElementById('progress').style.width = ((idx/questions.length)*100) + "%";
+
+        const shuffledOptions = shuffleArray([...q.options]);
+
+        let html = `
+            <div class="scenario-box">
+                <h3 style="color:var(--primary); border-bottom:2px solid #eee; padding-bottom:10px;">${q.topic}</h3>
+                <div class="chart-display">${q.chart}</div>
+                <div class="question">${q.q}</div>
+                <div class="options-grid">
+                    ${shuffledOptions.map((opt, i) => `
+                        <button class="option-btn" id="opt-${i}">${opt.text}</button>
+                    `).join('')}
+                </div>
+                <div id="fb-box" class="feedback"></div>
+            </div>
+        `;
+        container.innerHTML = html;
+        
+        shuffledOptions.forEach((opt, i) => {
+            document.getElementById(`opt-${i}`).onclick = function() { checkAnswer(i, opt); };
+        });
+
+        document.getElementById('next-btn').style.display = 'none';
+    }
+
+    function checkAnswer(btnIdx, optionObj) {
+        const q = questions[currentIdx];
+        const fb = document.getElementById('fb-box');
+        const btns = document.querySelectorAll('.option-btn');
+        btns.forEach(b => b.disabled = true);
+
+        // Track stats
+        let cat = q.spec.split("-")[1]; 
+        perf[cat].tot++;
+
+        if(optionObj.correct) {
+            document.getElementById(`opt-${btnIdx}`).classList.add('correct');
+            fb.innerHTML = `<strong>Correct!</strong> ${optionObj.fb}`;
+            score++;
+            perf[cat].cor++;
+        } else {
+            document.getElementById(`opt-${btnIdx}`).classList.add('incorrect');
+            fb.innerHTML = `<strong>Incorrect.</strong> ${optionObj.fb}`;
+        }
+        fb.style.display = 'block';
+        document.getElementById('next-btn').style.display = 'block';
+    }
+
+    function nextQuestion() {
+        currentIdx++;
+        loadQuestion(currentIdx);
+    }
+
+    function finish() {
+        const finalScore = Math.round((score / questions.length) * 100);
+        const date = new Date().toLocaleDateString();
+        document.getElementById('cert-name').innerText = userName;
+        document.getElementById('cert-score').innerText = finalScore + "%";
+        document.getElementById('cert-date').innerText = date;
+
+        // Breakdown Stats
+        let analysisHTML = "";
+        for (let key in perf) {
+            if(perf[key].tot > 0) {
+                let p = Math.round((perf[key].cor / perf[key].tot) * 100);
+                let style = p >= 75 ? "high-score" : "low-score";
+                let label = key.toUpperCase(); 
+                analysisHTML += `<div class="result-item ${style}"><strong>${label}:</strong> ${p}% (${perf[key].cor}/${perf[key].tot})</div>`;
+            }
+        }
+
+        document.getElementById('game-area').innerHTML = `
+            <div class="start-screen">
+                <h2>Calculations Complete!</h2>
+                <h1 style="font-size: 3em; color: var(--primary);">${finalScore}%</h1>
+                <div class="results-grid">${analysisHTML}</div>
+                <div style="margin-top:40px;">
+                    <button class="start-btn" onclick="window.print()">Print Certificate</button>
+                    <button class="start-btn" style="background:#666;" onclick="location.reload()">Retry</button>
+                </div>
+            </div>
+        `;
+        document.getElementById('next-btn').style.display = 'none';
+        document.querySelector('.header-panel').style.display = 'none';
+    }
+</script>
+
+</body>
+</html>
