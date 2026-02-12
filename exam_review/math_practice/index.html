@@ -188,7 +188,7 @@
         <div class="calc-icon">÷ × + −</div>
         <h2>Physics & Dosimetry Math</h2>
         <p style="color:var(--text-muted); max-width:600px; margin:0 auto;">
-            Solve clinical scenarios involving Inverse Square Law, Magnification, Shielding, and Biological Dose.<br>
+            Solve clinical scenarios involving Inverse Square Law, Magnification, Shielding, Gap Calculation, and Monitor Units.<br>
             <strong>Objective:</strong> Identify the correct formula and solve.
         </p>
         <button class="btn" onclick="startGame()">Start Calculations</button>
@@ -232,7 +232,6 @@
 <script>
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // Using backticks (`) for all strings ensures multi-line safety
     const questions = [
         // 1. INVERSE SQUARE (INTENSITY/PROTECTION)
         {
@@ -244,8 +243,7 @@
             expl: `<strong>Doubling distance = 1/4 Intensity.</strong><br>This is the classic Inverse Square Law for radiation protection.`,
             math: `100 / X = (2 / 1)²
 100 / X = 4
-X = 100 / 4 = 25 mR/hr`,
-            diagram: ``
+X = 100 / 4 = 25 mR/hr`
         },
         // 2. INVERSE SQUARE (DOSE RATE/TREATMENT)
         {
@@ -270,8 +268,7 @@ Object = Image / Mag Factor`,
             expl: `<strong>First find Mag Factor, then divide.</strong><br>Magnification makes objects look larger on film. To find the real size, you must divide the image size by the Mag Factor.`,
             math: `Mag = 140 / 100 = 1.4
 Real Size = 3.0 cm / 1.4
-Real Size = 2.14 cm`,
-            diagram: ``
+Real Size = 2.14 cm`
         },
         // 4. HVL (SHIELDING)
         {
@@ -342,11 +339,7 @@ OER = 3.0`
             expl: `<strong>Two half-lives have passed.</strong><br>148 days / 74 days = 2 half-lives.`,
             math: `Start: 10 Ci
 1 Half-Life (74d): 5 Ci
-2 Half-Lives (148d): 2.5 Ci`,
-            diagram: `
-
-[Image of radioactive decay curve graph]
-`
+2 Half-Lives (148d): 2.5 Ci`
         },
         // 10. MEAN ACTIVITY (IMPLANT)
         {
@@ -357,6 +350,123 @@ OER = 3.0`
             correct: 1,
             expl: `<strong>Mean Life = T½ × 1.44.</strong><br>This is used to calculate the total dose delivered by a permanent implant (Total Dose = Initial Rate × Mean Life).`,
             math: `Average Life (Ta) = 1.44 × T½`
+        },
+        // 11. SKIN GAP CALCULATION
+        {
+            cat: `Gap Calculation`,
+            text: `Two spinal fields are treated at 100 cm SSD. Field 1 is 20 cm long. Field 2 is 20 cm long. Calculate the skin gap required to match the fields at a depth of 10 cm.`,
+            hint: `Gap = 0.5 × L1 × (d/SSD) + 0.5 × L2 × (d/SSD)`,
+            options: [`1.0 cm`, `2.0 cm`, `4.0 cm`, `0.5 cm`],
+            correct: 1,
+            expl: `<br><strong>The gap accounts for beam divergence.</strong><br>You must calculate the gap for *each* field and add them together.`,
+            math: `Gap 1 = 0.5 × 20 × (10/100) = 1.0 cm
+Gap 2 = 0.5 × 20 × (10/100) = 1.0 cm
+Total Gap = 1.0 + 1.0 = 2.0 cm`
+        },
+        // 12. EQUIVALENT SQUARE
+        {
+            cat: `Equivalent Square (Sterling's Formula)`,
+            text: `What is the Equivalent Square for a 10 cm x 20 cm rectangular field?`,
+            hint: `EqSq = 4 × (Area / Perimeter) OR (2 × W × L) / (W + L)`,
+            options: [`13.3 cm`, `15 cm`, `12.5 cm`, `14.2 cm`],
+            correct: 0,
+            expl: `<strong>Sterling's Formula approximation.</strong><br>This allows us to look up PDD/TMR data for rectangles using square field tables.`,
+            math: `(2 × 10 × 20) / (10 + 20)
+400 / 30
+= 13.33 cm`
+        },
+        // 13. TEMP-PRESSURE CORRECTION (Ctp)
+        {
+            cat: `Calibration (Ctp)`,
+            text: `An ion chamber reading must be corrected for environmental conditions. The room temp is 24°C and pressure is 750 mmHg. (Standard: 22°C, 760 mmHg). Calculate Ctp.`,
+            hint: `Ctp = [(273.2 + T) / (273.2 + 22)] × [760 / P]`,
+            options: [`1.000`, `1.020`, `0.980`, `1.050`],
+            correct: 1,
+            expl: `<strong>Both factors increase the reading.</strong><br>Higher temp means less dense gas (needs + correction). Lower pressure means less dense gas (needs + correction).`,
+            math: `Temp Part: (297.2 / 295.2) = 1.0068
+Press Part: (760 / 750) = 1.0133
+Total: 1.0068 × 1.0133 = 1.020`
+        },
+        // 14. GEOMETRIC PENUMBRA
+        {
+            cat: `Geometric Penumbra`,
+            text: `Calculate the geometric penumbra size at the skin surface if the Source Size is 1 cm, SSD is 100 cm, and the Source-to-Diaphragm Distance (SDD) is 50 cm.`,
+            hint: `P = Source × (SSD - SDD) / SDD`,
+            options: [`0.5 cm`, `1.0 cm`, `2.0 cm`, `0.2 cm`],
+            correct: 1,
+            expl: `<br><strong>Penumbra increases with SSD and Source Size.</strong><br>Since the diaphragm is exactly halfway (50/100), the penumbra equals the source size.`,
+            math: `P = 1 cm × (100 - 50) / 50
+P = 1 × 50 / 50
+P = 1.0 cm`
+        },
+        // 15. WEDGE ANGLE
+        {
+            cat: `Wedge Angle`,
+            text: `A treatment plan requires a Hinge Angle (angle between two beams) of 90 degrees. What Wedge Angle is appropriate?`,
+            hint: `Wedge Angle = (180 - Hinge) / 2`,
+            options: [`30 degrees`, `45 degrees`, `60 degrees`, `15 degrees`],
+            correct: 1,
+            expl: `<br><strong>Formula: WA = (180 - HA) / 2.</strong><br>A 90-degree hinge angle is the classic setup for a 45-degree wedge pair.`,
+            math: `(180 - 90) / 2
+90 / 2 = 45 degrees`
+        },
+        // 16. LINEAR INTERPOLATION
+        {
+            cat: `Interpolation`,
+            text: `The PDD at 10 cm depth is 70%. The PDD at 12 cm depth is 60%. Using linear interpolation, what is the PDD at 11 cm?`,
+            hint: `Find the exact middle value.`,
+            options: [`64%`, `65%`, `66%`, `68%`],
+            correct: 1,
+            expl: `<strong>Average the two values.</strong><br>Since 11 cm is exactly halfway between 10 and 12, just average the PDDs.`,
+            math: `(70 + 60) / 2
+130 / 2 = 65%`
+        },
+        // 17. MONITOR UNITS (SAD/ISOCENTRIC)
+        {
+            cat: `MU Calculation (SAD)`,
+            text: `Prescription: 200 cGy to isocenter. TMR = 0.8, Output = 1.0 cGy/MU. Field Size Factors = 1.0. How many MU are required?`,
+            hint: `MU = Dose / (Output × TMR × Factors)`,
+            options: [`200 MU`, `250 MU`, `160 MU`, `220 MU`],
+            correct: 1,
+            expl: `<strong>MU = Dose / Total Transmission.</strong><br>Since TMR is < 1.0, you need MORE MUs than the dose to deliver that dose at depth.`,
+            math: `200 / (1.0 × 0.8)
+200 / 0.8
+= 250 MU`
+        },
+        // 18. CUMULATIVE DOSE LIMIT
+        {
+            cat: `Dose Limits (Cumulative)`,
+            text: `A 30-year-old radiation worker asks for their lifetime cumulative effective dose limit. What is it?`,
+            hint: `Limit = 10 mSv × Age (in years)`,
+            options: [`50 mSv`, `150 mSv`, `300 mSv`, `3000 mSv`],
+            correct: 2,
+            expl: `<strong>10 mSv per year of age.</strong><br>Note: The *annual* occupational limit is always 50 mSv, regardless of age.`,
+            math: `10 mSv × 30 years
+= 300 mSv`
+        },
+        // 19. CT NUMBER (HOUNSFIELD)
+        {
+            cat: `CT Numbers`,
+            text: `On the Hounsfield scale used in CT simulation, water is calibrated to 0 HU. What is the approximate value for Dense Bone?`,
+            hint: `Air = -1000, Water = 0, Bone = ?`,
+            options: [`+100`, `+500`, `+1000`, `+3000`],
+            correct: 2,
+            expl: `<strong>Bone is High Density (+1000).</strong><br>Air is -1000. Soft tissue ranges from -100 to +100. Metal is > +2000.`,
+            math: `Scale:
+Air: -1000
+Water: 0
+Bone: +1000`
+        },
+        // 20. TRANSMISSION FACTOR
+        {
+            cat: `Shielding (Transmission)`,
+            text: `A customized block allows 3% of the beam to pass through. What is the Transmission Factor?`,
+            hint: `Convert percentage to decimal.`,
+            options: [`0.3`, `0.03`, `3.0`, `0.003`],
+            correct: 1,
+            expl: `<strong>Percentage to Decimal.</strong><br>Transmission factors are used in MU calculations (e.g., Tray Factor).`,
+            math: `3% = 3 / 100
+= 0.03`
         }
     ];
 
