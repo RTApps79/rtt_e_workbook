@@ -1,1 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Calc Lab: Radiation Math</title>
+    <style>
+        :root {
+            --bg-color: #212121;
+            --panel-bg: #333333;
+            --accent: #ff9800; /* Calculator Orange */
+            --secondary: #03a9f4; /* Math Blue */
+            --text-main: #ffffff;
+            --text-muted: #bdbdbd;
+            --success: #4caf50;
+            --fail: #f44336;
+            --font-mono: 'Consolas', 'Monaco', monospace;
+        }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
 
+        .game-container {
+            background-color: var(--panel-bg);
+            width: 100%;
+            max-width: 900px;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            overflow: hidden;
+            border-top: 5px solid var(--accent);
+            position: relative;
+        }
+
+        /* HEADER */
+        .header {
+            padding: 20px;
+            background: #2c2c2c;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #444;
+        }
+        .header h1 { margin: 0; font-size: 1.5rem; color: var(--accent); font-family: var(--font-mono); }
+        .mode-badge { background: #444; padding: 5px 10px; border-radius: 4px; font-size: 0.8rem; font-family: var(--font-mono); }
+
+        /* PROGRESS */
+        .progress-bar { height: 4px; background: #222; width: 100%; }
+        .progress-fill { height: 100%; background: var(--secondary); width: 0%; transition: width 0.3s; }
+
+        /* SCREENS */
+        .screen { padding: 40px; text-align: center; }
+        .hidden { display: none; }
+
+        /* START SCREEN */
+        .calc-icon { font-size: 4rem; margin-bottom: 20px; color: var(--text-muted); }
+        .btn {
+            background: var(--accent);
+            color: #212121;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-top: 20px;
+            transition: 0.2s;
+        }
+        .btn:hover { background: #ffb74d; }
+
+        /* QUIZ SCREEN */
+        .category-label {
+            display: inline-block;
+            background: #444;
+            color: var(--secondary);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+        .scenario-box {
+            background: #263238;
+            padding: 25px;
+            border-radius: 6px;
+            border-left: 5px solid var(--secondary);
+            text-align: left;
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .hint-btn {
+            background: transparent;
+            border: 1px solid var(--text-muted);
+            color: var(--text-muted);
+            padding: 8px 15px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            border-radius: 20px;
+        }
+        .hint-btn:hover { border-color: var(--text-main); color: var(--text-main); }
+        
+        .formula-display {
+            background: #000;
+            color: #00e676;
+            font-family: var(--font-mono);
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: none;
+            border: 1px dashed #333;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .option-btn {
+            background: #424242;
+            color: #fff;
+            border: none;
+            padding: 20px;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+        }
+        .option-btn:hover { background: #616161; }
+        .option-btn.correct { background: var(--success); }
+        .option-btn.wrong { background: var(--fail); opacity: 0.6; }
+
+        /* FEEDBACK */
+        .feedback-area {
+            background: #263238;
+            padding: 20px;
+            border-radius: 6px;
+            margin-top: 20px;
+            text-align: left;
+            display: none;
+            border-top: 3px solid var(--accent);
+        }
+        .math-breakdown {
+            font-family: var(--font-mono);
+            background: rgba(0,0,0,0.3);
+            padding: 10px;
+            margin-top: 10px;
+            color: var(--secondary);
+            white-space: pre-wrap;
+        }
+
+        /* FOOTER */
+        .rt-footer {
+            text-align: center; margin-top: 30px; color: rgba(255,255,255,0.3); font-size: 0.8rem;
+        }
+
+        @media (max-width: 600px) {
+            .options-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="game-container">
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+
+    <div class="header">
+        <h1>🧮 The Calc Lab</h1>
+        <div class="mode-badge">MATH_MODE</div>
+    </div>
+
+    <div id="start-screen" class="screen">
+        <div class="calc-icon">÷ × + −</div>
+        <h2>Physics & Dosimetry Math</h2>
+        <p style="color:var(--text-muted); max-width:600px; margin:0 auto;">
+            Solve clinical scenarios involving Inverse Square Law, Magnification, Shielding, and Biological Dose.<br>
+            <strong>Objective:</strong> Identify the correct formula and solve.
+        </p>
+        <button class="btn" onclick="startGame()">Start Calculations</button>
+    </div>
+
+    <div id="quiz-screen" class="screen hidden">
+        <span class="category-label" id="q-cat">Topic</span>
+        
+        <div class="scenario-box" id="q-text">
+            Scenario loading...
+        </div>
+
+        <button class="hint-btn" onclick="toggleFormula()">💡 Show Formula Hint</button>
+        <div class="formula-display" id="formula-box"></div>
+
+        <div class="options-grid" id="options-area"></div>
+
+        <div class="feedback-area" id="feedback-box">
+            <h3 id="fb-title" style="margin-top:0; color:var(--accent)">Breakdown</h3>
+            <p id="fb-expl">Explanation text...</p>
+            <div class="math-breakdown" id="fb-math"></div>
+            <button class="btn" style="padding:10px 20px; margin-top:15px;" onclick="nextQuestion()">Next Problem</button>
+        </div>
+    </div>
+
+    <div id="end-screen" class="screen hidden">
+        <h2>Lab Report Generated</h2>
+        <div style="font-size:4rem; color:var(--accent); font-weight:bold; margin:20px 0;" id="final-score">0%</div>
+        <p>Review the breakdown of missed formulas below.</p>
+        <button class="btn" onclick="restartGame()">New Dataset</button>
+    </div>
+</div>
+
+<footer class="rt-footer">
+    <strong style="color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">RTApps ™</strong> 
+    &nbsp;|&nbsp; © <span id="year">2026</span> Kevin Kindle
+    <br>
+    <span style="font-style: italic; opacity: 0.6;">Educational simulation only. Reference: ARRT Content Specifications.</span>
+</footer>
+
+<script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Using backticks (`) for all strings ensures multi-line safety
+    const questions = [
+        // 1. INVERSE SQUARE (INTENSITY/PROTECTION)
+        {
+            cat: `Inverse Square (Protection)`,
+            text: `A therapist standing 1 meter from a source receives an exposure rate of 100 mR/hr. If they step back to 2 meters, what is the new exposure rate?`,
+            hint: `I1 / I2 = (D2 / D1)²`,
+            options: [`25 mR/hr`, `50 mR/hr`, `200 mR/hr`, `400 mR/hr`],
+            correct: 0,
+            expl: `<strong>Doubling distance = 1/4 Intensity.</strong><br>This is the classic Inverse Square Law for radiation protection.`,
+            math: `100 / X = (2 / 1)²
+100 / X = 4
+X = 100 / 4 = 25 mR/hr`,
+            diagram: ``
+        },
+        // 2. INVERSE SQUARE (DOSE RATE/TREATMENT)
+        {
+            cat: `Inverse Square (Treatment)`,
+            text: `A patient was treated at 100 cm SSD with a dose rate of 200 cGy/min. If the table is accidentally lowered to 105 cm SSD, what is the NEW dose rate at the patient's skin?`,
+            hint: `New Rate = Old Rate × (Old Dist / New Dist)²`,
+            options: [`181.4 cGy/min`, `190.5 cGy/min`, `210.5 cGy/min`, `220.5 cGy/min`],
+            correct: 0,
+            expl: `<strong>Distance Increased → Dose Rate Decreases.</strong><br>When distance increases, the beam spreads out, reducing intensity. This requires the Inverse Square Law.`,
+            math: `X = 200 × (100 / 105)²
+X = 200 × (0.952)²
+X = 200 × 0.907 = 181.4 cGy/min`
+        },
+        // 3. MAGNIFICATION
+        {
+            cat: `Magnification Factor`,
+            text: `A tumor measures 3.0 cm on a simulation film. The Source-to-Image Distance (SID) is 140 cm, and the Source-to-Object Distance (SOD) is 100 cm. What is the ACTUAL size of the tumor?`,
+            hint: `Mag Factor = SID / SOD
+Object = Image / Mag Factor`,
+            options: [`2.14 cm`, `3.0 cm`, `4.2 cm`, `1.4 cm`],
+            correct: 0,
+            expl: `<strong>First find Mag Factor, then divide.</strong><br>Magnification makes objects look larger on film. To find the real size, you must divide the image size by the Mag Factor.`,
+            math: `Mag = 140 / 100 = 1.4
+Real Size = 3.0 cm / 1.4
+Real Size = 2.14 cm`,
+            diagram: ``
+        },
+        // 4. HVL (SHIELDING)
+        {
+            cat: `Shielding (HVL)`,
+            text: `A beam has an intensity of 800 mR/hr. How many Half Value Layers (HVLs) are required to reduce the intensity to less than 100 mR/hr?`,
+            hint: `Count the halvings: 800 -> 400 -> ...`,
+            options: [`1 HVL`, `2 HVLs`, `3 HVLs`, `4 HVLs`],
+            correct: 2,
+            expl: `<strong>3 HVLs are required.</strong><br>Each HVL cuts the remaining intensity in half. We need to get below 100.`,
+            math: `Start: 800
+1 HVL: 400
+2 HVLs: 200
+3 HVLs: 100`
+        },
+        // 5. TVL (SHIELDING)
+        {
+            cat: `Shielding (TVL)`,
+            text: `If a barrier has a Tenth Value Layer (TVL) of 5 cm of Lead, how thick must the wall be to reduce a 1000 mR/hr beam to 10 mR/hr?`,
+            hint: `1 TVL = 10% remaining (1/10th). Count the TVLs.`,
+            options: [`5 cm`, `10 cm`, `15 cm`, `20 cm`],
+            correct: 1,
+            expl: `<strong>Two TVLs are needed.</strong><br>A TVL reduces intensity by a factor of 10. We need to go from 1000 to 10 (a factor of 100).`,
+            math: `1000 / 10 = 100 (Reduction Factor)
+100 = 10² (So we need 2 TVLs)
+2 × 5 cm = 10 cm total.`
+        },
+        // 6. DOSE EQUIVALENT (UNITS)
+        {
+            cat: `Dose Equivalent (Sv)`,
+            text: `A physicist receives an absorbed dose of 0.1 Gy from Fast Neutrons (Weighting Factor Wr = 20). What is the Dose Equivalent in Sieverts?`,
+            hint: `Sv = Gy × Wr`,
+            options: [`0.1 Sv`, `2.0 Sv`, `20 Sv`, `0.005 Sv`],
+            correct: 1,
+            expl: `<strong>Neutrons are biologically damaging.</strong><br>Dose Equivalent (Sv) accounts for the type of radiation. Neutrons have a high weighting factor (20).`,
+            math: `H (Sv) = D (Gy) × Wr
+H = 0.1 × 20
+H = 2.0 Sv`
+        },
+        // 7. RADIOBIOLOGY (RBE)
+        {
+            cat: `Radiobiology (RBE)`,
+            text: `A biological reaction is produced by 4 Gy of 250 kVp X-rays (Reference). It takes only 2 Gy of Neutrons (Test) to produce the exact same reaction. What is the RBE of the Neutrons?`,
+            hint: `RBE = Dose(Reference) / Dose(Test)`,
+            options: [`0.5`, `2.0`, `4.0`, `8.0`],
+            correct: 1,
+            expl: `<strong>RBE = Reference / Test.</strong><br>RBE compares how much 'standard' radiation is needed vs. 'test' radiation to get the same effect.`,
+            math: `RBE = 4 Gy (X-ray) / 2 Gy (Neutron)
+RBE = 2.0`
+        },
+        // 8. OXYGEN ENHANCEMENT RATIO (OER)
+        {
+            cat: `Radiobiology (OER)`,
+            text: `It takes 6 Gy to kill a colony of hypoxic cells. It takes 2 Gy to kill the same colony when oxygenated. What is the OER?`,
+            hint: `OER = Dose(Hypoxic) / Dose(Oxygenated)`,
+            options: [`0.33`, `3.0`, `4.0`, `12.0`],
+            correct: 1,
+            expl: `<strong>OER is always > 1.</strong><br>Cells are more sensitive with oxygen, so it takes LESS dose to kill them. It takes MORE dose to kill hypoxic cells.`,
+            math: `OER = 6 Gy / 2 Gy
+OER = 3.0`
+        },
+        // 9. DECAY (HALF-LIFE)
+        {
+            cat: `Decay (Half-Life)`,
+            text: `An Ir-192 source has an activity of 10 Ci. The half-life is 74 days. What will the activity be after 148 days?`,
+            hint: `Calculate number of half-lives elapsed.`,
+            options: [`5.0 Ci`, `2.5 Ci`, `1.25 Ci`, `0 Ci`],
+            correct: 1,
+            expl: `<strong>Two half-lives have passed.</strong><br>148 days / 74 days = 2 half-lives.`,
+            math: `Start: 10 Ci
+1 Half-Life (74d): 5 Ci
+2 Half-Lives (148d): 2.5 Ci`,
+            diagram: `
+
+[Image of radioactive decay curve graph]
+`
+        },
+        // 10. MEAN ACTIVITY (IMPLANT)
+        {
+            cat: `Mean Activity`,
+            text: `For a permanent seed implant, the Mean (Average) Life is calculated using the half-life. What is the formula for Mean Life?`,
+            hint: `Mean Life is always longer than Half-Life.`,
+            options: [`T½ × 0.693`, `T½ × 1.44`, `T½ / 1.44`, `T½ × 2`],
+            correct: 1,
+            expl: `<strong>Mean Life = T½ × 1.44.</strong><br>This is used to calculate the total dose delivered by a permanent implant (Total Dose = Initial Rate × Mean Life).`,
+            math: `Average Life (Ta) = 1.44 × T½`
+        }
+    ];
+
+    let currentQ = 0;
+    let score = 0;
+
+    function startGame() {
+        document.getElementById('start-screen').classList.add('hidden');
+        document.getElementById('quiz-screen').classList.remove('hidden');
+        loadQ();
+    }
+
+    function loadQ() {
+        const q = questions[currentQ];
+        document.getElementById('q-cat').innerText = q.cat;
+        document.getElementById('q-text').innerText = q.text;
+        document.getElementById('formula-box').innerText = q.hint;
+        document.getElementById('formula-box').style.display = 'none';
+        document.getElementById('feedback-box').style.display = 'none';
+        
+        // Progress
+        document.getElementById('progress').style.width = ((currentQ) / questions.length * 100) + "%";
+
+        const grid = document.getElementById('options-area');
+        grid.innerHTML = '';
+
+        q.options.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerHTML = `<span>${opt}</span>`;
+            btn.onclick = () => checkAnswer(idx, btn);
+            grid.appendChild(btn);
+        });
+    }
+
+    function toggleFormula() {
+        const box = document.getElementById('formula-box');
+        box.style.display = box.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function checkAnswer(idx, btn) {
+        const q = questions[currentQ];
+        const allBtns = document.querySelectorAll('.option-btn');
+        allBtns.forEach(b => { b.disabled = true; b.style.cursor='default'; });
+
+        if(idx === q.correct) {
+            btn.classList.add('correct');
+            score++;
+        } else {
+            btn.classList.add('wrong');
+            allBtns[q.correct].classList.add('correct');
+        }
+
+        document.getElementById('feedback-box').style.display = 'block';
+        document.getElementById('fb-expl').innerHTML = q.expl;
+        document.getElementById('fb-math').innerText = q.math;
+    }
+
+    function nextQuestion() {
+        currentQ++;
+        if(currentQ < questions.length) {
+            loadQ();
+        } else {
+            endGame();
+        }
+    }
+
+    function endGame() {
+        document.getElementById('quiz-screen').classList.add('hidden');
+        document.getElementById('end-screen').classList.remove('hidden');
+        document.getElementById('progress').style.width = '100%';
+        document.getElementById('final-score').innerText = Math.round((score/questions.length)*100) + "%";
+    }
+
+    function restartGame() {
+        currentQ = 0;
+        score = 0;
+        document.getElementById('end-screen').classList.add('hidden');
+        document.getElementById('start-screen').classList.remove('hidden');
+    }
+</script>
+
+</body>
+</html>
