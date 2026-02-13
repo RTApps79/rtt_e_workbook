@@ -222,6 +222,12 @@
             <span id="couchPositionDisplay" class="position-display">X:0.0, Y:0.0, Z:0.0</span>
         </div>
 
+        <div class="sidebar-title">Model Controls</div>
+        <div class="button-group">
+            <button id="rotateHumanBtn" onclick="rotateHuman180()" disabled>Rotate Patient 180°</button>
+            <button onclick="resetHumanRotation()">Reset Patient Rotation</button>
+        </div>  
+
         <div class="sidebar-title">Scan & Beam</div>
         <div class="button-group">
             <button id="halfScanBtn" onclick="startScan(halfScanTargetZ, 1500)">Half Scan (to Iso)</button>
@@ -314,6 +320,17 @@
         let gantryGroup, tubeMesh, detectorMesh, gantryRingMesh;
         let treatmentBeamHelper;
 
+        let upperArmL = null;
+        let upperArmR = null;
+
+        let _humanRotateAnimId = null;
+        let _humanRotateAnimating = false;
+
+        // New: separate inner + outer models and inner pivot
+        let gantryInnerModel = null;
+        let gantryOuterModel = null;
+        let gantryInnerPivot = null; // pivot at gantry origin used to rotate only inner
+
         let userDefinedIsocenterPos = new THREE.Vector3(0, 5, 0);
         let gantryRotationAngle = 0;
         const gantryRotationSpeed = 0.03;
@@ -392,7 +409,7 @@
 
             createAlignmentLasers();
             createCouchAndPatient();
-            createGantry(); // now also attempts to load GLB into gantryGroup
+            createGantry(); // now loads Gantry_Inner + Gantry_Outer into gantryGroup
             createTreatmentBeam();
             createLAPLases();
             createFixedGantryLasers();
@@ -455,7 +472,7 @@
 
             window.addEventListener('resize', onWindowResize, false);
             animate();
-            console.log("4D CT Sim Init complete with GLB-aware gantry loader");
+            console.log("4D CT Sim Init complete with separate Gantry_Inner / Gantry_Outer loader");
         }
 
         function createAlignmentLasers() {
@@ -480,7 +497,8 @@
             fixedGantryLaserGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-fixedLaserLength / 2, 0, 0), new THREE.Vector3(fixedLaserLength / 2, 0, 0)]), fixedLaserMaterial));
             fixedGantryLaserGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, -fixedLaserLength / 2), new THREE.Vector3(0, 0, fixedLaserLength / 2)]), fixedLaserMaterial));
             fixedGantryLaserGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, -fixedLaserLength / 2, 0), new THREE.Vector3(0, fixedLaserLength / 2, 0)]), fixedLaserMaterial));
-            gantryGroup.add(fixedGantryLaserGroup);
+            // attach to gantryGroup (outer/inner visuals will be children of gantryGroup)
+            if (gantryGroup) gantryGroup.add(fixedGantryLaserGroup);
         }
 
         function setLaserLayering() {
@@ -522,8 +540,8 @@
 
         function createCouchAndPatient() {
             couchGroup = new THREE.Group();
-            const couchTopGeo = new THREE.BoxGeometry(3.5, 0.5, 35);
-            const couchTopMat = new THREE.MeshStandardMaterial({ opacity: 100 });
+            const couchTopGeo = new THREE.BoxGeometry(0, 0, 0);
+            const couchTopMat = new THREE.MeshStandardMaterial({ transparent: true, opacity: 0 });
             const couchTop = new THREE.Mesh(couchTopGeo, couchTopMat);
             couchTop.receiveShadow = true;
             couchGroup.add(couchTop);
@@ -537,17 +555,55 @@
                 model.traverse((node) => { if (node.isMesh) { node.castShadow = node.receiveShadow = true; } });
                 const humanBbox = new THREE.Box3().setFromObject(model);
                 const size = humanBbox.getSize(new THREE.Vector3());
-                let scaleFactor = 5;
+                let scaleFactor = 10;
                 model.scale.setScalar(scaleFactor);
                 humanBbox.setFromObject(model);
                 const newSize = humanBbox.getSize(new THREE.Vector3());
-                patientBaseY = (0.5 / 2) + (newSize.y / 15);
+                patientBaseY = -2
                 model.rotation.x = Math.PI / -2;
                 humanBbox.setFromObject(model);
                 const offsetY = patientBaseY - humanBbox.min.y;
-                model.position.set(0, offsetY, 10);
+                model.position.set(0, offsetY, 30);
                 couchGroup.add(model);
                 patientMesh = model;
+
+                // enable rotate button once patient model is present
+                const rotateHumanBtn = document.getElementById('rotateHumanBtn');
+                if (rotateHumanBtn) rotateHumanBtn.disabled = false;
+
+                upperArmL = model.getObjectByName('upper_armL') || model.getObjectByName('upper_arm_l') || model.getObjectByName('UpperArm.L');
+                upperArmR = model.getObjectByName('upper_armR') || model.getObjectByName('upper_arm_r') || model.getObjectByName('UpperArm.R');
+
+                upperArmL.rotation.x = Math.PI / -2;
+                upperArmL.rotation.y = Math.PI / -4;
+                upperArmR.rotation.x = Math.PI / -2;
+                upperArmR.rotation.y = Math.PI / 4;
+
+                //// --- list all bones / bone-like nodes to console for debugging ---
+                //const boneNodes = [];
+                //model.traverse((n) => {
+                //    if (n.isBone || n.type === 'Bone') boneNodes.push(n);
+                //});
+
+                //if (boneNodes.length > 0) {
+                //    console.groupCollapsed(`Model Bones (${boneNodes.length})`);
+                //    boneNodes.forEach(b => console.log(b.name || b.uuid, b));
+                //    console.groupEnd();
+                //    // expose for console access
+                //    window.modelBones = boneNodes;
+                //} else {
+                //    // fallback: find nodes whose names look like bones
+                //    const candidates = [];
+                //    model.traverse((n) => {
+                //        if (n.name && /upper_arm\.l|upper_arm\.r|arm|humerus|radius|ulna|clavicle|scapula|bone|spine|femur|tibia|fibula|shoulder|hand|foot/i.test(n.name)) {
+                //            candidates.push(n);
+                //        }
+                //    });
+                //    console.groupCollapsed(`Bone-like nodes (${candidates.length})`);
+                //    candidates.forEach(n => console.log(n.name || n.uuid, n));
+                //    console.groupEnd();
+                //    window.modelBones = candidates;
+                //}
 
                 const tumorGeo = new THREE.SphereGeometry(TUMOR_RADIUS, 16, 16);
                 const tumorMat = new THREE.MeshStandardMaterial({ color: 0xff4136, emissive: 0x440000 });
@@ -602,128 +658,160 @@
             scene.add(couchGroup);
         }
 
-        // createGantry now tries to load your CT GLB and replace/add appropriate parts
+        // createGantry now loads Gantry_Outer + Gantry_Inner separately.
         function createGantry() {
             gantryGroup = new THREE.Group();
-
-            //// fallback visual ring/tube/detector (kept, but overridden when GLB loads)
-            //const gantryGeo = new THREE.TorusGeometry(GANTRY_RADIUS, GANTRY_THICKNESS, 16, 60);
-            //const gantryMat = new THREE.MeshStandardMaterial({ color: 0xd0d0d5, metalness: 0.3, roughness: 0.6 });
-            //gantryRingMesh = new THREE.Mesh(gantryGeo, gantryMat);
-            //gantryRingMesh.rotation.z = Math.PI / 2;
-            //gantryRingMesh.castShadow = true;
-            //gantryGroup.add(gantryRingMesh);
-
-            //const tubeGeo = new THREE.BoxGeometry(TUBE_SIZE, TUBE_SIZE, TUBE_SIZE * 1.2);
-            //const tubeMat = new THREE.MeshStandardMaterial({ color: 0x005eff });
-            //tubeMesh = new THREE.Mesh(tubeGeo, tubeMat);
-            //tubeMesh.position.set(0, GANTRY_RADIUS, 0);
-            //tubeMesh.castShadow = true;
-            //gantryGroup.add(tubeMesh);
-
-            //const detectorGeo = new THREE.BoxGeometry(DETECTOR_WIDTH, DETECTOR_HEIGHT, DETECTOR_DEPTH);
-            //const detectorMat = new THREE.MeshStandardMaterial({ color: 0x660000 });
-            //detectorMesh = new THREE.Mesh(detectorGeo, detectorMat);
-            //detectorMesh.position.set(0, -GANTRY_RADIUS, 0);
-            //detectorMesh.castShadow = true;
-            //gantryGroup.add(detectorMesh);
-
             scene.add(gantryGroup);
 
-            // now attempt to load the CT scanner GLB and replace/augment visuals
             const loader = new GLTFLoader();
-            const glbPath = 'CT_Assets/CT_Scanner.glb';
 
-            loader.load(glbPath, (gltf) => {
-                const model = gltf.scene || gltf.scenes[0];
+            // Helper to scale/center a loaded model and attach to gantryGroup.
+            function processAndAttachModel(model, options = {}) {
                 model.traverse(n => { if (n.isMesh) { n.castShadow = n.receiveShadow = true; } });
-
-                // compute bounding box and scale the imported scanner so it fits expected gantry diameter
                 const bbox = new THREE.Box3().setFromObject(model);
                 const size = bbox.getSize(new THREE.Vector3());
-                // guard if the GLB is huge (Sketchfab often exports very large units)
-                const desiredDiameter = GANTRY_RADIUS * 6; // target size in scene units
-                let uniformScale = 3.0;
-                if (size.x > 0) uniformScale = desiredDiameter / size.x;
-                // require reasonable limits
-                if (uniformScale <= 0) uniformScale = 0.01;
-                uniformScale = Math.min(Math.max(uniformScale, 0.0005), 10);
+                const desiredDiameter = GANTRY_RADIUS * 6;
+
+                // Allow an explicit scale override via options.scale.
+                // If not provided, compute a uniformScale based on model size (existing behaviour).
+                let uniformScale;
+                if (typeof options.scale === 'number') {
+                    uniformScale = options.scale;
+                } else {
+                    uniformScale = 1;
+                    if (size.x > 0) uniformScale = desiredDiameter / size.x;
+                    if (uniformScale <= 0) uniformScale = 0.01;
+                    // keep a reasonable clamp for automatically computed scales
+                    uniformScale = Math.min(Math.max(uniformScale, 0.0005), 10);
+                }
+
                 model.scale.setScalar(uniformScale);
 
-                // recalc bbox and center model at origin (so gantryGroup rotation behaves)
                 bbox.setFromObject(model);
                 const center = bbox.getCenter(new THREE.Vector3());
-                model.position.sub(center); // center model at world origin
-                model.position.x += 20; // optional offsets if needed
-                model.rotateY(Math.PI / -2); // ensure proper orientation
+                model.position.sub(center);
+                // small orientation adjustment to match previous behavior
+                model.rotateY(Math.PI / -2);
 
-                // heuristics to find tube (cylinder/tube) and couch/table
-                let foundTube = null;
-                let foundCouch = null;
-                model.traverse((n) => {
-                    if (!n.isMesh) return;
-                    const name = (n.name || '').toLowerCase();
-                    if (!foundTube && (name.includes('cyl') || name.includes('tube') || name.includes('xray') || name.includes('gantry'))) {
-                        foundTube = n;
-                    }
-                    if (!foundCouch && (name.includes('couch') || name.includes('table') || name.includes('bed') || name.includes('patient'))) {
-                        foundCouch = n;
-                    }
-                });
-
-                // If a model node representing the couch was found, reparent it to couchGroup so couch movement works
-                if (foundCouch) {
-                    if (foundCouch.parent) foundCouch.parent.remove(foundCouch);
-                    // assure proper scale is preserved (model already scaled)
-                    couchGroup.add(foundCouch);
-                    // position couchGroup origin near original couch world position
-                    const wc = new THREE.Vector3(); foundCouch.getWorldPosition(wc);
-                    // move couchGroup to that world position and make the child local transform reset — keep relative
-                    couchGroup.position.copy(wc);
-                    foundCouch.position.set(0, 0, 0);
-                    console.log('GLB couch extracted:', foundCouch.name || foundCouch.id);
-                }
-
-                // Add model under gantryGroup so gantry rotation affects scanner parts
+                // optional offset
+                if (options.offsetX) model.position.x += options.offsetX;
                 gantryGroup.add(model);
 
-                // If found tube, set tubeMesh reference so beam follows it
-                if (foundTube) {
-                    tubeMesh = foundTube;
-                    console.log('GLB tube assigned:', foundTube.name || foundTube.id);
-                } else {
-                    // try to find a mesh named 'cylinder' or similar at root level
-                    const maybe = model.getObjectByName('Cylinder') || model.getObjectByName('Cylinder__0') || model.getObjectByName('cylinder');
-                    if (maybe) { tubeMesh = maybe; console.log('Tube assigned by explicit name:', maybe.name); }
-                }
+                // return useful metadata
+                return { model, bbox, size, uniformScale };
+            }
 
-                // After scaling and centering, adjust camera to view model reasonably
-                bbox.setFromObject(gantryGroup);
-                const bsize = bbox.getSize(new THREE.Vector3());
-                const maxDim = Math.max(bsize.x, bsize.y, bsize.z);
-                // position camera back enough
-                camera.position.set(userDefinedIsocenterPos.x + Math.max(25, maxDim * 1.5), userDefinedIsocenterPos.y + Math.max(20, maxDim * 0.6), userDefinedIsocenterPos.z + Math.max(30, maxDim * 1.0));
-                controls.target.copy(userDefinedIsocenterPos);
-                console.log('CT GLB loaded and scaled:', uniformScale);
+            // Load outer shell (visual ring / housing)
+            loader.load('CT_Assets/Gantry_Outer.glb', (gltf) => {
+                try {
+                    const model = gltf.scene || gltf.scenes[0];
+                    const meta = processAndAttachModel(model, { offsetX: 39, scale: 10 });
+                    gantryOuterModel = model;
+                    console.log('Gantry Outer loaded, scale:', meta.uniformScale);
+                    // ensure fixedGantry lasers are parented to gantryGroup (already added earlier)
+                } catch (e) {
+                    console.warn('Error processing Gantry_Outer', e);
+                }
             }, undefined, (err) => {
-                console.warn('Failed to load CT GLB — using programmatic gantry/tube/detector fallback', err);
+                console.warn('Failed to load Gantry_Outer.glb', err);
             });
+
+            // Load inner tube (this is the rotating piece — we'll put it under an inner pivot so only it spins)
+            loader.load('CT_Assets/Gantry_Inner.glb', (gltf) => {
+                try {
+                    const model = gltf.scene || gltf.scenes[0];
+
+                    // heuristics to find the actual tube mesh (if any)
+                    let foundTube = null;
+                    model.traverse((n) => {
+                        if (!n.isMesh) return;
+                        const name = (n.name || '').toLowerCase();
+                        if (!foundTube && (name.includes('cyl') || name.includes('tube') || name.includes('xray') || name.includes('gantry') || name.includes('td'))) {
+                            foundTube = n;
+                        }
+                    });
+
+                    // scale + center and add temporarily to gantryGroup so world matrices are correct
+                    const meta = processAndAttachModel(model, { offsetX: 0 });
+
+                    // At this point `model` is a child of `gantryGroup` so world matrices are valid.
+                    // Compute tube world position (fallback to model origin if we couldn't detect the tube)
+                    const tubeWorldPos = new THREE.Vector3();
+                    if (foundTube) {
+                        foundTube.getWorldPosition(tubeWorldPos);
+                    } else {
+                        // fallback: use model's world position (center)
+                        model.getWorldPosition(tubeWorldPos);
+                    }
+
+                    // Create a pivot located at the tube center expressed in gantryGroup local space.
+                    // We'll add the pivot to gantryGroup and then attach the inner model to the pivot
+                    // using Object3D.attach to preserve the model's world transform.
+                    const pivot = new THREE.Object3D();
+                    const pivotLocal = gantryGroup.worldToLocal(tubeWorldPos.clone());
+                    pivot.position.copy(pivotLocal);
+                    gantryGroup.add(pivot);
+
+                    // Attach the model under the pivot while preserving its world transform.
+                    // attach() moves the object into the new parent and updates its local transform so
+                    // it keeps the same world transform — exactly what we need.
+                    pivot.attach(model);
+
+                    // Save references
+                    gantryInnerPivot = pivot;
+                    gantryInnerModel = model;
+
+                    if (foundTube) {
+                        tubeMesh = foundTube;
+                        console.log('Gantry Inner: tube mesh assigned by heuristic:', foundTube.name || foundTube.id);
+                    } else {
+                        const maybe = model.getObjectByName('Cylinder') || model.getObjectByName('Cylinder__0') || model.getObjectByName('cylinder');
+                        if (maybe) {
+                            tubeMesh = maybe;
+                            console.log('Gantry Inner: tube assigned by explicit name:', maybe.name);
+                        }
+                    }
+
+                    // Reparent treatment beam to the inner model so it rotates with the tube
+                    if (treatmentBeamHelper) {
+                        if (treatmentBeamHelper.parent) treatmentBeamHelper.parent.remove(treatmentBeamHelper);
+                        gantryInnerModel.add(treatmentBeamHelper);
+                    }
+
+                    // adjust camera / controls target as before
+                    const bbox = new THREE.Box3().setFromObject(gantryGroup);
+                    const bsize = bbox.getSize(new THREE.Vector3());
+                    const maxDim = Math.max(bsize.x, bsize.y, bsize.z);
+                    camera.position.set(userDefinedIsocenterPos.x + Math.max(25, maxDim * 1.5), userDefinedIsocenterPos.y + Math.max(20, maxDim * 0.6), userDefinedIsocenterPos.z + Math.max(30, maxDim * 1.0));
+                    controls.target.copy(userDefinedIsocenterPos);
+
+                    console.log('Gantry Inner loaded, attached to pivot at tube center. scale:', meta.uniformScale);
+                } catch (e) {
+                    console.warn('Error processing Gantry_Inner', e);
+                }
+            }, undefined, (err) => {
+                console.warn('Failed to load Gantry_Inner.glb', err);
+            });
+
+            // If both fail, the rest of the system continues to work with procedural fallback (unchanged)
         }
 
         function createTreatmentBeam() {
-            const coneHeight = GANTRY_RADIUS * 1.8;
+            const coneHeight = GANTRY_RADIUS / 4;
             const radiusAtIso = BEAM_FIELD_SIZE / 2;
             const coneBaseRadius = (radiusAtIso / GANTRY_RADIUS) * coneHeight;
             const beamGeo = new THREE.ConeGeometry(coneBaseRadius, coneHeight, 32, 1, true);
             beamGeo.rotateX(Math.PI);
-            beamGeo.translate(0, coneHeight / 2, 0);
+            beamGeo.translate(0, -3, 0);
             const beamMat = new THREE.MeshBasicMaterial({
                 color: 0x00ff00, transparent: true, opacity: 0.25,
                 depthWrite: false, side: THREE.DoubleSide
             });
             treatmentBeamHelper = new THREE.Mesh(beamGeo, beamMat);
             treatmentBeamHelper.visible = false;
-            gantryGroup.add(treatmentBeamHelper);
+
+            // add initially to gantryGroup; when inner loads the code reparents beamHelper to inner model
+            if (gantryGroup) gantryGroup.add(treatmentBeamHelper);
         }
 
         // moveLasers, setCurrentPosAsIsocenter, moveCouch, scanning and animation functions remain unchanged
@@ -763,6 +851,12 @@
             if (rotateGantryBtn) rotateGantryBtn.disabled = isScanning;
         }
 
+        // Helper: determine which object should be rotated for gantry actions
+        function getGantryRotationTarget() {
+            // Rotate the inner pivot (if present) so the outer shell remains static and inner spins about gantry origin.
+            return gantryInnerPivot || gantryInnerModel || gantryGroup;
+        }
+
         function animateScanMovement(targetZrelativeToIso, duration = 1500) {
             if (!couchGroup || !gantryGroup || isScanning || isGantryRotating) return;
             stopAllAnimations();
@@ -790,7 +884,8 @@
                 if (!isGantryRotating) { gantryAnimationRequestId = null; return; }
                 gantryRotationAngle += gantryRotationSpeed;
                 if (gantryRotationAngle > Math.PI * 2) gantryRotationAngle -= Math.PI * 2;
-                gantryGroup.rotation.z = gantryRotationAngle;
+                const rotTarget = getGantryRotationTarget();
+                rotTarget.rotation.z = gantryRotationAngle;
                 if (isScanning || isGantryRotating) { gantryAnimationRequestId = requestAnimationFrame(stepGantry); }
                 else { gantryAnimationRequestId = null; }
             }
@@ -812,13 +907,51 @@
                     if (!isGantryRotating) { gantryAnimationRequestId = null; return; }
                     gantryRotationAngle += gantryRotationSpeed;
                     if (gantryRotationAngle > Math.PI * 2) gantryRotationAngle -= Math.PI * 2;
-                    gantryGroup.rotation.z = gantryRotationAngle;
+                    const rotTarget = getGantryRotationTarget();
+                    rotTarget.rotation.z = gantryRotationAngle;
                     gantryAnimationRequestId = requestAnimationFrame(stepGantry);
                 }
                 gantryAnimationRequestId = requestAnimationFrame(stepGantry);
                 rotateGantryBtn.textContent = "Stop Rotation";
             }
         }
+
+        window.rotateHuman180 = function () {
+            if (!patientMesh) { console.warn('rotateHuman180: patientMesh not loaded'); return; }
+            if (_humanRotateAnimating) return;
+            _humanRotateAnimating = true;
+
+            const duration = 400; // ms
+            const startY = patientMesh.rotation.y;
+            const endY = startY + Math.PI; // 180 degrees
+            const startTime = performance.now();
+
+            function easeInOut(t) {
+                // smoothstep style easing
+                return 0.5 - 0.5 * Math.cos(Math.PI * Math.min(Math.max(t, 0), 1));
+            }
+
+            function step(now) {
+                const t = (now - startTime) / duration;
+                const eased = easeInOut(t);
+                patientMesh.rotation.y = startY + (endY - startY) * eased;
+                if (t < 1) {
+                    _humanRotateAnimId = requestAnimationFrame(step);
+                } else {
+                    _humanRotateAnimId = null;
+                    _humanRotateAnimating = false;
+                }
+            }
+
+            _humanRotateAnimId = requestAnimationFrame(step);
+        };
+
+        window.resetHumanRotation = function () {
+            if (!patientMesh) { console.warn('resetHumanRotation: patientMesh not loaded'); return; }
+            if (_humanRotateAnimId) { cancelAnimationFrame(_humanRotateAnimId); _humanRotateAnimId = null; }
+            _humanRotateAnimating = false;
+            patientMesh.rotation.y = 0;
+        };
 
         window.stopAllAnimations = function (scanFinishedNaturally = false) {
             const wasScanning = isScanning; const wasRotating = isGantryRotating;
@@ -880,13 +1013,12 @@
         }
 
         function updateTreatmentBeamPosition() {
-            if (gantryGroup && tubeMesh && treatmentBeamHelper) {
-                // prefer tubeMesh world position as origin for beam
+            // prefer inner pivot as beam parent so local conversions are consistent
+            const beamParent = gantryInnerPivot || gantryInnerModel || gantryGroup;
+            if (beamParent && tubeMesh && treatmentBeamHelper) {
                 const tubeWorldPos = new THREE.Vector3();
-                // mesh may be nested; use getWorldPosition
                 tubeMesh.getWorldPosition(tubeWorldPos);
-                // convert to gantryGroup local coords so beam (child of gantryGroup) aligns
-                const local = gantryGroup.worldToLocal(tubeWorldPos.clone());
+                const local = beamParent.worldToLocal(tubeWorldPos.clone());
                 treatmentBeamHelper.position.copy(local);
                 treatmentBeamHelper.rotation.set(0, 0, 0);
                 treatmentBeamHelper.rotateX(Math.PI);
