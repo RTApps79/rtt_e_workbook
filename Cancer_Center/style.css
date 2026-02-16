@@ -1,0 +1,290 @@
+:root {
+    /* Color Palette - Dark Medical Tech */
+    --panel-bg: rgba(18, 20, 28, 0.90);
+    --panel-border: rgba(255, 255, 255, 0.12);
+    --text: rgba(255, 255, 255, 0.92);
+    --muted: rgba(255, 255, 255, 0.66);
+    --accent: #70d6ff;  /* Cyan */
+    --accent2: #b8ff6a; /* Green */
+    --danger: #ff5c7a;  /* Red */
+    --bg: #0b0d12;      /* Deep Black/Blue */
+}
+
+/* Global Resets */
+html, body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    background: var(--bg);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    user-select: none; /* Prevent text selection during 3D navigation */
+}
+
+canvas {
+    display: block;
+    outline: none;
+}
+
+/* =========================================
+   HEADS UP DISPLAY (HUD) - Top Right
+   ========================================= */
+#hud {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 410px;
+    color: var(--text);
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    border-radius: 8px;
+    backdrop-filter: blur(8px);
+    padding: 16px;
+    z-index: 10;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    pointer-events: auto;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 12px;
+}
+
+.title {
+    font-weight: 800;
+    font-size: 18px;
+    letter-spacing: 0.05em;
+}
+
+.subtitle {
+    font-size: 12px;
+    font-weight: bold;
+    color: var(--muted);
+    text-transform: uppercase;
+}
+
+/* Minimap */
+.minimap-container {
+    border: 1px solid var(--panel-border);
+    border-radius: 4px;
+    overflow: hidden;
+    background: #000;
+    height: 120px;
+    position: relative;
+    margin-bottom: 12px;
+}
+
+#nav-map {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+#nav-marker {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    border: 2px solid white;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 8px var(--accent);
+    top: 50%;
+    left: 50%;
+    transition: all 0.1s linear;
+}
+
+.controls-hint {
+    font-size: 11px;
+    color: var(--muted);
+    border-top: 1px solid var(--panel-border);
+    padding-top: 8px;
+    line-height: 1.4;
+}
+
+/* =========================================
+   INFO PANEL - Bottom Left
+   ========================================= */
+#info {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    width: 340px;
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    color: var(--text);
+    padding: 20px;
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    z-index: 10;
+    transition: opacity 0.3s;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+#info h2 {
+    margin: 0 0 4px 0;
+    font-size: 20px;
+    color: var(--accent);
+}
+
+#info .badge {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-family: monospace;
+    float: right;
+}
+
+#info p {
+    margin: 12px 0 20px 0;
+    line-height: 1.5;
+    color: var(--muted);
+    font-size: 14px;
+    min-height: 40px;
+}
+
+/* Action Buttons Grid */
+.actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.actions button {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--panel-border);
+    color: var(--text);
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+    transition: all 0.2s;
+}
+
+.actions button:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: var(--accent);
+}
+
+/* Primary Action (Start Activity) */
+.actions button.primary {
+    background: var(--accent);
+    color: #000;
+    border: none;
+    grid-column: span 2; /* Full width */
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.actions button.primary:hover:not(:disabled) {
+    background: #99e6ff;
+    box-shadow: 0 0 15px rgba(112, 214, 255, 0.4);
+}
+
+.actions button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    filter: grayscale(1);
+}
+
+/* =========================================
+   FLOOR CONTROLS - Bottom Right
+   ========================================= */
+#controls-ui {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+}
+
+#controls-ui button {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #000;
+    border: 1px solid var(--panel-border);
+    font-weight: bold;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+#controls-ui button:hover {
+    border-color: var(--text);
+    color: var(--text);
+}
+
+#controls-ui button.active {
+    background: var(--accent);
+    color: #000;
+    border-color: var(--accent);
+    box-shadow: 0 0 12px var(--accent);
+    transform: scale(1.1);
+}
+
+/* =========================================
+   TOOLTIP
+   ========================================= */
+#tooltip {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    pointer-events: none;
+    display: none;
+    z-index: 20;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* =========================================
+   FULL SCREEN ACTIVITY PANELS (The Labs)
+   ========================================= */
+.panel {
+    display: none; /* Hidden by default */
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: rgba(0, 0, 0, 0.85); /* Dim the 3D world */
+    backdrop-filter: blur(5px);
+    align-items: center;
+    justify-content: center;
+}
+
+.panel.active {
+    display: flex;
+    animation: fadeIn 0.3s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.98); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* Specific Utilities for the Physics Lab */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2); 
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #3b82f6; /* Tailwind Blue-500 equivalent */
+    border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #60a5fa; 
+}
+
+/* Prevent image dragging in the simulator */
+img {
+    user-select: none;
+    -webkit-user-drag: none;
+}
