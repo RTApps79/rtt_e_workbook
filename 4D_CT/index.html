@@ -224,7 +224,8 @@
 
         <div class="sidebar-title">Model Controls</div>
         <div class="button-group">
-            <button id="rotateHumanBtn" onclick="rotateHuman180()" disabled>Rotate Patient 180°</button>
+            <button id="rotateHumanBtn" onclick="rotateHuman180()" disabled>Anterior/Posterior</button>
+            <button id="rotateHumanZBtn" onclick="rotateHumanZ180()" disabled>Interior/Superior</button>
             <button onclick="resetHumanRotation()">Reset Patient Rotation</button>
         </div>  
 
@@ -317,6 +318,7 @@
         let labelRenderer;
         let lapLaserGroup, fixedGantryLaserGroup, laserGroup;
         let couchGroup, patientMesh, tumorMesh;
+        let patientPivot = null; // NEW: pivot used to rotate patient about its center
         let gantryGroup, tubeMesh, detectorMesh, gantryRingMesh;
         let treatmentBeamHelper;
 
@@ -413,6 +415,7 @@
             createTreatmentBeam();
             createLAPLases();
             createFixedGantryLasers();
+            createRoom();
 
             // LAP lasers: set initial position halfway between gantry and patient couch
             const lapOriginZ = (longitudinalLimitOut + 0) / 2;
@@ -570,6 +573,8 @@
                 // enable rotate button once patient model is present
                 const rotateHumanBtn = document.getElementById('rotateHumanBtn');
                 if (rotateHumanBtn) rotateHumanBtn.disabled = false;
+                const rotateHumanXBtn = document.getElementById('rotateHumanZBtn');
+                if (rotateHumanXBtn) rotateHumanXBtn.disabled = false;
 
                 upperArmL = model.getObjectByName('upper_armL') || model.getObjectByName('upper_arm_l') || model.getObjectByName('UpperArm.L');
                 upperArmR = model.getObjectByName('upper_armR') || model.getObjectByName('upper_arm_r') || model.getObjectByName('UpperArm.R');
@@ -618,12 +623,12 @@
                 const labelPatientAntYPos = patientBaseY + newSize.y / 2 + 0.4;
                 const labelPatientPostYPos = (0.5 / 2) + 0.15;
 
-                couchGroup.add(createAnatomicalLabel("Head", 0, labelPatientYPos, -labelDepthOffset));
-                couchGroup.add(createAnatomicalLabel("Feet", 0, labelPatientYPos, labelDepthOffset));
-                couchGroup.add(createAnatomicalLabel("Anterior", 0, labelPatientAntYPos, 0));
-                couchGroup.add(createAnatomicalLabel("Posterior", 0, labelPatientPostYPos, 0));
-                couchGroup.add(createAnatomicalLabel("Left", labelWidthOffset, labelPatientYPos, 0));
-                couchGroup.add(createAnatomicalLabel("Right", -labelWidthOffset, labelPatientYPos, 0));
+                //couchGroup.add(createAnatomicalLabel("Head", 0, labelPatientYPos, -labelDepthOffset));
+                //couchGroup.add(createAnatomicalLabel("Feet", 0, labelPatientYPos, labelDepthOffset));
+                //couchGroup.add(createAnatomicalLabel("Anterior", 0, labelPatientAntYPos, 0));
+                //couchGroup.add(createAnatomicalLabel("Posterior", 0, labelPatientPostYPos, 0));
+                //couchGroup.add(createAnatomicalLabel("Left", labelWidthOffset, labelPatientYPos, 0));
+                //couchGroup.add(createAnatomicalLabel("Right", -labelWidthOffset, labelPatientYPos, 0));
             }, undefined, (err) => {
                 console.error("Failed to load GLB patient, falling back to cylinder:", err);
                 const patientGeo = new THREE.CylinderGeometry(PATIENT_CYLINDER_RADIUS, PATIENT_CYLINDER_RADIUS, PATIENT_CYLINDER_HEIGHT, 20);
@@ -641,18 +646,18 @@
                 tumorMesh.position.set(0, 0, 0);
                 patientMesh.add(tumorMesh);
 
-                const labelPatientYPos = patientBaseY;
-                const labelPatientAntYPos = patientBaseY + PATIENT_CYLINDER_RADIUS + 0.4;
-                const labelPatientPostYPos = (0.5 / 2) + 0.15;
-                const labelDepthOffset = PATIENT_CYLINDER_HEIGHT / 2 + 0.7;
-                const labelWidthOffset = PATIENT_CYLINDER_RADIUS + 0.5;
+                //const labelPatientYPos = patientBaseY;
+                //const labelPatientAntYPos = patientBaseY + PATIENT_CYLINDER_RADIUS + 0.4;
+                //const labelPatientPostYPos = (0.5 / 2) + 0.15;
+                //const labelDepthOffset = PATIENT_CYLINDER_HEIGHT / 2 + 0.7;
+                //const labelWidthOffset = PATIENT_CYLINDER_RADIUS + 0.5;
 
-                couchGroup.add(createAnatomicalLabel("Head", 0, labelPatientYPos, -labelDepthOffset));
-                couchGroup.add(createAnatomicalLabel("Feet", 0, labelPatientYPos, labelDepthOffset));
-                couchGroup.add(createAnatomicalLabel("Anterior", 0, labelPatientAntYPos, 0));
-                couchGroup.add(createAnatomicalLabel("Posterior", 0, labelPatientPostYPos, 0));
-                couchGroup.add(createAnatomicalLabel("Left", labelWidthOffset, labelPatientYPos, 0));
-                couchGroup.add(createAnatomicalLabel("Right", -labelWidthOffset, labelPatientYPos, 0));
+                //couchGroup.add(createAnatomicalLabel("Head", 0, labelPatientYPos, -labelDepthOffset));
+                //couchGroup.add(createAnatomicalLabel("Feet", 0, labelPatientYPos, labelDepthOffset));
+                //couchGroup.add(createAnatomicalLabel("Anterior", 0, labelPatientAntYPos, 0));
+                //couchGroup.add(createAnatomicalLabel("Posterior", 0, labelPatientPostYPos, 0));
+                //couchGroup.add(createAnatomicalLabel("Left", labelWidthOffset, labelPatientYPos, 0));
+                //couchGroup.add(createAnatomicalLabel("Right", -labelWidthOffset, labelPatientYPos, 0));
             });
 
             scene.add(couchGroup);
@@ -794,6 +799,113 @@
             });
 
             // If both fail, the rest of the system continues to work with procedural fallback (unchanged)
+        }
+
+        function createRoom() {
+            try {
+                const loader = new GLTFLoader();
+                const roomPath = 'CT_Assets/Room.glb';
+                const DEBUG_ROOM_HELPERS = false; // set false to hide helpers after verifying placement
+
+                loader.load(roomPath, (gltf) => {
+                    const model = gltf.scene || gltf.scenes[0];
+                    if (!model) {
+                        console.warn('Room.glb loaded but contains no scene root.');
+                        return;
+                    }
+
+                    // Ensure meshes cast/receive shadows and try to enforce backface culling.
+                    model.traverse((node) => {
+                        if (!node.isMesh) return;
+
+                        // Ensure shadows
+                        node.castShadow = true;
+                        node.receiveShadow = true;
+
+                        // If the material is an array or single material, force FrontSide culling
+                        const materials = Array.isArray(node.material) ? node.material : [node.material];
+                        materials.forEach((m) => {
+                            if (!m) return;
+                            // If material was intentionally double-sided in authoring we still switch to FrontSide
+                            // so backface culling will hide back faces as you expect.
+                            if (m.side === THREE.DoubleSide || m.side === THREE.BackSide) {
+                                console.log(`Room: forcing FrontSide on material (${m.name || m.id}) for mesh`, node.name || node.uuid);
+                                m.side = THREE.FrontSide;
+                                m.needsUpdate = true;
+                            }
+                        });
+
+                        // Recompute vertex normals in case normals were flipped or invalid
+                        const geom = node.geometry;
+                        if (geom && geom.isBufferGeometry) {
+                            try {
+                                geom.computeVertexNormals();
+                            } catch (e) {
+                                console.warn('Failed to compute normals for', node.name || node.uuid, e);
+                            }
+                        }
+                    });
+
+                    // Compute bounding box and scale/center the model so it fits the scene
+                    const bbox = new THREE.Box3().setFromObject(model);
+                    const size = bbox.getSize(new THREE.Vector3());
+                    const maxDim = Math.max(size.x, size.y, size.z);
+
+                    // Tweak target size to taste; keep relative to GANTRY_RADIUS so it fits your scene.
+                    const targetMax = Math.max(80, GANTRY_RADIUS * 35);
+                    let scaleFactor = 1;
+                    if (maxDim > 0) scaleFactor = targetMax / maxDim;
+                    // clamp scale to avoid degenerate values
+                    scaleFactor = Math.min(Math.max(scaleFactor, 0.0001), 10);
+
+                    model.scale.setScalar(scaleFactor);
+
+                    // Recompute bbox after scaling and center the model on origin
+                    bbox.setFromObject(model);
+                    const center = bbox.getCenter(new THREE.Vector3());
+                    model.position.sub(center); // move center to origin
+
+                    // Place room around the scene isocenter height so it's visible (small lift)
+                    // Adjust the added offset if the room sits too high/low
+                    const yOffset = userDefinedIsocenterPos.y + 18;
+                    model.position.y += yOffset;
+                    const zOffset = userDefinedIsocenterPos.z + 20;
+                    model.position.z += zOffset;
+
+                    // Force a matrix update so helpers / bbox are correct
+                    model.updateMatrixWorld(true);
+
+                    // Add model to scene
+                    scene.add(model);
+                    console.log('Room model added to scene. scale:', scaleFactor, 'bbox:', bbox.min, bbox.max, 'yOffset:', yOffset);
+
+                    // Diagnostic helpers — toggle with DEBUG_ROOM_HELPERS
+                    if (DEBUG_ROOM_HELPERS) {
+                        try {
+                            const boxHelper = new THREE.BoxHelper(model, 0xff0000);
+                            boxHelper.material.linewidth = 2;
+                            scene.add(boxHelper);
+
+                            const axes = new THREE.AxesHelper(Math.max(size.x, size.y, size.z) * 0.5 || 10);
+                            // Place axes at model world center
+                            const worldCenter = new THREE.Vector3();
+                            model.getWorldPosition(worldCenter);
+                            axes.position.copy(worldCenter);
+                            scene.add(axes);
+
+                            // Also log camera position so you can compare
+                            console.log('Camera position after room load:', camera && camera.position ? camera.position.clone() : null);
+                        } catch (e) {
+                            console.warn('Failed to add debug helpers for Room model', e);
+                        }
+                    }
+
+                }, undefined, (err) => {
+                    console.warn('Failed to load Room.glb', err);
+                });
+            } catch (e) {
+                console.warn('Error loading room model', e);
+            }
         }
 
         function createTreatmentBeam() {
@@ -946,11 +1058,42 @@
             _humanRotateAnimId = requestAnimationFrame(step);
         };
 
+        window.rotateHumanZ180 = function () {
+            if (!patientMesh) { console.warn('rotateHuman180: patientMesh not loaded'); return; }
+            if (_humanRotateAnimating) return;
+            _humanRotateAnimating = true;
+
+            const duration = 400; // ms
+            const startZ = patientMesh.rotation.z;
+            const endZ = startZ + Math.PI; // 180 degrees
+            const startTime = performance.now();
+
+            function easeInOut(t) {
+                // smoothstep style easing
+                return 0.5 - 0.5 * Math.cos(Math.PI * Math.min(Math.max(t, 0), 1));
+            }
+
+            function step(now) {
+                const t = (now - startTime) / duration;
+                const eased = easeInOut(t);
+                patientMesh.rotation.z = startZ + (endZ - startZ) * eased;
+                if (t < 1) {
+                    _humanRotateAnimId = requestAnimationFrame(step);
+                } else {
+                    _humanRotateAnimId = null;
+                    _humanRotateAnimating = false;
+                }
+            }
+
+            _humanRotateAnimId = requestAnimationFrame(step);
+        };
+
         window.resetHumanRotation = function () {
             if (!patientMesh) { console.warn('resetHumanRotation: patientMesh not loaded'); return; }
             if (_humanRotateAnimId) { cancelAnimationFrame(_humanRotateAnimId); _humanRotateAnimId = null; }
             _humanRotateAnimating = false;
             patientMesh.rotation.y = 0;
+            patientMesh.rotation.z = 0;
         };
 
         window.stopAllAnimations = function (scanFinishedNaturally = false) {
