@@ -164,23 +164,21 @@
             <button onclick="viewSagittal()">Sagittal View</button>
         </div>
 
-        <div class="sidebar-title">Display Options</div>
+        <!--<div class="sidebar-title">Display Options</div>
         <div class="checkbox-group">
             <input type="checkbox" id="showAnatomicalLabelsCheckbox" onchange="toggleAnatomicalLabelsVisibility()" checked>
             <label for="showAnatomicalLabelsCheckbox">Show Anatomical Labels</label>
-        </div>
-
-        <div class="sidebar-title">Laser Options</div>
+        </div>-->
+        <!--<div class="sidebar-title">Laser Options</div>
         <div class="checkbox-group">
             <input type="checkbox" id="lapLasersCheckbox" checked>
             <label for="lapLasersCheckbox">Show LAP Lasers</label>
-        </div>
-        <div class="checkbox-group">
+        </div>-->
+        <!--<div class="checkbox-group">
             <input type="checkbox" id="fixedGantryLasersCheckbox" checked>
             <label for="fixedGantryLasersCheckbox">Show Fixed Gantry Lasers</label>
-        </div>
-
-        <div class="sidebar-title">Laser Controls</div>
+        </div>-->
+        <!--<div class="sidebar-title">Laser Controls</div>
         <div class="button-group">
             <span>Lateral (X)</span>
             <button onclick="moveLasers(-1, 0, 0)">← Left</button>
@@ -199,7 +197,7 @@
         <div class="button-group">
             <span>Laser Position</span>
             <span id="laserPositionDisplay" class="position-display">X:0.0, Y:0.0, Z:0.0</span>
-        </div>
+        </div>-->
 
         <div class="sidebar-title">Couch Controls</div>
         <div class="button-group">
@@ -225,9 +223,11 @@
         <div class="sidebar-title">Model Controls</div>
         <div class="button-group">
             <button id="rotateHumanBtn" onclick="rotateHuman180()" disabled>Anterior/Posterior</button>
-            <button id="rotateHumanZBtn" onclick="rotateHumanZ180()" disabled>Interior/Superior</button>
+            <button id="feetFirstBtn" onclick="setFeetFirst()" disabled>Interior/Superior</button>
+        </div>
+        <div class="button-group">
             <button onclick="resetHumanRotation()">Reset Patient Rotation</button>
-        </div>  
+        </div>
 
         <div class="sidebar-title">Scan & Beam</div>
         <div class="button-group">
@@ -239,9 +239,10 @@
         </div>
         <div id="scanStatusDisplay" class="scan-status">Status: Idle</div>
         <div class="checkbox-group">
-            <input type="checkbox" id="beamVisibilityCheckbox" onchange="toggleBeamVisibility()">
+            <input type="checkbox" id="beamVisibilityCheckbox" onchange="toggleBeamVisibility()" checked>
             <label for="beamVisibilityCheckbox">Show Treatment Beam</label>
         </div>
+        <div id="collisionStatusDisplay" class="scan-status">Laser-Tumor: Clear</div>
         <div class="button-group">
             <button id="rotateGantryBtn" onclick="toggleGantryRotation()">Rotate Gantry</button>
         </div>
@@ -322,11 +323,16 @@
         let gantryGroup, tubeMesh, detectorMesh, gantryRingMesh;
         let treatmentBeamHelper;
 
+        const LASER_TUMOR_MARGIN = 0.25;
+
         let upperArmL = null;
         let upperArmR = null;
 
         let _humanRotateAnimId = null;
         let _humanRotateAnimating = false;
+
+        let patientOriginalLocalMatrix = null;
+        let feetFirstActive = false;
 
         // New: separate inner + outer models and inner pivot
         let gantryInnerModel = null;
@@ -419,7 +425,7 @@
 
             // LAP lasers: set initial position halfway between gantry and patient couch
             const lapOriginZ = (longitudinalLimitOut + 0) / 2;
-            const lapLaserInitialPos = new THREE.Vector3(0, userDefinedIsocenterPos.y, lapOriginZ);
+            const lapLaserInitialPos = new THREE.Vector3(0, userDefinedIsocenterPos.y, lapOriginZ + 5);
             lapLaserGroup.position.copy(lapLaserInitialPos);
             userDefinedIsocenterPos.copy(lapLaserInitialPos);
 
@@ -487,7 +493,7 @@
             const lapLaserLength = 12;
             const lapLaserMaterial = new THREE.LineBasicMaterial({ color: 0x00ff00, linewidth: 2, transparent: true, opacity: 0.7 });
             lapLaserGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-lapLaserLength / 2, 0, 0), new THREE.Vector3(lapLaserLength / 2, 0, 0)]), lapLaserMaterial));
-            lapLaserGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, -lapLaserLength / 2), new THREE.Vector3(0, 0, lapLaserLength / 2)]), lapLaserMaterial));
+            /*lapLaserGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, -lapLaserLength / 12), new THREE.Vector3(0, 0, lapLaserLength / 2)]), lapLaserMaterial));*/
             lapLaserGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, -lapLaserLength / 2, 0), new THREE.Vector3(0, lapLaserLength / 2, 0)]), lapLaserMaterial));
             scene.add(lapLaserGroup);
         }
@@ -497,9 +503,9 @@
             fixedGantryLaserGroup.position.set(0, 0, 0);
             const fixedLaserLength = 14;
             const fixedLaserMaterial = new THREE.LineBasicMaterial({ color: 0x3399ff, linewidth: 2, transparent: true, opacity: 0.7 });
-            fixedGantryLaserGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-fixedLaserLength / 2, 0, 0), new THREE.Vector3(fixedLaserLength / 2, 0, 0)]), fixedLaserMaterial));
-            fixedGantryLaserGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, -fixedLaserLength / 2), new THREE.Vector3(0, 0, fixedLaserLength / 2)]), fixedLaserMaterial));
-            fixedGantryLaserGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, -fixedLaserLength / 2, 0), new THREE.Vector3(0, fixedLaserLength / 2, 0)]), fixedLaserMaterial));
+            //fixedGantryLaserGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-fixedLaserLength / 2, 0, 0), new THREE.Vector3(fixedLaserLength / 2, 0, 0)]), fixedLaserMaterial));
+            //fixedGantryLaserGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, -fixedLaserLength / 2), new THREE.Vector3(0, 0, fixedLaserLength / 2)]), fixedLaserMaterial));
+            //fixedGantryLaserGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, -fixedLaserLength / 2, 0), new THREE.Vector3(0, fixedLaserLength / 2, 0)]), fixedLaserMaterial));
             // attach to gantryGroup (outer/inner visuals will be children of gantryGroup)
             if (gantryGroup) gantryGroup.add(fixedGantryLaserGroup);
         }
@@ -569,12 +575,18 @@
                 model.position.set(0, offsetY, 30);
                 couchGroup.add(model);
                 patientMesh = model;
+                patientMesh.updateMatrix();
+                patientMesh.updateMatrixWorld(true);
+                patientOriginalLocalMatrix = patientMesh.matrix.clone();
+                feetFirstActive = false;
+                patientPivot = humanBbox.getCenter(new THREE.Vector3()).add(new THREE.Vector3(0, offsetY, 0));
+                console.log("PatientPivot = ", patientPivot);
 
                 // enable rotate button once patient model is present
                 const rotateHumanBtn = document.getElementById('rotateHumanBtn');
                 if (rotateHumanBtn) rotateHumanBtn.disabled = false;
-                const rotateHumanXBtn = document.getElementById('rotateHumanZBtn');
-                if (rotateHumanXBtn) rotateHumanXBtn.disabled = false;
+                const feetFirstBtn = document.getElementById('feetFirstBtn');
+                if (feetFirstBtn) feetFirstBtn.disabled = false;
 
                 upperArmL = model.getObjectByName('upper_armL') || model.getObjectByName('upper_arm_l') || model.getObjectByName('UpperArm.L');
                 upperArmR = model.getObjectByName('upper_armR') || model.getObjectByName('upper_arm_r') || model.getObjectByName('UpperArm.R');
@@ -613,9 +625,20 @@
                 const tumorGeo = new THREE.SphereGeometry(TUMOR_RADIUS, 16, 16);
                 const tumorMat = new THREE.MeshStandardMaterial({ color: 0xff4136, emissive: 0x440000 });
                 tumorMesh = new THREE.Mesh(tumorGeo, tumorMat);
-                tumorMesh.position.set(0, 2.7, 0.2);
+
+                // Tumor position options (one is the original). User can fine-tune these later.
+                const tumorOptions = [
+                    new THREE.Vector3(0.1, 3, 0.2),   // original
+                    new THREE.Vector3(0, 2.15, 0.2),// alternative 1
+                    new THREE.Vector3(0, 4.3, 0.2) // alternative 2
+                ];
+                const choiceIndex = Math.floor(Math.random() * tumorOptions.length);
+                const chosenPos = tumorOptions[choiceIndex];
+                tumorMesh.position.copy(chosenPos);
                 tumorMesh.castShadow = true;
                 model.add(tumorMesh);
+
+                console.log(`Tumor position chosen [index=${choiceIndex}]:`, chosenPos);
 
                 const labelDepthOffset = newSize.z / 2 + 0.7;
                 const labelWidthOffset = newSize.x / 2 + 0.5;
@@ -641,10 +664,32 @@
                 fallbackPatient.receiveShadow = true;
                 couchGroup.add(fallbackPatient);
                 patientMesh = fallbackPatient;
+                patientMesh.updateMatrix();
+                patientMesh.updateMatrixWorld(true);
+                patientOriginalLocalMatrix = patientMesh.matrix.clone();
+                feetFirstActive = false;
 
-                tumorMesh = new THREE.Mesh(new THREE.SphereGeometry(TUMOR_RADIUS, 16, 16), new THREE.MeshStandardMaterial({ color: 0xff4136, emissive: 0x440000 }));
-                tumorMesh.position.set(0, 0, 0);
+                // Tumor -- use three choices here too (one matches the original fallback)
+                const tumorGeo = new THREE.SphereGeometry(TUMOR_RADIUS, 16, 16);
+                const tumorMat = new THREE.MeshStandardMaterial({ color: 0xff4136, emissive: 0x440000 });
+                tumorMesh = new THREE.Mesh(tumorGeo, tumorMat);
+
+                const tumorOptionsFallback = [
+                    new THREE.Vector3(0, 0, 0),          // original fallback center
+                    new THREE.Vector3(0.4, 0.2, -0.6),   // alternative 1
+                    new THREE.Vector3(-0.5, 0.3, 0.9)    // alternative 2
+                ];
+                const choiceIndexFallback = Math.floor(Math.random() * tumorOptionsFallback.length);
+                const chosenPosFallback = tumorOptionsFallback[choiceIndexFallback];
+                tumorMesh.position.copy(chosenPosFallback);
                 patientMesh.add(tumorMesh);
+
+                console.log(`Tumor position chosen (fallback) [index=${choiceIndexFallback}]:`, chosenPosFallback);
+
+                const feetFirstBtn = document.getElementById('feetFirstBtn');
+                const rotateHumanBtn = document.getElementById('rotateHumanBtn');
+                if (rotateHumanBtn) rotateHumanBtn.disabled = false;
+                if (feetFirstBtn) feetFirstBtn.disabled = false;
 
                 //const labelPatientYPos = patientBaseY;
                 //const labelPatientAntYPos = patientBaseY + PATIENT_CYLINDER_RADIUS + 0.4;
@@ -1058,42 +1103,100 @@
             _humanRotateAnimId = requestAnimationFrame(step);
         };
 
-        window.rotateHumanZ180 = function () {
-            if (!patientMesh) { console.warn('rotateHuman180: patientMesh not loaded'); return; }
-            if (_humanRotateAnimating) return;
-            _humanRotateAnimating = true;
+        // Fixed: rotate feet-first around the patient's actual world center while preserving position
+        window.setFeetFirst = function () {
+            if (!patientMesh || !couchGroup) { console.warn('setFeetFirst: patientMesh or couchGroup not ready'); return; }
 
-            const duration = 400; // ms
-            const startZ = patientMesh.rotation.z;
-            const endZ = startZ + Math.PI; // 180 degrees
-            const startTime = performance.now();
+            // Cancel any in-flight human rotation animation.
+            if (_humanRotateAnimId) { cancelAnimationFrame(_humanRotateAnimId); _humanRotateAnimId = null; _humanRotateAnimating = false; }
 
-            function easeInOut(t) {
-                // smoothstep style easing
-                return 0.5 - 0.5 * Math.cos(Math.PI * Math.min(Math.max(t, 0), 1));
-            }
+            // Ensure matrices are current
+            scene.updateMatrixWorld(true);
+            couchGroup.updateMatrixWorld(true);
+            patientMesh.updateMatrixWorld(true);
 
-            function step(now) {
-                const t = (now - startTime) / duration;
-                const eased = easeInOut(t);
-                patientMesh.rotation.z = startZ + (endZ - startZ) * eased;
-                if (t < 1) {
-                    _humanRotateAnimId = requestAnimationFrame(step);
-                } else {
-                    _humanRotateAnimId = null;
-                    _humanRotateAnimating = false;
+            // If already feet-first, restore original transform
+            if (feetFirstActive) {
+                if (patientOriginalLocalMatrix) {
+                    const pos = new THREE.Vector3();
+                    const quat = new THREE.Quaternion();
+                    const scale = new THREE.Vector3();
+                    patientOriginalLocalMatrix.decompose(pos, quat, scale);
+                    patientMesh.position.copy(pos);
+                    patientMesh.quaternion.copy(quat);
+                    patientMesh.scale.copy(scale);
+                    patientMesh.updateMatrix();
+                    patientMesh.updateMatrixWorld(true);
                 }
+                feetFirstActive = false;
+                return;
             }
 
-            _humanRotateAnimId = requestAnimationFrame(step);
+            // Ensure we have an original matrix saved (save now if not)
+            if (!patientOriginalLocalMatrix) {
+                patientMesh.updateMatrix();
+                patientOriginalLocalMatrix = patientMesh.matrix.clone();
+            }
+
+            // Compute pivot as bounding-box center in world space
+            const bbox = new THREE.Box3().setFromObject(patientMesh);
+            const pivotWorld = bbox.getCenter(new THREE.Vector3());
+
+            // Build matrix that rotates about pivot: T(pivot) * R_y(180deg) * T(-pivot)
+            const Tneg = new THREE.Matrix4().makeTranslation(-pivotWorld.x, -pivotWorld.y, -pivotWorld.z);
+            const R = new THREE.Matrix4().makeRotationY(Math.PI);
+            const Tpos = new THREE.Matrix4().makeTranslation(pivotWorld.x, pivotWorld.y, pivotWorld.z);
+            const rotAboutPivot = new THREE.Matrix4().multiplyMatrices(Tpos, new THREE.Matrix4().multiplyMatrices(R, Tneg));
+
+            // Compute new world matrix for the patient after rotation and convert into couch local space.
+            const newWorldMatrix = new THREE.Matrix4().multiplyMatrices(rotAboutPivot, patientMesh.matrixWorld);
+            const couchWorldInv = new THREE.Matrix4().copy(couchGroup.matrixWorld).invert();
+            const newLocalMatrix = new THREE.Matrix4().multiplyMatrices(couchWorldInv, newWorldMatrix);
+
+            // Decompose and apply to patientMesh (position, quaternion, scale).
+            const newPos = new THREE.Vector3();
+            const newQuat = new THREE.Quaternion();
+            const newScale = new THREE.Vector3();
+            newLocalMatrix.decompose(newPos, newQuat, newScale);
+
+            patientMesh.position.copy(newPos);
+            patientMesh.quaternion.copy(newQuat);
+            patientMesh.scale.copy(newScale);
+
+            // Force matrix updates so the scene stays consistent.
+            patientMesh.updateMatrix();
+            patientMesh.updateMatrixWorld(true);
+
+            feetFirstActive = true;
+            _humanRotateAnimating = false;
+            _humanRotateAnimId = null;
         };
 
         window.resetHumanRotation = function () {
-            if (!patientMesh) { console.warn('resetHumanRotation: patientMesh not loaded'); return; }
+            if (!patientMesh || !couchGroup) { console.warn('resetHumanRotation: patientMesh or couchGroup not loaded'); return; }
             if (_humanRotateAnimId) { cancelAnimationFrame(_humanRotateAnimId); _humanRotateAnimId = null; }
             _humanRotateAnimating = false;
-            patientMesh.rotation.y = 0;
-            patientMesh.rotation.z = 0;
+
+            // Restore stored original local transform if present
+            if (patientOriginalLocalMatrix) {
+                const pos = new THREE.Vector3();
+                const quat = new THREE.Quaternion();
+                const scale = new THREE.Vector3();
+                patientOriginalLocalMatrix.decompose(pos, quat, scale);
+                patientMesh.position.copy(pos);
+                patientMesh.quaternion.copy(quat);
+                patientMesh.scale.copy(scale);
+                patientMesh.updateMatrix();
+                patientMesh.updateMatrixWorld(true);
+            } else {
+                // Fallback: zero rotations if we don't have stored original
+                patientMesh.rotation.y = 0;
+                patientMesh.rotation.z = 0;
+                patientMesh.updateMatrix();
+                patientMesh.updateMatrixWorld(true);
+            }
+
+            feetFirstActive = false;
         };
 
         window.stopAllAnimations = function (scanFinishedNaturally = false) {
@@ -1104,6 +1207,16 @@
             if (gantryAnimationRequestId) { cancelAnimationFrame(gantryAnimationRequestId); gantryAnimationRequestId = null; }
             setMovementAndScanButtonsEnabled(true);
             rotateGantryBtn.textContent = "Rotate Gantry";
+
+            // If the scan completed naturally, restore patient to original position/rotation.
+            if (scanFinishedNaturally) {
+                try {
+                    resetHumanRotation();
+                } catch (e) {
+                    console.warn('Failed to reset patient after scan', e);
+                }
+            }
+
             if (!scanFinishedNaturally && (wasScanning || wasRotating)) { updateScanStatus("Stopped"); }
             else if (scanFinishedNaturally) { updateScanStatus("Scan Complete"); }
             else { updateScanStatus("Idle"); }
@@ -1172,6 +1285,84 @@
             }
         }
 
+
+        function _distanceSqPointToSegment(point, a, b) {
+            const line = new THREE.Line3(a, b);
+            const closest = new THREE.Vector3();
+            line.closestPointToPoint(point, true, closest);
+            return closest.distanceToSquared(point);
+        }
+
+        function _setTumorEmissive(hex) {
+            if (!tumorMesh) return;
+            if (Array.isArray(tumorMesh.material)) {
+                tumorMesh.material.forEach(m => { if (m && m.emissive) m.emissive.setHex(hex); });
+            } else if (tumorMesh.material && tumorMesh.material.emissive) {
+                tumorMesh.material.emissive.setHex(hex);
+            }
+        }
+
+        function _setLaserGroupColor(group, hex) {
+            if (!group) return;
+            group.children.forEach(child => {
+                if (child && child.material) {
+                    // LineBasicMaterial may be shared; ensure we set on the instance(s)
+                    try { child.material.color.setHex(hex); child.material.needsUpdate = true; } catch (e) { /* ignore */ }
+                }
+            });
+        }
+
+        // Performs collision test between all visible laser lines and the tumor.
+        // Updates visual feedback (tumor emissive, laser colors, and collision status text).
+        function checkLaserTumorCollisions() {
+            if (!tumorMesh) return false;
+            const tumorWorld = new THREE.Vector3();
+            tumorMesh.getWorldPosition(tumorWorld);
+
+            const threshold = TUMOR_RADIUS + LASER_TUMOR_MARGIN;
+            const thresholdSq = threshold * threshold;
+
+            let collided = false;
+
+            const groups = [lapLaserGroup, fixedGantryLaserGroup];
+
+            groups.forEach(group => {
+                if (!group || !group.visible) return;
+                group.children.forEach(line => {
+                    if (!line || !line.geometry) return;
+                    const posAttr = line.geometry.attributes && line.geometry.attributes.position;
+                    if (!posAttr || posAttr.count < 2) return;
+
+                    const startLocal = new THREE.Vector3().fromBufferAttribute(posAttr, 0);
+                    const endLocal = new THREE.Vector3().fromBufferAttribute(posAttr, 1);
+
+                    // convert to world positions
+                    line.localToWorld(startLocal);
+                    line.localToWorld(endLocal);
+
+                    const d2 = _distanceSqPointToSegment(tumorWorld, startLocal, endLocal);
+                    if (d2 <= thresholdSq) collided = true;
+                });
+            });
+
+            // Visual feedback
+            if (collided) {
+                _setTumorEmissive(0xff0000); // bright red glow
+                _setLaserGroupColor(lapLaserGroup, 0xff0000);
+                _setLaserGroupColor(fixedGantryLaserGroup, 0xff0000);
+                const el = document.getElementById('collisionStatusDisplay');
+                if (el) el.textContent = 'Laser-Tumor: COLLISION';
+            } else {
+                _setTumorEmissive(0x440000); // original subtle emissive
+                _setLaserGroupColor(lapLaserGroup, 0x00ff00); // lap green
+                _setLaserGroupColor(fixedGantryLaserGroup, 0x3399ff); // fixed blue
+                const el = document.getElementById('collisionStatusDisplay');
+                if (el) el.textContent = 'Laser-Tumor: Clear';
+            }
+
+            return collided;
+        }
+
         function onWindowResize() {
             if (!camera || !renderer) return;
             const newWidth = window.innerWidth - 220;
@@ -1198,7 +1389,10 @@
             } else if (!motionEnabled && patientMesh && patientMesh.position.y !== patientBaseY) {
                 patientMesh.position.y = patientBaseY;
             }
+
             updateTreatmentBeamPosition();
+
+            checkLaserTumorCollisions();
             if (renderer && controls && scene && camera) {
                 controls.update();
                 renderer.render(scene, camera);
