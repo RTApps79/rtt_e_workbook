@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 3A: Procedures (Upper Body) Master Simulator</title>
+    <style>
+        :root {
+            --bg: #f0f9ff; /* Light Blue for Procedures */
+            --card-bg: #ffffff;
+            --primary: #0c4a6e; /* Deep Blue */
+            --accent: #0ea5e9; /* Bright Blue */
+            --text: #333;
+            --border: #7dd3fc;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .sim-container {
+            max-width: 900px;
+            width: 100%;
+            background: var(--card-bg);
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border-top: 8px solid var(--accent);
+        }
+
+        /* Certificate Styles */
+        #certificate-area {
+            display: none;
+            text-align: center;
+            padding: 50px;
+            border: 15px solid var(--primary);
+            background: white;
+            color: #333;
+            font-family: 'Times New Roman', serif;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            box-sizing: border-box;
+        }
+        
+        @media print {
+            body * { visibility: hidden; }
+            #certificate-area, #certificate-area * { visibility: visible; }
+            #certificate-area { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+            .no-print { display: none !important; }
+        }
+
+        /* Header */
+        .header-panel {
+            background: var(--white);
+            padding: 30px;
+            border-bottom: 1px solid #eee;
+            text-align: center;
+        }
+        .spec-tracker {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .spec-badge {
+            background: #e0f2fe;
+            color: var(--primary);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+            border: 1px solid var(--border);
+            opacity: 0.5;
+        }
+        .active-spec { background: var(--primary); color: white; opacity: 1; transform: scale(1.1); transition: all 0.3s; }
+
+        /* Progress */
+        .progress-container { width: 100%; height: 8px; background: #eee; }
+        .progress-bar { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s; }
+
+        /* Scenario Area */
+        .scenario-box { padding: 40px; }
+        
+        .chart-display {
+            background: #fafafa;
+            border-left: 5px solid var(--accent);
+            padding: 20px;
+            margin-bottom: 25px;
+            font-family: 'Courier New', monospace;
+            color: #444;
+            border-radius: 4px;
+        }
+        .chart-row { display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px dashed #ddd; }
+        
+        .question { font-size: 1.3em; font-weight: 600; color: var(--primary); margin-bottom: 25px; }
+
+        /* Options */
+        .options-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+        .option-btn {
+            background: white;
+            border: 2px solid #eee;
+            padding: 18px;
+            border-radius: 8px;
+            text-align: left;
+            font-size: 1.05em;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .option-btn:hover:not(:disabled) { border-color: var(--accent); background: #f0f9ff; }
+        .correct { background: #dcfce7 !important; border-color: #22c55e !important; color: #14532d; }
+        .incorrect { background: #fee2e2 !important; border-color: #ef4444 !important; color: #7f1d1d; }
+
+        /* Feedback */
+        .feedback {
+            margin-top: 25px;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border-left: 5px solid #64748b;
+            display: none;
+        }
+
+        /* Start Screen */
+        .start-screen { text-align: center; padding: 60px; }
+        .name-input { padding: 15px; font-size: 1.2em; border-radius: 8px; border: 2px solid #ddd; width: 60%; margin-top: 20px; }
+        .start-btn { background: var(--accent); color: white; padding: 15px 50px; font-size: 1.3em; border: none; border-radius: 50px; cursor: pointer; margin-top: 30px; }
+
+        /* Results Screen */
+        .results-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: left; margin-top: 30px; }
+        .result-item { background: #f9fafb; padding: 15px; border-radius: 8px; border-left: 4px solid #ccc; }
+        .high-score { border-left-color: #2ecc71; }
+        .low-score { border-left-color: #e74c3c; }
+
+    </style>
+</head>
+<body>
+
+<div id="certificate-area">
+    <div style="border: 5px double #0c4a6e; padding: 40px; height: 90%;">
+        <div style="font-size: 3em; font-weight: bold; margin-bottom: 10px; color: #0c4a6e;">Certificate of Achievement</div>
+        <div style="font-size: 1.5em; margin-bottom: 30px;">ARRT Procedures (Upper Body)</div>
+        <div style="width: 100px; height: 100px; background: #e0f2fe; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 30px auto; font-size: 2em; font-weight: bold; color: #0c4a6e;">☢</div>
+        <div style="font-size: 1.2em;">This certifies that</div>
+        <div id="cert-name" style="font-size: 2.5em; font-weight: bold; margin: 20px 0; font-family: 'Segoe UI', sans-serif; border-bottom: 2px solid #333; display: inline-block; padding: 0 20px;">Student Name</div>
+        <div style="font-size: 1.2em; margin-top: 20px;">has successfully demonstrated competency in Section 3A: Upper Body Procedures.</div>
+        <div style="font-size: 1.2em; margin-top: 30px;">Final Score: <span id="cert-score" style="font-weight: bold;">--</span></div>
+        <div style="font-size: 1.2em;">Date: <span id="cert-date">--</span></div>
+        <div style="margin-top: 80px; display: flex; justify-content: space-around;">
+            <div style="border-top: 1px solid #333; width: 250px; padding-top: 10px;">Clinical Instructor Signature</div>
+            <div style="border-top: 1px solid #333; width: 250px; padding-top: 10px;">Simulation Director</div>
+        </div>
+    </div>
+</div>
+
+<div class="sim-container" id="game-ui">
+    <div class="header-panel">
+        <h1>Section 3A: Procedures (Upper)</h1>
+        <p>CNS, Head & Neck, Thorax & Breast</p>
+        <div class="spec-tracker">
+            <span class="spec-badge" id="badge-cns">CNS / Brain</span>
+            <span class="spec-badge" id="badge-hn">Head & Neck</span>
+            <span class="spec-badge" id="badge-lung">Thorax / Lung</span>
+            <span class="spec-badge" id="badge-brst">Breast</span>
+            <span class="spec-badge" id="badge-path">Pathology</span>
+        </div>
+    </div>
+    <div class="progress-container"><div class="progress-bar" id="progress"></div></div>
+
+    <div id="game-area">
+        <div class="start-screen">
+            <h2>Procedures: Part A</h2>
+            <p>25 Scenarios covering Anatomy, Setup, and Dose Limits for the Upper Body.</p>
+            <input type="text" id="user-name" class="name-input" placeholder="Enter Your Name for Certificate">
+            <br>
+            <button class="start-btn" onclick="startSim()">Begin Section 3A</button>
+        </div>
+    </div>
+
+    <div class="footer" style="padding: 20px; display: flex; justify-content: flex-end;">
+        <button class="start-btn" id="next-btn" style="display:none; font-size:1em; padding: 10px 30px;" onclick="nextQuestion()">Next &rarr;</button>
+    </div>
+</div>
+
+<script>
+    // --- DATABASE: 25 UPPER BODY SCENARIOS ---
+    const questions = [
+        // --- CNS / BRAIN ---
+        {
+            spec: "badge-cns",
+            topic: "Whole Brain Setup",
+            chart: `<div class="chart-row"><strong>Procedure:</strong> Whole Brain (Palliative).</div><div class="chart-row"><strong>Fields:</strong> Opposed Laterals.</div><div class="chart-row"><strong>Anatomy:</strong> The Inferior border intersects the orbit.</div>`,
+            q: "To prevent cataracts, how is the inferior border typically aligned relative to the eye?",
+            options: [
+                {text: "Through the middle of the lens.", correct: false, fb: "Incorrect. This guarantees cataracts."},
+                {text: "At the Supra-Orbital Ridge (Angled to avoid the lens).", correct: true, fb: "Correct. The border usually runs from the Supra-Orbital Ridge (brow) to the Mastoid Tip/EAM, utilizing a collimator angle or blocks to shield the lens while covering the cribriform plate."},
+                {text: "Below the maxillary sinus.", correct: false, fb: "Incorrect. Too low; treats unnecessary facial structures."},
+                {text: "Through the tip of the nose.", correct: false, fb: "Incorrect."}
+            ]
+        },
+        {
+            spec: "badge-cns",
+            topic: "Spine Tolerance",
+            chart: `<div class="chart-row"><strong>Plan:</strong> 3-Field Esophagus.</div><div class="chart-row"><strong>Dose:</strong> 50 Gy total.</div><div class="chart-row"><strong>OAR:</strong> Spinal Cord.</div>`,
+            q: "What is the generally accepted TD 5/5 dose limit for the Spinal Cord to prevent myelitis/necrosis?",
+            options: [
+                {text: "60 Gy", correct: false, fb: "Incorrect. This causes necrosis."},
+                {text: "45-50 Gy", correct: true, fb: "Correct. 45 Gy is the standard conservative limit; 50 Gy is the absolute max limit in most protocols."},
+                {text: "20 Gy", correct: false, fb: "Incorrect. Too low."},
+                {text: "70 Gy", correct: false, fb: "Incorrect."}
+            ]
+        },
+        {
+            spec: "badge-cns",
+            topic: "Emergency",
+            chart: `<div class="chart-row"><strong>Pt:</strong> Lung Cancer metastasis to T-Spine.</div><div class="chart-row"><strong>Complaint:</strong> Sudden loss of bladder control and leg weakness.</div>`,
+            q: "What is this condition called and what is the treatment urgency?",
+            options: [
+                {text: "Sciatica; Routine.", correct: false, fb: "Incorrect."},
+                {text: "Spinal Cord Compression; Emergency.", correct: true, fb: "Correct. This is a radiation oncology emergency requiring immediate treatment (and steroids) to prevent permanent paralysis."},
+                {text: "Cauda Equina; Urgent (48 hours).", correct: false, fb: "Incorrect. It must be treated within hours, not days."},
+                {text: "Brown-Sequard; Palliative.", correct: false, fb: "Incorrect."}
+            ]
+        },
+        {
+            spec: "badge-cns",
+            topic: "CSI Junction",
+            chart: `<div class="chart-row"><strong>Technique:</strong> Craniospinal Irradiation (CSI).</div><div class="chart-row"><strong>Problem:</strong> Divergence of the Brain fields into the Spine field.</div>`,
+            q: "How do we geometrically match the divergence of the lateral brain fields to the posterior spine field?",
+            options: [
+                {text: "Rotate the Collimator on the Brain fields.", correct: false, fb: "Incorrect. Collimator rotation matches the *Spine* divergence. We need to match *Brain* divergence."},
+                {text: "Kick the Couch (Patient feet toward the gantry).", correct: true, fb: "Correct. Kicking the couch aligns the inferior border of the brain field so it is vertical (non-divergent) relative to the spine field."},
+                {text: "Use a Half-Beam block on the spine.", correct: false, fb: "Incorrect. This helps superiorly, but doesn't fix the lateral brain divergence."},
+                {text: "No action needed if a gap is calculated.", correct: false, fb: "Incorrect. Gaps handle depth, but rotations handle the 3D geometry."}
+            ]
+        },
+
+        // --- HEAD & NECK ---
+        {
+            spec: "badge-hn",
+            topic: "Immobilization",
+            chart: `<div class="chart-row"><strong>Device:</strong> Thermoplastic Mask (5-point).</div><div class="chart-row"><strong>Pt Condition:</strong> Significant weight loss (15 lbs) since simulation.</div><div class="chart-row"><strong>Check:</strong> Mask is loose; air gaps visible.</div>`,
+            q: "What is the dosimetric risk of treating with a loose mask?",
+            options: [
+                {text: "Increased skin dose.", correct: false, fb: "Incorrect. Air gaps usually decrease skin dose (lack of bolus effect), but the bigger risk is geometric miss."},
+                {text: "Geometric miss of the target (PTV).", correct: true, fb: "Correct. If the patient can move inside the mask, the high-dose IMRT gradients may shift into the spinal cord or parotids, or miss the tumor."},
+                {text: "Overdosing the brainstem.", correct: false, fb: "Incorrect. While possible due to a shift, 'Geometric Miss' is the umbrella term."},
+                {text: "None, daily IGRT fixes it.", correct: false, fb: "Incorrect. IGRT aligns bone, but if the patient can rotate inside the mask, the dose distribution is compromised."}
+            ]
+        },
+        {
+            spec: "badge-hn",
+            topic: "Anatomy",
+            chart: `<div class="chart-row"><strong>Plan:</strong> Parotid Sparing IMRT.</div><div class="chart-row"><strong>Structure:</strong> Stensen's Duct.</div>`,
+            q: "Which gland does Stensen's Duct drain?",
+            options: [
+                {text: "Submandibular Gland", correct: false, fb: "Incorrect. That is Wharton's Duct."},
+                {text: "Parotid Gland", correct: true, fb: "Correct. Stensen's duct drains the Parotid gland into the buccal cavity (cheek)."},
+                {text: "Sublingual Gland", correct: false, fb: "Incorrect."},
+                {text: "Thyroid Gland", correct: false, fb: "Incorrect."}
+            ]
+        },
+        {
+            spec: "badge-hn",
+            topic: "Dose Constraints",
+            chart: `<div class="chart-row"><strong>OAR:</strong> Parotid Glands.</div><div class="chart-row"><strong>Goal:</strong> Prevent Xerostomia (Dry Mouth).</div>`,
+            q: "What is the standard mean dose constraint for the Parotid gland?",
+            options: [
+                {text: "< 25-30 Gy", correct: true, fb: "Correct. Keeping the mean dose < 26 Gy preserves salivary function."},
+                {text: "< 45 Gy", correct: false, fb: "Incorrect. At 45 Gy, function is usually lost permanently."},
+                {text: "< 10 Gy", correct: false, fb: "Incorrect. Too restrictive/impossible."},
+                {text: "< 60 Gy", correct: false, fb: "Incorrect."}
+            ]
+        },
+        {
+            spec: "badge-hn",
+            topic: "Lymphatics",
+            chart: `<div class="chart-row"><strong>Site:</strong> Nasopharynx.</div><div class="chart-row"><strong>Node:</strong> Enlarged node behind the ear (mastoid).</div>`,
+            q: "Which lymph node group is located posterior to the ear?",
+            options: [
+                {text: "Submental", correct: false, fb: "Incorrect. Under the chin."},
+                {text: "Retroauricular (Mastoid)", correct: true, fb: "Correct. Often involved in scalp or ear lesions."},
+                {text: "Retropharyngeal", correct: false, fb: "Incorrect. Deep in the neck."},
+                {text: "Supraclavicular", correct: false, fb: "Incorrect. Above the collarbone."}
+            ]
+        },
+
+        // --- THORAX / LUNG ---
+        {
+            spec: "badge-lung",
+            topic: "Motion Management",
+            chart: `<div class="chart-row"><strong>Tumor:</strong> Lower Lobe Lung.</div><div class="chart-row"><strong>Motion:</strong> Moves 3cm superior/inferior with breathing.</div><div class="chart-row"><strong>Technique:</strong> 4D-CT MIP (Maximum Intensity Projection).</div>`,
+            q: "What volume is created by combining the tumor position in ALL phases of respiration?",
+            options: [
+                {text: "GTV (Gross Tumor Volume)", correct: false, fb: "Incorrect."},
+                {text: "ITV (Internal Target Volume)", correct: true, fb: "Correct. The ITV encompasses the GTV plus the internal margin for motion (IM). It represents the full envelope of movement."},
+                {text: "PTV (Planning Target Volume)", correct: false, fb: "Incorrect. PTV adds setup margin to the ITV."},
+                {text: "CTV (Clinical Target Volume)", correct: false, fb: "Incorrect."}
+            ]
+        },
+        {
+            spec: "badge-lung",
+            topic: "Histology",
+            chart: `<div class="chart-row"><strong>Dx:</strong> Small Cell Lung Cancer (SCLC).</div><div class="chart-row"><strong>Characteristics:</strong> Central mass, rapid growth.</div>`,
+            q: "Because SCLC has a very high rate of brain metastasis, what prophylactic treatment is often prescribed?",
+            options: [
+                {text: "PCI (Prophylactic Cranial Irradiation).", correct: true, fb: "Correct. Even if MRI is negative, microscopic disease is assumed. PCI significantly increases survival in SCLC."},
+                {text: "Chemotherapy only.", correct: false, fb: "Incorrect."},
+                {text: "Whole Spine Radiation.", correct: false, fb: "Incorrect."},
+                {text: "SRS to the pituitary.", correct: false, fb: "Incorrect."}
+            ]
+        },
+        {
+            spec: "badge-lung",
+            topic: "SBRT Setup",
+            chart: `<div class="chart-row"><strong>Plan:</strong> Lung SBRT (48 Gy / 4 fx).</div><div class="chart-row"><strong>Immobilization:</strong> BodyFIX (Vacuum bag with cover sheet).</div><div class="chart-row"><strong>Image:</strong> CBCT shows tumor matches, but ribs are off by 1cm.</div>`,
+            q: "Which anatomy is the priority for alignment?",
+            options: [
+                {text: "Ribs (Bone).", correct: false, fb: "Incorrect. For Lung SBRT, the target is the soft tissue tumor. Ribs move differently than the lung."},
+                {text: "Tumor (Soft Tissue).", correct: true, fb: "Correct. In SBRT, you treat the tumor, not the bone. If the tumor is aligned, you treat, even if ribs are slightly off (provided rotation is corrected)."},
+                {text: "Carina.", correct: false, fb: "Incorrect. Carina is a surrogate, but the tumor itself is visible on CBCT."},
+                {text: "Skin marks.", correct: false, fb: "Incorrect. Never treat SBRT based on skin."}
+            ]
+        },
+        {
+            spec: "badge-lung",
+            topic: "OAR Limits",
+            chart: `<div class="chart-row"><strong>OAR:</strong> Esophagus.</div><div class="chart-row"><strong>Plan:</strong> Concurrent Chemo-Radiation.</div>`,
+            q: "Exceeding the tolerance of the esophagus creates a risk for:",
+            options: [
+                {text: "Pneumonitis.", correct: false, fb: "Incorrect. That is Lung."},
+                {text: "Stricture / Perforation.", correct: true, fb: "Correct. High dose can cause fibrosis (stricture) making swallowing impossible, or perforation (hole), which is fatal."},
+                {text: "Pericarditis.", correct: false, fb: "Incorrect. That is Heart."},
+                {text: "Myelitis.", correct: false, fb: "Incorrect. That is Spinal Cord."}
+            ]
+        },
+
+        // --- BREAST ---
+        {
+            spec: "badge-brst",
+            topic: "Tangential Borders",
+            chart: `<div class="chart-row"><strong>Field:</strong> Medial Tangent.</div><div class="chart-row"><strong>Landmark:</strong> Midline of patient.</div>`,
+            q: "Where is the medial border of a standard breast tangent typically placed?",
+            options: [
+                {text: "Mid-axillary line.", correct: false, fb: "Incorrect. That is the Lateral border."},
+                {text: "Mid-sternum (Midline).", correct: true, fb: "Correct. The field usually extends to the midline to cover the medial breast tissue without crossing over to the contralateral breast."},
+                {text: "Suprasternal Notch.", correct: false, fb: "Incorrect. That is the superior border."},
+                {text: "Xiphoid Process.", correct: false, fb: "Incorrect. That is near the inferior border."}
+            ]
+        },
+        {
+            spec: "badge-brst",
+            topic: "Chest Wall Bolus",
+            chart: `<div class="chart-row"><strong>Pt:</strong> Post-Mastectomy.</div><div class="chart-row"><strong>Order:</strong> 0.5cm Bolus every other day (QOD).</div><div class="chart-row"><strong>Reason:</strong> High risk of recurrence in skin.</div>`,
+            q: "What is the physical effect of the bolus on the dose distribution?",
+            options: [
+                {text: "It increases beam penetration.", correct: false, fb: "Incorrect. It decreases penetration."},
+                {text: "It brings Dmax closer to the skin surface.", correct: true, fb: "Correct. Bolus mimics tissue. The beam 'builds up' inside the bolus, so the 100% dose (Dmax) lands on the patient's skin rather than deep inside."},
+                {text: "It spares the skin.", correct: false, fb: "Incorrect. It INCREASES skin dose (sacrifices sparing)."},
+                {text: "It shields the lung.", correct: false, fb: "Incorrect. Bolus is tissue equivalent, not a shield."}
+            ]
+        },
+        {
+            spec: "badge-brst",
+            topic: "Supraclavicular Match",
+            chart: `<div class="chart-row"><strong>Fields:</strong> Tangents + Supraclav (S'clav).</div><div class="chart-row"><strong>Problem:</strong> Divergence of the S'clav field down into the Tangents.</div>`,
+            q: "How do we prevent overlap at the match line?",
+            options: [
+                {text: "Angle the gantry 10 degrees.", correct: false, fb: "Incorrect."},
+                {text: "Kick the couch 90 degrees.", correct: false, fb: "Incorrect. Couch kicks are for lateral fields."},
+                {text: "Use a Half-Beam Block (Asymmetric Jaw) on the S'clav inferior border.", correct: true, fb: "Correct. By closing the inferior jaw to 0 (isocenter), the bottom edge of the S'clav field becomes vertical (non-divergent), perfectly matching the superior edge of the tangents."},
+                {text: "Overlap them intentionally.", correct: false, fb: "Incorrect. This causes a hot spot."}
+            ]
+        },
+        {
+            spec: "badge-brst",
+            topic: "Node Drainage",
+            chart: `<div class="chart-row"><strong>Tumor:</strong> Upper Outer Quadrant (UOQ).</div><div class="chart-row"><strong>Sentinel Node:</strong> Positive.</div>`,
+            q: "Which lymph node chain is the primary drainage for the UOQ?",
+            options: [
+                {text: "Internal Mammary.", correct: false, fb: "Incorrect. That is Inner Quadrant."},
+                {text: "Axillary (Level I/II).", correct: true, fb: "Correct. Most breast lymphatics drain toward the axilla."},
+                {text: "Supraclavicular.", correct: false, fb: "Incorrect. This is Level III (Secondary)."},
+                {text: "Mediastinal.", correct: false, fb: "Incorrect."}
+            ]
+        },
+
+        // --- PATHOLOGY & MISC ---
+        {
+            spec: "badge-path",
+            topic: "Superior Vena Cava Syndrome",
+            chart: `<div class="chart-row"><strong>Pt:</strong> Lung Cancer.</div><div class="chart-row"><strong>Symptoms:</strong> Facial Edema, Dilated Neck Veins, Dyspnea.</div>`,
+            q: "This represents which type of oncologic emergency?",
+            options: [
+                {text: "Metabolic.", correct: false, fb: "Incorrect."},
+                {text: "Obstructive.", correct: true, fb: "Correct. The tumor is physically obstructing the SVC, preventing blood drainage from the head."},
+                {text: "Hematologic.", correct: false, fb: "Incorrect."},
+                {text: "Neurologic.", correct: false, fb: "Incorrect."}
+            ]
+        },
+        {
+            spec: "badge-path",
+            topic: "Bone Mets",
+            chart: `<div class="chart-row"><strong>Site:</strong> Femur metastasis.</div><div class="chart-row"><strong>Appearance:</strong> Lytic (Eaten away).</div><div class="chart-row"><strong>Risk:</strong> Weight bearing pain.</div>`,
+            q: "What is the primary goal of RT for bone mets?",
+            options: [
+                {text: "Total cure.", correct: false, fb: "Incorrect. Mets are Stage IV (Palliative)."},
+                {text: "Pain relief and prevention of fracture.", correct: true, fb: "Correct. RT kills tumor cells, reduces periosteal stretching (pain), and allows recalcification."},
+                {text: "Prevention of lung mets.", correct: false, fb: "Incorrect."},
+                {text: "Cosmetic improvement.", correct: false, fb: "Incorrect."}
+            ]
+        },
+        {
+            spec: "badge-path",
+            topic: "Keloids",
+            chart: `<div class="chart-row"><strong>Condition:</strong> Benign Keloid Scar.</div><div class="chart-row"><strong>Timing:</strong> Surgery was today at 10:00 AM.</div>`,
+            q: "When must Radiation Therapy be delivered to be effective?",
+            options: [
+                {text: "Within 24 hours (ideally < 6-8 hours).", correct: true, fb: "Correct. RT works by inhibiting fibroblast proliferation during the immediate healing phase. If you wait days, the scar tissue has already formed."},
+                {text: "After 2 weeks.", correct: false, fb: "Incorrect. Too late."},
+                {text: "Before surgery.", correct: false, fb: "Incorrect. Post-op is standard."},
+                {text: "Any time within a month.", correct: false, fb: "Incorrect."}
+            ]
+        },
+        {
+            spec: "badge-path",
+            topic: "Heterotopic Bone",
+            chart: `<div class="chart-row"><strong>Pt:</strong> Total Hip Replacement.</div><div class="chart-row"><strong>Risk:</strong> Heterotopic Ossification (Bone growth in soft tissue).</div>`,
+            q: "What is the typical prescription dose for HO prevention?",
+            options: [
+                {text: "60 Gy in 30 fractions.", correct: false, fb: "Incorrect. That's a cancer dose."},
+                {text: "7-8 Gy in 1 fraction.", correct: true, fb: "Correct. A single low dose (700-800 cGy) is sufficient to stop osteoblasts from forming bone."},
+                {text: "20 Gy in 10 fractions.", correct: false, fb: "Incorrect. Higher than necessary."},
+                {text: "100 Gy.", correct: false, fb: "Incorrect. Deadly."}
+            ]
+        },
+        {
+            spec: "badge-lung",
+            topic: "Lung Doses",
+            chart: `<div class="chart-row"><strong>Constraint:</strong> V20 (Volume receiving 20 Gy).</div><div class="chart-row"><strong>Outcome:</strong> Radiation Pneumonitis.</div>`,
+            q: "To minimize pneumonitis risk, the Mean Lung Dose (MLD) should generally be kept below:",
+            options: [
+                {text: "20 Gy", correct: true, fb: "Correct. MLD < 20 Gy is the standard quantitative constraint."},
+                {text: "45 Gy", correct: false, fb: "Incorrect. Too high."},
+                {text: "5 Gy", correct: false, fb: "Incorrect. Too strict."},
+                {text: "60 Gy", correct: false, fb: "Incorrect."}
+            ]
+        },
+        {
+            spec: "badge-hn",
+            topic: "Electron Energy",
+            chart: `<div class="chart-row"><strong>Site:</strong> Neck Node (Posterior).</div><div class="chart-row"><strong>Depth:</strong> Node is 3 cm deep.</div><div class="chart-row"><strong>Rule:</strong> E / 3 = 80% line coverage.</div>`,
+            q: "Which electron energy covers a depth of 3 cm at the 80% line?",
+            options: [
+                {text: "6 MeV", correct: false, fb: "Incorrect. 6/3 = 2cm."},
+                {text: "9 MeV", correct: true, fb: "Correct. 9 / 3 = 3.0 cm coverage."},
+                {text: "12 MeV", correct: false, fb: "Incorrect. 12/3 = 4cm (Too deep)."},
+                {text: "15 MeV", correct: false, fb: "Incorrect. 5cm."}
+            ]
+        },
+        {
+            spec: "badge-cns",
+            topic: "Brainstem Limit",
+            chart: `<div class="chart-row"><strong>OAR:</strong> Brainstem.</div><div class="chart-row"><strong>Plan:</strong> SRS or IMRT.</div>`,
+            q: "What is the widely accepted max point dose for the Brainstem?",
+            options: [
+                {text: "54 Gy", correct: true, fb: "Correct. 54 Gy is the standard limit. >60 Gy carries high risk of necrosis/death."},
+                {text: "45 Gy", correct: false, fb: "Incorrect. That is Spinal Cord."},
+                {text: "70 Gy", correct: false, fb: "Incorrect. Too high."},
+                {text: "10 Gy", correct: false, fb: "Incorrect. Lens of Eye."}
+            ]
+        },
+        {
+            spec: "badge-brst",
+            topic: "Setup Error",
+            chart: `<div class="chart-row"><strong>Setup:</strong> Breast Tangents.</div><div class="chart-row"><strong>Shift:</strong> Patient is 1cm too far lateral (away from gantry).</div>`,
+            q: "If you treat with the patient shifted laterally, how does this affect the lung dose?",
+            options: [
+                {text: "Lung dose Decreases.", correct: true, fb: "Correct. If the patient moves Lateral (away from the central axis), the beam skims more 'air' and less lung. However, you risk missing the deep tumor bed."},
+                {text: "Lung dose Increases.", correct: false, fb: "Incorrect. That would happen if the patient shifted Medial (into the beam)."},
+                {text: "No change.", correct: false, fb: "Incorrect."},
+                {text: "Heart dose increases.", correct: false, fb: "Incorrect."}
+            ]
+        },
+        {
+            spec: "badge-path",
+            topic: "Lhermitte's Sign",
+            chart: `<div class="chart-row"><strong>Pt:</strong> Head & Neck radiation.</div><div class="chart-row"><strong>Complaint:</strong> 'Electric shock sensation' down the spine when bending neck forward.</div>`,
+            q: "This sign indicates:",
+            options: [
+                {text: "Tumor recurrence.", correct: false, fb: "Incorrect."},
+                {text: "Demyelination of the spinal cord (Radiation Myelopathy).", correct: true, fb: "Correct. Lhermitte's sign is a classic symptom of cord irritation/damage."},
+                {text: "Muscle spasm.", correct: false, fb: "Incorrect."},
+                {text: "Esophagitis.", correct: false, fb: "Incorrect."}
+            ]
+        }
+    ];
+
+    // --- GAME ENGINE (Standardized) ---
+    let currentIdx = 0;
+    let score = 0;
+    let userName = "";
+    
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    function startSim() {
+        const input = document.getElementById('user-name').value;
+        if(input.trim() === "") { alert("Please enter your name."); return; }
+        userName = input;
+        document.getElementById('game-area').innerHTML = "";
+        loadQuestion(0);
+    }
+
+    function loadQuestion(idx) {
+        if(idx >= questions.length) {
+            finish();
+            return;
+        }
+        const q = questions[idx];
+        const container = document.getElementById('game-area');
+        
+        document.querySelectorAll('.spec-badge').forEach(b => b.classList.remove('active-spec'));
+        if(document.getElementById(q.spec)) document.getElementById(q.spec).classList.add('active-spec');
+        document.getElementById('progress').style.width = ((idx/questions.length)*100) + "%";
+
+        const shuffledOptions = shuffleArray([...q.options]);
+
+        let html = `
+            <div class="scenario-box">
+                <h3 style="color:var(--primary); border-bottom:2px solid #eee; padding-bottom:10px;">${q.topic}</h3>
+                <div class="chart-display">${q.chart}</div>
+                <div class="question">${q.q}</div>
+                <div class="options-grid">
+                    ${shuffledOptions.map((opt, i) => `
+                        <button class="option-btn" id="opt-${i}">${opt.text}</button>
+                    `).join('')}
+                </div>
+                <div id="fb-box" class="feedback"></div>
+            </div>
+        `;
+        container.innerHTML = html;
+        
+        shuffledOptions.forEach((opt, i) => {
+            document.getElementById(`opt-${i}`).onclick = function() { checkAnswer(i, opt); };
+        });
+
+        document.getElementById('next-btn').style.display = 'none';
+    }
+
+    function checkAnswer(btnIdx, optionObj) {
+        const fb = document.getElementById('fb-box');
+        const btns = document.querySelectorAll('.option-btn');
+        btns.forEach(b => b.disabled = true);
+
+        if(optionObj.correct) {
+            document.getElementById(`opt-${btnIdx}`).classList.add('correct');
+            fb.innerHTML = `<strong>Correct!</strong> ${optionObj.fb}`;
+            score++;
+        } else {
+            document.getElementById(`opt-${btnIdx}`).classList.add('incorrect');
+            fb.innerHTML = `<strong>Incorrect.</strong> ${optionObj.fb}`;
+        }
+        fb.style.display = 'block';
+        document.getElementById('next-btn').style.display = 'block';
+    }
+
+    function nextQuestion() {
+        currentIdx++;
+        loadQuestion(currentIdx);
+    }
+
+    function finish() {
+        const finalScore = Math.round((score / questions.length) * 100);
+        const date = new Date().toLocaleDateString();
+        document.getElementById('cert-name').innerText = userName;
+        document.getElementById('cert-score').innerText = finalScore + "%";
+        document.getElementById('cert-date').innerText = date;
+
+        document.getElementById('game-area').innerHTML = `
+            <div class="start-screen">
+                <h2>Upper Body Procedures Complete!</h2>
+                <h1 style="font-size: 3em; color: var(--primary);">${finalScore}%</h1>
+                <div style="margin-top:40px;">
+                    <button class="start-btn" onclick="window.print()">Print Certificate</button>
+                    <button class="start-btn" style="background:#666;" onclick="location.reload()">Retry</button>
+                </div>
+            </div>
+        `;
+        document.getElementById('next-btn').style.display = 'none';
+        document.querySelector('.header-panel').style.display = 'none';
+    }
+</script>
+
+</body>
+</html>

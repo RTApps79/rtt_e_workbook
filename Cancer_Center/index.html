@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RT School & Labs — Interactive Cancer Center</title>
+  
+  <link rel="stylesheet" href="style.css">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: { colors: { slate: { 950: '#020617' } } } }
+    }
+  </script>
+</head>
+<body>
+
+  <div id="canvas-container"></div>
+
+  <div id="hud">
+    <div class="header">
+      <div class="title">RT CENTER <span style="color:var(--accent)">LIVE</span></div>
+      <div class="subtitle">FLOOR <span id="floor-indicator">1</span></div>
+    </div>
+    <div class="minimap-container">
+      <canvas id="nav-map" width="180" height="120"></canvas>
+      <div id="nav-marker"></div>
+    </div>
+    <div class="controls-hint">
+      <p><strong>WASD</strong> Move &bull; <strong>Right Click</strong> Pan</p>
+      <p><strong>Click</strong> Select Room &bull; <strong>Scroll</strong> Zoom</p>
+    </div>
+  </div>
+
+  <div id="info">
+    <div class="header">
+      <h2 id="info-title">Welcome</h2>
+      <span class="badge" id="sel-lbl">--</span>
+    </div>
+    <p id="info-desc">Select a room to view details.</p>
+    
+    <div class="actions">
+      <button id="btnActivity" class="primary" disabled>Start Activity</button>
+      <button id="btnEnter" disabled>Enter Room</button>
+      <button id="btnTeleport" disabled>Teleport</button>
+    </div>
+  </div>
+
+  <div id="tooltip"></div>
+
+  <div id="controls-ui">
+    <button id="btn-floor-1" class="active">F1</button>
+    <button id="btn-floor-2">F2</button>
+    <button id="btn-floor-3">F3</button>
+    <button id="btn-view-all">ALL</button>
+  </div>
+
+  <div id="panel-lobby" class="panel">
+    <div class="bg-transparent w-full max-w-[1200px] relative">
+        <button onclick="Panels.close()" class="absolute -top-12 right-0 text-slate-400 hover:text-white text-xl z-50 flex items-center gap-2">
+            <span>Close Panel</span> <i class="fas fa-times-circle"></i>
+        </button>
+        <div class="flex h-[600px] w-full mx-auto gap-8">
+            <div class="w-1/3 bg-white rounded-lg shadow-2xl overflow-hidden flex flex-col font-mono text-sm text-slate-800">
+                <div class="bg-blue-900 text-white p-4 font-bold flex justify-between">
+                    <span>EMR: ONCO-CHART</span><span>Auth: Student</span>
+                </div>
+                <div class="p-6 flex-1 bg-slate-50 space-y-4">
+                    <div class="border-b border-slate-300 pb-2"><p class="text-xs text-slate-500 uppercase">Patient Name</p><p class="font-bold text-lg">ALICE JOHNSON</p></div>
+                    <div class="border-b border-slate-300 pb-2"><p class="text-xs text-slate-500 uppercase">DOB / MRN</p><p class="font-bold">05/12/1978 <span class="text-red-700 ml-2">(99-24-33)</span></p></div>
+                    <div class="border-b border-slate-300 pb-2"><p class="text-xs text-slate-500 uppercase">Site</p><p class="font-bold">Right Breast (Tangents)</p></div>
+                    <div class="bg-yellow-50 p-2 border border-yellow-200 rounded"><p class="text-xs font-bold text-yellow-800">CONSENT:</p><p id="emr-consent" class="text-red-600 font-bold">UNSIGNED</p></div>
+                </div>
+            </div>
+            <div class="flex-1 flex flex-col bg-slate-900 rounded-lg border border-slate-700 overflow-hidden relative">
+                <div class="flex-1 bg-gradient-to-b from-slate-800 to-slate-900 flex items-center justify-center relative">
+                    <div class="text-center">
+                        <div class="text-9xl text-slate-600 mb-4">👤</div>
+                        <p class="text-slate-400 italic">"I'm ready for my treatment today."</p>
+                    </div>
+                    <div id="intake-feedback" class="absolute inset-0 bg-black/90 flex items-center justify-center hidden z-10">
+                        <div class="text-center p-8">
+                            <h3 id="fb-title" class="text-2xl font-bold mb-2"></h3>
+                            <p id="fb-msg" class="text-slate-300 mb-6"></p>
+                            <button onclick="intake.reset()" class="px-6 py-2 bg-white text-black rounded font-bold hover:bg-slate-200">Reset</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="h-64 bg-slate-950 p-6 border-t border-slate-800">
+                    <h3 class="text-blue-400 font-bold text-xs uppercase mb-4">Therapist Action Menu</h3>
+                    <div id="intake-options" class="grid grid-cols-2 gap-4"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <div id="panel-nursing" class="panel">
+    <div class="bg-white rounded-xl max-w-5xl w-full h-[80vh] shadow-2xl flex overflow-hidden relative text-slate-800 mx-auto">
+        <button onclick="Panels.close()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-xl z-50">✕</button>
+        <div class="w-64 bg-slate-100 border-r border-slate-200 p-6 flex flex-col gap-2">
+            <h2 class="text-xl font-bold text-slate-800 mb-4">Assessment</h2>
+            <button onclick="nursing.tab('vitals')" id="tab-vitals" class="text-left px-4 py-3 rounded-lg bg-white border border-slate-200 shadow-sm font-bold text-pink-600">Vital Signs</button>
+            <button onclick="nursing.tab('labs')" id="tab-labs" class="text-left px-4 py-3 rounded-lg hover:bg-white text-slate-600">Lab Values</button>
+            <button onclick="nursing.tab('perf')" id="tab-perf" class="text-left px-4 py-3 rounded-lg hover:bg-white text-slate-600">Performance</button>
+        </div>
+        <div class="flex-1 p-8 bg-slate-50 overflow-y-auto">
+            <div id="view-vitals" class="space-y-6">
+                <h3 class="text-lg font-bold border-b pb-2">Manual Blood Pressure</h3>
+                <div class="flex gap-8 items-center">
+                    <div class="w-40 h-40 bg-white border-4 border-slate-300 rounded-full flex items-center justify-center relative">
+                        <div id="needle" class="w-1 h-16 bg-red-600 origin-bottom absolute bottom-1/2 left-1/2 -translate-x-1/2 transition-transform duration-75" style="transform: rotate(-140deg);"></div>
+                        <span class="mt-20 text-xs font-bold text-slate-400">mmHg</span>
+                    </div>
+                    <div class="flex-1">
+                        <label class="font-bold text-xs uppercase text-slate-500">Cuff Pressure</label>
+                        <input type="range" min="0" max="250" value="0" class="w-full h-4 bg-slate-200 rounded-lg cursor-pointer" oninput="nursing.setPressure(this.value)">
+                        <div class="flex justify-between text-xs font-mono mt-1"><span>0</span><span id="pressure-val" class="text-lg font-bold text-pink-700">0</span><span>250</span></div>
+                        <button onmousedown="nursing.playSound()" class="mt-4 px-4 py-2 bg-slate-800 text-white rounded">Listen (Simulated)</button>
+                    </div>
+                </div>
+            </div>
+            <div id="view-labs" class="hidden space-y-6">
+                <h3 class="text-lg font-bold border-b pb-2">CBC Analysis</h3>
+                <div class="grid grid-cols-3 gap-4">
+                    <div class="bg-white p-4 rounded border shadow-sm"><p class="text-xs text-slate-500">WBC</p><p class="text-2xl font-bold">2.1</p><span class="text-xs bg-red-100 text-red-700 px-2 rounded">LOW</span></div>
+                    <div class="bg-white p-4 rounded border shadow-sm"><p class="text-xs text-slate-500">Hgb</p><p class="text-2xl font-bold">13.5</p><span class="text-xs bg-green-100 text-green-700 px-2 rounded">NORMAL</span></div>
+                </div>
+                <div class="p-6 bg-yellow-50 border border-yellow-200 rounded-lg">
+                    <h4 class="font-bold text-yellow-800">Decision?</h4>
+                    <div class="flex gap-3 mt-2">
+                        <button onclick="nursing.decide('treat')" class="flex-1 py-2 bg-white border border-yellow-300 rounded text-yellow-800">Proceed</button>
+                        <button onclick="nursing.decide('hold')" class="flex-1 py-2 bg-red-600 text-white rounded">Hold</button>
+                    </div>
+                    <p id="lab-feedback" class="mt-2 font-bold text-center h-6"></p>
+                </div>
+            </div>
+            <div id="view-perf" class="hidden space-y-6">
+                <h3 class="text-lg font-bold border-b pb-2">ECOG Scoring</h3>
+                <p class="text-sm">Patient is ambulatory but fatigues easily. Spends <50% time in bed.</p>
+                <div class="space-y-2">
+                    <button onclick="nursing.ecog(1)" class="w-full text-left p-3 border rounded hover:bg-slate-100">ECOG 1: Restricted strenuous activity</button>
+                    <button onclick="nursing.ecog(2)" class="w-full text-left p-3 border rounded hover:bg-slate-100">ECOG 2: Ambulatory, up >50% waking hours</button>
+                    <button onclick="nursing.ecog(3)" class="w-full text-left p-3 border rounded hover:bg-slate-100">ECOG 3: Confined to bed >50%</button>
+                </div>
+                <p id="ecog-feedback" class="mt-2 font-bold h-6 text-blue-600"></p>
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <div id="panel-physics" class="panel">
+    <div class="bg-slate-900 rounded-xl max-w-6xl w-full h-[85vh] shadow-2xl flex overflow-hidden relative border border-slate-700 text-slate-200 mx-auto">
+        <button onclick="Panels.close()" class="absolute top-4 right-4 text-slate-500 hover:text-white text-xl z-50">✕</button>
+        <div class="w-64 bg-slate-950 border-r border-slate-800 p-6 flex flex-col gap-2">
+            <div class="mb-6"><h2 class="text-xl font-bold text-blue-400">PHYSICS LAB</h2><p class="text-xs text-slate-500">Dosimetry & Planning</p></div>
+            <button onclick="physics.tab('sim')" id="tab-sim" class="text-left px-4 py-3 rounded-lg bg-blue-900/20 border border-blue-500/50 text-blue-300 font-bold">Alignment Sim</button>
+            <button onclick="physics.tab('ref')" id="tab-ref" class="text-left px-4 py-3 rounded-lg hover:bg-slate-800 text-slate-400 transition">Emergency Protocols</button>
+        </div>
+        <div class="flex-1 bg-slate-900 overflow-hidden relative">
+            <div id="view-sim" class="h-full flex flex-col">
+                <div class="h-16 border-b border-slate-800 bg-slate-950/50 flex items-center px-6 justify-between">
+                    <div class="flex items-center gap-4">
+                        <span class="text-sm font-bold text-slate-400">ACTIVE CASE:</span>
+                        <select id="case-select" onchange="physics.loadCase(this.value)" class="bg-slate-800 border border-slate-600 rounded px-3 py-1 text-sm focus:border-blue-500 outline-none">
+                            <option value="spine">Case 1: Spinal Cord Comp (MSCC)</option>
+                            <option value="brain">Case 2: Brain Mets (ICP)</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <span class="text-xs uppercase text-slate-500 font-bold">Overlay Opacity</span>
+                        <input type="range" min="0" max="100" value="50" oninput="physics.setOpacity(this.value)" class="w-32 accent-blue-500">
+                    </div>
+                </div>
+                <div class="flex-1 relative bg-black overflow-hidden flex items-center justify-center select-none group" id="sim-viewport">
+                    <div id="sim-feedback" class="absolute top-4 left-1/2 -translate-x-1/2 z-20 px-6 py-2 rounded-full bg-slate-800 border border-slate-600 text-sm font-mono hidden">Waiting...</div>
+                    <div class="relative w-[500px] h-[500px] border-2 border-slate-800 bg-slate-900 flex items-center justify-center overflow-hidden">
+                        <div class="absolute inset-0 grid grid-cols-2 grid-rows-2 opacity-20 pointer-events-none">
+                            <div class="border-r border-b border-blue-500/30"></div><div class="border-b border-blue-500/30"></div><div class="border-r border-blue-500/30"></div><div></div>
+                        </div>
+                        <img id="img-ref" src="" class="w-full h-full object-cover opacity-60 grayscale" draggable="false">
+                        <span class="absolute top-2 left-2 text-xs text-slate-500 font-mono">REFERENCE (DRR)</span>
+                    </div>
+                    <div id="img-overlay-wrap" class="absolute w-[500px] h-[500px] border-2 border-yellow-500/50 cursor-move shadow-[0_0_30px_rgba(234,179,8,0.1)] transition-transform duration-75" style="top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.5;">
+                        <img id="img-overlay" src="" class="w-full h-full object-cover grayscale invert" draggable="false">
+                        <span class="absolute top-2 right-2 text-xs text-yellow-500 font-mono">PORTAL (KV)</span>
+                    </div>
+                    <div class="absolute bottom-6 left-6 text-slate-500 text-xs font-mono"><p>CONTROLS: Drag Image OR use Arrow Keys</p><p>GOAL: Align Portal (Yellow) to Reference (Gray)</p></div>
+                </div>
+                <div class="h-16 bg-slate-950 p-4 flex justify-between items-center border-t border-slate-800">
+                    <div id="sim-info" class="text-sm text-slate-400 italic">...</div>
+                    <button onclick="physics.verify()" class="px-6 py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded shadow-lg shadow-blue-900/20 transition">VERIFY ALIGNMENT</button>
+                </div>
+            </div>
+            <div id="view-ref" class="h-full hidden overflow-y-auto p-12 custom-scrollbar">
+                <h1 class="text-3xl font-bold text-white mb-6">Oncologic Emergencies</h1>
+                <p class="text-slate-400 mb-8 text-lg border-l-4 border-blue-500 pl-4">Reversible threats to organ function necessitating radiation within hours/days.</p>
+                <div class="grid grid-cols-2 gap-8">
+                    <div class="bg-slate-800 p-6 rounded-lg border border-slate-700">
+                        <h3 class="text-red-400 font-bold mb-2">MSCC (Spinal Cord Compression)</h3>
+                        <p class="text-sm text-slate-300">Symptoms: Back pain, motor weakness, bladder/bowel dysfunction.<br><span class="text-blue-400 mt-2 block font-bold">Tx: 30 Gy/10fx or 8 Gy/1fx.</span></p>
+                    </div>
+                    <div class="bg-slate-800 p-6 rounded-lg border border-slate-700">
+                        <h3 class="text-red-400 font-bold mb-2">SVC Syndrome</h3>
+                        <p class="text-sm text-slate-300">Symptoms: Facial edema, dyspnea, distended neck veins.<br><span class="text-blue-400 mt-2 block font-bold">Tx: Urgent RT + Steroids.</span></p>
+                    </div>
+                    <div class="bg-slate-800 p-6 rounded-lg border border-slate-700">
+                        <h3 class="text-red-400 font-bold mb-2">Brain Metastases</h3>
+                        <p class="text-sm text-slate-300">Symptoms: Headache, nausea, seizure, neurological deficit.<br><span class="text-blue-400 mt-2 block font-bold">Tx: WBRT or SRS.</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+
+  <script src="labs.js"></script> <script type="module" src="main.js"></script> </body>
+</html>

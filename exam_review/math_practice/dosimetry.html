@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TPS Console v3.0</title>
+    <style>
+        :root {
+            --bg-color: #1a1a1a;
+            --panel-bg: #2d2d2d;
+            --screen-bg: #000000;
+            --accent: #2196f3; /* Planning Blue */
+            --highlight: #00e676; /* Dosimetry Green */
+            --warning: #ffb74d;
+            --text-main: #e0e0e0;
+            --text-muted: #757575;
+            --border: #424242;
+            --font-mono: 'Consolas', 'Courier New', monospace;
+        }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .game-container {
+            background-color: var(--panel-bg);
+            width: 100%;
+            max-width: 950px;
+            border-radius: 6px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+            overflow: hidden;
+            border: 1px solid var(--border);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* HEADER */
+        .header {
+            background: #212121;
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--accent);
+        }
+        .header h1 { margin: 0; font-size: 1.4rem; color: var(--accent); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 1px; }
+        .system-status { font-family: var(--font-mono); font-size: 0.8rem; color: var(--highlight); }
+
+        /* PROGRESS */
+        .progress-bar { height: 4px; background: #000; width: 100%; }
+        .progress-fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s; }
+
+        /* SCREENS */
+        .screen { padding: 40px; text-align: center; }
+        .hidden { display: none; }
+
+        /* DATA TABLE (THE DISTRACTOR FIELD) */
+        .chart-container {
+            background: var(--screen-bg);
+            border: 1px solid #333;
+            border-radius: 4px;
+            padding: 20px;
+            margin-bottom: 25px;
+            text-align: left;
+            font-family: var(--font-mono);
+            color: var(--highlight);
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+        }
+        .chart-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+        .chart-table td { padding: 8px; border-bottom: 1px solid #333; }
+        .chart-table td:first-child { color: var(--text-muted); width: 40%; }
+        .chart-table tr:last-child td { border-bottom: none; }
+
+        /* BUTTONS */
+        .btn {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-top: 20px;
+            transition: 0.2s;
+        }
+        .btn:hover { background: #42a5f5; }
+
+        /* OPTIONS */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .option-btn {
+            background: #424242;
+            color: #fff;
+            border: 1px solid #555;
+            padding: 15px;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            text-align: left;
+            font-family: var(--font-mono);
+        }
+        .option-btn:hover { background: #616161; border-color: var(--accent); }
+        .option-btn.correct { background: #2e7d32; border-color: #00e676; }
+        .option-btn.wrong { background: #c62828; border-color: #ff5252; opacity: 0.6; }
+
+        /* FEEDBACK */
+        .feedback-area {
+            background: #212121;
+            padding: 20px;
+            border-radius: 4px;
+            margin-top: 20px;
+            text-align: left;
+            display: none;
+            border-left: 4px solid var(--accent);
+        }
+        .math-display {
+            background: #000;
+            color: #fff;
+            padding: 15px;
+            font-family: var(--font-mono);
+            margin-top: 10px;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            border: 1px dashed #444;
+        }
+
+        /* HINT TOGGLE */
+        .hint-toggle {
+            background: transparent; border: none; color: var(--text-muted); 
+            cursor: pointer; font-size: 0.8rem; margin-bottom: 10px; text-decoration: underline;
+        }
+
+        /* FOOTER */
+        .rt-footer {
+            text-align: center; margin-top: 30px; color: rgba(255,255,255,0.3); font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="game-container">
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+
+    <div class="header">
+        <h1>TPS Console <span style="font-size:0.6em; opacity:0.7;">v3.0</span></h1>
+        <div class="system-status">CALC_MODE: ACTIVE</div>
+    </div>
+
+    <div id="start-screen" class="screen">
+        <div style="font-size: 4rem; margin-bottom: 20px;">🖥️</div>
+        <h2>Dosimetry & Treatment Planning</h2>
+        <p style="color:var(--text-muted); max-width:600px; margin:0 auto;">
+            Review ARRT Sections 3 & 4.<br>
+            <strong>Warning:</strong> Patient charts contain distractor variables. Solve for "X" using only relevant data.
+        </p>
+        <button class="btn" onclick="startGame()">Load Patient List</button>
+    </div>
+
+    <div id="quiz-screen" class="screen hidden">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span class="system-status" id="q-category">CATEGORY</span>
+            <button class="hint-toggle" onclick="toggleHint()">[ Show Formula ]</button>
+        </div>
+        
+        <div id="hint-box" style="display:none; color:var(--warning); font-family:var(--font-mono); margin-bottom:10px; font-size:0.9rem;"></div>
+
+        <div class="chart-container">
+            <div style="border-bottom:1px solid #333; padding-bottom:10px; margin-bottom:10px; font-weight:bold; color:#fff;">
+                PATIENT CHART: <span id="pt-id">12345</span>
+            </div>
+            <p id="q-scenario" style="margin-bottom:15px; color:#fff; font-family:'Segoe UI', sans-serif;">Scenario text...</p>
+            <table class="chart-table" id="data-table">
+                </table>
+        </div>
+
+        <div class="options-grid" id="options-area"></div>
+
+        <div class="feedback-area" id="feedback-box">
+            <h3 style="margin-top:0; color:var(--accent)">Calculation Log</h3>
+            <p id="fb-expl">Text...</p>
+            <div class="math-display" id="fb-math"></div>
+            <button class="btn" onclick="nextQuestion()">Next Calculation</button>
+        </div>
+    </div>
+
+    <div id="end-screen" class="screen hidden">
+        <h2>Planning Session Complete</h2>
+        <div style="font-size:4rem; color:var(--accent); font-weight:bold; margin:20px 0;" id="final-score">0%</div>
+        <p>Review the log for any calculation errors.</p>
+        <button class="btn" onclick="restartGame()">New Session</button>
+    </div>
+</div>
+
+<footer class="rt-footer">
+    <strong style="color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">RTApps ™</strong> 
+    &nbsp;|&nbsp; © <span id="year">2026</span> Kevin Kindle
+    <br>
+    <span style="font-style: italic; opacity: 0.6;">Educational simulation only. Reference: ARRT Content Specifications.</span>
+</footer>
+
+<script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Use Template Literals for robustness
+    const questions = [
+        // 1. ABUTTING FIELDS (GAP CALC)
+        {
+            cat: `Gap Calculation`,
+            scenario: `Two spinal fields abut at a depth of 6 cm. Calculate "X" (The Skin Gap).`,
+            data: {
+                "Field 1 Length (L1)": "20 cm",
+                "Field 1 Width": "10 cm",
+                "Field 2 Length (L2)": "30 cm",
+                "Field 2 Width": "12 cm",
+                "Match Depth (d)": "6 cm",
+                "SSD": "100 cm"
+            },
+            hint: `Gap = (L1/2 × d/SSD) + (L2/2 × d/SSD)`,
+            options: [`0.9 cm`, `1.5 cm`, `2.5 cm`, `3.0 cm`],
+            correct: 1,
+            expl: `<strong>Use Field LENGTHS, ignore Widths.</strong><br>The gap formula relies on the field length in the direction of the match.`,
+            math: `Gap = (20/2 × 6/100) + (30/2 × 6/100)
+Gap = (10 × 0.06) + (15 × 0.06)
+Gap = 0.6 + 0.9
+Gap = 1.5 cm`,
+            diagram: ``
+        },
+        // 2. ELECTRON DEPTH
+        {
+            cat: `Electron Isodose`,
+            scenario: `Determine "X" (The Therapeutic Depth) for the 80% isodose line.`,
+            data: {
+                "Energy": "12 MeV",
+                "Cone Size": "10x10",
+                "Bolus": "None",
+                "Prescription": "Treat to 80% line"
+            },
+            hint: `80% Depth ≈ E / 3`,
+            options: [`3.0 cm`, `4.0 cm`, `6.0 cm`, `2.0 cm`],
+            correct: 1,
+            expl: `<strong>Rule of Thumb: E/3.</strong><br>The 80% isodose line is Energy / 3. The 90% line is E / 4.`,
+            math: `X = 12 / 3
+X = 4.0 cm`
+        },
+        // 3. MU CALC (SAD)
+        {
+            cat: `MU Calc (SAD)`,
+            scenario: `Calculate "X" (MU Setting) for a single PA Isocentric field.`,
+            data: {
+                "Rx Dose": "100 cGy",
+                "Technique": "SAD (Isocentric)",
+                "TMR": "0.789",
+                "PDD": "0.655",
+                "Output": "1.0 cGy/MU",
+                "Tray Factor": "0.97",
+                "Modifiers": "Custom Cerrobend Blocks"
+            },
+            hint: `MU = Dose / (Output × TMR × Tray)`,
+            options: [`131 MU`, `122 MU`, `156 MU`, `103 MU`],
+            correct: 0,
+            expl: `<strong>Use TMR for SAD, ignore PDD.</strong><br>Blocks are present, so Tray Factor (0.97) must be included.`,
+            math: `X = 100 / (1.0 × 0.789 × 0.97)
+X = 100 / 0.7653
+X = 130.6 (Round to 131)`
+        },
+        // 4. HINGE ANGLE
+        {
+            cat: `Wedge / Hinge Angle`,
+            scenario: `Calculate "X" (The Required Wedge Angle) for a Hinge Angle of 60°.`,
+            data: {
+                "Hinge Angle": "60°",
+                "Beam Energy": "6 MV",
+                "Field Size": "15x15"
+            },
+            hint: `Wedge = (180 - Hinge) / 2`,
+            options: [`30°`, `45°`, `60°`, `15°`],
+            correct: 2,
+            expl: `<strong>Wedge = (180 - Hinge) / 2.</strong><br>As beams get closer (smaller hinge), the wedge angle must get larger.`,
+            math: `X = (180 - 60) / 2
+X = 120 / 2
+X = 60° Wedge`
+        },
+        // 5. EXTENDED SSD (INCREASED MU)
+        {
+            cat: `Extended SSD (MU)`,
+            scenario: `The standard MU setting is 200 MU at 100cm SSD. Calculate "X" (New MU) required to deliver the SAME dose at 120cm SSD.`,
+            data: {
+                "Standard SSD": "100 cm",
+                "Treatment SSD": "120 cm",
+                "Standard MU": "200 MU",
+                "Dose Rate": "1.0 cGy/MU"
+            },
+            hint: `New MU = Old MU × (New Dist / Old Dist)²`,
+            options: [`139 MU`, `200 MU`, `240 MU`, `288 MU`],
+            correct: 3,
+            expl: `<strong>Distance Increases → Intensity Drops → MU must INCREASE.</strong><br>Since the beam is weaker at 120cm, we need MORE monitor units to deliver the same dose.`,
+            math: `X = 200 × (120 / 100)²
+X = 200 × (1.2)²
+X = 200 × 1.44
+X = 288 MU`
+        },
+        // 6. EQUIVALENT SQUARE (BLOCKED)
+        {
+            cat: `Equivalent Square`,
+            scenario: `Calculate "X" (Effective Square) for the blocked area shown.`,
+            data: {
+                "Open Field": "20 x 20 cm",
+                "Open Area": "400 cm²",
+                "Blocked Area": "100 cm²",
+                "Modifiers": "Standard Blocks"
+            },
+            hint: `EqSq = √(Open Area - Blocked Area)`,
+            options: [`15.0 cm`, `17.3 cm`, `10.0 cm`, `20.0 cm`],
+            correct: 1,
+            expl: `<strong>Square root of the *remaining* area.</strong><br>Effective Area = 400 - 100 = 300.`,
+            math: `X = √300
+X = 17.32 cm`
+        },
+        // 7. COUCH SHIFT
+        {
+            cat: `Couch Coordinates`,
+            scenario: `Calculate "X" (Vertical Shift). Setup laser is Anterior Skin. Isocenter is 8 cm Posterior (mid-depth).`,
+            data: {
+                "Patient Position": "Supine",
+                "Laser": "Anterior Skin",
+                "Iso Depth": "8 cm",
+                "Table": "IEC Scale"
+            },
+            hint: `To treat deeper, table must move UP.`,
+            options: [`Vertical -8 cm (Down)`, `Vertical +8 cm (Up)`, `Longitudinal +8 cm`, `Lateral +8 cm`],
+            correct: 1,
+            expl: `<strong>Move UP to get INSIDE.</strong><br>The laser defines zero. To place isocenter 8cm deep, you must lift the patient 8cm UP into the beam.`,
+            math: `X = +8.0 cm (Vertical Lift)`
+        },
+        // 8. MAYNEORD F FACTOR
+        {
+            cat: `PDD Correction`,
+            scenario: `Determine the effect on PDD when treating at 120cm SSD instead of 100cm.`,
+            data: {
+                "Energy": "18 MV",
+                "Depth": "10 cm",
+                "Std SSD": "100 cm",
+                "Ext SSD": "120 cm"
+            },
+            hint: `Extended SSD increases PDD.`,
+            options: [`PDD Decreases`, `PDD Increases`, `PDD remains the same`, `TMR Increases`],
+            correct: 1,
+            expl: `<strong>Extended SSD = Higher PDD.</strong><br>The beam is 'harder' (more penetrating) relative to the surface at extended distances.`,
+            math: `Mayneord F > 1.0`
+        },
+        // 9. ARC SPEED
+        {
+            cat: `Arc Calculation`,
+            scenario: `Calculate "X" (MU per Degree) for this VMAT arc.`,
+            data: {
+                "Start Angle": "270°",
+                "Stop Angle": "90°",
+                "Total MU": "400",
+                "Rotation": "180 degrees"
+            },
+            hint: `X = Total MU / Total Degrees`,
+            options: [`0.45 MU/deg`, `2.22 MU/deg`, `1.5 MU/deg`, `0.66 MU/deg`],
+            correct: 1,
+            expl: `<strong>MU per Degree.</strong><br>Total MU divided by the total arc length.`,
+            math: `X = 400 MU / 180°
+X = 2.22 MU/deg`
+        },
+        // 10. MAGNIFICATION (FIELD SIZE)
+        {
+            cat: `Magnification`,
+            scenario: `Calculate "X" (Field Width on Skin) for an Isocentric setup.`,
+            data: {
+                "SAD (Iso)": "100 cm",
+                "SSD (Skin)": "90 cm",
+                "Field Size at Iso": "15 cm"
+            },
+            hint: `Size_skin = Size_iso × (SSD / SAD)`,
+            options: [`16.7 cm`, `13.5 cm`, `15.0 cm`, `12.0 cm`],
+            correct: 1,
+            expl: `<strong>Closer to source = Smaller field.</strong><br>The field diverges. At 90cm (skin), it is smaller than at 100cm (iso).`,
+            math: `X = 15 × (90 / 100)
+X = 13.5 cm`
+        },
+        // 11. MIDPLANE DEPTH
+        {
+            cat: `Patient Thickness`,
+            scenario: `Calculate "X" (Treatment Depth) for a Midplane Lateral Pelvis field.`,
+            data: {
+                "Separation (Thickness)": "32 cm",
+                "Table Kick": "0°",
+                "Target": "Midplane"
+            },
+            hint: `Midplane = Separation / 2`,
+            options: [`32 cm`, `100 cm`, `16 cm`, `10 cm`],
+            correct: 2,
+            expl: `<strong>Midplane is half the separation.</strong>`,
+            math: `X = 32 / 2
+X = 16 cm`
+        },
+        // 12. MU CALC (SSD BLOCKED)
+        {
+            cat: `MU Calc (SSD Blocked)`,
+            scenario: `Calculate "X" (MU Setting) for a blocked SSD field.`,
+            data: {
+                "Rx Dose": "200 cGy",
+                "Output": "1.0 cGy/MU",
+                "PDD": "1.0 (Dmax)",
+                "Tray Factor": "0.96",
+                "Modifiers": "Custom Cerrobend Blocks on Tray"
+            },
+            hint: `MU = Dose / (Output × PDD × Tray)`,
+            options: [`192 MU`, `200 MU`, `208 MU`, `215 MU`],
+            correct: 2,
+            expl: `<strong>Tray Factor absorbs radiation.</strong><br>You need MORE MU to push through the tray. Dividing by 0.96 increases the MU.`,
+            math: `X = 200 / (1.0 × 1.0 × 0.96)
+X = 200 / 0.96
+X = 208.3`
+        }
+    ];
+
+    let currentQ = 0;
+    let score = 0;
+
+    function startGame() {
+        document.getElementById('start-screen').classList.add('hidden');
+        document.getElementById('quiz-screen').classList.remove('hidden');
+        loadQ();
+    }
+
+    function loadQ() {
+        const q = questions[currentQ];
+        document.getElementById('q-category').innerText = q.cat;
+        document.getElementById('pt-id').innerText = Math.floor(Math.random() * 90000) + 10000;
+        document.getElementById('q-scenario').innerText = q.scenario;
+        document.getElementById('hint-box').innerText = q.hint;
+        document.getElementById('hint-box').style.display = 'none';
+        document.getElementById('feedback-box').style.display = 'none';
+        
+        // Populate Data Table
+        const table = document.getElementById('data-table');
+        table.innerHTML = '';
+        for (const [key, value] of Object.entries(q.data)) {
+            let row = table.insertRow();
+            let c1 = row.insertCell(0);
+            let c2 = row.insertCell(1);
+            c1.innerText = key;
+            c2.innerText = value;
+        }
+
+        // Progress
+        document.getElementById('progress').style.width = ((currentQ) / questions.length * 100) + "%";
+
+        // Options
+        const grid = document.getElementById('options-area');
+        grid.innerHTML = '';
+        q.options.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerText = opt;
+            btn.onclick = () => checkAnswer(idx, btn);
+            grid.appendChild(btn);
+        });
+    }
+
+    function toggleHint() {
+        const box = document.getElementById('hint-box');
+        box.style.display = box.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function checkAnswer(idx, btn) {
+        const q = questions[currentQ];
+        const allBtns = document.querySelectorAll('.option-btn');
+        allBtns.forEach(b => { b.disabled = true; b.style.cursor='default'; });
+
+        if(idx === q.correct) {
+            btn.classList.add('correct');
+            score++;
+        } else {
+            btn.classList.add('wrong');
+            allBtns[q.correct].classList.add('correct');
+        }
+
+        document.getElementById('feedback-box').style.display = 'block';
+        document.getElementById('fb-expl').innerHTML = q.expl;
+        document.getElementById('fb-math').innerText = q.math;
+    }
+
+    function nextQuestion() {
+        currentQ++;
+        if(currentQ < questions.length) {
+            loadQ();
+        } else {
+            endGame();
+        }
+    }
+
+    function endGame() {
+        document.getElementById('quiz-screen').classList.add('hidden');
+        document.getElementById('end-screen').classList.remove('hidden');
+        document.getElementById('progress').style.width = '100%';
+        document.getElementById('final-score').innerText = Math.round((score/questions.length)*100) + "%";
+    }
+
+    function restartGame() {
+        currentQ = 0;
+        score = 0;
+        document.getElementById('end-screen').classList.add('hidden');
+        document.getElementById('start-screen').classList.remove('hidden');
+    }
+</script>
+
+</body>
+</html>

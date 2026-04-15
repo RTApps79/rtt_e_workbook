@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprehensive ARRT Clinical Simulator</title>
+    <style>
+        :root {
+            --bg: #f4f7f6;
+            --card-bg: #ffffff;
+            --primary: #2c3e50;
+            --accent: #2980b9;
+            --care: #27ae60;   /* Green for Patient Care */
+            --safety: #d35400; /* Orange for Safety */
+            --proc: #8e44ad;   /* Purple for Procedures */
+            --text: #333;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .sim-container {
+            max-width: 950px;
+            width: 100%;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Area */
+        .header-panel {
+            background: var(--primary);
+            color: white;
+            padding: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header-info h1 { margin: 0; font-size: 1.6em; }
+        .header-info p { margin: 5px 0 0; opacity: 0.8; font-size: 0.9em; }
+        .score-badge {
+            background: rgba(255,255,255,0.1);
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .score-number { font-size: 1.5em; font-weight: bold; display: block; }
+        .score-label { font-size: 0.75em; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Progress Bar */
+        .progress-track { height: 8px; background: #e0e0e0; width: 100%; }
+        .progress-fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.4s ease; }
+
+        /* Content Area */
+        .scenario-area { padding: 30px; }
+
+        /* Category Badge */
+        .category-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+        .cat-care { background-color: var(--care); }
+        .cat-safety { background-color: var(--safety); }
+        .cat-proc { background-color: var(--proc); }
+
+        /* Patient Chart */
+        .chart-card {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-left: 6px solid #555; /* Default, changes via JS */
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 25px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.95em;
+            position: relative;
+        }
+        .chart-title {
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: var(--primary);
+            color: white;
+            padding: 2px 10px;
+            font-size: 0.8em;
+            border-radius: 4px;
+        }
+        .chart-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            border-bottom: 1px dashed #e0e0e0;
+            padding-bottom: 4px;
+        }
+        .chart-row:last-child { border-bottom: none; }
+        
+        /* Question */
+        .question-text {
+            font-size: 1.25em;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: var(--primary);
+            line-height: 1.4;
+        }
+
+        /* Options */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .option-btn {
+            background: white;
+            border: 2px solid #e0e0e0;
+            padding: 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
+            font-size: 1em;
+            color: var(--text);
+            position: relative;
+        }
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--accent);
+            background: #f0f8ff;
+            transform: translateY(-2px);
+        }
+        .option-btn:disabled { cursor: default; opacity: 0.7; }
+        
+        /* Feedback States */
+        .correct-choice { background-color: #d4edda !important; border-color: #28a745 !important; color: #155724; }
+        .wrong-choice { background-color: #f8d7da !important; border-color: #dc3545 !important; color: #721c24; }
+
+        /* Feedback Panel */
+        .feedback-panel {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 8px;
+            animation: fadeIn 0.5s;
+            display: none;
+        }
+        .fb-correct { background: #e8f5e9; border: 1px solid #c3e6cb; }
+        .fb-wrong { background: #fce4ec; border: 1px solid #f5c6cb; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Navigation */
+        .footer-nav {
+            padding: 20px 30px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            background: #fafafa;
+        }
+        .next-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            display: none;
+        }
+        .next-btn:hover { background: #34495e; }
+
+        /* Start Screen */
+        .start-screen { text-align: center; padding: 50px; }
+        .start-btn {
+            background: var(--accent);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.2em;
+            cursor: pointer;
+            margin-top: 30px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="sim-container">
+    <div class="header-panel">
+        <div class="header-info">
+            <h1>ARRT Clinical Judgment Simulator</h1>
+            <p>Covering Patient Care, Safety, and Procedures</p>
+        </div>
+        <div class="score-badge">
+            <span class="score-number" id="score-display">0/0</span>
+            <span class="score-label">Score</span>
+        </div>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progress"></div></div>
+
+    <div id="main-interface">
+        <div class="start-screen">
+            <h2>Welcome to the Board Prep Simulation</h2>
+            <p>You will face 12 branching scenarios organized by ARRT specifications.</p>
+            <p style="color: #666;">Focus: Applied Math, Triage, QA Analysis, and Image Interpretation.</p>
+            <button class="start-btn" onclick="startSim()">Begin Exam</button>
+        </div>
+    </div>
+
+    <div class="footer-nav">
+        <button id="next-btn" class="next-btn" onclick="nextScenario()">Next Scenario &rarr;</button>
+    </div>
+</div>
+
+<script>
+    // --- THE MASTER SCENARIO DATABASE ---
+    // Organized by ARRT Content Specifications
+    const scenarios = [
+        
+        // --- SECTION 1: PATIENT CARE (Interactions, Ethics, Emergencies) ---
+        
+        {
+            category: "1. Patient Care",
+            type: "care",
+            title: "Legal & Ethics: Informed Consent",
+            chart: `
+                <div class="chart-row"><strong>Pt:</strong> H. Ford (72M)</div>
+                <div class="chart-row"><strong>Site:</strong> Whole Brain (Palliative)</div>
+                <div class="chart-row"><strong>Status:</strong> On table, thermoplastic mask fitted.</div>
+                <div class="chart-row"><strong>Event:</strong> Patient begins crying, pulls at mask, says "I don't want this anymore."</div>
+                <div class="chart-row"><strong>Family:</strong> Daughter in waiting room insists "He needs this to live."</div>
+            `,
+            question: "The patient is legally competent but physically frail. The daughter has Medical Power of Attorney (POA). What is your immediate course of action?",
+            options: [
+                { text: "Continue setup; the POA consents and overrides the patient's refusal.", correct: false, feedback: "Incorrect. Battery. POA only activates when the patient is INCOMPETENT. A competent patient on the table has the absolute right to revoke consent at any time." },
+                { text: "Stop immediately, remove the mask, and assist the patient off the table.", correct: true, feedback: "Correct. This avoids Battery and False Imprisonment. You must respect the revocation of consent immediately, regardless of the daughter's wishes." },
+                { text: "Stop, leave patient on table, and go get the daughter to calm him down.", correct: false, feedback: "Incorrect. False Imprisonment. Leaving a patient restrained/masked against their will while you leave the room is a tort. Unmask first." },
+                { text: "Finish the fraction quickly since setup is complete, then discuss discharge.", correct: false, feedback: "Incorrect. Battery. Treating a patient who has verbally withdrawn consent is intentional unlawful touching." }
+            ]
+        },
+        {
+            id: "1B",
+            category: "1. Patient Care",
+            type: "care",
+            title: "Patient Management: Transfer Safety",
+            chart: `
+                <div class="chart-row"><strong>Pt:</strong> G. Harris (88F)</div>
+                <div class="chart-row"><strong>History:</strong> Hip replacement (Right side) 2 weeks ago.</div>
+                <div class="chart-row"><strong>Status:</strong> Wheelchair to Table transfer.</div>
+                <div class="chart-row"><strong>Mobility:</strong> Weakness in Right leg. Strong Left side.</div>
+            `,
+            question: "You are assisting this patient from the wheelchair to the treatment couch. Which setup ensures proper body mechanics and patient safety?",
+            options: [
+                { text: "Position wheelchair on patient's Right side (parallel), lock wheels, lift under axilla.", correct: false, feedback: "Incorrect. Never transfer toward the weak/surgical side if possible. Also, lifting under the axilla can damage the brachial plexus." },
+                { text: "Position wheelchair on patient's Left side (45°), lock wheels, use gait belt.", correct: true, feedback: "Correct. Transfer toward the STRONG side (Left). Locking wheels and using a gait belt are critical safety standards." },
+                { text: "Position wheelchair perpendicular to table, have patient hop on one foot.", correct: false, feedback: "Incorrect. Perpendicular placement creates a dangerous gap. Hopping is a severe fall risk for an 88-year-old." },
+                { text: "Use a sliding board with the wheelchair positioned on the Right side.", correct: false, feedback: "Incorrect. While a sliding board is good, you should still position the chair on the Strong (Left) side to allow the patient to pull themselves." }
+            ]
+        },
+        {
+            category: "1. Patient Care",
+            type: "care",
+            title: "Dietary Management: H&N Side Effects",
+            chart: `
+                <div class="chart-row"><strong>Pt:</strong> T. Cruz (55M)</div>
+                <div class="chart-row"><strong>Site:</strong> Oropharynx (Week 4 of 7)</div>
+                <div class="chart-row"><strong>Symptoms:</strong> Dysphagia, Odynophagia, Thick Saliva.</div>
+                <div class="chart-row"><strong>Weight:</strong> Lost 12 lbs in 2 weeks. BMI 19.</div>
+                <div class="chart-row"><strong>Current Diet:</strong> "Trying to eat spicy chicken wings but it hurts."</div>
+            `,
+            question: "The patient is at risk for cachexia. Which specific dietary instruction is most appropriate to manage his current symptoms?",
+            options: [
+                { text: "Switch to a high-fiber, low-residue diet immediately.", correct: false, feedback: "Incorrect. Low Residue is for pelvic/diarrhea patients. Fiber is hard to swallow for H&N patients." },
+                { text: "Encourage soft, bland foods with gravy/sauces; avoid hot temps and acid.", correct: true, feedback: "Correct. Dysphagia requires soft textures (lubricated with gravy). Odynophagia requires avoiding thermal hot, spicy, and acidic (citrus) foods." },
+                { text: "Suggest drinking 3 glasses of wine daily to numb the throat pain.", correct: false, feedback: "Incorrect. Alcohol is a desiccant (drying) and irritant. It will worsen the mucositis and thick saliva." },
+                { text: "Recommend large salads and raw vegetables for vitamins.", correct: false, feedback: "Incorrect. Raw veggies are sharp and will traumatize the inflamed mucosa. Vitamins are good, but the texture is wrong." }
+            ]
+        },
+
+        // --- SECTION 2: SAFETY (Physics, QA, Radiation Protection) ---
+
+        {
+            category: "2. Safety & QA",
+            type: "safety",
+            title: "Daily QA Analysis",
+            chart: `
+                <div class="chart-row"><strong>Test:</strong> Daily X-Ray Output Constancy</div>
+                <div class="chart-row"><strong>Machine:</strong> Varian TrueBeam (6MV)</div>
+                <div class="chart-row"><strong>Baseline:</strong> 1.000 nC (100 cGy)</div>
+                <div class="chart-row"><strong>Today's Reading:</strong> 1.038 nC (103.8 cGy)</div>
+                <div class="chart-row"><strong>Temp/Pressure:</strong> Already corrected.</div>
+            `,
+            question: "The daily output reading shows a variance. Based on standard TG-142 tolerances, what is your action?",
+            options: [
+                { text: "Record the value and proceed with patient treatments.", correct: false, feedback: "Incorrect. The tolerance for Daily Output is 3%. This reading is 3.8% off. You cannot treat." },
+                { text: "Stop. Do not treat. Call the Medical Physicist immediately.", correct: true, feedback: "Correct. The variance is >3%. This is a 'Fail'. Treatment cannot proceed until Physics investigates and recalibrates." },
+                { text: "Adjust the T&P factor until the reading drops below 3%.", correct: false, feedback: "Incorrect. Falsifying data is an ethical violation and dangerous. The reading is real." },
+                { text: "Treat non-IMRT patients only, then call Physics.", correct: false, feedback: "Incorrect. If the output is wrong, ALL patients (IMRT or 3D) will be overdosed. No treatments are safe." }
+            ]
+        },
+        {
+            category: "2. Safety & QA",
+            type: "safety",
+            title: "Radiation Protection: Shielding",
+            chart: `
+                <div class="chart-row"><strong>Scenario:</strong> Designing a new vault door.</div>
+                <div class="chart-row"><strong>Energy:</strong> 18 MV Photons</div>
+                <div class="chart-row"><strong>Primary Barrier:</strong> Concrete (TVL = 45cm).</div>
+                <div class="chart-row"><strong>Issue:</strong> High Energy Neutrons detected.</div>
+            `,
+            question: "Because the machine energy is >10 MV, neutrons are produced via photodisintegration. What material must be added to the door design?",
+            options: [
+                { text: "Add a layer of Lead (Pb) to absorb the neutrons.", correct: false, feedback: "Incorrect. Lead is great for X-rays but poor for neutrons. Neutrons bounce off heavy nuclei." },
+                { text: "Add a layer of Borated Polyethylene.", correct: true, feedback: "Correct. Polyethylene contains Hydrogen (low Z), which slows down fast neutrons. Boron captures the slow neutrons." },
+                { text: "Increase the concrete thickness by 2 TVLs.", correct: false, feedback: "Incorrect. While concrete helps, it is inefficient for the door. You need a specialized hydrogenous material for the door." },
+                { text: "Add a copper mesh screen to the door frame.", correct: false, feedback: "Incorrect. Copper mesh is for RF shielding, not neutron shielding." }
+            ]
+        },
+        {
+            category: "2. Safety & Physics",
+            type: "safety",
+            title: "Calculation: Inverse Square Law",
+            chart: `
+                <div class="chart-row"><strong>Context:</strong> Power Failure. Treating manually.</div>
+                <div class="chart-row"><strong>Prescription:</strong> 200 cGy at 100 cm SSD.</div>
+                <div class="chart-row"><strong>Setup Error:</strong> Patient was treated at 90 cm SSD.</div>
+                <div class="chart-row"><strong>Factor:</strong> Inverse Square Law applies.</div>
+            `,
+            question: "The patient was treated at a shorter distance (90cm) than planned (100cm). Did they receive an overdose or underdose, and by approximately how much?",
+            options: [
+                { text: "Underdose of 10%. (90/100)", correct: false, feedback: "Incorrect. Closer distance = HIGHER intensity (Overdose). Also, you forgot to Square the ratio." },
+                { text: "Overdose of 23%. (100/90)²", correct: true, feedback: "Correct. Intensity increases as distance decreases. (100/90) = 1.11. 1.11² = 1.23. The patient received 123% of the dose." },
+                { text: "Overdose of 10%. (100/90)", correct: false, feedback: "Incorrect. You identified the Overdose correctly, but you forgot to SQUARE the result. ISL is a square function." },
+                { text: "The dose remains the same because MUs were set.", correct: false, feedback: "Incorrect. MUs deliver a set output, but intensity at the patient changes with distance." }
+            ]
+        },
+
+        // --- SECTION 3: PROCEDURES (Sites, Planning, Delivery) ---
+
+        {
+            category: "3. Procedures",
+            type: "proc",
+            title: "Treatment Planning: Electron Selection",
+            chart: `
+                <div class="chart-row"><strong>Pt:</strong> B. White (30M)</div>
+                <div class="chart-row"><strong>Site:</strong> Keloid Scar (Ear Lobe)</div>
+                <div class="chart-row"><strong>Target Depth:</strong> 1.5 cm from surface.</div>
+                <div class="chart-row"><strong>Goal:</strong> 90% Isodose line coverage.</div>
+                <div class="chart-row"><strong>Energies:</strong> 6e, 9e, 12e, 15e.</div>
+            `,
+            question: "Using the Rule of Thumb (E/4), which electron energy provides the best coverage for the 1.5 cm depth without excessive penetration?",
+            options: [
+                { text: "6 MeV", correct: true, feedback: "Correct. 6 MeV / 4 = 1.5 cm depth (at 90%). This matches the target perfectly." },
+                { text: "9 MeV", correct: false, feedback: "Incorrect. 9 MeV / 4 = 2.25 cm. This penetrates too deep, treating healthy tissue beyond the ear lobe." },
+                { text: "12 MeV", correct: false, feedback: "Incorrect. 12 / 4 = 3.0 cm. Way too deep." },
+                { text: "6 MeV with 1cm bolus", correct: false, feedback: "Incorrect. Bolus pulls the dose closer to the surface. 6 MeV (1.5cm depth) - 1cm bolus = 0.5cm depth in patient. You would underdose the target." }
+            ]
+        },
+        {
+            category: "3. Procedures",
+            type: "proc",
+            title: "Imaging: CBCT Interpretation",
+            chart: `
+                <div class="chart-row"><strong>Pt:</strong> R. Jones (68M)</div>
+                <div class="chart-row"><strong>Site:</strong> Prostate IMRT</div>
+                <div class="chart-row"><strong>Image:</strong> Daily CBCT vs Planning CT.</div>
+                <div class="chart-row"><strong>Observation:</strong> Bone alignment is perfect. Rectum is distended with gas (5cm diameter). Prostate pushed Anteriorly outside the PTV."</div>
+            `,
+            question: "The bony anatomy matches, but the soft tissue (prostate) is shifted due to gas. What is the correct action?",
+            options: [
+                { text: "Shift the table Anterior to catch the prostate.", correct: false, feedback: "Incorrect. Shifting to chase a moving target caused by gas puts the rectum (OAR) in the high dose field. You cannot treat with this anatomy." },
+                { text: "Treat as is; bony anatomy is the standard for prostate.", correct: false, feedback: "Incorrect. Prostate moves independently of bone. Soft tissue matching is required for IMRT." },
+                { text: "Remove patient, insert rectal tube/gas release, resimulate CBCT.", correct: true, feedback: "Correct. The anatomy has changed significantly. You must reproduce the planning anatomy (empty rectum) before treating." },
+                { text: "Widen the field borders (jaws) to cover the shift.", correct: false, feedback: "Incorrect. Therapists cannot change field sizes. This also irradiates more bowel." }
+            ]
+        },
+        {
+            category: "3. Procedures",
+            type: "proc",
+            title: "Field Matching: CSI Setup",
+            chart: `
+                <div class="chart-row"><strong>Pt:</strong> Child (8M) - Medulloblastoma</div>
+                <div class="chart-row"><strong>Fields:</strong> PA Spine + Lateral Brains.</div>
+                <div class="chart-row"><strong>Issue:</strong> Field Junction (Gap) between Brain and Spine.</div>
+                <div class="chart-row"><strong>Geometry:</strong> Beams are divergent.</div>
+            `,
+            question: "To prevent a hot spot or cold spot at the cord junction, you must rotate the collimator and the couch. Which rotation matches which field?",
+            options: [
+                { text: "Rotate Couch for Spine divergence; Rotate Collimator for Brain divergence.", correct: false, feedback: "Incorrect. Reverse it." },
+                { text: "Rotate Collimator to match Spine divergence; Kick Couch to match Brain divergence.", correct: true, feedback: "Correct. The Collimator (Brain field) rotates to match the divergence of the long Spine field. The Couch kicks to match the divergence of the Brain field." },
+                { text: "No rotation needed if you calculate the skin gap correctly.", correct: false, feedback: "Incorrect. The skin gap handles depth overlap, but rotations are required for 3D alignment of the beam edges." },
+                { text: "Use a half-beam block on the spine only.", correct: false, feedback: "Incorrect. While half-beam blocks remove divergence, modern CSI usually employs rotations for perfect matching." }
+            ]
+        },
+        {
+            category: "3. Procedures",
+            type: "proc",
+            title: "Breast Setup: Tangent Geometery",
+            chart: `
+                <div class="chart-row"><strong>Pt:</strong> L. Lane (45F)</div>
+                <div class="chart-row"><strong>Site:</strong> Left Chest Wall (Mastectomy)</div>
+                <div class="chart-row"><strong>Fields:</strong> Medial and Lateral Tangents.</div>
+                <div class="chart-row"><strong>Check:</strong> You verify the light field on the chest."</div>
+                <div class="chart-row"><strong>Observation:</strong> The back edge of the lateral field is straight (non-divergent)."</div>
+            `,
+            question: "Why is the posterior border of a tangent field typically non-divergent (half-beam blocked)?",
+            options: [
+                { text: "To protect the spinal cord.", correct: false, feedback: "Incorrect. The tangents are angled away from the cord. The issue is the lung." },
+                { text: "To minimize dose to the ipsilateral lung.", correct: true, feedback: "Correct. By making the deep border non-divergent (straight), we prevent the beam from diverging deeper into the lung tissue." },
+                { text: "To prevent overlap with the supraclavicular field.", correct: false, feedback: "Incorrect. That requires a Couch Kick or collimator rotation, not a half-beam block on the lateral field." },
+                { text: "To increase skin dose to the scar.", correct: false, feedback: "Incorrect. Bolus increases skin dose. Beam divergence affects internal geometry." }
+            ]
+        },
+        {
+            category: "3. Procedures",
+            type: "proc",
+            title: "Emergencies: Contrast Reaction",
+            chart: `
+                <div class="chart-row"><strong>Pt:</strong> K. West (50M)</div>
+                <div class="chart-row"><strong>Sim:</strong> Abdomen/Pelvis with IV Contrast.</div>
+                <div class="chart-row"><strong>Time:</strong> 5 mins post-injection.</div>
+                <div class="chart-row"><strong>Signs:</strong> Facial Edema, Laryngeal stridor (wheezing), Dyspnea.</div>
+            `,
+            question: "Classify this reaction and identify the correct medication response.",
+            options: [
+                { text: "Mild Reaction. Observation only.", correct: false, feedback: "Incorrect. Facial edema and stridor (throat closing) are never mild." },
+                { text: "Moderate Reaction. Administer Benadryl (Diphenhydramine).", correct: false, feedback: "Incorrect. While serious, 'Laryngeal Stridor' pushes this into Severe territory (Airway compromise)." },
+                { text: "Severe Reaction. Administer Epinephrine.", correct: true, feedback: "Correct. Airway compromise (stridor/edema) is Anaphylactic Shock. Epinephrine is the first-line drug." },
+                { text: "Vasovagal Reaction. Elevate legs.", correct: false, feedback: "Incorrect. Vasovagal presents as hypotension/bradycardia (fainting), not airway swelling." }
+            ]
+        },
+        {
+            category: "3. Procedures",
+            type: "proc",
+            title: "Monitor Unit Calculation",
+            chart: `
+                <div class="chart-row"><strong>Pt:</strong> S. Jobs (60M)</div>
+                <div class="chart-row"><strong>Rx:</strong> 180 cGy to isocenter.</div>
+                <div class="chart-row"><strong>Fields:</strong> PA Spine (Single Field).</div>
+                <div class="chart-row"><strong>Factors:</strong> PDD=0.90, Sc=1.02, Sp=1.01, Tray=0.97. Output=1.0 cGy/MU.</div>
+            `,
+            question: "Calculate the required Monitor Units (MU). Formula: MU = Dose / (Output * Factors)",
+            options: [
+                { text: "198 MU", correct: false, feedback: "Incorrect. You multiplied the dose by the factors. You must DIVIDE Dose by the factors." },
+                { text: "202 MU", correct: true, feedback: "Correct. 180 / (1.0 * 0.90 * 1.02 * 1.01 * 0.97) = 180 / 0.89 = 202. The math holds up." },
+                { text: "180 MU", correct: false, feedback: "Incorrect. You simply treated 1 cGy/MU without accounting for attenuation (PDD/Tray) or scatter." },
+                { text: "225 MU", correct: false, feedback: "Incorrect. Too high. Check your decimal placements." }
+            ]
+        }
+    ];
+
+    // --- GAME ENGINE ---
+    let currentScenarioIndex = 0;
+    let score = 0;
+
+    function startSim() {
+        document.getElementById('main-interface').innerHTML = ""; // Clear start screen
+        currentScenarioIndex = 0;
+        score = 0;
+        updateScore();
+        loadScenario(0);
+    }
+
+    function loadScenario(index) {
+        if (index >= scenarios.length) {
+            endSim();
+            return;
+        }
+
+        const scen = scenarios[index];
+        const container = document.getElementById('main-interface');
+        const progressBar = document.getElementById('progress');
+        
+        // Update Progress
+        const percent = ((index) / scenarios.length) * 100;
+        progressBar.style.width = percent + "%";
+
+        // Category Color Logic
+        let catClass = "cat-care";
+        let borderClass = "#27ae60"; // Green default
+        if(scen.type === "safety") { catClass = "cat-safety"; borderClass = "#d35400"; }
+        if(scen.type === "proc") { catClass = "cat-proc"; borderClass = "#8e44ad"; }
+
+        // Build HTML
+        let html = `
+            <div class="scenario-area">
+                <span class="category-badge ${catClass}">${scen.category}</span>
+                
+                <div class="chart-card" style="border-left-color: ${borderClass}">
+                    <div class="chart-title">ELECTRONIC MEDICAL RECORD</div>
+                    ${scen.chart}
+                </div>
+
+                <div class="question-text">${scen.question}</div>
+
+                <div class="options-grid">
+                    ${scen.options.map((opt, i) => `
+                        <button class="option-btn" id="btn-${i}" onclick="checkAnswer(${i})">${opt.text}</button>
+                    `).join('')}
+                </div>
+
+                <div id="feedback-area" class="feedback-panel"></div>
+            </div>
+        `;
+        
+        container.innerHTML = html;
+        document.getElementById('next-btn').style.display = 'none';
+    }
+
+    function checkAnswer(selectedIndex) {
+        const scen = scenarios[currentScenarioIndex];
+        const buttons = document.querySelectorAll('.option-btn');
+        const fbPanel = document.getElementById('feedback-area');
+        const selectedBtn = document.getElementById(`btn-${selectedIndex}`);
+        const isCorrect = scen.options[selectedIndex].correct;
+
+        // Disable all
+        buttons.forEach(b => b.disabled = true);
+
+        // Styling
+        if (isCorrect) {
+            selectedBtn.classList.add('correct-choice');
+            fbPanel.classList.add('fb-correct');
+            fbPanel.innerHTML = `<strong>Correct!</strong> ${scen.options[selectedIndex].feedback}`;
+            score++;
+        } else {
+            selectedBtn.classList.add('wrong-choice');
+            fbPanel.classList.add('fb-wrong');
+            // Find right answer to highlight
+            const rightIndex = scen.options.findIndex(o => o.correct);
+            document.getElementById(`btn-${rightIndex}`).classList.add('correct-choice');
+            
+            fbPanel.innerHTML = `<strong>Incorrect.</strong> ${scen.options[selectedIndex].feedback}`;
+        }
+
+        fbPanel.style.display = 'block';
+        updateScore();
+        document.getElementById('next-btn').style.display = 'block';
+    }
+
+    function nextScenario() {
+        currentScenarioIndex++;
+        loadScenario(currentScenarioIndex);
+    }
+
+    function updateScore() {
+        document.getElementById('score-display').innerText = `${score}/${scenarios.length}`;
+    }
+
+    function endSim() {
+        document.getElementById('progress').style.width = "100%";
+        const container = document.getElementById('main-interface');
+        const percentage = Math.round((score / scenarios.length) * 100);
+        
+        let msg = "Keep studying. Focus on the explanation feedback.";
+        if(percentage > 75) msg = "Great job! You are demonstrating solid clinical judgment.";
+        if(percentage > 90) msg = "Excellent! You are ready for the Registry.";
+
+        container.innerHTML = `
+            <div class="start-screen">
+                <h2 style="color: var(--primary)">Simulation Complete</h2>
+                <div class="score-number" style="font-size: 3em; color: var(--accent);">${percentage}%</div>
+                <p>${msg}</p>
+                <button class="start-btn" onclick="startSim()">Restart</button>
+            </div>
+        `;
+        document.getElementById('next-btn').style.display = 'none';
+    }
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 2: Safety Master Simulator</title>
+    <style>
+        :root {
+            --bg: #fff7ed; /* Light Orange Background for Safety */
+            --card-bg: #ffffff;
+            --primary: #c2410c; /* Deep Orange/Rust */
+            --accent: #f97316; /* Bright Orange */
+            --text: #333;
+            --border: #fdba74;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        /* Main Game Container */
+        .sim-container {
+            max-width: 900px;
+            width: 100%;
+            background: var(--card-bg);
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border-top: 8px solid var(--accent);
+        }
+
+        /* Certificate Styles (Hidden until print) */
+        #certificate-area {
+            display: none;
+            text-align: center;
+            padding: 50px;
+            border: 15px solid var(--primary);
+            background: white;
+            color: #333;
+            font-family: 'Times New Roman', serif;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            box-sizing: border-box;
+        }
+        
+        @media print {
+            body * { visibility: hidden; }
+            #certificate-area, #certificate-area * { visibility: visible; }
+            #certificate-area { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+            .no-print { display: none !important; }
+        }
+
+        /* Header */
+        .header-panel {
+            background: var(--white);
+            padding: 30px;
+            border-bottom: 1px solid #eee;
+            text-align: center;
+        }
+        .spec-tracker {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .spec-badge {
+            background: #ffedd5;
+            color: var(--primary);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+            border: 1px solid var(--border);
+            opacity: 0.5;
+        }
+        .active-spec { background: var(--primary); color: white; opacity: 1; transform: scale(1.1); transition: all 0.3s; }
+
+        /* Progress */
+        .progress-container { width: 100%; height: 8px; background: #eee; }
+        .progress-bar { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s; }
+
+        /* Scenario Area */
+        .scenario-box { padding: 40px; }
+        
+        .chart-display {
+            background: #fafafa;
+            border-left: 5px solid var(--accent);
+            padding: 20px;
+            margin-bottom: 25px;
+            font-family: 'Courier New', monospace;
+            color: #444;
+            border-radius: 4px;
+        }
+        .chart-row { display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px dashed #ddd; }
+        
+        .question { font-size: 1.3em; font-weight: 600; color: var(--primary); margin-bottom: 25px; }
+
+        /* Options */
+        .options-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+        .option-btn {
+            background: white;
+            border: 2px solid #eee;
+            padding: 18px;
+            border-radius: 8px;
+            text-align: left;
+            font-size: 1.05em;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .option-btn:hover:not(:disabled) { border-color: var(--accent); background: #fff7ed; }
+        .correct { background: #dcfce7 !important; border-color: #22c55e !important; color: #14532d; }
+        .incorrect { background: #fee2e2 !important; border-color: #ef4444 !important; color: #7f1d1d; }
+
+        /* Feedback */
+        .feedback {
+            margin-top: 25px;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border-left: 5px solid #64748b;
+            display: none;
+        }
+
+        /* Start Screen */
+        .start-screen { text-align: center; padding: 60px; }
+        .name-input { padding: 15px; font-size: 1.2em; border-radius: 8px; border: 2px solid #ddd; width: 60%; margin-top: 20px; }
+        .start-btn { background: var(--accent); color: white; padding: 15px 50px; font-size: 1.3em; border: none; border-radius: 50px; cursor: pointer; margin-top: 30px; }
+
+        /* Results Screen */
+        .results-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: left; margin-top: 30px; }
+        .result-item { background: #f9fafb; padding: 15px; border-radius: 8px; border-left: 4px solid #ccc; }
+        .high-score { border-left-color: #2ecc71; }
+        .low-score { border-left-color: #e74c3c; }
+
+    </style>
+</head>
+<body>
+
+<div id="certificate-area">
+    <div style="border: 5px double #c2410c; padding: 40px; height: 90%;">
+        <div style="font-size: 3em; font-weight: bold; margin-bottom: 10px; color: #c2410c;">Certificate of Achievement</div>
+        <div style="font-size: 1.5em; margin-bottom: 30px;">ARRT Radiation Safety Simulation</div>
+        <div style="width: 100px; height: 100px; background: #ffedd5; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 30px auto; font-size: 2em; font-weight: bold; color: #c2410c;">☢</div>
+        <div style="font-size: 1.2em;">This certifies that</div>
+        <div id="cert-name" style="font-size: 2.5em; font-weight: bold; margin: 20px 0; font-family: 'Segoe UI', sans-serif; border-bottom: 2px solid #333; display: inline-block; padding: 0 20px;">Student Name</div>
+        <div style="font-size: 1.2em; margin-top: 20px;">has successfully demonstrated competency in Section 2: Safety & QA.</div>
+        <div style="font-size: 1.2em; margin-top: 30px;">Final Score: <span id="cert-score" style="font-weight: bold;">--</span></div>
+        <div style="font-size: 1.2em;">Date: <span id="cert-date">--</span></div>
+        <div style="margin-top: 80px; display: flex; justify-content: space-around;">
+            <div style="border-top: 1px solid #333; width: 250px; padding-top: 10px;">Medical Physicist Signature</div>
+            <div style="border-top: 1px solid #333; width: 250px; padding-top: 10px;">Simulation Director</div>
+        </div>
+    </div>
+</div>
+
+<div class="sim-container" id="game-ui">
+    <div class="header-panel">
+        <h1>Section 2: Safety & QA</h1>
+        <p>Comprehensive Review: Physics, Protection, QA & Radiobiology</p>
+        <div class="spec-tracker">
+            <span class="spec-badge" id="badge-phys">Physics</span>
+            <span class="spec-badge" id="badge-prot">Protection</span>
+            <span class="spec-badge" id="badge-qa">Quality Assurance</span>
+            <span class="spec-badge" id="badge-bio">Radiobiology</span>
+            <span class="spec-badge" id="badge-equip">Equipment</span>
+        </div>
+    </div>
+    <div class="progress-container"><div class="progress-bar" id="progress"></div></div>
+
+    <div id="game-area">
+        <div class="start-screen">
+            <h2>Board Exam Simulation</h2>
+            <p>25 Scenarios. Randomized Options. Real-time feedback.</p>
+            <input type="text" id="user-name" class="name-input" placeholder="Enter Your Name for Certificate">
+            <br>
+            <button class="start-btn" onclick="startSim()">Begin Exam</button>
+        </div>
+    </div>
+
+    <div class="footer" style="padding: 20px; display: flex; justify-content: flex-end;">
+        <button class="start-btn" id="next-btn" style="display:none; font-size:1em; padding: 10px 30px;" onclick="nextQuestion()">Next &rarr;</button>
+    </div>
+</div>
+
+<script>
+    // --- DATABASE: 25 SAFETY QUESTIONS ---
+    const questions = [
+        // --- 1. RADIATION PHYSICS ---
+        {
+            spec: "badge-phys",
+            topic: "Interactions",
+            chart: `<div class="chart-row"><strong>Beam:</strong> 10 MV Photons (Therapy).</div><div class="chart-row"><strong>Tissue:</strong> Soft Tissue.</div><div class="chart-row"><strong>Effect:</strong> Scattering dose to the therapist outside the room.</div>`,
+            q: "Which interaction is the primary source of occupational exposure (scatter) in Radiation Therapy?",
+            options: [
+                {text: "Photoelectric Effect", correct: false, fb: "Incorrect. Photoelectric dominates in Diagnostic (kV) range, not Therapy."},
+                {text: "Compton Scatter", correct: true, fb: "Correct. In the MV range, Compton scatter is the dominant interaction. It sends photons in all directions, creating the need for shielding."},
+                {text: "Pair Production", correct: false, fb: "Incorrect. Pair Production occurs >1.02 MeV but is less common than Compton."},
+                {text: "Coherent Scatter", correct: false, fb: "Incorrect. Negligible at therapeutic energies."}
+            ]
+        },
+        {
+            spec: "badge-phys",
+            topic: "Inverse Square Law",
+            chart: `<div class="chart-row"><strong>Source:</strong> Brachytherapy Seed (Iridium-192).</div><div class="chart-row"><strong>Dose Rate:</strong> 100 mR/hr at 1 meter.</div><div class="chart-row"><strong>New Position:</strong> Therapist steps back to 2 meters.</div>`,
+            q: "What is the new dose rate at 2 meters?",
+            options: [
+                {text: "50 mR/hr", correct: false, fb: "Incorrect. You halved it. ISL is squared."},
+                {text: "25 mR/hr", correct: true, fb: "Correct. Double the distance = 1/4 the intensity. 100 / 2² = 100 / 4 = 25."},
+                {text: "10 mR/hr", correct: false, fb: "Incorrect."},
+                {text: "200 mR/hr", correct: false, fb: "Incorrect. Intensity drops as you move away."}
+            ]
+        },
+        {
+            spec: "badge-phys",
+            topic: "Particulate Radiation",
+            chart: `<div class="chart-row"><strong>Particle:</strong> Alpha Particle.</div><div class="chart-row"><strong>LET:</strong> High.</div><div class="chart-row"><strong>Quality Factor (Q):</strong> 20.</div>`,
+            q: "Why are Alpha particles considered harmless outside the body but deadly inside?",
+            options: [
+                {text: "They have a long half-life.", correct: false, fb: "Incorrect."},
+                {text: "They cannot penetrate the dead layer of skin, but wreak havoc on soft tissue if inhaled.", correct: true, fb: "Correct. Alphas are heavy (+2 charge). A piece of paper stops them. But if swallowed/inhaled, their High LET causes massive biological damage."},
+                {text: "They turn into Beta particles inside the body.", correct: false, fb: "Incorrect."},
+                {text: "They are low LET radiation.", correct: false, fb: "Incorrect. They are the highest LET."}
+            ]
+        },
+
+        // --- 2. RADIATION PROTECTION ---
+        {
+            spec: "badge-prot",
+            topic: "Dose Limits",
+            chart: `<div class="chart-row"><strong>Person:</strong> Radiation Therapist (Occupational).</div><div class="chart-row"><strong>Timeframe:</strong> Annual (1 year).</div><div class="chart-row"><strong>Report:</strong> 45 mSv (4.5 rem).</div>`,
+            q: "Is this exposure within NCRP limits?",
+            options: [
+                {text: "Yes, the limit is 50 mSv.", correct: true, fb: "Correct. The annual occupational limit is 50 mSv (5 rem). However, this is high and should trigger an ALARA investigation."},
+                {text: "No, the limit is 5 mSv.", correct: false, fb: "Incorrect. 5 mSv is for the public or fetus."},
+                {text: "No, the limit is 1 mSv.", correct: false, fb: "Incorrect. 1 mSv is for continuous public exposure."},
+                {text: "Yes, the limit is 150 mSv.", correct: false, fb: "Incorrect. 150 mSv is for the Lens of the Eye."}
+            ]
+        },
+        {
+            spec: "badge-prot",
+            topic: "Shielding",
+            chart: `<div class="chart-row"><strong>Barrier:</strong> Wall behind the Linac.</div><div class="chart-row"><strong>Beam:</strong> Direct beam hits this wall 20% of the time.</div><div class="chart-row"><strong>Material:</strong> Concrete.</div>`,
+            q: "This wall is classified as a:",
+            options: [
+                {text: "Secondary Barrier", correct: false, fb: "Incorrect. Secondary barriers only intercept scatter/leakage."},
+                {text: "Primary Barrier", correct: true, fb: "Correct. Any wall the direct un-attenuated beam can hit is a Primary Barrier. It requires roughly 2 meters of concrete (vs 1 meter for secondary)."},
+                {text: "Tertiary Barrier", correct: false, fb: "Incorrect."},
+                {text: "Maze Barrier", correct: false, fb: "Incorrect."}
+            ]
+        },
+        {
+            spec: "badge-prot",
+            topic: "Personnel Monitoring",
+            chart: `<div class="chart-row"><strong>Device:</strong> OSL Dosimeter (Luxel).</div><div class="chart-row"><strong>Material:</strong> Aluminum Oxide.</div><div class="chart-row"><strong>Feature:</strong> Filters (Copper/Tin).</div>`,
+            q: "What is the purpose of the metal filters inside the badge?",
+            options: [
+                {text: "To protect the crystal from light.", correct: false, fb: "Incorrect."},
+                {text: "To determine the energy of the radiation.", correct: true, fb: "Correct. Different energies penetrate different filters (deep vs shallow dose). This allows the badge to distinguish between a diagnostic scatter vs a high-energy primary beam exposure."},
+                {text: "To hold the crystal in place.", correct: false, fb: "Incorrect."},
+                {text: "To absorb beta radiation.", correct: false, fb: "Incorrect."}
+            ]
+        },
+
+        // --- 3. QUALITY ASSURANCE (QA) ---
+        {
+            spec: "badge-qa",
+            topic: "Daily QA",
+            chart: `<div class="chart-row"><strong>Test:</strong> Laser Alignment.</div><div class="chart-row"><strong>Method:</strong> Align to wall marks.</div><div class="chart-row"><strong>Result:</strong> Left laser is off by 3mm.</div>`,
+            q: "According to TG-142, is this acceptable for non-IMRT/non-SRS treatment?",
+            options: [
+                {text: "Yes, tolerance is 5mm.", correct: false, fb: "Incorrect."},
+                {text: "No, tolerance is 2mm.", correct: true, fb: "Correct. For standard treatments, lasers must be within 2mm. (1mm for SRS). 3mm is a Fail."},
+                {text: "Yes, tolerance is 3mm.", correct: false, fb: "Incorrect. 2mm is the industry standard."},
+                {text: "Yes, if the ODI is accurate.", correct: false, fb: "Incorrect. Lasers define isocenter location; ODI defines depth. Both must pass."}
+            ]
+        },
+        {
+            spec: "badge-qa",
+            topic: "Safety Interlocks",
+            chart: `<div class="chart-row"><strong>Test:</strong> Door Interlock.</div><div class="chart-row"><strong>Action:</strong> Open door while beam is ON.</div><div class="chart-row"><strong>Result:</strong> Beam stops.</div><div class="chart-row"><strong>Next Step:</strong> Close door.</div>`,
+            q: "What should happen when the door is closed?",
+            options: [
+                {text: "The beam should resume automatically.", correct: false, fb: "Incorrect. This is dangerous. Automatic resumption violates safety standards."},
+                {text: "The beam must remain off until manually reset at the console.", correct: true, fb: "Correct. Closing the door completes the circuit, but the beam must NOT start until the therapist presses 'Beam On' again at the console."},
+                {text: "The couch should reset to zero.", correct: false, fb: "Incorrect."},
+                {text: "The alarm should sound continuously.", correct: false, fb: "Incorrect."}
+            ]
+        },
+        {
+            spec: "badge-qa",
+            topic: "Beam Flatness",
+            chart: `<div class="chart-row"><strong>Energy:</strong> 6 MV.</div><div class="chart-row"><strong>Profile:</strong> Dose measured across the field width (10cm depth).</div><div class="chart-row"><strong>Result:</strong> Central dose is 100%. Edge dose is 104%.</div>`,
+            q: "What causes the 'horns' (higher dose near the edges) at shallow depths?",
+            options: [
+                {text: "The Flattening Filter.", correct: true, fb: "Correct. The Flattening Filter is thickest in the middle (to harden/attenuate the forward peak). At shallow depths, the edges are 'over-flattened', causing horns. Flatness is defined at 10cm depth."},
+                {text: "The Scattering Foil.", correct: false, fb: "Incorrect. Foils are for electrons."},
+                {text: "The Monitor Chamber.", correct: false, fb: "Incorrect."},
+                {text: "The Inverse Square Law.", correct: false, fb: "Incorrect."}
+            ]
+        },
+
+        // --- 4. RADIOBIOLOGY ---
+        {
+            spec: "badge-bio",
+            topic: "Cell Survival",
+            chart: `<div class="chart-row"><strong>Curve:</strong> Linear Quadratic (survival fraction vs dose).</div><div class="chart-row"><strong>Shape:</strong> Shoulder region present.</div>`,
+            q: "What does the 'Shoulder' of the survival curve represent?",
+            options: [
+                {text: "Direct Cell Kill.", correct: false, fb: "Incorrect. Direct kill is the linear (straight) part."},
+                {text: "Repair of Sublethal Damage.", correct: true, fb: "Correct. At low doses, cells can repair damage (Elkind Recovery). The shoulder indicates that multiple hits are required to kill the cell."},
+                {text: "The OER effect.", correct: false, fb: "Incorrect."},
+                {text: "Hypoxic cell fraction.", correct: false, fb: "Incorrect."}
+            ]
+        },
+        {
+            spec: "badge-bio",
+            topic: "Acute Radiation Syndrome",
+            chart: `<div class="chart-row"><strong>Event:</strong> Whole Body Exposure.</div><div class="chart-row"><strong>Dose:</strong> 15 Gray (1500 rads).</div><div class="chart-row"><strong>Symptoms:</strong> Severe diarrhea, dehydration, electrolyte imbalance.</div>`,
+            q: "Which syndrome is the primary cause of death at this dose level?",
+            options: [
+                {text: "Hematopoietic (Bone Marrow).", correct: false, fb: "Incorrect. Marrow death happens at 2-10 Gy. At 15 Gy, the GI system fails before the marrow effects kill the patient."},
+                {text: "Gastrointestinal (GI).", correct: true, fb: "Correct. 10-50 Gy destroys the crypt cells of the intestines (villi slough off). Death occurs in 3-10 days due to dehydration/infection."},
+                {text: "Cerebrovascular (CNS).", correct: false, fb: "Incorrect. CNS syndrome requires >50 Gy."},
+                {text: "Prodromal.", correct: false, fb: "Incorrect. Prodromal is a stage (nausea), not a syndrome."}
+            ]
+        },
+        {
+            spec: "badge-bio",
+            topic: "Fetal Dose",
+            chart: `<div class="chart-row"><strong>Patient:</strong> Pregnant (1st Trimester).</div><div class="chart-row"><strong>Risk:</strong> Radiation exposure during Organogenesis (Weeks 2-8).</div>`,
+            q: "What is the primary risk of exposure during this specific timeframe?",
+            options: [
+                {text: "Prenatal Death (Spontaneous Abortion).", correct: false, fb: "Incorrect. That is the risk for Pre-implantation (Week 0-2)."},
+                {text: "Congenital Abnormalities (Skeletal/Organ).", correct: true, fb: "Correct. During organogenesis, the organs are forming. Radiation causes structural deformities (microcephaly, stunted limbs)."},
+                {text: "Growth Retardation.", correct: false, fb: "Incorrect. This is the risk for the Fetal Stage (Week 8+)."},
+                {text: "Childhood Leukemia.", correct: false, fb: "Incorrect. This is a stochastic risk for all stages."}
+            ]
+        },
+
+        // --- 5. EQUIPMENT & UNITS ---
+        {
+            spec: "badge-equip",
+            topic: "Klystron vs Magnetron",
+            chart: `<div class="chart-row"><strong>Machine:</strong> Varian TrueBeam (High Energy 18MV).</div><div class="chart-row"><strong>Component:</strong> Microwave Source.</div>`,
+            q: "Which component is likely used to power this high-energy machine?",
+            options: [
+                {text: "Magnetron", correct: false, fb: "Incorrect. Magnetrons generate microwaves but are typically used for low-energy (6MV) units."},
+                {text: "Klystron", correct: true, fb: "Correct. Klystrons are amplifiers. They are required for high-energy linacs to boost the RF power sufficiently."},
+                {text: "Electron Gun", correct: false, fb: "Incorrect. The gun makes electrons, not microwaves."},
+                {text: "Waveguide", correct: false, fb: "Incorrect. The waveguide transports the waves."}
+            ]
+        },
+        {
+            spec: "badge-equip",
+            topic: "Units of Measurement",
+            chart: `<div class="chart-row"><strong>Measurement:</strong> Radioactivity of a Source.</div><div class="chart-row"><strong>System:</strong> SI (International System).</div>`,
+            q: "What is the correct SI unit for Radioactivity?",
+            options: [
+                {text: "Curie (Ci)", correct: false, fb: "Incorrect. Curie is the traditional/US unit."},
+                {text: "Becquerel (Bq)", correct: true, fb: "Correct. 1 Bq = 1 disintegration per second. (3.7 x 10^10 Bq = 1 Ci)."},
+                {text: "Sievert (Sv)", correct: false, fb: "Incorrect. Sv is Equivalent Dose."},
+                {text: "Gray (Gy)", correct: false, fb: "Incorrect. Gy is Absorbed Dose."}
+            ]
+        },
+        {
+            spec: "badge-phys",
+            topic: "Wedge Factors",
+            chart: `<div class="chart-row"><strong>Plan:</strong> Manual Calc.</div><div class="chart-row"><strong>Beam:</strong> 6 MV with 45-degree wedge.</div><div class="chart-row"><strong>Wedge Factor:</strong> 0.50.</div><div class="chart-row"><strong>Open MU:</strong> 100.</div>`,
+            q: "How does the wedge affect the Monitor Units (MU)?",
+            options: [
+                {text: "MUs decrease to 50.", correct: false, fb: "Incorrect."},
+                {text: "MUs increase to 200.", correct: true, fb: "Correct. The wedge absorbs 50% of the beam (Factor 0.5). To get the same dose to the patient, you must double the Beam On time. 100 / 0.5 = 200."},
+                {text: "MUs stay the same.", correct: false, fb: "Incorrect."},
+                {text: "MUs increase to 150.", correct: false, fb: "Incorrect."}
+            ]
+        },
+        {
+            spec: "badge-qa",
+            topic: "CT Simulator QA",
+            chart: `<div class="chart-row"><strong>Test:</strong> CT Number Accuracy (Water Phantom).</div><div class="chart-row"><strong>Result:</strong> Water measures +3 HU.</div><div class="chart-row"><strong>Tolerance:</strong> +/- 5 HU.</div>`,
+            q: "Is this result acceptable?",
+            options: [
+                {text: "Yes, it is within the 5 HU tolerance.", correct: true, fb: "Correct. Water is defined as 0 HU. A deviation of +3 is acceptable for dose calculation accuracy."},
+                {text: "No, water must be exactly 0.", correct: false, fb: "Incorrect. Detectors have noise."},
+                {text: "No, tolerance is +/- 1 HU.", correct: false, fb: "Incorrect. Too strict."},
+                {text: "Yes, but recalibrate anyway.", correct: false, fb: "Incorrect. Unnecessary recalibration introduces risk."}
+            ]
+        },
+        {
+            spec: "badge-prot",
+            topic: "Transport Index",
+            chart: `<div class="chart-row"><strong>Package:</strong> Radioactive I-131.</div><div class="chart-row"><strong>Survey:</strong> 4 mR/hr at 1 meter from surface.</div>`,
+            q: "What is the Transport Index (TI)?",
+            options: [
+                {text: "0.4", correct: false, fb: "Incorrect."},
+                {text: "4.0", correct: true, fb: "Correct. The Transport Index is defined as the dose rate (in mR/hr) at 1 meter. 4 mR/hr @ 1m = TI of 4."},
+                {text: "40.0", correct: false, fb: "Incorrect."},
+                {text: "1.0", correct: false, fb: "Incorrect."}
+            ]
+        },
+        {
+            spec: "badge-equip",
+            topic: "Ion Chambers",
+            chart: `<div class="chart-row"><strong>Device:</strong> 'Cutie Pie' Survey Meter.</div><div class="chart-row"><strong>Use Case:</strong> Searching for a lost I-125 seed in the OR.</div>`,
+            q: "Is this the correct tool?",
+            options: [
+                {text: "Yes, it measures dose accurately.", correct: false, fb: "Incorrect. Cutie Pies are for precise dose rate measurement (high flux), but they are slow to respond."},
+                {text: "No. A Geiger-Muller (GM) counter is better.", correct: true, fb: "Correct. For *finding* lost sources (low levels), you need high sensitivity and instant response. A GM counter clicks instantly when it finds radiation."},
+                {text: "Yes, it is the most sensitive.", correct: false, fb: "Incorrect. Ion chambers are less sensitive than GM counters."},
+                {text: "No. Use a Scintillation detector.", correct: false, fb: "Incorrect. While sensitive, GM is the standard 'finder' tool."}
+            ]
+        },
+        {
+            spec: "badge-bio",
+            topic: "Stochastic Effects",
+            chart: `<div class="chart-row"><strong>Effect:</strong> Radiation-induced Cancer.</div><div class="chart-row"><strong>Model:</strong> Linear Non-Threshold (LNT).</div>`,
+            q: "Which statement accurately describes a Stochastic Effect?",
+            options: [
+                {text: "The severity depends on the dose.", correct: false, fb: "Incorrect. That is Deterministic (Non-Stochastic)."},
+                {text: "There is a threshold dose below which it cannot happen.", correct: false, fb: "Incorrect. Stochastic implies NO safe dose."},
+                {text: "The *probability* of occurrence increases with dose, but severity does not.", correct: true, fb: "Correct. Getting 1 Gy vs 10 Gy increases your *chance* of cancer, but the cancer itself is not 'worse'."},
+                {text: "It occurs immediately after exposure.", correct: false, fb: "Incorrect. Cancer has a latency period of years."}
+            ]
+        },
+        {
+            spec: "badge-qa",
+            topic: "MLC Transmission",
+            chart: `<div class="chart-row"><strong>Component:</strong> Multi-Leaf Collimator (MLC).</div><div class="chart-row"><strong>Function:</strong> Blocking OARs.</div><div class="chart-row"><strong>Leakage:</strong> Intra-leaf transmission.</div>`,
+            q: "What is the average transmission through an MLC leaf?",
+            options: [
+                {text: "0% (Complete block)", correct: false, fb: "Incorrect. No collimator is perfect."},
+                {text: "2% to 3%", correct: false, fb: "Incorrect. This is for jaws/blocks. MLCs leak more."},
+                {text: "Less than 0.1%", correct: false, fb: "Incorrect."},
+                {text: "Approximately 2% (Intra-leaf) to 3-4% (Inter-leaf).", correct: true, fb: "Correct. Because MLCs must slide, they have small gaps (inter-leaf) and are rounded (penumbra), leading to higher leakage than solid jaws."}
+            ]
+        }
+    ];
+
+    // --- GAME ENGINE ---
+    let currentIdx = 0;
+    let score = 0;
+    let userName = "";
+    
+    // Helper: Shuffle Array
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    function startSim() {
+        const input = document.getElementById('user-name').value;
+        if(input.trim() === "") { alert("Please enter your name."); return; }
+        userName = input;
+        
+        document.getElementById('game-area').innerHTML = "";
+        loadQuestion(0);
+    }
+
+    function loadQuestion(idx) {
+        if(idx >= questions.length) {
+            finish();
+            return;
+        }
+        
+        const q = questions[idx];
+        const container = document.getElementById('game-area');
+        
+        // Highlight badge
+        document.querySelectorAll('.spec-badge').forEach(b => b.classList.remove('active-spec'));
+        if(document.getElementById(q.spec)) document.getElementById(q.spec).classList.add('active-spec');
+
+        // Progress
+        document.getElementById('progress').style.width = ((idx/questions.length)*100) + "%";
+
+        // Shuffle
+        const shuffledOptions = shuffleArray([...q.options]);
+
+        let specName = "";
+        if(q.spec === "badge-phys") specName = "Radiation Physics";
+        if(q.spec === "badge-prot") specName = "Radiation Protection";
+        if(q.spec === "badge-qa") specName = "Quality Assurance";
+        if(q.spec === "badge-bio") specName = "Radiobiology";
+        if(q.spec === "badge-equip") specName = "Equipment";
+
+        let html = `
+            <div class="scenario-box">
+                <h3 style="color:var(--primary); border-bottom:2px solid #eee; padding-bottom:10px;">${specName} - ${q.topic}</h3>
+                <div class="chart-display">${q.chart}</div>
+                <div class="question">${q.q}</div>
+                <div class="options-grid">
+                    ${shuffledOptions.map((opt, i) => `
+                        <button class="option-btn" id="opt-${i}" onclick="checkAnswer(${i}, this)">${opt.text}</button>
+                    `).join('')}
+                </div>
+                <div id="fb-box" class="feedback"></div>
+            </div>
+        `;
+        
+        container.innerHTML = html;
+        
+        // Bind data for checking
+        shuffledOptions.forEach((opt, i) => {
+            document.getElementById(`opt-${i}`).dataset.correct = opt.correct;
+            document.getElementById(`opt-${i}`).dataset.fb = opt.fb;
+        });
+
+        document.getElementById('next-btn').style.display = 'none';
+    }
+
+    function checkAnswer(btnIdx, btnElement) {
+        const isCorrect = btnElement.dataset.correct === "true";
+        const fb = document.getElementById('fb-box');
+        const btns = document.querySelectorAll('.option-btn');
+        
+        btns.forEach(b => b.disabled = true);
+
+        if(isCorrect) {
+            btnElement.classList.add('correct');
+            fb.innerHTML = `<strong>Correct!</strong> ${btnElement.dataset.fb}`;
+            score++;
+        } else {
+            btnElement.classList.add('incorrect');
+            // Show right answer
+            btns.forEach(b => { if(b.dataset.correct === "true") b.classList.add('correct'); });
+            fb.innerHTML = `<strong>Incorrect.</strong> ${btnElement.dataset.fb}`;
+        }
+        
+        fb.style.display = 'block';
+        document.getElementById('next-btn').style.display = 'block';
+    }
+
+    function nextQuestion() {
+        currentIdx++;
+        loadQuestion(currentIdx);
+    }
+
+    function finish() {
+        const finalScore = Math.round((score / questions.length) * 100);
+        const date = new Date().toLocaleDateString();
+
+        document.getElementById('cert-name').innerText = userName;
+        document.getElementById('cert-score').innerText = finalScore + "%";
+        document.getElementById('cert-date').innerText = date;
+
+        document.getElementById('game-area').innerHTML = `
+            <div class="start-screen">
+                <h2>Simulation Complete!</h2>
+                <h1 style="font-size: 3em; color: var(--primary);">${finalScore}%</h1>
+                <div style="margin-top:40px;">
+                    <button class="start-btn" onclick="window.print()">Print Certificate</button>
+                    <button class="start-btn" style="background:#666;" onclick="location.reload()">Retry</button>
+                </div>
+            </div>
+        `;
+        document.getElementById('next-btn').style.display = 'none';
+        document.querySelector('.header-panel').style.display = 'none'; 
+    }
+
+</script>
+
+</body>
+</html>
