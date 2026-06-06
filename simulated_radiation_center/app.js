@@ -476,16 +476,73 @@ function buildLinac() {
   const jy1 = box(0.9, 0.3, 0.12, MAT.metalDark, 0, 0, 0); jaws.add(jy1);
   const jy2 = box(0.9, 0.3, 0.12, MAT.metalDark, 0, 0, 0); jaws.add(jy2);
   RIG.jx1 = jx1; RIG.jx2 = jx2; RIG.jy1 = jy1; RIG.jy2 = jy2;
-  // MLC leaves (two banks) below jaws
+ // MLC leaves (two banks) below jaws
   const mlc = new THREE.Group(); mlc.position.y = -0.42; head.add(mlc);
   RIG.mlcLeaves = [];
-  for (let i = 0; i < 8; i++) {
-    const z = -0.35 + i * 0.1;
-    const lA = box(0.5, 0.1, 0.085, MAT.metal, -0.25, 0, z); mlc.add(lA);
-    const lB = box(0.5, 0.1, 0.085, MAT.metal, 0.25, 0, z); mlc.add(lB);
-    RIG.mlcLeaves.push([lA, lB]);
+  
+  const numPairs = 20; // Expanded leaf pairs
+  const leafWidth = 0.8 / numPairs; // Fit within the 0.8m jaw opening
+  
+  for (let i = 0; i < numPairs; i++) {
+    const z = -0.4 + i * leafWidth + (leafWidth / 2);
+    // lA is the left bank (-X), lB is the right bank (+X)
+    const lA = box(0.5, 0.1, leafWidth - 0.005, MAT.metal, -0.25, 0, z); mlc.add(lA);
+    const lB = box(0.5, 0.1, leafWidth - 0.005, MAT.metal, 0.25, 0, z); mlc.add(lB);
+    
+    // Store meshes and their target positions for animation
+    RIG.mlcLeaves.push({ 
+      left: lA, right: lB, 
+      targetLeft: -0.25, targetRight: 0.25,
+      currentLeft: -0.25, currentRight: 0.25
+    });
   }
-
+function setMLCPreset(presetType) {
+  const numPairs = RIG.mlcLeaves.length;
+  const maxOpen = 0.25; // Fully retracted position in meters
+  
+  for (let i = 0; i < numPairs; i++) {
+    let leftTarget = -maxOpen;
+    let rightTarget = maxOpen;
+    
+    switch (presetType) {
+      case 'square':
+        // A simple square field
+        if (i > 4 && i < 15) { leftTarget = -0.1; rightTarget = 0.1; }
+        else { leftTarget = 0; rightTarget = 0; } // Blocked
+        break;
+        
+      case 'cshape':
+        // C-Shape wrapping around a central structure
+        const numEnds = Math.floor(numPairs / 4);
+        if (i < numEnds || i >= numPairs - numEnds) {
+          leftTarget = -0.15; rightTarget = 0.15; // Outer arms
+        } else {
+          leftTarget = 0.05; rightTarget = 0.15; // Inner curve
+        }
+        break;
+        
+      case 'diagonal':
+        // Ascending diagonal slit
+        let offset = (i / (numPairs - 1)) * 0.3 - 0.15;
+        leftTarget = offset - 0.05;
+        rightTarget = offset + 0.05;
+        break;
+        
+      case 'slidingWindow':
+        // Dynamic animation target (starts closed on left)
+        leftTarget = -maxOpen;
+        rightTarget = -maxOpen + 0.05; 
+        break;
+        
+      default: // 'open' or 'match'
+        leftTarget = -maxOpen; rightTarget = maxOpen;
+    }
+    
+    // Assign targets to the RIG
+    RIG.mlcLeaves[i].targetLeft = leftTarget;
+    RIG.mlcLeaves[i].targetRight = rightTarget;
+  }
+}
   // --- beam cone from head through isocenter to floor ---
   const beam = new THREE.Mesh(new THREE.ConeGeometry(0.5, SAD + 1.4, 24, 1, true), MAT.beam);
   beam.position.y = SAD / 2 - 0.7;          // apex near source, widening downward
@@ -665,12 +722,23 @@ function stepMachines(dt) {
     RIG.jy1.position.x = fx + 0.06; RIG.jy2.position.x = -fx - 0.06;
     if (RIG.linacBeam) { RIG.linacBeam.scale.set(fx / 0.5, 1, fy / 0.5); }
   }
-  // MLC retraction fraction
+ // MLC smooth interpolation toward targets
   if (RIG.mlcLeaves) {
-    RIG.mlcLeaves.forEach((pair, i) => {
-      const open = (M.linac.mlc / 100) * (0.12 + 0.04 * Math.sin(i * 1.3));
-      pair[0].position.x = -0.25 - open; pair[1].position.x = 0.25 + open;
+    const speed = dt * 0.8; // Leaf travel speed
+    RIG.mlcLeaves.forEach((pair) => {
+      // Move left bank toward target
+      if (Math.abs(pair.targetLeft - pair.currentLeft) > 0.001) {
+        pair.currentLeft += Math.sign(pair.targetLeft - pair.currentLeft) * speed;
+      }
+      // Move right bank toward target
+      if (Math.abs(pair.targetRight - pair.currentRight) > 0.001) {
+        pair.currentRight += Math.sign(pair.targetRight - pair.currentRight) * speed;
+      }
+      
+      pair.left.position.x = pair.currentLeft;
+      pair.right.position.x = pair.currentRight;
     });
+  }
   }
   // couch transforms
   if (RIG.linacLift) RIG.linacLift.position.y = 1.3 + M.linac.couchV;
@@ -806,6 +874,17 @@ const PANELS = {
       <div class="procbtn" data-act="pVMAT"><div class="pn">VMAT arc</div><div class="pd">Dynamic arc delivery with continuous gantry rotation.</div></div>
       <div class="procbtn" data-act="pPortal"><div class="pn">Portal imaging</div><div class="pd">Deploy EPID and acquire a verification image.</div></div>
     </div>`
+   <div class="grp"><div class="gt">MLC Presets</div>
+      <div class="btnrow three">
+        <button class="b" onclick="setMLCPreset('open')">Open</button>
+        <button class="b" onclick="setMLCPreset('square')">Square</button>
+        <button class="b" onclick="setMLCPreset('cshape')">C-Shape</button>
+      </div>
+      <div class="btnrow three">
+        <button class="b" onclick="setMLCPreset('diagonal')">Diagonal</button>
+        <button class="b" onclick="setMLCPreset('slidingWindow')">Sliding Window</button>
+      </div>
+    </div>
 };
 
 /* sync slider/checkbox displays to state on (re)build */
