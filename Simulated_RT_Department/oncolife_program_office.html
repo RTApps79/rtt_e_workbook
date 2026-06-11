@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RTApps · OncoLife Program Office</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#081222; --panel:#0d1d31; --panel2:#0a1726; --stroke:rgba(120,200,210,.16); --stroke2:rgba(120,200,210,.34);
+    --ink:#e6eef5; --dim:#8da6b8; --teal:#3fd6cf; --tealdk:#1b8c87; --amber:#ffb454; --red:#ff5d5d; --green:#6ee7a8; --blue:#6fb6ff; --violet:#a98bff;
+    --radius:12px; --shadow:0 14px 40px rgba(0,0,0,.45);
+    --g1:#3fd6cf; --g2:#6fb6ff; --g3:#ffb454; --g4:#a98bff;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; min-height:100%; background:var(--bg); color:var(--ink); font-family:"IBM Plex Sans",system-ui,sans-serif; font-size:13.5px; }
+  .mono{ font-family:"IBM Plex Mono",monospace; }
+  button{ font-family:inherit; }
+  header{ position:sticky; top:0; z-index:30; height:54px; display:flex; align-items:center; gap:14px; padding:0 16px; background:var(--panel); border-bottom:1px solid var(--stroke); }
+  header .brand{ font-family:"Bricolage Grotesque"; font-weight:800; font-size:15px; white-space:nowrap; }
+  header .brand b{ color:var(--teal); } header .brand span{ color:var(--dim); font-weight:600; font-size:12px; }
+  .grow{ flex:1; }
+  .tabs{ display:flex; gap:4px; background:var(--panel2); border:1px solid var(--stroke); border-radius:999px; padding:3px; }
+  .tabs button{ border:0; background:transparent; color:var(--dim); font-weight:600; font-size:12.5px; padding:7px 18px; border-radius:999px; cursor:pointer; }
+  .tabs button.active{ background:var(--teal); color:#06231f; }
+  .hbtn{ border:1px solid var(--stroke); background:rgba(255,255,255,.04); color:var(--ink); font-size:12px; padding:7px 11px; border-radius:8px; cursor:pointer; }
+  .hbtn:hover{ background:rgba(63,214,207,.13); }
+  .wrap{ max-width:1200px; margin:0 auto; padding:20px 18px 90px; }
+  .view{ display:none; } .view.active{ display:block; }
+  .card{ background:var(--panel); border:1px solid var(--stroke); border-radius:var(--radius); padding:16px; margin-bottom:16px; }
+  h2.sec{ font-family:"Bricolage Grotesque"; font-weight:800; font-size:18px; margin:4px 0 14px; }
+  h3.lab{ font-family:"Bricolage Grotesque"; font-weight:700; font-size:11px; letter-spacing:.8px; text-transform:uppercase; color:var(--dim); margin:0 0 10px; }
+  .note{ font-size:12px; color:var(--dim); line-height:1.55; background:rgba(255,255,255,.03); border-left:2px solid var(--tealdk); border-radius:0 8px 8px 0; padding:9px 11px; }
+  .muted{ color:var(--dim); }
+  .goal{ border:1px solid var(--stroke); border-radius:var(--radius); margin-bottom:14px; overflow:hidden; }
+  .goal>.gh{ display:flex; align-items:center; gap:10px; padding:12px 14px; background:var(--panel2); }
+  .goal .dot{ width:11px; height:11px; border-radius:50%; flex:none; }
+  .goal .gt{ font-family:"Bricolage Grotesque"; font-weight:800; font-size:14px; flex:1; }
+  .goal .gmeta{ font-size:11px; color:var(--dim); font-family:"IBM Plex Mono"; }
+  .goal .gbody{ padding:8px 14px 14px; }
+  .slo{ border:1px solid var(--stroke); border-radius:10px; padding:11px 12px; margin:8px 0; background:rgba(255,255,255,.015); }
+  .slo .top{ display:flex; align-items:flex-start; gap:10px; }
+  .slo .code{ font-family:"IBM Plex Mono"; font-size:11px; color:var(--teal); margin-top:2px; min-width:58px; }
+  .slo .stmt{ flex:1; font-size:13px; } .slo .stmt small{ color:var(--dim); display:block; margin-top:3px; }
+  .slo .acts{ display:flex; gap:6px; }
+  .tags{ display:flex; gap:5px; flex-wrap:wrap; margin-top:7px; }
+  .chip{ font-size:10px; padding:2px 8px; border-radius:999px; font-family:"IBM Plex Mono"; border:1px solid var(--stroke2); color:var(--dim); }
+  .chip.tool{ color:var(--teal); border-color:var(--teal); } .chip.dok{ color:var(--blue); border-color:var(--blue); }
+  .chip.ct{ color:var(--violet); border-color:var(--violet); } .chip.arrt{ color:var(--amber); border-color:var(--amber); }
+  .bench{ margin-top:10px; padding-top:10px; border-top:1px dashed var(--stroke); }
+  .scale{ display:flex; gap:0; border-radius:8px; overflow:hidden; border:1px solid var(--stroke); margin-top:6px; }
+  .scale .lvl{ flex:1; text-align:center; padding:7px 4px; font-size:10.5px; cursor:pointer; background:var(--panel2); border-right:1px solid var(--stroke); transition:.12s; }
+  .scale .lvl:last-child{ border-right:0; } .scale .lvl small{ display:block; color:var(--dim); font-family:"IBM Plex Mono"; }
+  .scale .lvl.on{ background:var(--teal); color:#06231f; } .scale .lvl.on small{ color:#06231f; }
+  .b{ border:1px solid var(--stroke); background:rgba(255,255,255,.04); color:var(--ink); font-size:12px; padding:7px 10px; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:6px; }
+  .b:hover{ background:rgba(63,214,207,.13); border-color:var(--stroke2); }
+  .b.sm{ padding:4px 8px; font-size:11px; } .b.primary{ background:var(--teal); color:#06231f; border-color:transparent; font-weight:600; }
+  .b.danger{ color:var(--red); border-color:rgba(255,93,93,.4); }
+  .row{ display:flex; gap:8px; align-items:center; } .row.wrap{ flex-wrap:wrap; }
+  input[type=text],input[type=number],textarea,select{ background:var(--panel2); color:var(--ink); border:1px solid var(--stroke); border-radius:8px; padding:8px 10px; font-family:inherit; font-size:13px; width:100%; }
+  textarea{ resize:vertical; min-height:54px; }
+  label.fld{ display:block; font-size:11px; color:var(--dim); margin:10px 0 4px; }
+  .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:10px; } .grid3{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; }
+  #modal{ position:fixed; inset:0; z-index:50; background:rgba(2,6,12,.7); display:none; align-items:flex-start; justify-content:center; padding:34px 16px; overflow:auto; }
+  #modal.show{ display:flex; }
+  .sheet{ width:100%; max-width:680px; background:var(--panel); border:1px solid var(--stroke2); border-radius:14px; box-shadow:var(--shadow); padding:18px; }
+  .sheet h3{ font-family:"Bricolage Grotesque"; font-weight:800; font-size:16px; margin:0 0 12px; }
+  .sheet .foot{ display:flex; justify-content:flex-end; gap:8px; margin-top:16px; }
+  .toollib .titem{ display:flex; align-items:center; gap:8px; padding:7px 9px; border:1px solid var(--stroke); border-radius:8px; margin-bottom:6px; font-size:12px; }
+  .toollib .titem .nm{ flex:1; } .toollib .titem small{ color:var(--dim); }
+  /* deliver */
+  #runner{ position:fixed; inset:0; z-index:55; background:rgba(2,6,12,.9); display:none; flex-direction:column; }
+  #runner.show{ display:flex; }
+  #runner .rhead{ height:50px; display:flex; align-items:center; gap:12px; padding:0 14px; background:var(--panel); border-bottom:1px solid var(--stroke); }
+  #runner iframe{ flex:1; width:100%; border:0; background:#fff; }
+  #runner .rfoot{ background:var(--panel); border-top:1px solid var(--stroke); padding:12px 14px; }
+  /* dashboard */
+  .kpis{ display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:16px; }
+  .kpi{ background:var(--panel); border:1px solid var(--stroke); border-radius:12px; padding:13px 14px; }
+  .kpi .v{ font-family:"Bricolage Grotesque"; font-weight:800; font-size:24px; } .kpi .k{ font-size:11px; color:var(--dim); text-transform:uppercase; letter-spacing:.5px; }
+  table.dash{ width:100%; border-collapse:collapse; font-size:12.5px; } table.dash th,table.dash td{ text-align:left; padding:8px 9px; border-bottom:1px solid var(--stroke); }
+  table.dash th{ color:var(--dim); font-weight:600; font-size:10.5px; text-transform:uppercase; letter-spacing:.4px; }
+  .bar{ height:9px; border-radius:6px; background:rgba(255,255,255,.1); overflow:hidden; min-width:90px; position:relative; }
+  .bar i{ display:block; height:100%; border-radius:6px; } .bar .mark{ position:absolute; top:-2px; width:2px; height:13px; background:#fff; }
+  .met{ font-weight:700; } .met.y{ color:var(--green); } .met.n{ color:var(--red); }
+  .spark{ display:inline-flex; align-items:flex-end; gap:2px; height:24px; } .spark i{ width:7px; background:var(--teal); border-radius:2px 2px 0 0; opacity:.85; }
+  .pill{ font-size:10px; padding:2px 7px; border-radius:999px; font-family:"IBM Plex Mono"; }
+  #toast{ position:fixed; bottom:14px; left:50%; transform:translateX(-50%); background:var(--panel); border:1px solid var(--stroke2); border-radius:9px; padding:9px 18px; font-size:12.5px; box-shadow:var(--shadow); opacity:0; transition:.25s; z-index:70; pointer-events:none; }
+  #toast.show{ opacity:1; } #toast b{ color:var(--teal); }
+  .kesn{ display:flex; gap:10px; flex-wrap:wrap; } .kesn .a{ flex:1; min-width:120px; }
+  .att{ height:8px; border-radius:6px; background:rgba(255,255,255,.1); overflow:hidden; margin-top:4px; } .att i{ display:block; height:100%; }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><b>◎ RTApps</b> · OncoLife Program Office <span id="progTag"></span></div>
+  <div class="grow"></div>
+  <div class="tabs" id="tabs">
+    <button data-tab="builder" class="active">Plan Builder</button>
+    <button data-tab="deliver">Deliver</button>
+    <button data-tab="dashboard">Dashboard</button>
+  </div>
+  <button class="hbtn" id="importBtn">Import</button>
+  <button class="hbtn" id="exportBtn">Export</button>
+  <input type="file" id="importFile" accept="application/json" style="display:none">
+</header>
+
+<div class="wrap">
+  <section class="view active" id="view-builder">
+    <div class="row" style="justify-content:space-between;align-items:flex-end">
+      <h2 class="sec">Assessment Plan Builder</h2>
+      <div class="row"><input type="text" id="progName" placeholder="Program name" style="width:240px"><button class="b" id="resetBtn">Reset to seed</button></div>
+    </div>
+    <div class="note" style="margin-bottom:14px">Four <b>Program Goals</b> are fixed. Each <b>SLO / EPA</b> maps to a module activity (your e-Workbook tool), is tagged with DOK level, Scheffer cognitive skills and ARRT task, and carries a <b>benchmark on the 4-point Clinical Mastery Scale</b> — click a mastery level to set the bar. Everything is stored locally; nothing leaves the browser.</div>
+    <div id="goalsHost"></div>
+    <div class="card toollib">
+      <h3 class="lab">e-Workbook Tool Library <span class="muted" style="text-transform:none;font-weight:400">— seeded from the 2026 curriculum activity menus</span></h3>
+      <div class="row wrap" style="margin-bottom:8px"><select id="libModule" style="width:auto"></select><span class="muted" style="font-size:11px">click a tool to attach it to a new SLO</span></div>
+      <div id="toolLib"></div>
+    </div>
+  </section>
+
+  <section class="view" id="view-deliver">
+    <h2 class="sec">Deliver an Assessment</h2>
+    <div class="card">
+      <h3 class="lab">Select assessment</h3>
+      <label class="fld">Outcome / tool</label><select id="mapSel"></select>
+      <div class="grid3" style="margin-top:6px">
+        <div><label class="fld">Student ID</label><input type="text" id="stuId" placeholder="STU12345"></div>
+        <div><label class="fld">Cohort</label><input type="text" id="cohort" placeholder="2026"></div>
+        <div><label class="fld">Period</label><select id="period"><option>Q1</option><option>Q2</option><option>Q3</option><option>Q4</option></select></div>
+      </div>
+      <button class="b primary" id="launchBtn" style="margin-top:14px">Launch tool</button>
+      <div class="note" style="margin-top:10px">The tool opens in a frame. When the student submits, a wired tool reports its score automatically (<span class="mono">postMessage RTAPPS_RESULT</span>). If it isn't wired yet, record the observed mastery level in the footer.</div>
+    </div>
+  </section>
+
+  <section class="view" id="view-dashboard">
+    <div class="row" style="justify-content:space-between;align-items:flex-end">
+      <h2 class="sec">Automated Analysis</h2>
+      <div class="row"><label class="fld" style="margin:0">Cohort</label><select id="cohortFilter" style="width:140px"></select><button class="b" id="exportReport">Export report</button></div>
+    </div>
+    <div class="kpis" id="kpis"></div>
+    <div class="card"><h3 class="lab">Cohort attribute profile (K·E·S·N — OncoLife)</h3><div class="kesn" id="kesn"></div></div>
+    <div id="dashHost"></div>
+  </section>
+</div>
+
+<div id="modal"><div class="sheet" id="sheet"></div></div>
+<div id="runner">
+  <div class="rhead"><b id="runnerTitle" style="font-family:Bricolage Grotesque"></b><span class="grow"></span><button class="b sm" id="runnerClose">Close</button></div>
+  <iframe id="runnerFrame" title="assessment tool"></iframe>
+  <div class="rfoot" id="runnerFoot"></div>
+</div>
+<div id="toast"></div>
+<script>
+/* ===================================================================
+   RTApps · OncoLife Program / Education Office
+   Self-contained CMS + rubric benchmark engine + automated dashboard.
+   Spine: CBE/EPAs · 4-Point Clinical Mastery Rubric · Scheffer skills ·
+   Drive Logic archetypes · K-E-S-N attributes. Data stays in the browser.
+   =================================================================== */
+'use strict';
+const $ = id => document.getElementById(id);
+const el = (t, c, h) => { const e = document.createElement(t); if (c) e.className = c; if (h != null) e.innerHTML = h; return e; };
+const uid = () => 'x' + Math.random().toString(36).slice(2, 9);
+const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
+function toast(m) { const t = $('toast'); t.innerHTML = m; t.classList.add('show'); clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('show'), 2200); }
+
+/* ---------- fixed pedagogy ---------- */
+const GOALS = [
+  { id: 'CLINICAL_COMPETENCE', name: 'Clinical Competence', color: 'var(--g1)' },
+  { id: 'CRITICAL_THINKING', name: 'Critical Thinking', color: 'var(--g2)' },
+  { id: 'COMMUNICATION', name: 'Communication', color: 'var(--g3)' },
+  { id: 'PROFESSIONALISM', name: 'Professionalism', color: 'var(--g4)' }
+];
+const GCOLOR = { CLINICAL_COMPETENCE: '#3fd6cf', CRITICAL_THINKING: '#6fb6ff', COMMUNICATION: '#ffb454', PROFESSIONALISM: '#a98bff' };
+// 4-Point Clinical Mastery Scale (workbook). level -> {name, cut% to MEET this level}
+const RUBRIC = [
+  { lvl: 4, name: 'Mastery', cut: 95 },
+  { lvl: 3, name: 'Proficient', cut: 85 },
+  { lvl: 2, name: 'Apprentice', cut: 75 },
+  { lvl: 1, name: 'Novice', cut: 65 },
+  { lvl: 0, name: 'Not Yet', cut: 0 }
+];
+const cutFor = lvl => (RUBRIC.find(r => r.lvl === lvl) || { cut: 85 }).cut;
+function masteryOf(pct) { if (pct >= 95) return 4; if (pct >= 85) return 3; if (pct >= 75) return 2; if (pct >= 65) return 1; return 0; }
+const masteryName = lvl => (RUBRIC.find(r => r.lvl === lvl) || {}).name || '—';
+// Scheffer & Rubenfeld 7 cognitive skills (tagging)
+const SCHEFFER = ['Analyzing', 'Applying Standards', 'Discriminating', 'Information Seeking', 'Logical Reasoning', 'Predicting', 'Transforming Knowledge'];
+const MODULES = [
+  { n: 1, name: 'Orientation', folder: 'Orientation_to_Radiation_Therapy' },
+  { n: 2, name: 'Radiation Physics', folder: 'Radiation_Physics' },
+  { n: 3, name: 'Radiation Biology', folder: 'Radiation_Biology' },
+  { n: 4, name: 'Sectional Anatomy', folder: 'Sectional_Anatomy' },
+  { n: 5, name: 'Patient Care', folder: 'Patient_Care' },
+  { n: 6, name: 'Ethics & Law', folder: 'Ethics' },
+  { n: 7, name: 'Quality Management', folder: 'Quality_Management_and_Safety' },
+  { n: 8, name: '3D LINAC Operations', folder: null },
+  { n: 9, name: '4D CT & Imaging', folder: '4D_CT' },
+  { n: 10, name: 'Treatment Planning', folder: 'Treatment_Planning' },
+  { n: 11, name: 'Treatment Delivery', folder: 'Treatment_Delivery_Procedures' },
+  { n: 12, name: 'Clinical Practice (Capstone)', folder: 'Clinical_Practice' }
+];
+const WB_BASE = 'https://rtapps79.github.io/rtt_e_workbook/';
+const moduleOf = n => MODULES.find(m => m.n === n) || {};
+const toolUrl = n => { const m = moduleOf(n); return m.folder ? WB_BASE + m.folder + '/' : null; };
+const toolURLof = tool => tool && tool.path ? WB_BASE + tool.path : (tool ? toolUrl(tool.module) : null);
+const DEMO_B64 = "PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9ImVuIj4KPGhlYWQ+CjxtZXRhIGNoYXJzZXQ9IlVURi04Ij4KPG1ldGEgbmFtZT0idmlld3BvcnQiIGNvbnRlbnQ9IndpZHRoPWRldmljZS13aWR0aCwgaW5pdGlhbC1zY2FsZT0xLjAiPgo8dGl0bGU+Q29uc2VudCAmYW1wOyBMZWdhbCBEb2N0cmluZXMg4oCUIEFzc2Vzc21lbnQ8L3RpdGxlPgo8c3R5bGU+CiAgYm9keXsgZm9udC1mYW1pbHk6c3lzdGVtLXVpLCJTZWdvZSBVSSIsc2Fucy1zZXJpZjsgYmFja2dyb3VuZDojMGQxZDMxOyBjb2xvcjojZTZlZWY1OyBtYXJnaW46MDsgcGFkZGluZzoyNnB4IDE4cHg7IH0KICAuY2FyZHsgbWF4LXdpZHRoOjY0MHB4OyBtYXJnaW46MCBhdXRvOyBiYWNrZ3JvdW5kOiMwYTE3MjY7IGJvcmRlcjoxcHggc29saWQgcmdiYSgxMjAsMjAwLDIxMCwuMik7IGJvcmRlci1yYWRpdXM6MTZweDsgcGFkZGluZzoyNHB4OyB9CiAgaDF7IGZvbnQtc2l6ZToxOHB4OyBtYXJnaW46MCAwIDJweDsgfSAuc3VieyBjb2xvcjojOGRhNmI4OyBmb250LXNpemU6MTIuNXB4OyBtYXJnaW4tYm90dG9tOjE4cHg7IH0KICAucXsgZm9udC1zaXplOjE1cHg7IGxpbmUtaGVpZ2h0OjEuNTsgbWFyZ2luOjhweCAwIDE0cHg7IH0KICBidXR0b24ub3B0eyBkaXNwbGF5OmJsb2NrOyB3aWR0aDoxMDAlOyB0ZXh0LWFsaWduOmxlZnQ7IG1hcmdpbjo5cHggMDsgcGFkZGluZzoxMnB4IDE0cHg7IGJvcmRlci1yYWRpdXM6MTFweDsgYm9yZGVyOjFweCBzb2xpZCByZ2JhKDEyMCwyMDAsMjEwLC4yNSk7IGJhY2tncm91bmQ6IzBkMWQzMTsgY29sb3I6I2U2ZWVmNTsgY3Vyc29yOnBvaW50ZXI7IGZvbnQtc2l6ZToxNHB4OyB0cmFuc2l0aW9uOi4xMnM7IH0KICBidXR0b24ub3B0OmhvdmVyeyBiYWNrZ3JvdW5kOnJnYmEoNjMsMjE0LDIwNywuMTIpOyBib3JkZXItY29sb3I6cmdiYSg2MywyMTQsMjA3LC41KTsgfQogIC5wcm9neyBjb2xvcjojOGRhNmI4OyBmb250LXNpemU6MTJweDsgbWFyZ2luLWJvdHRvbTo2cHg7IH0KICAuZG9uZXsgdGV4dC1hbGlnbjpjZW50ZXI7IHBhZGRpbmc6MTRweCA2cHg7IH0KICAuc2NvcmV7IGZvbnQtc2l6ZTo0NnB4OyBmb250LXdlaWdodDo4MDA7IGNvbG9yOiMzZmQ2Y2Y7IGxpbmUtaGVpZ2h0OjEuMTsgfQogIC5sdmx7IGZvbnQtc2l6ZToxNnB4OyBtYXJnaW4tdG9wOjZweDsgfSAuZmJ7IHRleHQtYWxpZ246bGVmdDsgbWFyZ2luLXRvcDoxNnB4OyBmb250LXNpemU6MTNweDsgY29sb3I6I2I5Y2NkOTsgfQogIC5mYiBkaXZ7IHBhZGRpbmc6NnB4IDA7IGJvcmRlci10b3A6MXB4IHNvbGlkIHJnYmEoMTIwLDIwMCwyMTAsLjE0KTsgfQogIC5va3sgY29sb3I6IzZlZTdhODsgfSAubm97IGNvbG9yOiNmZjhkOGQ7IH0KPC9zdHlsZT4KPC9oZWFkPgo8Ym9keT4KPGRpdiBjbGFzcz0iY2FyZCIgaWQ9ImFwcCI+PC9kaXY+CjxzY3JpcHQ+Ci8qID09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KICAgUlRBcHBzIFN0YXRpb24gQnJpZGdlICDCtyAgcnRhcHBzLWJyaWRnZS5qcwogICBEcm9wIHRoaXMgaW50byBhbnkgZS1Xb3JrYm9vayB0b29sIHRvIHJlcG9ydCBzY29yZXMgdG8gdGhlIE9uY29MaWZlCiAgIFByb2dyYW0gT2ZmaWNlIChvciB0aGUgU2ltdWxhdGVkIENlbnRlcikgd2hlbiB0aGUgdG9vbCBydW5zIGluc2lkZSBpdC4KCiAgIEFkZCBPTkUgc2NyaXB0IHRhZzoKICAgICA8c2NyaXB0IHNyYz0icnRhcHBzLWJyaWRnZS5qcyI+PC9zY3JpcHQ+CgogICBUaGVuIEVJVEhFUiBjYWxsIHRoaXMgYXQgeW91ciBzY29yaW5nIHBvaW50OgogICAgIFJUQXBwcy5jb21wbGV0ZShzY29yZVBjdCwgeyBrZXNuOntLLEUsUyxOfSwgYXJjaGV0eXBlOidSb2JvdCd8J1RoZW9yaXN0J3wnQmFsYW5jZWQnLCByYXc6ey4uLn0gfSk7CgogICBPUiwgZm9yIGEgdG9vbCB0aGF0IGFscmVhZHkgc2hvd3MgYSAiRmluYWwgU2NvcmU6IDg2JSIgb24gY29tcGxldGlvbiwKICAgYWRkIG9uZSBsaW5lIG9uIGxvYWQgYW5kIGl0IGF1dG8tY2FwdHVyZXM6CiAgICAgUlRBcHBzLndhdGNoU2NvcmUoeyBsYWJlbDonRmluYWwgU2NvcmUnIH0pOwoKICAgVGhlIGJyaWRnZSBwb3N0cyBhbiBBU1NFU1NNRU5UX1JFU1VMVFMgcGF5bG9hZCB0byB0aGUgcGFyZW50IHdpbmRvdzoKICAgICB7IHR5cGU6J1JUQVBQU19SRVNVTFQnLCBwYXlsb2FkOnsgLi4ucmVzdWx0X2lkLCBzbG9faWQsIHN0dWRlbnRfaWQsCiAgICAgICBmaW5hbF9zY29yZSwgc2NvcmVQY3QsIGtlc24sIGFyY2hldHlwZSwgcmF3X2RhdGFfcGF5bG9hZCB9IH0KICAgSXQgaXMgYSBuby1vcCB3aGVuIHRoZSB0b29sIGlzIG9wZW5lZCBzdGFuZGFsb25lIChubyBwYXJlbnQgbGlzdGVuZXIpLgogICA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09ICovCihmdW5jdGlvbiAoKSB7CiAgJ3VzZSBzdHJpY3QnOwogIC8vIGxhdW5jaCBjb250ZXh0IGFycml2ZXMgZnJvbSB0aGUgaG9zdCAoT2ZmaWNlL0NlbnRlcikgdmlhIHBvc3RNZXNzYWdlLAogIC8vIG9yIHZpYSBhIFVSTCBoYXNoICgjcnRhcHBzPTxlbmNvZGVkIEpTT04+KSBhcyBhIGZhbGxiYWNrLgogIGZ1bmN0aW9uIGN0eCgpIHsKICAgIGlmICh3aW5kb3cuX19SVEFQUFNfQ1RYX18pIHJldHVybiB3aW5kb3cuX19SVEFQUFNfQ1RYX187CiAgICB0cnkgeyB2YXIgaCA9IGxvY2F0aW9uLmhhc2gubWF0Y2goL3J0YXBwcz0oW14mXSspLyk7IGlmIChoKSByZXR1cm4gSlNPTi5wYXJzZShkZWNvZGVVUklDb21wb25lbnQoaFsxXSkpOyB9IGNhdGNoIChlKSB7IH0KICAgIHJldHVybiB7fTsKICB9CiAgd2luZG93LmFkZEV2ZW50TGlzdGVuZXIoJ21lc3NhZ2UnLCBmdW5jdGlvbiAoZSkgewogICAgaWYgKGUgJiYgZS5kYXRhICYmIGUuZGF0YS50eXBlID09PSAnUlRBUFBTX0NUWCcpIHdpbmRvdy5fX1JUQVBQU19DVFhfXyA9IGUuZGF0YS5jdHggfHwge307CiAgfSk7CgogIGZ1bmN0aW9uIGNvbXBsZXRlKHNjb3JlUGN0LCByYXcpIHsKICAgIHJhdyA9IHJhdyB8fCB7fTsKICAgIHZhciBwY3QgPSBNYXRoLm1heCgwLCBNYXRoLm1pbigxMDAsIE51bWJlcihzY29yZVBjdCkgfHwgMCkpOwogICAgdmFyIGMgPSBjdHgoKTsKICAgIHZhciBwYXlsb2FkID0gewogICAgICByZXN1bHRfaWQ6ICdyJyArIERhdGUubm93KCkgKyBNYXRoLmZsb29yKE1hdGgucmFuZG9tKCkgKiAxZTQpLAogICAgICB0aW1lc3RhbXA6IG5ldyBEYXRlKCkudG9JU09TdHJpbmcoKSwKICAgICAgcHJvZ3JhbV9pZDogYy5wcm9ncmFtIHx8ICcnLAogICAgICBzbG9faWQ6IGMuc2xvIHx8ICcnLAogICAgICBnb2FsX2lkOiBjLmdvYWwgfHwgJycsCiAgICAgIHN0dWRlbnRfaWQ6IGMuc3R1ZGVudCB8fCAnJywKICAgICAgY29ob3J0OiBjLmNvaG9ydCB8fCAnJywKICAgICAgcGVyaW9kOiBjLnBlcmlvZCB8fCAnJywKICAgICAgdG9vbF90eXBlOiByYXcudG9vbF90eXBlIHx8ICdlV29ya2Jvb2snLAogICAgICBmaW5hbF9zY29yZTogKHBjdCAvIDEwMCkudG9GaXhlZCgyKSwKICAgICAgc2NvcmVQY3Q6IE1hdGgucm91bmQocGN0KSwKICAgICAgcGFzc19mYWlsOiBudWxsLAogICAgICBhdHRlbXB0c19jb3VudDogcmF3LmF0dGVtcHRzX2NvdW50IHx8IDEsCiAgICAgIGtlc246IHJhdy5rZXNuIHx8IG51bGwsCiAgICAgIGFyY2hldHlwZTogcmF3LmFyY2hldHlwZSB8fCBudWxsLAogICAgICByYXdfZGF0YV9wYXlsb2FkOiByYXcucmF3IHx8IHJhdy5yYXdfZGF0YV9wYXlsb2FkIHx8IG51bGwKICAgIH07CiAgICB0cnkgeyB3aW5kb3cucGFyZW50ICYmIHdpbmRvdy5wYXJlbnQucG9zdE1lc3NhZ2UoeyB0eXBlOiAnUlRBUFBTX1JFU1VMVCcsIHBheWxvYWQ6IHBheWxvYWQgfSwgJyonKTsgfSBjYXRjaCAoZSkgeyB9CiAgICByZXR1cm4gcGF5bG9hZDsKICB9CgogIC8vIEF1dG8tY2FwdHVyZTogd2F0Y2ggdGhlIERPTSBmb3IgYSBjb21wbGV0aW9uIGVsZW1lbnQgY29udGFpbmluZyBgbGFiZWxgLAogIC8vIHBhcnNlIGEgcGVyY2VudGFnZSBvdXQgb2YgaXQsIGFuZCByZXBvcnQgb25jZS4KICBmdW5jdGlvbiB3YXRjaFNjb3JlKG9wdHMpIHsKICAgIG9wdHMgPSBvcHRzIHx8IHt9OwogICAgdmFyIGxhYmVsID0gb3B0cy5sYWJlbCB8fCAnRmluYWwgU2NvcmUnOwogICAgdmFyIHBhcnNlID0gb3B0cy5wYXJzZSB8fCBmdW5jdGlvbiAodHh0KSB7IHZhciBtID0gU3RyaW5nKHR4dCkubWF0Y2goLyhcZCsoPzpcLlxkKyk/KVxzKiUvKTsgcmV0dXJuIG0gPyBwYXJzZUZsb2F0KG1bMV0pIDogbnVsbDsgfTsKICAgIHZhciBkb25lID0gZmFsc2U7CiAgICBmdW5jdGlvbiBzY2FuKCkgewogICAgICBpZiAoZG9uZSkgcmV0dXJuOwogICAgICB2YXIgbm9kZXMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKG9wdHMuc2VsZWN0b3IgfHwgJ2JvZHkgKicpLCBpLCB0LCBwY3Q7CiAgICAgIGZvciAoaSA9IDA7IGkgPCBub2Rlcy5sZW5ndGg7IGkrKykgewogICAgICAgIHQgPSBub2Rlc1tpXS50ZXh0Q29udGVudCB8fCAnJzsKICAgICAgICBpZiAob3B0cy5zZWxlY3RvciB8fCB0LmluZGV4T2YobGFiZWwpID49IDApIHsKICAgICAgICAgIHBjdCA9IHBhcnNlKHQpOwogICAgICAgICAgaWYgKHBjdCAhPSBudWxsICYmICFpc05hTihwY3QpICYmIG5vZGVzW2ldLm9mZnNldFBhcmVudCAhPT0gbnVsbCkgeyBkb25lID0gdHJ1ZTsgb2JzLmRpc2Nvbm5lY3QoKTsgY29tcGxldGUocGN0LCBvcHRzKTsgcmV0dXJuOyB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgICB2YXIgb2JzID0gbmV3IE11dGF0aW9uT2JzZXJ2ZXIoc2Nhbik7CiAgICBvYnMub2JzZXJ2ZShkb2N1bWVudC5ib2R5LCB7IGNoaWxkTGlzdDogdHJ1ZSwgc3VidHJlZTogdHJ1ZSwgY2hhcmFjdGVyRGF0YTogdHJ1ZSB9KTsKICAgIHNjYW4oKTsKICAgIHJldHVybiBvYnM7CiAgfQoKICB3aW5kb3cuUlRBcHBzID0geyBjb21wbGV0ZTogY29tcGxldGUsIHdhdGNoU2NvcmU6IHdhdGNoU2NvcmUsIGNvbnRleHQ6IGN0eCwgdmVyc2lvbjogJzEuMCcgfTsKfSkoKTsKCjwvc2NyaXB0Pgo8c2NyaXB0PgogIHZhciBRID0gWwogICAgeyBzOiAnQSByYWRpYXRpb24gb25jb2xvZ2lzdCBnaXZlcyBhIHZlcmJhbCBvcmRlciB0byB0cmVhdCwgYnV0IHRoZSBjb25zZW50IGZvcm0gaXMgdW5zaWduZWQuIFRoZSB0aGVyYXBpc3QgcHJvY2VlZHMgd2l0aCB0cmVhdG1lbnQuJywgbzogWydCZW5lZmljZW5jZScsICdCYXR0ZXJ5ICh0cmVhdGluZyB3aXRob3V0IGNvbnNlbnQpJywgJ1ZlcmFjaXR5J10sIGE6IDEsIHdoeTogJ1RyZWF0aW5nIHdpdGhvdXQgdmFsaWQgY29uc2VudCBjYW4gY29uc3RpdHV0ZSBiYXR0ZXJ5IOKAlCB1bmxhd2Z1bCB0b3VjaGluZy4nIH0sCiAgICB7IHM6ICdBIHRoZXJhcGlzdCBvbWl0cyB0aGUgd2VkZ2UgZmFjdG9yIGR1cmluZyBhIG1hbnVhbCBjaGVjaywgYW5kIHRoZSBwYXRpZW50IHJlY2VpdmVzIGEgNDAlIG92ZXJkb3NlLicsIG86IFsnTmVnbGlnZW5jZScsICdBdXRvbm9teScsICdDb25maWRlbnRpYWxpdHknXSwgYTogMCwgd2h5OiAnRmFpbGluZyB0byBtZWV0IHRoZSBzdGFuZGFyZCBvZiBjYXJlIHRoYXQgY2F1c2VzIGhhcm0gaXMgbmVnbGlnZW5jZS4nIH0sCiAgICB7IHM6ICdBIHRoZXJhcGlzdCBkaXNjdXNzZXMgYSBwYXRpZW50IGJ5IG5hbWUgYW5kIGRpYWdub3NpcyB3aXRoIGEgZnJpZW5kIGluIGEgY3Jvd2RlZCBlbGV2YXRvci4nLCBvOiBbJ0hJUEFBIHByaXZhY3kgYnJlYWNoJywgJ0luZm9ybWVkIGNvbnNlbnQnLCAnU2NvcGUgb2YgcHJhY3RpY2UnXSwgYTogMCwgd2h5OiAnRGlzY2xvc2luZyBpZGVudGlmaWFibGUgaGVhbHRoIGluZm9ybWF0aW9uIHdpdGhvdXQgYXV0aG9yaXphdGlvbiBicmVhY2hlcyBISVBBQS4nIH0sCiAgICB7IHM6ICdBIG51cnNlIGFza3MgYSBzdHVkZW50IHRoZXJhcGlzdCB0byBjaGFuZ2UgdGhlIHByZXNjcmliZWQgZG9zZSB0byAic2F2ZSB0aW1lLiInLCBvOiBbJ1dpdGhpbiBzY29wZSBvZiBwcmFjdGljZScsICdPdXRzaWRlIHNjb3BlIG9mIHByYWN0aWNlJywgJ0RlZmFtYXRpb24nXSwgYTogMSwgd2h5OiAnQWx0ZXJpbmcgYSBwcmVzY3JpcHRpb24gaXMgb3V0c2lkZSB0aGUgcmFkaWF0aW9uIHRoZXJhcGlzdFx1MjAxOXMgc2NvcGUgb2YgcHJhY3RpY2UuJyB9LAogICAgeyBzOiAnQSBwYXRpZW50IHdpdGhkcmF3cyBjb25zZW50IG1pZC1jb3Vyc2UgYW5kIHJlZnVzZXMgZnVydGhlciB0cmVhdG1lbnQuIFRoZSB0ZWFtIHN0b3BzIGFuZCBkb2N1bWVudHMuJywgbzogWydSZXNwZWN0aW5nIGF1dG9ub215JywgJ0FiYW5kb25tZW50JywgJ0JhdHRlcnknXSwgYTogMCwgd2h5OiAnSG9ub3JpbmcgYSBjb21wZXRlbnQgcGF0aWVudFx1MjAxOXMgcmVmdXNhbCByZXNwZWN0cyBhdXRvbm9teS4nIH0KICBdOwogIHZhciBpID0gMCwgY29ycmVjdCA9IDAsIGxvZyA9IFtdOwogIHZhciBhcHAgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnYXBwJyk7CiAgZnVuY3Rpb24gbHZsKHApIHsgcmV0dXJuIHAgPj0gOTUgPyAnTWFzdGVyeScgOiBwID49IDg1ID8gJ1Byb2ZpY2llbnQnIDogcCA+PSA3NSA/ICdBcHByZW50aWNlJyA6IHAgPj0gNjUgPyAnTm92aWNlJyA6ICdOb3QgWWV0JzsgfQogIGZ1bmN0aW9uIHJlbmRlcigpIHsKICAgIGlmIChpID49IFEubGVuZ3RoKSByZXR1cm4gZmluaXNoKCk7CiAgICB2YXIgcSA9IFFbaV0sIGggPSAnJzsKICAgIGggKz0gJzxoMT5Db25zZW50ICZhbXA7IExlZ2FsIERvY3RyaW5lczwvaDE+JzsKICAgIGggKz0gJzxkaXYgY2xhc3M9InN1YiI+TGVnYWwgcmV2aWV3IGRlc2sg4oCUIHNlbGVjdCB0aGUgZG9jdHJpbmUgdGhhdCBiZXN0IGZpdHMgZWFjaCBjYXNlLjwvZGl2Pic7CiAgICBoICs9ICc8ZGl2IGNsYXNzPSJwcm9nIj5DYXNlICcgKyAoaSArIDEpICsgJyBvZiAnICsgUS5sZW5ndGggKyAnPC9kaXY+JzsKICAgIGggKz0gJzxkaXYgY2xhc3M9InEiPicgKyBxLnMgKyAnPC9kaXY+JzsKICAgIGZvciAodmFyIGsgPSAwOyBrIDwgcS5vLmxlbmd0aDsgaysrKSBoICs9ICc8YnV0dG9uIGNsYXNzPSJvcHQiIGRhdGEtaT0iJyArIGsgKyAnIj4nICsgcS5vW2tdICsgJzwvYnV0dG9uPic7CiAgICBhcHAuaW5uZXJIVE1MID0gaDsKICAgIHZhciBidG5zID0gYXBwLnF1ZXJ5U2VsZWN0b3JBbGwoJy5vcHQnKTsKICAgIGZvciAodmFyIGIgPSAwOyBiIDwgYnRucy5sZW5ndGg7IGIrKykgYnRuc1tiXS5vbmNsaWNrID0gZnVuY3Rpb24gKCkgewogICAgICB2YXIgY2hvc2VuID0gK3RoaXMuZ2V0QXR0cmlidXRlKCdkYXRhLWknKSwgcSA9IFFbaV07CiAgICAgIHZhciByaWdodCA9IGNob3NlbiA9PT0gcS5hOyBpZiAocmlnaHQpIGNvcnJlY3QrKzsKICAgICAgbG9nLnB1c2goeyBjYXNlOiBpICsgMSwgY29ycmVjdDogcmlnaHQgfSk7CiAgICAgIGkrKzsgcmVuZGVyKCk7CiAgICB9OwogIH0KICBmdW5jdGlvbiBmaW5pc2goKSB7CiAgICB2YXIgcCA9IE1hdGgucm91bmQoY29ycmVjdCAvIFEubGVuZ3RoICogMTAwKTsKICAgIHZhciBmYiA9ICcnOwogICAgZm9yICh2YXIgayA9IDA7IGsgPCBRLmxlbmd0aDsgaysrKSBmYiArPSAnPGRpdj48c3BhbiBjbGFzcz0iJyArIChsb2dba10uY29ycmVjdCA/ICdvaycgOiAnbm8nKSArICciPicgKyAobG9nW2tdLmNvcnJlY3QgPyAnXHUyNzEzJyA6ICdcdTI3MTcnKSArICc8L3NwYW4+IENhc2UgJyArIChrICsgMSkgKyAnOiAnICsgUVtrXS53aHkgKyAnPC9kaXY+JzsKICAgIGFwcC5pbm5lckhUTUwgPSAnPGRpdiBjbGFzcz0iZG9uZSI+PGRpdiBjbGFzcz0icHJvZyI+QXNzZXNzbWVudCBDb21wbGV0ZTwvZGl2PicKICAgICAgKyAnPGRpdiBjbGFzcz0ic2NvcmUiPicgKyBwICsgJyU8L2Rpdj4nCiAgICAgICsgJzxkaXYgY2xhc3M9Imx2bCI+UGVyZm9ybWFuY2UgTGV2ZWw6IDxiPicgKyBsdmwocCkgKyAnPC9iPjwvZGl2PicKICAgICAgKyAnPGRpdiBjbGFzcz0iZmIiPicgKyBmYiArICc8L2Rpdj48L2Rpdj4nOwogICAgLy8gLS0tLSB0aGUgd2lyaW5nOiBvbmUgY2FsbCByZXBvcnRzIHRoZSByZXN1bHQgdG8gdGhlIGhvc3QgLS0tLQogICAgaWYgKHdpbmRvdy5SVEFwcHMpIFJUQXBwcy5jb21wbGV0ZShwLCB7CiAgICAgIHRvb2xfdHlwZTogJ0Nhc2VTdGFtcCcsCiAgICAgIGtlc246IHsgSzogcCwgRTogNzgsIFM6IDM4LCBOOiA3MiB9LAogICAgICBhcmNoZXR5cGU6IHAgPj0gODUgPyAnQmFsYW5jZWQnIDogJ1RoZW9yaXN0JywKICAgICAgcmF3OiB7IGNvcnJlY3Q6IGNvcnJlY3QsIHRvdGFsOiBRLmxlbmd0aCwgbG9nOiBsb2cgfQogICAgfSk7CiAgfQogIHJlbmRlcigpOwo8L3NjcmlwdD4KPC9ib2R5Pgo8L2h0bWw+Cg==";
+
+/* ---------- seed (curriculum activity menus) ---------- */
+function seedTools() {
+  // [name, module, dok, focus, source, goalId]
+  const T = [
+    ['The Deadman\'s Drill', 1, 3, 'Hand Pendant / collision', 'Sim', 'CLINICAL_COMPETENCE'],
+    ['Roles & Responsibilities', 1, 1, 'Scope of practice', 'Codebook', 'PROFESSIONALISM'],
+    ['The Interlock Match', 1, 2, 'Safety circuit logic', 'Codebook', 'CLINICAL_COMPETENCE'],
+    ['The Hand Calc Audit', 2, 3, 'MU error detection', 'Sim', 'CRITICAL_THINKING'],
+    ['Inverse Square Calc', 2, 2, 'Intensity math', 'Codebook', 'CLINICAL_COMPETENCE'],
+    ['The Toxicity Timeline', 3, 4, 'Longitudinal care', 'Sim', 'CLINICAL_COMPETENCE'],
+    ['Visual Diagnosis', 3, 3, 'Skin grading', 'Sim', 'CLINICAL_COMPETENCE'],
+    ['The Contour Police', 4, 3, 'PTV/OAR QA', 'Sim', 'CLINICAL_COMPETENCE'],
+    ['Cross-Sectional Quiz', 4, 1, 'Slice level ID', 'Codebook', 'CLINICAL_COMPETENCE'],
+    ['The Triage Desk', 5, 3, 'EMR prioritization', 'Patient Library', 'COMMUNICATION'],
+    ['Vital Signs Simulator', 5, 1, 'Reading instruments', 'Codebook', 'CLINICAL_COMPETENCE'],
+    ['The Unsigned Form', 6, 3, 'Consent / authority', 'Sim', 'PROFESSIONALISM'],
+    ['Ethics Challenge', 6, 1, 'HIPAA rules', 'Codebook', 'PROFESSIONALISM'],
+    ['The QA Error Hunt', 7, 4, 'Log auditing', 'Patient Library', 'CRITICAL_THINKING'],
+    ['Tolerance Slider', 7, 2, 'Visualizing error', 'New', 'CLINICAL_COMPETENCE'],
+    ['The Setup Note Builder', 8, 3, 'Documentation', 'Patient Library', 'COMMUNICATION'],
+    ['Fault Code Decoder', 8, 2, 'Error translation', 'New', 'CLINICAL_COMPETENCE'],
+    ['The Bad Data Trap', 9, 3, '4D trace analysis', 'Sim', 'CRITICAL_THINKING'],
+    ['The Cold Spot Hunter', 10, 3, 'Slice review', 'Sim', 'CRITICAL_THINKING'],
+    ['DVH Challenge', 10, 1, 'Data reading', 'Codebook', 'CLINICAL_COMPETENCE'],
+    ['The Plan Trade-Off', 10, 3, 'Optimization', 'Sim', 'CRITICAL_THINKING'],
+    ['Match-Line Master', 11, 3, 'Abutting fields', 'Sim', 'CLINICAL_COMPETENCE'],
+    ['The TBI Wall', 11, 4, 'Extended distance', 'Sim', 'CLINICAL_COMPETENCE'],
+    ['The Virtual Checkride', 12, 3, 'Full workflow', 'Sim', 'CLINICAL_COMPETENCE'],
+    ['Billing Coder', 12, 2, 'CPT codes', 'New', 'PROFESSIONALISM']
+  ];
+  const arr = T.map(([name, mod, dok, focus, source, goalId]) => ({ id: uid(), name, module: mod, dok, focus, source, goalId }));
+  arr.push({ id: uid(), name: 'Legal Doctrines Assessment', module: 6, dok: 3, focus: 'Negligence / malpractice / consent', source: 'e-Workbook', goalId: 'PROFESSIONALISM', path: 'Ethics/Legal_Doctrines_Assessment/' });
+  arr.push({ id: uid(), name: '4D CT Simulator', module: 9, dok: 2, focus: 'Couch / isocenter localization + X-ray quiz', source: 'e-Workbook', goalId: 'CLINICAL_COMPETENCE', path: '4D_CT/' });
+  arr.push({ id: uid(), name: 'Consent & Legal Doctrines (wired demo)', module: 6, dok: 3, focus: 'End-to-end capture demo', source: 'RTApps', goalId: 'PROFESSIONALISM', builtin: true });
+  return arr;
+}
+function seedSLOs(tools) {
+  const byName = n => tools.find(t => t.name === n);
+  const S = [
+    ['1.1', 'CLINICAL_COMPETENCE', 'Operate the linac safely', 'Demonstrate safe machine operation and hazard recognition.', 'The Deadman\'s Drill', ['Predicting', 'Analyzing'], 'ARRT #167', 3],
+    ['1.2', 'CLINICAL_COMPETENCE', 'Identify anatomy & verify setup', 'Identify cross-sectional anatomy and evaluate daily setup accuracy.', 'The Contour Police', ['Applying Standards', 'Discriminating'], 'ARRT #126', 3],
+    ['1.3', 'CLINICAL_COMPETENCE', 'Perform site-specific setups', 'Perform accurate site-specific setups, indexing, and field matching.', 'Match-Line Master', ['Predicting'], 'ARRT #176-195', 3],
+    ['1.4', 'CLINICAL_COMPETENCE', 'Localize isocenter on the CT sim', 'Operate the CT simulator (couch, lasers, scan) and localize the isocenter.', '4D CT Simulator', ['Predicting', 'Applying Standards'], 'ARRT #134', 2],
+    ['2.1', 'CRITICAL_THINKING', 'Verify dose calculations', 'Verify computer MU against manual logic; detect calculation errors.', 'The Hand Calc Audit', ['Logical Reasoning', 'Analyzing'], 'ARRT #152', 3],
+    ['2.2', 'CRITICAL_THINKING', 'Evaluate treatment plans', 'Evaluate isodose distributions and DVH; detect geometric misses.', 'The Cold Spot Hunter', ['Analyzing', 'Predicting'], 'ARRT #142', 3],
+    ['2.3', 'CRITICAL_THINKING', 'Detect QA drift & errors', 'Audit QA logs and detect trends/errors before equipment failure.', 'The QA Error Hunt', ['Information Seeking', 'Applying Standards'], 'ARRT #157-166', 3],
+    ['3.1', 'COMMUNICATION', 'Triage & patient communication', 'Prioritize patients by medical urgency and communicate effectively.', 'The Triage Desk', ['Discriminating'], 'ARRT #201/204', 3],
+    ['3.2', 'COMMUNICATION', 'Produce clear documentation', 'Translate a setup into clear, complete driving instructions.', 'The Setup Note Builder', ['Transforming Knowledge'], 'ARRT #167', 2],
+    ['4.1', 'PROFESSIONALISM', 'Uphold consent & scope', 'Identify ethical/legal violations and verify documentation.', 'Legal Doctrines Assessment', ['Information Seeking'], 'ARRT #2/7', 3],
+    ['4.2', 'PROFESSIONALISM', 'Demonstrate practice readiness', 'Integrate workflow, billing, and communication (capstone).', 'The Virtual Checkride', ['Analyzing'], 'ARRT #All', 3],
+    ['4.3', 'PROFESSIONALISM', 'Apply legal & ethical doctrines', 'Apply negligence, consent, and scope-of-practice doctrines to cases.', 'Consent & Legal Doctrines (wired demo)', ['Logical Reasoning'], 'ARRT #2/7', 3]
+  ];
+  return S.map(([code, goalId, title, statement, toolName, scheffer, arrt, bench]) => {
+    const tool = byName(toolName) || {};
+    return { id: uid(), code, goalId, title, statement, toolId: tool.id || null, module: tool.module || 1, dok: tool.dok || 3, scheffer, arrt, benchmarkLevel: bench, weight: 1 };
+  });
+}
+function seedResults(slos) {
+  const out = []; const cohorts = ['2025', '2026']; const periods = ['Q2', 'Q4'];
+  const students = n => Array.from({ length: n }, (_, i) => 'STU' + (1000 + i));
+  cohorts.forEach((cohort, ci) => {
+    slos.forEach(slo => {
+      students(10).forEach((sid, si) => {
+        // synth score: tend near benchmark, improve 2026, vary by student
+        const base = cutFor(slo.benchmarkLevel) + (ci === 1 ? 6 : 0) - 6 + ((si * 7 + slo.code.charCodeAt(0)) % 18) - 6;
+        const period = periods[(si + ci) % 2];
+        const pct = clamp(Math.round(base + (Math.random() * 10 - 5)), 40, 100);
+        const K = clamp(pct + (Math.random() * 10 - 5), 30, 100), E = clamp(70 + (Math.random() * 30 - 12), 30, 100);
+        const Sv = clamp(35 + (Math.random() * 40), 0, 100), N = clamp(70 - Sv * 0.3 + (Math.random() * 20), 10, 100);
+        out.push({ id: uid(), sloId: slo.id, studentId: sid, cohort, period, scorePct: pct, ts: Date.now() - (1 - ci) * 3e10, kesn: { K: Math.round(K), E: Math.round(E), S: Math.round(Sv), N: Math.round(N) }, archetype: pct < cutFor(slo.benchmarkLevel) ? (Math.random() < 0.5 ? 'Robot' : 'Theorist') : 'Balanced' });
+      });
+    });
+  });
+  return out;
+}
+function seed() {
+  const tools = seedTools(); const slos = seedSLOs(tools);
+  return { program: 'Radiation Therapy', tools, slos, results: seedResults(slos), actions: {} };
+}
+
+/* ---------- persistence ---------- */
+const KEY = 'rtapps_oncolife_v1';
+let DB;
+function load() { try { const r = localStorage.getItem(KEY); DB = r ? JSON.parse(r) : seed(); } catch (e) { DB = seed(); } if (!DB.tools || !DB.slos) DB = seed(); }
+function save() { try { localStorage.setItem(KEY, JSON.stringify(DB)); } catch (e) { } }
+function resetSeed() { DB = seed(); save(); renderAll(); toast('Reset to seeded plan.'); }
+
+/* ============================ BUILDER ============================ */
+function toolById(id) { return DB.tools.find(t => t.id === id); }
+function renderBuilder() {
+  $('progName').value = DB.program || '';
+  $('progTag').textContent = DB.program ? '· ' + DB.program : '';
+  const host = $('goalsHost'); host.innerHTML = '';
+  GOALS.forEach(g => {
+    const slos = DB.slos.filter(s => s.goalId === g.id);
+    const box = el('div', 'goal');
+    box.appendChild(el('div', 'gh', `<span class="dot" style="background:${GCOLOR[g.id]}"></span><span class="gt">${g.name}</span><span class="gmeta">${slos.length} SLO${slos.length !== 1 ? 's' : ''}</span>`));
+    const body = el('div', 'gbody');
+    slos.forEach(s => body.appendChild(sloRow(s)));
+    const add = el('button', 'b sm', '+ Add SLO'); add.onclick = () => openSLO(null, g.id); body.appendChild(add);
+    box.appendChild(body); host.appendChild(box);
+  });
+  renderToolLib();
+}
+function sloRow(s) {
+  const tool = toolById(s.toolId);
+  const d = el('div', 'slo');
+  d.appendChild(el('div', 'top',
+    `<span class="code">${s.code}</span><div class="stmt"><b>${s.title}</b><small>${s.statement}</small></div>`));
+  const acts = el('div', 'acts');
+  const edit = el('button', 'b sm', 'Edit'); edit.onclick = () => openSLO(s);
+  const del = el('button', 'b sm danger', '✕'); del.onclick = () => { if (confirm('Delete SLO ' + s.code + '?')) { DB.slos = DB.slos.filter(x => x.id !== s.id); save(); renderBuilder(); } };
+  acts.appendChild(edit); acts.appendChild(del);
+  d.querySelector('.top').appendChild(acts);
+  const tags = el('div', 'tags');
+  tags.innerHTML = `<span class="chip tool">🔧 ${tool ? tool.name : 'no tool'}</span>`
+    + `<span class="chip">M${s.module} · ${moduleOf(s.module).name}</span>`
+    + `<span class="chip dok">DOK ${s.dok}</span>`
+    + (s.arrt ? `<span class="chip arrt">${s.arrt}</span>` : '')
+    + (s.scheffer || []).map(x => `<span class="chip ct">${x}</span>`).join('');
+  d.appendChild(tags);
+  // benchmark scale
+  const bench = el('div', 'bench', `<span class="muted" style="font-size:11px">Benchmark (Clinical Mastery Scale) — required level:</span>`);
+  const scale = el('div', 'scale');
+  [1, 2, 3, 4].forEach(lvl => {
+    const r = RUBRIC.find(x => x.lvl === lvl);
+    const c = el('div', 'lvl' + (s.benchmarkLevel === lvl ? ' on' : ''), `${r.name}<small>≥${r.cut}%</small>`);
+    c.onclick = () => { s.benchmarkLevel = lvl; save(); renderBuilder(); };
+    scale.appendChild(c);
+  });
+  bench.appendChild(scale);
+  d.appendChild(bench);
+  return d;
+}
+function renderToolLib() {
+  const sel = $('libModule');
+  if (!sel.options.length) { sel.innerHTML = '<option value="0">All modules</option>' + MODULES.map(m => `<option value="${m.n}">M${m.n} · ${m.name}</option>`).join(''); }
+  const mod = +sel.value || 0;
+  const host = $('toolLib'); host.innerHTML = '';
+  DB.tools.filter(t => !mod || t.module === mod).forEach(t => {
+    const row = el('div', 'titem');
+    const url = toolURLof(t);
+    row.innerHTML = `<span class="dot" style="width:9px;height:9px;border-radius:50%;background:${GCOLOR[t.goalId]}"></span>
+      <span class="nm">${t.name} <small>· M${t.module} · DOK ${t.dok} · ${t.focus} · ${t.source}${url ? '' : ' · (no live URL)'}</small></span>
+      <button class="b sm">+ SLO</button>`;
+    row.querySelector('button').onclick = () => openSLO(null, t.goalId, t);
+    host.appendChild(row);
+  });
+}
+/* SLO modal */
+function openSLO(slo, goalId, presetTool) {
+  const editing = !!slo;
+  slo = slo || { id: uid(), code: '', goalId: goalId || 'CLINICAL_COMPETENCE', title: presetTool ? presetTool.name : '', statement: '', toolId: presetTool ? presetTool.id : null, module: presetTool ? presetTool.module : 1, dok: presetTool ? presetTool.dok : 3, scheffer: [], arrt: '', benchmarkLevel: 3, weight: 1 };
+  const sheet = $('sheet');
+  sheet.innerHTML = `<h3>${editing ? 'Edit' : 'New'} SLO / EPA</h3>
+    <div class="grid3">
+      <div><label class="fld">Code</label><input type="text" id="m_code" value="${slo.code}"></div>
+      <div><label class="fld">Goal</label><select id="m_goal">${GOALS.map(g => `<option value="${g.id}" ${g.id === slo.goalId ? 'selected' : ''}>${g.name}</option>`).join('')}</select></div>
+      <div><label class="fld">Module</label><select id="m_mod">${MODULES.map(m => `<option value="${m.n}" ${m.n === slo.module ? 'selected' : ''}>M${m.n} · ${m.name}</option>`).join('')}</select></div>
+    </div>
+    <label class="fld">Title</label><input type="text" id="m_title" value="${slo.title.replace(/"/g, '&quot;')}">
+    <label class="fld">Statement</label><textarea id="m_stmt">${slo.statement}</textarea>
+    <div class="grid3">
+      <div><label class="fld">Tool (measurement)</label><select id="m_tool"></select></div>
+      <div><label class="fld">DOK level</label><select id="m_dok">${[1, 2, 3, 4].map(d => `<option value="${d}" ${d === slo.dok ? 'selected' : ''}>DOK ${d}</option>`).join('')}</select></div>
+      <div><label class="fld">ARRT task</label><input type="text" id="m_arrt" value="${slo.arrt || ''}"></div>
+    </div>
+    <label class="fld">Scheffer cognitive skills</label>
+    <div id="m_scheffer" class="row wrap" style="gap:6px">${SCHEFFER.map(x => `<label class="chip ct" style="cursor:pointer"><input type="checkbox" value="${x}" ${(slo.scheffer || []).includes(x) ? 'checked' : ''} style="width:auto;vertical-align:middle"> ${x}</label>`).join('')}</div>
+    <label class="fld">Benchmark — required mastery level</label>
+    <div class="scale" id="m_scale">${[1, 2, 3, 4].map(lvl => { const r = RUBRIC.find(x => x.lvl === lvl); return `<div class="lvl ${slo.benchmarkLevel === lvl ? 'on' : ''}" data-lvl="${lvl}">${r.name}<small>≥${r.cut}%</small></div>`; }).join('')}</div>
+    <div class="foot"><button class="b" id="m_cancel">Cancel</button><button class="b primary" id="m_save">${editing ? 'Save' : 'Add'} SLO</button></div>`;
+  // tool select filtered by module
+  const fillTools = () => {
+    const mod = +$('m_mod').value;
+    $('m_tool').innerHTML = '<option value="">— none —</option>' + DB.tools.filter(t => t.module === mod).map(t => `<option value="${t.id}" ${t.id === slo.toolId ? 'selected' : ''}>${t.name} (DOK ${t.dok})</option>`).join('');
+  };
+  fillTools(); $('m_mod').onchange = fillTools;
+  let blvl = slo.benchmarkLevel;
+  sheet.querySelectorAll('#m_scale .lvl').forEach(c => c.onclick = () => { blvl = +c.dataset.lvl; sheet.querySelectorAll('#m_scale .lvl').forEach(x => x.classList.toggle('on', +x.dataset.lvl === blvl)); });
+  $('m_cancel').onclick = closeModal;
+  $('m_save').onclick = () => {
+    slo.code = $('m_code').value.trim() || slo.code; slo.goalId = $('m_goal').value; slo.module = +$('m_mod').value;
+    slo.title = $('m_title').value.trim(); slo.statement = $('m_stmt').value.trim(); slo.toolId = $('m_tool').value || null;
+    slo.dok = +$('m_dok').value; slo.arrt = $('m_arrt').value.trim(); slo.benchmarkLevel = blvl;
+    slo.scheffer = [...sheet.querySelectorAll('#m_scheffer input:checked')].map(i => i.value);
+    if (!DB.slos.find(x => x.id === slo.id)) DB.slos.push(slo);
+    save(); closeModal(); renderBuilder(); toast('SLO saved.');
+  };
+  $('modal').classList.add('show');
+}
+function closeModal() { $('modal').classList.remove('show'); }
+
+/* ============================ DELIVER ============================ */
+let activeDeliver = null;
+function renderDeliver() {
+  const sel = $('mapSel'); sel.innerHTML = '';
+  GOALS.forEach(g => {
+    const slos = DB.slos.filter(s => s.goalId === g.id); if (!slos.length) return;
+    const og = el('optgroup'); og.label = g.name;
+    slos.forEach(s => { const t = toolById(s.toolId); const o = el('option'); o.value = s.id; o.textContent = `${s.code} ${s.title} — ${t ? t.name : 'manual'}`; og.appendChild(o); });
+    sel.appendChild(og);
+  });
+}
+function launch() {
+  const slo = DB.slos.find(s => s.id === $('mapSel').value); if (!slo) { toast('Pick an outcome.'); return; }
+  const sid = $('stuId').value.trim(), cohort = $('cohort').value.trim(), period = $('period').value;
+  if (!sid || !cohort) { toast('Enter student ID and cohort.'); return; }
+  activeDeliver = { slo, sid, cohort, period };
+  const tool = toolById(slo.toolId);
+  const ctx = { program: DB.program, slo: slo.code, goal: slo.goalId, title: slo.title, student: sid, cohort, period };
+  activeDeliver.ctx = ctx;
+  const frame = $('runnerFrame');
+  $('runnerTitle').textContent = `${slo.code} · ${slo.title}${tool ? ' — ' + tool.name : ''}`;
+  let mode = 'manual', liveUrl = null;
+  if (tool && tool.builtin) { frame.style.display = ''; frame.src = 'data:text/html;base64,' + DEMO_B64; mode = 'builtin'; }
+  else { liveUrl = toolURLof(tool); if (liveUrl) { frame.style.display = ''; frame.src = liveUrl; mode = 'live'; } else { frame.style.display = 'none'; frame.removeAttribute('src'); } }
+  frame.onload = () => { try { frame.contentWindow.postMessage({ type: 'RTAPPS_CTX', ctx }, '*'); } catch (e) { } };
+  const note = mode === 'builtin' ? `<div class="note" style="margin-bottom:10px">Built-in <b>wired demo</b> via the RTApps Station Bridge — finish the cases and the score posts straight to the dashboard. This is the full capture loop, offline.</div>`
+    : mode === 'live' ? `<div class="note" style="margin-bottom:10px">Live tool: <span class="mono">${liveUrl}</span>. Wire it by adding <span class="mono">rtapps-bridge.js</span> + one line — <span class="mono">RTApps.complete(pct)</span> or <span class="mono">RTApps.watchScore({label:'Final Score'})</span>. Until then, record manually.</div>`
+    : `<div class="note" style="margin-bottom:10px">No live URL for this module yet — record the observed mastery level below.</div>`;
+  $('runnerFoot').innerHTML = note
+    + `<div class="row wrap"><span class="muted" style="font-size:12px">Record mastery (manual):</span>`
+    + RUBRIC.filter(r => r.lvl > 0).map(r => `<button class="b sm" data-pct="${r.cut === 95 ? 100 : r.cut}">${r.name} (${r.cut === 95 ? 100 : r.cut}%)</button>`).join('')
+    + `<button class="b sm danger" data-pct="50">Not Yet (50%)</button></div>`;
+  $('runnerFoot').querySelectorAll('button[data-pct]').forEach(b => b.onclick = () => recordResult(+b.dataset.pct, { method: 'manual' }));
+  $('runner').classList.add('show');
+}
+function recordResult(pct, raw) {
+  if (!activeDeliver) return;
+  const { slo, sid, cohort, period } = activeDeliver;
+  const lvl = masteryOf(pct), pass = pct >= cutFor(slo.benchmarkLevel);
+  const res = { id: uid(), sloId: slo.id, studentId: sid, cohort, period, scorePct: Math.round(pct), ts: Date.now(), kesn: (raw && raw.kesn) || null, archetype: (raw && raw.archetype) || null, raw: raw || null };
+  DB.results.push(res); save();
+  $('runner').classList.remove('show'); activeDeliver = null;
+  toast(`Recorded <b>${sid}</b>: ${Math.round(pct)}% · ${masteryName(lvl)} · ${pass ? 'benchmark met' : 'below benchmark'}`);
+  renderDashboard();
+}
+// capture results from wired tools (cross-origin postMessage)
+addEventListener('message', e => {
+  const d = e.data; if (!d || d.type !== 'RTAPPS_RESULT' || !activeDeliver) return;
+  const p = d.payload || {}; let pct = null;
+  if (typeof p.final_score !== 'undefined') pct = parseFloat(p.final_score) * (parseFloat(p.final_score) <= 1 ? 100 : 1);
+  else if (typeof p.scorePct !== 'undefined') pct = +p.scorePct;
+  if (pct == null || isNaN(pct)) { toast('Tool reported, but no score field found.'); return; }
+  recordResult(pct, p);
+});
+
+/* ============================ DASHBOARD ============================ */
+function resultsFor(sloId, cohort) { return DB.results.filter(r => r.sloId === sloId && (cohort === 'All' || r.cohort === cohort)); }
+function mean(a) { return a.length ? a.reduce((x, y) => x + y, 0) / a.length : 0; }
+function renderDashboard() {
+  const cf = $('cohortFilter');
+  const cohorts = [...new Set(DB.results.map(r => r.cohort))].sort();
+  const cur = cf.value && (cf.value === 'All' || cohorts.includes(cf.value)) ? cf.value : (cohorts[cohorts.length - 1] || 'All');
+  cf.innerHTML = '<option>All</option>' + cohorts.map(c => `<option ${c === cur ? 'selected' : ''}>${c}</option>`).join('');
+  if (!cf.value) cf.value = cur;
+  const cohort = cf.value;
+  const rows = DB.results.filter(r => cohort === 'All' || r.cohort === cohort);
+  // KPIs
+  const meanMastery = Math.round(mean(rows.map(r => r.scorePct)));
+  const sloStats = DB.slos.map(s => { const rs = resultsFor(s.id, cohort); return { s, n: rs.length, m: mean(rs.map(r => r.scorePct)), met: rs.length ? mean(rs.map(r => r.scorePct)) >= cutFor(s.benchmarkLevel) : null }; });
+  const withData = sloStats.filter(x => x.n);
+  const pctMet = withData.length ? Math.round(withData.filter(x => x.met).length / withData.length * 100) : 0;
+  const students = new Set(rows.map(r => r.studentId)).size;
+  $('kpis').innerHTML = [
+    ['Mean mastery', meanMastery + '%'], ['SLOs meeting benchmark', pctMet + '%'], ['Students assessed', students], ['Assessment records', rows.length]
+  ].map(([k, v]) => `<div class="kpi"><div class="v">${v}</div><div class="k">${k}</div></div>`).join('');
+  // K-E-S-N
+  const kesnRows = rows.filter(r => r.kesn);
+  const kesn = ['K', 'E', 'S', 'N'].map(a => ({ a, v: Math.round(mean(kesnRows.map(r => r.kesn[a]))) }));
+  const kcol = { K: 'var(--g1)', E: 'var(--g3)', S: 'var(--red)', N: 'var(--green)' };
+  const kname = { K: 'Knowledge', E: 'Empathy', S: 'Stress', N: 'Energy' };
+  $('kesn').innerHTML = kesnRows.length ? kesn.map(x => `<div class="a"><div class="row" style="justify-content:space-between"><span class="muted">${kname[x.a]}</span><b class="mono">${x.v}</b></div><div class="att"><i style="width:${x.v}%;background:${kcol[x.a]}"></i></div></div>`).join('') : '<span class="muted">No attribute telemetry yet (wired tools can report K·E·S·N in the result payload).</span>';
+  // per-goal tables
+  const host = $('dashHost'); host.innerHTML = '';
+  GOALS.forEach(g => {
+    const items = sloStats.filter(x => x.s.goalId === g.id); if (!items.length) return;
+    const card = el('div', 'card');
+    card.appendChild(el('div', 'row', `<span class="dot" style="width:11px;height:11px;border-radius:50%;background:${GCOLOR[g.id]}"></span><h3 class="lab" style="margin:0">${g.name}</h3>`));
+    const tbl = el('table', 'dash');
+    tbl.innerHTML = `<tr><th>SLO</th><th>Tool</th><th>N</th><th>Mean mastery</th><th>Benchmark</th><th>Met</th><th>Trend</th><th>Action plan</th></tr>`;
+    items.forEach(({ s, n, m, met }) => {
+      const tool = toolById(s.toolId); const cut = cutFor(s.benchmarkLevel);
+      const tr = el('tr');
+      const mPct = Math.round(m);
+      const barColor = met == null ? 'var(--dim)' : met ? 'var(--green)' : 'var(--red)';
+      // trend by period
+      const rs = resultsFor(s.id, cohort);
+      const byP = ['Q1', 'Q2', 'Q3', 'Q4'].map(p => mean(rs.filter(r => r.period === p).map(r => r.scorePct)));
+      const spark = byP.map(v => `<i style="height:${v ? clamp(v / 100 * 24, 2, 24) : 1}px"></i>`).join('');
+      const akey = s.id + '|' + cohort;
+      tr.innerHTML = `<td><b>${s.code}</b> ${s.title}</td>
+        <td><small class="muted">${tool ? tool.name : '—'}</small></td>
+        <td class="mono">${n || '—'}</td>
+        <td>${n ? `<div class="bar"><i style="width:${mPct}%;background:${barColor}"></i><span class="mark" style="left:${cut}%"></span></div><small class="mono">${mPct}% · ${masteryName(masteryOf(m))}</small>` : '<span class="muted">no data</span>'}</td>
+        <td><span class="pill" style="background:rgba(120,200,210,.14);color:var(--teal)">${masteryName(s.benchmarkLevel)} ≥${cut}%</span></td>
+        <td class="met ${met == null ? '' : met ? 'y' : 'n'}">${met == null ? '—' : met ? '✓' : '✗'}</td>
+        <td><span class="spark">${spark}</span></td>
+        <td><input type="text" class="apn" value="${(DB.actions[akey] || '').replace(/"/g, '&quot;')}" placeholder="action / follow-up" style="min-width:150px"></td>`;
+      tr.querySelector('.apn').onchange = e => { DB.actions[akey] = e.target.value; save(); };
+      tbl.appendChild(tr);
+    });
+    card.appendChild(tbl); host.appendChild(card);
+  });
+  if (!rows.length) host.innerHTML = '<div class="note">No results for this cohort yet. Use the Deliver tab to run an assessment.</div>';
+}
+
+/* ============================ EXPORT / IMPORT ============================ */
+function exportData() { dl(JSON.stringify(DB, null, 2), 'oncolife_plan.json', 'application/json'); }
+function importData(file) { const r = new FileReader(); r.onload = () => { try { DB = JSON.parse(r.result); save(); renderAll(); toast('Plan imported.'); } catch (e) { toast('Invalid file.'); } }; r.readAsText(file); }
+function exportReport() {
+  const cohort = $('cohortFilter').value || 'All';
+  let t = `RTApps · OncoLife — Assessment Report\nProgram: ${DB.program}\nCohort: ${cohort}\nGenerated: ${new Date().toLocaleString()}\n(Clinical Mastery Scale: Mastery≥95 · Proficient≥85 · Apprentice≥75 · Novice≥65)\n`;
+  GOALS.forEach(g => {
+    const items = DB.slos.filter(s => s.goalId === g.id); if (!items.length) return;
+    t += `\n=== ${g.name} ===\n`;
+    items.forEach(s => {
+      const rs = resultsFor(s.id, cohort); const m = Math.round(mean(rs.map(r => r.scorePct))); const cut = cutFor(s.benchmarkLevel);
+      const met = rs.length ? (m >= cut ? 'MET' : 'NOT MET') : 'no data';
+      t += `  ${s.code} ${s.title}\n     tool: ${(toolById(s.toolId) || {}).name || '—'} · DOK ${s.dok} · ${s.arrt || ''}\n     benchmark: ${masteryName(s.benchmarkLevel)} (≥${cut}%) · result: ${rs.length ? m + '% (' + masteryName(masteryOf(m)) + ')' : '—'} · ${met}\n`;
+      const a = DB.actions[s.id + '|' + cohort]; if (a) t += `     action: ${a}\n`;
+    });
+  });
+  t += `\n(Educational platform — OncoLife / RTApps. Not for clinical use.)\n`;
+  dl(t, 'oncolife_report.txt', 'text/plain');
+}
+function dl(text, name, type) { const b = new Blob([text], { type }); const a = el('a'); a.href = URL.createObjectURL(b); a.download = name; a.click(); URL.revokeObjectURL(a.href); }
+
+/* ============================ NAV / INIT ============================ */
+function renderAll() { renderBuilder(); renderDeliver(); renderDashboard(); }
+function setTab(t) {
+  document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('active', b.dataset.tab === t));
+  document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.id === 'view-' + t));
+  if (t === 'deliver') renderDeliver(); if (t === 'dashboard') renderDashboard();
+}
+function init() {
+  load();
+  document.querySelectorAll('#tabs button').forEach(b => b.onclick = () => setTab(b.dataset.tab));
+  $('progName').onchange = e => { DB.program = e.target.value.trim(); save(); $('progTag').textContent = DB.program ? '· ' + DB.program : ''; };
+  $('resetBtn').onclick = () => { if (confirm('Reset to the seeded curriculum plan? This clears local changes.')) resetSeed(); };
+  $('libModule').onchange = renderToolLib;
+  $('launchBtn').onclick = launch;
+  $('runnerClose').onclick = () => { $('runner').classList.remove('show'); activeDeliver = null; };
+  $('cohortFilter').onchange = renderDashboard;
+  $('exportReport').onclick = exportReport;
+  $('exportBtn').onclick = exportData;
+  $('importBtn').onclick = () => $('importFile').click();
+  $('importFile').onchange = e => { if (e.target.files[0]) importData(e.target.files[0]); };
+  $('modal').onclick = e => { if (e.target.id === 'modal') closeModal(); };
+  renderAll();
+}
+window.addEventListener('DOMContentLoaded', init);
+
+</script>
+</body>
+</html>
