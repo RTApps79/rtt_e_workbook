@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>RT CARE // Activity Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b1622; --bg2:#0e1d2c; --panel:#11273b; --panel2:#143049;
+  --line:#1d3a54; --line2:#27506f;
+  --cyan:#37c6d8; --cyan-dim:#1c6f7c; --amber:#f4a93c; --amber-dim:#7a571c;
+  --txt:#e9f1f7; --muted:#88a2b8; --muted2:#5d7488;
+  --green:#5fd1a0; --violet:#a98be0; --rose:#e98aa8; --blue:#5aa6e6; --slate:#9fb4c7;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --disp:'Space Grotesk',system-ui,Segoe UI,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:
+   radial-gradient(1200px 600px at 80% -10%, #123048 0%, transparent 60%),
+   radial-gradient(900px 500px at -10% 110%, #10283c 0%, transparent 55%),
+   var(--bg);
+  color:var(--txt);font-family:var(--disp);-webkit-font-smoothing:antialiased;}
+a{color:inherit}
+/* ---- top console bar ---- */
+.bar{position:sticky;top:0;z-index:40;background:linear-gradient(180deg,#0d1f30 0%, #0c1c2bcc 100%);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--line);}
+.bar-inner{max-width:1400px;margin:0 auto;padding:14px 22px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.iso{width:30px;height:30px;flex:0 0 auto;position:relative}
+.iso::before,.iso::after{content:"";position:absolute;background:var(--cyan)}
+.iso::before{left:50%;top:0;width:1.5px;height:100%;transform:translateX(-50%);box-shadow:0 0 6px var(--cyan)}
+.iso::after{top:50%;left:0;height:1.5px;width:100%;transform:translateY(-50%);box-shadow:0 0 6px var(--cyan)}
+.iso i{position:absolute;inset:6px;border:1.5px solid var(--amber);border-radius:50%;box-shadow:0 0 8px var(--amber-dim)}
+.title h1{font-size:15px;letter-spacing:.14em;margin:0;font-weight:700;text-transform:uppercase}
+.title span{font-family:var(--mono);font-size:10.5px;color:var(--muted);letter-spacing:.18em}
+.spacer{flex:1 1 auto}
+.search{display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line2);
+  border-radius:8px;padding:8px 12px;min-width:230px;flex:1 1 280px;max-width:440px}
+.search input{background:none;border:none;outline:none;color:var(--txt);font-family:var(--disp);font-size:14px;width:100%}
+.search input::placeholder{color:var(--muted)}
+.search svg{flex:0 0 auto;opacity:.7}
+.readout{font-family:var(--mono);font-size:11px;color:var(--cyan);letter-spacing:.1em;white-space:nowrap;
+  border:1px solid var(--cyan-dim);border-radius:6px;padding:7px 10px;background:#0c2330}
+.readout b{color:var(--amber)}
+.tour-btn{font-family:var(--disp);font-weight:600;font-size:13.5px;letter-spacing:.04em;cursor:pointer;
+  background:linear-gradient(180deg,var(--amber),#d8922f);color:#1a1304;border:none;border-radius:8px;
+  padding:10px 16px;display:flex;align-items:center;gap:8px;box-shadow:0 4px 14px #f4a93c2e}
+.tour-btn:hover{filter:brightness(1.06)}
+.tour-btn:active{transform:translateY(1px)}
+/* ---- filter rail ---- */
+.rail{max-width:1400px;margin:18px auto 0;padding:0 22px}
+.rail h2{font-family:var(--mono);font-size:10.5px;color:var(--muted);letter-spacing:.22em;
+  text-transform:uppercase;margin:0 0 9px;font-weight:500}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.chip{font-family:var(--disp);font-size:12.5px;cursor:pointer;border-radius:999px;padding:6px 13px;
+  border:1px solid var(--line2);background:var(--panel);color:var(--slate);transition:.12s;display:flex;gap:7px;align-items:center}
+.chip:hover{border-color:var(--cyan);color:var(--txt)}
+.chip.on{background:var(--cyan);color:#06181d;border-color:var(--cyan);font-weight:600}
+.chip .n{font-family:var(--mono);font-size:10px;opacity:.75}
+.chip.on .n{opacity:.9}
+.tchip.on{background:var(--amber);border-color:var(--amber);color:#1a1304}
+/* ---- grid ---- */
+main{max-width:1400px;margin:6px auto 80px;padding:0 22px}
+.group{margin-top:30px}
+.group-head{display:flex;align-items:baseline;gap:14px;border-bottom:1px solid var(--line);padding-bottom:9px;margin-bottom:16px}
+.group-head h3{font-size:17px;margin:0;font-weight:600;letter-spacing:.02em}
+.group-head .cnt{font-family:var(--mono);font-size:11px;color:var(--amber)}
+.group-head .ln{flex:1;height:1px;background:linear-gradient(90deg,var(--line2),transparent)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(258px,1fr));gap:14px}
+.card{background:linear-gradient(180deg,var(--panel) 0%,var(--bg2) 100%);border:1px solid var(--line);
+  border-radius:11px;padding:15px 15px 13px;cursor:pointer;position:relative;overflow:hidden;transition:.14s;display:flex;flex-direction:column;min-height:118px}
+.card::after{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent,var(--cyan));opacity:.85}
+.card:hover{border-color:var(--cyan);transform:translateY(-2px);box-shadow:0 10px 26px #00000040}
+.card:hover .go{opacity:1;transform:translateX(0)}
+.badge{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;
+  padding:3px 8px;border-radius:5px;align-self:flex-start;color:#08151c;background:var(--accent,var(--cyan));font-weight:700}
+.card h4{margin:11px 0 6px;font-size:14.5px;font-weight:600;line-height:1.25}
+.card .path{font-family:var(--mono);font-size:10px;color:var(--muted);word-break:break-all;line-height:1.4;margin-top:auto}
+.go{position:absolute;right:13px;bottom:12px;opacity:0;transform:translateX(-4px);transition:.14s;color:var(--cyan);font-family:var(--mono);font-size:11px}
+.newtab{position:absolute;right:11px;top:11px;opacity:.45;font-size:12px}
+.card:hover .newtab{opacity:.9}
+.empty{font-family:var(--mono);color:var(--muted);text-align:center;padding:60px 0;font-size:13px}
+/* ---- footer ---- */
+footer{max-width:1400px;margin:0 auto;padding:26px 22px 50px;border-top:1px solid var(--line);
+  font-family:var(--mono);font-size:11px;color:var(--muted);line-height:1.7}
+footer b{color:var(--slate)}
+/* ---- tour / loop modal ---- */
+.viewer{position:fixed;inset:0;z-index:90;background:#060e16ee;backdrop-filter:blur(4px);display:none;flex-direction:column}
+.viewer.open{display:flex}
+.vbar{display:flex;align-items:center;gap:14px;padding:11px 16px;background:#0c1f30;border-bottom:1px solid var(--line2);flex-wrap:wrap}
+.vidx{font-family:var(--mono);font-size:12px;color:var(--cyan);letter-spacing:.1em;white-space:nowrap}
+.vidx b{color:var(--amber)}
+.vtitle{font-weight:600;font-size:14.5px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.vtitle small{font-family:var(--mono);font-weight:400;color:var(--muted);font-size:10.5px;display:block;letter-spacing:.06em}
+.vbtn{cursor:pointer;border:1px solid var(--line2);background:var(--panel);color:var(--txt);border-radius:7px;
+  padding:7px 11px;font-family:var(--disp);font-size:12.5px;display:flex;align-items:center;gap:6px;transition:.12s}
+.vbtn:hover{border-color:var(--cyan);color:var(--cyan)}
+.vbtn.amber.on{background:var(--amber);color:#1a1304;border-color:var(--amber)}
+.vbtn.prim{background:var(--cyan);color:#06181d;border-color:var(--cyan);font-weight:600}
+.vstage{flex:1;position:relative;background:#0a131d}
+.vstage iframe{width:100%;height:100%;border:none;background:#fff}
+.appcard{position:absolute;inset:0;display:none;align-items:center;justify-content:center;padding:30px}
+.appcard.show{display:flex}
+.appbox{max-width:560px;background:var(--panel);border:1px solid var(--line2);border-radius:14px;padding:30px 30px 26px}
+.appbox .tag{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--amber);text-transform:uppercase}
+.appbox h3{margin:8px 0 4px;font-size:20px}
+.appbox p{color:var(--muted);font-size:13.5px;line-height:1.6}
+.appbox code{display:block;font-family:var(--mono);font-size:12.5px;background:#08161f;border:1px solid var(--line);
+  border-radius:8px;padding:12px 14px;color:var(--cyan);margin-top:10px;word-break:break-all}
+.beam{height:2px;background:linear-gradient(90deg,transparent,var(--amber),transparent);opacity:.0;transition:opacity .3s}
+.viewer.autop .beam{opacity:1;animation:slide 2s linear infinite}
+@keyframes slide{0%{background-position:-300px 0}100%{background-position:300px 0}}
+@media (max-width:640px){
+  .title span{display:none}.readout{display:none}
+  .vtitle small{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="bar">
+  <div class="bar-inner">
+    <div class="brand">
+      <div class="iso"><i></i></div>
+      <div class="title"><h1>RT&nbsp;CARE&nbsp;Console</h1><span>RADIATION THERAPY · UNIFIED ACTIVITY INDEX</span></div>
+    </div>
+    <div class="search">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input id="q" type="text" placeholder="Search activities, topics, files…" autocomplete="off"/>
+    </div>
+    <div class="readout">SHOWING <b id="rcount">0</b> / 186 ACTIVITIES</div>
+    <button class="tour-btn" id="tourBtn" title="Step through every shown activity, looping end-to-start">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 4v6h6M20 20v-6h-6"/><path d="M20 9a8 8 0 0 0-14-4M4 15a8 8 0 0 0 14 4"/></svg>
+      Course Tour
+    </button>
+  </div>
+</div>
+
+<div class="rail">
+  <h2>Modules</h2>
+  <div class="chips" id="catChips"></div>
+  <h2>Activity Type</h2>
+  <div class="chips" id="typeChips"></div>
+</div>
+
+<main id="main"></main>
+
+<footer>
+  <div><b>RT CARE Console</b> — a single launcher that links and loops every unique learning activity in the KK CODE library.</div>
+  <div>Index built from <b>247</b> source HTML files → <b>186</b> unique web activities (duplicate <span style="color:var(--muted)">.txt twins, "- Copy" folders, nested repeats, and superseded _v2/_v3 versions removed</span>) + <b>12</b> Python/Flask server apps. <b>198</b> entries across <b>14</b> modules.</div>
+  <div style="margin-top:6px">Hosting: keep the activity folders beside this file inside <b>/hub</b> (or set <b>BASE_PATH</b> at the top of the script). Enable <b>GitHub Pages</b> and add an empty <b>.nojekyll</b> file so folders with spaces and parentheses are served correctly. Web activities open in the looping viewer; Python apps must be run locally.</div>
+</footer>
+
+<!-- ===== Tour / Loop Viewer ===== -->
+<div class="viewer" id="viewer" aria-modal="true" role="dialog">
+  <div class="vbar">
+    <div class="vidx"><b id="vIdx">001</b> / <span id="vTot">000</span></div>
+    <div class="vtitle"><span id="vName">—</span><small id="vPath"></small></div>
+    <button class="vbtn" id="vPrev" title="Previous (←)">‹ Prev</button>
+    <button class="vbtn" id="vNext" title="Next (→)">Next ›</button>
+    <button class="vbtn" id="vRand" title="Random (R)">⤬ Random</button>
+    <button class="vbtn amber" id="vAuto" title="Autoplay loop (Space)">▶ Loop</button>
+    <button class="vbtn prim" id="vOpen" title="Open in new tab">↗ Open</button>
+    <button class="vbtn" id="vClose" title="Close (Esc)">✕</button>
+  </div>
+  <div class="beam"></div>
+  <div class="vstage">
+    <iframe id="vFrame" title="activity"></iframe>
+    <div class="appcard" id="appCard">
+      <div class="appbox">
+        <div class="tag">Python · Flask server app</div>
+        <h3 id="aName">App</h3>
+        <p>This is a server-side application, so it can't run on GitHub Pages (static hosting only). Run it locally: from a terminal in the project folder, start it and open the local address it prints (usually <span style="color:var(--cyan)">http://127.0.0.1:5000</span>).</p>
+        <code id="aCmd">python app.py</code>
+        <p style="margin-top:14px;font-size:12px">Requires Python 3 and the app's dependencies (e.g. <span style="color:var(--cyan)">pip install flask</span>).</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const DATA = [{"title": "3D Patient Emulator", "path": "3D_emulator/templates/index.html", "type": "Hub", "category": "3D & Simulation Tools", "origin": "3D_emulator", "kind": "web"}, {"title": "CT Sim Order Entry", "path": "ct_sim_order/templates/index.html", "type": "Hub", "category": "3D & Simulation Tools", "origin": "ct_sim_order", "kind": "web"}, {"title": "CT Simulator (3D)", "path": "ct_simulator/index.html", "type": "Hub", "category": "3D & Simulation Tools", "origin": "ct_simulator", "kind": "web"}, {"title": "Dosimetry Vocabulary Game", "path": "Dosimetry Vocabulary Game/index.html", "type": "Hub", "category": "Dosimetry & Calculations", "origin": "Dosimetry Vocabulary Game", "kind": "web"}, {"title": "Depth Dose Lesson", "path": "Depth Dose/depth_dose_lesson_index.html", "type": "Lesson", "category": "Dosimetry & Calculations", "origin": "Depth Dose", "kind": "web"}, {"title": "Eq2 Lesson", "path": "Equivalent Square/eq2_lesson_index.html", "type": "Lesson", "category": "Dosimetry & Calculations", "origin": "Equivalent Square", "kind": "web"}, {"title": "Field Size Lesson", "path": "Field Size/field_size_lesson_index.html", "type": "Lesson", "category": "Dosimetry & Calculations", "origin": "Field Size", "kind": "web"}, {"title": "Gap Lesson", "path": "Gap Calculations/gap_lesson_index.html", "type": "Lesson", "category": "Dosimetry & Calculations", "origin": "Gap Calculations", "kind": "web"}, {"title": "Depth Dose Visualizer", "path": "Depth Dose/depth_dose_visualizer_index.html", "type": "Simulator", "category": "Dosimetry & Calculations", "origin": "Depth Dose", "kind": "web"}, {"title": "Gap Visualizer", "path": "Gap Calculations/gap_visualizer_index.html", "type": "Simulator", "category": "Dosimetry & Calculations", "origin": "Gap Calculations", "kind": "web"}, {"title": "Bolus Worksheet", "path": "Bolus/bolus_worksheet_index.html", "type": "Worksheet", "category": "Dosimetry & Calculations", "origin": "Bolus", "kind": "web"}, {"title": "Depth Dose Worksheet", "path": "Depth Dose/depth_dose_worksheet_index.html", "type": "Worksheet", "category": "Dosimetry & Calculations", "origin": "Depth Dose", "kind": "web"}, {"title": "Eq2 Worksheet", "path": "Equivalent Square/eq2_worksheet_index.html", "type": "Worksheet", "category": "Dosimetry & Calculations", "origin": "Equivalent Square", "kind": "web"}, {"title": "Field Size Worksheet", "path": "Field Size/field_size_worksheet_index.html", "type": "Worksheet", "category": "Dosimetry & Calculations", "origin": "Field Size", "kind": "web"}, {"title": "Gap Worksheet", "path": "Gap Calculations/gap_worksheet_index.html", "type": "Worksheet", "category": "Dosimetry & Calculations", "origin": "Gap Calculations", "kind": "web"}, {"title": "Depth Dose", "path": "Depth Dose/depth_dose_game_index.html", "type": "Game", "category": "Dosimetry & Calculations", "origin": "Depth Dose", "kind": "web"}, {"title": "Dose Calc Dash", "path": "dose_calc_dash_game_index.html", "type": "Game", "category": "Dosimetry & Calculations", "origin": "(root)", "kind": "web"}, {"title": "Equivalent Square", "path": "Equivalent Square/eq2_game_index.html", "type": "Game", "category": "Dosimetry & Calculations", "origin": "Equivalent Square", "kind": "web"}, {"title": "Field Size", "path": "Field Size/field_size_game_index.html", "type": "Game", "category": "Dosimetry & Calculations", "origin": "Field Size", "kind": "web"}, {"title": "Gap", "path": "Gap Calculations/gap_game_index.html", "type": "Game", "category": "Dosimetry & Calculations", "origin": "Gap Calculations", "kind": "web"}, {"title": "Bolus", "path": "Bolus/bolus_index.html", "type": "Activity", "category": "Dosimetry & Calculations", "origin": "Bolus", "kind": "web"}, {"title": "Dosimetry Dmax Activity", "path": "Dosimetry_Dmax_Activity.html", "type": "Activity", "category": "Dosimetry & Calculations", "origin": "(root)", "kind": "web"}, {"title": "EMR Patient Records", "path": "EMR/index.html", "type": "Hub", "category": "EMR & Case Management", "origin": "EMR", "kind": "web"}, {"title": "OncoLife Lead", "path": "oncolife_lead/static/index.html", "type": "Hub", "category": "EMR & Case Management", "origin": "oncolife_lead", "kind": "web"}, {"title": "RadOnc Manager", "path": "radonc_manager/static/index.html", "type": "Hub", "category": "EMR & Case Management", "origin": "radonc_manager", "kind": "web"}, {"title": "Oncolife Lesson Template", "path": "oncolife_lesson_template.html", "type": "Lesson", "category": "EMR & Case Management", "origin": "(root)", "kind": "web"}, {"title": "EMR Arcade Game", "path": "EMR_Arcade_Game.html", "type": "Game", "category": "EMR & Case Management", "origin": "(root)", "kind": "web"}, {"title": "Onco Conversations", "path": "onco_conversations_game_index.html", "type": "Game", "category": "EMR & Case Management", "origin": "(root)", "kind": "web"}, {"title": "Onco Uno", "path": "onco_uno_game_index.html", "type": "Game", "category": "EMR & Case Management", "origin": "(root)", "kind": "web"}, {"title": "Procedure Pursuit", "path": "procedure_pursuit_game_index.html", "type": "Game", "category": "EMR & Case Management", "origin": "(root)", "kind": "web"}, {"title": "RT School Lab Building Multifloor V3 3 Aesthetics Branding", "path": "rt_school_lab_building_multifloor_v3_3_aesthetics_branding.html", "type": "Lab", "category": "Games & Review", "origin": "(root)", "kind": "web"}, {"title": "Anatomy Angler", "path": "anatomy_angler_game_index.html", "type": "Game", "category": "Games & Review", "origin": "(root)", "kind": "web"}, {"title": "Anatomy Atlas", "path": "anatomy_atlas_game_index.html", "type": "Game", "category": "Games & Review", "origin": "(root)", "kind": "web"}, {"title": "Chutes And Ladders", "path": "chutes_and_ladders_game_index.html", "type": "Game", "category": "Games & Review", "origin": "(root)", "kind": "web"}, {"title": "Clue V2", "path": "clue_game_v2_index.html", "type": "Game", "category": "Games & Review", "origin": "(root)", "kind": "web"}, {"title": "Jenga", "path": "Jenga_game.html", "type": "Game", "category": "Games & Review", "origin": "(root)", "kind": "web"}, {"title": "Jenga Quiz", "path": "jenga_quiz_index.html", "type": "Game", "category": "Games & Review", "origin": "(root)", "kind": "web"}, {"title": "Rad Racer", "path": "rad_racer_game_index.html", "type": "Game", "category": "Games & Review", "origin": "(root)", "kind": "web"}, {"title": "RT Tycoon V3", "path": "rt_tycoon_game_v3_index.html", "type": "Game", "category": "Games & Review", "origin": "(root)", "kind": "web"}, {"title": "Codenames", "path": "Codenames.html", "type": "Activity", "category": "Games & Review", "origin": "(root)", "kind": "web"}, {"title": "Final RT Bit Life With Scenarios", "path": "Final_RT_Bit_Life_with_Scenarios.html", "type": "Activity", "category": "Games & Review", "origin": "(root)", "kind": "web"}, {"title": "Jeopardy Review", "path": "Jeopardy_Reviewv2.html", "type": "Activity", "category": "Games & Review", "origin": "(root)", "kind": "web"}, {"title": "Jeopardy Review Speech", "path": "Jeopardy_Review_speech.html", "type": "Activity", "category": "Games & Review", "origin": "(root)", "kind": "web"}, {"title": "Mask Design", "path": "mask_design.html", "type": "Activity", "category": "Games & Review", "origin": "(root)", "kind": "web"}, {"title": "Microscope", "path": "microscope.html", "type": "Activity", "category": "Games & Review", "origin": "(root)", "kind": "web"}, {"title": "Microscope Enhanced", "path": "microscope_enhanced.html", "type": "Activity", "category": "Games & Review", "origin": "(root)", "kind": "web"}, {"title": "Mitosis Microscope", "path": "mitosis_microscopev2.html", "type": "Activity", "category": "Games & Review", "origin": "(root)", "kind": "web"}, {"title": "Monopoly Board", "path": "monopoly_board.html", "type": "Activity", "category": "Games & Review", "origin": "(root)", "kind": "web"}, {"title": "OncoLife EF1", "path": "oncolef_ef1_index.html", "type": "Activity", "category": "Games & Review", "origin": "(root)", "kind": "web"}, {"title": "RT Activity Hub", "path": "RT_Activity_Hub.html", "type": "Activity", "category": "Games & Review", "origin": "(root)", "kind": "web"}, {"title": "RT Bit Life", "path": "RT_Bit_Life.html", "type": "Activity", "category": "Games & Review", "origin": "(root)", "kind": "web"}, {"title": "RT Department 3D", "path": "rt_department_3d.html", "type": "Activity", "category": "Games & Review", "origin": "(root)", "kind": "web"}, {"title": "Uno", "path": "Uno.html", "type": "Activity", "category": "Games & Review", "origin": "(root)", "kind": "web"}, {"title": "Workbook", "path": "workbook_index.html", "type": "Activity", "category": "Games & Review", "origin": "(root)", "kind": "web"}, {"title": "Main Game Ecosystem", "path": "Main Game Ecosystem/index.html", "type": "Hub", "category": "Hubs & Menus", "origin": "Main Game Ecosystem", "kind": "web"}, {"title": "RT Games Main Menu", "path": "Main Menu/index.html", "type": "Hub", "category": "Hubs & Menus", "origin": "Main Menu", "kind": "web"}, {"title": "Store", "path": "Main Game Ecosystem/store.html", "type": "Hub", "category": "Hubs & Menus", "origin": "Main Game Ecosystem", "kind": "web"}, {"title": "LINAC Console Emulator", "path": "Linac Console Emulator/index.html.html", "type": "Hub", "category": "LINAC & Equipment", "origin": "Linac Console Emulator", "kind": "web"}, {"title": "2D Gantry Field Simulator", "path": "Pendant Images/2D_gantry_field_simulator_index.html", "type": "Simulator", "category": "LINAC & Equipment", "origin": "Pendant Images", "kind": "web"}, {"title": "3D LINAC Simulator", "path": "LINAC Parts/3D_LINAC_simulator.html", "type": "Simulator", "category": "LINAC & Equipment", "origin": "LINAC Parts", "kind": "web"}, {"title": "Field Size Simulator", "path": "Linac Console Emulator/field_size_simulator_activity.html", "type": "Simulator", "category": "LINAC & Equipment", "origin": "Linac Console Emulator", "kind": "web"}, {"title": "LINAC Operations Lab", "path": "LINAC Parts/linac_operations_lab_activity.html", "type": "Lab", "category": "LINAC & Equipment", "origin": "LINAC Parts", "kind": "web"}, {"title": "Build A Console", "path": "Linac Console Emulator/build_a_console_game_index.html", "type": "Game", "category": "LINAC & Equipment", "origin": "Linac Console Emulator", "kind": "web"}, {"title": "Build A LINAC Game", "path": "LINAC Parts/Build_a_LINAC_Game.html", "type": "Game", "category": "LINAC & Equipment", "origin": "LINAC Parts", "kind": "web"}, {"title": "MLC Field Shaping", "path": "Linac Console Emulator/mlc_field_shaping_activity.html", "type": "Activity", "category": "LINAC & Equipment", "origin": "Linac Console Emulator", "kind": "web"}, {"title": "Profession Path Practice Lesson", "path": "Orientation to Radiation Therapy/profession_path_practice_lesson.html", "type": "Lesson", "category": "Orientation & Professional", "origin": "Orientation to Radiation Therapy", "kind": "web"}, {"title": "Speech Quiz", "path": "Orientation to Radiation Therapy/speech_quiz.html", "type": "Game", "category": "Orientation & Professional", "origin": "Orientation to Radiation Therapy", "kind": "web"}, {"title": "History Timeline", "path": "Orientation to Radiation Therapy/history_timeline_activity.html", "type": "Activity", "category": "Orientation & Professional", "origin": "Orientation to Radiation Therapy", "kind": "web"}, {"title": "Oncology Flashcards", "path": "Orientation to Radiation Therapy/oncology_flashcards_activity.html", "type": "Activity", "category": "Orientation & Professional", "origin": "Orientation to Radiation Therapy", "kind": "web"}, {"title": "Personal Success Plan", "path": "Orientation to Radiation Therapy/personal_success_plan_activity.html", "type": "Activity", "category": "Orientation & Professional", "origin": "Orientation to Radiation Therapy", "kind": "web"}, {"title": "Care Center V4 2", "path": "care_center_v4_2.html", "type": "Hub", "category": "Patient Care & Communication", "origin": "(root)", "kind": "web"}, {"title": "CARE Interactive Center", "path": "CARE Interactive Center.html", "type": "Hub", "category": "Patient Care & Communication", "origin": "(root)", "kind": "web"}, {"title": "Side Effect Simulator", "path": "side_effect_simulator_package/index.html", "type": "Hub", "category": "Patient Care & Communication", "origin": "side_effect_simulator_package", "kind": "web"}, {"title": "Patient Safety ID Lab", "path": "Patient Care/patient_safety_id_lab.html", "type": "Lab", "category": "Patient Care & Communication", "origin": "Patient Care", "kind": "web"}, {"title": "Care Commander", "path": "care_commander_game_index.html", "type": "Game", "category": "Patient Care & Communication", "origin": "(root)", "kind": "web"}, {"title": "Communication Branched Scenarios", "path": "Communication Branched Scenarios Introduction/CommunicationBranchedScenariosIntroduction.html", "type": "Activity", "category": "Patient Care & Communication", "origin": "Communication Branched Scenarios Introduction", "kind": "web"}, {"title": "Patient Care Skills", "path": "Patient Care/patient_care_skills_activity.html", "type": "Activity", "category": "Patient Care & Communication", "origin": "Patient Care", "kind": "web"}, {"title": "Patient Journey Sequencer", "path": "Patient Care/patient_journey_sequencer_activity.html", "type": "Activity", "category": "Patient Care & Communication", "origin": "Patient Care", "kind": "web"}, {"title": "Rad Units Challenge", "path": "Rad Units Challenge/menu.html", "type": "Hub", "category": "Radiation Physics", "origin": "Rad Units Challenge", "kind": "web"}, {"title": "Atomic Structure Lesson", "path": "Atomic Structure/atomic_structure_lesson_index.html", "type": "Lesson", "category": "Radiation Physics", "origin": "Atomic Structure", "kind": "web"}, {"title": "Em Spectrum Lesson", "path": "Electromagnetic Radiation/em_spectrum_lesson_index.html", "type": "Lesson", "category": "Radiation Physics", "origin": "Electromagnetic Radiation", "kind": "web"}, {"title": "Inv2 Lesson", "path": "Inverse Square/inv2_lesson_index.html", "type": "Lesson", "category": "Radiation Physics", "origin": "Inverse Square", "kind": "web"}, {"title": "Photon Interactions Lesson", "path": "Photon Interactions/photon_interactions_lesson_index.html", "type": "Lesson", "category": "Radiation Physics", "origin": "Photon Interactions", "kind": "web"}, {"title": "Units Of Measurement Lesson", "path": "Units of Measurement/units_of_measurement_lesson_index.html", "type": "Lesson", "category": "Radiation Physics", "origin": "Units of Measurement", "kind": "web"}, {"title": "Em Spectrum Simulator", "path": "Electromagnetic Radiation/em_spectrum_simulator_index.html", "type": "Simulator", "category": "Radiation Physics", "origin": "Electromagnetic Radiation", "kind": "web"}, {"title": "Inv2 Simulator", "path": "Inverse Square/inv2_simulator_index.html", "type": "Simulator", "category": "Radiation Physics", "origin": "Inverse Square", "kind": "web"}, {"title": "LINAC Beam Production Simulator", "path": "X-Ray Production/LINAC_beam_production_simulator_index.html", "type": "Simulator", "category": "Radiation Physics", "origin": "X-Ray Production", "kind": "web"}, {"title": "Photon Interactions Simulator", "path": "Photon Interactions/photon_interactions_simulator_index.html", "type": "Simulator", "category": "Radiation Physics", "origin": "Photon Interactions", "kind": "web"}, {"title": "Target Interaction Simulator", "path": "X-Ray Production/target_interaction_simulator_index.html", "type": "Simulator", "category": "Radiation Physics", "origin": "X-Ray Production", "kind": "web"}, {"title": "Atomic Structure Worksheet", "path": "Atomic Structure/atomic_structure_worksheet_index.html", "type": "Worksheet", "category": "Radiation Physics", "origin": "Atomic Structure", "kind": "web"}, {"title": "Em Spectrum Worksheet", "path": "Electromagnetic Radiation/em_spectrum_worksheet_index.html", "type": "Worksheet", "category": "Radiation Physics", "origin": "Electromagnetic Radiation", "kind": "web"}, {"title": "Inv2 Worksheet", "path": "Inverse Square/inv2_worksheet_index.html", "type": "Worksheet", "category": "Radiation Physics", "origin": "Inverse Square", "kind": "web"}, {"title": "LINAC Beam Production Worksheet", "path": "X-Ray Production/LINAC_beam_production_worksheet_index.html", "type": "Worksheet", "category": "Radiation Physics", "origin": "X-Ray Production", "kind": "web"}, {"title": "Photon Interactions Worksheet", "path": "Photon Interactions/photon_interactions_worksheet_index.html", "type": "Worksheet", "category": "Radiation Physics", "origin": "Photon Interactions", "kind": "web"}, {"title": "Target Interaction Worksheet", "path": "X-Ray Production/target_interaction_worksheet_index.html", "type": "Worksheet", "category": "Radiation Physics", "origin": "X-Ray Production", "kind": "web"}, {"title": "Units Of Measurement Worksheet", "path": "Units of Measurement/units_of_measurement_worksheet_index.html", "type": "Worksheet", "category": "Radiation Physics", "origin": "Units of Measurement", "kind": "web"}, {"title": "Beam Sculptor V2", "path": "beam_sculptor_game_v2_index.html", "type": "Game", "category": "Radiation Physics", "origin": "(root)", "kind": "web"}, {"title": "LINAC Beam Production", "path": "X-Ray Production/LINAC_beam_production_game_index.html", "type": "Game", "category": "Radiation Physics", "origin": "X-Ray Production", "kind": "web"}, {"title": "Notation", "path": "Atomic Structure/notation_game_index.html", "type": "Game", "category": "Radiation Physics", "origin": "Atomic Structure", "kind": "web"}, {"title": "Photon Pinball", "path": "photon_pinball_game_index.html", "type": "Game", "category": "Radiation Physics", "origin": "(root)", "kind": "web"}, {"title": "Quiz", "path": "Rad Units Challenge/quiz.html", "type": "Game", "category": "Radiation Physics", "origin": "Rad Units Challenge", "kind": "web"}, {"title": "Target", "path": "target_game_index.html", "type": "Game", "category": "Radiation Physics", "origin": "(root)", "kind": "web"}, {"title": "Target Interaction", "path": "X-Ray Production/target_interaction_game_index.html", "type": "Game", "category": "Radiation Physics", "origin": "X-Ray Production", "kind": "web"}, {"title": "Units Of Measurement", "path": "Units of Measurement/units_of_measurement_game_index.html", "type": "Game", "category": "Radiation Physics", "origin": "Units of Measurement", "kind": "web"}, {"title": "Target Interaction Lesson", "path": "X-Ray Production/target_interaction_leson_index.html", "type": "Activity", "category": "Radiation Physics", "origin": "X-Ray Production", "kind": "web"}, {"title": "Lesson Tabs", "path": "Safety Lessons/lesson_tabs.html", "type": "Lesson", "category": "Radiation Safety & QA", "origin": "Safety Lessons", "kind": "web"}, {"title": "Page Lesson", "path": "Safety Lessons/page_lesson.html", "type": "Lesson", "category": "Radiation Safety & QA", "origin": "Safety Lessons", "kind": "web"}, {"title": "Personnel Dosimetry Lesson", "path": "Personnel Dosimetry/personnel_dosimetry_lesson_index.html", "type": "Lesson", "category": "Radiation Safety & QA", "origin": "Personnel Dosimetry", "kind": "web"}, {"title": "QA Lesson", "path": "QA/QA_lesson_index.html", "type": "Lesson", "category": "Radiation Safety & QA", "origin": "QA", "kind": "web"}, {"title": "Personnel Dosimetry Worksheet", "path": "Personnel Dosimetry/personnel_dosimetry_worksheet_index.html", "type": "Worksheet", "category": "Radiation Safety & QA", "origin": "Personnel Dosimetry", "kind": "web"}, {"title": "QA Worksheet", "path": "QA/QA_worksheet_index.html", "type": "Worksheet", "category": "Radiation Safety & QA", "origin": "QA", "kind": "web"}, {"title": "Error Reporter V3", "path": "error_reporter_game_v3_index.html", "type": "Game", "category": "Radiation Safety & QA", "origin": "(root)", "kind": "web"}, {"title": "Legal Eagle", "path": "legal_eagle_game_index.html", "type": "Game", "category": "Radiation Safety & QA", "origin": "(root)", "kind": "web"}, {"title": "Personnel Dosimetry", "path": "Personnel Dosimetry/personnel_dosimetry_game_index.html", "type": "Game", "category": "Radiation Safety & QA", "origin": "Personnel Dosimetry", "kind": "web"}, {"title": "QA Checkpoint", "path": "QA/QA_checkpoint_game_index.html", "type": "Game", "category": "Radiation Safety & QA", "origin": "QA", "kind": "web"}, {"title": "QA Crusader", "path": "qa_crusader_game_index.html", "type": "Game", "category": "Radiation Safety & QA", "origin": "(root)", "kind": "web"}, {"title": "Safety Supervisor", "path": "safety_supervisor_game_index.html", "type": "Game", "category": "Radiation Safety & QA", "origin": "(root)", "kind": "web"}, {"title": "Cell Sensitivity Hub", "path": "Cell Sensitivity and Cell Populations/index.html", "type": "Hub", "category": "Radiobiology & Oncology", "origin": "Cell Sensitivity and Cell Populations", "kind": "web"}, {"title": "4rs Lesson", "path": "Cell Sensitivity and Cell Populations/4Rs_lesson_index.html", "type": "Lesson", "category": "Radiobiology & Oncology", "origin": "Cell Sensitivity and Cell Populations", "kind": "web"}, {"title": "Carcinogenesis Lesson", "path": "Carcinogenesis/carcinogenesis_lesson_index.html", "type": "Lesson", "category": "Radiobiology & Oncology", "origin": "Carcinogenesis", "kind": "web"}, {"title": "Cell Cycle Radiosensitivity Lesson", "path": "Cell Sensitivity and Cell Populations/cell_cycle_radiosensitivity_lesson_index.html", "type": "Lesson", "category": "Radiobiology & Oncology", "origin": "Cell Sensitivity and Cell Populations", "kind": "web"}, {"title": "Cell Survival Curve Lesson", "path": "Cell Sensitivity and Cell Populations/cell_survival_curve_lesson_index.html", "type": "Lesson", "category": "Radiobiology & Oncology", "origin": "Cell Sensitivity and Cell Populations", "kind": "web"}, {"title": "Cell Survival MTSH Lesson", "path": "Cell Sensitivity and Cell Populations/cell_survival_mtsh_lesson_index.html", "type": "Lesson", "category": "Radiobiology & Oncology", "origin": "Cell Sensitivity and Cell Populations", "kind": "web"}, {"title": "DNA Structure Lesson", "path": "Cell Sensitivity and Cell Populations/dna_structure_lesson_index.html", "type": "Lesson", "category": "Radiobiology & Oncology", "origin": "Cell Sensitivity and Cell Populations", "kind": "web"}, {"title": "Grading And Staging Lesson", "path": "Carcinogenesis/grading_and_staging_lesson_index.html", "type": "Lesson", "category": "Radiobiology & Oncology", "origin": "Carcinogenesis", "kind": "web"}, {"title": "Tolerance Dose Lesson", "path": "tolerance_dose_lesson_index.html", "type": "Lesson", "category": "Radiobiology & Oncology", "origin": "(root)", "kind": "web"}, {"title": "Tumor Classification Lesson", "path": "Carcinogenesis/tumor_classification_lesson_index.html", "type": "Lesson", "category": "Radiobiology & Oncology", "origin": "Carcinogenesis", "kind": "web"}, {"title": "DNA Damage Lab", "path": "Cell Sensitivity and Cell Populations/dna_damage_lab_index.html", "type": "Lab", "category": "Radiobiology & Oncology", "origin": "Cell Sensitivity and Cell Populations", "kind": "web"}, {"title": "DNA Structure Lab", "path": "Cell Sensitivity and Cell Populations/dna_structure_lab_index.html", "type": "Lab", "category": "Radiobiology & Oncology", "origin": "Cell Sensitivity and Cell Populations", "kind": "web"}, {"title": "Microscope Cell Differentaition Lab", "path": "Cell Sensitivity and Cell Populations/microscope_cell_differentaition_lab_index.html", "type": "Lab", "category": "Radiobiology & Oncology", "origin": "Cell Sensitivity and Cell Populations", "kind": "web"}, {"title": "4rs Worksheet", "path": "Cell Sensitivity and Cell Populations/4Rs_worksheet_index.html", "type": "Worksheet", "category": "Radiobiology & Oncology", "origin": "Cell Sensitivity and Cell Populations", "kind": "web"}, {"title": "4rs Worksheet 2", "path": "Cell Sensitivity and Cell Populations/4Rs_worksheet_2_index.html", "type": "Worksheet", "category": "Radiobiology & Oncology", "origin": "Cell Sensitivity and Cell Populations", "kind": "web"}, {"title": "Carcinogenesis Worksheet", "path": "Carcinogenesis/carcinogenesis_worksheet_index.html", "type": "Worksheet", "category": "Radiobiology & Oncology", "origin": "Carcinogenesis", "kind": "web"}, {"title": "Cell Cycle Radiosensitivity Worksheet", "path": "Cell Sensitivity and Cell Populations/cell_cycle_radiosensitivity_worksheet_index.html", "type": "Worksheet", "category": "Radiobiology & Oncology", "origin": "Cell Sensitivity and Cell Populations", "kind": "web"}, {"title": "Cell Survival Curve Worksheet", "path": "Cell Sensitivity and Cell Populations/cell_survival_curve_worksheet_index.html", "type": "Worksheet", "category": "Radiobiology & Oncology", "origin": "Cell Sensitivity and Cell Populations", "kind": "web"}, {"title": "Cell Survival MTSH Worksheet", "path": "Cell Sensitivity and Cell Populations/cell_survival_mtsh_worksheet_index.html", "type": "Worksheet", "category": "Radiobiology & Oncology", "origin": "Cell Sensitivity and Cell Populations", "kind": "web"}, {"title": "Pathology Reports Worksheet", "path": "Carcinogenesis/pathology_reports_worksheet_index.html", "type": "Worksheet", "category": "Radiobiology & Oncology", "origin": "Carcinogenesis", "kind": "web"}, {"title": "RBE OER Worksheet", "path": "Cell Sensitivity and Cell Populations/rbe_oer_worksheet_index.html", "type": "Worksheet", "category": "Radiobiology & Oncology", "origin": "Cell Sensitivity and Cell Populations", "kind": "web"}, {"title": "Tolerance Dose Worksheet", "path": "tolerance_dose_worksheet_index.html", "type": "Worksheet", "category": "Radiobiology & Oncology", "origin": "(root)", "kind": "web"}, {"title": "Tolerance Dose Worksheet 2", "path": "Tolerance Dose/tolerance_dose_worksheet_2_index.html", "type": "Worksheet", "category": "Radiobiology & Oncology", "origin": "Tolerance Dose", "kind": "web"}, {"title": "Tumor Classification Worksheet", "path": "Carcinogenesis/tumor_classification_worksheet_index.html", "type": "Worksheet", "category": "Radiobiology & Oncology", "origin": "Carcinogenesis", "kind": "web"}, {"title": "Cell Defender", "path": "cell_defender_game_index.html", "type": "Game", "category": "Radiobiology & Oncology", "origin": "(root)", "kind": "web"}, {"title": "Cell Survival Curve", "path": "Cell Sensitivity and Cell Populations/cell_survival_curve_game_index.html", "type": "Game", "category": "Radiobiology & Oncology", "origin": "Cell Sensitivity and Cell Populations", "kind": "web"}, {"title": "Radbio", "path": "Tolerance Dose/radbio_game_index.html", "type": "Game", "category": "Radiobiology & Oncology", "origin": "Tolerance Dose", "kind": "web"}, {"title": "Radbio V3", "path": "radbio_game_v3_index.html", "type": "Game", "category": "Radiobiology & Oncology", "origin": "(root)", "kind": "web"}, {"title": "Side Effect Sorcerer V4", "path": "side_effect_sorcerer_game_v4_index.html", "type": "Game", "category": "Radiobiology & Oncology", "origin": "(root)", "kind": "web"}, {"title": "Staging Strategist", "path": "staging_strategist_game_index.html", "type": "Game", "category": "Radiobiology & Oncology", "origin": "(root)", "kind": "web"}, {"title": "10 MV PDD", "path": "Reference Charts/10 MV PDD.html", "type": "Reference", "category": "Reference & Charts", "origin": "Reference Charts", "kind": "web"}, {"title": "10 MV TMR", "path": "Reference Charts/10 MV TMR.html", "type": "Reference", "category": "Reference & Charts", "origin": "Reference Charts", "kind": "web"}, {"title": "18 MV PDD", "path": "Reference Charts/18 MV PDD.html", "type": "Reference", "category": "Reference & Charts", "origin": "Reference Charts", "kind": "web"}, {"title": "18 MV TMR", "path": "Reference Charts/18 MV TMR.html", "type": "Reference", "category": "Reference & Charts", "origin": "Reference Charts", "kind": "web"}, {"title": "6mv PDD", "path": "Reference Charts/6MV PDD.html", "type": "Reference", "category": "Reference & Charts", "origin": "Reference Charts", "kind": "web"}, {"title": "6mv TMR", "path": "Reference Charts/6MV TMR.html", "type": "Reference", "category": "Reference & Charts", "origin": "Reference Charts", "kind": "web"}, {"title": "Output Factor For Calculations (sc)", "path": "Reference Charts/Output factor for calculations (Sc).html", "type": "Reference", "category": "Reference & Charts", "origin": "Reference Charts", "kind": "web"}, {"title": "Output Factor For Calculations (sp)", "path": "Reference Charts/Output factor for calculations (Sp).html", "type": "Reference", "category": "Reference & Charts", "origin": "Reference Charts", "kind": "web"}, {"title": "Reference Chart", "path": "Reference Charts/Reference Chart.html", "type": "Reference", "category": "Reference & Charts", "origin": "Reference Charts", "kind": "web"}, {"title": "Tray Factors And Wedge Factors", "path": "Reference Charts/Tray Factors and Wedge Factors.html", "type": "Reference", "category": "Reference & Charts", "origin": "Reference Charts", "kind": "web"}, {"title": "3D Patient Emulator (Flask)", "path": "3D_emulator/app.py", "type": "App", "category": "Server Apps (Python/Flask)", "origin": "3D_emulator", "kind": "py"}, {"title": "Case Manager", "path": "case_manager.py", "type": "App", "category": "Server Apps (Python/Flask)", "origin": "(root)", "kind": "py"}, {"title": "Case Manager v2", "path": "case_manager2.py", "type": "App", "category": "Server Apps (Python/Flask)", "origin": "(root)", "kind": "py"}, {"title": "Comps Simulator (CLI)", "path": "Comps_sim/rt_simulator.py", "type": "App", "category": "Server Apps (Python/Flask)", "origin": "Comps_sim", "kind": "py"}, {"title": "CT Sim Order Entry (Flask)", "path": "ct_sim_order/app.py", "type": "App", "category": "Server Apps (Python/Flask)", "origin": "ct_sim_order", "kind": "py"}, {"title": "Hybrid Sim App (Flask)", "path": "hybrid_sim_app.py", "type": "App", "category": "Server Apps (Python/Flask)", "origin": "(root)", "kind": "py"}, {"title": "OncoLife Lead (Flask)", "path": "oncolife_lead/app.py", "type": "App", "category": "Server Apps (Python/Flask)", "origin": "oncolife_lead", "kind": "py"}, {"title": "OncoLife Main App (Flask)", "path": "app.py", "type": "App", "category": "Server Apps (Python/Flask)", "origin": "(root)", "kind": "py"}, {"title": "RadOnc Manager (Flask)", "path": "radonc_manager/app.py", "type": "App", "category": "Server Apps (Python/Flask)", "origin": "radonc_manager", "kind": "py"}, {"title": "RadOnc Manager (latest script)", "path": "radonc_managerv5.py", "type": "App", "category": "Server Apps (Python/Flask)", "origin": "(root)", "kind": "py"}, {"title": "TPS Chest Project (Flask)", "path": "tps_chest_project/app.py", "type": "App", "category": "Server Apps (Python/Flask)", "origin": "tps_chest_project", "kind": "py"}, {"title": "TPS Hybrid Project (Flask)", "path": "tps_hybrid_project/app.py", "type": "App", "category": "Server Apps (Python/Flask)", "origin": "tps_hybrid_project", "kind": "py"}, {"title": "4D CT Simulator Hub", "path": "4D CT Simulator/index.html", "type": "Hub", "category": "Treatment Planning & Sim", "origin": "4D CT Simulator", "kind": "web"}, {"title": "Head & Neck TPS Quiz", "path": "head_neck_tps/3d-quiz/index.html", "type": "Hub", "category": "Treatment Planning & Sim", "origin": "head_neck_tps", "kind": "web"}, {"title": "TPS Chest Project", "path": "tps_chest_project/static/index.html", "type": "Hub", "category": "Treatment Planning & Sim", "origin": "tps_chest_project", "kind": "web"}, {"title": "Breast CT Simulation Lesson", "path": "4D CT Simulator/breast_ct_simulation_lesson_index.html", "type": "Lesson", "category": "Treatment Planning & Sim", "origin": "4D CT Simulator", "kind": "web"}, {"title": "CT Simulation Lesson", "path": "4D CT Simulator/ct_simulation_lesson_index.html", "type": "Lesson", "category": "Treatment Planning & Sim", "origin": "4D CT Simulator", "kind": "web"}, {"title": "Pelvis CT Simulation Lesson", "path": "4D CT Simulator/pelvis_ct_simulation_lesson_index.html", "type": "Lesson", "category": "Treatment Planning & Sim", "origin": "4D CT Simulator", "kind": "web"}, {"title": "Primary Brain Setup Lesson", "path": "Treatment Procedures/primary_brain_setup_lesson_index.html", "type": "Lesson", "category": "Treatment Planning & Sim", "origin": "Treatment Procedures", "kind": "web"}, {"title": "Skeletal CT Simulation Lesson", "path": "4D CT Simulator/skeletal_ct_simulation_lesson_index.html", "type": "Lesson", "category": "Treatment Planning & Sim", "origin": "4D CT Simulator", "kind": "web"}, {"title": "Thoracic CT Simulation Lesson", "path": "4D CT Simulator/thoracic_ct_simulation_lesson_index.html", "type": "Lesson", "category": "Treatment Planning & Sim", "origin": "4D CT Simulator", "kind": "web"}, {"title": "Whole Brain Setup Lesson", "path": "Treatment Procedures/whole_brain_setup_lesson_index.html", "type": "Lesson", "category": "Treatment Planning & Sim", "origin": "Treatment Procedures", "kind": "web"}, {"title": "CT Simulation", "path": "4D CT Simulator/ct_simulation.html", "type": "Simulator", "category": "Treatment Planning & Sim", "origin": "4D CT Simulator", "kind": "web"}, {"title": "TPS Run Plan", "path": "TPS/TPS_RunPlan.html", "type": "Simulator", "category": "Treatment Planning & Sim", "origin": "TPS", "kind": "web"}, {"title": "TPS · Brain Plan", "path": "TPS/Brain/index.html", "type": "Simulator", "category": "Treatment Planning & Sim", "origin": "TPS", "kind": "web"}, {"title": "TPS · Lung Plan", "path": "TPS/Lung/index.html", "type": "Simulator", "category": "Treatment Planning & Sim", "origin": "TPS", "kind": "web"}, {"title": "Treatment Planning System", "path": "TPS/index.html", "type": "Simulator", "category": "Treatment Planning & Sim", "origin": "TPS", "kind": "web"}, {"title": "Breast CT Simulation Worksheet", "path": "4D CT Simulator/breast_ct_simulation_worksheet_index.html", "type": "Worksheet", "category": "Treatment Planning & Sim", "origin": "4D CT Simulator", "kind": "web"}, {"title": "CT Simulation Worksheet", "path": "4D CT Simulator/ct_simulation_worksheet_index.html", "type": "Worksheet", "category": "Treatment Planning & Sim", "origin": "4D CT Simulator", "kind": "web"}, {"title": "Pelvis CT Simulation Worksheet", "path": "4D CT Simulator/pelvis_ct_simulation_worksheet_index.html", "type": "Worksheet", "category": "Treatment Planning & Sim", "origin": "4D CT Simulator", "kind": "web"}, {"title": "Skeletal CT Simulation Worksheet", "path": "4D CT Simulator/skeletal_ct_simulation_worksheet_index.html", "type": "Worksheet", "category": "Treatment Planning & Sim", "origin": "4D CT Simulator", "kind": "web"}, {"title": "Thoracic CT Simulation Worksheet", "path": "4D CT Simulator/thoracic_ct_simulation_worksheet_index.html", "type": "Worksheet", "category": "Treatment Planning & Sim", "origin": "4D CT Simulator", "kind": "web"}, {"title": "Tumor Volumes Worksheet", "path": "Tumor Volumes/tumor_volumes_worksheet_index.html", "type": "Worksheet", "category": "Treatment Planning & Sim", "origin": "Tumor Volumes", "kind": "web"}, {"title": "Whole Brain Setup Worksheet", "path": "Treatment Procedures/whole_brain_setup_worksheet_index.html", "type": "Worksheet", "category": "Treatment Planning & Sim", "origin": "Treatment Procedures", "kind": "web"}, {"title": "3D Model Male Female", "path": "4D CT Simulator/3D Model Male_Female.html", "type": "Activity", "category": "Treatment Planning & Sim", "origin": "4D CT Simulator", "kind": "web"}, {"title": "Brain TPS 2", "path": "4D CT Simulator/brain_tps_2.html", "type": "Activity", "category": "Treatment Planning & Sim", "origin": "4D CT Simulator", "kind": "web"}, {"title": "Eford", "path": "4D CT Simulator/eford.html", "type": "Activity", "category": "Treatment Planning & Sim", "origin": "4D CT Simulator", "kind": "web"}, {"title": "Imagesforcontouring", "path": "Images for Contouring/ImagesforContouring.html", "type": "Activity", "category": "Treatment Planning & Sim", "origin": "Images for Contouring", "kind": "web"}, {"title": "TPS Hybrid Project", "path": "tps_hybrid_project/static/tps.html", "type": "Activity", "category": "Treatment Planning & Sim", "origin": "tps_hybrid_project", "kind": "web"}, {"title": "Tps1", "path": "4D CT Simulator/TPS1.html", "type": "Activity", "category": "Treatment Planning & Sim", "origin": "4D CT Simulator", "kind": "web"}, {"title": "Tumor Volumes", "path": "Tumor Volumes/tumor_volumes_index.html", "type": "Activity", "category": "Treatment Planning & Sim", "origin": "Tumor Volumes", "kind": "web"}];
+const TYPE_COLOR = {
+  Hub:'#a98be0', Lesson:'#5aa6e6', Simulator:'#37c6d8', Lab:'#5fd1a0',
+  Worksheet:'#f4a93c', Game:'#e98aa8', Activity:'#9fb4c7', Reference:'#c9b27a', App:'#7f9bb3'
+};
+const CAT_ORDER = [
+ "Orientation & Professional","Radiation Physics","Dosimetry & Calculations","Radiobiology & Oncology",
+ "LINAC & Equipment","Radiation Safety & QA","Treatment Planning & Sim","3D & Simulation Tools",
+ "Patient Care & Communication","EMR & Case Management","Reference & Charts","Games & Review",
+ "Hubs & Menus","Server Apps (Python/Flask)"
+];
+let state = { cat:'All', type:'All', q:'' };
+let working = [];   // current filtered list (the loop set)
+let pos = 0;        // index within working
+let auto = null;
+
+const $ = s => document.querySelector(s);
+const main = $('#main');
+
+/* ---- path resolution -------------------------------------------------
+   Set BASE_PATH if the activity folders do NOT sit directly beside this
+   file. Examples:
+     ""            -> folders are in the same folder as this file (default)
+     "KK CODE/"    -> folders live in a "KK CODE/" subfolder next to this file
+     "../"         -> folders are one level up (e.g. this file is in /hub,
+                      folders are at the repo root)
+   Paths are percent-encoded per segment so spaces, &, and () work over HTTP
+   (GitHub Pages) as well as locally.                                     */
+const BASE_PATH = "";
+function resolve(p){
+  return BASE_PATH + p.split('/').map(encodeURIComponent).join('/');
+}
+
+function catList(){
+  const m = {}; DATA.forEach(r=>m[r.category]=(m[r.category]||0)+1);
+  const ks = CAT_ORDER.filter(c=>m[c]); 
+  Object.keys(m).forEach(c=>{ if(!ks.includes(c)) ks.push(c); });
+  return ks.map(c=>[c,m[c]]);
+}
+function typeList(){
+  const order=['Hub','Lesson','Simulator','Lab','Worksheet','Game','Activity','Reference','App'];
+  const m={}; DATA.forEach(r=>m[r.type]=(m[r.type]||0)+1);
+  return order.filter(t=>m[t]).map(t=>[t,m[t]]);
+}
+function buildChips(){
+  const cc=$('#catChips');
+  cc.innerHTML = `<div class="chip on" data-cat="All">All Modules <span class="n">${DATA.length}</span></div>`+
+    catList().map(([c,n])=>`<div class="chip" data-cat="${esc(c)}">${esc(c)} <span class="n">${n}</span></div>`).join('');
+  const tc=$('#typeChips');
+  tc.innerHTML = `<div class="chip tchip on" data-type="All">All Types</div>`+
+    typeList().map(([t,n])=>`<div class="chip tchip" data-type="${t}" style="--accent:${TYPE_COLOR[t]}">${t} <span class="n">${n}</span></div>`).join('');
+  cc.querySelectorAll('.chip').forEach(el=>el.onclick=()=>{state.cat=el.dataset.cat;syncChips();render();});
+  tc.querySelectorAll('.chip').forEach(el=>el.onclick=()=>{state.type=el.dataset.type;syncChips();render();});
+}
+function syncChips(){
+  document.querySelectorAll('#catChips .chip').forEach(el=>el.classList.toggle('on',el.dataset.cat===state.cat));
+  document.querySelectorAll('#typeChips .chip').forEach(el=>el.classList.toggle('on',el.dataset.type===state.type));
+}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+
+function filtered(){
+  const q=state.q.trim().toLowerCase();
+  return DATA.filter(r=>{
+    if(state.cat!=='All' && r.category!==state.cat) return false;
+    if(state.type!=='All' && r.type!==state.type) return false;
+    if(q){ const hay=(r.title+' '+r.path+' '+r.category+' '+r.type+' '+r.origin).toLowerCase();
+      if(!hay.includes(q)) return false; }
+    return true;
+  });
+}
+function render(){
+  working = filtered();
+  $('#rcount').textContent = working.length;
+  if(!working.length){ main.innerHTML='<div class="empty">No activities match this filter.</div>'; return; }
+  const groups={};
+  working.forEach((r,i)=>{ (groups[r.category]=groups[r.category]||[]).push({...r,_gi:i}); });
+  const order = CAT_ORDER.filter(c=>groups[c]).concat(Object.keys(groups).filter(c=>!CAT_ORDER.includes(c)));
+  main.innerHTML = order.map(cat=>{
+    const items=groups[cat];
+    return `<section class="group">
+      <div class="group-head"><h3>${esc(cat)}</h3><span class="cnt">${items.length} ${items.length===1?'activity':'activities'}</span><div class="ln"></div></div>
+      <div class="grid">`+ items.map(r=>{
+        const col=TYPE_COLOR[r.type]||'#37c6d8';
+        const nt = r.kind==='web' ? `<a class="newtab" href="${esc(resolve(r.path))}" target="_blank" title="Open in new tab" onclick="event.stopPropagation()">↗</a>`:'';
+        return `<div class="card" style="--accent:${col}" data-i="${r._gi}">
+          ${nt}<span class="badge">${r.type}</span>
+          <h4>${esc(r.title)}</h4>
+          <div class="path">${esc(r.path)}</div>
+          <span class="go">launch →</span></div>`;
+      }).join('')+`</div></section>`;
+  }).join('');
+  main.querySelectorAll('.card').forEach(el=>el.onclick=()=>openAt(+el.dataset.i));
+}
+
+/* ---- viewer / loop ---- */
+const viewer=$('#viewer'), frame=$('#vFrame'), appCard=$('#appCard');
+function openAt(i){ pos=i; showCurrent(); viewer.classList.add('open'); }
+function showCurrent(){
+  if(!working.length) return;
+  pos=(pos+working.length)%working.length;
+  const r=working[pos];
+  $('#vIdx').textContent=String(pos+1).padStart(3,'0');
+  $('#vTot').textContent=String(working.length).padStart(3,'0');
+  $('#vName').textContent=r.title;
+  $('#vPath').textContent=r.path+'  ·  '+r.category;
+  $('#vOpen').onclick=()=>window.open(resolve(r.path),'_blank');
+  if(r.kind==='py'){
+    appCard.classList.add('show'); frame.removeAttribute('src');
+    $('#aName').textContent=r.title;
+    $('#aCmd').textContent='cd "KK CODE" && python "'+r.path+'"';
+  }else{
+    appCard.classList.remove('show'); frame.src=resolve(r.path);
+  }
+}
+function step(d){ pos+=d; showCurrent(); }
+function rand(){ pos=Math.floor(Math.random()*working.length); showCurrent(); }
+function closeV(){ viewer.classList.remove('open'); frame.removeAttribute('src'); stopAuto(); }
+function toggleAuto(){
+  if(auto){ stopAuto(); } else {
+    auto=setInterval(()=>step(1),18000); $('#vAuto').classList.add('on');
+    $('#vAuto').textContent='⏸ Looping'; viewer.classList.add('autop');
+  }
+}
+function stopAuto(){ if(auto){clearInterval(auto);auto=null;} $('#vAuto').classList.remove('on');
+  $('#vAuto').textContent='▶ Loop'; viewer.classList.remove('autop'); }
+
+$('#vPrev').onclick=()=>step(-1);
+$('#vNext').onclick=()=>step(1);
+$('#vRand').onclick=rand;
+$('#vAuto').onclick=toggleAuto;
+$('#vClose').onclick=closeV;
+$('#tourBtn').onclick=()=>{ if(working.length){ openAt(0); } };
+document.addEventListener('keydown',e=>{
+  if(!viewer.classList.contains('open')) return;
+  if(e.key==='ArrowRight'){step(1);} else if(e.key==='ArrowLeft'){step(-1);}
+  else if(e.key.toLowerCase()==='r'){rand();}
+  else if(e.key==='Escape'){closeV();}
+  else if(e.key===' '){e.preventDefault();toggleAuto();}
+});
+$('#q').addEventListener('input',e=>{state.q=e.target.value;render();});
+
+buildChips(); render();
+</script>
+</body>
+</html>
