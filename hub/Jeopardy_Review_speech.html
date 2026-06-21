@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthcare Roles Speech Quiz</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #e0f7fa, #f1f8e9);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        h1 {
+            text-align: center;
+            color: #2e7d32;
+            margin-bottom: 30px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            width: 80%;
+            max-width: 700px;
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        .description-display {
+            font-size: 1.6em;
+            font-weight: bold;
+            text-align: center;
+            padding: 25px;
+            background-color: #e3f2fd;
+            border-radius: 10px;
+            border: 1px solid #90caf9;
+            width: 90%;
+            margin-bottom: 20px;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        .prompt-text {
+            font-size: 1.3em;
+            color: #3f51b5;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .feedback-correct {
+            color: #2e7d32;
+            font-weight: bold;
+            font-size: 1.4em;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .feedback-incorrect {
+            color: #c62828;
+            font-weight: bold;
+            font-size: 1.4em;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .status-message {
+            font-size: 1.1em;
+            color: #616161;
+            margin-top: 15px;
+            text-align: center;
+        }
+        .btn-base {
+            display: block;
+            margin: 10px auto;
+            padding: 12px 25px;
+            font-size: 1.2em;
+            background: #388e3c;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease, opacity 0.3s ease;
+        }
+        .btn-base:hover {
+            background: #2e7d32;
+        }
+        .btn-base:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .current-score {
+            font-size: 1.2em;
+            color: #00796b;
+            font-weight: bold;
+            margin-top: 20px;
+            text-align: center;
+            width: 100%;
+        }
+        #mic-test-area {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px dashed #bdbdbd;
+            border-radius: 8px;
+            background-color: #f5f5f5;
+        }
+        #mic-test-area p {
+            font-size: 1.1em;
+            color: #424242;
+        }
+        #typed-answer-area input[type="text"] {
+            padding: 10px;
+            font-size: 1em;
+            width: 70%;
+            max-width: 350px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+        @media (min-width: 600px) {
+             #typed-answer-area {
+                display: flex !important; /* Use important if inline styles are causing issues */
+                align-items: center;
+                justify-content: center;
+             }
+            #typed-answer-area input[type="text"] {
+                margin-bottom: 0;
+                margin-right: 10px; /* Add some space between input and button */
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Healthcare Roles Speech Quiz</h1>
+    <div class="container">
+        <div id="quiz-area">
+            <div class="description-display" id="description-display">
+                Welcome! Let's test your microphone first.
+            </div>
+            <div class="prompt-text" id="prompt-text"></div>
+
+            <div id="typed-answer-area" style="display: none; margin-top: 15px; text-align: center;">
+                <input type="text" id="typed-answer-input" placeholder="Or type your answer here">
+                <button class="btn-base" id="submit-typed-answer-button" style="margin-left: 10px; padding: 10px 15px; font-size: 1em;">Submit Type</button>
+            </div>
+
+            <div class="status-message" id="status-message"></div>
+            <div class="feedback" id="feedback"></div>
+        </div>
+
+        <div id="mic-test-area">
+            <p>To test your microphone, please click "Test Mic" and say: <strong>"Hello Gemini"</strong> or <strong>"Testing one two three"</strong></p>
+            <button class="btn-base" id="test-mic-button">Test Mic</button>
+            <button class="btn-base" id="retest-mic-button" style="display: none;">Retest Mic</button>
+            <p id="mic-test-feedback"></p>
+        </div>
+
+        <button class="btn-base" id="start-button" disabled>Start Quiz</button>
+        <button class="btn-base" id="next-button" style="display: none;">Next Question</button>
+        <div class="current-score" id="score-display">Score: 0 / 0</div>
+    </div>
+
+    <script>
+        const data = [
+            ["Radiologist", "Interpret medical images."],
+            ["Radiologic Technologist", "Perform routine X-ray exams."],
+            ["MRI Technologist", "Operate MRI machines for diagnostic imaging."],
+            ["CT Technologist", "Use CT scanners to create cross-sectional images."],
+            ["Ultrasound Technologist", "Use sound waves to produce images of internal organs."],
+            ["Nuclear Medicine Technologist", "Administer radioactive drugs for imaging or treatment."],
+            ["Radiation Therapist", "Administer radiation treatment to cancer patients."],
+            ["Medical Physicist", "Ensure safe and effective radiation doses."],
+            ["Dosimetrist", "Calculate and plan radiation doses."],
+            ["Oncologist", "Diagnose and treat cancer patients."],
+            ["Medical Assistant", "Assist with clinical and administrative tasks."],
+            ["Nurse", "Provide patient care and support."],
+            ["Surgeon", "Perform surgeries."],
+            ["Pathologist", "Study tissues and diagnose diseases."],
+            ["Pharmacist", "Dispense medications and counsel patients."],
+            ["Physical Therapist", "Help patients improve movement and manage pain."],
+            ["Occupational Therapist", "Assist patients in developing daily living skills."],
+            ["Speech Therapist", "Treat speech, communication, and swallowing disorders."],
+            ["Respiratory Therapist", "Treat patients with breathing or cardiopulmonary disorders."],
+            ["Dietitian", "Plan food and nutrition programs."],
+            ["Social Worker", "Support patients with social and emotional needs."],
+            ["Health Information Technician", "Manage medical records and health data."],
+            ["Medical Coder", "Assign codes to diagnoses and procedures."],
+            ["Medical Biller", "Submit bills and claims to insurance companies."],
+            ["Healthcare Administrator", "Manage healthcare facilities and operations."],
+            ["Lab Technician", "Conduct laboratory tests."],
+            ["Genetic Counselor", "Assess individual or family risk for genetic conditions."],
+            ["Biomedical Engineer", "Design equipment and devices for healthcare."],
+            ["EMT or Paramedic", "Provide emergency medical care."],
+            ["Chiropractor", "Treat musculoskeletal system problems."],
+            ["Podiatrist", "Treat conditions of the foot and ankle."],
+            ["Optometrist", "Examine, diagnose, and treat eye conditions."]
+        ];
+
+        let shuffledData = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let totalQuestionsAttempted = 0;
+        let recognition;
+        let isListening = false;
+        let isTestingMic = false;
+
+        const TEST_PHRASE_1 = "hello gemini";
+        const TEST_PHRASE_2 = "testing one two three";
+
+        const descriptionDisplay = document.getElementById("description-display");
+        const promptText = document.getElementById("prompt-text");
+        const statusMessage = document.getElementById("status-message");
+        const feedbackDisplay = document.getElementById("feedback");
+        const startButton = document.getElementById("start-button");
+        const nextButton = document.getElementById("next-button");
+        const scoreDisplay = document.getElementById("score-display");
+        const micTestArea = document.getElementById("mic-test-area");
+        const micTestButton = document.getElementById("test-mic-button");
+        const retestMicButton = document.getElementById("retest-mic-button");
+        const micTestFeedback = document.getElementById("mic-test-feedback");
+
+        const typedAnswerArea = document.getElementById("typed-answer-area");
+        const typedAnswerInput = document.getElementById("typed-answer-input");
+        const submitTypedAnswerButton = document.getElementById("submit-typed-answer-button");
+
+
+        function initializeSpeechRecognition() {
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                descriptionDisplay.textContent = "Sorry, your browser doesn't support the Web Speech API. Please try using Google Chrome. You can still use the typed input.";
+                micTestArea.style.display = 'none'; // Hide mic test if not supported
+                startButton.disabled = false; // Allow starting with typed input
+                // In a real scenario, you might want to inform the user they'll only have typed input.
+                return;
+            }
+
+            recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.continuous = false;
+            recognition.lang = 'en-US';
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+
+            recognition.onstart = () => {
+                isListening = true;
+                if (isTestingMic) {
+                    statusMessage.textContent = "Listening for test phrase...";
+                } else {
+                    statusMessage.textContent = "Listening for your answer...";
+                }
+                feedbackDisplay.textContent = "";
+                micTestFeedback.textContent = "";
+            };
+
+            recognition.onresult = (event) => {
+                isListening = false; // Will be set again if recognition restarts
+                const spokenText = event.results[0][0].transcript.trim();
+                statusMessage.textContent = ""; // Clear "Listening..."
+
+                if (isTestingMic) {
+                    handleMicTestResult(spokenText);
+                } else {
+                    // If speech provides a result, we process it and hide typed input for this question
+                    typedAnswerArea.style.display = 'none';
+                    checkAnswer(spokenText);
+                }
+            };
+
+            recognition.onerror = (event) => {
+                isListening = false;
+                let specificErrorMsg = "";
+
+                if (isTestingMic) {
+                    micTestFeedback.className = "feedback-incorrect";
+                    if (event.error === 'not-allowed') {
+                        specificErrorMsg = "Microphone access denied. Please allow microphone in your browser settings and try again.";
+                    } else if (event.error === 'no-speech') {
+                        specificErrorMsg = "No speech detected. Please speak clearly into your microphone.";
+                    } else {
+                        specificErrorMsg = "Microphone test failed. Ensure your mic is connected and working.";
+                    }
+                    micTestFeedback.textContent = specificErrorMsg;
+                    micTestButton.style.display = 'none';
+                    retestMicButton.style.display = 'block';
+                    startButton.disabled = true;
+                    typedAnswerArea.style.display = 'none';
+                } else { // Quiz part
+                    feedbackDisplay.className = "feedback-incorrect";
+                     if (event.error === 'no-speech') {
+                        specificErrorMsg = "No speech detected. Please type your answer.";
+                    } else if (event.error === 'not-allowed') {
+                        specificErrorMsg = "Microphone access denied. Please type your answer or allow microphone access and restart quiz.";
+                        if(recognition) recognition.abort();
+                    } else {
+                        specificErrorMsg = `Speech recognition error: ${event.error}. Please type your answer.`;
+                    }
+                    feedbackDisplay.textContent = specificErrorMsg;
+                    statusMessage.textContent = ""; // Clear "Listening..."
+
+                    // Ensure typed input is available and focused if speech fails
+                    typedAnswerArea.style.display = 'block'; // Or 'flex' depending on your CSS for larger screens
+                    submitTypedAnswerButton.disabled = false;
+                    typedAnswerInput.disabled = false;
+                    typedAnswerInput.focus();
+                }
+            };
+
+            recognition.onend = () => {
+                const wasListeningForQuizAnswer = !isTestingMic && statusMessage.textContent === "Listening for your answer...";
+                isListening = false;
+
+                if (wasListeningForQuizAnswer && !feedbackDisplay.textContent) {
+                    statusMessage.textContent = "Recognition stopped. You can type your answer.";
+                    typedAnswerArea.style.display = 'block'; // Or 'flex'
+                    submitTypedAnswerButton.disabled = false;
+                    typedAnswerInput.disabled = false;
+                } else if (isTestingMic && !micTestFeedback.textContent.includes("successful") && !micTestFeedback.textContent.includes("failed") && !micTestFeedback.textContent.includes("denied") && !micTestFeedback.textContent.includes("detected")) {
+                    micTestFeedback.className = "feedback-incorrect";
+                    micTestFeedback.textContent = "Microphone test ended. Please try again.";
+                    micTestButton.style.display = 'none';
+                    retestMicButton.style.display = 'block';
+                }
+                 if (statusMessage.textContent === "Listening for test phrase..." || statusMessage.textContent === "Listening for your answer...") {
+                     statusMessage.textContent = ""; // Clear if not handled by other logic
+                }
+            };
+        }
+
+        function startMicTest() {
+            if (!recognition) { // If speech API not supported, skip mic test
+                micTestFeedback.textContent = "Web Speech API not supported in this browser. Mic test skipped.";
+                micTestArea.style.display = 'none';
+                startButton.disabled = false; // Allow to start with typed input
+                descriptionDisplay.textContent = "Click 'Start Quiz' to begin (using typed answers).";
+                return;
+            }
+            if (isListening) return;
+
+            isTestingMic = true;
+            micTestFeedback.textContent = "";
+            micTestFeedback.className = "";
+            micTestButton.style.display = 'none';
+            retestMicButton.style.display = 'none';
+            startButton.disabled = true;
+            typedAnswerArea.style.display = 'none';
+
+            descriptionDisplay.textContent = "Say: 'Hello Gemini' or 'Testing one two three'";
+            promptText.textContent = "";
+            feedbackDisplay.textContent = "";
+
+            try {
+                recognition.start();
+            } catch (e) {
+                statusMessage.textContent = "Microphone busy or failed to start. Try retesting.";
+                micTestButton.style.display = 'none';
+                retestMicButton.style.display = 'block';
+            }
+        }
+
+        function handleMicTestResult(spokenText) {
+            isTestingMic = false; // Reset flag
+            const normalizedSpoken = spokenText.toLowerCase().replace(/[^a-z0-9\s]/g, '').trim();
+
+            if (normalizedSpoken.includes(TEST_PHRASE_1) || normalizedSpoken.includes(TEST_PHRASE_2)) {
+                micTestFeedback.className = "feedback-correct";
+                micTestFeedback.textContent = `Mic test successful! You said: "${spokenText}".`;
+                startButton.disabled = false;
+                micTestArea.style.display = 'none';
+                descriptionDisplay.textContent = "Mic test passed! Click 'Start Quiz' to begin.";
+                promptText.textContent = "";
+            } else {
+                micTestFeedback.className = "feedback-incorrect";
+                micTestFeedback.textContent = `Mic test failed. You said "${spokenText}". Please try saying "Hello Gemini" or "Testing one two three" more clearly.`;
+                startButton.disabled = true;
+                micTestButton.style.display = 'none';
+                retestMicButton.style.display = 'block';
+            }
+            typedAnswerArea.style.display = 'none'; // Ensure it's hidden after test
+        }
+
+        function startGame() {
+            if (recognition && isListening) {
+                recognition.abort();
+            }
+            isTestingMic = false;
+
+            shuffledData = [...data];
+            for (let i = shuffledData.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffledData[i], shuffledData[j]] = [shuffledData[j], shuffledData[i]];
+            }
+
+            currentQuestionIndex = 0;
+            score = 0;
+            totalQuestionsAttempted = 0;
+            updateScoreDisplay();
+
+            micTestArea.style.display = 'none';
+            startButton.style.display = 'none';
+            nextButton.style.display = 'none';
+            typedAnswerArea.style.display = 'none'; // Hide initially for the first question
+            displayNextQuestion();
+        }
+
+        function displayNextQuestion() {
+            feedbackDisplay.textContent = "";
+            feedbackDisplay.className = "";
+            statusMessage.textContent = "";
+
+            if (currentQuestionIndex < shuffledData.length) {
+                const [role, description] = shuffledData[currentQuestionIndex];
+                descriptionDisplay.textContent = description;
+                promptText.textContent = "What healthcare team member is this?";
+                nextButton.style.display = 'none';
+
+                typedAnswerInput.value = "";
+                typedAnswerArea.style.display = 'block'; // Or 'flex' based on CSS
+                submitTypedAnswerButton.disabled = false;
+                typedAnswerInput.disabled = false;
+
+                if (recognition && !isListening) {
+                    try {
+                        recognition.start();
+                    } catch (e) {
+                        statusMessage.textContent = "Speech recognition could not start. Please type your answer.";
+                    }
+                } else if (!recognition) { // If API not supported, prompt for typing
+                    statusMessage.textContent = "Please type your answer.";
+                }
+            } else {
+                descriptionDisplay.innerHTML = "<h2>Quiz Over!</h2><p>You've completed all the questions.</p>";
+                promptText.textContent = `Your final score: ${score} out of ${totalQuestionsAttempted}.`;
+                statusMessage.textContent = "";
+                nextButton.style.display = 'none';
+                startButton.textContent = "Restart Quiz";
+                startButton.style.display = 'block';
+                typedAnswerArea.style.display = 'none';
+                if (recognition && isListening) {
+                    recognition.abort();
+                }
+            }
+        }
+
+        function checkAnswer(answerText) {
+            if (recognition && isListening) {
+                recognition.abort();
+                isListening = false;
+            }
+            typedAnswerInput.disabled = true;
+            submitTypedAnswerButton.disabled = true;
+            // Note: typedAnswerArea itself is not hidden here, just its interactive elements.
+            // It will be hidden/re-shown by displayNextQuestion or quiz end.
+
+            totalQuestionsAttempted++;
+            const [correctRole, currentDescription] = shuffledData[currentQuestionIndex];
+            let isCorrect = false;
+
+            const normalizedAnswer = answerText.toLowerCase()
+                                                .replace(/^(a|an|the)\s/, '')
+                                                .replace(/\s(or|and)\s/g, ' ')
+                                                .replace(/[^a-z0-9\s]/g, '')
+                                                .trim();
+            const normalizedCorrect = correctRole.toLowerCase()
+                                                 .replace(/^(a|an|the)\s/, '')
+                                                 .replace(/\s(or|and)\s/g, ' ')
+                                                 .replace(/[^a-z0-9\s]/g, '')
+                                                 .trim();
+
+            // Simple direct match or if one significantly contains the other (and is of reasonable length)
+            if (normalizedAnswer === normalizedCorrect ||
+                (normalizedAnswer.includes(normalizedCorrect) && normalizedAnswer.length < normalizedCorrect.length + 5) || // Allow slightly longer spoken/typed answer
+                (normalizedCorrect.includes(normalizedAnswer) && normalizedCorrect.length < normalizedAnswer.length + 5)    // Allow slightly shorter
+            ) {
+                 if (normalizedAnswer.length > 2 || normalizedCorrect.length > 2) { // Avoid matching very short strings like "a" to "a technologist"
+                    isCorrect = true;
+                 }
+            }
+
+
+            if (!isCorrect && normalizedCorrect === "emt or paramedic" && (normalizedAnswer === "emt" || normalizedAnswer === "paramedic")) {
+                isCorrect = true;
+            }
+
+
+            if (isCorrect) {
+                score++;
+                feedbackDisplay.textContent = `Correct! It's a ${correctRole}.`;
+                feedbackDisplay.className = "feedback-correct";
+            } else {
+                feedbackDisplay.textContent = `Incorrect. You answered "${answerText}". The correct answer was "${correctRole}".`;
+                feedbackDisplay.className = "feedback-incorrect";
+            }
+            updateScoreDisplay();
+            nextButton.style.display = 'block';
+        }
+
+        function handleSubmitTypedAnswer() {
+            const typedAnswer = typedAnswerInput.value.trim();
+            if (typedAnswer) {
+                checkAnswer(typedAnswer);
+            } else {
+                statusMessage.textContent = "Please type an answer before submitting.";
+                typedAnswerInput.focus();
+            }
+        }
+
+        function updateScoreDisplay() {
+            scoreDisplay.textContent = `Score: ${score} / ${totalQuestionsAttempted}`;
+        }
+
+        micTestButton.addEventListener('click', startMicTest);
+        retestMicButton.addEventListener('click', startMicTest);
+        startButton.addEventListener('click', startGame);
+        nextButton.addEventListener('click', () => {
+            currentQuestionIndex++;
+            displayNextQuestion();
+        });
+        submitTypedAnswerButton.addEventListener('click', handleSubmitTypedAnswer);
+        typedAnswerInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                handleSubmitTypedAnswer();
+            }
+        });
+
+        window.onload = () => {
+            initializeSpeechRecognition(); // This will check for API support
+            descriptionDisplay.textContent = "Welcome! Let's test your microphone first.";
+            promptText.textContent = "";
+
+            // If recognition API is not supported, initializeSpeechRecognition will handle button states.
+            // Otherwise, proceed with normal mic test setup.
+            if (('webkitSpeechRecognition' in window) || ('SpeechRecognition' in window)) {
+                micTestArea.style.display = 'block';
+                startButton.disabled = true;
+            } else { // API not supported flow
+                micTestArea.style.display = 'none';
+                startButton.disabled = false; // Enable start for typed input
+                descriptionDisplay.textContent = "Speech input not supported. Click 'Start Quiz' for typed answers.";
+            }
+            typedAnswerArea.style.display = 'none';
+        };
+    </script>
+</body>
+</html>

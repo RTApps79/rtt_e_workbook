@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EMR Arcade Challenge</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: black;
+      color: lime;
+      font-family: 'Press Start 2P', monospace;
+      padding: 30px;
+      text-align: center;
+    }
+    h1 {
+      font-size: 1.5rem;
+      color: yellow;
+    }
+    .game-box {
+      border: 4px double lime;
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: #111;
+    }
+    .question {
+      margin: 20px 0;
+      font-size: 1rem;
+    }
+    .choices button {
+      background-color: #222;
+      color: lime;
+      border: 2px solid lime;
+      padding: 10px;
+      margin: 5px;
+      cursor: pointer;
+    }
+    .choices button:hover {
+      background-color: lime;
+      color: black;
+    }
+    #score {
+      font-size: 1.2rem;
+      margin-top: 20px;
+      color: cyan;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎮 EMR Arcade Challenge</h1>
+  <div class="game-box">
+    <div id="question-box">
+      <div class="question" id="question">Loading question...</div>
+      <div class="choices" id="choices"></div>
+    </div>
+    <div id="score">Score: 0</div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        text: "What is the typical diagnosis for John Smith?",
+        choices: ["Breast Cancer", "Glioblastoma", "Lung Cancer", "Colon Cancer"],
+        answer: "Glioblastoma"
+      },
+      {
+        text: "Which patient had a prone breast setup?",
+        choices: ["Susan Miller", "Mary Peterson", "Anna Bellwether", "Barbara Davis"],
+        answer: "Susan Miller"
+      },
+      {
+        text: "What diagnosis is associated with Samuel Green?",
+        choices: ["Prostate Cancer", "Hodgkin Lymphoma", "Osteosarcoma", "Skin Cancer"],
+        answer: "Hodgkin Lymphoma"
+      },
+      {
+        text: "What modality was used for Patricia Rodriguez?",
+        choices: ["Photon IMRT", "Electron Field", "Proton Therapy", "3D-CRT"],
+        answer: "Proton Therapy"
+      }
+    ];
+
+    let current = 0;
+    let score = 0;
+
+    function renderQuestion() {
+      if (current >= questions.length) {
+        document.getElementById('question-box').innerHTML = `<h2>Game Over!</h2><p>Your final score: ${score}</p>`;
+        return;
+      }
+      const q = questions[current];
+      document.getElementById('question').textContent = q.text;
+      const choiceBox = document.getElementById('choices');
+      choiceBox.innerHTML = '';
+      q.choices.forEach(choice => {
+        const btn = document.createElement('button');
+        btn.textContent = choice;
+        btn.onclick = () => handleAnswer(choice);
+        choiceBox.appendChild(btn);
+      });
+    }
+
+    function handleAnswer(selected) {
+      const correct = questions[current].answer;
+      if (selected === correct) {
+        score += 10;
+      } else {
+        score -= 5;
+      }
+      document.getElementById('score').textContent = `Score: ${score}`;
+      current++;
+      renderQuestion();
+    }
+
+    // Start the game
+    renderQuestion();
+  </script>
+</body>
+</html>

@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trivia Tower Challenge</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #1a202c; /* Dark background for game show feel */
+            color: #e2e8f0;
+            user-select: none; /* Prevent text selection */
+        }
+        #game-wrapper {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+        }
+        #quiz-panel {
+            width: 35%; /* Left side for quiz */
+            padding: 2rem;
+            background-color: #2d3748;
+            border-right: 2px solid #4a5568;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        #jenga-container-wrapper {
+            width: 65%; /* Right side for Jenga */
+            position: relative;
+        }
+        #info { /* Repurpose for score/status on quiz panel */
+            position: static; /* Remove absolute positioning */
+            background-color: transparent; /* No background */
+            padding: 0;
+            box-shadow: none;
+            color: inherit;
+            min-width: unset;
+            margin-bottom: 2rem;
+        }
+        #info h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            color: #9f7aea;
+            text-shadow: 0 0 10px rgba(159, 122, 234, 0.7);
+            margin-bottom: 1rem;
+        }
+        #info p {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        #scoreDisplay, #roundDisplay {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #f6ad55;
+            text-shadow: 0 0 8px rgba(246, 173, 85, 0.5);
+        }
+
+        #question-area {
+            background-color: #4a5568;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        #question-text {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            color: #cbd5e0;
+        }
+        #options-container {
+            display: grid;
+            gap: 0.75rem;
+            width: 100%;
+        }
+        .option-button {
+            background-color: #667eea; /* Blue-purple gradient look */
+            color: white;
+            padding: 0.75rem 1.25rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+        .option-button:hover:not(:disabled) {
+            background-color: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+        }
+        .option-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .option-button.correct-answer {
+            background-color: #48bb78; /* Green for correct */
+            box-shadow: 0 0 15px #48bb78;
+        }
+        .option-button.incorrect-answer {
+            background-color: #fc8181; /* Red for incorrect */
+        }
+        #feedback-text {
+            margin-top: 1rem;
+            font-style: italic;
+            color: #a0aec0;
+            min-height: 1.5rem; /* Reserve space */
+        }
+
+        /* Jenga specific styles (mostly unchanged but ensures full height/width) */
+        #container {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        /* Overriding some default jenga info styles which are now handled by quiz-panel */
+        #pullButton, #placeButton, #resetButton {
+            display: none; /* Hide Jenga game buttons, controlled by quiz flow */
+        }
+
+        /* Message box overlay */
+        .message-box-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.8); display: flex;
+            align-items: center; justify-content: center; z-index: 1000;
+            font-family: 'Orbitron', sans-serif;
+        }
+        .message-box-content {
+            background-color: #2d3748;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            text-align: center;
+            max-width: 500px;
+            border: 2px solid #9f7aea;
+            color: #e2e8f0;
+        }
+        .message-box-content h2 {
+            font-size: 2.5rem;
+            color: #9f7aea;
+            margin-bottom: 1.5rem;
+        }
+        .message-box-content p {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        .message-box-content button {
+            background-color: #667eea;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .message-box-content button:hover {
+            background-color: #764ba2;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="bg-gray-900">
+    <div id="game-wrapper">
+        <div id="quiz-panel">
+            <div id="info">
+                <h1>Trivia Tower Challenge</h1>
+                <p>Round: <span id="roundDisplay">1</span></p>
+                <p>Score: <span id="scoreDisplay">0</span></p>
+                <p class="text-sm text-gray-400 mt-4">Keep the tower standing!</p>
+            </div>
+
+            <div id="question-area">
+                <p id="question-text">Loading question...</p>
+                <div id="options-container">
+                    <!-- Options will be loaded here -->
+                </div>
+                <p id="feedback-text"></p>
+            </div>
+            <button id="nextQuestionButton" class="option-button mt-4 hidden">Next Round</button>
+        </div>
+
+        <div id="jenga-container-wrapper">
+            <div id="container"></div>
+        </div>
+    </div>
+
+    <!-- Start Game Modal -->
+    <div id="start-game-modal" class="message-box-overlay">
+        <div class="message-box-content">
+            <h2>Welcome to Trivia Tower Challenge!</h2>
+            <p>Answer questions correctly to earn points and strategically remove blocks from the tower. Answering incorrectly will cause a random block to be removed, making the tower unstable!</p>
+            <p>Keep the tower from collapsing for as long as possible to maximize your score!</p>
+            <button id="start-button">Start Game</button>
+        </div>
+    </div>
+
+    <!-- Game Over Modal -->
+    <div id="game-over-modal" class="message-box-overlay hidden">
+        <div class="message-box-content">
+            <h2>Game Over!</h2>
+            <p id="game-over-message">The tower collapsed!</p>
+            <p>Final Score: <span id="final-score-display">0</span></p>
+            <button id="restart-button">Play Again</button>
+        </div>
+    </div>
+
+    <div id="messageBox" class="message-box-overlay hidden">
+        <div class="message-box-content">
+            <p id="messageText"></p>
+            <button id="closeMessageButton">OK</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cannon.js/0.6.2/cannon.min.js"></script>
+
+    <script>
+        // --- Quiz Questions Data ---
+        // Combined from mix_all_questions.txt, safety_questions.txt, pt_care_questions.txt
+        const mixAllQuestions = {
+            procedures: {
+                treatmentSitesAndTumors: [
+                    { question: "Which is a common primary brain tumor treated with radiation?", options: ["Glioblastoma", "Adenocarcinoma", "Squamous cell carcinoma", "Lymphoma"], correctAnswer: 0, feedback: "Correct! Glioblastoma is a common primary brain tumor treated with radiation." },
+                    { question: "What is the most common quadrant for breast cancer?", options: ["Upper outer", "Lower inner", "Upper inner", "Lower outer"], correctAnswer: 0, feedback: "Correct! The upper outer quadrant is the most common site for breast cancer." },
+                    { question: "Which imaging is used for lung cancer screening?", options: ["Low-dose CT", "MRI", "PET/CT", "Ultrasound"], correctAnswer: 0, feedback: "Correct! Low-dose CT is used for lung cancer screening." },
+                    { question: "What is the main symptom of esophageal cancer?", options: ["Dysphagia", "Cough", "Hematuria", "Headache"], correctAnswer: 0, feedback: "Correct! Difficulty swallowing (dysphagia) is a key symptom." },
+                    { question: "What is the main role of radiation in palliative care?", options: ["Relieve symptoms such as pain or bleeding", "Cure the disease", "Prevent infection", "Replace surgery"], correctAnswer: 0, feedback: "Correct! Palliative RT aims to relieve symptoms and improve quality of life." }
+                ],
+                treatmentVolumeLocalization: [
+                    { question: "What is the primary goal of simulation in radiation therapy?", options: ["To accurately localize the treatment area and plan patient positioning", "To deliver the first treatment", "To check insurance", "To measure blood pressure"], correctAnswer: 0, feedback: "Correct! Simulation ensures precise targeting." },
+                    { question: "Which device is commonly used to immobilize a head and neck patient during simulation?", options: ["Thermoplastic mask", "Gait belt", "Transfer board", "Wheelchair"], correctAnswer: 0, feedback: "Correct! Thermoplastic masks prevent movement." },
+                    { question: "What is a target volume in radiation therapy?", options: ["The area planned to receive the prescribed dose", "The patient’s total body volume", "The machine’s output", "The waiting room size"], correctAnswer: 0, feedback: "Correct! Target volume is the area treated." },
+                    { question: "What is a critical structure in treatment planning?", options: ["An organ at risk of radiation damage", "A machine part", "A billing code", "A patient’s family member"], correctAnswer: 0, feedback: "Correct! Critical structures must be protected." },
+                    { question: "What is the purpose of a bolus in radiation therapy?", options: ["To increase surface dose for superficial tumors", "To sedate the patient", "To decrease dose to the tumor", "To clean the skin"], correctAnswer: 0, feedback: "Correct! Bolus increases surface dose." }
+                ],
+                prescriptionAndDoseCalculation: [
+                    { question: "A patient is prescribed 200 cGy at a depth of 5 cm. The PDD at 5 cm is 80%. What is the dose to the skin surface?", options: ["250 cGy", "160 cGy", "200 cGy", "100 cGy"], correctAnswer: 0, feedback: "Correct! Surface dose = prescribed dose / (PDD/100) = 200 / 0.8 = 250 cGy." },
+                    { question: "If 200 cGy is prescribed at a depth where the PDD is 67%, what is the required dose at the surface?", options: ["298.5 cGy", "134 cGy", "200 cGy", "300 cGy"], correctAnswer: 0, feedback: "Correct! 200 / 0.67 = 298.5 cGy." },
+                    { question: "A field is set at 100 cm SSD. If the dose rate at 100 cm is 1 cGy/MU, how many MUs are needed to deliver 200 cGy at dmax?", options: ["200 MU", "100 MU", "2 MU", "50 MU"], correctAnswer: 0, feedback: "Correct! 200 cGy / 1 cGy/MU = 200 MU." },
+                    { question: "A patient is treated at 90 cm SSD. The calibration is 1 cGy/MU at 100 cm. What is the new dose rate at 90 cm?", options: ["1.23 cGy/MU", "0.81 cGy/MU", "1.11 cGy/MU", "0.90 cGy/MU"], correctAnswer: 1, feedback: "Correct! (90/100)^2 = 0.81, so the dose rate is 0.81 cGy/MU." },
+                    { question: "Using the inverse square law, if the intensity at 100 cm is 100 cGy, what is the intensity at 50 cm?", options: ["400 cGy", "50 cGy", "25 cGy", "200 cGy"], correctAnswer: 0, feedback: "Correct! (100/50)^2 = 4, so 100 cGy x 4 = 400 cGy." },
+                    { question: "A gap calculation is needed between two adjacent fields. If the depth is 8 cm, the length of the superior field is 20 cm, and the inferior field is 16 cm, what is the gap on the skin? (Assume 100 cm SSD)", options: ["1.36 cm", "0.64 cm", "2.88 cm", "0 cm"], correctAnswer: 0, feedback: "Correct! Gap = (1/2) x (L1 x d / SSD + L2 x d / SSD) = 0.5 x [(20x8/100) + (16x8/100)] = 0.5 x 2.88 = 1.44 cm (closest to 1.36 cm)." }
+                ],
+                treatments: [
+                    { question: "What is the main indication for chemotherapy in cancer management?", options: ["Systemic disease control", "Local tumor control", "Pain management only", "Preventing infection"], correctAnswer: 0, feedback: "Correct! Chemotherapy is used for systemic control." },
+                    { question: "What is brachytherapy?", options: ["Placement of radioactive sources inside or next to the tumor", "External beam therapy", "Chemotherapy", "Surgery"], correctAnswer: 0, feedback: "Correct! Brachytherapy delivers radiation from within." },
+                    { question: "What is the purpose of patient positioning and immobilization?", options: ["To ensure accurate and reproducible treatment delivery", "To increase comfort only", "To reduce machine noise", "To speed up billing"], correctAnswer: 0, feedback: "Correct! Immobilization prevents movement and errors." },
+                    { question: "What is a 3D conformal technique?", options: ["A treatment plan that shapes the radiation dose to match the tumor's 3D shape", "A plan using only 2D X-rays", "A plan with no imaging", "A surgical technique"], correctAnswer: 0, feedback: "Correct! 3D-CRT shapes the dose to the tumor." },
+                    { question: "What is the function of a multileaf collimator (MLC)?", options: ["To shape the radiation beam to match the tumor", "To immobilize the patient", "To measure blood pressure", "To deliver chemotherapy"], correctAnswer: 0, feedback: "Correct! MLCs are used to shape and modulate the beam." }
+                ],
+                prescriptionAndRecordKeeping: [
+                    { question: "What information must be included in a radiation therapy prescription?", options: ["The prescription must include site, total dose, fractionation, energy, and modality for each patient.", "The prescription must include only the patient's name and address for each patient.", "The prescription must include only the insurance number and billing code for each patient.", "The prescription must include only the machine serial number and treatment room for each patient."], correctAnswer: 0, feedback: "Correct! All treatment parameters must be included." },
+                    { question: "Why is it important for each daily treatment entry to be signed by the therapist?", options: ["Each entry must be signed to ensure accountability for treatments delivered and for legal documentation.", "Each entry must be signed to verify billing codes for insurance reimbursement.", "Each entry must be signed to track the patient's favorite color for record keeping.", "Each entry must be signed to confirm the patient's insurance provider for billing."], correctAnswer: 0, feedback: "Correct! Signatures verify who delivered the treatment." },
+                    { question: "How should errors in the treatment record be corrected?", options: ["Errors should be corrected by drawing a single line through the error, initialing, and dating the correction.", "Errors should be corrected by erasing the mistake and rewriting the correct information.", "Errors should be corrected by using white-out to cover the error and writing over it.", "Errors should be corrected by leaving the error as is and making a note elsewhere."], correctAnswer: 0, feedback: "Correct! Proper correction maintains record integrity." },
+                    { question: "What is the purpose of legibility in documentation for radiation therapy?", options: ["Legibility ensures records are clear and can be understood by all members of the healthcare team.", "Legibility is important only for insurance auditors reviewing the records.", "Legibility is important for making the records look neat for visitors.", "Legibility is required only for billing and coding staff."], correctAnswer: 0, feedback: "Correct! Clear records are essential for patient safety and legal compliance." },
+                    { question: "What should be done if there is a variance from the radiation therapy prescription?", options: ["Any variance should be documented in the record along with actions taken and the physician notified.", "Any variance should be ignored if the patient is not harmed and not documented.", "Any variance should be erased and replaced with the correct information.", "Any variance should be reported only to the billing office for insurance purposes."], correctAnswer: 0, feedback: "Correct! All deviations must be documented and reported." }
+                ],
+                muCalculationQuestions: [
+                    { question: "A patient is prescribed 200 cGy to a depth of 5 cm. The dose rate at calibration is 1 cGy/MU at dmax. The field size is 10x10 cm², Sc = 1.00, Sp = 1.00, PDD at 5 cm = 85%, tray factor = 0.98, wedge factor = 0.90. How many monitor units are required to deliver the prescribed dose?", options: ["The required monitor units are 258 MU, accounting for all factors in the calculation.", "The required monitor units are 200 MU, accounting for all factors in the calculation.", "The required monitor units are 170 MU, accounting for all factors in the calculation.", "The required monitor units are 220 MU, accounting for all factors in the calculation."], correctAnswer: 0, feedback: "Correct! MU = 200 / (1.00 × 1.00 × 0.85 × 0.98 × 0.90) = 258 MU." },
+                    { question: "A patient is to receive 180 cGy at a depth of 10 cm. The calibration dose rate is 1 cGy/MU at dmax. Field size is 15x15 cm², Sc = 1.02, Sp = 1.03, PDD at 10 cm = 77%, no tray, wedge factor = 0.95. What is the correct number of monitor units?", options: ["The correct number of monitor units is 240 MU, using all provided factors.", "The correct number of monitor units is 210 MU, using all provided factors.", "The correct number of monitor units is 180 MU, using all provided factors.", "The correct number of monitor units is 200 MU, using all provided factors."], correctAnswer: 0, feedback: "Correct! MU = 180 / (1.02 × 1.03 × 0.77 × 1 × 0.95) = 240 MU." },
+                    { question: "A patient is prescribed 150 cGy at a depth of 8 cm. The calibration dose rate is 1 cGy/MU at dmax. Field size is 20x20 cm², Sc = 1.04, Sp = 1.05, PDD at 8 cm = 80%, tray factor = 0.97, wedge factor = 0.92. How many monitor units are needed?", options: ["The number of monitor units needed is 208 MU, based on the calculation with all factors.", "The number of monitor units needed is 150 MU, based on the calculation with all factors.", "The number of monitor units needed is 175 MU, based on the calculation with all factors.", "The number of monitor units needed is 190 MU, based on the calculation with all factors."], correctAnswer: 0, feedback: "Correct! MU = 150 / (1.04 × 1.05 × 0.80 × 0.97 × 0.92) = 208 MU." },
+                    { question: "A patient is to receive 100 cGy at a depth of 10 cm. The calibration dose rate is 1 cGy/MU at dmax. Field size is 12x12 cm², Sc = 1.01, Sp = 1.02, PDD at 10 cm = 75%, tray factor = 0.96, wedge factor = 0.93. What is the correct number of monitor units?", options: ["The correct number of monitor units is 156 MU, using all provided factors.", "The correct number of monitor units is 120 MU, using all provided factors.", "The correct number of monitor units is 100 MU, using all provided factors.", "The correct number of monitor units is 130 MU, using all provided factors."], correctAnswer: 0, feedback: "Correct! MU = 100 / (1.01 × 1.02 × 0.75 × 0.96 × 0.93) = 156 MU." },
+                    { question: "A patient is prescribed 250 cGy at a depth of 6 cm. The calibration dose rate is 1 cGy/MU at dmax. Field size is 18x18 cm², Sc = 1.03, Sp = 1.04, PDD at 6 cm = 82%, tray factor = 0.99, wedge factor = 0.91. How many monitor units are required?", options: ["The required monitor units are 325 MU, accounting for all calculation factors.", "The required monitor units are 250 MU, accounting for all calculation factors.", "The required monitor units are 210 MU, accounting for all calculation factors.", "The required monitor units are 275 MU, accounting for all calculation factors."], correctAnswer: 0, feedback: "Correct! MU = 250 / (1.03 × 1.04 × 0.82 × 0.99 × 0.91) = 325 MU." },
+                    { question: "A patient is to receive 200 cGy at a depth of 12 cm. The calibration dose rate is 1 cGy/MU at dmax. Field size is 10x20 cm², Sc = 1.02, Sp = 1.03, PDD at 12 cm = 70%, tray factor = 0.95, wedge factor = 0.89. What is the correct number of monitor units?", options: ["The correct number of monitor units is 334 MU, using all provided factors.", "The correct number of monitor units is 220 MU, accounting for all provided factors.", "The correct number of monitor units is 180 MU, accounting for all provided factors.", "The correct number of monitor units is 290 MU, accounting for all provided factors."], correctAnswer: 0, feedback: "Correct! MU = 200 / (1.02 × 1.03 × 0.70 × 0.95 × 0.89) = 334 MU." },
+                    { question: "A patient is prescribed 120 cGy at a depth of 4 cm. The calibration dose rate is 1 cGy/MU at dmax. Field size is 8x8 cm², Sc = 0.99, Sp = 1.00, PDD at 4 cm = 88%, tray factor = 1.00, wedge factor = 0.92. How many monitor units are required?", options: ["The required monitor units are 148 MU, accounting for all calculation factors.", "The required monitor units are 120 MU, accounting for all calculation factors.", "The required monitor units are 100 MU, accounting for all calculation factors.", "The required monitor units are 130 MU, accounting for all calculation factors."], correctAnswer: 0, feedback: "Correct! MU = 120 / (0.99 × 1.00 × 0.88 × 1.00 × 0.92) = 148 MU." },
+                    { question: "A patient is to receive 180 cGy at a depth of 7 cm. The calibration dose rate is 1 cGy/MU at dmax. Field size is 14x14 cm², Sc = 1.01, Sp = 1.02, PDD at 7 cm = 83%, tray factor = 0.97, wedge factor = 0.94. What is the correct number of monitor units?", options: ["The correct number of monitor units is 233 MU, using all provided factors.", "The correct number of monitor units is 180 MU, using all provided factors.", "The correct number of monitor units is 200 MU, using all provided factors.", "The correct number of monitor units is 210 MU, accounting for all provided factors."], correctAnswer: 0, feedback: "Correct! MU = 180 / (1.01 × 1.02 × 0.83 × 0.97 × 0.94) = 233 MU." },
+                    { question: "A patient is prescribed 90 cGy at a depth of 3 cm. The calibration dose rate is 1 cGy/MU at dmax. Field size is 6x6 cm², Sc = 0.98, Sp = 0.99, PDD at 3 cm = 90%, tray factor = 1.00, wedge factor = 0.93. How many monitor units are required?", options: ["The required monitor units are 116 MU, accounting for all calculation factors.", "The required monitor units are 90 MU, accounting for all calculation factors.", "The required monitor units is 100 MU, accounting for all calculation factors.", "The required monitor units is 105 MU, accounting for all calculation factors."], correctAnswer: 0, feedback: "Correct! MU = 90 / (0.98 × 0.99 × 0.90 × 1.00 × 0.93) = 116 MU." },
+                    { question: "A patient is to receive 220 cGy at a depth of 9 cm. The calibration dose rate is 1 cGy/MU at dmax. Field size is 16x16 cm², Sc = 1.02, Sp = 1.03, PDD at 9 cm = 78%, tray factor = 0.98, wedge factor = 0.91. What is the correct number of monitor units?", options: ["The correct number of monitor units is 316 MU, using all provided factors.", "The correct number of monitor units is 220 MU, accounting for all provided factors.", "The correct number of monitor units is 250 MU, using all provided factors.", "The correct number of monitor units is 280 MU, accounting for all provided factors."], correctAnswer: 0, feedback: "Correct! MU = 220 / (1.02 × 1.03 × 0.78 × 0.98 × 0.91) = 316 MU." }
+                ]
+            }
+        };
+
+        // Combined and shuffled question pool
+        let questionPool = [];
+        let currentQuestion = null;
+        let score = 0;
+        let round = 1;
+        let gameActive = false;
+        let towerPhysicsActive = false;
+        let isPlayerTurn = true; // True for question, false for block pull/computer
+        let isProcessingTurn = false; // Flag to prevent multiple actions during animations
+
+        // Jenga Physics and 3D globals (from original game)
+        let scene, camera, renderer, controls;
+        let world;
+        const blocks = [];
+        let selectedBlockMesh = null; // Mesh selected by player for correct answer pull
+        let heldBlockData = null; // Block currently 'held' by the player (after correct answer) or computer (after incorrect answer)
+
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+
+        const blockHeight = 0.5;
+        const blockWidth = 1.0;
+        const blockLength = 3.0;
+        const blockMass = 0.06;
+        const numLayers = 18;
+        const blocksPerLayer = 3;
+
+        let woodMaterial;
+        let selectedMaterial; // For player selected block
+        let heldMaterial;     // For block being pulled/held
+        let correctPullMaterial; // For player successful pull
+        let incorrectPullMaterial; // For computer random pull
+
+        // UI Elements
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        const roundDisplay = document.getElementById('roundDisplay');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const feedbackText = document.getElementById('feedback-text');
+        const nextQuestionButton = document.getElementById('nextQuestionButton');
+        const startGameModal = document.getElementById('start-game-modal');
+        const startButton = document.getElementById('start-button');
+        const gameOverModal = document.getElementById('game-over-modal');
+        const gameOverMessage = document.getElementById('game-over-message');
+        const finalScoreDisplay = document.getElementById('final-score-display');
+        const restartButton = document.getElementById('restart-button');
+        const closeMessageButton = document.getElementById('closeMessageButton'); // For generic messageBox
+        const messageBox = document.getElementById('messageBox'); // For generic messages
+        
+        // --- Utility Functions ---
+        // Function to shuffle an array (Fisher-Yates algorithm)
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Function to update score and round UI elements
+        function updateScoreAndRoundUI() {
+            if(scoreDisplay) scoreDisplay.textContent = score;
+            if(roundDisplay) roundDisplay.textContent = round;
+        }
+
+        function showMessage(text, duration = 3000) {
+            messageBox.classList.remove('hidden');
+            document.getElementById('messageText').textContent = text;
+            if (duration > 0) {
+                setTimeout(() => messageBox.classList.add('hidden'), duration);
+            }
+        }
+        function hideMessage() {
+            messageBox.classList.add('hidden');
+        }
+
+        // --- Game Flow Control Functions ---
+        function nextRound() {
+            if (!gameActive) return;
+
+            roundDisplay.textContent = round;
+            feedbackText.textContent = '';
+            nextQuestionButton.classList.add('hidden');
+            enableOptions(true);
+
+            if (questionPool.length === 0) {
+                // If all questions are used, re-combine and shuffle for endless play
+                questionPool = shuffleArray(
+                    Object.values(mixAllQuestions.procedures).flat().concat(
+                    Object.values(safetyQuestions).flat(),
+                    Object.values(ptCareQuestions).flat()
+                    )
+                );
+            }
+
+            currentQuestion = questionPool.pop();
+            questionText.textContent = currentQuestion.question;
+            optionsContainer.innerHTML = '';
+
+            const shuffledOptions = shuffleArray(
+                currentQuestion.options.map((text, index) => ({ text, originalIndex: index }))
+            );
+
+            shuffledOptions.forEach(option => {
+                const button = document.createElement('button');
+                button.textContent = option.text;
+                button.className = 'option-button';
+                button.dataset.originalIndex = option.originalIndex;
+                button.addEventListener('click', () => handleAnswer(option.originalIndex));
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        function handleAnswer(selectedIndex) {
+            if (isProcessingTurn) return; // Prevent multiple clicks
+            isProcessingTurn = true;
+            enableOptions(false); // Disable buttons immediately
+
+            const isCorrect = (selectedIndex === currentQuestion.correctAnswer);
+            feedbackText.textContent = currentQuestion.feedback;
+            
+            // Highlight correct/incorrect answers
+            Array.from(optionsContainer.children).forEach(button => {
+                const originalIndex = parseInt(button.dataset.originalIndex);
+                if (originalIndex === currentQuestion.correctAnswer) {
+                    button.classList.add('correct-answer');
+                } else if (originalIndex === selectedIndex) {
+                    button.classList.add('incorrect-answer');
+                }
+            });
+
+            setTimeout(() => {
+                if (isCorrect) {
+                    score += 100; // Points for correct answer
+                    updateScoreAndRoundUI();
+                    isPlayerTurn = true; // Player gets to pull
+                    showMessage("Correct! Select a block to pull.", 3000);
+                    // Re-enable Jenga interaction for player to select block
+                    renderer.domElement.addEventListener('click', onClick, false); 
+                    // Hide next question button initially, it will be shown when a block is selected
+                    nextQuestionButton.classList.add('hidden');
+                    nextQuestionButton.textContent = "Pull Selected Block"; // Prepare text for player's pull button
+                    nextQuestionButton.onclick = () => { // Set the click handler for player's pull
+                        isProcessingTurn = true;
+                        renderer.domElement.removeEventListener('click', onClick, false); // Disable clicks during pull
+                        pullBlock(selectedBlockMesh, true);
+                    };
+
+                } else {
+                    score -= 50; // Penalty for incorrect answer
+                    if (score < 0) score = 0;
+                    updateScoreAndRoundUI();
+                    isPlayerTurn = false; // Computer pulls
+                    showMessage("Incorrect! A block will be randomly removed.", 3000);
+                    // Disable Jenga interaction for computer's turn
+                    renderer.domElement.removeEventListener('click', onClick, false);
+                    setTimeout(computerPullBlock, 2000); // Give time to read message
+                }
+                isProcessingTurn = false;
+            }, 1500); // Show feedback for 1.5 seconds
+        }
+
+        function enableOptions(enable) {
+            Array.from(optionsContainer.children).forEach(button => {
+                button.disabled = !enable;
+            });
+        }
+        
+        function endGame(message) {
+            if (!gameActive) return;
+            gameActive = false;
+            gameOverMessage.textContent = message;
+            finalScoreDisplay.textContent = score;
+            gameOverModal.classList.remove('hidden');
+            // Disable Jenga interaction on game over
+            renderer.domElement.removeEventListener('click', onClick, false);
+        }
+
+        // --- Jenga Physics Functions ---
+
+        // Jenga Physics and 3D globals are defined outside functions now
+        // to ensure they are globally accessible.
+
+        function initThree() {
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x87CEEB);
+            camera = new THREE.PerspectiveCamera(75, (window.innerWidth * 0.65) / window.innerHeight, 0.1, 1000); // Adjust aspect ratio for Jenga panel
+            camera.position.set(blockLength * 1.8, blockHeight * numLayers * 0.75, blockLength * 1.8);
+            camera.lookAt(0, blockHeight * numLayers / 2, 0);
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth * 0.65, window.innerHeight); // Set size for Jenga panel
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            document.getElementById('container').appendChild(renderer.domElement);
+
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(10, 20, 15);
+            directionalLight.castShadow = true;
+            directionalLight.shadow.mapSize.width = 2048;
+            directionalLight.shadow.mapSize.height = 2048;
+            directionalLight.shadow.camera.near = 0.5;
+            directionalLight.shadow.camera.far = 50;
+            directionalLight.shadow.camera.left = -20;
+            directionalLight.shadow.camera.right = 20;
+            directionalLight.shadow.camera.top = 20;
+            directionalLight.shadow.camera.bottom = -20;
+            scene.add(directionalLight);
+
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.target.set(0, blockHeight * numLayers / 2, 0);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+
+            // Set up Jenga related materials once
+            woodMaterial = new THREE.MeshLambertMaterial({ color: 0xDEB887 });
+            selectedMaterial = new THREE.MeshLambertMaterial({ color: 0x667eea }); // Player selection color
+            heldMaterial = new THREE.MeshLambertMaterial({ color: 0xadd8e6, transparent: true, opacity: 0.7 });
+            correctPullMaterial = new THREE.MeshLambertMaterial({ color: 0x48bb78 }); // Green for correct pull
+            incorrectPullMaterial = new THREE.MeshLambertMaterial({ color: 0xfc8181 }); // Red for incorrect pull
+        }
+
+        function initCannon() {
+            world = new CANNON.World();
+            world.gravity.set(0, -9.82, 0);
+            world.broadphase = new CANNON.NaiveBroadphase();
+            world.solver.iterations = 35;
+            world.solver.split = true;
+            world.solver.tolerance = 0.02;
+            world.allowSleep = true;
+
+            const groundMaterialCannon = new CANNON.Material("groundMaterial");
+            const blockMaterialCannon = new CANNON.Material("blockMaterial");
+            const groundBlockContactMaterial = new CANNON.ContactMaterial(
+                groundMaterialCannon, blockMaterialCannon,
+                { friction: 0.6, restitution: 0.05 }
+            );
+            world.addContactMaterial(groundBlockContactMaterial);
+            const blockBlockContactMaterial = new CANNON.ContactMaterial(
+                blockMaterialCannon, blockMaterialCannon,
+                { friction: 0.35, restitution: 0.02 }
+            );
+            world.addContactMaterial(blockBlockContactMaterial);
+
+            // Ground plane for physics
+            const groundShape = new CANNON.Plane();
+            const groundBody = new CANNON.Body({ mass: 0, material: groundMaterialCannon });
+            groundBody.addShape(groundShape);
+            groundBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1,0,0), -Math.PI/2);
+            world.addBody(groundBody);
+
+            // Create a visible ground mesh for Three.js
+            const groundGeo = new THREE.PlaneGeometry(blockLength * 10, blockLength * 10); // Larger ground plane
+            const groundMat = new THREE.MeshStandardMaterial({ color: 0x556B2F, side: THREE.DoubleSide });
+            const groundMesh = new THREE.Mesh(groundGeo, groundMat);
+            groundMesh.rotation.x = -Math.PI / 2;
+            groundMesh.receiveShadow = true;
+            scene.add(groundMesh);
+
+            // Listen for tower to fall
+            world.addEventListener("postStep", checkTowerStability);
+        }
+
+        function resetJengaTower() {
+            // Clear all existing blocks from previous game or initial setup
+            blocks.forEach(blockData => {
+                if (blockData.mesh) {
+                    scene.remove(blockData.mesh);
+                    blockData.mesh.geometry.dispose();
+                    if(blockData.mesh.material && blockData.mesh.material.isMaterial) blockData.mesh.material.dispose();
+                    if(blockData.originalMaterial && blockData.originalMaterial.isMaterial) blockData.originalMaterial.dispose();
+                }
+                if (blockData.body && world) {
+                    world.removeBody(blockData.body);
+                }
+            });
+            blocks.length = 0; // Clear the array
+
+            // Reset specific Jenga game state
+            towerPhysicsActive = false;
+            selectedBlockMesh = null;
+            heldBlockData = null;
+
+            createTower(); // Rebuild a fresh tower
+
+            // Reset camera and controls to initial position
+            if (camera && controls) {
+                camera.position.set(blockLength * 1.8, blockHeight * numLayers * 0.75, blockLength * 1.8);
+                controls.target.set(0, blockHeight * numLayers / 2, 0);
+                controls.update();
+            }
+        }
+
+
+        function createJengaBlock(position, quaternion, layerIndex) {
+            const blockId = `block-${blocks.length}`; // Use blocks.length for unique ID
+            const geometry = new THREE.BoxGeometry(blockLength, blockHeight, blockWidth);
+            const mesh = new THREE.Mesh(geometry, woodMaterial.clone());
+            mesh.position.copy(position);
+            mesh.quaternion.copy(quaternion);
+            mesh.castShadow = true;
+            mesh.receiveShadow = true;
+            mesh.userData = { id: blockId, layerIndex: layerIndex };
+            scene.add(mesh);
+
+            const shape = new CANNON.Box(new CANNON.Vec3(blockLength/2, blockHeight/2, blockWidth/2));
+            const body = new CANNON.Body({
+                mass: towerPhysicsActive ? blockMass : 0,
+                position: new CANNON.Vec3(position.x, position.y, position.z),
+                quaternion: new CANNON.Quaternion(quaternion.x, quaternion.y, quaternion.z, quaternion.w),
+                material: world.materials.find(m => m.name === "blockMaterial") || new CANNON.Material("blockMaterial"),
+                type: towerPhysicsActive ? CANNON.Body.DYNAMIC : CANNON.Body.KINEMATIC
+            });
+            body.addShape(shape);
+            body.userData = { id: blockId, layerIndex: layerIndex };
+            body.linearDamping = 0.1;
+            body.angularDamping = 0.3;
+            body.allowSleep = true;
+            body.sleepSpeedLimit = 0.05;
+            body.sleepTimeLimit = 0.5;
+            world.addBody(body);
+            blocks.push({ mesh, body, originalMaterial: woodMaterial.clone(), id: blockId, layerIndex });
+        }
+
+        function createTower() {
+            // Already handled by resetJengaTower's blocks clear
+            const yOffset = 0.035;
+            const inLayerOffset = 0.025;
+            for (let layer = 0; layer < numLayers; layer++) {
+                const currentY = layer * (blockHeight + yOffset) + blockHeight / 2;
+                for (let i = 0; i < blocksPerLayer; i++) {
+                    const position = new THREE.Vector3();
+                    const quaternion = new THREE.Quaternion();
+                    const blockIndex = i - Math.floor(blocksPerLayer / 2);
+                    if (layer % 2 === 0) { // Horizontal blocks
+                        position.set(blockIndex * (blockWidth + inLayerOffset), currentY, 0);
+                        quaternion.setFromAxisAngle(new THREE.Vector3(0,1,0), Math.PI/2);
+                    } else { // Vertical blocks
+                        position.set(0, currentY, blockIndex * (blockWidth + inLayerOffset));
+                    }
+                    createJengaBlock(position, quaternion, layer);
+                }
+            }
+        }
+        
+        function activateTowerPhysics() {
+            if (towerPhysicsActive) return;
+            console.log("Activating tower physics.");
+            towerPhysicsActive = true;
+            blocks.forEach(blockData => {
+                if (blockData.body.type === CANNON.Body.KINEMATIC) {
+                    blockData.body.type = CANNON.Body.DYNAMIC;
+                    blockData.body.mass = blockMass;
+                    blockData.body.updateMassProperties();
+                }
+                blockData.body.wakeUp();
+            });
+            showMessage("Tower physics activated!", 2000);
+        }
+        
+        // Logic to pull a specific block, or a random one
+        function pullBlock(blockToPullMesh, isPlayerAction) {
+            if (!towerPhysicsActive) activateTowerPhysics(); // Activate physics on first pull if not already
+
+            let blockData = blocks.find(b => b.mesh === blockToPullMesh); // Use 'let' here as it might change
+
+            if (!blockData || blockData === heldBlockData) {
+                // If the intended block is somehow already held or invalid, try a fallback for computer, or show error for player
+                if (!isPlayerAction) {
+                    // Try to pick another random block for computer
+                    const validBlocks = blocks.filter(b => b.body.type === CANNON.Body.DYNAMIC && b.body.position.y > (blockHeight * 2) && b.body.position.y < (numLayers - 3) * blockHeight && b !== heldBlockData);
+                    if (validBlocks.length > 0) {
+                        blockToPullMesh = validBlocks[Math.floor(Math.random() * validBlocks.length)].mesh;
+                        blockData = blocks.find(b => b.mesh === blockToPullMesh);
+                    } else {
+                        endGame("The computer couldn't find a block to pull!");
+                        return;
+                    }
+                } else {
+                    showMessage("Selected block cannot be pulled. Choose another.", 2500);
+                    isProcessingTurn = false; // Release lock
+                    // Re-enable Jenga interaction for player to choose another block
+                    renderer.domElement.addEventListener('click', onClick, false);
+                    nextQuestionButton.classList.add('hidden'); // Hide "Pull Block" again
+                    return;
+                }
+            }
+
+
+            heldBlockData = blockData;
+            heldBlockData.body.type = CANNON.Body.KINEMATIC; // Make it kinematic to move it
+            
+            // Animate pulling the block out and then moving it to a 'held' position
+            const pullDistance = blockLength * 1.5; // Pull it clear of the tower
+            const targetY = blockHeight * numLayers * 1.2; // Above the tower for 'held' position
+
+            // Determine pull direction based on block's orientation
+            const blockQuaternion = heldBlockData.body.quaternion;
+            const isXOriented = Math.abs(blockQuaternion.y) > 0.1 || Math.abs(blockQuaternion.w) < 0.9; // Roughly check if rotated ~90deg around Y
+
+            let pullVector = new CANNON.Vec3();
+            if (isXOriented) { // Block is horizontal, pull along X axis
+                 pullVector.set(Math.sign(heldBlockData.body.position.x || 1) * pullDistance, 0, 0);
+            } else { // Block is vertical, pull along Z axis
+                 pullVector.set(0, 0, Math.sign(heldBlockData.body.position.z || 1) * pullDistance);
+            }
+            
+            // Set position directly for now, might need smooth animation later
+            heldBlockData.body.position.x += pullVector.x;
+            heldBlockData.body.position.y = targetY; // Move it high up
+            heldBlockData.body.position.z += pullVector.z;
+
+            // Highlight with correct/incorrect material
+            heldBlockData.mesh.material = isPlayerAction ? correctPullMaterial : incorrectPullMaterial;
+
+            // Reset selection after block is pulled
+            if (selectedBlockMesh) {
+                if (selectedBlockMesh.material !== heldBlockData.mesh.material) { // Avoid changing material if it's the one we just set
+                    selectedBlockMesh.material = blocks.find(b => b.mesh === selectedBlockMesh).originalMaterial;
+                }
+                selectedBlockMesh = null;
+            }
+            
+            // After successful pull, automatically place it on top
+            setTimeout(placeHeldBlock, 1500); // Wait for pull animation to conceptualize
+        }
+
+        function placeHeldBlock() {
+            if (!heldBlockData) return;
+
+            let currentTopY = 0;
+            let highestLayerIndex = -1;
+            let topLayerOrientationIsX = true;
+            let foundDynamicTopBlock = false;
+
+            // Find the highest block that is part of the tower and dynamic
+            if (blocks.length > 0) {
+                let tempTopY = -Infinity;
+                blocks.forEach(b => {
+                    // Exclude the held block itself from finding the 'top'
+                    if (b.id !== heldBlockData.id && b.body.type === CANNON.Body.DYNAMIC) {
+                        if (b.body.position.y > tempTopY) {
+                            tempTopY = b.body.position.y;
+                            highestLayerIndex = b.layerIndex;
+                            foundDynamicTopBlock = true;
+                        }
+                    }
+                });
+
+                if (foundDynamicTopBlock) {
+                    currentTopY = tempTopY;
+                    // Determine orientation of the new layer based on the previous top layer
+                    topLayerOrientationIsX = (highestLayerIndex % 2 !== 0); // If previous layer was horizontal, new is vertical, and vice-versa
+                } else {
+                    // If no dynamic blocks found (e.g., tower is just starting or only kinematic blocks left)
+                    // Assume it's the very first layer, so next will be horizontal
+                    currentTopY = 0; // Ground level
+                    highestLayerIndex = -1; // No previous layer
+                    topLayerOrientationIsX = true; // First layer is usually horizontal
+                }
+            }
+
+            const yOffsetForPlacement = 0.035; // Small gap between layers
+            let targetY;
+
+            if (foundDynamicTopBlock) {
+                targetY = currentTopY + blockHeight + yOffsetForPlacement;
+            } else {
+                targetY = blockHeight / 2; // For the very first block placed on the ground
+            }
+
+            heldBlockData.body.position.y = targetY;
+            const newLayerOrientationIsX = !topLayerOrientationIsX; // Invert orientation for the new layer
+
+            // Set X or Z position to 0 and adjust quaternion based on new layer orientation
+            if (newLayerOrientationIsX) {
+                heldBlockData.body.position.x = 0;
+                heldBlockData.body.position.z = 0;
+                heldBlockData.body.quaternion.setFromEuler(0, 0, 0, 'XYZ'); // Face along Z for visual
+            } else {
+                heldBlockData.body.position.x = 0;
+                heldBlockData.body.position.z = 0;
+                heldBlockData.body.quaternion.setFromEuler(0, Math.PI / 2, 0, 'XYZ'); // Face along X for visual
+            }
+            
+            // Update layerIndex for the held block
+            heldBlockData.layerIndex = highestLayerIndex + 1;
+
+            // Make the block dynamic again
+            heldBlockData.body.type = CANNON.Body.DYNAMIC;
+            heldBlockData.body.mass = blockMass;
+            heldBlockData.body.updateMassProperties();
+            heldBlockData.body.wakeUp();
+
+            // Restore original wood material after placing
+            heldBlockData.mesh.material = heldBlockData.originalMaterial;
+            
+            heldBlockData = null; // Clear held block data
+            
+            round++; // Increment round after successful place
+            updateScoreAndRoundUI();
+            
+            setTimeout(() => { // Small delay before next question
+                if (gameActive) nextRound();
+            }, 1000);
+        }
+        
+        function computerPullBlock() {
+            if (!towerPhysicsActive) activateTowerPhysics(); // Activate physics if not active
+
+            // Filter for blocks that are not too high up (avoid breaking game early)
+            const pullableBlocks = blocks.filter(b => b.body.type === CANNON.Body.DYNAMIC && b.body.position.y > (blockHeight * 2) && b.body.position.y < (numLayers - 3) * blockHeight);
+            
+            if (pullableBlocks.length === 0) {
+                console.warn("No pullable blocks for computer, ending game.");
+                endGame("The computer couldn't find a block to pull!");
+                return;
+            }
+
+            const randomIndex = Math.floor(Math.random() * pullableBlocks.length);
+            const blockToPull = pullableBlocks[randomIndex];
+
+            if (!blockToPull) {
+                console.warn("Computer failed to select a block. Skipping turn.");
+                setTimeout(() => {
+                    if (gameActive) nextRound();
+                }, 1000);
+                return;
+            }
+
+            // Highlight computer's pulled block red
+            // The material is set inside pullBlock now
+            pullBlock(blockToPull.mesh, false);
+        }
+
+
+        function checkTowerStability() {
+            if (!gameActive || !towerPhysicsActive) return;
+
+            // Check if any block's y-position is significantly lower than the expected base of the tower.
+            // Or if many blocks have fallen to the ground.
+            const fallenBlocks = blocks.filter(block =>
+                block.body.position.y < (blockHeight * 2) && block.body.sleepState === CANNON.Body.SLEEPING && block.body.mass > 0 && block.body.type === CANNON.Body.DYNAMIC
+            );
+            
+            const standingBlocks = blocks.filter(block => 
+                block.body.position.y > (blockHeight * 2) && block.body.type === CANNON.Body.DYNAMIC
+            );
+
+            // If a significant number of blocks have fallen, or the main structure is clearly disrupted
+            if (fallenBlocks.length > 5 || standingBlocks.length < (numLayers * blocksPerLayer) / 2) { // More than 5 fallen or less than half standing
+                if (gameActive) endGame("The tower has collapsed!");
+                return;
+            }
+
+            // Also check for tower tilting too much
+            const baseBlocks = blocks.filter(b => b.layerIndex < 3 && b.body.type === CANNON.Body.DYNAMIC);
+            if (baseBlocks.length > 0) {
+                const centerOfMass = new CANNON.Vec3();
+                let totalMass = 0;
+                blocks.forEach(b => {
+                    if (b.body.type === CANNON.Body.DYNAMIC) {
+                        centerOfMass.vadd(b.body.position.scale(b.body.mass), centerOfMass);
+                        totalMass += b.body.mass;
+                    }
+                    else if (b.body.type === CANNON.Body.STATIC && b.layerIndex < 3) { // Include bottom static blocks in COM calculation if they exist
+                         centerOfMass.vadd(b.body.position.scale(blockMass), centerOfMass); // Use average block mass
+                         totalMass += blockMass;
+                    }
+                });
+                if (totalMass > 0) centerOfMass.scale(1 / totalMass, centerOfMass);
+
+                // Check if the center of mass has moved too far horizontally from the base
+                const tiltThreshold = blockWidth * 0.8; // e.g., 80% of block width
+                if (Math.abs(centerOfMass.x) > tiltThreshold || Math.abs(centerOfMass.z) > tiltThreshold) {
+                    if (gameActive) endGame("The tower is unstable and has fallen!");
+                    return;
+                }
+            }
+        }
+        
+        // --- Event Listeners ---
+        function setupEventListeners() {
+            window.addEventListener('resize', onWindowResize, false);
+            startButton.addEventListener('click', initGame); // Call initGame directly
+            restartButton.addEventListener('click', initGame); // Call initGame directly
+            
+            // nextQuestionButton's click handler is set dynamically in onClick for player's turn
+            // and in nextRound for computer's turn or game start.
+            closeMessageButton.addEventListener('click', hideMessage); // For generic messageBox
+            
+            // Initial listener for Jenga interaction (only for selecting a block at the start or after question)
+            renderer.domElement.addEventListener('click', onClick, false); 
+        }
+
+        function onWindowResize() {
+            if (camera && renderer) {
+                camera.aspect = (window.innerWidth * 0.65) / window.innerHeight; // Adjust for quiz panel
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth * 0.65, window.innerHeight);
+            }
+        }
+
+        function onClick(event) {
+            if (!gameActive || isProcessingTurn || !isPlayerTurn || heldBlockData) return; // Only allow clicks if it's player's turn and no block held
+
+            // Convert mouse coordinates to normalized device coordinates (-1 to +1)
+            const rect = renderer.domElement.getBoundingClientRect();
+            mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+            mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+            
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(blocks.map(b => b.mesh));
+
+            if (intersects.length > 0) {
+                const intersectedMesh = intersects[0].object;
+                const blockData = blocks.find(b => b.mesh === intersectedMesh);
+
+                if (!blockData) return; 
+
+                // If physics isn't active, activate it on first selection
+                if (!towerPhysicsActive) {
+                    activateTowerPhysics();
+                }
+
+                // If a block is already selected, un-highlight it
+                if (selectedBlockMesh && selectedBlockMesh !== intersectedMesh) {
+                    const prevSelectedData = blocks.find(b => b.mesh === selectedBlockMesh);
+                    if(prevSelectedData) selectedBlockMesh.material = prevSelectedData.originalMaterial;
+                }
+                
+                // Toggle selection
+                if (selectedBlockMesh === intersectedMesh) {
+                    selectedBlockMesh.material = blockData.originalMaterial;
+                    selectedBlockMesh = null;
+                    showMessage("Block deselected. Select a block to pull.", 2000);
+                    nextQuestionButton.classList.add('hidden'); // Hide "Pull Block" if nothing is selected
+                } else {
+                    selectedBlockMesh = intersectedMesh;
+                    selectedBlockMesh.material = selectedMaterial; // Highlight with player's color
+                    showMessage("Block selected! Click 'Pull Selected Block' to confirm.", 3000); 
+                    
+                    nextQuestionButton.classList.remove('hidden'); 
+                    nextQuestionButton.textContent = "Pull Selected Block";
+                    nextQuestionButton.onclick = () => {
+                        isProcessingTurn = true; // Block further clicks
+                        renderer.domElement.removeEventListener('click', onClick, false); // Disable Jenga interaction during pull
+                        pullBlock(selectedBlockMesh, true); // Player action, so 'true' for isPlayerAction
+                    };
+                }
+            } else { // Clicked outside any block
+                if (selectedBlockMesh) {
+                    const selectedData = blocks.find(b => b.mesh === selectedBlockMesh);
+                    if(selectedData) selectedBlockMesh.material = selectedData.originalMaterial;
+                    selectedBlockMesh = null;
+                    showMessage("No block selected. Click a block to choose it.", 2000);
+                }
+                nextQuestionButton.classList.add('hidden'); // Hide "Pull Block" if nothing is selected
+            }
+        }
+
+
+        function animate() {
+            requestAnimationFrame(animate);
+            if (!THREE || !world || !renderer || !scene || !camera || !controls ) return;
+            if (world && towerPhysicsActive) world.step(1/60, 1/60, 10); // Update physics
+            
+            // Sync Three.js meshes with Cannon.js bodies
+            for (const blockData of blocks) {
+                if (blockData.body && blockData.mesh) {
+                    blockData.mesh.position.copy(blockData.body.position);
+                    blockData.mesh.quaternion.copy(blockData.body.quaternion);
+                }
+            }
+
+            controls.update(); // Update orbit controls
+            renderer.render(scene, camera); // Render the scene
+        }
+
+        // Initialize on DOM content loaded
+        window.addEventListener('DOMContentLoaded', () => {
+            if (typeof THREE !== 'undefined' && typeof CANNON !== 'undefined') {
+                // Initialize Three.js and Cannon.js once here
+                initThree();
+                initCannon();
+                resetJengaTower(); // Initial tower build
+                animate(); // Start animation loop
+                setupEventListeners(); // Setup event listeners after everything is ready
+                startGameModal.classList.remove('hidden'); // Show start modal
+            } else {
+                let errorMsg = 'CRITICAL ERROR: ';
+                if (typeof THREE === 'undefined') errorMsg += 'THREE.js failed. ';
+                if (typeof CANNON === 'undefined') errorMsg += 'CANNON.js failed. ';
+                showMessage(errorMsg + 'Game cannot start.', 0);
+            }
+        });
+    </script>
+</body>
+</html>

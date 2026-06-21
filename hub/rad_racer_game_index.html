@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rad Racer: Beam Delivery Challenge</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background-color: #0a0a23; /* Dark space-like background */
+            color: #fff;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            cursor: default; /* Hide default cursor */
+        }
+        #game-container {
+            position: relative;
+            width: 800px; /* Standard game width */
+            height: 600px; /* Standard game height */
+            background-color: #000; /* Deep black for the track area */
+            border: 4px solid #00ffdd; /* Bright sci-fi border */
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(0, 255, 221, 0.7); /* Glowing shadow */
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+            background-color: transparent; /* Canvas background is handled by JS drawing */
+        }
+        #ui-panel {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 10, 35, 0.8);
+            border: 1px solid #00ffdd;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-family: 'Roboto Mono', monospace;
+            z-index: 10; /* Above game elements */
+            box-shadow: 0 0 10px rgba(0, 255, 221, 0.3);
+        }
+        .ui-element {
+            text-align: center;
+            font-size: 1.1rem;
+        }
+        .ui-label {
+            color: #00ffdd;
+            font-size: 0.8rem;
+        }
+        .ui-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fde047; /* Yellow for values */
+        }
+        .health-bar-container {
+            width: 150px;
+            height: 15px;
+            background-color: #374151;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #00ffdd;
+            margin-left: 10px;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
+        }
+        .health-bar {
+            height: 100%;
+            width: 100%;
+            background-color: #22c55e; /* Green for health */
+            border-radius: 8px;
+            transition: width 0.2s ease-out, background-color 0.2s ease-out;
+        }
+
+        /* Modals */
+        .modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.9); display: flex;
+            align-items: center; justify-content: center; z-index: 1000;
+            font-family: 'Orbitron', sans-serif;
+        }
+        .modal-content {
+            background-color: #1f2937;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 0 50px rgba(159, 122, 234, 0.7);
+            text-align: center;
+            max-width: 600px;
+            border: 2px solid #9f7aea;
+            color: #e2e8f0;
+        }
+        .modal-content h2 {
+            font-size: 2.8rem;
+            color: #9f7aea;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 10px rgba(159, 122, 234, 0.5);
+        }
+        .modal-content p {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        .modal-button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 5px 15px rgba(118, 75, 162, 0.4);
+            border: none;
+        }
+        .modal-button:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 20px rgba(118, 75, 162, 0.6);
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="ui-panel">
+            <div class="ui-element">
+                <div class="ui-label">SCORE</div>
+                <div id="score-display" class="ui-value">0</div>
+            </div>
+            <div class="ui-element flex items-center">
+                <div class="ui-label">BEAM INTEGRITY</div>
+                <div class="health-bar-container">
+                    <div id="health-bar" class="health-bar" style="width: 100%; background-color: #22c55e;"></div>
+                </div>
+            </div>
+            <div class="ui-element">
+                <div class="ui-label">TIME</div>
+                <div id="time-display" class="ui-value">00:00</div>
+            </div>
+            <div class="ui-element">
+                <div class="ui-label">TARGETS</div>
+                <div id="targets-display" class="ui-value">0 / 0</div>
+            </div>
+        </div>
+        <canvas id="game-canvas"></canvas>
+    </div>
+
+    <!-- Start Modal -->
+    <div id="start-modal" class="modal">
+        <div class="modal-content">
+            <h2>Rad Racer: Beam Delivery Challenge</h2>
+            <p>Pilot your precision radiation beam through challenging anatomical pathways. Collect **yellow tumor targets** (🟡) to administer therapy, and **avoid critical organs** (🔴) that can compromise beam integrity.</p>
+            <p>Reach the end of the pathway with sufficient beam integrity to complete the challenge!</p>
+            <button id="start-button" class="modal-button">Start Challenge</button>
+        </div>
+    </div>
+
+    <!-- Game Over Modal -->
+    <div id="game-over-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2 id="game-over-title"></h2>
+            <p id="game-over-message"></p>
+            <p class="text-xl mt-4">Final Score: <span id="final-score" class="ui-value">0</span></p>
+            <button id="restart-button" class="modal-button">Try Again</button>
+        </div>
+    </div>
+
+    <!-- Audio Elements -->
+    <!-- Replaced problematic Pixabay links with Freesound.org (CC0 Public Domain) -->
+    <audio id="collect-sound" src="https://freesound.org/data/previews/398/398863_4376510-lq.mp3" preload="auto"></audio> <!-- "Collect Coin" by InspectorJ -->
+    <audio id="hit-sound" src="https://freesound.org/data/previews/407/407765_4376510-lq.mp3" preload="auto"></audio> <!-- "Sci-Fi Weapon Hit" by InspectorJ -->
+    <audio id="win-sound" src="https://freesound.org/data/previews/387/387229_4376510-lq.mp3" preload="auto"></audio> <!-- "Winning Fanfare" by InspectorJ -->
+    <audio id="lose-sound" src="https://freesound.org/data/previews/140/140411_2391036-lq.mp3" preload="auto"></audio> <!-- "Game Over" by TheSubber13 -->
+
+    <script>
+        // --- Canvas Setup ---
+        const canvas = document.getElementById('game-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = 800;
+        canvas.height = 600;
+
+        // --- Game State ---
+        let gameActive = false;
+        let animationFrameId;
+        let score = 0;
+        let gameTime = 0; // in seconds
+        let gameInterval; // for time tracking
+        let currentLevel = 0; // Starts at 0 for levels array index
+
+        // --- Player (Beam) ---
+        const player = {
+            x: canvas.width / 2,
+            y: canvas.height - 50,
+            width: 30,
+            height: 40,
+            speed: 8,
+            health: 100,
+            maxHealth: 100,
+            color: '#00ffdd', // Cyan beam color
+            trail: [] // For visual trail effect
+        };
+
+        // --- Game Objects ---
+        let targets = []; // Collectible tumor targets
+        let obstacles = []; // Avoidable critical organs
+        let particles = []; // For explosions/effects
+
+        // --- Game Config (Levels) ---
+        const levels = [
+            {
+                name: "Basic Pathway: Liver",
+                duration: 60, // seconds
+                targetCount: 10,
+                targetSpawnRate: 150, // frames between spawns
+                obstacleSpawnRate: 200,
+                backgroundSpeed: 2,
+                playerSpeed: 8,
+                criticalOrganDamage: 10, // Health lost per obstacle hit
+                targetScoreValue: 100,
+                healthRegenOnCollect: 5, // Small health regen on collecting target
+                levelGoal: "Collect 10 targets and reach the end of the pathway."
+            },
+            {
+                name: "Complex Pathway: Head & Neck",
+                duration: 75,
+                targetCount: 15,
+                targetSpawnRate: 120,
+                obstacleSpawnRate: 150,
+                backgroundSpeed: 3,
+                playerSpeed: 10,
+                criticalOrganDamage: 15,
+                targetScoreValue: 120,
+                healthRegenOnCollect: 3,
+                levelGoal: "Navigate a tighter pathway, collect 15 targets."
+            },
+            {
+                name: "Precision SBRT: Lung",
+                duration: 90,
+                targetCount: 20,
+                targetSpawnRate: 100,
+                obstacleSpawnRate: 120,
+                backgroundSpeed: 4,
+                playerSpeed: 12,
+                criticalOrganDamage: 20,
+                targetScoreValue: 150,
+                healthRegenOnCollect: 2,
+                levelGoal: "Deliver precise SBRT: collect 20 targets in a faster pathway."
+            }
+        ];
+
+        let currentLevelConfig;
+        let targetsCollected = 0;
+        let targetSpawnTimer = 0;
+        let obstacleSpawnTimer = 0;
+        let backgroundY = 0; // For scrolling background
+
+        // --- UI Elements (declared globally, assigned in DOMContentLoaded) ---
+        let startModal;
+        let startButton;
+        let gameOverModal;
+        let gameOverTitle;
+        let gameOverMessage;
+        let finalScoreDisplay;
+        let restartButton;
+
+        let scoreDisplay;
+        let healthBar;
+        let timeDisplay;
+        let targetsDisplay;
+
+        let collectSound;
+        let hitSound;
+        let winSound;
+        let loseSound;
+
+
+        // --- Game Object Classes ---
+
+        class Target {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.radius = 15;
+                this.speed = currentLevelConfig.backgroundSpeed;
+                this.color = '#fde047'; // Yellow for targets
+            }
+
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#e5b600';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // Draw a crosshair or target symbol
+                ctx.strokeStyle = '#333';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(this.x - this.radius * 0.7, this.y);
+                ctx.lineTo(this.x + this.radius * 0.7, this.y);
+                ctx.moveTo(this.x, this.y - this.radius * 0.7);
+                ctx.lineTo(this.x, this.y + this.radius * 0.7);
+                ctx.stroke();
+            }
+
+            update() {
+                this.y += this.speed;
+                this.draw();
+            }
+        }
+
+        class Obstacle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.width = 40;
+                this.height = 40;
+                this.speed = currentLevelConfig.backgroundSpeed * 0.8; // Slightly slower than targets
+                this.color = '#ef4444'; // Red for obstacles
+            }
+
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.width / 2, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#c0392b';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // Draw an 'X' or danger symbol
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(this.x - this.width * 0.3, this.y - this.height * 0.3);
+                ctx.lineTo(this.x + this.width * 0.3, this.y + this.height * 0.3);
+                ctx.moveTo(this.x + this.width * 0.3, this.y - this.height * 0.3);
+                ctx.lineTo(this.x - this.width * 0.3, this.y + this.height * 0.3);
+                ctx.stroke();
+            }
+
+            update() {
+                this.y += this.speed;
+                this.draw();
+            }
+        }
+
+        class Particle {
+            constructor(x, y, color, size, speedX, speedY, life) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                this.size = size;
+                this.speedX = speedX;
+                this.speedY = speedY;
+                this.life = life;
+                this.alpha = 1;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.life--;
+                this.alpha = this.life / 60; // Fade out
+                this.draw();
+            }
+        }
+
+        // --- Game Logic ---
+
+        function initGame() {
+            score = 0;
+            gameTime = 0;
+            player.health = player.maxHealth;
+            player.x = canvas.width / 2;
+            player.y = canvas.height - 50;
+            player.trail = []; // Clear trail
+            targets = [];
+            obstacles = [];
+            particles = [];
+            targetsCollected = 0;
+            targetSpawnTimer = 0;
+            obstacleSpawnTimer = 0;
+            backgroundY = 0;
+
+            // Load current level config
+            currentLevelConfig = levels[currentLevel];
+            if (!currentLevelConfig) {
+                // If all levels complete, show a special win screen
+                endGame(true, "All Challenges Completed!", `You mastered all pathways with a final score of ${score}!`);
+                return;
+            }
+
+            // Update player speed based on level config
+            player.speed = currentLevelConfig.playerSpeed;
+
+            updateUI(); // Initial UI update
+
+            startModal.classList.add('hidden');
+            gameOverModal.classList.add('hidden');
+
+            gameActive = true;
+            if (animationFrameId) cancelAnimationFrame(animationFrameId); // Clear previous animation
+            if (gameInterval) clearInterval(gameInterval); // Clear previous interval
+
+            gameInterval = setInterval(updateGameTime, 1000); // Start game timer
+            gameLoop(); // Start animation loop
+            console.log(`Level ${currentLevel + 1}: ${currentLevelConfig.name} started!`); // Use console.log for clarity
+        }
+
+        function gameLoop() {
+            if (!gameActive) return;
+
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw scrolling background
+            drawBackground();
+
+            // Update & Draw Player
+            player.x = Math.max(0, Math.min(canvas.width - player.width, player.x)); // Keep player in bounds
+            player.y = Math.max(0, Math.min(canvas.height - player.height, player.y));
+            drawPlayer();
+            updatePlayerTrail();
+
+            // Spawn Targets
+            targetSpawnTimer++;
+            if (targetSpawnTimer >= currentLevelConfig.targetSpawnRate) {
+                targets.push(new Target(Math.random() * canvas.width, -30));
+                targetSpawnTimer = 0;
+            }
+
+            // Spawn Obstacles
+            obstacleSpawnTimer++;
+            if (obstacleSpawnTimer >= currentLevelConfig.obstacleSpawnRate) {
+                obstacles.push(new Obstacle(Math.random() * canvas.width, -40));
+                obstacleSpawnTimer = 0;
+            }
+
+            // Update & Draw Objects
+            updateObjects(targets);
+            updateObjects(obstacles);
+            updateObjects(particles);
+
+            // Check Collisions
+            checkCollisions();
+
+            // Check Game Over / Win Conditions
+            checkGameConditions();
+
+            // Request next frame
+            animationFrameId = requestAnimationFrame(gameLoop);
+        }
+
+        function drawBackground() {
+            // Simulate scrolling cellular/molecular path
+            backgroundY = (backgroundY + currentLevelConfig.backgroundSpeed * 0.5) % canvas.height;
+            
+            // Draw a base dark blue track
+            ctx.fillStyle = '#0a0a23';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw grid lines or patterns
+            ctx.strokeStyle = 'rgba(0, 255, 221, 0.1)'; // Faint cyan lines
+            ctx.lineWidth = 1;
+            const gridSize = 40;
+            for (let i = 0; i < canvas.width / gridSize; i++) {
+                ctx.beginPath();
+                ctx.moveTo(i * gridSize, (0 + backgroundY) % canvas.height);
+                ctx.lineTo(i * gridSize, (canvas.height + backgroundY) % canvas.height);
+                ctx.stroke();
+                ctx.moveTo(0, (i * gridSize + backgroundY) % canvas.height);
+                ctx.lineTo(canvas.width, (i * gridSize + backgroundY) % canvas.height);
+                ctx.stroke();
+            }
+
+            // Draw some "cellular" or "energy" blobs
+            for (let i = 0; i < 10; i++) {
+                ctx.fillStyle = `rgba(159, 122, 234, ${0.1 + (Math.sin(gameTime + i) * 0.05)})`;
+                ctx.beginPath();
+                ctx.arc(
+                    (canvas.width / 2) + Math.sin(gameTime * 0.5 + i) * 300,
+                    (canvas.height * 0.2) + Math.cos(gameTime * 0.7 + i) * 200 + (backgroundY * 2) % canvas.height,
+                    20 + Math.sin(gameTime * 0.1 + i) * 10,
+                    0, Math.PI * 2
+                );
+                ctx.fill();
+            }
+        }
+
+
+        function drawPlayer() {
+            // Draw the main beam (a rectangle or custom shape)
+            ctx.fillStyle = player.color;
+            ctx.beginPath();
+            ctx.moveTo(player.x + player.width / 2, player.y);
+            ctx.lineTo(player.x, player.y + player.height);
+            ctx.lineTo(player.x + player.width, player.y + player.height);
+            ctx.closePath();
+            ctx.fill();
+            ctx.shadowColor = player.color;
+            ctx.shadowBlur = 15;
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Draw trail particles
+            for (const p of player.trail) {
+                ctx.fillStyle = `rgba(0, 255, 221, ${p.alpha})`;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            ctx.shadowBlur = 0;
+        }
+
+        function updatePlayerTrail() {
+            player.trail.push({
+                x: player.x + player.width / 2,
+                y: player.y + player.height / 2,
+                size: Math.random() * 5 + 2,
+                alpha: 0.5,
+                life: 30
+            });
+
+            for (let i = player.trail.length - 1; i >= 0; i--) {
+                player.trail[i].y += currentLevelConfig.backgroundSpeed * 0.5; // Trail moves with background
+                player.trail[i].life--;
+                player.trail[i].alpha = player.trail[i].life / 30;
+                if (player.trail[i].life <= 0) {
+                    player.trail.splice(i, 1);
+                }
+            }
+        }
+
+        function updateObjects(objectArray) {
+            for (let i = objectArray.length - 1; i >= 0; i--) {
+                objectArray[i].update();
+                if (objectArray[i].y > canvas.height + 50) { // Remove if off-screen
+                    objectArray.splice(i, 1);
+                }
+            }
+        }
+
+        function checkCollisions() {
+            // Player-Target collisions
+            for (let i = targets.length - 1; i >= 0; i--) {
+                const target = targets[i];
+                if (
+                    player.x < target.x + target.radius &&
+                    player.x + player.width > target.x - target.radius &&
+                    player.y < target.y + target.radius &&
+                    player.y + player.height > target.y - target.radius
+                ) {
+                    score += currentLevelConfig.targetScoreValue;
+                    targetsCollected++;
+                    player.health = Math.min(player.maxHealth, player.health + currentLevelConfig.healthRegenOnCollect);
+                    createExplosion(target.x, target.y, 'rgba(255, 255, 0, 1)'); // Yellow explosion
+                    targets.splice(i, 1);
+                    if (collectSound) { // Defensive check
+                        collectSound.currentTime = 0;
+                        collectSound.play().catch(e => {}); // Play sound
+                    }
+                }
+            }
+
+            // Player-Obstacle collisions
+            for (let i = obstacles.length - 1; i >= 0; i--) {
+                const obstacle = obstacles[i];
+                if (
+                    player.x < obstacle.x + obstacle.width / 2 &&
+                    player.x + player.width > obstacle.x - obstacle.width / 2 &&
+                    player.y < obstacle.y + obstacle.height / 2 &&
+                    player.y + player.height > obstacle.y - obstacle.height / 2
+                ) {
+                    player.health -= currentLevelConfig.criticalOrganDamage;
+                    score -= (currentLevelConfig.criticalOrganDamage * 5); // Penalty for hitting obstacles
+                    if (score < 0) score = 0;
+                    createExplosion(obstacle.x, obstacle.y, 'rgba(255, 0, 0, 1)'); // Red explosion
+                    obstacles.splice(i, 1);
+                    if (hitSound) { // Defensive check
+                        hitSound.currentTime = 0;
+                        hitSound.play().catch(e => {}); // Play sound
+                    }
+                }
+            }
+        }
+
+        function createExplosion(x, y, color) {
+            for (let i = 0; i < 15; i++) {
+                particles.push(new Particle(
+                    x, y, color, Math.random() * 4 + 1,
+                    (Math.random() - 0.5) * 5, (Math.random() - 0.5) * 5, 60
+                ));
+            }
+        }
+
+        function updateGameTime() {
+            gameTime++;
+            updateUI(); // Update time display
+        }
+
+        function updateUI() {
+            if (scoreDisplay) scoreDisplay.textContent = score;
+            if (healthBar) {
+                healthBar.style.width = `${player.health}%`;
+                if (player.health < 30) {
+                    healthBar.style.backgroundColor = '#ef4444'; // Red
+                } else if (player.health < 60) {
+                    healthBar.style.backgroundColor = '#facc15'; // Yellow
+                } else {
+                    healthBar.style.backgroundColor = '#22c55e'; // Green
+                }
+            }
+            if (timeDisplay) {
+                const minutes = Math.floor(gameTime / 60);
+                const seconds = gameTime % 60;
+                timeDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            }
+            if (targetsDisplay) {
+                targetsDisplay.textContent = `${targetsCollected} / ${currentLevelConfig.targetCount}`;
+            }
+        }
+
+        function checkGameConditions() {
+            if (player.health <= 0) {
+                endGame(false, "Beam Integrity Compromised!", "Your beam lost integrity due to critical organ collisions.");
+                if (loseSound) {
+                    loseSound.currentTime = 0;
+                    loseSound.play().catch(e => {});
+                }
+            } else if (gameTime >= currentLevelConfig.duration) {
+                // Check if enough targets collected
+                if (targetsCollected >= currentLevelConfig.targetCount) {
+                    endGame(true, "Pathway Completed!", `You successfully delivered therapy through Level ${currentLevel + 1}!`);
+                    if (winSound) {
+                        winSound.currentTime = 0;
+                        winSound.play().catch(e => {});
+                    }
+                } else {
+                    endGame(false, "Challenge Failed!", `You reached the end, but didn't collect enough targets (${targetsCollected}/${currentLevelConfig.targetCount}).`);
+                    if (loseSound) {
+                        loseSound.currentTime = 0;
+                        loseSound.play().catch(e => {});
+                    }
+                }
+            }
+        }
+
+        function endGame(success, title, message) {
+            gameActive = false;
+            if (gameInterval) clearInterval(gameInterval); // Stop game timer
+            cancelAnimationFrame(animationFrameId); // Stop animation loop
+
+            if (gameOverTitle) gameOverTitle.textContent = success ? "Challenge Complete!" : "Challenge Failed!";
+            if (gameOverMessage) gameOverMessage.textContent = message;
+            if (finalScoreDisplay) finalScoreDisplay.textContent = score;
+            if (gameOverModal) gameOverModal.classList.remove('hidden');
+
+            // If success, advance level for next game
+            if (success) {
+                currentLevel++;
+            } else {
+                // If fail, stay on current level
+                // currentLevel = currentLevel; // This line is redundant, effectively does nothing
+            }
+        }
+
+
+        // --- Event Listeners ---
+        // Player movement
+        document.addEventListener('keydown', (e) => {
+            if (!gameActive) return;
+            if (e.key === 'ArrowLeft') {
+                player.x -= player.speed;
+            } else if (e.key === 'ArrowRight') {
+                player.x += player.speed;
+            } else if (e.key === 'ArrowUp') {
+                player.y -= player.speed;
+            } else if (e.key === 'ArrowDown') {
+                player.y += player.speed;
+            }
+        });
+
+        // Touch controls for mobile
+        let touchStartX = 0;
+        let touchStartY = 0;
+        canvas.addEventListener('touchstart', (e) => {
+            if (!gameActive) return;
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+            e.preventDefault(); // Prevent scrolling
+        });
+
+        canvas.addEventListener('touchmove', (e) => {
+            if (!gameActive) return;
+            const touch = e.touches[0];
+            const deltaX = touch.clientX - touchStartX;
+            const deltaY = touch.clientY - touchStartY;
+
+            // Update player position based on touch drag
+            player.x += deltaX * 0.5; // Adjust sensitivity
+            player.y += deltaY * 0.5; // Adjust sensitivity
+
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
+            e.preventDefault();
+        });
+
+
+        // Start/Restart button
+        document.addEventListener('DOMContentLoaded', () => {
+            // Assign UI elements here, guaranteeing they are defined
+            startModal = document.getElementById('start-modal');
+            startButton = document.getElementById('start-button');
+            gameOverModal = document.getElementById('game-over-modal');
+            gameOverTitle = document.getElementById('game-over-title');
+            gameOverMessage = document.getElementById('game-over-message');
+            finalScoreDisplay = document.getElementById('final-score');
+            restartButton = document.getElementById('restart-button');
+
+            scoreDisplay = document.getElementById('score-display');
+            healthBar = document.getElementById('health-bar');
+            timeDisplay = document.getElementById('time-display');
+            targetsDisplay = document.getElementById('targets-display');
+
+            collectSound = document.getElementById('collect-sound');
+            hitSound = document.getElementById('hit-sound');
+            winSound = document.getElementById('win-sound');
+            loseSound = document.getElementById('lose-sound');
+
+            // Now attach event listeners to these elements
+            if (startButton) {
+                startButton.addEventListener('click', () => {
+                    currentLevel = 0; // Always start from level 1 (index 0) when first starting
+                    initGame();
+                });
+            }
+            if (restartButton) {
+                restartButton.addEventListener('click', initGame);
+            }
+
+            // Show start modal initially
+            if (startModal) {
+                startModal.classList.remove('hidden');
+            }
+        });
+    </script>
+</body>
+</html>

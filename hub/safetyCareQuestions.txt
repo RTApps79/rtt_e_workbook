@@ -1,0 +1,292 @@
+const safetyQuestions = {
+  "Radiation Physics and Radiobiology": [
+    // Units of Measurement
+    {
+      question: "What is the SI unit for absorbed dose of radiation?",
+      options: ["Gray (Gy)", "Sievert (Sv)", "Rem", "Coulomb per kilogram (C/kg)"],
+      correctAnswer: 0,
+      feedback: "Correct! Absorbed dose is measured in Gray (Gy)."
+    },
+    {
+      question: "Which unit is used to measure dose equivalent in radiation protection?",
+      options: ["Gray (Gy)", "Sievert (Sv)", "Rad", "Curie (Ci)"],
+      correctAnswer: 1,
+      feedback: "Correct! Dose equivalent is measured in Sievert (Sv)."
+    },
+    // Radiation Types and Properties
+    {
+      question: "Which type of radiation is most likely to cause ionization in tissue?",
+      options: ["Alpha particles", "Ultrasound", "Microwaves", "Visible light"],
+      correctAnswer: 0,
+      feedback: "Correct! Alpha particles are highly ionizing."
+    },
+    {
+      question: "What is the charge of a beta particle?",
+      options: ["Positive", "Negative", "Neutral", "Variable"],
+      correctAnswer: 1,
+      feedback: "Correct! Beta particles are electrons and have a negative charge."
+    },
+    // Interactions with Matter
+    {
+      question: "Which interaction is most likely at diagnostic X-ray energies?",
+      options: ["Photoelectric effect", "Compton scatter", "Pair production", "Photodisintegration"],
+      correctAnswer: 1,
+      feedback: "Correct! Compton scatter predominates at diagnostic energies."
+    },
+    {
+      question: "Pair production can only occur if the photon energy exceeds:",
+      options: ["0.511 MeV", "1.022 MeV", "2.0 MeV", "10 MeV"],
+      correctAnswer: 1,
+      feedback: "Correct! Pair production threshold is 1.022 MeV."
+    },
+    // Half-life and Decay
+    {
+      question: "The half-life of a radioactive isotope is the time it takes for:",
+      options: [
+        "All atoms to decay",
+        "Half the atoms to decay",
+        "The activity to double",
+        "The energy to increase"
+      ],
+      correctAnswer: 1,
+      feedback: "Correct! Half-life is the time for half the atoms to decay."
+    },
+    {
+      question: "Which isotope is commonly used in HDR brachytherapy?",
+      options: ["Iodine-131", "Cesium-137", "Iridium-192", "Cobalt-60"],
+      correctAnswer: 2,
+      feedback: "Correct! Iridium-192 is used for HDR brachytherapy."
+    }
+  ],
+  "Radiation Protection and Safety": [
+    // ALARA and Dose Limits
+    {
+      question: "What does ALARA stand for?",
+      options: [
+        "As Low As Reasonably Achievable",
+        "As Large As Radiation Allows",
+        "All Levels Are Regulated Accordingly",
+        "As Low As Radiation Allows"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! ALARA means keeping exposures as low as reasonably achievable."
+    },
+    {
+      question: "What is the annual occupational dose limit for whole body exposure in the US?",
+      options: ["5 mSv", "50 mSv", "500 mSv", "100 mSv"],
+      correctAnswer: 1,
+      feedback: "Correct! The annual limit is 50 mSv (5 rem)."
+    },
+    // Time, Distance, Shielding
+    {
+      question: "Which principle reduces radiation exposure by minimizing the period of exposure?",
+      options: ["Time", "Distance", "Shielding", "Filtration"],
+      correctAnswer: 0,
+      feedback: "Correct! Reducing time lowers exposure."
+    },
+    {
+      question: "Doubling your distance from a radiation source reduces exposure by:",
+      options: ["Half", "One-fourth", "Double", "No change"],
+      correctAnswer: 1,
+      feedback: "Correct! Exposure drops by a factor of four (inverse square law)."
+    },
+    // Shielding Materials
+    {
+      question: "Which material is most effective for shielding against X-rays?",
+      options: ["Plastic", "Lead", "Wood", "Aluminum"],
+      correctAnswer: 1,
+      feedback: "Correct! Lead is commonly used for X-ray shielding."
+    },
+    {
+      question: "What is the purpose of a primary barrier in a treatment room?",
+      options: [
+        "To shield against the primary beam",
+        "To shield against leakage radiation",
+        "To block sound",
+        "To provide ventilation"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! Primary barriers shield against the main beam."
+    },
+    // Area Monitoring and Signs
+    {
+      question: "What sign must be posted at the entrance to a controlled area with radiation?",
+      options: [
+        "No Smoking",
+        "Radiation Area",
+        "Authorized Personnel Only",
+        "Biohazard"
+      ],
+      correctAnswer: 1,
+      feedback: "Correct! 'Radiation Area' signs are required."
+    },
+    {
+      question: "Which device is used for area radiation monitoring?",
+      options: ["Ionization chamber", "Thermometer", "Stethoscope", "Otoscope"],
+      correctAnswer: 0,
+      feedback: "Correct! Ionization chambers monitor area radiation."
+    }
+  ],
+  "Equipment Operation and Quality Assurance": [
+    // Linear Accelerator Safety
+    {
+      question: "What is the purpose of interlocks on a linear accelerator?",
+      options: [
+        "Prevent unsafe operation",
+        "Increase dose rate",
+        "Reduce image quality",
+        "Cool the treatment room"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! Interlocks prevent unsafe operation."
+    },
+    {
+      question: "Which device is used to verify the output of a linear accelerator?",
+      options: ["Ion chamber", "Thermometer", "MRI", "Ultrasound"],
+      correctAnswer: 0,
+      feedback: "Correct! Ion chambers are used for output verification."
+    },
+    // CT Simulator and Imaging Safety
+    {
+      question: "Why is immobilization important during CT simulation?",
+      options: [
+        "To ensure reproducible patient positioning",
+        "To reduce scan time",
+        "To increase image noise",
+        "To improve contrast"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! Immobilization ensures reproducible positioning."
+    },
+    {
+      question: "What is the main safety concern with MRI in radiation oncology?",
+      options: [
+        "Magnetic field hazards with ferrous objects",
+        "Radiation exposure",
+        "Loud noises",
+        "Contrast allergies"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! Ferrous objects can become projectiles in MRI."
+    },
+    // Quality Assurance
+    {
+      question: "What is the purpose of daily output checks on a linear accelerator?",
+      options: [
+        "To verify consistent radiation dose delivery",
+        "To clean the machine",
+        "To calibrate the patient table",
+        "To test the fire alarm"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! Daily output checks ensure dose accuracy."
+    },
+    {
+      question: "Which test is performed to check the accuracy of the laser alignment in a treatment room?",
+      options: [
+        "Laser QA test",
+        "Leakage test",
+        "Contrast test",
+        "Noise test"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! Laser QA checks alignment accuracy."
+    }
+  ],
+  "Personnel Monitoring and Protection": [
+    // Dosimetry and Monitoring Devices
+    {
+      question: "What is the most common personnel dosimeter used in radiation therapy?",
+      options: [
+        "TLD (Thermoluminescent dosimeter)",
+        "Film badge",
+        "Pocket dosimeter",
+        "Geiger-Müller counter"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! TLDs are commonly used for personnel monitoring."
+    },
+    {
+      question: "Where should a personnel dosimeter be worn?",
+      options: [
+        "On the collar outside the lead apron",
+        "On the ankle",
+        "In a pocket",
+        "Under the apron"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! Dosimeters should be worn on the collar outside the apron."
+    },
+    // Exposure Limits and Records
+    {
+      question: "Who sets occupational dose limits for radiation workers in the US?",
+      options: [
+        "NCRP and NRC",
+        "FDA",
+        "OSHA",
+        "EPA"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! NCRP and NRC set dose limits."
+    },
+    {
+      question: "What should be done if a dosimeter shows an unusually high reading?",
+      options: [
+        "Report to the radiation safety officer",
+        "Ignore it",
+        "Throw it away",
+        "Continue working as usual"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! Always report high readings to the safety officer."
+    }
+  ],
+  "Facilities and Area Monitoring": [
+    // NRC Regulations and Area Classification
+    {
+      question: "What is a restricted area in radiation therapy?",
+      options: [
+        "An area where access is limited to authorized personnel due to radiation hazards",
+        "A public waiting room",
+        "A cafeteria",
+        "A parking lot"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! Restricted areas are limited to authorized personnel."
+    },
+    {
+      question: "What must be posted in a controlled area?",
+      options: [
+        "Radiation warning signs",
+        "No food or drink signs",
+        "Smoking allowed signs",
+        "No cell phone signs"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! Radiation warning signs are required."
+    },
+    // Area Monitoring Devices
+    {
+      question: "Which device is used for continuous area monitoring in radiation therapy?",
+      options: [
+        "Area radiation monitor",
+        "Thermometer",
+        "Blood pressure cuff",
+        "Stethoscope"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! Area radiation monitors provide continuous monitoring."
+    },
+    {
+      question: "What is the purpose of secondary barriers in a treatment room?",
+      options: [
+        "To shield against scatter and leakage radiation",
+        "To block the primary beam",
+        "To provide air conditioning",
+        "To support the ceiling"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! Secondary barriers shield against scatter and leakage."
+    }
+  ]
+};

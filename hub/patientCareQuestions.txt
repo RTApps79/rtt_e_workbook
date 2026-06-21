@@ -1,0 +1,549 @@
+const patientCareQuestions = [
+  // Ethical and Legal Aspects
+  {
+    question: "What is informed consent in healthcare?",
+    options: [
+      "Patient agrees to treatment after being told risks, benefits, and alternatives.",
+      "Patient is forced to accept treatment.",
+      "Patient signs any paper given.",
+      "Patient agrees by showing up to the appointment."
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! Informed consent means the patient understands and voluntarily agrees to treatment after being informed."
+  },
+  {
+    question: "Which law protects patient privacy and requires safeguarding health information?",
+    options: [
+      "HIPAA",
+      "FDA",
+      "OSHA",
+      "ARRT"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! HIPAA protects patient privacy and health information."
+  },
+  {
+    question: "What is the purpose of a living will?",
+    options: [
+      "To specify desired medical treatments if the patient becomes incapacitated",
+      "To appoint a financial advisor",
+      "To determine insurance coverage",
+      "To select a hospital"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! A living will details a patient's wishes for care if they cannot communicate."
+  },
+  {
+    question: "What does a DNR order mean?",
+    options: [
+      "Do Not Resuscitate",
+      "Do Not Remove",
+      "Doctor Needs Review",
+      "Direct Nurse Response"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! DNR stands for Do Not Resuscitate."
+  },
+  {
+    question: "What is the main goal of palliative care?",
+    options: [
+      "To relieve symptoms and improve quality of life",
+      "To cure the disease",
+      "To perform surgery",
+      "To diagnose cancer"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! Palliative care focuses on comfort and quality of life."
+  },
+  {
+    question: "What is battery in a healthcare context?",
+    options: [
+      "Touching a patient without consent",
+      "Failing to diagnose a disease",
+      "Losing patient records",
+      "Giving the wrong medication"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! Battery is intentional touching without consent."
+  },
+  {
+    question: "What is the difference between restraints and immobilization devices?",
+    options: [
+      "Restraints limit freedom and require a physician's order; immobilization devices prevent motion during treatment.",
+      "Both are the same.",
+      "Restraints are used for imaging only.",
+      "Immobilization devices require a court order."
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! Restraints limit movement and need an order; immobilization devices are used to keep position during therapy."
+  },
+  {
+    question: "What is the ARRT Standards of Ethics?",
+    options: [
+      "A professional code governing conduct and patient care for radiologic technologists",
+      "A billing guideline",
+      "A hospital cleaning protocol",
+      "A dietary manual"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! The ARRT Standards of Ethics guide professional behavior and patient care."
+  },
+
+  // Interpersonal Communication
+  {
+    question: "Which is an example of nonverbal communication?",
+    options: [
+      "Eye contact",
+      "Written instructions",
+      "Phone call",
+      "Email"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! Eye contact is a form of nonverbal communication."
+  },
+  {
+    question: "What is the best way to communicate with a patient who does not speak your language?",
+    options: [
+      "Use a certified interpreter",
+      "Speak louder",
+      "Use family members to translate",
+      "Ignore their questions"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! Always use a certified interpreter for language barriers."
+  },
+  {
+    question: "How can you help a patient with a hearing impairment understand instructions?",
+    options: [
+      "Face the patient and speak clearly",
+      "Shout at the patient",
+      "Ignore the impairment",
+      "Only use written instructions"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! Facing the patient and speaking clearly helps with understanding."
+  },
+  {
+    question: "What is the teach-back method?",
+    options: [
+      "Having the patient repeat instructions to confirm understanding",
+      "Telling the patient to read instructions at home",
+      "Only providing written instructions",
+      "Using medical jargon"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! Teach-back ensures the patient understands instructions."
+  },
+
+  // Patient Education
+  {
+    question: "What should you include when explaining a radiation therapy procedure?",
+    options: [
+      "Purpose, duration, and possible side effects",
+      "Only the risks",
+      "Only the benefits",
+      "No information is necessary"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! Patients should know the purpose, length, and potential side effects."
+  },
+  {
+    question: "Why is it important to not wash off skin marks used in radiation therapy?",
+    options: [
+      "They help ensure accurate treatment positioning",
+      "They are decorative",
+      "They help with billing",
+      "They are for identification"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! Skin marks help maintain accurate treatment alignment."
+  },
+  {
+    question: "What is a key instruction for general skin care during radiation therapy?",
+    options: [
+      "Wash gently with lukewarm water and mild soap",
+      "Scrub the area vigorously",
+      "Apply any lotion you like",
+      "Expose the area to sunlight"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! Gentle washing helps protect sensitive skin."
+  },
+  {
+    question: "What is a dietary recommendation for patients experiencing nausea during radiation therapy?",
+    options: [
+      "Eat small, frequent, bland meals",
+      "Eat large meals",
+      "Avoid all food",
+      "Only drink soda"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! Small, bland meals help manage nausea."
+  },
+  {
+    question: "Who can patients be referred to for nutritional support during therapy?",
+    options: [
+      "Dietitian",
+      "Pharmacist",
+      "Radiation physicist",
+      "Billing specialist"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! Dietitians provide nutritional support."
+  },
+
+  // Support Services
+  {
+    question: "What is the main focus of hospice care?",
+    options: [
+      "Comfort and quality of life at end-of-life",
+      "Aggressive curative treatment",
+      "Surgical intervention",
+      "Radiation only"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! Hospice focuses on comfort and support."
+  },
+
+  // Ergonomics and Monitoring
+  {
+    question: "What is the safest way to lift a heavy object?",
+    options: [
+      "Bend at the knees and keep the object close",
+      "Bend at the waist",
+      "Twist your back",
+      "Lift quickly"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! Bend at the knees and keep the load close for safe lifting."
+  },
+  {
+    question: "What device can help move a patient from bed to stretcher?",
+    options: [
+      "Transfer board",
+      "IV pole",
+      "Oxygen tank",
+      "Bed sheet"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! A transfer board helps move patients safely."
+  },
+  {
+    question: "When assisting a patient with an infusion pump, you should:",
+    options: [
+      "Avoid pulling on lines and monitor the pump site",
+      "Ignore the pump",
+      "Disconnect lines for convenience",
+      "Increase the flow rate"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! Always avoid pulling lines and monitor the site."
+  },
+  {
+    question: "How should you handle an oxygen tank in the treatment room?",
+    options: [
+      "Secure the tank and keep away from open flames",
+      "Lay it on the floor",
+      "Ignore safety precautions",
+      "Increase flow without checking"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! Oxygen tanks must be secured and kept from flames."
+  },
+  {
+    question: "What is the most important vital sign to monitor during radiation therapy?",
+    options: [
+      "All vital signs are important",
+      "Only temperature",
+      "Only pulse",
+      "Only blood pressure"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! All vital signs are important to monitor."
+  },
+  {
+    question: "What should you do if a patient is at risk for falls?",
+    options: [
+      "Use side rails and keep the environment clear",
+      "Leave the patient unattended",
+      "Remove all supports",
+      "Ignore the risk"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! Use side rails and keep the area clear to prevent falls."
+  },
+
+  // Medical Emergencies
+  {
+    question: "What is the first step if a patient has a severe allergic reaction to latex?",
+    options: [
+      "Stop exposure and call for help",
+      "Give food",
+      "Ignore the reaction",
+      "Continue the procedure"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! Stop exposure and call for help immediately."
+  },
+  {
+    question: "What should you do if a patient has a seizure during treatment?",
+    options: [
+      "Protect the patient from injury and do not restrain",
+      "Hold the patient down",
+      "Leave the room",
+      "Give them water"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! Protect from injury and do not restrain."
+  },
+  {
+    question: "What is the recommended response if a patient becomes hypoglycemic?",
+    options: [
+      "Give sugar if the patient is conscious",
+      "Give insulin",
+      "Ignore the symptoms",
+      "Call security"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! Give sugar if conscious and notify medical staff."
+  },
+
+  // Infection Control
+  {
+    question: "What is the most effective way to prevent the spread of infection?",
+    options: [
+      "Hand hygiene",
+      "Wearing a hat",
+      "Taking vitamins",
+      "Using air freshener"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! Hand hygiene is the most effective infection control measure."
+  },
+  {
+    question: "What is the purpose of medical aseptic technique?",
+    options: [
+      "To reduce the number of pathogens",
+      "To eliminate all microbes",
+      "To clean only visible dirt",
+      "To sterilize equipment"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! Medical asepsis reduces pathogens."
+  },
+  {
+    question: "When should you use personal protective equipment (PPE)?",
+    options: [
+      "When exposure to blood or body fluids is possible",
+      "Only during surgery",
+      "Never",
+      "Only if the patient asks"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! PPE is used when exposure to blood or body fluids is possible."
+  },
+  {
+    question: "What type of precaution is used for a patient with tuberculosis?",
+    options: [
+      "Airborne precautions with N95 respirator",
+      "Contact precautions only",
+      "Droplet precautions only",
+      "No special precautions"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! Airborne precautions and an N95 mask are required."
+  },
+  {
+    question: "What is the chain of infection?",
+    options: [
+      "Pathogen, reservoir, portal of exit, mode of transmission, portal of entry, susceptible host",
+      "Pathogen, patient, doctor, nurse, room, hospital",
+      "Only the patient",
+      "Only the doctor"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! The chain of infection includes all those links."
+  },
+  {
+    question: "What is a healthcare-associated infection (HAI)?",
+    options: [
+      "An infection acquired during healthcare delivery",
+      "An infection from food",
+      "A genetic disorder",
+      "A skin rash"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! HAIs are acquired during healthcare."
+  },
+
+  // Handling and Disposal of Hazardous Material
+  {
+    question: "What is the purpose of a Material Safety Data Sheet (MSDS)?",
+    options: [
+      "To provide information on chemical hazards and safe handling",
+      "To record patient allergies",
+      "To list hospital staff",
+      "To document billing codes"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! MSDS gives safety info for chemicals."
+  },
+  {
+    question: "How should used needles be disposed of?",
+    options: [
+      "Place in a sharps container without recapping",
+      "Throw in regular trash",
+      "Recap and reuse",
+      "Leave on the counter"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! Used needles go in a sharps container, never recap."
+  },
+
+  // Pharmacology (Contrast Media)
+  {
+    question: "Which contrast agent is commonly used for GI tract imaging?",
+    options: [
+      "Barium sulfate",
+      "Iodinated contrast",
+      "Saline",
+      "Glucose"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! Barium sulfate is used for GI imaging."
+  },
+  {
+    question: "What should you check before giving IV iodinated contrast?",
+    options: [
+      "Kidney function (e.g., creatinine, eGFR)",
+      "Blood pressure only",
+      "Blood sugar",
+      "Liver enzymes"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! Always check kidney function before IV contrast."
+  },
+  {
+    question: "What is a mild reaction to contrast media?",
+    options: [
+      "Nausea or hives",
+      "Cardiac arrest",
+      "Seizure",
+      "Coma"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! Mild reactions include nausea and hives."
+  },
+  {
+    question: "What is the first response to extravasation of contrast?",
+    options: [
+      "Stop injection and notify physician",
+      "Continue injection",
+      "Apply heat immediately",
+      "Ignore the event"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! Stop injection and notify the physician."
+  },
+
+  // Patient and Medical Record Management
+  {
+    question: "What are two common cancer risk factors?",
+    options: [
+      "Smoking and family history",
+      "Eye color and height",
+      "Blood type and shoe size",
+      "Birth month and diet soda"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! Smoking and genetics are cancer risk factors."
+  },
+  {
+    question: "What is the difference between prevalence and incidence?",
+    options: [
+      "Prevalence is existing cases; incidence is new cases in a time period",
+      "Prevalence is new cases; incidence is existing cases",
+      "They mean the same thing",
+      "Incidence is only for cancer"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! Prevalence is existing cases; incidence is new cases."
+  },
+  {
+    question: "What is the purpose of cancer screening?",
+    options: [
+      "To detect cancer early in asymptomatic individuals",
+      "To treat cancer",
+      "To cure cancer",
+      "To prevent cancer"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! Screening detects cancer early."
+  },
+  {
+    question: "Which of the following is a subjective symptom?",
+    options: [
+      "Pain reported by the patient",
+      "Fever measured by staff",
+      "Rash observed by staff",
+      "Blood pressure reading"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! Pain is a subjective symptom."
+  },
+  {
+    question: "What is included in a radiation therapy prescription?",
+    options: [
+      "Site, total dose, fractionation, energy, and modality",
+      "Only the patient's name",
+      "Only the total dose",
+      "Only the date"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! The prescription includes all those details."
+  },
+  {
+    question: "What is the nadir in blood studies?",
+    options: [
+      "The lowest blood count after treatment",
+      "The highest blood count",
+      "A type of white blood cell",
+      "A medication"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! The nadir is the lowest blood count point."
+  },
+  {
+    question: "What is a key principle of accurate documentation?",
+    options: [
+      "Legibility and error-free records",
+      "Using pencil",
+      "Erasing mistakes",
+      "Leaving blanks"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! Documentation must be legible and error-free."
+  },
+  {
+    question: "What should you do if there is a variance from the prescription?",
+    options: [
+      "Document the deviation and actions taken",
+      "Ignore it",
+      "Erase the error",
+      "Tell no one"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! Always document any deviations."
+  },
+  {
+    question: "What is a medical event in radiation therapy?",
+    options: [
+      "A reportable incident that must be documented according to regulations",
+      "A patient birthday",
+      "A staff meeting",
+      "A holiday"
+    ],
+    correctAnswer: 0,
+    feedback: "Correct! Medical events are reportable incidents."
+  }
+];

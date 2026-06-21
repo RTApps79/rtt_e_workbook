@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OncoLife: ER - Oncology Training Game</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8; /* Light blue-gray background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .game-container {
+            background-color: #ffffff;
+            border-radius: 1.5rem; /* More rounded corners */
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            padding: 2.5rem;
+            max-width: 900px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            border: 1px solid #e2e8f0; /* Light border */
+        }
+        .btn {
+            background-color: #4CAF50; /* Green for action */
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .btn:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+        }
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+        .btn-secondary {
+            background-color: #007bff; /* Blue for secondary actions */
+        }
+        .btn-secondary:hover {
+            background-color: #0056b3;
+        }
+        .stat-item {
+            background-color: #f8fafc; /* Lighter background for stat items */
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            border: 1px solid #cbd5e1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .stat-label {
+            font-weight: 600;
+            color: #475569; /* Slate 600 */
+        }
+        .stat-value {
+            font-weight: 700;
+            color: #1e293b; /* Slate 900 */
+        }
+        .message-box {
+            background-color: #e0f2fe; /* Light blue for messages */
+            border-left: 5px solid #38b2ac; /* Teal border */
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            margin-top: 1rem;
+            font-size: 0.95rem;
+            color: #1a202c;
+            display: none; /* Hidden by default */
+        }
+        .message-box.show {
+            display: block;
+        }
+        .message-box.success {
+            background-color: #d1fae5; /* Light green */
+            border-color: #10b981; /* Green */
+        }
+        .message-box.error {
+            background-color: #fee2e2; /* Light red */
+            border-color: #ef4444; /* Red */
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1 class="text-4xl font-extrabold text-center text-gray-800 mb-6">OncoLife: ER</h1>
+        <p class="text-center text-gray-600 mb-4">An educational training game for oncology students.</p>
+
+        <!-- User ID Display -->
+        <div id="user-id-display" class="text-sm text-gray-500 text-center mb-4">
+            Loading user ID...
+        </div>
+
+        <!-- Player Stats -->
+        <div id="stats-display" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <div class="stat-item">
+                <span class="stat-label">Knowledge:</span>
+                <span id="stat-knowledge" class="stat-value">100</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Clinical Acuity:</span>
+                <span id="stat-acuity" class="stat-value">100</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Stress Tolerance:</span>
+                <span id="stat-stress" class="stat-value">100</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Empathy:</span>
+                <span id="stat-empathy" class="stat-value">100</span>
+            </div>
+        </div>
+
+        <!-- Game Area -->
+        <div id="game-area" class="bg-blue-50 p-6 rounded-xl shadow-inner border border-blue-200">
+            <div id="scenario-description" class="text-lg text-gray-700 mb-6 leading-relaxed">
+                Welcome to OncoLife: ER! Your journey as an oncology student begins now.
+                Click "Start New Shift" to begin your first patient encounter.
+            </div>
+
+            <div id="choices-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Choices will be rendered here -->
+            </div>
+
+            <div id="feedback-message" class="message-box mt-6">
+                <!-- Feedback messages will appear here -->
+            </div>
+
+            <button id="start-game-btn" class="btn btn-secondary w-full mt-6">Start New Shift</button>
+            <button id="next-scenario-btn" class="btn btn-secondary w-full mt-6 hidden">Continue</button>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Global variables for Firebase (will be initialized below)
+        let app;
+        let db;
+        let auth;
+        let userId = 'anonymous'; // Default until authenticated
+
+        // Game state variables
+        let playerStats = {
+            knowledge: 100,
+            acuity: 100,
+            stress: 100,
+            empathy: 100
+        };
+
+        let currentScenarioId = 'intro'; // Start with the intro scenario
+        let gameActive = false; // Flag to control game flow
+
+        // DOM Elements
+        const scenarioDescriptionEl = document.getElementById('scenario-description');
+        const choicesContainerEl = document.getElementById('choices-container');
+        const feedbackMessageEl = document.getElementById('feedback-message');
+        const startGameBtn = document.getElementById('start-game-btn');
+        const nextScenarioBtn = document.getElementById('next-scenario-btn');
+        const userIdDisplayEl = document.getElementById('user-id-display');
+
+        // Stat display elements
+        const statKnowledgeEl = document.getElementById('stat-knowledge');
+        const statAcuityEl = document.getElementById('stat-acuity');
+        const statStressEl = document.getElementById('stat-stress');
+        const statEmpathyEl = document.getElementById('stat-empathy');
+
+        // Game Data: Scenarios and Choices
+        const gameData = {
+            'intro': {
+                description: "Welcome to OncoLife: ER! Your journey as an oncology student begins now. Click 'Start New Shift' to begin your first patient encounter.",
+                options: [] // No options for intro, just a start button
+            },
+            'scenario1_start': {
+                title: "Patient 1: Altered Mental Status",
+                description: "You're on call in the ER. A 55-year-old male with a history of metastatic lung cancer presents with altered mental status and generalized weakness. Vitals: BP 100/60, HR 110, RR 22, Temp 37.5°C, SpO2 94% on room air. He is lethargic but responds to painful stimuli. Pupils are equal and reactive. No focal neurological deficits noted on initial exam.",
+                options: [
+                    { text: "Order STAT head CT and labs (CBC, BMP, LFTs, Calcium, Magnesium, Phosphorus, Uric Acid, LDH)", outcome: "You order comprehensive tests to rule out common oncologic emergencies.", correct: true, statChanges: { knowledge: 5, acuity: 5 }, feedback: "Excellent initial move! This broad panel helps identify metabolic derangements and structural issues quickly.", nextScenario: 'scenario1_results' },
+                    { text: "Administer IV fluids and observe for an hour", outcome: "You administer fluids, but the patient's mental status does not improve, and vitals remain concerning.", correct: false, statChanges: { stress: -10, acuity: -5 }, feedback: "Observation alone is insufficient for altered mental status in a cancer patient. Critical time is lost.", nextScenario: 'scenario1_failed_observation' },
+                    { text: "Consult Neurology immediately without further workup", outcome: "Neurology is consulted, but they request basic labs and imaging before assessment.", correct: false, statChanges: { stress: -5 }, feedback: "While neurology consultation is important, basic workup is usually expected before a specialist review in the ER.", nextScenario: 'scenario1_consult_early' }
+                ]
+            },
+            'scenario1_results': {
+                title: "Patient 1: Lab Results & Imaging",
+                description: "Lab results return: Na 135, K 4.0, Cl 100, HCO3 24, BUN 15, Cr 0.9, Glucose 120. **Calcium: 14.5 mg/dL (High)**. Mg 2.0, Phos 3.0, Uric Acid 5.0, LDH 300. CBC and LFTs are within normal limits. STAT Head CT shows no acute intracranial hemorrhage or mass effect, but diffuse cerebral edema is noted. What is your next step?",
+                options: [
+                    { text: "Administer IV fluids (Normal Saline) and IV bisphosphonates (e.g., Zoledronic Acid)", outcome: "You initiate aggressive hydration and medication. The patient's calcium level begins to trend down.", correct: true, statChanges: { knowledge: 10, acuity: 10, stress: 5 }, feedback: "Correct! This patient has hypercalcemia of malignancy. Aggressive hydration and bisphosphonates are cornerstone treatments.", nextScenario: 'scenario1_success' },
+                    { text: "Administer a diuretic (e.g., Furosemide) to reduce edema", outcome: "You administer a diuretic, but it worsens the patient's dehydration and calcium levels remain high.", correct: false, statChanges: { stress: -15, knowledge: -5 }, feedback: "Diuretics can worsen hypercalcemia by promoting dehydration. Hydration is key.", nextScenario: 'scenario1_failed_diuretic' },
+                    { text: "Prepare for intubation due to altered mental status", outcome: "While intubation might be needed for airway protection, addressing the underlying cause (hypercalcemia) is the priority.", correct: false, statChanges: { stress: -10 }, feedback: "Intubation is a supportive measure; focus on treating the primary issue first.", nextScenario: 'scenario1_intubate_prematurely' }
+                ]
+            },
+            'scenario1_success': {
+                title: "Patient 1: Outcome",
+                description: "The patient's mental status gradually improves over the next few hours as his calcium levels normalize. You successfully managed a case of hypercalcemia of malignancy. The oncology attending praises your prompt and accurate management.",
+                options: [], // End of scenario, will trigger 'Next Shift'
+                endScenario: true,
+                outcomeType: 'success'
+            },
+            'scenario1_failed_observation': {
+                title: "Patient 1: Outcome",
+                description: "The patient's condition rapidly deteriorates. His blood pressure drops, and he becomes unresponsive. You failed to identify and treat the underlying oncologic emergency in time.",
+                options: [],
+                endScenario: true,
+                outcomeType: 'failure'
+            },
+            'scenario1_consult_early': {
+                title: "Patient 1: Outcome",
+                description: "After some delay, basic labs and imaging are performed, revealing the hypercalcemia. The patient's condition worsens while waiting. You learn the importance of initial workup before specialist consultation.",
+                options: [],
+                endScenario: true,
+                outcomeType: 'failure'
+            },
+            'scenario1_failed_diuretic': {
+                title: "Patient 1: Outcome",
+                description: "The patient's dehydration worsens, and his calcium levels remain dangerously high. You realize your error in administering a diuretic without adequate hydration.",
+                options: [],
+                endScenario: true,
+                outcomeType: 'failure'
+            },
+            'scenario1_intubate_prematurely': {
+                title: "Patient 1: Outcome",
+                description: "You intubate the patient, but his underlying hypercalcemia remains untreated, leading to continued deterioration. Airway management is important, but addressing the root cause is critical.",
+                options: [],
+                endScenario: true,
+                outcomeType: 'failure'
+            },
+            // Add more scenarios here for other oncologic emergencies
+            'scenario2_start': {
+                title: "Patient 2: Fever and Neutropenia",
+                description: "A 42-year-old female with acute myeloid leukemia (AML) currently undergoing chemotherapy presents to the ER with a fever of 39.5°C (103.1°F) and chills. She feels generally unwell. Her last chemotherapy dose was 7 days ago. What is your immediate concern and action?",
+                options: [
+                    { text: "Suspect febrile neutropenia. Initiate broad-spectrum IV antibiotics immediately after blood cultures.", outcome: "You act quickly to address a life-threatening condition.", correct: true, statChanges: { knowledge: 8, acuity: 8, stress: 5 }, feedback: "Excellent! Febrile neutropenia is an oncologic emergency requiring prompt empiric broad-spectrum antibiotics.", nextScenario: 'scenario2_success' },
+                    { text: "Order a chest X-ray and wait for results before giving antibiotics.", outcome: "You order a chest X-ray, but delaying antibiotics in febrile neutropenia can lead to rapid deterioration.", correct: false, statChanges: { stress: -15, knowledge: -5 }, feedback: "Delaying antibiotics in febrile neutropenia is dangerous. Empiric antibiotics are critical even before culture results or imaging.", nextScenario: 'scenario2_failure_delay' },
+                    { text: "Give acetaminophen for fever and monitor vitals closely.", outcome: "The fever temporarily reduces, but the underlying infection is not treated, and the patient's condition worsens.", correct: false, statChanges: { stress: -10, empathy: -5 }, feedback: "Symptomatic treatment is not enough for febrile neutropenia. The infection must be aggressively treated.", nextScenario: 'scenario2_failure_symptomatic' }
+                ]
+            },
+            'scenario2_success': {
+                title: "Patient 2: Outcome",
+                description: "Your prompt administration of broad-spectrum antibiotics, after obtaining cultures, stabilizes the patient. She is admitted for continued management of febrile neutropenia. Your quick thinking likely saved her life.",
+                options: [],
+                endScenario: true,
+                outcomeType: 'success'
+            },
+            'scenario2_failure_delay': {
+                title: "Patient 2: Outcome",
+                description: "The patient's condition rapidly declines due to overwhelming sepsis. You learn a critical lesson about the urgency of treating febrile neutropenia.",
+                options: [],
+                endScenario: true,
+                outcomeType: 'failure'
+            },
+            'scenario2_failure_symptomatic': {
+                title: "Patient 2: Outcome",
+                description: "The patient's fever returns, and she develops signs of septic shock. Treating only the fever without addressing the infection was a critical mistake.",
+                options: [],
+                endScenario: true,
+                outcomeType: 'failure'
+            }
+        };
+
+        // --- Firebase Initialization and Authentication ---
+        window.onload = async function() {
+            try {
+                // Mandatory: Use __app_id and __firebase_config
+                const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+                const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+
+                if (Object.keys(firebaseConfig).length === 0) {
+                    console.warn("Firebase config not found. Running in anonymous mode.");
+                }
+
+                app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+
+                onAuthStateChanged(auth, async (user) => {
+                    if (user) {
+                        userId = user.uid;
+                        userIdDisplayEl.textContent = `User ID: ${userId}`;
+                        console.log("Authenticated user:", userId);
+                    } else {
+                        // Mandatory: Use __initial_auth_token
+                        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                            try {
+                                const userCredential = await signInWithCustomToken(auth, __initial_auth_token);
+                                userId = userCredential.user.uid;
+                                userIdDisplayEl.textContent = `User ID: ${userId}`;
+                                console.log("Signed in with custom token:", userId);
+                            } catch (error) {
+                                console.error("Error signing in with custom token:", error);
+                                await signInAnonymously(auth);
+                                userId = auth.currentUser?.uid || crypto.randomUUID();
+                                userIdDisplayEl.textContent = `User ID: ${userId} (Anonymous)`;
+                                console.log("Signed in anonymously due to custom token error:", userId);
+                            }
+                        } else {
+                            await signInAnonymously(auth);
+                            userId = auth.currentUser?.uid || crypto.randomUUID();
+                            userIdDisplayEl.textContent = `User ID: ${userId} (Anonymous)`;
+                            console.log("Signed in anonymously:", userId);
+                        }
+                    }
+                });
+
+                // Initialize game display
+                updateStatsDisplay();
+                loadScenario(currentScenarioId);
+
+            } catch (error) {
+                console.error("Failed to initialize Firebase or authenticate:", error);
+                userIdDisplayEl.textContent = `User ID: Error loading (check console)`;
+                // Fallback for game if Firebase fails
+                updateStatsDisplay();
+                loadScenario(currentScenarioId);
+            }
+        };
+
+        // --- Game Functions ---
+
+        function updateStatsDisplay() {
+            statKnowledgeEl.textContent = playerStats.knowledge;
+            statAcuityEl.textContent = playerStats.acuity;
+            statStressEl.textContent = playerStats.stress;
+            statEmpathyEl.textContent = playerStats.empathy;
+
+            // Optional: Add visual cues for low/high stats
+            if (playerStats.stress > 150) statStressEl.classList.add('text-red-600');
+            else statStressEl.classList.remove('text-red-600');
+        }
+
+        function showMessage(message, type = 'info') {
+            feedbackMessageEl.textContent = message;
+            feedbackMessageEl.className = `message-box show ${type}`;
+        }
+
+        function hideMessage() {
+            feedbackMessageEl.classList.remove('show', 'success', 'error');
+            feedbackMessageEl.textContent = '';
+        }
+
+        function loadScenario(scenarioId) {
+            hideMessage(); // Clear previous feedback
+            currentScenarioId = scenarioId;
+            const scenario = gameData[scenarioId];
+
+            if (!scenario) {
+                console.error("Scenario not found:", scenarioId);
+                scenarioDescriptionEl.textContent = "An error occurred. Please restart the game.";
+                choicesContainerEl.innerHTML = '';
+                startGameBtn.classList.remove('hidden');
+                nextScenarioBtn.classList.add('hidden');
+                return;
+            }
+
+            scenarioDescriptionEl.innerHTML = `
+                ${scenario.title ? `<h2 class="text-2xl font-semibold text-gray-800 mb-4">${scenario.title}</h2>` : ''}
+                <p>${scenario.description}</p>
+            `;
+            choicesContainerEl.innerHTML = ''; // Clear previous choices
+
+            if (scenario.options && scenario.options.length > 0) {
+                scenario.options.forEach((option, index) => {
+                    const button = document.createElement('button');
+                    button.classList.add('btn');
+                    button.textContent = option.text;
+                    button.onclick = () => makeChoice(scenarioId, index);
+                    choicesContainerEl.appendChild(button);
+                });
+                startGameBtn.classList.add('hidden');
+                nextScenarioBtn.classList.add('hidden');
+            } else if (scenario.endScenario) {
+                // If it's an end scenario, show "Continue" button
+                startGameBtn.classList.add('hidden');
+                nextScenarioBtn.classList.remove('hidden');
+                nextScenarioBtn.textContent = 'End Shift / Start New Shift';
+            } else {
+                // For intro scenario, show "Start Game" button
+                startGameBtn.classList.remove('hidden');
+                nextScenarioBtn.classList.add('hidden');
+            }
+        }
+
+        function makeChoice(scenarioId, choiceIndex) {
+            const scenario = gameData[scenarioId];
+            const choice = scenario.options[choiceIndex];
+
+            if (!choice) {
+                console.error("Choice not found for scenario:", scenarioId, "index:", choiceIndex);
+                return;
+            }
+
+            // Apply stat changes
+            for (const stat in choice.statChanges) {
+                if (playerStats.hasOwnProperty(stat)) {
+                    playerStats[stat] += choice.statChanges[stat];
+                    // Clamp stats to reasonable bounds (e.g., 0-200)
+                    playerStats[stat] = Math.max(0, Math.min(200, playerStats[stat]));
+                }
+            }
+            updateStatsDisplay();
+
+            // Display feedback
+            const feedbackType = choice.correct ? 'success' : 'error';
+            showMessage(choice.feedback, feedbackType);
+
+            // Hide choices after selection
+            choicesContainerEl.innerHTML = '';
+
+            // Proceed to next scenario or end current one
+            if (choice.nextScenario) {
+                // Show a "Continue" button to manually advance
+                nextScenarioBtn.classList.remove('hidden');
+                nextScenarioBtn.textContent = 'Continue';
+                nextScenarioBtn.onclick = () => loadScenario(choice.nextScenario);
+            } else {
+                // If no next scenario, it means this path ends the current patient encounter
+                endShift(scenario.outcomeType);
+            }
+        }
+
+        function endShift(outcomeType) {
+            let message = '';
+            if (outcomeType === 'success') {
+                message = "Patient successfully managed! You gained valuable experience.";
+                playerStats.knowledge += 10;
+                playerStats.acuity += 10;
+                playerStats.stress = Math.max(0, playerStats.stress - 10); // Reduce stress after success
+            } else {
+                message = "Patient outcome was not ideal. Review your choices and learn from this experience.";
+                playerStats.knowledge = Math.max(0, playerStats.knowledge - 5);
+                playerStats.acuity = Math.max(0, playerStats.acuity - 5);
+                playerStats.stress = Math.min(200, playerStats.stress + 15); // Increase stress after failure
+            }
+            updateStatsDisplay();
+            showMessage(message, outcomeType === 'success' ? 'success' : 'error');
+
+            // Show "End Shift / Start New Shift" button
+            nextScenarioBtn.classList.remove('hidden');
+            nextScenarioBtn.textContent = 'End Shift / Start New Shift';
+            nextScenarioBtn.onclick = startNewShift;
+        }
+
+        function startNewShift() {
+            // Reset for a new shift
+            hideMessage();
+            playerStats.stress = Math.max(0, playerStats.stress - 20); // Some stress relief between shifts
+            updateStatsDisplay();
+
+            // Randomly select a new starting scenario (excluding 'intro')
+            const scenarioKeys = Object.keys(gameData).filter(key => key.endsWith('_start'));
+            if (scenarioKeys.length === 0) {
+                scenarioDescriptionEl.textContent = "No more scenarios available! You've mastered OncoLife: ER!";
+                choicesContainerEl.innerHTML = '';
+                startGameBtn.classList.add('hidden');
+                nextScenarioBtn.classList.add('hidden');
+                return;
+            }
+            const randomScenarioKey = scenarioKeys[Math.floor(Math.random() * scenarioKeys.length)];
+            loadScenario(randomScenarioKey);
+        }
+
+        // Event Listeners
+        startGameBtn.addEventListener('click', startNewShift);
+
+    </script>
+</body>
+</html>

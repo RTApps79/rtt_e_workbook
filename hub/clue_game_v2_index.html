@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinical Conundrum: The RT Mystery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto Mono', monospace;
+            background-color: #1a202c;
+            color: #e2e8f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            user-select: none;
+        }
+        #game-container {
+            display: flex;
+            background-color: #2d3748;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 2px solid #667eea;
+            overflow: hidden;
+            width: 95vw;
+            height: 95vh;
+            max-width: 1200px;
+            max-height: 800px;
+        }
+
+        /* Left Panel: Deduction Sheet & Player Info */
+        #left-panel {
+            width: 300px;
+            padding: 1.5rem;
+            background-color: #1f2937;
+            border-right: 1.5px solid #4a5568; /* Increased border for separation */
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            overflow-y: auto;
+        }
+        #left-panel h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: #9f7aea;
+            border-bottom: 1px solid #4a5568;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .deduction-section {
+            background-color: #2d3748;
+            border-radius: 8px;
+            padding: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+        .deduction-section h3 {
+            font-size: 1.1rem;
+            color: #f6ad55;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+        .deduction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.25rem 0;
+            font-size: 0.9rem;
+            color: #cbd5e0;
+        }
+        .deduction-checkbox {
+            margin-left: 0.5rem;
+        }
+        .deduction-checkbox input[type="checkbox"] {
+            transform: scale(1.2);
+            margin-left: 0.5rem;
+            accent-color: #9f7aea; /* Purple checkbox */
+        }
+
+        /* Center Panel: Game Board */
+        #board-panel {
+            flex-grow: 1;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr); /* 5x5 grid for rooms/pathways */
+            grid-template-rows: repeat(5, 1fr);
+            position: relative;
+            background-color: #4a5568;
+            border-right: 1px solid #4a5568;
+            box-sizing: border-box;
+        }
+        .board-square {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid rgba(0,0,0,0.2);
+            background-color: #6366f1; /* Default square color (pathway) */
+            color: white;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-align: center;
+            position: relative;
+        }
+        .board-square-room {
+            background-color: #374151; /* Darker for rooms */
+            border: 2px solid #5a626f; /* Room border */
+            box-shadow: inset 0 0 8px rgba(0,0,0,0.4);
+        }
+        .player-token {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            transition: all 0.3s ease-in-out;
+            z-index: 10;
+        }
+
+        /* Right Panel: Controls & Log */
+        #right-panel {
+            width: 300px;
+            padding: 1.5rem;
+            background-color: #1f2937;
+            border-left: 1.5px solid #4a5568; /* Increased border for separation */
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        #right-panel h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: #9f7aea;
+            border-bottom: 1px solid #4a5568;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        .control-button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 5px 15px rgba(118, 75, 162, 0.4);
+            border: none;
+            width: 100%;
+        }
+        .control-button:hover:not(:disabled) {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 20px rgba(118, 75, 162, 0.6);
+        }
+        .control-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        #game-log-display {
+            background-color: #2d3748;
+            padding: 0.75rem;
+            border-radius: 8px;
+            height: 200px; /* Fixed height for log */
+            overflow-y: auto;
+            flex-grow: 1; /* Allows it to expand */
+        }
+        #game-log-display li {
+            font-size: 0.85rem;
+            margin-bottom: 0.25rem;
+            color: #cbd5e0;
+        }
+        .player-hand-section {
+            margin-top: 1rem;
+            background-color: #2d3748;
+            padding: 1rem;
+            border-radius: 8px;
+            min-height: 150px;
+        }
+        .player-hand-section h3 {
+            font-size: 1rem;
+            color: #fde047;
+            margin-bottom: 0.5rem;
+        }
+        .player-hand-section ul {
+            list-style: none;
+            padding: 0;
+            font-size: 0.9rem;
+            color: #cbd5e0;
+        }
+
+
+        /* Modals */
+        .modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.9); display: flex;
+            align-items: center; justify-content: center; z-index: 2000;
+            font-family: 'Orbitron', sans-serif;
+        }
+        .modal-content {
+            background-color: #1f2937;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 0 50px rgba(159, 122, 234, 0.7);
+            text-align: center;
+            max-width: 600px;
+            border: 2px solid #9f7aea;
+            color: #e2e8f0;
+        }
+        .modal-content h2 {
+            font-size: 2rem;
+            color: #9f7aea;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 10px rgba(159, 122, 234, 0.5);
+        }
+        .modal-content p {
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        .modal-select, .modal-input {
+            background-color: #374151;
+            border: 1px solid #4a5568;
+            color: white;
+            padding: 0.5rem 0.75rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            width: 100%;
+            max-width: 300px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .modal-button-group {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .modal-button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 5px 15px rgba(118, 75, 162, 0.4);
+            border: none;
+        }
+        .modal-button:hover:not(:disabled) {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 20px rgba(118, 75, 162, 0.6);
+        }
+        .modal-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="left-panel">
+            <h2>Deduction Sheet</h2>
+            <div id="deduction-sheet-errors" class="deduction-section">
+                <h3>Errors</h3>
+                <!-- Checkboxes generated here -->
+            </div>
+            <div id="deduction-sheet-causes" class="deduction-section">
+                <h3>Causes</h3>
+                <!-- Checkboxes generated here -->
+            </div>
+            <div id="deduction-sheet-locations" class="deduction-section">
+                <h3>Locations</h3>
+                <!-- Checkboxes generated here -->
+            </div>
+            <div id="player-hand-section" class="player-hand-section">
+                <h3>My Clue Cards</h3>
+                <ul id="player-hand-list">
+                    <!-- Clue cards will be listed here -->
+                </ul>
+            </div>
+        </div>
+
+        <div id="board-panel">
+            <!-- Board squares will be dynamically generated -->
+            <div id="player-token" class="player-token">?</div>
+        </div>
+
+        <div id="right-panel">
+            <h2>Game Controls</h2>
+            <div class="control-group">
+                <p class="text-sm text-gray-400">Current Player: <span id="current-player-name" class="font-bold text-yellow-300">You</span></p>
+                <p class="text-sm text-gray-400">Roll: <span id="dice-roll-display" class="font-bold text-lg text-fuchsia-300">0</span></p>
+                <button id="roll-dice-btn" class="control-button">Roll Dice</button>
+            </div>
+
+            <div class="control-group">
+                <button id="make-suggestion-btn" class="control-button">Make Suggestion</button>
+                <button id="make-accusation-btn" class="control-button">Make Accusation</button>
+                <button id="end-turn-btn" class="control-button">End Turn</button>
+            </div>
+
+            <div class="game-log-section flex flex-col h-full">
+                <h2 class="text-white text-lg font-bold mb-2">Game Log</h2>
+                <ul id="game-log-display" class="list-none p-0">
+                    <!-- Game log messages here -->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="start-modal" class="modal">
+        <div class="modal-content">
+            <h2>Clinical Conundrum: The RT Mystery</h2>
+            <p>A major **clinical error** has occurred in the department! As a new RT professional, it's your job to investigate and determine:</p>
+            <p class="text-lg font-bold text-yellow-300 mb-4">What was the ERROR?<br>What was the ROOT CAUSE?<br>Where did it HAPPEN?</p>
+            <p>Roll the dice to move around the department. Land on specific rooms to gather clue cards and mark off possibilities on your deduction sheet. Make suggestions to gain more information from the experienced staff. Be careful: only one accusation is allowed!</p>
+            <button id="start-game-btn" class="modal-button">Start Investigation</button>
+        </div>
+    </div>
+
+    <div id="suggestion-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2>Make a Suggestion</h2>
+            <p>What do you suggest happened?</p>
+            <select id="suggest-error" class="modal-select"></select>
+            <select id="suggest-cause" class="modal-select"></select>
+            <select id="suggest-location" class="modal-select"></select>
+            <div class="modal-button-group">
+                <button id="confirm-suggestion-btn" class="modal-button">Suggest</button>
+                <button id="cancel-suggestion-btn" class="modal-button bg-gray-600 hover:bg-gray-700">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="accusation-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2>Make an Accusation</h2>
+            <p class="text-red-400 font-bold">This is your one chance! If incorrect, you lose the game.</p>
+            <select id="accuse-error" class="modal-select"></select>
+            <select id="accuse-cause" class="modal-select"></select>
+            <select id="accuse-location" class="modal-select"></select>
+            <div class="modal-button-group">
+                <button id="confirm-accusation-btn" class="modal-button">Accuse!</button>
+                <button id="cancel-accusation-btn" class="modal-button bg-gray-600 hover:bg-gray-700">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="clue-card-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2>Clue Card Found!</h2>
+            <p id="clue-card-text"></p>
+            <button id="clue-card-ok-btn" class="modal-button">OK</button>
+        </div>
+    </div>
+
+    <div id="game-end-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2 id="game-end-title"></h2>
+            <p id="game-end-message"></p>
+            <button id="restart-game-btn" class="modal-button">Play Again?</button>
+        </div>
+    </div>
+
+    <script>
+        // Wrap the entire game logic in an IIFE to encapsulate scope
+        (function() {
+            // --- Game Configuration Data (Updated with clinical relevance) ---
+            const ELEMENTS = {
+                errors: [
+                    "Incorrect Dose Delivered (Under/Over)",
+                    "Wrong Patient / Wrong Site Error",
+                    "Mispositioned Patient / Setup Error",
+                    "Target / OAR Contouring Error",
+                    "Treatment Plan Execution Error",
+                    "Data Transfer / IT System Error",
+                    "Equipment Malfunction / Failure",
+                    "Scheduling / Patient Flow Error",
+                    "Incorrect Prescription (Ambiguity/Omission)",
+                    "Inaccurate Imaging for Planning"
+                ],
+                causes: [
+                    "Communication Breakdown (Verbal/Written)",
+                    "Human Fatigue / Rushing",
+                    "Procedural Non-Compliance (SOPs)",
+                    "Software / Hardware Glitch",
+                    "Inadequate Training / Competency",
+                    "Verification / QA Oversight Missed",
+                    "Documentation Error / Incomplete Data",
+                    "Lack of Standardization (e.g., Nomenclature)",
+                    "Distraction / Workflow Interruption",
+                    "External Data Integration Issue"
+                ],
+                locations: [
+                    "Patient Evaluation / Consult",
+                    "Pre-planning Imaging / Sim Suite",
+                    "Treatment Planning Office",
+                    "Physics Lab / QA Review",
+                    "LINAC Vault (Treatment Delivery)",
+                    "Brachytherapy Suite",
+                    "On-Board Imaging (OBI) Room",
+                    "Record & Verify (R&V) System",
+                    "Patient Management / Clinic Floor",
+                    "Chart Round / Peer Review Meeting"
+                ]
+            };
+
+            const BOARD_LAYOUT = [
+                ['Room:Patient Evaluation / Consult', 'Path', 'Path', 'Path', 'Room:Treatment Planning Office'],
+                ['Path', 'Path', 'Path', 'Path', 'Path'],
+                ['Path', 'Room:On-Board Imaging (OBI) Room', 'Path', 'Room:Physics Lab / QA Review', 'Path'],
+                ['Path', 'Path', 'Path', 'Path', 'Path'],
+                ['Room:Pre-planning Imaging / Sim Suite', 'Path', 'Room:LINAC Vault (Treatment Delivery)', 'Path', 'Room:Patient Management / Clinic Floor']
+            ];
+            const START_POSITION = { row: 4, col: 0 }; // Player starts at CT Simulation Suite
+
+            // --- Game State Variables ---
+            let solution = {}; // The hidden Error, Cause, Location
+            let deck = []; // All cards in play
+            let playerHand = []; // Cards the player holds (clues)
+            let board = []; // Array of board square objects (unused, but kept for consistency)
+            let playerPosition = { ...START_POSITION };
+            let gameActive = false;
+            let accusationsMade = 0;
+            let playerTokenElement = null; // Ref to the actual DOM element for the player token
+
+            // --- UI Elements (global references within IIFE, assigned in DOMContentLoaded) ---
+            let deductionSheetErrorsDiv, deductionSheetCausesDiv, deductionSheetLocationsDiv;
+            let playerHandList;
+            let boardPanel;
+            let rollDiceBtn, diceRollDisplay, makeSuggestionBtn, makeAccusationBtn, endTurnBtn;
+            let gameLogDisplay;
+            let startModal, startGameBtn, suggestionModal, accusationModal, clueCardModal, gameEndModal;
+            let suggestErrorSelect, suggestCauseSelect, suggestLocationSelect;
+            let accuseErrorSelect, accuseCauseSelect, accuseLocationSelect;
+            let confirmSuggestionBtn, cancelSuggestionBtn, confirmAccusationBtn, cancelAccusationBtn;
+            let clueCardText, clueCardOkBtn;
+            let gameEndTitle, gameEndMessage, restartGameBtn;
+            let currentPlayerNameDisplay;
+
+
+            // --- Utility Functions (Declared at top of IIFE scope for hoisting) ---
+
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+
+            function logMessage(message) {
+                if (gameLogDisplay) {
+                    const li = document.createElement('li');
+                    li.textContent = message;
+                    gameLogDisplay.prepend(li); // Add to top
+                    if (gameLogDisplay.children.length > 20) { // Keep log concise
+                        gameLogDisplay.removeChild(gameLogDisplay.lastChild);
+                    }
+                }
+            }
+
+            function toggleControls(canRoll, canSuggest, canAccuse, canEndTurn) {
+                if (rollDiceBtn) rollDiceBtn.disabled = !canRoll;
+                if (makeSuggestionBtn) makeSuggestionBtn.disabled = !canSuggest;
+                if (makeAccusationBtn) makeAccusationBtn.disabled = !canAccuse;
+                if (endTurnBtn) endTurnBtn.disabled = !canEndTurn;
+            }
+
+            function updatePlayerNameUI() {
+                // For single player, this just confirms "You"
+                if (currentPlayerNameDisplay) currentPlayerNameDisplay.textContent = 'You';
+            }
+
+
+            // --- Game Setup Functions ---
+
+            function initializeGame() {
+                // Reset game state
+                solution = {};
+                deck = [];
+                playerHand = [];
+                board = []; // Clear board array if used
+                playerPosition = { ...START_POSITION };
+                gameActive = true;
+                accusationsMade = 0;
+
+                setupSolutionAndDeck();
+                setupBoard();
+                setupDeductionSheet();
+                dealPlayerHand();
+                updatePlayerHandUI();
+                updatePlayerTokenPosition();
+
+                // Hide modals
+                if (startModal) startModal.classList.add('hidden');
+                if (suggestionModal) suggestionModal.classList.add('hidden');
+                if (accusationModal) accusationModal.classList.add('hidden');
+                if (clueCardModal) clueCardModal.classList.add('hidden');
+                if (gameEndModal) gameEndModal.classList.add('hidden');
+
+                logMessage("Investigation begins! Roll the dice to move.");
+                toggleControls(true, false, true, false); // Can Roll, Can Accuse
+                updatePlayerNameUI(); // Update current player name (fixed to "You" for single player)
+            }
+
+            function setupSolutionAndDeck() {
+                const allErrors = shuffleArray([...ELEMENTS.errors]);
+                const allCauses = shuffleArray([...ELEMENTS.causes]);
+                const allLocations = shuffleArray([...ELEMENTS.locations]);
+
+                solution.error = allErrors.pop();
+                solution.cause = allCauses.pop();
+                solution.location = allLocations.pop();
+
+                // logMessage(`The mystery is set... (DEBUG: Solution: ${solution.error}, ${solution.cause}, ${solution.location})`); // For testing, remove in prod
+
+                // Combine remaining cards for the deck
+                deck = allErrors.concat(allCauses, allLocations);
+                deck = shuffleArray(deck);
+            }
+
+            function dealPlayerHand() {
+                // Deal a few cards to the player, simulating starting clues
+                const numStartingClues = 3; 
+                for (let i = 0; i < numStartingClues; i++) {
+                    if (deck.length > 0) {
+                        const card = deck.pop();
+                        playerHand.push(card);
+                        logMessage(`You received a clue card: "${card}"`);
+                        // Automatically mark off in deduction sheet
+                        markDeductionSheet(card, true); // True means "I have it"
+                    }
+                }
+            }
+
+            function setupBoard() {
+                if (boardPanel) boardPanel.innerHTML = ''; // Clear previous board
+
+                BOARD_LAYOUT.forEach((row, rIdx) => {
+                    row.forEach((squareType, cIdx) => {
+                        const square = document.createElement('div');
+                        square.classList.add('board-square');
+                        square.dataset.row = rIdx;
+                        square.dataset.col = cIdx;
+
+                        let label = '';
+                        if (squareType.startsWith('Room:')) {
+                            square.classList.add('board-square-room');
+                            label = squareType.substring(5); // Remove "Room:" prefix
+                        } else {
+                            label = squareType;
+                        }
+                        square.textContent = label;
+                        if (boardPanel) boardPanel.appendChild(square);
+                    });
+                });
+
+                // Player token setup
+                playerTokenElement = document.createElement('div');
+                playerTokenElement.classList.add('player-token');
+                playerTokenElement.textContent = '🕵️'; // Detective emoji
+                if (boardPanel) boardPanel.appendChild(playerTokenElement);
+            }
+
+            function updatePlayerTokenPosition() {
+                if (!playerTokenElement || !boardPanel) return;
+
+                const targetSquare = boardPanel.querySelector(`[data-row="${playerPosition.row}"][data-col="${playerPosition.col}"]`);
+                if (targetSquare) {
+                    const squareRect = targetSquare.getBoundingClientRect();
+                    const boardRect = boardPanel.getBoundingClientRect();
+
+                    // Position token in center of target square relative to board panel
+                    playerTokenElement.style.left = `${squareRect.left - boardRect.left + (squareRect.width / 2) - (playerTokenElement.offsetWidth / 2)}px`;
+                    playerTokenElement.style.top = `${squareRect.top - boardRect.top + (squareRect.height / 2) - (playerTokenElement.offsetHeight / 2)}px`;
+                }
+            }
+
+            function setupDeductionSheet() {
+                if (deductionSheetErrorsDiv) deductionSheetErrorsDiv.innerHTML = '<h3>Errors</h3>';
+                if (deductionSheetCausesDiv) deductionSheetCausesDiv.innerHTML = '<h3>Causes</h3>';
+                if (deductionSheetLocationsDiv) deductionSheetLocationsDiv.innerHTML = '<h3>Locations</h3>';
+
+                ELEMENTS.errors.forEach(item => createCheckbox(deductionSheetErrorsDiv, item, 'error'));
+                ELEMENTS.causes.forEach(item => createCheckbox(deductionSheetCausesDiv, item, 'cause'));
+                ELEMENTS.locations.forEach(item => createCheckbox(deductionSheetLocationsDiv, item, 'location'));
+            }
+
+            function createCheckbox(parentDiv, itemName, type) {
+                if (!parentDiv) return;
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('deduction-item');
+                // Sanitize itemName for ID to ensure it's valid
+                const safeItemName = itemName.replace(/[^a-zA-Z0-9-]/g, '');
+                itemDiv.innerHTML = `
+                    <span>${itemName}</span>
+                    <input type="checkbox" id="deduce-${type}-${safeItemName}" class="deduction-checkbox">
+                `;
+                parentDiv.appendChild(itemDiv);
+            }
+
+            function markDeductionSheet(cardName, hasIt = false) {
+                // Determine type based on which array it belongs to
+                let type = '';
+                if (ELEMENTS.errors.includes(cardName)) type = 'error';
+                else if (ELEMENTS.causes.includes(cardName)) type = 'cause';
+                else if (ELEMENTS.locations.includes(cardName)) type = 'location';
+                
+                if (type) {
+                    const safeCardName = cardName.replace(/[^a-zA-Z0-9-]/g, ''); // Sanitize for ID
+                    const checkboxId = `deduce-${type}-${safeCardName}`;
+                    const checkbox = document.getElementById(checkboxId);
+                    if (checkbox) {
+                        checkbox.checked = true; // Mark as "known" or "have it"
+                        checkbox.disabled = true; // Disable if automatically marked
+                    }
+                } else {
+                    console.warn("Attempted to mark deduction sheet for unknown card:", cardName);
+                }
+            }
+
+            function updatePlayerHandUI() {
+                if (playerHandList) {
+                    playerHandList.innerHTML = '';
+                    if (playerHand.length === 0) {
+                        playerHandList.innerHTML = '<li>No clue cards yet.</li>';
+                    } else {
+                        playerHand.forEach(card => {
+                            const li = document.createElement('li');
+                            li.textContent = card;
+                            playerHandList.appendChild(li);
+                        });
+                    }
+                }
+            }
+
+            // --- Game Actions ---
+
+            function rollDice() {
+                if (!gameActive || (rollDiceBtn && rollDiceBtn.disabled)) return;
+
+                const roll = Math.floor(Math.random() * 6) + 1;
+                if (diceRollDisplay) diceRollDisplay.textContent = roll;
+                logMessage(`You rolled a ${roll}.`);
+                toggleControls(false, true, true, false); // Disable roll, enable suggestion/accusation
+
+                // Calculate new position
+                let newRow = playerPosition.row;
+                let newCol = playerPosition.col;
+                let moved = 0;
+
+                // Define the simple circular path around the 5x5 grid
+                const path = []; 
+                // Path: (4,0) -> (4,1) -> (4,2) -> (4,3) -> (4,4) (bottom row, left to right)
+                // (3,4) -> (2,4) -> (1,4) -> (0,4) (right column, bottom to top)
+                // (0,3) -> (0,2) -> (0,1) -> (0,0) (top row, right to left)
+                // (1,0) -> (2,0) -> (3,0) (left column, top to bottom, avoiding start square)
+
+                // Start from (4,0) and move clockwise
+                for(let c=0; c<5; c++) path.push({r:4, c:c}); // Bottom row
+                for(let r=3; r>=0; r--) path.push({r:r, c:4}); // Right column (excluding bottom-right corner already added)
+                for(let c=3; c>=0; c--) path.push({r:0, c:c}); // Top row (excluding top-right corner already added)
+                for(let r=1; r<4; r++) path.push({r:r, c:0}); // Left column (excluding top-left corner already added, and (4,0) which is start)
+
+                let currentPathIndex = path.findIndex(p => p.r === playerPosition.row && p.c === playerPosition.col);
+                if (currentPathIndex === -1) { 
+                    currentPathIndex = 0; // If not on a path, start at the beginning of the defined path
+                    playerPosition = { ...path[0] };
+                    updatePlayerTokenPosition(); 
+                    logMessage("You were placed on a valid path square.");
+                }
+
+                for(let i=0; i<roll; i++) {
+                    currentPathIndex = (currentPathIndex + 1) % path.length;
+                    newRow = path[currentPathIndex].r;
+                    newCol = path[currentPathIndex].c;
+                    moved++;
+                    if (moved === roll) break;
+                }
+                
+                playerPosition.row = newRow;
+                playerPosition.col = newCol;
+                updatePlayerTokenPosition();
+                
+                // Get the actual square content for logging
+                let currentSquareContent = BOARD_LAYOUT[playerPosition.row][playerPosition.col];
+                if (currentSquareContent.startsWith('Room:')) {
+                    logMessage(`You moved to: ${currentSquareContent.substring(5)}`);
+                } else {
+                    logMessage(`You moved to a: ${currentSquareContent}`);
+                }
+
+
+                setTimeout(() => {
+                    handleLanding();
+                }, 500); // Animation delay
+            }
+
+            function handleLanding() {
+                const currentSquareType = BOARD_LAYOUT[playerPosition.row][playerPosition.col];
+                if (currentSquareType.startsWith('Room:')) {
+                    logMessage(`You entered the ${currentSquareType.substring(5)}.`);
+                    // If it's a room, draw a clue card
+                    setTimeout(drawClueCard, 500);
+                } else {
+                    logMessage('You landed on a pathway square.');
+                    toggleControls(false, true, true, true); // No clue, just enable actions and end turn
+                }
+            }
+
+            function drawClueCard() {
+                if (deck.length === 0) {
+                    logMessage("No more clue cards in the deck!");
+                    toggleControls(false, true, true, true); // Allow suggestion/accusation/end turn
+                    return;
+                }
+                const card = deck.pop();
+                playerHand.push(card);
+                logMessage(`You found a clue card: "${card}"`);
+                updatePlayerHandUI();
+                markDeductionSheet(card, true);
+
+                if (clueCardModal) {
+                    if (clueCardText) clueCardText.textContent = `You found: "${card}"`;
+                    clueCardModal.classList.remove('hidden');
+                    if (clueCardOkBtn) {
+                        clueCardOkBtn.onclick = () => {
+                            clueCardModal.classList.add('hidden');
+                            toggleControls(false, true, true, true); // Enable suggestion/accusation/end turn
+                        };
+                    }
+                }
+            }
+
+
+            function makeSuggestion() {
+                if (!gameActive || (makeSuggestionBtn && makeSuggestionBtn.disabled)) return;
+
+                // Populate select options
+                populateSelect(suggestErrorSelect, ELEMENTS.errors);
+                populateSelect(suggestCauseSelect, ELEMENTS.causes);
+                populateSelect(suggestLocationSelect, ELEMENTS.locations);
+
+                if (suggestionModal) suggestionModal.classList.remove('hidden');
+                toggleControls(false, false, false, false); // Disable all main controls
+            }
+
+            function populateSelect(selectElement, optionsArray) {
+                if (!selectElement) return;
+                selectElement.innerHTML = '';
+                optionsArray.forEach(option => {
+                    const opt = document.createElement('option');
+                    opt.value = option;
+                    opt.textContent = option;
+                    selectElement.appendChild(opt);
+                });
+            }
+
+            function confirmSuggestion() {
+                const suggestedError = suggestErrorSelect.value;
+                const suggestedCause = suggestCauseSelect.value;
+                const suggestedLocation = suggestLocationSelect.value;
+
+                logMessage(`You suggested: The error was "${suggestedError}" caused by "${suggestedCause}" in the "${suggestedLocation}".`);
+
+                if (suggestionModal) suggestionModal.classList.add('hidden');
+
+                // --- Simplified single-player logic for disproving ---
+                let disprovedCard = null;
+                if (playerHand.includes(suggestedError)) disprovedCard = suggestedError;
+                else if (playerHand.includes(suggestedCause)) disprovedCard = suggestedCause;
+                else if (playerHand.includes(suggestedLocation)) disprovedCard = suggestedLocation;
+
+                if (disprovedCard) {
+                    logMessage(`Someone disproved your suggestion with "${disprovedCard}".`);
+                    // Mark this card on your deduction sheet if you didn't have it (or to confirm you have it)
+                    markDeductionSheet(disprovedCard, false); // Mark as ruled out if player has it.
+                } else {
+                    logMessage("No one could disprove your suggestion!");
+                    // This means your suggestion might be true or the answer is in the deck
+                }
+                toggleControls(false, true, true, true); // Re-enable controls after suggestion
+            }
+
+            function cancelSuggestion() {
+                if (suggestionModal) suggestionModal.classList.add('hidden');
+                toggleControls(false, true, true, true); // Re-enable controls
+            }
+
+            function makeAccusation() {
+                if (!gameActive || (makeAccusationBtn && makeAccusationBtn.disabled)) return;
+                if (accusationsMade >= 1) {
+                    logMessage("You've already made an accusation and cannot make another.");
+                    return;
+                }
+
+                // Populate select options
+                populateSelect(accuseErrorSelect, ELEMENTS.errors);
+                populateSelect(accuseCauseSelect, ELEMENTS.causes);
+                populateSelect(accuseLocationSelect, ELEMENTS.locations);
+
+                if (accusationModal) accusationModal.classList.remove('hidden');
+                toggleControls(false, false, false, false); // Disable all controls
+            }
+
+            function confirmAccusation() {
+                const accusedError = accuseErrorSelect.value;
+                const accusedCause = accuseCauseSelect.value;
+                const accusedLocation = accuseLocationSelect.value;
+
+                accusationsMade++; // Mark that an accusation has been made
+                logMessage(`You accuse: The error was "${accusedError}" caused by "${accusedCause}" in the "${accusedLocation}"!`);
+                
+                if (accusationModal) accusationModal.classList.add('hidden');
+
+                if (accusedError === solution.error &&
+                    accusedCause === solution.cause &&
+                    accusedLocation === solution.location) {
+                    
+                    endGame(true, "Case Solved!", `Congratulations! You correctly deduced the mystery!`);
+                } else {
+                    endGame(false, "Accusation Incorrect!", `That was not the correct solution. The actual solution was: "${solution.error}", "${solution.cause}", "${solution.location}". You lose.`);
+                }
+            }
+
+            function cancelAccusation() {
+                if (accusationModal) accusationModal.classList.add('hidden');
+                toggleControls(false, true, true, true); // Re-enable controls
+            }
+
+
+            function endGame(isWin, title, message) {
+                gameActive = false;
+                if (gameEndTitle) gameEndTitle.textContent = title;
+                if (gameEndMessage) gameEndMessage.textContent = message;
+                if (gameEndModal) gameEndModal.classList.remove('hidden');
+                toggleControls(false, false, false, false); // Disable all controls
+            }
+
+            function endTurn() {
+                if (!gameActive) return;
+                logMessage("Turn ended.");
+                toggleControls(true, false, true, false); // Enable roll, suggestion, accusation
+            }
+
+
+            // --- Event Listeners and Initial Setup ---
+
+            document.addEventListener('DOMContentLoaded', () => {
+                // Assign UI elements on DOMContentLoaded
+                deductionSheetErrorsDiv = document.getElementById('deduction-sheet-errors');
+                deductionSheetCausesDiv = document.getElementById('deduction-sheet-causes');
+                deductionSheetLocationsDiv = document.getElementById('deduction-sheet-locations');
+                playerHandList = document.getElementById('player-hand-list');
+                boardPanel = document.getElementById('board-panel');
+                rollDiceBtn = document.getElementById('roll-dice-btn');
+                diceRollDisplay = document.getElementById('dice-roll-display');
+                makeSuggestionBtn = document.getElementById('make-suggestion-btn');
+                makeAccusationBtn = document.getElementById('make-accusation-btn');
+                endTurnBtn = document.getElementById('end-turn-btn');
+                gameLogDisplay = document.getElementById('game-log-display');
+                currentPlayerNameDisplay = document.getElementById('current-player-name');
+
+                startModal = document.getElementById('start-modal');
+                startGameBtn = document.getElementById('start-game-btn');
+                suggestionModal = document.getElementById('suggestion-modal');
+                accusationModal = document.getElementById('accusation-modal');
+                clueCardModal = document.getElementById('clue-card-modal');
+                gameEndModal = document.getElementById('game-end-modal');
+
+                suggestErrorSelect = document.getElementById('suggest-error');
+                suggestCauseSelect = document.getElementById('suggest-cause');
+                suggestLocationSelect = document.getElementById('suggest-location');
+                confirmSuggestionBtn = document.getElementById('confirm-suggestion-btn');
+                cancelSuggestionBtn = document.getElementById('cancel-suggestion-btn');
+
+                accuseErrorSelect = document.getElementById('accuse-error');
+                accuseCauseSelect = document.getElementById('accuse-cause');
+                accuseLocationSelect = document.getElementById('accuse-location');
+                confirmAccusationBtn = document.getElementById('confirm-accusation-btn');
+                cancelAccusationBtn = document.getElementById('cancel-accusation-btn');
+
+                clueCardText = document.getElementById('clue-card-text');
+                clueCardOkBtn = document.getElementById('clue-card-ok-btn');
+                gameEndTitle = document.getElementById('game-end-title');
+                gameEndMessage = document.getElementById('game-end-message');
+                restartGameBtn = document.getElementById('restart-game-btn');
+
+
+                // Attach Event Listeners
+                if (startGameBtn) startGameBtn.addEventListener('click', initializeGame);
+                if (rollDiceBtn) rollDiceBtn.addEventListener('click', rollDice);
+                if (makeSuggestionBtn) makeSuggestionBtn.addEventListener('click', makeSuggestion);
+                if (makeAccusationBtn) makeAccusationBtn.addEventListener('click', makeAccusation);
+                if (endTurnBtn) endTurnBtn.addEventListener('click', endTurn);
+
+                if (confirmSuggestionBtn) confirmSuggestionBtn.addEventListener('click', confirmSuggestion);
+                if (cancelSuggestionBtn) cancelSuggestionBtn.addEventListener('click', cancelSuggestion);
+                if (confirmAccusationBtn) confirmAccusationBtn.addEventListener('click', confirmAccusation);
+                if (cancelAccusationBtn) cancelAccusationBtn.addEventListener('click', cancelAccusation);
+                if (restartGameBtn) restartGameBtn.addEventListener('click', initializeGame); // Restart game
+
+
+                // Initial UI state
+                if (startModal) startModal.classList.remove('hidden');
+                toggleControls(false, false, false, false); // Disable all controls until game starts
+                if (currentPlayerNameDisplay) currentPlayerNameDisplay.textContent = 'You'; // Single player
+            });
+
+        })(); // End of IIFE
+    </script>
+</body>
+</html>

@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinical Pathway Journey</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto Mono', monospace;
+            background-color: #1a202c;
+            color: #e2e8f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            flex-direction: column;
+        }
+        #game-container {
+            display: flex;
+            background-color: #2d3748;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 2px solid #667eea;
+            overflow: hidden;
+            max-width: 1000px; /* Max width for larger screens */
+            max-height: 800px; /* Max height for larger screens */
+            width: 95vw; /* Responsive width */
+            height: 95vh; /* Responsive height */
+        }
+        #board-panel {
+            flex-grow: 1;
+            display: grid;
+            grid-template-columns: repeat(10, 1fr); /* 10 columns for the board */
+            grid-template-rows: repeat(10, 1fr); /* 10 rows for the board */
+            position: relative;
+            background-color: #4a5568;
+            border-right: 1px solid #4a5568;
+            box-sizing: border-box;
+        }
+        .square {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid rgba(0,0,0,0.2);
+            background-color: #6366f1; /* Default square color */
+            color: white;
+            font-size: 0.7rem;
+            font-weight: bold;
+            box-sizing: border-box;
+            position: relative; /* For player tokens */
+        }
+        .square-number {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            font-size: 0.6rem;
+            color: rgba(255,255,255,0.5);
+        }
+        .square-label {
+            text-align: center;
+            padding: 5px;
+        }
+
+        /* Themed square colors */
+        .stage-consultation { background-color: #22c55e; } /* Green */
+        .stage-simulation { background-color: #facc15; } /* Yellow */
+        .stage-planning { background-color: #38bdf8; } /* Light Blue */
+        .stage-treatment { background-color: #8b5cf6; } /* Violet */
+        .stage-qa { background-color: #ef4444; } /* Red */
+        .stage-followup { background-color: #ec4899; } /* Pink */
+        .square-start { background-color: #10b981; } /* Darker green */
+        .square-finish { background-color: #0c4a6e; } /* Dark blue */
+
+
+        /* Ladders and Chutes */
+        /* These will be overlayed and animated, or just visual cues on squares */
+        .ladder { background-color: #10b981; } /* Success, move forward */
+        .chute { background-color: #dc2626; } /* Setback, move backward */
+
+        .player-token {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background-color: #fff; /* White token */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #1a202c;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            transition: transform 0.5s ease-out; /* Smooth movement */
+            z-index: 10;
+        }
+
+        #control-panel {
+            width: 250px;
+            background-color: #1a202c;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 1px solid #4a5568;
+            text-align: center;
+        }
+        #control-panel h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: #9f7aea;
+            margin-bottom: 1rem;
+        }
+        .player-status-card {
+            background-color: #2d3748;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            width: 100%;
+            text-align: left;
+            border: 1px solid #4a5568;
+        }
+        .player-status-card.active {
+            border-color: #f6ad55;
+            box-shadow: 0 0 10px rgba(246, 173, 85, 0.5);
+        }
+        .player-status-card .name {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        .player-status-card .status {
+            font-size: 0.8rem;
+            color: #a0aec0;
+        }
+        
+        #dice-display {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            color: #fde047;
+            margin: 1rem 0;
+            min-height: 50px; /* Reserve space */
+        }
+        #roll-dice-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 0.8rem 1.8rem;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 5px 15px rgba(118, 75, 162, 0.4);
+            border: none;
+            width: 100%;
+        }
+        #roll-dice-btn:hover:not(:disabled) {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 20px rgba(118, 75, 162, 0.6);
+        }
+        #roll-dice-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        #game-log {
+            flex-grow: 1; /* Allow log to take remaining space */
+            background-color: #2d3748;
+            padding: 0.75rem;
+            border-radius: 8px;
+            overflow-y: auto;
+            margin-top: 1rem;
+            text-align: left;
+        }
+        #game-log li {
+            font-size: 0.75rem;
+            margin-bottom: 0.25rem;
+            color: #a0aec0;
+        }
+
+        /* Quiz Modal for special squares */
+        .modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.8); display: flex;
+            align-items: center; justify-content: center; z-index: 1000;
+            font-family: 'Orbitron', sans-serif;
+        }
+        .modal-content {
+            background-color: #2d3748;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            text-align: center;
+            max-width: 500px;
+            border: 2px solid #9f7aea;
+            color: #e2e8f0;
+        }
+        .modal-content h2 {
+            font-size: 2rem;
+            color: #9f7aea;
+            margin-bottom: 1.5rem;
+        }
+        .modal-content p {
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        .option-button { /* Reusing button style from Tycoon game */
+            background-color: #667eea;
+            color: white;
+            padding: 0.75rem 1.25rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+        .option-button:hover:not(:disabled) {
+            background-color: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+        }
+        .option-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .option-button.correct-answer { background-color: #48bb78; }
+        .option-button.incorrect-answer { background-color: #ef4444; }
+        .feedback-text {
+            font-size: 0.9rem;
+            color: #a0aec0;
+            margin-top: 1rem;
+            min-height: 1.5rem;
+        }
+
+        /* Specific for Start/End Game Modals */
+        #start-game-modal .modal-content, #game-over-modal .modal-content {
+            padding: 2rem;
+        }
+        #start-game-btn, #restart-game-btn {
+            background-color: #22c55e;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            font-size: 1.1rem;
+        }
+        #start-game-btn:hover, #restart-game-btn:hover {
+            background-color: #16a34a;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="board-panel">
+            <!-- Board squares will be dynamically generated here -->
+        </div>
+
+        <div id="control-panel">
+            <h1>Clinical Pathway Journey</h1>
+            <div id="player-status-container" class="w-full">
+                <!-- Player status cards dynamically inserted here -->
+            </div>
+
+            <div id="dice-display">0</div>
+            <button id="roll-dice-btn">Roll Dice</button>
+
+            <div id="game-log" class="w-full">
+                <h2 class="text-white text-lg font-bold mb-2">Log</h2>
+                <ul>
+                    <!-- Game log messages here -->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="start-game-modal" class="modal">
+        <div class="modal-content">
+            <h2>Welcome to Clinical Pathway Journey!</h2>
+            <p>Guide your patient through the radiation therapy journey. Roll the dice to move. Land on a **green ladder** (good clinical practice) to advance, but beware of **red chutes** (complications or errors) that send you back!</p>
+            <p>Some squares may trigger a quick quiz to test your knowledge. Answer correctly to avoid setbacks or earn bonuses.</p>
+            <button id="start-game-btn">Begin Journey</button>
+        </div>
+    </div>
+
+    <div id="quiz-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2 id="quiz-title">Quiz Time!</h2>
+            <p id="quiz-question"></p>
+            <div id="quiz-options-container">
+                <!-- Quiz options generated here -->
+            </div>
+            <p id="quiz-feedback" class="feedback-text"></p>
+            <button id="quiz-continue-btn" class="hidden mt-4">Continue</button>
+        </div>
+    </div>
+
+    <div id="game-over-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2>Journey Complete!</h2>
+            <p id="game-over-message"></p>
+            <p class="text-xl font-bold mt-4">Final Standing:</p>
+            <ul id="final-standing-list" class="list-none text-base mb-4"></ul>
+            <button id="restart-game-btn">Start New Journey</button>
+        </div>
+    </div>
+
+    <script>
+        // --- Game Configuration (moved to top-level script scope for global access) ---
+        const BOARD_WIDTH = 10; // Squares per row/column
+        const BOARD_HEIGHT = 10;
+        const NUM_SQUARES = BOARD_WIDTH * BOARD_HEIGHT; // 100 squares total
+
+        const PLAYER_TOKENS = ['🧑', '👩', '👨', '👵']; // Patient-like emojis
+        const PLAYER_COLORS = ['#34d399', '#60a5fa', '#f87171', '#a78bfa']; 
+
+        // Define square types and their base colors for visual stages of treatment
+        const STAGE_COLORS = {
+            consultation: '#22c55e', /* Green */
+            simulation: '#facc15', /* Yellow */
+            planning: '#38bdf8', /* Light Blue */
+            treatment: '#8b5cf6', /* Violet */
+            qa: '#ef4444', /* Red */
+            followup: '#ec4899' /* Pink */
+        };
+
+        // Ladders & Chutes data: [startSquareIndex, endSquareIndex, type, description]
+        // Ensure indices are 0-based
+        const PATHWAY_EVENTS = [
+            // Ladders (Good outcomes, advance)
+            { start: 3, end: 14, type: 'ladder', label: 'Accurate Patient ID!' },
+            { start: 8, end: 30, type: 'ladder', label: 'Optimal Immobilization!' },
+            { start: 17, end: 28, type: 'ladder', label: 'Precise Contouring!' },
+            { start: 26, end: 47, type: 'ladder', label: 'Flawless Daily Setup!' },
+            { start: 35, end: 56, type: 'ladder', label: 'Successful IGRT Match!' },
+            { start: 42, end: 63, type: 'ladder', label: 'Excellent Symptom Management!' },
+            { start: 50, end: 71, type: 'ladder', label: 'Positive Patient Feedback!' },
+            { start: 60, end: 81, type: 'ladder', label: 'Efficient Workflow!' },
+            { start: 75, end: 90, type: 'ladder', label: 'Research Breakthrough!' },
+
+            // Chutes (Setbacks, regress)
+            { start: 16, end: 6, type: 'chute', label: 'Missed QA Check!' },
+            { start: 29, end: 10, type: 'chute', label: 'Equipment Malfunction!' },
+            { start: 38, end: 20, type: 'chute', label: 'Communication Breakdown!' },
+            { start: 45, end: 31, type: 'chute', label: 'Patient develops Nausea!' },
+            { start: 58, end: 40, type: 'chute', label: 'Data Entry Error!' },
+            { start: 69, end: 52, type: 'chute', label: 'Unscheduled Treatment Interruption!' },
+            { start: 80, end: 61, type: 'chute', label: 'Resource Shortage!' },
+            { start: 95, end: 70, type: 'chute', label: 'Insurance Complication!' }
+        ];
+
+        // Quiz Questions (examples, can pull from provided docs)
+        const QUIZ_QUESTIONS = [
+            { 
+                question: "What is the primary purpose of daily imaging (e.g., CBCT) in radiation therapy?", 
+                options: ["To confirm patient position and target alignment.", "To check the machine's energy output.", "To determine the patient's daily mood.", "To reduce the overall treatment time."], 
+                correctAnswer: 0, 
+                feedback: "Correct! Daily imaging ensures accurate and reproducible treatment delivery."
+            },
+            {
+                question: "Which of the following is a key component of informed consent in radiation therapysensing?",
+                options: ["Patient signature only.", "Discussion of risks, benefits, and alternatives.", "Doctor's verbal instruction only.", "Patient's favorite color."],
+                correctAnswer: 1,
+                feedback: "Correct! Patients must understand the full scope of treatment before agreeing."
+            },
+            {
+                question: "What does ALARA stand for in radiation safety?",
+                options: ["Always Listen And Report Accidents", "As Low As Reasonably Achievable", "All Levels Are Reviewed Annually", "Automatic Laser Alignment of Radiation Apparatus"],
+                correctAnswer: 1,
+                feedback: "Correct! ALARA is the fundamental principle of keeping radiation exposure to a minimum."
+            },
+            {
+                question: "What is the typical fractionation for conventional radiation therapy (dose per day)?",
+                options: ["5 Gy/day", "2 Gy/day", "10 Gy/day", "0.5 Gy/day"],
+                correctAnswer: 1,
+                feedback: "Correct! Conventional fractionation typically involves 1.8-2.0 Gy per day."
+            },
+            {
+                question: "Which professional is primarily responsible for calculating monitor units (MUs) for a treatment plan?",
+                options: ["Radiation Oncologist", "Radiation Therapist", "Medical Dosimetrist", "Oncology Nurse"],
+                correctAnswer: 2,
+                feedback: "Correct! Medical Dosimetrists are specialized in treatment planning and MU calculations."
+            },
+            {
+                question: "What is myelosuppression, a common side effect of chemotherapy and large field radiation?",
+                options: ["Hair loss", "Low blood counts", "Skin redness", "Nausea and vomiting"],
+                correctAnswer: 1,
+                feedback: "Correct! Myelosuppression is a reduction in the production of blood cells in the bone marrow."
+            }
+        ];
+
+        const MAX_ROUNDS = 20; // Game ends after this many rounds for simplicity
+
+        // --- Game State Variables (moved to top-level script scope) ---
+        let players; // Initialized in initializeGame
+        let currentPlayerIndex = 0;
+        let gameActive = false;
+        let gameRound = 1;
+        let quizActive = false; // Flag to indicate if quiz modal is open
+        let quizCallback = null; // Callback function after quiz is answered
+
+        // --- UI Elements (declared here, assigned in DOMContentLoaded) ---
+        // These will be assigned values in DOMContentLoaded, guaranteeing they exist.
+        let boardPanel;
+        let controlPanel;
+        let diceDisplay;
+        let rollDiceBtn;
+        let gameLogUl;
+        let playerStatusContainer;
+        let currentRoundDisplay;
+
+        // Modals (declared here, assigned in DOMContentLoaded)
+        let startGameModal;
+        let startGameBtn;
+        let quizModal;
+        let quizTitle;
+        let quizQuestion;
+        let quizOptionsContainer;
+        let quizFeedback;
+        let quizContinueBtn;
+        let gameOverModal;
+        let gameOverMessage;
+        let finalStandingList;
+        let restartGameBtn;
+
+
+        // --- Utility Functions (moved to top-level script scope) ---
+
+        // Function to shuffle an array (Fisher-Yates algorithm)
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Function to update current round display (defensive check added)
+        function updateScoreAndRoundUI() {
+            if(currentRoundDisplay) { // Defensive check
+                currentRoundDisplay.textContent = gameRound;
+            }
+        }
+
+        function showMessage(text, duration = 3000) {
+            console.log("Game Message:", text);
+        }
+        function hideMessage() {
+            // Placeholder
+        }
+
+        // --- Core Game Functions (moved to top-level script scope) ---
+
+        function initializeGame() {
+            players = [];
+            for (let i = 0; i < 2; i++) { // Starting with 2 players for simplicity
+                players.push({
+                    id: i,
+                    position: 0,
+                    token: PLAYER_TOKENS[i],
+                    status: "Active" // e.g., "Active", "Quiz", "Setback"
+                });
+            }
+            currentPlayerIndex = 0;
+            gameActive = true;
+            gameRound = 1;
+            
+            setupBoard();
+            updatePlayerTokensOnBoard();
+            updateUI();
+            logMessage("Game Started! Player 1's turn. Roll the dice!");
+            toggleControls(true); // Enable roll button
+            startGameModal.classList.add('hidden');
+            updateScoreAndRoundUI(); // Initial update for round display
+        }
+
+        function setupBoard() {
+            boardPanel.innerHTML = ''; // Clear existing squares
+
+            // Create squares
+            for (let i = 0; i < NUM_SQUARES; i++) {
+                const square = document.createElement('div');
+                square.classList.add('square');
+                square.dataset.index = i;
+
+                // Determine grid position (Snakes & Ladders style path)
+                let row = Math.floor(i / BOARD_WIDTH);
+                let col;
+                if (row % 2 === 0) { // Even rows (0, 2, 4...) -> Left to Right
+                    col = i % BOARD_WIDTH;
+                } else { // Odd rows (1, 3, 5...) -> Right to Left
+                    col = BOARD_WIDTH - 1 - (i % BOARD_WIDTH);
+                }
+                
+                // Adjust row to be from bottom (10) to top (1)
+                square.style.gridRow = `${BOARD_HEIGHT - row}`; 
+                square.style.gridColumn = `${col + 1}`; // col is 0-indexed, grid is 1-indexed
+
+
+                const squareNum = document.createElement('span');
+                squareNum.classList.add('square-number');
+                squareNum.textContent = i + 1; // Display 1-indexed number
+                square.appendChild(squareNum);
+
+                const squareLabel = document.createElement('span');
+                squareLabel.classList.add('square-label');
+                squareLabel.textContent = getSquareLabel(i); // Get thematic label
+                square.appendChild(squareLabel);
+
+                // --- FIX: Ensure stageClass is always valid ---
+                let stageClass = '';
+                if (i === 0) {
+                    stageClass = 'square-start';
+                } else if (i === NUM_SQUARES - 1) {
+                    stageClass = 'square-finish';
+                } else if (i <= 15) {
+                    stageClass = 'stage-consultation';
+                } else if (i <= 35) {
+                    stageClass = 'stage-simulation';
+                } else if (i <= 55) {
+                    stageClass = 'stage-planning';
+                } else if (i <= 75) {
+                    stageClass = 'stage-treatment';
+                } else if (i <= 90) {
+                    stageClass = 'stage-qa';
+                } else { // Fallback for any remaining squares
+                    stageClass = 'stage-followup';
+                }
+                square.classList.add(stageClass);
+
+                // Add visual indicators for ladders/chutes (purely visual for now)
+                const event = PATHWAY_EVENTS.find(e => e.start === i);
+                if (event) {
+                    const eventDiv = document.createElement('div');
+                    eventDiv.classList.add('square-event-indicator'); // You'd style this
+                    eventDiv.textContent = event.type === 'ladder' ? '⬆️' : '⬇️';
+                    eventDiv.style.fontSize = '1.5rem';
+                    eventDiv.style.position = 'absolute';
+                    eventDiv.style.bottom = '5px';
+                    eventDiv.style.right = '5px';
+                    square.appendChild(eventDiv);
+                    square.title = event.label; // Tooltip for event
+                }
+
+                boardPanel.appendChild(square);
+            }
+
+            // Add player tokens
+            players.forEach(player => {
+                const token = document.createElement('div');
+                token.id = `player-token-${player.id}`;
+                token.classList.add('player-token');
+                token.textContent = player.token;
+                boardPanel.appendChild(token);
+            });
+        }
+
+        function getSquareLabel(index) {
+            if (index === 0) return "Consultation";
+            if (index === NUM_SQUARES - 1) return "Treatment Complete!";
+            if (index === 5) return "New Patient Referral";
+            if (index === 12) return "Treatment Plan Review";
+            if (index === 25) return "First Fraction";
+            if (index === 40) return "Weekly Checkup";
+            if (index === 60) return "Mid-Course Imaging";
+            if (index === 85) return "End of Treatment";
+            return `Step ${index + 1}`;
+        }
+
+        function updatePlayerTokensOnBoard() {
+            players.forEach(player => {
+                const tokenElement = document.getElementById(`player-token-${player.id}`);
+                // Defensive check: ensure tokenElement exists before trying to modify its style
+                if (!tokenElement) {
+                    console.warn(`Player token element not found for player ID: ${player.id}`);
+                    return;
+                }
+
+                const targetSquareIndex = player.position;
+                
+                // Get row and col for current position
+                let row = Math.floor(targetSquareIndex / BOARD_WIDTH);
+                let col;
+                if (row % 2 === 0) { // Even rows (0, 2, 4...) -> Left to Right
+                    col = targetSquareIndex % BOARD_WIDTH;
+                } else { // Odd rows (1, 3, 5...) -> Right to Left
+                    col = BOARD_WIDTH - 1 - (targetSquareIndex % BOARD_WIDTH);
+                }
+
+                // Calculate the square's top-left position relative to the board
+                const squareSize = boardPanel.offsetWidth / BOARD_WIDTH; // Assuming square is perfectly square
+                const targetX = col * squareSize;
+                const targetY = (BOARD_HEIGHT - 1 - row) * squareSize; // Adjust Y to be from bottom (row 0 at bottom)
+
+                // Apply transform for positioning. Add small offset for multiple players on same square
+                const offset = (player.id * 10) - (players.length * 5); // Example offset
+                tokenElement.style.transform = `translate(${targetX + squareSize / 2 + offset}px, ${targetY + squareSize / 2 + offset}px)`;
+            });
+        }
+
+        function rollDice() {
+            if (!gameActive) return;
+
+            const roll = Math.floor(Math.random() * 6) + 1; // Single die roll for simplicity
+            if(diceDisplay) { // Defensive check
+                diceDisplay.textContent = roll;
+            }
+            logMessage(`${players[currentPlayerIndex].token} rolled a ${roll}.`);
+            if(rollDiceBtn) { // Defensive check
+                rollDiceBtn.disabled = true; // Disable button after roll
+            }
+
+            movePlayer(roll);
+        }
+
+        function movePlayer(spaces) {
+            const currentPlayer = players[currentPlayerIndex];
+            const oldPosition = currentPlayer.position;
+            let newPosition = currentPlayer.position + spaces;
+
+            // Prevent going past the last square (finish line)
+            if (newPosition >= NUM_SQUARES - 1) {
+                newPosition = NUM_SQUARES - 1;
+            }
+
+            currentPlayer.position = newPosition;
+            updatePlayerTokensOnBoard(); // Update token position visually
+
+            logMessage(`${currentPlayer.token} moved from ${oldPosition + 1} to ${newPosition + 1}.`);
+
+            setTimeout(() => { // Delay for movement animation to complete
+                handleLandingOnSquare();
+            }, 600);
+        }
+
+        function handleLandingOnSquare() {
+            const currentPlayer = players[currentPlayerIndex];
+            const currentSquareIndex = currentPlayer.position;
+
+            if (currentSquareIndex === NUM_SQUARES - 1) {
+                endGame(`${currentPlayer.token} reached Treatment Complete!`);
+                return;
+            }
+
+            const pathwayEvent = PATHWAY_EVENTS.find(e => e.start === currentSquareIndex);
+
+            if (pathwayEvent) {
+                if (pathwayEvent.type === 'ladder') {
+                    logMessage(`${currentPlayer.token} hit a ladder: ${pathwayEvent.label}! Moving to ${pathwayEvent.end + 1}.`);
+                    currentPlayer.position = pathwayEvent.end;
+                    updatePlayerTokensOnBoard();
+                    setTimeout(() => { showQuizOrAdvance(true); }, 600); // Small delay for ladder animation
+                } else if (pathwayEvent.type === 'chute') {
+                    logMessage(`${currentPlayer.token} hit a chute: ${pathwayEvent.label}! Moving back to ${pathwayEvent.end + 1}.`);
+                    currentPlayer.position = pathwayEvent.end;
+                    updatePlayerTokensOnBoard();
+                    setTimeout(() => { showQuizOrAdvance(false); }, 600); // Small delay for chute animation
+                }
+            } else {
+                // If not a ladder/chute, check for quiz square
+                if (Math.random() < 0.2) { // 20% chance for a quiz on a normal square
+                    showQuizModal();
+                } else {
+                    endTurn();
+                }
+            }
+        }
+
+        function showQuizModal(fromPathwayEvent = false) {
+            quizActive = true;
+            if(rollDiceBtn) { // Defensive check
+                rollDiceBtn.disabled = true; // Disable main roll button
+            }
+            const questionData = QUIZ_QUESTIONS[Math.floor(Math.random() * QUIZ_QUESTIONS.length)];
+            
+            if(quizQuestion) quizQuestion.textContent = questionData.question;
+            if(quizOptionsContainer) quizOptionsContainer.innerHTML = '';
+            if(quizFeedback) quizFeedback.textContent = '';
+            if(quizContinueBtn) quizContinueBtn.classList.add('hidden');
+
+            const shuffledOptions = shuffleArray(questionData.options.map((text, index) => ({ text, originalIndex: index })));
+
+            shuffledOptions.forEach(option => {
+                const button = document.createElement('button');
+                button.classList.add('option-button');
+                button.textContent = option.text;
+                button.onclick = () => handleQuizAnswer(option.originalIndex, questionData.correctAnswer, questionData.feedback, fromPathwayEvent);
+                if(quizOptionsContainer) quizOptionsContainer.appendChild(button);
+            });
+
+            if(quizModal) quizModal.classList.remove('hidden');
+        }
+
+        function handleQuizAnswer(selectedIndex, correctAnswer, feedback, fromPathwayEvent) {
+            if(quizOptionsContainer) { // Defensive check
+                quizOptionsContainer.querySelectorAll('.option-button').forEach(btn => btn.disabled = true);
+            }
+            const isCorrect = (selectedIndex === correctAnswer);
+
+            // Highlight chosen options
+            if(quizOptionsContainer) { // Defensive check
+                quizOptionsContainer.querySelectorAll('.option-button').forEach(btn => {
+                    const originalIndex = parseInt(btn.dataset.originalIndex);
+                    if (originalIndex === correctAnswer) {
+                        btn.classList.add('correct-answer');
+                    } else if (originalIndex === selectedIndex && !isCorrect) {
+                        btn.classList.add('incorrect-answer');
+                    }
+                });
+            }
+
+            if(quizFeedback) quizFeedback.textContent = feedback;
+            logMessage(`${players[currentPlayerIndex].token} answered ${isCorrect ? 'correctly' : 'incorrectly'}.`);
+
+            if(quizContinueBtn) { // Defensive check
+                quizContinueBtn.classList.remove('hidden');
+                quizContinueBtn.onclick = () => {
+                    if(quizModal) quizModal.classList.add('hidden');
+                    quizActive = false;
+                    if(rollDiceBtn) rollDiceBtn.disabled = false; // Re-enable roll button after quiz
+
+                    // Logic specific to quiz outside of ladder/chute
+                    if (!fromPathwayEvent) {
+                        if (isCorrect) {
+                            logMessage(`${players[currentPlayerIndex].token} earned a bonus move!`);
+                            movePlayer(2); // Bonus for correct answer on quiz square
+                        } else {
+                            logMessage(`${players[currentPlayerIndex].token} faces a small setback.`);
+                            movePlayer(-1); // Penalty for incorrect answer
+                        }
+                    }
+                    endTurn(); // End turn after quiz resolved (even if it causes another move)
+                };
+            }
+        }
+
+        function showQuizOrAdvance(isLadder) { // Helper for PathwayEvents
+            // You can add a special quiz here if desired for ladder/chute events
+            // For now, it just resolves the move and ends turn
+            endTurn();
+        }
+
+
+        function endTurn() {
+            if (!gameActive) return; // Prevent multiple end turns
+
+            currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
+            if (currentPlayerIndex === 0) { // New round
+                gameRound++;
+                updateScoreAndRoundUI(); // Defensive check for currentRoundDisplay
+                logMessage(`--- Round ${gameRound} ---`);
+                if (gameRound > MAX_ROUNDS) { // Now MAX_ROUNDS is correctly in scope
+                    endGame("Max rounds reached for the journey!");
+                    return;
+                }
+            }
+
+            logMessage(`${players[currentPlayerIndex].token}'s turn. Roll the dice!`);
+            updateUI();
+            if(rollDiceBtn) { // Defensive check
+                rollDiceBtn.disabled = false; // Re-enable roll for next player
+            }
+        }
+
+        function endGame(message) {
+            gameActive = false;
+            if(gameOverMessage) gameOverMessage.textContent = message;
+
+            // Determine final standing based on position
+            const sortedPlayers = [...players].sort((a, b) => b.position - a.position);
+
+            if(finalStandingList) finalStandingList.innerHTML = '';
+            sortedPlayers.forEach(player => {
+                const li = document.createElement('li');
+                li.innerHTML = `${player.token} ${player.name}: Reached Step ${player.position + 1} of ${NUM_SQUARES}.`;
+                if(finalStandingList) finalStandingList.appendChild(li);
+            });
+
+            if(gameOverModal) gameOverModal.classList.remove('hidden');
+            if(rollDiceBtn) rollDiceBtn.disabled = true; // Ensure no more rolls
+        }
+
+
+        // --- UI Update Functions ---
+        function updateUI() {
+            // Update player status cards
+            if(playerStatusContainer) playerStatusContainer.innerHTML = '';
+            players.forEach(player => {
+                const statusCard = document.createElement('div');
+                statusCard.classList.add('player-status-card');
+                if (player.id === currentPlayerIndex) {
+                    statusCard.classList.add('active');
+                }
+                statusCard.innerHTML = `
+                    <div class="name" style="color:${PLAYER_COLORS[player.id]}">${player.token} ${player.name}</div>
+                    <div class="status">Current Position: ${player.position + 1}</div>
+                `;
+                if(playerStatusContainer) playerStatusContainer.appendChild(statusCard);
+            });
+            updateScoreAndRoundUI(); // Call the defensive update for currentRoundDisplay
+        }
+
+        function logMessage(message) {
+            if(gameLogUl) { // Defensive check
+                const li = document.createElement('li');
+                li.textContent = message;
+                gameLogUl.prepend(li); // Add newest messages to top
+                if (gameLogUl.children.length > 20) { // Keep log concise
+                    gameLogUl.removeChild(gameLogUl.lastChild);
+                }
+            }
+        }
+
+        function toggleControls(rollEnabled) { /* Simplified for this game */
+            if(rollDiceBtn) { // Defensive check
+                rollDiceBtn.disabled = !rollEnabled;
+            }
+        }
+
+        // --- Event Listeners ---
+        // Assign elements here after DOMContentLoaded to ensure they exist
+        document.addEventListener('DOMContentLoaded', () => {
+            // Assign UI elements
+            boardPanel = document.getElementById('board-panel');
+            controlPanel = document.getElementById('control-panel');
+            diceDisplay = document.getElementById('dice-display');
+            rollDiceBtn = document.getElementById('roll-dice-btn');
+            gameLogUl = document.querySelector('#game-log ul');
+            playerStatusContainer = document.getElementById('player-status-container');
+            currentRoundDisplay = document.getElementById('current-round-display');
+
+            startGameModal = document.getElementById('start-game-modal');
+            startGameBtn = document.getElementById('start-game-btn');
+            quizModal = document.getElementById('quiz-modal');
+            quizTitle = document.getElementById('quiz-title');
+            quizQuestion = document.getElementById('quiz-question');
+            quizOptionsContainer = document.getElementById('quiz-options-container');
+            quizFeedback = document.getElementById('quiz-feedback');
+            quizContinueBtn = document.getElementById('quiz-continue-btn');
+            gameOverModal = document.getElementById('game-over-modal');
+            gameOverMessage = document.getElementById('game-over-message');
+            finalStandingList = document.getElementById('final-standing-list');
+            restartGameBtn = document.getElementById('restart-game-btn');
+
+            // Attach event listeners (with defensive checks for element existence)
+            if(rollDiceBtn) rollDiceBtn.addEventListener('click', rollDice);
+            if(startGameBtn) startGameBtn.addEventListener('click', initializeGame);
+            if(restartGameBtn) restartGameBtn.addEventListener('click', initializeGame); // Restart button starts a new game
+
+            logMessage("Welcome to Clinical Pathway Journey! Click 'Begin Journey' to start.");
+            if(startGameModal) startGameModal.classList.remove('hidden');
+            updateScoreAndRoundUI(); // Initial update for round display (even if it's 1)
+        });
+    </script>
+</body>
+</html>

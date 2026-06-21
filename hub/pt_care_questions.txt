@@ -1,0 +1,516 @@
+// ====================
+// PATIENT CARE SECTION
+// ====================
+
+const patientCareQuestions = {
+  patientInteractionsAndManagement: [
+    {
+      question: "What is informed consent in radiation therapy?",
+      options: [
+        "Patient agrees to treatment after being told risks, benefits, and alternatives.",
+        "Patient is forced to accept treatment.",
+        "Patient signs any paper given.",
+        "Patient agrees by showing up to the appointment."
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! Informed consent means the patient understands and voluntarily agrees to treatment after being informed."
+    },
+    {
+      question: "Which law protects patient health information privacy?",
+      options: [
+        "HIPAA",
+        "FDA",
+        "OSHA",
+        "ARRT"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! HIPAA protects patient privacy and health information."
+    },
+    {
+      question: "What should you do if a patient refuses treatment?",
+      options: [
+        "Respect their decision and inform the physician",
+        "Force them to proceed",
+        "Ignore their wishes",
+        "Call security"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! Patient autonomy must be respected and the care team notified."
+    },
+    {
+      question: "What is the main goal of palliative care?",
+      options: [
+        "To relieve symptoms and improve quality of life",
+        "To cure the disease",
+        "To perform surgery",
+        "To diagnose cancer"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! Palliative care focuses on comfort and quality of life."
+    },
+    {
+      question: "How do you verify patient identification before treatment?",
+      options: [
+        "Use at least two identifiers such as name and date of birth",
+        "Ask the patient's favorite color",
+        "Check the room number",
+        "Ask the patient's insurance provider"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! Always use two identifiers to ensure patient safety."
+    },
+    {
+      question: "What is the difference between restraints and immobilization devices?",
+      options: [
+        "Restraints limit freedom and require a physician's order; immobilization devices prevent motion during treatment.",
+        "Both are the same.",
+        "Restraints are used for imaging only.",
+        "Immobilization devices require a court order."
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! Restraints limit movement and need an order; immobilization devices are used to keep position during therapy."
+    },
+    {
+      question: "What is the ARRT Standards of Ethics?",
+      options: [
+        "A professional code governing conduct and patient care for radiologic technologists",
+        "A billing guideline",
+        "A hospital cleaning protocol",
+        "A dietary manual"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! The ARRT Standards of Ethics guide professional behavior and patient care."
+    },
+    {
+      question: "Which is an example of nonverbal communication?",
+      options: [
+        "Eye contact",
+        "Written instructions",
+        "Phone call",
+        "Email"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! Eye contact is a form of nonverbal communication."
+    },
+    {
+      question: "What is the best way to communicate with a patient who does not speak English?",
+      options: [
+        "Use a certified interpreter",
+        "Speak louder",
+        "Use family members to translate",
+        "Ignore their questions"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! Always use a certified interpreter for language barriers."
+    },
+    {
+      question: "How can you help a patient with hearing impairment understand instructions?",
+      options: [
+        "Face the patient and speak clearly",
+        "Shout at the patient",
+        "Ignore the impairment",
+        "Only use written instructions"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! Facing the patient and speaking clearly helps with understanding."
+    },
+    {
+      question: "What is the teach-back method?",
+      options: [
+        "Having the patient repeat instructions to confirm understanding",
+        "Telling the patient to read instructions at home",
+        "Only providing written instructions",
+        "Using medical jargon"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! Teach-back ensures the patient understands instructions."
+    },
+    {
+      question: "Which information should be included when explaining a radiation therapy procedure?",
+      options: [
+        "Purpose, duration, and possible side effects",
+        "Only the risks",
+        "Only the benefits",
+        "No information is necessary"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! Patients should know the purpose, length, and potential side effects."
+    },
+    {
+      question: "Why is it important not to wash off skin marks?",
+      options: [
+        "They help ensure accurate treatment positioning",
+        "They are decorative",
+        "They help with billing",
+        "They are for identification"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! Skin marks help maintain accurate treatment alignment."
+    },
+    {
+      question: "What is a key instruction for skin care during therapy?",
+      options: [
+        "Wash gently with lukewarm water and mild soap",
+        "Scrub the area vigorously",
+        "Apply any lotion you like",
+        "Expose the area to sunlight"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! Gentle washing helps protect sensitive skin."
+    },
+    {
+      question: "What is a dietary recommendation for patients with nausea?",
+      options: [
+        "Eat small, frequent, bland meals",
+        "Eat large meals",
+        "Avoid all food",
+        "Only drink soda"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! Small, bland meals help manage nausea."
+    },
+    {
+      question: "Who can patients be referred to for nutritional support?",
+      options: [
+        "Dietitian",
+        "Pharmacist",
+        "Radiation physicist",
+        "Billing specialist"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! Dietitians provide nutritional support."
+    },
+    {
+      question: "What is the main focus of hospice care?",
+      options: [
+        "Comfort and quality of life at end-of-life",
+        "Aggressive curative treatment",
+        "Surgical intervention",
+        "Radiation only"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! Hospice focuses on comfort and support."
+    },
+    {
+      question: "What is the safest way to lift a heavy object?",
+      options: [
+        "Bend at the knees and keep the object close",
+        "Bend at the waist",
+        "Twist your back",
+        "Lift quickly"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! Bend at the knees and keep the load close for safe lifting."
+    },
+    {
+      question: "What device can help move a patient from bed to stretcher?",
+      options: [
+        "Transfer board",
+        "IV pole",
+        "Oxygen tank",
+        "Bed sheet"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! A transfer board helps move patients safely."
+    },
+    {
+      question: "When assisting with an infusion pump, what should you do?",
+      options: [
+        "Avoid pulling on lines and monitor the pump site",
+        "Ignore the pump",
+        "Disconnect lines for convenience",
+        "Increase the flow rate"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! Always avoid pulling lines and monitor the site."
+    },
+    {
+      question: "How should you handle an oxygen tank in the treatment room?",
+      options: [
+        "Secure the tank and keep away from open flames",
+        "Lay it on the floor",
+        "Ignore safety precautions",
+        "Increase flow without checking"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! Oxygen tanks must be secured and kept from flames."
+    },
+    {
+      question: "Which vital sign is most important to monitor during therapy?",
+      options: [
+        "All vital signs are important",
+        "Only temperature",
+        "Only pulse",
+        "Only blood pressure"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! All vital signs are important to monitor."
+    },
+    {
+      question: "What should you do if a patient is at risk for falls?",
+      options: [
+        "Use side rails and keep the environment clear",
+        "Leave the patient unattended",
+        "Remove all supports",
+        "Ignore the risk"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! Use side rails and keep the area clear to prevent falls."
+    },
+    {
+      question: "What is the first step if a patient has a severe allergic reaction to latex?",
+      options: [
+        "Stop exposure and call for help",
+        "Give food",
+        "Ignore the reaction",
+        "Continue the procedure"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! Stop exposure and call for help immediately."
+    },
+    {
+      question: "What should you do if a patient has a seizure during treatment?",
+      options: [
+        "Protect the patient from injury and do not restrain",
+        "Hold the patient down",
+        "Leave the room",
+        "Give them water"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! Protect from injury and do not restrain."
+    },
+    {
+      question: "What is the recommended response if a patient becomes hypoglycemic?",
+      options: [
+        "Give sugar if the patient is conscious",
+        "Give insulin",
+        "Ignore the symptoms",
+        "Call security"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! Give sugar if conscious and notify medical staff."
+    },
+    {
+      question: "What is the most effective way to prevent infection spread?",
+      options: [
+        "Hand hygiene",
+        "Wearing a hat",
+        "Taking vitamins",
+        "Using air freshener"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! Hand hygiene is the most effective infection control measure."
+    },
+    {
+      question: "When should you use personal protective equipment (PPE)?",
+      options: [
+        "When exposure to blood or body fluids is possible",
+        "Only during surgery",
+        "Never",
+        "Only if the patient asks"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! PPE is used when exposure to blood or body fluids is possible."
+    },
+    {
+      question: "What is a healthcare-associated infection (HAI)?",
+      options: [
+        "An infection acquired during healthcare delivery",
+        "An infection from food",
+        "A genetic disorder",
+        "A skin rash"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! HAIs are acquired during healthcare."
+    }
+  ],
+  patientAndMedicalRecordManagement: [
+    {
+      question: "Which of the following must be included in a radiation therapy prescription?",
+      options: [
+        "Site, total dose, fractionation, energy, and modality",
+        "Patient's insurance number",
+        "Patient's favorite color",
+        "Machine serial number"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! The prescription must include all treatment parameters."
+    },
+    {
+      question: "What information is recorded as the 'fraction' in a treatment record?",
+      options: [
+        "The number of treatments delivered",
+        "The patient's age",
+        "The total cost of treatment",
+        "The type of immobilization used"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! 'Fraction' refers to the treatment number in the course."
+    },
+    {
+      question: "Why is the time of day documented for b.i.d. (twice-daily) treatments?",
+      options: [
+        "To ensure sufficient time between fractions",
+        "To track therapist shift changes",
+        "For billing purposes",
+        "To monitor patient hydration"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! A minimum interval between treatments is required for patient safety."
+    },
+    {
+      question: "What is the purpose of documenting monitor units (MUs) in the treatment record?",
+      options: [
+        "To verify the correct dose is delivered",
+        "To record the patient's weight",
+        "To track machine maintenance",
+        "To document insurance approval"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! MUs are used to deliver the prescribed dose accurately."
+    },
+    {
+      question: "What does 'elapsed days' mean in a treatment record?",
+      options: [
+        "The total number of days since treatment started",
+        "The patient's age",
+        "The number of treatments missed",
+        "The number of imaging studies performed"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! Elapsed days track the overall treatment timeline."
+    },
+    {
+      question: "Which of the following is a cancer risk factor?",
+      options: [
+        "Smoking",
+        "Regular exercise",
+        "Low blood pressure",
+        "Drinking water"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! Smoking is a well-established risk factor for cancer."
+    },
+    {
+      question: "What does 'prevalence' mean in cancer epidemiology?",
+      options: [
+        "The total number of existing cases in a population",
+        "The number of new cases per year",
+        "The number of deaths per year",
+        "The number of patients cured"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! Prevalence is the number of existing cases."
+    },
+    {
+      question: "What is the difference between incidence and prevalence?",
+      options: [
+        "Incidence is new cases; prevalence is all existing cases",
+        "Incidence is all cases; prevalence is new cases",
+        "They mean the same thing",
+        "Incidence is only for children"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! Incidence is new cases in a time period; prevalence is all cases."
+    },
+    {
+      question: "Which screening test is used to detect early breast cancer?",
+      options: [
+        "Mammography",
+        "Colonoscopy",
+        "Pap test",
+        "PSA test"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! Mammography is used for breast cancer screening."
+    },
+    {
+      question: "Which virus is associated with increased risk of cervical cancer?",
+      options: [
+        "HPV (Human Papillomavirus)",
+        "HIV",
+        "Influenza",
+        "Hepatitis B"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! HPV is a major risk factor for cervical cancer."
+    },
+    {
+      question: "Which of the following is a subjective symptom?",
+      options: [
+        "Pain reported by the patient",
+        "Fever measured by staff",
+        "Rash observed by the therapist",
+        "Elevated blood pressure"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! Subjective symptoms are reported by the patient."
+    },
+    {
+      question: "What is the purpose of the history and physical examination before radiation therapy?",
+      options: [
+        "To assess the patient's baseline health and identify contraindications",
+        "To determine insurance coverage",
+        "To select the treatment machine",
+        "To choose the color of patient gowns"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! Baseline assessment helps monitor changes and risks."
+    },
+    {
+      question: "Which of the following is an objective sign?",
+      options: [
+        "Skin erythema observed by staff",
+        "Patient reports fatigue",
+        "Patient complains of pain",
+        "Patient describes nausea"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! Objective signs are observed by others."
+    },
+    {
+      question: "Why is it important to document signs and symptoms during treatment?",
+      options: [
+        "To monitor for side effects and complications",
+        "To increase billing",
+        "To speed up treatment",
+        "To avoid paperwork"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! Documentation helps track patient response and safety."
+    },
+    {
+      question: "Which imaging modality is most commonly used for radiation therapy planning?",
+      options: [
+        "CT scan",
+        "X-ray",
+        "Ultrasound",
+        "Mammography"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! CT is the standard for planning."
+    },
+    {
+      question: "What information does a pathology report provide?",
+      options: [
+        "Tumor type, grade, and margin status",
+        "Patient’s insurance",
+        "Radiation dose",
+        "Machine settings"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! Pathology reports guide treatment decisions."
+    },
+    {
+      question: "What is the nadir in blood studies?",
+      options: [
+        "The lowest blood count after treatment",
+        "The highest blood count",
+        "A type of white blood cell",
+        "A medication"
+      ],
+      correctAnswer: 0,
+      feedback: "Correct! The nadir is the lowest blood count point."
+    }
+  ]
+};

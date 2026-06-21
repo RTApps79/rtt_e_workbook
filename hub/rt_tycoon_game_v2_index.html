@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RT Department Tycoon</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto Mono', monospace;
+            background-color: #1a202c;
+            color: #e2e8f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Make body take full viewport height */
+            width: 100vw;  /* Make body take full viewport width */
+            overflow: hidden; /* Hide body scrollbars */
+        }
+        #game-board-container {
+            display: grid;
+            /* Auto for side panels (fixed width), 1fr for central board */
+            grid-template-columns: 250px 1fr 250px; /* Adjusted fixed width for panels */
+            /* Auto for top/bottom bars, 1fr for the main board area */
+            grid-template-rows: auto 1fr auto;
+            width: 100%; /* Take full width of parent (body) */
+            height: 100%; /* Take full height of parent (body) */
+            background-color: #2d3748;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 2px solid #667eea;
+            overflow: hidden; /* Keep overflow hidden for container */
+        }
+
+        /* Top UI Panel */
+        #top-ui-panel {
+            grid-column: 1 / 4;
+            grid-row: 1;
+            background-color: #1a202c;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-bottom: 1px solid #4a5568;
+            flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+            min-height: 80px; /* Ensure it has a minimum height */
+        }
+        #top-ui-panel h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem; /* Slightly smaller for better fit */
+            color: #9f7aea;
+        }
+        .player-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem; /* Reduced gap */
+            margin: 0.25rem; /* Small margin for wrapping */
+        }
+        .player-token-display {
+            width: 25px; /* Slightly smaller token */
+            height: 25px;
+            font-size: 1rem; /* Smaller font */
+        }
+        .player-info span {
+            font-size: 0.9rem; /* Smaller font */
+        }
+
+        /* Left/Right Control Panels */
+        #left-panel, #right-panel {
+            grid-row: 2;
+            padding: 1rem; /* Reduced padding */
+            background-color: #2d3748;
+            border-top: 1px solid #4a5568;
+            overflow-y: auto; /* Allow scrolling within panels if content is too long */
+        }
+        #left-panel {
+            grid-column: 1;
+            border-right: 1px solid #4a5568;
+        }
+        #right-panel {
+            grid-column: 3;
+            border-left: 1px solid #4a5568;
+        }
+        .panel-section h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem; /* Reduced font size */
+            color: #f6ad55;
+            margin-bottom: 0.75rem; /* Reduced margin */
+            border-bottom: 1px solid #4a5568;
+            padding-bottom: 0.5rem;
+        }
+        .panel-content div {
+            margin-bottom: 0.25rem; /* Reduced margin */
+        }
+        .property-card {
+            background-color: #4a5568;
+            padding: 0.5rem; /* Reduced padding */
+            border-radius: 6px; /* Slightly smaller radius */
+            margin-bottom: 0.5rem; /* Reduced margin */
+            font-size: 0.8rem; /* Reduced font size */
+        }
+        .property-card.owned-by-0 { background-color: #48bb78; } /* Player 1 color */
+        .property-card.owned-by-1 { background-color: #63b3ed; } /* Player 2 color */
+        .property-card.owned-by-2 { background-color: #f87171; } /* Player 3 color */
+        .property-card.owned-by-3 { background-color: #9f7aea; } /* Player 4 color */
+
+
+        /* Main Game Board Area */
+        #board {
+            grid-column: 2;
+            grid-row: 2;
+            display: grid;
+            grid-template-columns: repeat(11, 1fr);
+            grid-template-rows: repeat(11, 1fr);
+            background-color: #4a5568; /* Board background */
+            position: relative;
+            box-sizing: border-box;
+            border: 2px solid #1a202c;
+        }
+        .square {
+            width: 100%;
+            height: 100%;
+            background-color: #6366f1; /* Default square color */
+            border: 1px solid #1a202c;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 3px; /* Reduced padding */
+            font-size: 0.6rem; /* Reduced font size */
+            text-align: center;
+            position: relative;
+        }
+        .corner, .side-square {
+            background-color: #7c3aed; /* Darker purple for main path */
+        }
+        .player-token {
+            position: absolute;
+            width: 20px; /* Reduced token size */
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.7rem; /* Reduced font size */
+            font-weight: bold;
+            color: #1a202c;
+            transform: translate(-50%, -50%); /* Center token */
+            transition: top 0.5s ease-in-out, left 0.5s ease-in-out;
+            z-index: 10;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        .player-token.p-0 { background-color: #34d399; }
+        .player-token.p-1 { background-color: #60a5fa; }
+        .player-token.p-2 { background-color: #f87171; }
+        .player-token.p-3 { background-color: #a78bfa; }
+
+        .square-type-go { background-color: #22c55e; }
+        .square-type-property { background-color: #a78bfa; }
+        .square-type-tax { background-color: #ef4444; }
+        .square-type-clinical-challenge { background-color: #facc15; }
+        .square-type-research-breakthrough { background-color: #38bdf8; }
+        .square-type-qa-hold { background-color: #0ea5e9; } /* Blue for QA Hold */
+        .square-type-free-parking { background-color: #6d28d9; }
+
+        .square-name {
+            font-weight: bold;
+            font-size: 0.7rem; /* Adjusted font size */
+            color: #1a202c;
+            padding-top: 2px; /* Adjusted padding */
+        }
+        .square-info {
+            font-size: 0.55rem; /* Adjusted font size */
+            color: #1a202c;
+        }
+        .property-owner-token {
+            position: absolute;
+            top: 3px; /* Adjusted position */
+            left: 3px; /* Adjusted position */
+            width: 12px; /* Reduced token size */
+            height: 12px;
+            font-size: 0.6rem; /* Reduced font size */
+            line-height: 12px; /* For vertical alignment */
+        }
+        .property-owner-token.p-0 { background-color: #34d399; }
+        .property-owner-token.p-1 { background-color: #60a5fa; }
+        .property-owner-token.p-2 { background-color: #f87171; }
+        .property-owner-token.p-3 { background-color: #a78bfa; }
+
+        /* Central RT Center Silhouette */
+        .center-board-area {
+            grid-row: 2 / 11; /* Rows 2 through 10 (total 9 rows) */
+            grid-column: 2 / 11; /* Columns 2 through 10 (total 9 columns) */
+            background: linear-gradient(135deg, #1f2937, #374151); /* Darker, gradient background */
+            border-radius: 10px;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5); /* Inner shadow for depth */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 1rem;
+            color: #e2e8f0;
+            z-index: 1; /* Ensure squares and tokens are above it */
+        }
+        .center-board-area .icon {
+            font-size: 4rem; /* Slightly smaller large icon */
+            margin-bottom: 0.5rem;
+            color: #9f7aea; /* Purple accent */
+            text-shadow: 0 0 10px rgba(159, 122, 234, 0.7);
+        }
+        .center-board-area .title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem; /* Slightly smaller title */
+            color: #9f7aea;
+        }
+        .center-board-area .subtitle {
+            font-size: 0.9rem; /* Slightly smaller subtitle */
+            color: #a0aec0;
+            margin-top: 0.5rem;
+        }
+
+
+        /* Bottom Control Panel */
+        #bottom-control-panel {
+            grid-column: 1 / 4;
+            grid-row: 3;
+            background-color: #1a202c;
+            padding: 0.75rem; /* Reduced padding */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem; /* Reduced gap */
+            border-top: 1px solid #4a5568;
+            min-height: 60px; /* Ensure it has a minimum height */
+        }
+        .control-button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 0.6rem 1.2rem; /* Reduced padding */
+            border-radius: 8px;
+            font-size: 1rem; /* Reduced font size */
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 10px rgba(118, 75, 162, 0.3); /* Smaller shadow */
+            border: none;
+        }
+        .control-button:hover:not(:disabled) {
+            transform: translateY(-2px) scale(1.02); /* Smaller hover effect */
+            box-shadow: 0 6px 15px rgba(118, 75, 162, 0.5);
+        }
+        .control-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        #dice-display {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem; /* Reduced font size */
+            color: #fde047;
+            min-width: 80px; /* Reduced min-width */
+            text-align: center;
+        }
+        #current-action-message {
+            margin-top: 0.5rem; /* Reduced margin */
+            font-size: 0.9rem; /* Reduced font size */
+            color: #a0aec0;
+            text-align: center;
+            min-height: 25px; /* Reduced min-height */
+        }
+        /* Modal adjustments for better fit */
+        .modal-content {
+            padding: 30px; /* Reduced padding */
+        }
+        .modal-content h2 {
+            font-size: 2rem; /* Reduced font size */
+        }
+        .modal-content p {
+            font-size: 1rem; /* Reduced font size */
+        }
+        .modal-content button {
+            padding: 10px 20px; /* Reduced padding */
+            font-size: 1rem; /* Reduced font size */
+        }
+    </style>
+</head>
+<body>
+    <div id="game-board-container">
+        <div id="top-ui-panel">
+            <h1>RT Department Tycoon</h1>
+            <div id="player-info-container" class="flex gap-4">
+                <!-- Player info will be dynamically inserted here -->
+            </div>
+            <div>Round: <span id="current-round-display">1</span></div>
+        </div>
+
+        <div id="left-panel" class="panel-section">
+            <h2 class="text-xl font-bold">Player Assets</h2>
+            <div id="player-assets-list" class="panel-content">
+                <!-- Assets for current player will be listed here -->
+            </div>
+        </div>
+
+        <div id="board">
+            <!-- Board squares will be dynamically generated here -->
+            <div class="center-board-area" style="grid-row: 2 / 11; grid-column: 2 / 11;">
+                <span class="icon">⚛️</span>
+                <span class="title">RT Center HQ</span>
+                <span class="subtitle">Leading the Fight Against Cancer</span>
+            </div>
+        </div>
+
+        <div id="right-panel" class="panel-section">
+            <h2 class="text-xl font-bold">Game Log</h2>
+            <div id="game-log" class="panel-content text-sm">
+                <!-- Game log messages will appear here -->
+            </div>
+        </div>
+
+        <div id="bottom-control-panel">
+            <button id="roll-dice-btn" class="control-button">Roll Dice</button>
+            <div id="dice-display"></div>
+            <button id="buy-property-btn" class="control-button hidden">Buy Asset</button>
+            <button id="end-turn-btn" class="control-button hidden">End Turn</button>
+            <button id="pay-bail-btn" class="control-button hidden">Pay for QA Release ($500)</button>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="start-modal" class="modal">
+        <div class="modal-content">
+            <h2>Welcome to RT Department Tycoon!</h2>
+            <p>Build your radiation therapy empire! Acquire LINACs, CT simulators, and hire top staff. Navigate challenges and breakthroughs to become the leading department!</p>
+            <p>How many players?</p>
+            <select id="num-players-select" class="bg-gray-700 text-white p-2 rounded mb-4">
+                <option value="2">2 Players</option>
+                <option value="3">3 Players</option>
+                <option value="4">4 Players</option>
+            </select>
+            <button id="start-game-btn">Start Game</button>
+        </div>
+    </div>
+
+    <div id="buy-property-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2 id="buy-modal-title"></h2>
+            <p id="buy-modal-description"></p>
+            <p class="text-lg">Cost: $<span id="buy-modal-cost"></span></p>
+            <button id="confirm-buy-btn" class="mr-4">Confirm Purchase</button>
+            <button id="decline-buy-btn">Decline</button>
+        </div>
+    </div>
+
+    <div id="card-modal" class="modal hidden">
+        <div class="modal-content" id="card-modal-content">
+            <h2 id="card-title"></h2>
+            <p id="card-description"></p>
+            <button id="card-button">OK</button>
+        </div>
+    </div>
+
+    <div id="game-over-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2>Game Over!</h2>
+            <p id="game-over-message"></p>
+            <p>Final Scores:</p>
+            <ul id="final-scores-list" class="list-none mb-4"></ul>
+            <button id="restart-game-btn">Restart Game</button>
+        </div>
+    </div>
+
+    <script>
+        // --- Game Configuration ---
+        const BOARD_SIZE = 11; // 11x11 grid for the board
+        const SQUARE_TYPES = {
+            GO: 'go',
+            PROPERTY: 'property',
+            TAX: 'tax',
+            CLINICAL_CHALLENGE: 'clinical-challenge',
+            RESEARCH_BREAKTHROUGH: 'research-breakthrough',
+            QA_HOLD: 'qa-hold',
+            FREE_PARKING: 'free-parking'
+        };
+        const PLAYER_COLORS = ['#34d399', '#60a5fa', '#f87171', '#a78bfa']; // Green, Blue, Red, Purple
+        const STARTING_MONEY = 1500;
+        const SALARY_ON_GO = 200;
+        const QA_HOLD_FINE = 500;
+        const MAX_ROUNDS = 20; // Game ends after this many rounds for simplicity
+
+        // --- Game Data (Board, Properties, Cards) ---
+        const boardConfig = [
+            // Bottom Row (0-10) - Clockwise
+            { name: "GO!", type: SQUARE_TYPES.GO, effect: "Collect $200 Salary!" }, // 0
+            { name: "LINAC 1", type: SQUARE_TYPES.PROPERTY, cost: 600, rent: 50 }, // 1
+            { name: "Clinical Challenge", type: SQUARE_TYPES.CLINICAL_CHALLENGE }, // 2
+            { name: "CT Sim Suite", type: SQUARE_TYPES.PROPERTY, cost: 600, rent: 50 }, // 3
+            { name: "Income Tax", type: SQUARE_TYPES.TAX, amount: 200 }, // 4
+            { name: "Brachytherapy Suite", type: SQUARE_TYPES.PROPERTY, cost: 2000, rent: 150 }, // 5 (High value asset)
+            { name: "MRI Sim", type: SQUARE_TYPES.PROPERTY, cost: 1000, rent: 80 }, // 6
+            { name: "Research Breakthrough", type: SQUARE_TYPES.RESEARCH_BREAKTHROUGH }, // 7
+            { name: "CyberKnife", type: SQUARE_TYPES.PROPERTY, cost: 1000, rent: 80 }, // 8
+            { name: "Luxury Tax", type: SQUARE_TYPES.TAX, amount: 100 }, // 9
+            { name: "QA HOLD!", type: SQUARE_TYPES.QA_HOLD }, // 10 (Corner)
+
+            // Left Column (11-20)
+            { name: "Patient Prep Area", type: SQUARE_TYPES.PROPERTY, cost: 800, rent: 60 }, // 11
+            { name: "Clinical Challenge", type: SQUARE_TYPES.CLINICAL_CHALLENGE }, // 12
+            { name: "Dosimetrist Office", type: SQUARE_TYPES.PROPERTY, cost: 800, rent: 60 }, // 13
+            { name: "Research Breakthrough", type: SQUARE_TYPES.RESEARCH_BREAKTHROUGH }, // 14
+            { name: "Oncologist Office", type: SQUARE_TYPES.PROPERTY, cost: 1200, rent: 100 }, // 15
+            { name: "Oncology Nurse Unit", type: SQUARE_TYPES.PROPERTY, cost: 1400, rent: 120 }, // 16
+            { name: "Clinical Challenge", type: SQUARE_TYPES.CLINICAL_CHALLENGE }, // 17
+            { name: "Therapist Break Room", type: SQUARE_TYPES.PROPERTY, cost: 1400, rent: 120 }, // 18
+            { name: "Physics Lab", type: SQUARE_TYPES.PROPERTY, cost: 1600, rent: 130 }, // 19
+            { name: "Free Parking", type: SQUARE_TYPES.FREE_PARKING, effect: "Relax and Recharge!" }, // 20 (Corner)
+
+            // Top Row (21-30)
+            { name: "VMAT Linac", type: SQUARE_TYPES.PROPERTY, cost: 1600, rent: 130 }, // 21
+            { name: "Research Breakthrough", type: SQUARE_TYPES.RESEARCH_BREAKTHROUGH }, // 22
+            { name: "SBRT Linac", type: SQUARE_TYPES.PROPERTY, cost: 1800, rent: 140 }, // 23
+            { name: "Clinical Challenge", type: SQUARE_TYPES.CLINICAL_CHALLENGE }, // 24
+            { name: "Proton Therapy Unit", type: SQUARE_TYPES.PROPERTY, cost: 4000, rent: 300 }, // 25 (Highest value asset)
+            { name: "Patient Waiting Area", type: SQUARE_TYPES.PROPERTY, cost: 2200, rent: 180 }, // 26
+            { name: "Clinical Challenge", type: SQUARE_TYPES.CLINICAL_CHALLENGE }, // 27
+            { name: "Record & Verify System", type: SQUARE_TYPES.PROPERTY, cost: 2200, rent: 180 }, // 28
+            { name: "Proton Beam Line", type: SQUARE_TYPES.PROPERTY, cost: 2400, rent: 200 }, // 29
+            { name: "Go to QA HOLD!", type: SQUARE_TYPES.QA_HOLD }, // 30 (Corner)
+
+            // Right Column (31-39)
+            { name: "Support Services", type: SQUARE_TYPES.PROPERTY, cost: 2600, rent: 220 }, // 31
+            { name: "Research Breakthrough", type: SQUARE_TYPES.RESEARCH_BREAKTHROUGH }, // 32
+            { name: "CT/MR Fusion Center", type: SQUARE_TYPES.PROPERTY, cost: 2600, rent: 220 }, // 33
+            { name: "Clinical Challenge", type: SQUARE_TYPES.CLINICAL_CHALLENGE }, // 34
+            { name: "Advanced Imaging", type: SQUARE_TYPES.PROPERTY, cost: 3000, rent: 250 }, // 35
+            { name: "Radiation Safety Office", type: SQUARE_TYPES.PROPERTY, cost: 3000, rent: 250 }, // 36
+            { name: "Clinical Challenge", type: SQUARE_TYPES.CLINICAL_CHALLENGE }, // 37
+            { name: "Patient Follow-up Unit", type: SQUARE_TYPES.PROPERTY, cost: 3500, rent: 280 }, // 38
+            { name: "Department Expansion", type: SQUARE_TYPES.TAX, amount: 400 } // 39
+        ];
+        // Ensure the order above matches the 0-indexed positions on the board.
+        // There are 40 squares in total (0 to 39).
+
+        const clinicalChallengeCards = [
+            { title: "Patient Anxiety Spike!", description: "A patient is highly anxious about treatment. Your empathy pays off! Gain $200 for excellent communication.", type: "money", amount: 200 },
+            { title: "Software Glitch", description: "Treatment planning software bug! Pay $150 for IT support to resolve the issue.", type: "money", amount: -150 },
+            { title: "Staff Training Initiative", description: "You initiated a new safety training program. Advance 3 spaces for leadership!", type: "move", spaces: 3 },
+            { title: "Unexpected Side Effect", description: "Patient develops unexpected Grade 3 toxicity. Lose $100 for managing complications.", type: "money", amount: -100 },
+            { title: "Successful Protocol Audit", description: "Your department passed a rigorous audit with flying colors! Gain $300 bonus.", type: "money", amount: 300 },
+            { title: "Burnout Risk", description: "You forgot to take a break! Lose $50 in productivity.", type: "money", amount: -50 },
+            { title: "New Referral Source", description: "A new doctor is highly impressed with your department. Advance 2 spaces!", type: "move", spaces: 2 },
+            { title: "Equipment Maintenance", description: "Routine maintenance needed on a LINAC. Pay $200.", type: "money", amount: -200 },
+            { title: "Community Outreach", description: "You participated in a successful community health fair. Gain $100 in good will.", type: "money", amount: 100 },
+            { title: "Go to QA HOLD!", description: "Critical QA finding! Go directly to QA Hold. Do not pass GO, do not collect $200.", type: "goto", square: 10 }
+        ];
+
+        const researchBreakthroughCards = [
+            { title: "AI Integration!", description: "Successfully integrated AI into contouring. Gain $250 for innovation!", type: "money", amount: 250 },
+            { title: "Novel Drug Trial", description: "Your department participated in a groundbreaking drug trial. Gain $200.", type: "money", amount: 200 },
+            { title: "Precision RT Advance", description: "Discovered a new method for precision radiation delivery. Advance 4 spaces!", type: "move", spaces: 4 },
+            { title: "Patient Feedback Loop", description: "Implemented an effective patient feedback system. Gain $150 bonus.", type: "money", amount: 150 },
+            { title: "Improved Patient Outcomes", description: "Your department's patient outcomes have significantly improved. Gain $300.", type: "money", amount: 300 },
+            { title: "Grant Funding Secured", description: "Secured a new grant for research. Gain $400.", type: "money", amount: 400 },
+            { title: "Interdisciplinary Collaboration", description: "Successful collaboration with another department. Advance 2 spaces!", type: "move", spaces: 2 },
+            { title: "Efficient Workflow", description: "Streamlined daily workflow, improving throughput. Gain $100.", type: "money", amount: 100 }
+        ];
+
+        // --- Game State Variables ---
+        let players = [];
+        let currentPlayerIndex = 0;
+        let boardSquares = [];
+        let diceRoll = 0;
+        let gameRound = 1;
+        let gameActive = false;
+        let numPlayers = 2;
+
+        // --- UI Elements ---
+        const boardElement = document.getElementById('board');
+        const rollDiceBtn = document.getElementById('roll-dice-btn');
+        const diceDisplay = document.getElementById('dice-display');
+        const buyPropertyBtn = document.getElementById('buy-property-btn');
+        const endTurnBtn = document.getElementById('end-turn-btn');
+        const payBailBtn = document.getElementById('pay-bail-btn');
+        const playerInfoContainer = document.getElementById('player-info-container');
+        const playerAssetsList = document.getElementById('player-assets-list');
+        const gameLog = document.getElementById('game-log');
+        const currentRoundDisplay = document.getElementById('current-round-display');
+
+        // Modals
+        const startModal = document.getElementById('start-modal');
+        const startGameBtn = document.getElementById('start-game-btn');
+        const numPlayersSelect = document.getElementById('num-players-select');
+        const buyPropertyModal = document.getElementById('buy-property-modal');
+        const buyModalTitle = document.getElementById('buy-modal-title');
+        const buyModalDescription = document.getElementById('buy-modal-description');
+        const buyModalCost = document.getElementById('buy-modal-cost');
+        const confirmBuyBtn = document.getElementById('confirm-buy-btn');
+        const declineBuyBtn = document.getElementById('decline-buy-btn');
+        const cardModal = document.getElementById('card-modal');
+        const cardTitle = document.getElementById('card-title');
+        const cardDescription = document.getElementById('card-description');
+        const cardButton = document.getElementById('card-button');
+        const gameOverModal = document.getElementById('game-over-modal');
+        const gameOverMessage = document.getElementById('game-over-message');
+        const finalScoresList = document.getElementById('final-scores-list');
+        const restartGameBtn = document.getElementById('restart-game-btn');
+
+        // --- Utility Functions ---
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function updateScoreAndRoundUI() {
+            if(currentRoundDisplay) currentRoundDisplay.textContent = gameRound;
+        }
+
+        function showMessage(text, duration = 3000) {
+            console.log("Game Message:", text);
+        }
+        function hideMessage() {
+            // Placeholder
+        }
+
+        // --- Core Game Functions ---
+
+        function initializeGame() {
+            numPlayers = parseInt(numPlayersSelect.value);
+            players = [];
+            for (let i = 0; i < numPlayers; i++) {
+                players.push({
+                    id: i,
+                    name: `Player ${i + 1}`,
+                    money: STARTING_MONEY,
+                    position: 0,
+                    properties: [],
+                    qaHoldTurns: 0,
+                    token: getPlayerTokenChar(i)
+                });
+            }
+            currentPlayerIndex = 0;
+            gameRound = 1;
+            gameActive = true;
+            diceRoll = 0;
+
+            setupBoard();
+            updateUI();
+            logMessage("Game Started! Player 1's turn.");
+            toggleControls(true, false, false);
+            startModal.classList.add('hidden');
+            gameOverModal.classList.add('hidden');
+            updateScoreAndRoundUI();
+        }
+
+        function setupBoard() {
+            boardElement.innerHTML = '';
+            boardSquares = [];
+
+            const squarePositions = [];
+            // Bottom Row (0-10) - Clockwise from bottom-right (Go) to bottom-left (QA HOLD)
+            for (let i = 0; i <= 10; i++) { // 0 to 10
+                squarePositions.push({ index: i, row: BOARD_SIZE, col: BOARD_SIZE - i });
+            }
+            // Left Column (11-20) - Bottom-left (QA HOLD) to top-left (Free Parking)
+            for (let i = 11; i <= 20; i++) { // 11 to 20
+                squarePositions.push({ index: i, row: BOARD_SIZE - (i - 10), col: 1 });
+            }
+            // Top Row (21-30) - Top-left (Free Parking) to top-right (Go to QA HOLD!)
+            for (let i = 21; i <= 30; i++) { // 21 to 30
+                squarePositions.push({ index: i, row: 1, col: i - 20 });
+            }
+            // Right Column (31-39) - Top-right (Go to QA HOLD!) to bottom-right (just before Go)
+            for (let i = 31; i <= 39; i++) { // 31 to 39
+                squarePositions.push({ index: i, row: i - 30, col: BOARD_SIZE });
+            }
+
+            squarePositions.forEach(({ index, row, col }) => {
+                const squareConfig = boardConfig[index]; // Get config based on original order
+                const square = document.createElement('div');
+                square.classList.add('square');
+                square.dataset.index = index;
+                square.style.gridRow = `${row}`;
+                square.style.gridColumn = `${col}`;
+
+                if (squareConfig.type === SQUARE_TYPES.GO) square.classList.add('square-type-go');
+                else if (squareConfig.type === SQUARE_TYPES.PROPERTY) square.classList.add('square-type-property');
+                else if (squareConfig.type === SQUARE_TYPES.TAX) square.classList.add('square-type-tax');
+                else if (squareConfig.type === SQUARE_TYPES.CLINICAL_CHALLENGE) square.classList.add('square-type-clinical-challenge');
+                else if (squareConfig.type === SQUARE_TYPES.RESEARCH_BREAKTHROUGH) square.classList.add('square-type-research-breakthrough');
+                else if (squareConfig.type === SQUARE_TYPES.QA_HOLD && squareConfig.name === "QA HOLD!") square.classList.add('square-type-qa-hold');
+                else if (squareConfig.type === SQUARE_TYPES.FREE_PARKING) square.classList.add('square-type-free-parking');
+
+                if (index === 0 || index === 10 || index === 20 || index === 30) {
+                    square.classList.add('corner');
+                } else {
+                    square.classList.add('side-square');
+                }
+
+                const nameDiv = document.createElement('div');
+                nameDiv.classList.add('square-name');
+                nameDiv.textContent = squareConfig.name;
+                square.appendChild(nameDiv);
+
+                if (squareConfig.cost) {
+                    const costDiv = document.createElement('div');
+                    costDiv.classList.add('square-info');
+                    costDiv.textContent = `$${squareConfig.cost}`;
+                    square.appendChild(costDiv);
+                } else if (squareConfig.amount) {
+                    const amountDiv = document.createElement('div');
+                    amountDiv.classList.add('square-info');
+                    amountDiv.textContent = `-$${squareConfig.amount}`;
+                    square.appendChild(amountDiv);
+                } else if (squareConfig.effect) {
+                    const effectDiv = document.createElement('div');
+                    effectDiv.classList.add('square-info');
+                    effectDiv.textContent = squareConfig.effect;
+                    square.appendChild(effectDiv);
+                }
+                
+                boardElement.appendChild(square);
+            });
+
+            // Re-append the central RT Center Silhouette to ensure it's on top of dynamically created squares
+            const centerArea = boardElement.querySelector('.center-board-area');
+            if (!centerArea) { // Create it if it doesn't exist (e.g., first run)
+                const newCenterArea = document.createElement('div');
+                newCenterArea.classList.add('center-board-area');
+                newCenterArea.style.gridRow = `2 / ${BOARD_SIZE}`;
+                newCenterArea.style.gridColumn = `2 / ${BOARD_SIZE}`;
+                newCenterArea.innerHTML = `
+                    <span class="icon">⚛️</span>
+                    <span class="title">RT Center HQ</span>
+                    <span class="subtitle">Leading the Fight Against Cancer</span>
+                `;
+                boardElement.appendChild(newCenterArea);
+            } else { // If it exists, just ensure its grid placement is correct (might be moved by clearing innerHTML)
+                 centerArea.style.gridRow = `2 / ${BOARD_SIZE}`;
+                 centerArea.style.gridColumn = `2 / ${BOARD_SIZE}`;
+                 boardElement.appendChild(centerArea); // Re-append to ensure correct z-index over squares
+            }
+
+
+            // Add player tokens to the board (ensure they are appended after squares for z-index)
+            players.forEach(player => {
+                const token = document.createElement('div');
+                token.id = `player-token-${player.id}`;
+                token.classList.add('player-token', `p-${player.id}`);
+                token.textContent = player.token;
+                boardElement.appendChild(token);
+                updatePlayerTokenPosition(player); // Position initially at GO square
+            });
+        }
+
+        function getPlayerTokenChar(playerId) {
+            const tokens = ['🧑‍⚕️', '🔬', '🏥', '🤝']; // Therapist, Physicist, Hospital, Collab
+            return tokens[playerId % tokens.length];
+        }
+
+        function rollDice() {
+            if (!gameActive) return;
+
+            const die1 = Math.floor(Math.random() * 6) + 1;
+            const die2 = Math.floor(Math.random() * 6) + 1;
+            diceRoll = die1 + die2;
+            diceDisplay.textContent = `${die1} + ${die2} = ${diceRoll}`;
+            logMessage(`${players[currentPlayerIndex].name} rolled a ${diceRoll}.`);
+
+            rollDiceBtn.disabled = true; // Disable roll button after roll
+
+            if (players[currentPlayerIndex].qaHoldTurns > 0) {
+                if (die1 === die2) {
+                    logMessage(`${players[currentPlayerIndex].name} rolled doubles and is released from QA Hold!`);
+                    players[currentPlayerIndex].qaHoldTurns = 0;
+                    movePlayer(diceRoll);
+                } else {
+                    logMessage(`${players[currentPlayerIndex].name} is in QA Hold for ${players[currentPlayerIndex].qaHoldTurns} more turns. No doubles.`);
+                    players[currentPlayerIndex].qaHoldTurns--;
+                    endTurn();
+                }
+            } else {
+                movePlayer(diceRoll);
+            }
+        }
+
+        function movePlayer(spaces) {
+            const currentPlayer = players[currentPlayerIndex];
+            const oldPosition = currentPlayer.position;
+            currentPlayer.position = (currentPlayer.position + spaces) % boardConfig.length;
+
+            updatePlayerTokenPosition(currentPlayer);
+            logMessage(`${currentPlayer.name} moved to ${boardConfig[currentPlayer.position].name}.`);
+
+            // Check if player passed GO (this logic works even if landing ON GO)
+            if (currentPlayer.position < oldPosition) { // Wrapped around the board
+                currentPlayer.money += SALARY_ON_GO;
+                logMessage(`${currentPlayer.name} passed GO and collected $${SALARY_ON_GO} salary!`);
+            }
+
+            setTimeout(() => { // Small delay for animation
+                handleLandingOnSquare();
+            }, 800);
+        }
+
+        function updatePlayerTokenPosition(player) {
+            // Get the actual DOM element for the square
+            const squareElement = boardElement.querySelector(`[data-index="${player.position}"]`);
+            if (!squareElement) {
+                console.error("Square element not found for position:", player.position);
+                return;
+            }
+
+            const tokenElement = document.getElementById(`player-token-${player.id}`);
+            
+            // Calculate absolute position within the board grid
+            const squareRect = squareElement.getBoundingClientRect();
+            const boardRect = boardElement.getBoundingClientRect();
+
+            tokenElement.style.left = `${squareRect.left - boardRect.left + (squareRect.width / 2) + (player.id * 5) - (numPlayers * 2.5)}px`; /* Offset for multiple tokens on one square */
+            tokenElement.style.top = `${squareRect.top - boardRect.top + (squareRect.height / 2) + (player.id * 5) - (numPlayers * 2.5)}px`; /* Offset for multiple tokens on one square */
+        }
+
+        function handleLandingOnSquare() {
+            const currentPlayer = players[currentPlayerIndex];
+            const currentSquare = boardConfig[currentPlayer.position];
+
+            logMessage(`${currentPlayer.name} landed on: ${currentSquare.name}`);
+
+            if (currentSquare.type === SQUARE_TYPES.PROPERTY) {
+                if (currentSquare.owner === undefined) {
+                    showBuyPropertyModal(currentSquare);
+                } else if (currentSquare.owner !== currentPlayerIndex) {
+                    payRent(currentPlayer, currentSquare);
+                } else {
+                    logMessage(`${currentPlayer.name} owns this asset.`);
+                    endTurn();
+                }
+            } else if (currentSquare.type === SQUARE_TYPES.TAX) {
+                currentPlayer.money -= currentSquare.amount;
+                logMessage(`${currentPlayer.name} paid $${currentSquare.amount} for ${currentSquare.name}.`);
+                checkBankruptcy();
+                endTurn();
+            } else if (currentSquare.type === SQUARE_TYPES.CLINICAL_CHALLENGE) {
+                drawCard(clinicalChallengeCards, "Clinical Challenge");
+            } else if (currentSquare.type === SQUARE_TYPES.RESEARCH_BREAKTHROUGH) {
+                drawCard(researchBreakthroughCards, "Research Breakthrough");
+            } else if (currentSquare.type === SQUARE_TYPES.QA_HOLD) {
+                if (currentSquare.name === "Go to QA HOLD!") {
+                    logMessage(`${currentPlayer.name} sent to QA HOLD!`);
+                    currentPlayer.position = 10; // QA Hold square index
+                    currentPlayer.qaHoldTurns = 3; // 3 turns in QA hold
+                    updatePlayerTokenPosition(currentPlayer);
+                    toggleControls(false, false, false); // Disable all until pay/end turn
+                    payBailBtn.classList.remove('hidden');
+                    endTurnBtn.classList.remove('hidden'); // Can end turn without action
+                } else { // Landing directly on QA Hold from a roll or card
+                    logMessage(`${currentPlayer.name} is just visiting QA Hold.`);
+                    endTurn();
+                }
+            } else if (currentSquare.type === SQUARE_TYPES.GO || currentSquare.type === SQUARE_TYPES.FREE_PARKING) {
+                logMessage(currentSquare.effect);
+                endTurn();
+            }
+        }
+
+        function showBuyPropertyModal(property) {
+            buyModalTitle.textContent = property.name;
+            buyModalDescription.textContent = `Do you want to acquire this asset?`;
+            buyModalCost.textContent = property.cost;
+
+            confirmBuyBtn.onclick = () => confirmPurchase(property);
+            declineBuyBtn.onclick = () => declinePurchase(property);
+
+            buyPropertyModal.classList.remove('hidden');
+            toggleControls(false, false, false); // Disable main controls
+        }
+
+        function confirmPurchase(property) {
+            const currentPlayer = players[currentPlayerIndex];
+            if (currentPlayer.money >= property.cost) {
+                currentPlayer.money -= property.cost;
+                property.owner = currentPlayerIndex;
+                currentPlayer.properties.push(property);
+                logMessage(`${currentPlayer.name} acquired ${property.name} for $${property.cost}.`);
+                updateSquareOwner(property);
+                updateUI();
+                buyPropertyModal.classList.add('hidden');
+                endTurn();
+            } else {
+                logMessage(`${currentPlayer.name} doesn't have enough money to buy ${property.name}.`);
+                buyPropertyModal.classList.add('hidden');
+                endTurn();
+            }
+        }
+
+        function declinePurchase(property) {
+            logMessage(`${players[currentPlayerIndex].name} declined to acquire ${property.name}.`);
+            buyPropertyModal.classList.add('hidden');
+            endTurn();
+        }
+
+        function payRent(payer, property) {
+            const owner = players[property.owner];
+            const rentAmount = property.rent;
+            payer.money -= rentAmount;
+            owner.money += rentAmount;
+            logMessage(`${payer.name} paid $${rentAmount} to ${owner.name} for ${property.name}.`);
+            checkBankruptcy();
+            endTurn();
+        }
+
+        function updateSquareOwner(property) {
+            const index = boardConfig.indexOf(property);
+            const squareElement = boardElement.querySelector(`[data-index="${index}"]`);
+            if (!squareElement) return; // Should not happen if property is valid
+
+            let ownerToken = squareElement.querySelector('.property-owner-token');
+            if (!ownerToken) {
+                ownerToken = document.createElement('div');
+                ownerToken.classList.add('property-owner-token');
+                squareElement.appendChild(ownerToken);
+            }
+            // Remove previous owner class if any
+            PLAYER_COLORS.forEach((color, pId) => {
+                ownerToken.classList.remove(`p-${pId}`);
+            });
+            ownerToken.classList.add(`p-${property.owner}`);
+            ownerToken.textContent = players[property.owner].token;
+        }
+
+        function drawCard(cardDeck, type) {
+            const card = cardDeck[Math.floor(Math.random() * cardDeck.length)];
+            cardTitle.textContent = card.title;
+            cardDescription.textContent = card.description;
+            cardButton.onclick = () => {
+                if (card.type === "money") {
+                    players[currentPlayerIndex].money += card.amount;
+                    logMessage(`${players[currentPlayerIndex].name} ${card.amount > 0 ? 'gained' : 'lost'} $${Math.abs(card.amount)}: ${card.title}`);
+                } else if (card.type === "move") {
+                    logMessage(`${players[currentPlayerIndex].name} ${card.spaces > 0 ? 'advanced' : 'moved back'} ${Math.abs(card.spaces)} spaces: ${card.title}`);
+                    movePlayer(card.spaces); // Recursively call move and then handle square
+                    cardModal.classList.add('hidden');
+                    return; // Exit to prevent immediate endTurn
+                } else if (card.type === "goto") {
+                    logMessage(`${players[currentPlayerIndex].name} sent to ${boardConfig[card.square].name}: ${card.title}`);
+                    players[currentPlayerIndex].position = card.square;
+                    updatePlayerTokenPosition(players[currentPlayerIndex]);
+                    if (card.square === 10) players[currentPlayerIndex].qaHoldTurns = 3; // Go to QA Hold
+                }
+                cardModal.classList.add('hidden');
+                checkBankruptcy();
+                endTurn();
+            };
+            cardModal.classList.remove('hidden');
+            toggleControls(false, false, false); // Disable controls until card resolved
+        }
+
+        function payForQARelease() {
+            const currentPlayer = players[currentPlayerIndex];
+            if (currentPlayer.money >= QA_HOLD_FINE) {
+                currentPlayer.money -= QA_HOLD_FINE;
+                currentPlayer.qaHoldTurns = 0;
+                logMessage(`${currentPlayer.name} paid $${QA_HOLD_FINE} and is released from QA Hold!`);
+                toggleControls(true, false, false); // Enable roll dice
+                payBailBtn.classList.add('hidden');
+                endTurnBtn.classList.add('hidden');
+                updateUI();
+            } else {
+                logMessage(`${currentPlayer.name} doesn't have enough to pay the QA Hold fine.`);
+            }
+        }
+
+        function endTurn() {
+            if (!gameActive) return;
+
+            currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
+            if (currentPlayerIndex === 0) { // New round
+                gameRound++;
+                currentRoundDisplay.textContent = gameRound;
+                logMessage(`--- Round ${gameRound} ---`);
+                if (gameRound > MAX_ROUNDS) {
+                    endGame("Max rounds reached!");
+                    return;
+                }
+            }
+
+            logMessage(`${players[currentPlayerIndex].name}'s turn.`);
+            updateUI();
+
+            // Check if current player is in QA Hold
+            if (players[currentPlayerIndex].qaHoldTurns > 0) {
+                logMessage(`${players[currentPlayerIndex].name} is in QA Hold for ${players[currentPlayerIndex].qaHoldTurns} more turns. Must pay or roll doubles.`);
+                toggleControls(true, false, true); // Enable roll and pay bail
+            } else {
+                toggleControls(true, false, false); // Only roll dice enabled
+            }
+        }
+
+        function checkBankruptcy() {
+            players.forEach((player, index) => {
+                if (player.money <= 0 && player.properties.length === 0) {
+                    gameActive = false; // End game
+                    logMessage(`${player.name} is bankrupt!`);
+                    endGame(`${player.name} ran out of funds!`);
+                }
+            });
+        }
+
+        function endGame(message) {
+            gameActive = false;
+            gameOverMessage.textContent = message;
+            
+            // Calculate final scores based on money + property value
+            players.forEach(player => {
+                let propertyValue = player.properties.reduce((sum, prop) => sum + prop.cost, 0);
+                player.finalScore = player.money + propertyValue;
+            });
+
+            // Sort players by final score
+            const sortedPlayers = [...players].sort((a, b) => b.finalScore - a.finalScore);
+
+            finalScoresList.innerHTML = '';
+            sortedPlayers.forEach(player => {
+                const li = document.createElement('li');
+                li.textContent = `${player.name}: $${player.finalScore}`;
+                finalScoresList.appendChild(li);
+            });
+
+            gameOverModal.classList.remove('hidden');
+            toggleControls(false, false, false); // Disable all controls
+        }
+
+
+        // --- UI Update Functions ---
+        function updateUI() {
+            // Update player info panel
+            playerInfoContainer.innerHTML = '';
+            players.forEach(player => {
+                const playerDiv = document.createElement('div');
+                playerDiv.classList.add('player-info', 'flex', 'items-center', 'gap-2', 'p-2', 'rounded-lg');
+                if (player.id === currentPlayerIndex) {
+                    playerDiv.classList.add('bg-gray-700', 'border', 'border-yellow-400');
+                }
+                playerDiv.innerHTML = `
+                    <div class="player-token-display p-${player.id}">${player.token}</div>
+                    <span>${player.name}: $${player.money}</span>
+                `;
+                playerInfoContainer.appendChild(playerDiv);
+            });
+
+            // Update current player's assets list
+            playerAssetsList.innerHTML = '';
+            const currentPlayer = players[currentPlayerIndex];
+            if (currentPlayer.properties.length === 0) {
+                playerAssetsList.innerHTML = `<p class="text-gray-400">No assets acquired yet.</p>`;
+            } else {
+                currentPlayer.properties.forEach(prop => {
+                    const propDiv = document.createElement('div');
+                    propDiv.classList.add('property-card', `owned-by-${prop.owner}`);
+                    propDiv.textContent = `${prop.name} (Rent: $${prop.rent})`;
+                    playerAssetsList.appendChild(propDiv);
+                });
+            }
+
+            // Ensure correct button states are applied
+            // (handled by toggleControls after specific actions)
+        }
+
+        function logMessage(message) {
+            const li = document.createElement('li');
+            li.textContent = message;
+            gameLog.prepend(li); // Add newest messages to top
+            if (gameLog.children.length > 10) { // Keep log concise
+                gameLog.removeChild(gameLog.lastChild);
+            }
+        }
+
+        function toggleControls(rollEnabled, buyEnabled, endEnabled) {
+            rollDiceBtn.disabled = !rollEnabled;
+            buyPropertyBtn.classList.toggle('hidden', !buyEnabled); // Use toggle for visibility
+            buyPropertyBtn.disabled = !buyEnabled;
+            endTurnBtn.classList.toggle('hidden', !endEnabled);
+            endTurnBtn.disabled = !endEnabled;
+            payBailBtn.classList.toggle('hidden', !players[currentPlayerIndex].qaHoldTurns); // Only show if in QA hold
+            payBailBtn.disabled = players[currentPlayerIndex].qaHoldTurns <= 0 || players[currentPlayerIndex].money < QA_HOLD_FINE; // Disable if not in QA or can't afford
+        }
+
+        // --- Event Listeners ---
+        rollDiceBtn.addEventListener('click', rollDice);
+        buyPropertyBtn.addEventListener('click', () => showBuyPropertyModal(boardConfig[players[currentPlayerIndex].position]));
+        endTurnBtn.addEventListener('click', endTurn);
+        payBailBtn.addEventListener('click', payForQARelease);
+
+        startGameBtn.addEventListener('click', initializeGame);
+        restartGameBtn.addEventListener('click', initializeGame);
+
+        // Initial setup on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            logMessage("Welcome to RT Department Tycoon! Choose number of players and click Start Game.");
+            startModal.classList.remove('hidden');
+            currentRoundDisplay.textContent = gameRound; // Initialize round display
+        });
+    </script>
+</body>
+</html>

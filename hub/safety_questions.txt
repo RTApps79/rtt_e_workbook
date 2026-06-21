@@ -1,0 +1,337 @@
+// ====================
+// SAFETY SECTION
+// ====================
+
+const safetyQuestions = {
+  // A. Biological Effects of Radiation (formerly 'Radiation Physics and Radiobiology' - 21 Questions)
+  biologicalEffectsOfRadiation: [
+    {
+      question: "What is the SI unit for absorbed dose of radiation?",
+      options: ["Gray (Gy)", "Sievert (Sv)", "Rem", "Coulomb per kilogram (C/kg)"],
+      correctAnswer: 0,
+      feedback: "Correct! Absorbed dose is measured in Gray (Gy)."
+    },
+    {
+      question: "Which unit is used to measure dose equivalent in radiation protection?",
+      options: ["Gray (Gy)", "Sievert (Sv)", "Rad", "Curie (Ci)"],
+      correctAnswer: 1,
+      feedback: "Correct! Dose equivalent is measured in Sievert (Sv)."
+    },
+    {
+      question: "What unit measures exposure in air?",
+      options: ["Gray (Gy)", "Sievert (Sv)", "Coulomb per kilogram (C/kg)", "Rad"],
+      correctAnswer: 2,
+      feedback: "Correct! Exposure in air is measured in Coulomb per kilogram (C/kg)."
+    },
+    {
+      question: "Effective dose, used for radiation protection purposes, is measured in which unit?",
+      options: ["Gray (Gy)", "Sievert (Sv)", "Coulomb per kilogram (C/kg)", "Rem"],
+      correctAnswer: 1,
+      feedback: "Correct! Effective dose is measured in Sievert (Sv)."
+    },
+    {
+      question: "Air kerma is a measure of kinetic energy released in a material. In radiation therapy, it is measured in:",
+      options: ["Gray (Gy)", "Sievert (Sv)", "Coulomb per kilogram (C/kg)", "Rem"],
+      correctAnswer: 0,
+      feedback: "Correct! Air kerma is measured in Gray (Gy)."
+    },
+    {
+      question: "Which cells are generally the most radiosensitive?",
+      options: ["Nerve cells", "Muscle cells", "Lymphocytes", "Red blood cells"],
+      correctAnswer: 2,
+      feedback: "Correct! Lymphocytes are among the most radiosensitive cells."
+    },
+    {
+      question: "What describes the relationship between radiation dose and biological response?",
+      options: ["Dose-response relationship", "LET", "RBE", "OER"],
+      correctAnswer: 0,
+      feedback: "Correct! The dose-response relationship shows how biological effect changes with dose."
+    },
+    {
+      question: "Which radiation type has a higher Relative Biological Effectiveness (RBE)?",
+      options: ["X-rays", "Gamma rays", "Alpha particles", "Visible light"],
+      correctAnswer: 2,
+      feedback: "Correct! High-LET radiation like alpha particles has higher RBE due to dense ionization tracks."
+    },
+    {
+      question: "The oxygen enhancement ratio (OER) indicates that cells are more sensitive to radiation in the presence of oxygen. For X-rays, the OER is typically:",
+      options: ["1.0", "1.5-2.0", "2.5-3.0", "4.0-5.0"],
+      correctAnswer: 1,
+      feedback: "Correct! OER for X-rays is about 1.5-2.0."
+    },
+    {
+      question: "What describes the 'shoulder' of a cell survival curve?",
+      options: ["Single-hit killing", "Accumulation of sublethal damage", "Oxygen effect dominance", "Repair enzyme saturation"],
+      correctAnswer: 1,
+      feedback: "Correct! The shoulder indicates cells can repair sublethal damage at low doses."
+    },
+    {
+      question: "Which cell death mode is most common after radiation in rapidly dividing cells?",
+      options: ["Apoptosis", "Necrosis", "Mitotic catastrophe", "Autophagy"],
+      correctAnswer: 2,
+      feedback: "Correct! Mitotic catastrophe from DNA damage during division is a primary radiation-induced cell death."
+    },
+    {
+      question: "What is the primary target of radiation-induced DNA damage?",
+      options: ["Cell membrane", "Mitochondria", "Nuclear DNA", "Ribosomes"],
+      correctAnswer: 2,
+      feedback: "Correct! DNA double-strand breaks in the nucleus are the most critical lesions."
+    },
+    {
+      question: "Why is fractionation used in radiotherapy?",
+      options: ["Allows normal tissue repair", "Permits tumor reoxygenation", "Exploits cell cycle redistribution", "All of the above"],
+      correctAnswer: 3,
+      feedback: "Correct! Fractionation leverages all four R's: Repair, Repopulation, Reoxygenation, Redistribution."
+    },
+    {
+      question: "The α/β ratio is typically lower for:",
+      options: ["Early-responding tissues", "Late-responding tissues", "Malignant tumors", "Leukemia cells"],
+      correctAnswer: 1,
+      feedback: "Correct! Late-responding tissues (e.g., spinal cord) have low α/β ratios, making them sensitive to dose per fraction."
+    },
+    {
+      question: "What does TD5/5 refer to in radiation tissue tolerance?",
+      options: ["Dose causing 5% complication in 5 years", "Dose causing 5% tumor control in 5 years", "Dose causing 50% complication in 5 years", "Dose causing 50% tumor control in 5 years"],
+      correctAnswer: 0,
+      feedback: "Correct! TD5/5 is the dose that causes a 5% complication rate in 5 years."
+    },
+    {
+      question: "Which of the following is a potential adverse effect of exceeding tissue tolerance?",
+      options: ["Erythema", "Fibrosis", "Necrosis", "All of the above"],
+      correctAnswer: 3,
+      feedback: "Correct! All are possible adverse effects of exceeding tissue tolerance."
+    },
+    {
+      question: "Which of the following is an example of a radioprotector?",
+      options: ["Oxygen", "Amifostine", "Chemotherapy", "Brachytherapy"],
+      correctAnswer: 1,
+      feedback: "Correct! Amifostine is a radioprotector."
+    },
+    {
+      question: "Which of the following is a somatic effect of radiation?",
+      options: ["Genetic mutations in offspring", "Skin erythema", "Altered DNA in sperm", "None of the above"],
+      correctAnswer: 1,
+      feedback: "Correct! Skin erythema is a somatic effect."
+    },
+    {
+      question: "What is the most radiosensitive time in human embryonic/fetal development?",
+      options: ["Pre-implantation", "Organogenesis", "Fetal period", "Adulthood"],
+      correctAnswer: 1,
+      feedback: "Correct! Organogenesis is the most radiosensitive period."
+    },
+    {
+      question: "Carcinogenesis refers to:",
+      options: ["Cell death", "Cancer formation", "Tissue repair", "Genetic mutation"],
+      correctAnswer: 1,
+      feedback: "Correct! Carcinogenesis is the formation of cancer."
+    },
+    {
+      question: "Which organ system is most sensitive to whole-body radiation exposure?",
+      options: ["Gastrointestinal", "Hemopoietic", "Central nervous system", "Muscular"],
+      correctAnswer: 1,
+      feedback: "Correct! The hemopoietic system is most sensitive to whole-body radiation."
+    },
+  ],
+
+  // B. Minimizing Patient Exposure (5 Questions)
+  minimizingPatientExposure: [
+    {
+      question: "To reduce patient exposure during imaging, what adjustment should be made to kVp if mAs is increased?",
+      options: ["Decrease kVp", "Increase kVp", "Keep kVp constant", "kVp is not related to mAs"],
+      correctAnswer: 0,
+      feedback: "Correct! Decreasing kVp when increasing mAs helps maintain image quality while minimizing exposure."
+    },
+    {
+      question: "What is the primary rationale for using patient shielding in diagnostic imaging and CT simulation?",
+      options: ["To reduce unnecessary dose to radiosensitive organs", "To improve image quality", "To extend equipment life", "To shorten exposure time"],
+      correctAnswer: 0,
+      feedback: "Correct! Shielding protects radiosensitive organs from scatter radiation."
+    },
+    {
+      question: "Which type of shielding is most appropriate for a patient receiving scatter radiation during a CT simulation?",
+      options: ["Lead apron or gonad shield", "Aluminum filter", "Copper filter", "Acrylic shield"],
+      correctAnswer: 0,
+      feedback: "Correct! Lead shields are effective against scatter radiation."
+    },
+    {
+      question: "How does proper collimation affect patient dose during imaging?",
+      options: ["It reduces patient dose by limiting the beam to the area of interest", "It increases patient dose by concentrating the beam", "It has no effect on patient dose", "It improves image contrast without affecting dose"],
+      correctAnswer: 0,
+      feedback: "Correct! Collimation minimizes the irradiated volume, thereby reducing patient dose."
+    },
+    {
+      question: "For a pediatric patient undergoing CT simulation, which consideration is most important for dose reduction?",
+      options: ["Optimize protocols for lowest possible dose while maintaining image quality", "Increase mAs to compensate for patient motion", "Use a higher kVp setting", "Avoid communication to reduce anxiety"],
+      correctAnswer: 0,
+      feedback: "Correct! Pediatric patients are more radiosensitive, requiring careful dose optimization."
+    }
+  ],
+
+  // C. Personnel Protection (ALARA) (5 Questions)
+  personnelProtection: [
+    {
+      question: "What does ALARA stand for in radiation protection?",
+      options: ["As Low As Reasonably Achievable", "As Large As Radiation Allows", "All Levels Are Regulated Accordingly", "As Low As Radiation Allows"],
+      correctAnswer: 0,
+      feedback: "Correct! ALARA is the guiding principle for radiation protection."
+    },
+    {
+      question: "Which of the following is NOT a basic method of radiation protection?",
+      options: ["Time", "Distance", "Shielding", "Filtration"],
+      correctAnswer: 3,
+      feedback: "Correct! Filtration is an aspect of beam quality, not a basic method of personal protection."
+    },
+    {
+      question: "According to NCRP Report #116, what is the annual occupational effective dose limit for radiation workers in the US?",
+      options: ["5 mSv", "50 mSv", "100 mSv", "500 mSv"],
+      correctAnswer: 1,
+      feedback: "Correct! The annual occupational effective dose limit is 50 mSv (5 rem)."
+    },
+    {
+      question: "For an embryo/fetus of a declared pregnant worker, what is the monthly dose equivalent limit?",
+      options: ["0.5 mSv", "5.0 mSv", "1.0 mSv", "50 mSv"],
+      correctAnswer: 0,
+      feedback: "Correct! The monthly dose equivalent limit for an embryo/fetus is 0.5 mSv (0.05 rem)."
+    },
+    {
+      question: "Why is proper evaluation and maintenance of personnel dosimetry records crucial?",
+      options: ["To track individual exposure and ensure compliance with dose limits", "To monitor equipment performance", "To calculate patient dose", "To determine billing codes"],
+      correctAnswer: 0,
+      feedback: "Correct! Dosimetry records are essential for demonstrating regulatory compliance and protecting workers."
+    }
+  ],
+
+  // D. Facilities and Area Monitoring (5 Questions)
+  facilitiesAndAreaMonitoring: [
+    {
+      question: "According to NRC regulations (10 CFR), which area classification has limited access due to radiation hazards and requires personnel monitoring?",
+      options: ["Restricted area", "Controlled area", "Unrestricted area", "Public area"],
+      correctAnswer: 0,
+      feedback: "Correct! A restricted area is where access is limited to protect individuals from radiation hazards."
+    },
+    {
+      question: "What type of posting or sign is typically required at the entrance to a 'Radiation Area'?",
+      options: ["Caution: Radiation Area", "Danger: High Voltage", "No Smoking", "Emergency Exit"],
+      correctAnswer: 0,
+      feedback: "Correct! Specific signs are required to warn of radiation hazards."
+    },
+    {
+      question: "Which device is used for continuous area monitoring of radiation levels in a treatment vault?",
+      options: ["Area radiation monitor", "Geiger-Müller detector", "Pocket dosimeter", "TLD"],
+      correctAnswer: 0,
+      feedback: "Correct! Area radiation monitors provide real-time monitoring of radiation levels."
+    },
+    {
+      question: "What is the primary purpose of a primary barrier in a radiation therapy vault?",
+      options: ["To attenuate the direct (primary) radiation beam", "To attenuate scattered radiation", "To provide structural support", "To prevent unauthorized entry"],
+      correctAnswer: 0,
+      feedback: "Correct! Primary barriers are designed to block the direct radiation beam."
+    },
+    {
+      question: "What is the function of a secondary barrier in a radiation therapy vault?",
+      options: ["To attenuate scatter and leakage radiation", "To block the direct beam", "To absorb neutrons", "To serve as the main entrance"],
+      correctAnswer: 0,
+      feedback: "Correct! Secondary barriers are designed to shield against scatter and leakage radiation."
+    }
+  ],
+
+  // E. MRI Magnetic Field Screening (4 Questions)
+  mriMagneticFieldScreening: [
+    {
+      question: "What is the primary safety concern regarding biomedical implants (e.g., pacemakers, aneurysm clips) in an MRI environment?",
+      options: ["Potential for movement, heating, or malfunction due to the strong magnetic field", "Increased radiation dose", "Allergic reaction to contrast media", "No concerns, MRI is completely safe for all implants"],
+      correctAnswer: 0,
+      feedback: "Correct! The strong magnetic field can interact dangerously with certain implants."
+    },
+    {
+      question: "Why are ferrous foreign bodies (e.g., metal fragments) a serious concern in an MRI scanner?",
+      options: ["They can become projectiles and cause injury", "They interfere with RF signals causing poor image quality", "They cause overheating of the patient", "They can induce electric shocks"],
+      correctAnswer: 0,
+      feedback: "Correct! Ferrous objects can be rapidly attracted to the magnet, creating a projectile hazard."
+    },
+    {
+      question: "When screening for MRI, what is a key consideration for patients with tattoos or permanent makeup?",
+      options: ["Potential for skin irritation or burns at the tattoo site", "They cause severe image artifacts", "They prevent the magnetic field from penetrating", "No concerns, tattoos are always safe"],
+      correctAnswer: 0,
+      feedback: "Correct! Metallic pigments in tattoos can heat up during MRI, causing burns."
+    },
+    {
+      question: "Which ancillary equipment must be carefully screened before entering the MRI suite?",
+      options: ["Oxygen tanks, IV poles, and wheelchairs made of non-MRI compatible materials", "Paper charts only", "Plastic containers", "Wooden chairs"],
+      correctAnswer: 0,
+      feedback: "Correct! Many common medical devices and ancillary equipment contain ferromagnetic materials and pose a hazard in the MRI suite."
+    }
+  ],
+
+  // F. Handling and Disposal of Radioactive Materials (3 Questions)
+  handlingAndDisposalOfRadioactiveMaterials: [
+    {
+      question: "For a patient undergoing brachytherapy with a temporary implant, what general principle should be applied regarding handling of radioactive materials?",
+      options: ["Minimize time in vicinity, maximize distance, and use shielding", "Handle without gloves", "Dispose of directly in regular trash", "Store in a patient's room"],
+      correctAnswer: 0,
+      feedback: "Correct! Time, distance, and shielding are paramount for handling radioactive materials."
+    },
+    {
+      question: "Who is primarily responsible for the safe handling and disposal of radioactive sources after a brachytherapy procedure?",
+      options: ["Qualified personnel trained in radiation safety and waste management", "The patient's nurse", "The cleaning staff", "Any available staff member"],
+      correctAnswer: 0,
+      feedback: "Correct! Only trained and authorized personnel should handle radioactive materials."
+    },
+    {
+      question: "What is the purpose of specific waste containers (e.g., shielded bins) for radioactive materials?",
+      options: ["To safely store and isolate radioactive waste before disposal", "To reduce the volume of waste", "To recycle the materials", "To make it easier to move the waste"],
+      correctAnswer: 0,
+      feedback: "Correct! Dedicated containers ensure safe containment and prevent exposure."
+    }
+  ],
+
+  // G. Components and Operation (Linear Accelerator, CT Simulator) (5 Questions)
+  componentsAndOperation: [
+    {
+      question: "What is the primary function of the multileaf collimator (MLC) on a linear accelerator?",
+      options: ["To shape the radiation beam to conform to the tumor", "To generate electrons", "To cool the machine", "To immobilize the patient"],
+      correctAnswer: 0,
+      feedback: "Correct! MLCs are essential for conformal and intensity-modulated radiation therapy."
+    },
+    {
+      question: "What is the purpose of interlocks on a linear accelerator?",
+      options: ["To prevent unsafe operation by shutting down the beam if safety conditions are not met", "To increase the dose rate", "To reduce image quality", "To cool the treatment room"],
+      correctAnswer: 0,
+      feedback: "Correct! Interlocks are crucial safety mechanisms."
+    },
+    {
+      question: "What is the primary role of a CT simulator in radiation therapy?",
+      options: ["To generate 3D anatomical images for treatment planning", "To deliver therapeutic radiation doses", "To perform diagnostic exams only", "To monitor patient vital signs"],
+      correctAnswer: 0,
+      feedback: "Correct! CT simulation provides the essential anatomical data for treatment planning."
+    },
+    {
+      question: "What is the function of the lasers in a CT simulation room?",
+      options: ["To assist in accurate patient positioning and mark reference points on the skin", "To treat the patient", "To provide ambient lighting", "To sterilize the room"],
+      correctAnswer: 0,
+      feedback: "Correct! Lasers are critical for reproducible patient setup."
+    },
+    {
+      question: "What is the purpose of the record and verify (R&V) system in radiation therapy?",
+      options: ["To ensure the correct treatment parameters are set and delivered for each patient", "To schedule patient appointments", "To manage billing and insurance", "To track machine maintenance records"],
+      correctAnswer: 0,
+      feedback: "Correct! The R&V system provides a crucial safety check for treatment delivery."
+    }
+  ],
+
+  // H. Instrumentation (2 Questions)
+  instrumentation: [
+    {
+      question: "Which radiation detection instrument is commonly used for measuring exposure rates in a radiation therapy facility, especially for surveying areas?",
+      options: ["Ionization chamber", "TLD", "OSL dosimeter", "Diode"],
+      correctAnswer: 0,
+      feedback: "Correct! Ionization chambers are often used as survey meters due to their accuracy over a wide range of energies."
+    },
+    {
+      question: "What is the primary function of a Thermoluminescent Dosimeter (TLD) or Optically Stimulated Luminescent (OSL) dosimeter?",
+      options: ["To measure accumulated radiation dose for personnel monitoring", "To measure instantaneous dose rate", "To detect neutrons only", "To visualize the treatment field"],
+      correctAnswer: 0,
+      feedback: "Correct! TLDs and OSLs are passive detectors used for long-term personnel and area monitoring."
+    }
+  ]
+};

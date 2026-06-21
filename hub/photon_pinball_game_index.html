@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photon Pinball</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.18.0/matter.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto Mono', monospace;
+            background-color: #0a0a23;
+            color: #fff;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        #game-wrapper {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+        }
+        canvas {
+            background-color: #111;
+            border: 2px solid #fde047; /* Yellow border */
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(253, 224, 71, 0.4);
+        }
+        .controls-panel {
+            display: flex;
+            flex-direction: column;
+            width: 250px;
+            gap: 1.5rem;
+        }
+        .ui-box {
+            background: #1e293b;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #334155;
+        }
+        .ui-box h3 {
+            color: #fde047;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2em;
+            margin-bottom: 0.5rem;
+        }
+        .ui-box p {
+            font-size: 1.8em;
+            font-family: 'Orbitron', sans-serif;
+        }
+        #target-interaction {
+            color: #fde047;
+            font-weight: bold;
+        }
+        .energy-btn {
+            background: #374151; border: 1px solid #4b5563; padding: 0.75rem;
+            border-radius: 8px; text-align: center; font-family: 'Orbitron', sans-serif;
+            font-size: 1em; cursor: pointer; transition: all 0.2s ease-in-out;
+        }
+        .energy-btn:hover, .energy-btn.selected {
+            background: #fde047; color: #111; border-color: #facc15; transform: scale(1.05);
+        }
+        #launch-button {
+            background: #22c55e; border-color: #16a34a; padding: 1rem;
+            font-size: 1.2em;
+        }
+        .modal { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(10, 10, 35, 0.95); border: 2px solid #fde047; border-radius: 15px; padding: 30px; text-align: center; box-shadow: 0 0 30px #fde047; z-index: 100; width: 90%; max-width: 600px; }
+        .modal h2 { font-size: 2em; color: #fde047; margin-bottom: 20px; font-family: 'Orbitron', sans-serif; }
+        .modal p { font-size: 1.1em; line-height: 1.6; margin-bottom: 20px; }
+        .modal button { background-color: #fde047; color: #111; border: none; padding: 15px 30px; border-radius: 8px; font-family: 'Orbitron', sans-serif; font-size: 1.2em; cursor: pointer; transition: all 0.3s ease; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div id="game-wrapper">
+        <canvas id="gameCanvas" width="600" height="800"></canvas>
+        <div class="controls-panel">
+            <div class="ui-box">
+                <h3>Score</h3>
+                <p id="score">0</p>
+            </div>
+            <div class="ui-box">
+                <h3>Balls Left</h3>
+                <p id="balls-left">5</p>
+            </div>
+             <div class="ui-box">
+                <h3>Target Interaction</h3>
+                <p id="target-interaction">Compton</p>
+            </div>
+            <div class="ui-box">
+                <h3>Select Energy</h3>
+                <div class="flex flex-col gap-2 mt-2">
+                    <button class="energy-btn" data-energy="low">Low (kV)</button>
+                    <button class="energy-btn selected" data-energy="medium">Medium (MV)</button>
+                    <button class="energy-btn" data-energy="high">High (>10MV)</button>
+                </div>
+            </div>
+            <button id="launch-button" class="energy-btn">LAUNCH PHOTON</button>
+        </div>
+    </div>
+    <div id="startScreen" class="modal">
+        <h2>Photon Pinball</h2>
+        <p>Your goal is to achieve the TARGET INTERACTION. Select the PHOTON ENERGY, then use SPACEBAR to LAUNCH. Use LEFT/RIGHT ARROW keys to control the flippers. The interaction outcome depends on the energy and the material it hits!</p>
+        <button id="startButton">Start Physics!</button>
+    </div>
+    <div id="endScreen" class="modal hidden">
+        <h2 id="endTitle"></h2>
+        <p id="endMessage"></p>
+        <p>Final Score: <span id="finalScore">0</span></p>
+        <button id="restartButton">Play Again</button>
+    </div>
+
+<script>
+const { Engine, Render, Runner, Bodies, Composite, Events, World, Body, Vector, Constraint } = Matter;
+
+// --- Setup ---
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+const startScreen = document.getElementById('startScreen');
+const endScreen = document.getElementById('endScreen');
+const startButton = document.getElementById('startButton');
+const launchButton = document.getElementById('launch-button');
+const restartButton = document.getElementById('restartButton');
+const scoreEl = document.getElementById('score');
+const ballsLeftEl = document.getElementById('balls-left');
+const targetInteractionEl = document.getElementById('target-interaction');
+const energyButtons = document.querySelectorAll('.energy-btn');
+
+// --- Game State ---
+let engine, render, runner;
+let score = 0;
+let ballsLeft = 5;
+let currentEnergy = 'medium';
+let targetInteraction = 'Compton Scatter';
+let ball = null;
+let particles = [];
+let gameRunning = false;
+let leftFlipper, rightFlipper;
+let keys = {};
+
+const TARGET_INTERACTIONS = ['Compton Scatter', 'Photoelectric Effect', 'Pair Production'];
+
+// --- Game Logic ---
+function init() {
+    startScreen.classList.add('hidden');
+    endScreen.classList.add('hidden');
+    
+    score = 0;
+    ballsLeft = 5;
+    
+    setupPhysics();
+    setupWorld();
+    prepareNewBall();
+    setNewTarget();
+    updateUI();
+
+    gameRunning = true;
+    Runner.run(runner, engine);
+    Render.run(render);
+    
+    Events.on(engine, 'beforeUpdate', handleFlippers);
+    Events.on(engine, 'collisionStart', handleCollision);
+    Events.on(render, 'afterRender', drawGameElements);
+}
+
+function setupPhysics() {
+    engine = Engine.create();
+    engine.world.gravity.y = 1;
+
+    render = Render.create({
+        canvas: canvas,
+        engine: engine,
+        options: { width: 600, height: 800, wireframes: false, background: '#111827' }
+    });
+    runner = Runner.create();
+}
+
+function setupWorld() {
+    const wallOptions = { isStatic: true, render: { fillStyle: '#fde047' } };
+    Composite.add(engine.world, [
+        Bodies.rectangle(300, 820, 600, 40, { ...wallOptions, isSensor: true, label: 'bottom' }),
+        Bodies.rectangle(-10, 400, 20, 800, wallOptions),
+        Bodies.rectangle(610, 400, 20, 800, wallOptions),
+        Bodies.rectangle(300, -10, 600, 20, wallOptions),
+        Bodies.rectangle(550, 475, 20, 650, wallOptions),
+        Bodies.rectangle(470, 700, 20, 200, wallOptions)
+    ]);
+    
+    const softTissueZone = Bodies.rectangle(235, 250, 450, 300, { isStatic: true, isSensor: true, render: { fillStyle: 'rgba(239, 68, 68, 0.1)', strokeStyle: '#ef4444', lineWidth: 1 }});
+    softTissueZone.label = 'soft-tissue-zone';
+    const boneZone = Bodies.rectangle(235, 500, 450, 200, { isStatic: true, isSensor: true, render: { fillStyle: 'rgba(236, 240, 241, 0.1)', strokeStyle: '#e5e7eb', lineWidth: 1 }});
+    boneZone.label = 'bone-zone';
+    Composite.add(engine.world, [softTissueZone, boneZone]);
+    
+    const atomOptions = { isStatic: true, restitution: 0.9 };
+    for (let i = 0; i < 15; i++) {
+        const x = Math.random() * 400 + 50;
+        const y = Math.random() * 500 + 50;
+        const isBone = y > 400;
+        const atom = Bodies.circle(x, y, isBone ? 20 : 15, { ...atomOptions, render: { fillStyle: isBone ? '#e5e7eb' : '#ef4444'}, label: isBone ? 'bone' : 'soft_tissue' });
+        Composite.add(engine.world, atom);
+    }
+
+    const flipperOptions = { friction: 0.5, restitution: 0.5, density: 0.01 };
+    leftFlipper = Bodies.rectangle(170, 680, 120, 20, { ...flipperOptions, angle: Math.PI / 6 });
+    rightFlipper = Bodies.rectangle(350, 680, 120, 20, { ...flipperOptions, angle: -Math.PI / 6 });
+    Composite.add(engine.world, [leftFlipper, rightFlipper]);
+    
+    Composite.add(engine.world, [
+        Constraint.create({ bodyA: leftFlipper, pointA: { x: -55, y: 0 }, pointB: { x: 170, y: 680 }, stiffness: 0.9, length:0 }),
+        Constraint.create({ bodyA: rightFlipper, pointA: { x: 55, y: 0 }, pointB: { x: 350, y: 680 }, stiffness: 0.9, length:0 })
+    ]);
+}
+
+function prepareNewBall() {
+    if (ballsLeft <= 0) return;
+    ball = Bodies.circle(510, 750, 10, {
+        restitution: 0.5, render: { fillStyle: '#fde047' }, label: 'photon'
+    });
+    ball.energy = currentEnergy;
+    ball.interactions = 5; 
+    Composite.add(engine.world, ball);
+    launchButton.disabled = false;
+}
+
+function launchBall() {
+    if (!gameRunning || ballsLeft <= 0 || !ball) return;
+    
+    // Check if the ball is in the plunger area and at rest before launching
+    if (ball.position.x > 480 && ball.speed < 0.1) {
+        Body.applyForce(ball, ball.position, { x: -0.05, y: -0.4 });
+        ballsLeft--;
+        updateUI();
+        launchButton.disabled = true;
+    }
+}
+
+
+function handleCollision(event) {
+    if(!ball) return;
+    const pairs = event.pairs;
+    pairs.forEach(pair => {
+        let photon, target;
+        if (pair.bodyA.label === 'photon' && (pair.bodyB.label === 'soft_tissue' || pair.bodyB.label === 'bone')) {
+            photon = pair.bodyA; target = pair.bodyB;
+        } else if (pair.bodyB.label === 'photon' && (pair.bodyA.label === 'soft_tissue' || pair.bodyA.label === 'bone')) {
+            photon = pair.bodyB; target = pair.bodyA;
+        }
+
+        if (photon && target) {
+            photon.interactions--;
+            determineInteraction(photon, target);
+            if (photon.interactions <= 0) {
+                World.remove(engine.world, photon);
+                ball = null;
+                if(ballsLeft > 0) setTimeout(prepareNewBall, 1500);
+                else endGame();
+            }
+        }
+    });
+}
+
+function handleFlippers() {
+    const maxAngleUp = -Math.PI / 4;
+    const maxAngleDown = Math.PI / 4;
+
+    if (keys['ArrowLeft']) {
+        if(leftFlipper.angle > maxAngleUp) Body.setAngularVelocity(leftFlipper, -0.55);
+    } else {
+         if(leftFlipper.angle < maxAngleDown) Body.setAngularVelocity(leftFlipper, 0.35);
+    }
+    if (keys['ArrowRight']) {
+         if(rightFlipper.angle < maxAngleDown) Body.setAngularVelocity(rightFlipper, 0.55);
+    } else {
+         if(rightFlipper.angle > maxAngleUp) Body.setAngularVelocity(rightFlipper, -0.35);
+    }
+
+    if(ball && ball.position.y > 820){
+        World.remove(engine.world, ball);
+        ball = null;
+        if (ballsLeft > 0) setTimeout(prepareNewBall, 1000);
+        else endGame();
+    }
+}
+
+function determineInteraction(photon, target) {
+    let outcome = 'Compton Scatter';
+    const rand = Math.random();
+    if (photon.energy === 'low') {
+        outcome = target.label === 'bone' ? (rand < 0.7 ? 'Photoelectric Effect' : 'Compton Scatter') : (rand < 0.6 ? 'Compton Scatter' : 'Photoelectric Effect');
+    } else if (photon.energy === 'medium') {
+        outcome = target.label === 'bone' ? (rand < 0.8 ? 'Compton Scatter' : 'Photoelectric Effect') : (rand < 0.95 ? 'Compton Scatter' : 'Photoelectric Effect');
+    } else if (photon.energy === 'high') {
+        outcome = rand < 0.6 ? 'Pair Production' : 'Compton Scatter';
+    }
+
+    if (outcome === targetInteraction) {
+        score += 100;
+        createParticle(photon.position.x, photon.position.y, `+100 ${outcome}`, '#22c55e');
+    } else {
+        score -= 25;
+        if (score < 0) score = 0;
+        createParticle(photon.position.x, photon.position.y, `Oops! ${outcome}`, '#ef4444');
+    }
+    updateUI();
+}
+
+function createParticle(x, y, text, color) {
+    particles.push({ x, y, text, color, alpha: 1.0, life: 60 });
+}
+
+function setNewTarget() {
+    targetInteraction = TARGET_INTERACTIONS[Math.floor(Math.random() * TARGET_INTERACTIONS.length)];
+    updateUI();
+}
+
+function updateUI() {
+    scoreEl.textContent = score;
+    ballsLeftEl.textContent = ballsLeft;
+    targetInteractionEl.textContent = targetInteraction;
+}
+
+function endGame() {
+    gameRunning = false;
+    Runner.stop(runner);
+    
+    document.getElementById('endTitle').textContent = "Simulation Complete";
+    document.getElementById('endMessage').textContent = `You've completed the physics simulation!`;
+    finalScoreEl.textContent = score;
+    endScreen.classList.remove('hidden');
+}
+
+function drawGameElements(event){
+    const renderCtx = event.source.context;
+    
+    renderCtx.fillStyle = 'rgba(239, 68, 68, 0.3)';
+    renderCtx.font = 'bold 30px Orbitron';
+    renderCtx.textAlign = 'center';
+    renderCtx.fillText('Soft Tissue', 235, 250);
+
+    renderCtx.fillStyle = 'rgba(236, 240, 241, 0.3)';
+    renderCtx.fillText('Bone', 235, 500);
+
+    for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.alpha -= 0.01;
+        p.y -= 1;
+        p.life--;
+        if (p.life <= 0) {
+            particles.splice(i, 1);
+        } else {
+            renderCtx.save();
+            renderCtx.globalAlpha = p.alpha;
+            renderCtx.fillStyle = p.color;
+            renderCtx.font = 'bold 24px Orbitron';
+            renderCtx.textAlign = 'center';
+            renderCtx.fillText(p.text, p.x, p.y);
+            renderCtx.restore();
+        }
+    }
+}
+
+// --- Event Listeners ---
+startButton.addEventListener('click', init);
+restartButton.addEventListener('click', () => {
+    Render.stop(render);
+    World.clear(engine.world);
+    Engine.clear(engine);
+    init();
+});
+launchButton.addEventListener('click', launchBall);
+document.addEventListener('keydown', (e) => {
+    if (e.code === 'Space' && !launchButton.disabled) {
+        e.preventDefault();
+        launchBall();
+    }
+    keys[e.code] = true;
+});
+document.addEventListener('keyup', (e) => {
+    keys[e.code] = false;
+});
+energyButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+        energyButtons.forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        currentEnergy = btn.dataset.energy;
+    });
+});
+
+</script>
+</body>
+</html>

@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rad-Blaster: Cell Defender</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background-color: #0a0a23;
+            color: #fff;
+            overflow: hidden;
+        }
+        canvas {
+            background-color: #000;
+            border: 2px solid #00ffdd;
+            border-radius: 10px;
+            box-shadow: 0 0 20px #00ffdd;
+        }
+        .game-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 20px;
+            flex-wrap: wrap;
+        }
+        .ui-panel {
+            background: rgba(10, 10, 35, 0.8);
+            border: 1px solid #00ffdd;
+            border-radius: 10px;
+            padding: 20px;
+            width: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            box-shadow: 0 0 15px rgba(0, 255, 221, 0.5);
+        }
+        .ui-panel h2, .ui-panel h3 {
+            color: #00ffdd;
+            text-align: center;
+            text-shadow: 0 0 5px #00ffdd;
+        }
+        .progress-bar-container {
+            width: 100%;
+            background-color: #2a2a57;
+            border-radius: 5px;
+            border: 1px solid #00ffdd;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 20px;
+            width: 100%;
+            background-color: #4caf50;
+            border-radius: 3px;
+            transition: width 0.3s ease-in-out;
+        }
+        .modal {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(10, 10, 35, 0.95);
+            border: 2px solid #00ffdd;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 0 30px #00ffdd;
+            z-index: 100;
+            width: 90%;
+            max-width: 600px;
+        }
+        .modal h2 {
+            font-size: 2em;
+            color: #00ffdd;
+            margin-bottom: 20px;
+        }
+        .modal p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .modal button, .quiz-option {
+            background: linear-gradient(145deg, #0d7377, #14ffec);
+            color: #0a0a23;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(20, 255, 236, 0.4);
+            margin-top: 10px;
+        }
+        .modal button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(20, 255, 236, 0.6);
+        }
+        .quiz-option {
+            display: block;
+            width: 100%;
+            text-align: left;
+            margin-bottom: 10px;
+            font-size: 1em; /* smaller font for more text */
+            padding: 12px 20px;
+        }
+        .quiz-option.correct {
+             background: linear-gradient(145deg, #4caf50, #81c784);
+        }
+        .quiz-option.incorrect {
+             background: linear-gradient(145deg, #f44336, #e57373);
+        }
+        .feedback {
+            margin-top: 15px;
+            font-size: 1em;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .feedback.correct {
+            background-color: rgba(76, 175, 80, 0.3);
+            border: 1px solid #4caf50;
+        }
+        .feedback.incorrect {
+            background-color: rgba(244, 67, 54, 0.3);
+            border: 1px solid #f44336;
+        }
+    </style>
+</head>
+<body class="w-screen h-screen flex justify-center items-center">
+
+    <div id="startScreen" class="modal">
+        <h2>Rad-Blaster: Cell Defender</h2>
+        <p>Your mission is to defend healthy tissue by eliminating malignant cancer cells using targeted radiation. Use the ARROW KEYS to move and the SPACEBAR to fire. Good luck, Defender!</p>
+        <button id="startButton">Start Game</button>
+    </div>
+
+    <div id="levelIntroScreen" class="modal hidden">
+        <h2 id="levelTitle"></h2>
+        <p id="levelDescription"></p>
+        <button id="startLevelButton">Begin Level</button>
+    </div>
+
+    <div id="quizScreen" class="modal hidden">
+        <h2 id="quizTitle">Knowledge Check!</h2>
+        <p id="quizQuestion"></p>
+        <div id="quizOptions"></div>
+        <div id="quizFeedback"></div>
+        <button id="nextLevelButton" class="hidden">Next Level</button>
+    </div>
+
+    <div id="gameOverScreen" class="modal hidden">
+        <h2>Game Over</h2>
+        <p id="gameOverMessage"></p>
+        <p>Final Score: <span id="finalScore">0</span></p>
+        <button id="restartButton">Play Again</button>
+    </div>
+
+    <div class="game-container hidden" id="gameArea">
+        <canvas id="gameCanvas"></canvas>
+        <div class="ui-panel">
+            <h2>STATUS</h2>
+            <div>
+                <h3>Score</h3>
+                <p id="score" class="text-center text-2xl">0</p>
+            </div>
+            <div>
+                <h3>Level</h3>
+                <p id="level" class="text-center text-2xl">1</p>
+            </div>
+            <div>
+                <h3>Healthy Tissue Integrity</h3>
+                <div class="progress-bar-container">
+                    <div id="healthBar" class="progress-bar"></div>
+                </div>
+            </div>
+            <div>
+                <h3>Dose/Fraction</h3>
+                <div class="progress-bar-container">
+                    <div id="doseBar" class="progress-bar bg-yellow-400"></div>
+                </div>
+            </div>
+             <div>
+                <h3>Level Objective</h3>
+                <p id="levelObjective" class="text-center text-sm"></p>
+            </div>
+        </div>
+    </div>
+
+<script>
+// --- Basic Setup ---
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+
+const gameArea = document.getElementById('gameArea');
+const startScreen = document.getElementById('startScreen');
+const levelIntroScreen = document.getElementById('levelIntroScreen');
+const gameOverScreen = document.getElementById('gameOverScreen');
+const quizScreen = document.getElementById('quizScreen');
+
+const startButton = document.getElementById('startButton');
+const startLevelButton = document.getElementById('startLevelButton');
+const restartButton = document.getElementById('restartButton');
+const nextLevelButton = document.getElementById('nextLevelButton');
+
+const scoreEl = document.getElementById('score');
+const finalScoreEl = document.getElementById('finalScore');
+const levelEl = document.getElementById('level');
+const healthBar = document.getElementById('healthBar');
+const doseBar = document.getElementById('doseBar');
+const levelObjectiveEl = document.getElementById('levelObjective');
+
+
+canvas.width = 800;
+canvas.height = 600;
+
+let gameRunning = false;
+let animationFrameId;
+
+// --- Game State ---
+let player;
+let projectiles = [];
+let enemies = [];
+let particles = [];
+let healthyCells = [];
+let score = 0;
+let currentLevel = 1;
+let levelConfig;
+let keys = {};
+let currentQuizQuestion; // To store the selected question object
+
+// --- Game Objects ---
+class Player {
+    constructor() {
+        this.width = 40;
+        this.height = 50;
+        this.x = canvas.width / 2 - this.width / 2;
+        this.y = canvas.height - this.height - 20;
+        this.speed = 5;
+        this.health = 100;
+        this.maxDose = 100;
+        this.currentDose = this.maxDose;
+        this.doseRechargeRate = 0.5;
+    }
+
+    draw() {
+        ctx.fillStyle = '#00ffdd';
+        // Simple ship shape
+        ctx.beginPath();
+        ctx.moveTo(this.x + this.width / 2, this.y);
+        ctx.lineTo(this.x, this.y + this.height);
+        ctx.lineTo(this.x + this.width, this.y + this.height);
+        ctx.closePath();
+        ctx.fill();
+        ctx.shadowColor = '#00ffdd';
+        ctx.shadowBlur = 10;
+    }
+
+    update() {
+        if (keys['ArrowLeft'] && this.x > 0) {
+            this.x -= this.speed;
+        }
+        if (keys['ArrowRight'] && this.x < canvas.width - this.width) {
+            this.x += this.speed;
+        }
+        if (keys['ArrowUp'] && this.y > 0) {
+            this.y -= this.speed;
+        }
+        if (keys['ArrowDown'] && this.y < canvas.height - this.height) {
+            this.y += this.speed;
+        }
+        
+        // Recharge dose/ammo
+        if (this.currentDose < this.maxDose) {
+            this.currentDose += this.doseRechargeRate;
+        }
+
+        this.draw();
+        updateUI();
+    }
+
+    shoot() {
+        const projectileCost = levelConfig.projectileCost || 5;
+        if (this.currentDose >= projectileCost) {
+            projectiles.push(new Projectile(this.x + this.width / 2, this.y));
+            this.currentDose -= projectileCost;
+        }
+    }
+}
+
+class Projectile {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.width = 5;
+        this.height = 15;
+        this.speed = 10;
+        this.color = '#f0ff00';
+    }
+
+    draw() {
+        ctx.fillStyle = this.color;
+        ctx.fillRect(this.x - this.width / 2, this.y, this.width, this.height);
+    }
+
+    update() {
+        this.y -= this.speed;
+        this.draw();
+    }
+}
+
+class Enemy {
+    constructor(x, y, type = 'standard') {
+        this.x = x;
+        this.y = y;
+        this.width = 40;
+        this.height = 40;
+        // *** MODIFICATION: Reduced speed ***
+        this.speed = Math.random() * 1.0 + 0.3; // Was 1.5 + 0.5
+        this.type = type;
+        this.health = levelConfig.enemyHealth || 1;
+        this.canRepair = levelConfig.canRepair || false;
+        this.repairCooldown = 0;
+        this.isVulnerable = false; // For reoxygenation
+    }
+
+    // *** MODIFICATION: New draw method for spiky shape ***
+    draw() {
+        ctx.save();
+        ctx.translate(this.x + this.width / 2, this.y + this.height / 2);
+        ctx.beginPath();
+        const spikes = 8;
+        const outerRadius = this.width / 2;
+        const innerRadius = this.width / 3;
+        for (let i = 0; i < spikes * 2; i++) {
+            const radius = (i % 2 === 0) ? outerRadius : innerRadius;
+            const angle = (i * Math.PI) / spikes;
+            ctx.lineTo(Math.cos(angle) * radius, Math.sin(angle) * radius);
+        }
+        ctx.closePath();
+        
+        if (this.isVulnerable) {
+            ctx.fillStyle = '#ff8c00'; // Orange when vulnerable
+            ctx.shadowColor = '#ff8c00';
+        } else {
+            ctx.fillStyle = `rgba(255, 0, 100, ${0.5 + (this.health / (levelConfig.enemyHealth || 1)) * 0.5})`;
+            ctx.shadowColor = 'rgba(255, 0, 100, 1)';
+        }
+        
+        ctx.shadowBlur = 15;
+        ctx.fill();
+        ctx.restore();
+    }
+
+    update() {
+        this.y += this.speed;
+        if (this.canRepair && this.repairCooldown > 0) {
+            this.repairCooldown--;
+        }
+        this.draw();
+    }
+    
+    takeDamage() {
+        this.health--;
+        if (this.canRepair && this.health > 0) {
+            this.repairCooldown = 180; // 3 seconds at 60fps
+        }
+    }
+}
+
+class HealthyCell {
+     constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.width = 30;
+        this.height = 30;
+        this.speed = Math.random() * 0.5 + 0.1;
+     }
+
+     // *** MODIFICATION: More vibrant and distinct drawing ***
+     draw() {
+        ctx.fillStyle = 'rgba(0, 150, 255, 0.8)';
+        ctx.shadowColor = 'rgba(0, 200, 255, 0.9)';
+        ctx.shadowBlur = 20;
+        ctx.beginPath();
+        ctx.arc(this.x + this.width/2, this.y + this.height/2, this.width/2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0; // Reset shadow blur
+     }
+
+     update() {
+        this.y += this.speed;
+        if(this.y > canvas.height) {
+            this.y = -this.height;
+            this.x = Math.random() * (canvas.width - this.width);
+        }
+        this.draw();
+     }
+}
+
+class CriticalStructure {
+    constructor() {
+        this.width = 150;
+        this.height = canvas.height;
+        this.x = canvas.width / 2 - this.width / 2;
+        this.y = 0;
+        this.tolerance = 100;
+    }
+
+    draw() {
+        ctx.fillStyle = `rgba(255, 255, 0, ${0.2 + (this.tolerance / 100) * 0.3})`;
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+        ctx.strokeStyle = `rgba(255, 255, 0, 0.8)`;
+        ctx.strokeRect(this.x, this.y, this.width, this.height);
+    }
+
+    update() {
+        this.draw();
+    }
+
+    takeDamage(amount) {
+        this.tolerance -= amount;
+        player.health = this.tolerance; // Link to main health bar
+        if (this.tolerance <= 0) {
+            gameOver("Critical structure tolerance failed!");
+        }
+    }
+}
+
+
+class Particle {
+    constructor(x, y, color) {
+        this.x = x;
+        this.y = y;
+        this.size = Math.random() * 5 + 2;
+        this.speedX = Math.random() * 3 - 1.5;
+        this.speedY = Math.random() * 3 - 1.5;
+        this.color = color;
+        this.life = 50;
+    }
+
+    draw() {
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        this.life--;
+        this.draw();
+    }
+}
+
+// --- Level Configurations (with expanded quizzes) ---
+const levels = {
+    1: {
+        title: "Level 1: Basic Cell Identification & Concepts",
+        description: "Cancer cells (red, spiky) are rapidly dividing. Healthy cells (blue, round) are uniform. Your task is to destroy the cancer cells while avoiding the healthy tissue.",
+        objective: "Destroy all spiky cancer cells.",
+        enemyCount: 10,
+        enemyHealth: 1,
+        spawnRate: 100,
+        hasHealthyCells: true,
+        quiz: [
+            {
+                question: "According to the Law of Bergonié and Tribondeau, which cells are most sensitive to radiation?",
+                options: [
+                    "Highly differentiated and mature cells",
+                    "Cells with a high mitotic rate and undifferentiated cells",
+                    "Cells that are not dividing",
+                    "Nerve cells"
+                ],
+                correctAnswer: 1,
+                feedback: "Correct! The law states that radiosensitivity is directly proportional to the rate of cell division and inversely proportional to the degree of cell differentiation. Cancer cells typically have high mitotic rates."
+            },
+            {
+                question: "What is the primary unit for 'Absorbed Dose'?",
+                options: ["Sievert (Sv)", "Gray (Gy)", "Becquerel (Bq)", "Coulomb/kg (C/kg)"],
+                correctAnswer: 1,
+                feedback: "Correct! The Gray (Gy) represents the energy deposited per unit mass (1 J/kg) and is the standard unit for absorbed dose."
+            },
+            {
+                question: "Which of the following is considered a 'stochastic' effect of radiation?",
+                options: ["Skin erythema (reddening)", "Cancer induction", "Cataracts", "Hair loss"],
+                correctAnswer: 1,
+                feedback: "Correct! Stochastic effects have no dose threshold, and their probability increases with dose. Cancer induction is a primary stochastic risk. The others are deterministic effects with a threshold."
+            }
+        ]
+    },
+    2: {
+        title: "Level 2: The 4 R's & Core Principles",
+        description: "This level introduces the '4 R's'. Some cancer cells will REPAIR damage (hit them again!). They will REPOPULATE if you're too slow. Power-ups will cause REOXYGENATION, making them more vulnerable.",
+        objective: "Survive the waves and clear all cancer cells.",
+        enemyCount: 20,
+        enemyHealth: 2,
+        canRepair: true,
+        spawnRate: 80,
+        repopulation: true,
+        reoxygenation: true,
+        quiz: [
+            {
+                question: "What are the '4 R's' of radiobiology that influence the effectiveness of fractionated radiotherapy?",
+                options: [
+                    "Radiation, Reaction, Recovery, Response",
+                    "Repair, Repopulation, Reoxygenation, Redistribution",
+                    "Resistance, Reduction, Rejection, Renewal",
+                    "Rate, Ratio, Remission, Relapse"
+                ],
+                correctAnswer: 1,
+                feedback: "Excellent! These four biological processes are fundamental to understanding why splitting a total radiation dose into multiple fractions is often more effective."
+            },
+            {
+                question: "The 'Oxygen Effect' is most significant for which type of radiation?",
+                options: [
+                    "High-LET radiation (e.g., alpha particles)",
+                    "Low-LET radiation (e.g., X-rays, gamma rays)",
+                    "It is the same for all radiation types",
+                    "It is only relevant for neutron therapy"
+                ],
+                correctAnswer: 1,
+                feedback: "That's right! The Oxygen Enhancement Ratio (OER) is much higher (~2.5-3.0) for low-LET radiation because oxygen helps 'fix' the damage caused by sparse ionization."
+            },
+            {
+                question: "In radiation therapy, which photon interaction with matter is dominant in soft tissue?",
+                options: ["Photoelectric Effect", "Pair Production", "Compton Scatter", "Photodisintegration"],
+                correctAnswer: 2,
+                feedback: "Exactly! Compton Scatter is the most common interaction for the megavoltage photon beams used in radiation therapy."
+            }
+        ]
+    },
+    3: {
+        title: "Level 3: Dose Fractionation & Tissue Effects",
+        description: "Instead of unlimited firing, your dose is delivered in fractions. You have a limited dose for each wave of enemies. Use it wisely to eliminate targets. This simulates how radiation treatments are delivered over time.",
+        objective: "Clear all 3 waves using your dose fractions.",
+        enemyCount: 15,
+        enemyHealth: 2,
+        spawnRate: 60,
+        waves: 3,
+        projectileCost: 10,
+        quiz: [
+            {
+                question: "Why is a total dose of radiation 'fractionated' (split into smaller doses over several days)?",
+                options: [
+                    "To make the treatment take longer.",
+                    "To give the hospital more time to bill for services.",
+                    "To allow normal cells to repair between doses, while cancer cells are less efficient at repair.",
+                    "Because the machine overheats if used all at once."
+                ],
+                correctAnswer: 2,
+                feedback: "That's right! Fractionation exploits the difference in repair capabilities between normal and tumorous tissue, a key principle for a successful therapeutic ratio."
+            },
+            {
+                question: "What does the term 'repopulation' refer to in the context of fractionated radiotherapy?",
+                options: [
+                    "The patient gaining back weight during treatment.",
+                    "The increase in oxygen levels within the tumor.",
+                    "The division and regrowth of cells (both tumor and normal) between fractions.",
+                    "The repair of sublethal DNA damage."
+                ],
+                correctAnswer: 2,
+                feedback: "Correct! Repopulation is the regrowth of cells between dose fractions. For tumors, this is something we want to overcome. For normal tissues, this is a process that helps them heal."
+            },
+             {
+                question: "Which of the following describes a 'deterministic' effect of radiation?",
+                options: [
+                    "It has a threshold dose below which the effect is not seen.",
+                    "The probability of the effect increases with dose, but severity does not.",
+                    "It has no known threshold.",
+                    "It is a randomly occurring genetic mutation."
+                ],
+                correctAnswer: 0,
+                feedback: "Yes! Deterministic effects, like skin reactions or cataracts, have a dose threshold. The severity of the effect increases as the dose increases above that threshold."
+            }
+        ]
+    },
+     4: {
+        title: "Level 4: Critical Structures & Tolerance",
+        description: "A large tumor mass is growing near a critical structure (yellow zone). You must destroy the tumor cells without exceeding the tolerance dose of the healthy organ. This simulates treating tumors near sensitive areas.",
+        objective: "Destroy tumor, protect the critical structure.",
+        enemyCount: 30,
+        enemyHealth: 3,
+        spawnRate: 50,
+        hasCriticalStructure: true,
+        quiz: [
+            {
+                question: "What does TD 5/5 represent in radiation oncology?",
+                options: [
+                    "The dose that will cure 5% of tumors in 5 days.",
+                    "The dose that will cause a 5% complication rate within 5 years.",
+                    "The target dose for 5 out of 5 patients.",
+                    "A type of treatment machine."
+                ],
+                correctAnswer: 1,
+                feedback: "Correct! TD 5/5 is the tolerance dose for a specific organ that is expected to result in a 5% chance of severe complications within 5 years of treatment. It's a critical concept for planning safe treatments."
+            },
+            {
+                question: "The approximate tolerance dose (TD 5/5) for the entire spinal cord to prevent myelopathy is:",
+                options: ["20 Gy", "30 Gy", "47 Gy", "70 Gy"],
+                correctAnswer: 2,
+                feedback: "Correct! The spinal cord is a critical late-responding organ, and its tolerance is around 45-50 Gy with conventional fractionation to keep the risk of myelopathy low."
+            },
+            {
+                question: "Which Acute Radiation Syndrome occurs at the lowest whole-body dose range (approx. 1-10 Gy)?",
+                options: [
+                    "Central Nervous System (CNS) Syndrome",
+                    "Gastrointestinal (GI) Syndrome",
+                    "Hemopoietic Syndrome",
+                    "Cutaneous Radiation Syndrome"
+                ],
+                correctAnswer: 2,
+                feedback: "Correct! The Hemopoietic Syndrome, affecting the blood-forming cells in the bone marrow, is the first to manifest at the lowest dose range for acute whole-body exposure."
+            }
+        ]
+    }
+};
+
+// --- Game Logic ---
+function initLevel(level) {
+    levelConfig = levels[level];
+    if (!levelConfig) {
+        gameOver("YOU'VE BECOME A MASTER RADIOBIOLOGIST!");
+        return;
+    }
+    
+    document.getElementById('levelTitle').textContent = levelConfig.title;
+    document.getElementById('levelDescription').textContent = levelConfig.description;
+    levelObjectiveEl.textContent = levelConfig.objective;
+    
+    levelIntroScreen.classList.remove('hidden');
+    gameArea.classList.add('hidden');
+}
+
+function startLevel() {
+    levelIntroScreen.classList.add('hidden');
+    gameArea.classList.remove('hidden');
+    
+    player = new Player();
+    projectiles = [];
+    enemies = [];
+    particles = [];
+    healthyCells = [];
+
+    if(levelConfig.hasCriticalStructure){
+        enemies.push(new CriticalStructure());
+    }
+
+    if (levelConfig.hasHealthyCells) {
+        for (let i = 0; i < 20; i++) {
+            healthyCells.push(new HealthyCell(Math.random() * canvas.width, Math.random() * canvas.height));
+        }
+    }
+    
+    if (levelConfig.waves) {
+        player.wave = 1;
+        spawnWave();
+    } else {
+        spawnEnemies(levelConfig.enemyCount);
+    }
+    
+    gameRunning = true;
+    if (animationFrameId) cancelAnimationFrame(animationFrameId);
+    gameLoop();
+}
+
+function spawnEnemies(count) {
+    for (let i = 0; i < count; i++) {
+        // *** MODIFICATION: Increased delay between spawns ***
+        setTimeout(() => {
+            if (gameRunning) {
+               const x = Math.random() * (canvas.width - 40);
+               const y = -Math.random() * canvas.height;
+               enemies.push(new Enemy(x, y));
+            }
+        }, i * (15000 / levelConfig.enemyCount)); // Was 10000
+    }
+}
+
+function spawnWave() {
+    if (player.wave > levelConfig.waves) return;
+    spawnEnemies(levelConfig.enemyCount / levelConfig.waves);
+    player.currentDose = player.maxDose;
+}
+
+
+function gameLoop() {
+    if (!gameRunning) return;
+
+    ctx.shadowBlur = 0;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    handleHealthyCells();
+    handleProjectiles();
+    handleEnemies();
+    handleParticles();
+    
+    player.update();
+    
+    checkCollisions();
+    checkLevelComplete();
+
+    animationFrameId = requestAnimationFrame(gameLoop);
+}
+
+function handleHealthyCells() {
+    healthyCells.forEach(cell => cell.update());
+}
+
+function handleProjectiles() {
+    for (let i = projectiles.length - 1; i >= 0; i--) {
+        projectiles[i].update();
+        if (projectiles[i].y < 0) {
+            projectiles.splice(i, 1);
+        }
+    }
+}
+
+function handleEnemies() {
+    for (let i = enemies.length - 1; i >= 0; i--) {
+        const enemy = enemies[i];
+        enemy.update();
+
+        // Remove if off-screen
+        if (enemy.y > canvas.height) {
+            if(!(enemy instanceof CriticalStructure)) {
+               enemies.splice(i, 1);
+               if(!levelConfig.hasCriticalStructure) player.health -= 5;
+            }
+        }
+        
+        // Repopulation logic
+        if (levelConfig.repopulation && Math.random() < 0.0005 && enemies.length < 50) {
+             enemies.push(new Enemy(enemy.x + Math.random() * 40 - 20, enemy.y));
+        }
+
+        // Reoxygenation power-up spawn
+        if (levelConfig.reoxygenation && Math.random() < 0.0001) {
+            const powerUp = new Enemy(enemy.x, enemy.y, 'powerup');
+            powerUp.speed = 2;
+            powerUp.draw = function() {
+                ctx.fillStyle = '#00ff00'; ctx.shadowColor = '#00ff00';
+                ctx.fillRect(this.x, this.y, 20, 20);
+            }
+            enemies.push(powerUp);
+        }
+    }
+}
+
+
+function handleParticles() {
+    for (let i = particles.length - 1; i >= 0; i--) {
+        particles[i].update();
+        if (particles[i].life <= 0) {
+            particles.splice(i, 1);
+        }
+    }
+}
+
+function checkCollisions() {
+    // Projectiles with enemies
+    projectiles.forEach((proj, projIndex) => {
+        enemies.forEach((enemy, enemyIndex) => {
+            if (
+                proj.x < enemy.x + enemy.width &&
+                proj.x + proj.width > enemy.x &&
+                proj.y < enemy.y + enemy.height &&
+                proj.y + proj.height > enemy.y
+            ) {
+                 if(enemy instanceof CriticalStructure) {
+                    enemy.takeDamage(1);
+                    createExplosion(proj.x, proj.y, 'rgba(255, 255, 0, 1)');
+                 } else if (enemy.type === 'powerup') {
+                    // Apply reoxygenation
+                    enemies.forEach(e => { if (!(e instanceof CriticalStructure)) e.isVulnerable = true; });
+                    setTimeout(() => {
+                        enemies.forEach(e => e.isVulnerable = false);
+                    }, 5000);
+                    score += 50;
+                    enemies.splice(enemyIndex, 1);
+                } else {
+                    enemy.takeDamage();
+                    createExplosion(proj.x, proj.y, 'rgba(255, 0, 100, 1)');
+                    if (enemy.health <= 0) {
+                        score += 100;
+                        enemies.splice(enemyIndex, 1);
+                    }
+                }
+                projectiles.splice(projIndex, 1);
+            }
+        });
+    });
+
+    // Player with enemies
+    enemies.forEach((enemy, enemyIndex) => {
+        if (
+            player.x < enemy.x + enemy.width &&
+            player.x + player.width > enemy.x &&
+            player.y < enemy.y + enemy.height &&
+            player.y + player.height > enemy.y
+        ) {
+            if(!(enemy instanceof CriticalStructure)){
+                createExplosion(player.x + player.width / 2, player.y + player.height / 2, '#00ffdd');
+                player.health -= 20;
+                enemies.splice(enemyIndex, 1);
+            }
+        }
+    });
+}
+
+function checkLevelComplete() {
+    // Check if player health is 0
+    if (player.health <= 0) {
+        gameOver("Healthy tissue integrity failed!");
+        return;
+    }
+
+    const remainingEnemies = enemies.filter(e => !(e instanceof CriticalStructure) && e.type !== 'powerup');
+
+    // Level complete condition
+    if (remainingEnemies.length === 0) {
+        if (levelConfig.waves && player.wave < levelConfig.waves) {
+             player.wave++;
+             spawnWave();
+        } else {
+            gameRunning = false;
+            cancelAnimationFrame(animationFrameId);
+            showQuiz();
+        }
+    }
+}
+
+function showQuiz() {
+    gameArea.classList.add('hidden');
+    quizScreen.classList.remove('hidden');
+    nextLevelButton.classList.add('hidden');
+
+    const quizArray = levelConfig.quiz;
+    currentQuizQuestion = quizArray[Math.floor(Math.random() * quizArray.length)];
+    
+    document.getElementById('quizQuestion').textContent = currentQuizQuestion.question;
+    const optionsContainer = document.getElementById('quizOptions');
+    optionsContainer.innerHTML = '';
+    
+    currentQuizQuestion.options.forEach((option, index) => {
+        const button = document.createElement('button');
+        button.textContent = option;
+        button.classList.add('quiz-option');
+        button.onclick = () => handleQuizAnswer(index);
+        optionsContainer.appendChild(button);
+    });
+    
+    document.getElementById('quizFeedback').innerHTML = '';
+}
+
+function handleQuizAnswer(selectedIndex) {
+    const quiz = currentQuizQuestion;
+    const options = document.querySelectorAll('.quiz-option');
+    options.forEach(button => button.disabled = true);
+
+    const feedbackEl = document.getElementById('quizFeedback');
+    
+    if (selectedIndex === quiz.correctAnswer) {
+        options[selectedIndex].classList.add('correct');
+        feedbackEl.innerHTML = `<p class="feedback correct">${quiz.feedback}</p>`;
+        score += 500;
+    } else {
+        options[selectedIndex].classList.add('incorrect');
+        options[quiz.correctAnswer].classList.add('correct');
+        feedbackEl.innerHTML = `<p class="feedback incorrect">Not quite. The correct answer is highlighted above.<br><br>${quiz.feedback}</p>`;
+    }
+
+    nextLevelButton.classList.remove('hidden');
+}
+
+function advanceLevel() {
+    quizScreen.classList.add('hidden');
+    currentLevel++;
+    initLevel(currentLevel);
+}
+
+
+function createExplosion(x, y, color) {
+    for (let i = 0; i < 20; i++) {
+        particles.push(new Particle(x, y, color));
+    }
+}
+
+function updateUI() {
+    scoreEl.textContent = score;
+    levelEl.textContent = currentLevel;
+    healthBar.style.width = player.health + '%';
+    doseBar.style.width = (player.currentDose / player.maxDose) * 100 + '%';
+
+    if(player.health < 30) {
+        healthBar.style.backgroundColor = '#f44336';
+    } else if (player.health < 60) {
+        healthBar.style.backgroundColor = '#ffc107';
+    } else {
+        healthBar.style.backgroundColor = '#4caf50';
+    }
+}
+
+function gameOver(message) {
+    gameRunning = false;
+    cancelAnimationFrame(animationFrameId);
+    gameArea.classList.add('hidden');
+    gameOverScreen.classList.remove('hidden');
+    document.getElementById('gameOverMessage').textContent = message;
+    finalScoreEl.textContent = score;
+}
+
+function resetGame() {
+    score = 0;
+    currentLevel = 1;
+    gameOverScreen.classList.add('hidden');
+    initLevel(currentLevel);
+}
+
+// --- Event Listeners ---
+startButton.addEventListener('click', () => {
+    startScreen.classList.add('hidden');
+    initLevel(currentLevel);
+});
+
+startLevelButton.addEventListener('click', startLevel);
+restartButton.addEventListener('click', resetGame);
+nextLevelButton.addEventListener('click', advanceLevel);
+
+window.addEventListener('keydown', (e) => {
+    keys[e.code] = true;
+    if (e.code === 'Space' && gameRunning) {
+        e.preventDefault();
+        player.shoot();
+    }
+});
+
+window.addEventListener('keyup', (e) => {
+    keys[e.code] = false;
+});
+
+</script>
+</body>
+</html>

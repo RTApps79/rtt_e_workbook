@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>3D Mask Painting - RadTherapy Apps</title>
+  <style>
+    body { margin: 0; overflow: hidden; }
+    canvas { display: block; }
+  </style>
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/three@0.155.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.155.0/examples/js/loaders/GLTFLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.155.0/examples/js/controls/OrbitControls.js"></script>
+
+<script>
+  let scene, camera, renderer, controls;
+  let maskMaterial, paintTexture, paintCanvas, ctx;
+  const brushColor = '#ff0000'; // red brush
+  const brushSize = 5;
+
+  init();
+  animate();
+
+  function init() {
+    // Scene setup
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x222222);
+
+    camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.set(0, 1.5, 3);
+
+    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    // Controls
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+    // Light
+    const light = new THREE.DirectionalLight(0xffffff, 1);
+    light.position.set(2, 2, 5);
+    scene.add(light);
+    scene.add(new THREE.AmbientLight(0x404040));
+
+    // Canvas texture for painting
+    paintCanvas = document.createElement('canvas');
+    paintCanvas.width = 1024;
+    paintCanvas.height = 1024;
+    ctx = paintCanvas.getContext('2d');
+    ctx.fillStyle = '#ffffff'; // white background
+    ctx.fillRect(0, 0, paintCanvas.width, paintCanvas.height);
+    paintTexture = new THREE.CanvasTexture(paintCanvas);
+
+    // Mask material with UV mapping
+    maskMaterial = new THREE.MeshStandardMaterial({ 
+      map: paintTexture, 
+      roughness: 0.8,
+      metalness: 0.2 
+    });
+
+    // Load GLB mask model
+    const loader = new THREE.GLTFLoader();
+    loader.load('lincoln-mask.glb', function(gltf) {
+      const maskMesh = gltf.scene;
+      maskMesh.traverse((child) => {
+        if (child.isMesh) {
+          child.material = maskMaterial;
+          child.geometry.computeVertexNormals();
+        }
+      });
+      maskMesh.scale.set(1.5, 1.5, 1.5);
+      maskMesh.position.y = 0.5;
+      scene.add(maskMesh);
+    }, undefined, function(error) {
+      console.error('Error loading model:', error);
+    });
+
+    // Raycaster for painting
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+
+    window.addEventListener('pointerdown', function(event) {
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObjects(scene.children, true);
+      if (intersects.length > 0) {
+        const uv = intersects[0].uv;
+        if (uv) {
+          const x = uv.x * paintCanvas.width;
+          const y = (1 - uv.y) * paintCanvas.height;
+          ctx.beginPath();
+          ctx.arc(x, y, brushSize, 0, 2 * Math.PI);
+          ctx.fillStyle = brushColor;
+          ctx.fill();
+          paintTexture.needsUpdate = true;
+        }
+      }
+    });
+
+    // Resize handling
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  }
+
+  function animate() {
+    requestAnimationFrame(animate);
+    renderer.render(scene, camera);
+  }
+</script>
+</body>
+</html>

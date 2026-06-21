@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integrated Lesson: Normal Tissue Tolerance</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; overflow: hidden; }
+        #page-container { display: flex; flex-direction: column; height: 100vh; }
+        @media (min-width: 1024px) { #page-container { flex-direction: row; } }
+        
+        #lesson-panel { flex: 1 1 55%; overflow-y: auto; height: 100vh; border-right: 1px solid #e5e7eb; }
+        .dark #lesson-panel { border-right: 1px solid #374151; }
+
+        #simulation-panel {
+            flex: 1 1 45%; height: 100vh; position: relative;
+            background-color: #111827; /* gray-900 */
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center; padding: 1rem;
+            overflow: hidden;
+        }
+
+        .student-input { height: 80px; width: 100%; padding: 8px; border: 1px solid #D1D5DB; border-radius: 6px; resize: vertical; }
+        .dark .student-input { background-color: #374151; border-color: #4B5563; color: #F3F4F6; }
+        
+        #self-check-container { display: none; }
+        .feedback-item { border-left: 4px solid; padding-left: 1rem; margin-bottom: 1rem; }
+        .formula { background-color: #1F2937; color: #A5B4FC; padding: 0.5rem 1rem; border-radius: 6px; text-align: center; font-family: monospace; margin: 1rem 0;}
+
+        /* Interactive Diagram Styles */
+        #human-body-container { position: relative; width: 100%; max-width: 300px; }
+        .organ-hotspot {
+            position: absolute;
+            background-color: rgba(59, 130, 246, 0.4);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            border: 2px solid rgba(96, 165, 250, 0.7);
+        }
+        .organ-hotspot:hover {
+            background-color: rgba(96, 165, 250, 0.6);
+            transform: scale(1.1);
+        }
+        #organ-info-box {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(31, 41, 55, 0.9);
+            border: 1px solid #4B5563;
+            padding: 1rem;
+            border-radius: 8px;
+            color: white;
+            width: calc(100% - 20px);
+            max-width: 350px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+        #organ-info-box.visible { opacity: 1; visibility: visible; }
+        
+        /* DVH Styles */
+        .dvh-container { background-color: #1F2937; padding: 1rem; border-radius: 8px; }
+        .dvh-bar-container { display: flex; align-items: center; margin-bottom: 0.5rem; }
+        .dvh-label { width: 100px; font-size: 0.875rem; color: #D1D5DB; }
+        .dvh-bar { height: 20px; background-color: #4F46E5; border-radius: 3px; transition: width 1s ease-out; }
+        .dvh-value { margin-left: 10px; font-weight: bold; color: white; }
+    </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200">
+
+    <div id="page-container">
+        <!-- LEFT PANEL: LESSON CONTENT -->
+        <div id="lesson-panel" class="bg-white dark:bg-gray-900">
+            <div class="p-4 sm:p-6 lg:p-8">
+                <section id="lesson-plan" class="mb-10">
+                    <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-2">Normal Tissue Tolerance</h1>
+                    <p class="text-lg text-cyan-600 dark:text-cyan-400 font-semibold mb-6">Homework Assignment</p>
+                    <div class="mb-8">
+                        <h2 class="text-2xl font-bold border-b-2 border-cyan-500 pb-2 mb-4 dark:text-white">1. PURPOSE: Why This Matters</h2>
+                        <ul class="space-y-4 list-disc list-inside text-gray-700 dark:text-gray-300">
+                            <li><strong>Knowledge You Will Gain:</strong> This lesson introduces one of the most important concepts in treatment planning: normal tissue tolerance. You will learn that every organ has a radiation dose limit (<strong>TD 5/5</strong>) and the potential consequences (endpoints) of exceeding that limit.</li>
+                            <li><strong>Skills You Will Practice:</strong> You will use an interactive diagram to learn key organ tolerances. Then, you will practice the critical clinical skill of plan evaluation by analyzing a Dose Volume Histogram (DVH) to determine if a treatment plan is safe.</li>
+                            <li><strong>Relevance to Your Profession:</strong> Your primary job as a radiation therapist is to deliver treatment safely. This means understanding not just the dose to the tumor, but also the dose to surrounding healthy organs. Recognizing the significance of a DVH and knowing critical organ dose limits is essential for daily quality assurance and for understanding the clinical rationale behind every treatment plan.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold border-b-2 border-cyan-500 pb-2 mb-4 dark:text-white">2. TASK: What You Will Do</h2>
+                        <ol class="space-y-3 list-decimal list-inside text-gray-700 dark:text-gray-300">
+                            <li><strong>Explore the Diagram:</strong> In the right panel, click on the different organs of the human body diagram to learn their TD 5/5 values and associated side effects.</li>
+                            <li><strong>Complete the Plan Evaluation Challenge:</strong> Read the case study for David Garcia and analyze the provided DVH.</li>
+                            <li><strong>Answer the Worksheet Questions:</strong> Fill out the worksheet below using information from the diagram and the DVH.</li>
+                            <li><strong>Perform a Self-Check:</strong> Use the Answer Key at the bottom to check your work.</li>
+                        </ol>
+                    </div>
+                </section>
+                
+                <!-- Lab Activity Worksheet Section -->
+                <section id="lab-activity">
+                    <h1 class="text-3xl font-bold text-gray-800 dark:text-white mb-6">Lab: Plan Evaluation Challenge</h1>
+                    
+                    <div class="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg mb-6">
+                        <p class="font-semibold">Case Study: David Garcia (Lung Cancer)</p>
+                        <p class="text-gray-600 dark:text-gray-400">David Garcia is a 67-year-old male with Stage IIIA Non-Small Cell Lung Cancer of the right lower lobe. He is planned for definitive chemoradiation. The radiation plan prescribes 66 Gy to the tumor, but it's crucial to ensure the dose to surrounding healthy organs is within safe limits. Your task is to evaluate the plan's DVH.</p>
+                    </div>
+
+                    <h2 class="text-2xl font-bold mb-4 dark:text-white">Student Worksheet</h2>
+                    <h3 class="text-xl font-semibold mb-3 dark:text-white">Part 1: Data Gathering</h3>
+                    <p class="mb-4 text-gray-600 dark:text-gray-400">Use the interactive diagram on the right to find the tolerance doses for the following organs at risk (OARs) for this lung cancer case.</p>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block font-medium">1. Spinal Cord: What is the TD 5/5 and the associated complication?</label>
+                            <input type="text" class="worksheet-input mt-1">
+                        </div>
+                        <div>
+                            <label class="block font-medium">2. Heart: What is the TD 5/5 for the whole organ and the associated complication?</label>
+                            <input type="text" class="worksheet-input mt-1">
+                        </div>
+                        <div>
+                           <label class="block font-medium">3. Lung (Total): What is the TD 5/5 for both lungs combined and the associated complication?</label>
+                            <input type="text" class="worksheet-input mt-1">
+                        </div>
+                    </div>
+
+                     <h3 class="text-xl font-semibold mt-8 mb-4 dark:text-white">Part 2: DVH Analysis</h3>
+                    <p class="mb-4 text-gray-600 dark:text-gray-400">Below is a simplified DVH showing the maximum dose (or mean dose for lung) that critical organs will receive from David Garcia's treatment plan. Compare these values to the TD 5/5 limits you found above to answer the questions.</p>
+                    
+                    <div class="dvh-container">
+                        <h3 class="text-lg font-semibold text-white mb-4">Dose Volume Histogram (DVH) Summary</h3>
+                        <div class="dvh-bar-container">
+                            <div class="dvh-label">Spinal Cord (Max):</div>
+                            <div class="dvh-bar" id="dvh-cord" style="width: 0%; background-color:#3B82F6;"></div>
+                            <div class="dvh-value" id="dvh-cord-val">0 Gy</div>
+                        </div>
+                        <div class="dvh-bar-container">
+                            <div class="dvh-label">Heart (Mean):</div>
+                            <div class="dvh-bar" id="dvh-heart" style="width: 0%; background-color:#EC4899;"></div>
+                            <div class="dvh-value" id="dvh-heart-val">0 Gy</div>
+                        </div>
+                        <div class="dvh-bar-container">
+                            <div class="dvh-label">Total Lung (Mean):</div>
+                            <div class="dvh-bar" id="dvh-lung" style="width: 0%; background-color:#10B981;"></div>
+                            <div class="dvh-value" id="dvh-lung-val">0 Gy</div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-6 mt-6">
+                        <div>
+                            <label class="font-semibold block mb-2">4. Spinal Cord Safety: Is the max dose to the spinal cord below its tolerance limit? Is this part of the plan safe?</label>
+                            <textarea class="student-input"></textarea>
+                        </div>
+                         <div>
+                            <label class="font-semibold block mb-2">5. Heart Safety: Is the mean dose to the heart below its tolerance limit? Is this part of the plan safe?</label>
+                            <textarea class="student-input"></textarea>
+                        </div>
+                         <div>
+                            <label class="font-semibold block mb-2">6. Lung Safety: Is the mean dose to the total lung volume below its tolerance limit? What does this mean for the patient's risk of developing radiation pneumonitis?</label>
+                            <textarea class="student-input"></textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- SELF-CHECK SECTION -->
+                    <div class="mt-10">
+                        <button id="show-feedback-btn" class="w-full text-center py-3 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg" onclick="toggleFeedback()">Show Answer Key</button>
+                        <div id="self-check-container" class="mt-6 p-6 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                            <h3 class="text-2xl font-bold mb-4">Self-Check: Answers & Key Concepts</h3>
+                            <div class="feedback-item border-green-500">
+                                <p class="font-semibold">Part 1: Data Gathering</p>
+                                <ul class="list-disc list-inside mt-2 text-gray-700 dark:text-gray-300">
+                                    <li><strong>Spinal Cord:</strong> TD 5/5 is ~47 Gy. The endpoint is Myelitis/Paralysis.</li>
+                                    <li><strong>Heart:</strong> TD 5/5 for the whole organ is ~40 Gy. The endpoint is Pericarditis.</li>
+                                    <li><strong>Lung (Total):</strong> TD 5/5 for both lungs is ~17.5 Gy (mean dose). The endpoint is Pneumonitis.</li>
+                                </ul>
+                            </div>
+                             <div class="feedback-item border-green-500">
+                                <p class="font-semibold">Part 2: DVH Analysis</p>
+                                <ul class="list-disc list-inside mt-2 text-gray-700 dark:text-gray-300">
+                                    <li><strong>Spinal Cord Safety:</strong> Yes, the plan is safe. The max dose of 45 Gy is below the ~47 Gy tolerance limit.</li>
+                                    <li><strong>Heart Safety:</strong> Yes, the plan is safe. The mean dose of 25 Gy is below the ~40 Gy tolerance limit.</li>
+                                     <li><strong>Lung Safety:</strong> Yes, the plan is safe. The mean dose of 15 Gy is below the ~17.5 Gy tolerance limit. This indicates the patient has a low risk (<5%) of developing severe radiation pneumonitis from this plan.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- RIGHT PANEL: SIMULATOR -->
+        <div id="simulation-panel">
+             <div id="human-body-container">
+                <svg viewBox="0 0 200 400" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M100 0 C70 0, 70 30, 100 30 S130 0, 100 0 M85 40 L85 120 L75 120 L75 200 L85 200 L85 220 L115 220 L115 200 L125 200 L125 120 L115 120 L115 40 Z" fill="#9CA3AF" opacity="0.2"/>
+                </svg>
+                <!-- Organ Hotspots -->
+                <div class="organ-hotspot" style="top: 13%; left: 46%; width: 25px; height: 35px;" onclick="showOrganInfo('Brainstem', '~54 Gy', 'Necrosis/Infarction')"></div>
+                <div class="organ-hotspot" style="top: 25%; left: 47.5%; width: 12px; height: 120px;" onclick="showOrganInfo('Spinal Cord', '~47 Gy', 'Myelitis / Paralysis')"></div>
+                <div class="organ-hotspot" style="top: 28%; left: 30%; width: 30px; height: 50px;" onclick="showOrganInfo('Heart', '~40 Gy (whole)', 'Pericarditis')"></div>
+                <div class="organ-hotspot" style="top: 25%; left: 55%; width: 50px; height: 60px;" onclick="showOrganInfo('Lung', '~17.5 Gy (mean)', 'Pneumonitis')"></div>
+                <div class="organ-hotspot" style="top: 45%; left: 28%; width: 25px; height: 35px;" onclick="showOrganInfo('Kidney', '~23 Gy (whole)', 'Nephritis')"></div>
+                <div class="organ-hotspot" style="top: 43%; left: 55%; width: 40px; height: 40px;" onclick="showOrganInfo('Liver', '~30 Gy (whole)', 'Liver Failure')"></div>
+                <div class="organ-hotspot" style="top: 65%; left: 43%; width: 40px; height: 30px;" onclick="showOrganInfo('Bladder', '~65 Gy (whole)', 'Symptomatic Contracture')"></div>
+                <div class="organ-hotspot" style="top: 68%; left: 45%; width: 30px; height: 40px; border-radius: 10px;" onclick="showOrganInfo('Rectum', '~60 Gy (whole)', 'Severe Proctitis / Necrosis')"></div>
+
+             </div>
+             <div id="organ-info-box">
+                <h3 id="organ-name" class="text-xl font-bold text-teal-300">Organ Name</h3>
+                <p><strong>TD 5/5:</strong> <span id="organ-td55"></span></p>
+                <p><strong>Endpoint:</strong> <span id="organ-endpoint"></span></p>
+             </div>
+        </div>
+    </div>
+    
+    <script>
+        function toggleFeedback() {
+            const feedbackContainer = document.getElementById('self-check-container');
+            const feedbackBtn = document.getElementById('show-feedback-btn');
+            const isHidden = feedbackContainer.style.display === 'none';
+            feedbackContainer.style.display = isHidden ? 'block' : 'none';
+            feedbackBtn.textContent = isHidden ? 'Hide Answer Key' : 'Show Answer Key';
+        }
+
+        const organInfoBox = document.getElementById('organ-info-box');
+        const organNameEl = document.getElementById('organ-name');
+        const organTd55El = document.getElementById('organ-td55');
+        const organEndpointEl = document.getElementById('organ-endpoint');
+        
+        function showOrganInfo(name, td55, endpoint) {
+            organNameEl.textContent = name;
+            organTd55El.textContent = td55;
+            organEndpointEl.textContent = endpoint;
+            organInfoBox.classList.add('visible');
+        }
+
+        document.getElementById('simulation-panel').addEventListener('click', (e) => {
+            if (!e.target.classList.contains('organ-hotspot')) {
+                 organInfoBox.classList.remove('visible');
+            }
+        });
+        
+        // DVH Animation Logic
+        function animateDVH() {
+            const cordBar = document.getElementById('dvh-cord');
+            const heartBar = document.getElementById('dvh-heart');
+            const lungBar = document.getElementById('dvh-lung');
+            
+            const cordVal = document.getElementById('dvh-cord-val');
+            const heartVal = document.getElementById('dvh-heart-val');
+            const lungVal = document.getElementById('dvh-lung-val');
+
+            const planData = { cord: 45, heart: 25, lung: 15 };
+            const maxDose = 70; // Set a visual max for the bar width
+            
+            setTimeout(() => {
+                cordBar.style.width = `${(planData.cord / maxDose) * 100}%`;
+                cordVal.textContent = `${planData.cord} Gy`;
+                
+                heartBar.style.width = `${(planData.heart / maxDose) * 100}%`;
+                heartVal.textContent = `${planData.heart} Gy`;
+
+                lungBar.style.width = `${(planData.lung / maxDose) * 100}%`;
+                lungVal.textContent = `${planData.lung} Gy`;
+            }, 500);
+        }
+
+        document.addEventListener('DOMContentLoaded', animateDVH);
+    </script>
+</body>
+</html>
