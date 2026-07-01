@@ -1,0 +1,148 @@
+--- a/oncology_information_system.html
++++ b/oncology_information_system.html
+@@ -1,5 +1,5 @@
+ <!DOCTYPE html>
+-<html lang="en">
++<html lang="en" data-image-catalog="./patient_library/image_sets/catalog.json">
+ <head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+@@ -104,6 +104,16 @@
+           <div class="msg" id="vMsg">No image series loaded — drop DICOM files at right.</div>
+         </div>
+         <div class="vtools">
++          <h4>GitHub image library</h4>
++          <select id="librarySetSel" style="width:100%;margin-bottom:6px;background:#0a1726;color:inherit;border:1px solid rgba(120,200,210,.34);border-radius:7px;padding:6px;font-size:11px">
++            <option value="">Loading catalog…</option>
++          </select>
++          <select id="librarySeriesSel" style="width:100%;margin-bottom:6px;background:#0a1726;color:inherit;border:1px solid rgba(120,200,210,.34);border-radius:7px;padding:6px;font-size:11px">
++            <option value="">Choose an image set first</option>
++          </select>
++          <button class="b sm primary" id="loadLibrarySeries" style="width:100%;margin-bottom:6px">Load selected series</button>
++          <div class="note" id="libraryNote" style="margin:0 0 12px">Catalog: patient_library/image_sets/catalog.json</div>
++          <h4>Local files / direct URL</h4>
+           <div class="drop" id="drop">Drop <b>DICOM / NIfTI</b> files here<br>or click to choose</div>
+           <input type="file" id="fileInput" multiple style="display:none">
+           <input type="text" id="urlList" placeholder="…or paste a file URL / .json manifest" style="width:100%;margin-bottom:6px">
+@@ -363,14 +373,108 @@
+   ingest(out);
+ }
+ async function loadUrls(urls){
++  urls=[...new Set(urls)].filter(Boolean);
++  if(!urls.length){ toast('No image URLs were supplied.'); return; }
+   toast('Fetching '+urls.length+' file'+(urls.length>1?'s':'')+'…');
+-  const out=[]; for(const u of urls){ try{ const b=await (await fetch(u)).arrayBuffer(); out.push(await routeBuffer(b,u.split('/').pop()||u)); }catch(e){ out.push({kind:'error',name:u,error:'fetch blocked (CORS?) or missing'}); } }
++  const out=new Array(urls.length); let next=0, completed=0;
++  async function worker(){
++    while(next<urls.length){
++      const i=next++, u=urls[i];
++      try{
++        const response=await fetch(u);
++        if(!response.ok) throw new Error('HTTP '+response.status);
++        const b=await response.arrayBuffer();
++        const clean=u.split('?')[0].split('#')[0];
++        out[i]=await routeBuffer(b,decodeURIComponent(clean.split('/').pop()||u));
++      }catch(e){ out[i]={kind:'error',name:u,error:'fetch failed ('+(e.message||'CORS or missing file')+')'}; }
++      completed++;
++      if(completed===urls.length || completed%25===0) toast('Fetched '+completed+'/'+urls.length+'…');
++    }
++  }
++  const concurrency=Math.min(6,urls.length);
++  await Promise.all(Array.from({length:concurrency},worker));
+   ingest(out);
+ }
++function filePathOf(record){ return typeof record==='string'?record:(record&&record.path)||''; }
++function resolveManifestFiles(series,manifestUrl){
++  return (series&&series.files||[]).map(filePathOf).filter(Boolean).map(path=>new URL(path,manifestUrl).href);
++}
++async function fetchJson(url){
++  const resolved=new URL(url,location.href).href;
++  const response=await fetch(resolved,{cache:'no-store'});
++  if(!response.ok) throw new Error('HTTP '+response.status);
++  return {data:await response.json(),url:resolved};
++}
++const LIB={ catalog:null, catalogUrl:'', manifest:null, manifestUrl:'' };
++function option(text,value){ const o=document.createElement('option'); o.textContent=text; o.value=value; return o; }
++function populateLibraryCatalog(catalog,catalogUrl){
++  const setSel=$('librarySetSel'), note=$('libraryNote');
++  LIB.catalog=catalog; LIB.catalogUrl=catalogUrl;
++  setSel.innerHTML=''; setSel.appendChild(option('Choose an image set…',''));
++  (LIB.catalog.imageSets||[]).forEach(item=>{
++    const label=[item.title,item.site,item.modalities&&item.modalities.join('/')].filter(Boolean).join(' · ');
++    setSel.appendChild(option(label,item.id));
++  });
++  note.textContent='Catalog: '+catalogUrl;
++  if(!(LIB.catalog.imageSets||[]).length){ setSel.innerHTML=''; setSel.appendChild(option('No image sets in catalog yet','')); note.textContent='The catalog is valid but empty. Run the image-set importer first.'; }
++}
++async function initImageLibrary(){
++  const setSel=$('librarySetSel'), note=$('libraryNote');
++  if(!setSel)return;
++  const configured=document.documentElement.dataset.imageCatalog||'./patient_library/image_sets/catalog.json';
++  note.textContent='Catalog: '+configured;
++  try{
++    const result=await fetchJson(configured); populateLibraryCatalog(result.data,result.url);
++  }catch(e){
++    setSel.innerHTML=''; setSel.appendChild(option('Catalog unavailable',''));
++    note.textContent='Catalog could not be loaded: '+e.message+'. Check data-image-catalog on the <html> element.';
++  }
++}
++async function selectLibrarySet(id){
++  const seriesSel=$('librarySeriesSel'), note=$('libraryNote');
++  seriesSel.innerHTML='';
++  if(!id||!LIB.catalog){ seriesSel.appendChild(option('Choose an image set first','')); return; }
++  const entry=(LIB.catalog.imageSets||[]).find(item=>item.id===id);
++  if(!entry){ seriesSel.appendChild(option('Image set not found','')); return; }
++  try{
++    const result=await fetchJson(new URL(entry.manifest,LIB.catalogUrl).href);
++    LIB.manifest=result.data; LIB.manifestUrl=result.url;
++    const loadable=(LIB.manifest.series||[]).filter(series=>series.loadable!==false&&series.files&&series.files.length);
++    if(!loadable.length){ seriesSel.appendChild(option('No browser-loadable series','')); return; }
++    loadable.forEach(series=>{
++      const warning=series.prototypeViewerCompatible===false?' ⚠':'';
++      seriesSel.appendChild(option((series.label||series.id)+' · '+(series.modality||series.format||'')+' · '+series.files.length+' file(s)'+warning,series.id));
++    });
++    const preferred=LIB.manifest.defaultSeriesId;
++    if(preferred&&loadable.some(series=>series.id===preferred)) seriesSel.value=preferred;
++    note.textContent=(LIB.manifest.patient&&LIB.manifest.patient.alias?LIB.manifest.patient.alias+' · ':'')+(LIB.manifest.description||LIB.manifest.title||entry.title);
++  }catch(e){ seriesSel.appendChild(option('Manifest unavailable','')); note.textContent='Could not load image-set manifest: '+e.message; }
++}
++async function loadSelectedLibrarySeries(){
++  const id=$('librarySeriesSel').value;
++  const series=LIB.manifest&&(LIB.manifest.series||[]).find(item=>item.id===id);
++  if(!series){ toast('Choose a series first.'); return; }
++  if(series.prototypeViewerCompatible===false) toast('This series may include a format the starter viewer cannot decode.');
++  await loadUrls(resolveManifestFiles(series,LIB.manifestUrl));
++}
+ async function loadFromInput(v){
+   v=v.trim(); if(!v)return;
+-  if(/\.json$/i.test(v)){ try{ const m=await (await fetch(v)).json(); const urls=Array.isArray(m)?m:(m.urls||m.images||[]); if(urls.length) return loadUrls(urls); toast('Manifest had no urls.'); }catch(e){ toast('Could not load manifest (CORS?).'); } return; }
+-  loadUrls(v.split(/[\s,]+/).filter(Boolean));
++  if(/\.json(?:[?#].*)?$/i.test(v)){
++    try{
++      const result=await fetchJson(v), m=result.data, manifestUrl=result.url;
++      if(m.imageSets){ populateLibraryCatalog(m,manifestUrl); return; }
++      if(m.series){
++        const series=(m.series||[]).find(item=>item.id===m.defaultSeriesId)||(m.series||[]).find(item=>item.loadable!==false&&item.files&&item.files.length);
++        if(series) return loadUrls(resolveManifestFiles(series,manifestUrl));
++      }
++      const raw=Array.isArray(m)?m:(m.urls||m.images||[]);
++      const urls=raw.map(filePathOf).filter(Boolean).map(path=>new URL(path,manifestUrl).href);
++      if(urls.length) return loadUrls(urls);
++      toast('Manifest had no loadable image URLs.');
++    }catch(e){ toast('Could not load manifest: '+e.message); }
++    return;
++  }
++  loadUrls(v.split(/[\s,]+/).filter(Boolean).map(path=>new URL(path,location.href).href));
+ }
+ 
+ /* ----------------------------- worklist + chart ----------------------------- */
+@@ -448,6 +552,9 @@
+   ['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('hover');}));
+   drop.addEventListener('drop',e=>loadFiles(e.dataTransfer.files));
+   $('loadUrl').onclick=()=>loadFromInput($('urlList').value);
++  $('librarySetSel').onchange=e=>selectLibrarySet(e.target.value);
++  $('loadLibrarySeries').onclick=loadSelectedLibrarySeries;
++  initImageLibrary();
+   { const ss=$('seriesSel'); if(ss) ss.onchange=e=>selectSeries(+e.target.value); }
+   { const lb=$('labelBtn'); if(lb) lb.onclick=()=>{ V.labelColor=!V.labelColor; lb.classList.toggle('on',V.labelColor); drawViewer(); }; }
+   $('addPatient').onclick=()=>{ const id='ANON-'+String(DB.patients.length+1).padStart(3,'0'); DB.patients.push({id,alias:'New patient',site:'',dx:'',status:'sim',rx:{dose:60,fx:30},seriesUrls:[]}); save(); renderWorklist(); toast('Patient added — edit via manifest import.'); };
