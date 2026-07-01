@@ -1,0 +1,22 @@
+# Attached reference inputs
+
+- `EA1141_v02_20260519.tcia` is a TCIA/NBIA download manifest containing Series Instance UIDs. Use the NBIA Data Retriever to download the actual DICOM files before running the importer.
+- `CFB-GBM_treatment_data_v02_20260129.tsv` is tabular treatment metadata. It may be copied into an image set's `metadata/` folder, but it is not an image series.
+
+Example after the downloaded images are available:
+
+```powershell
+python -m pip install -r tools/image_library/requirements.txt
+
+.\tools\image_library\add_image_set.ps1 `
+  -Source "C:\TCIA\EA1141\downloaded-case-folder" `
+  -SetId "ea1141-case-001" `
+  -Title "EA1141 Case 001" `
+  -PatientAlias "EA1141-001" `
+  -Site "Breast" `
+  -SourceLabel "TCIA EA1141" `
+  -SourceMetadata @(
+    ".\reference_inputs\EA1141_v02_20260519.tcia",
+    ".\reference_inputs\CFB-GBM_treatment_data_v02_20260129.tsv"
+  )
+```
