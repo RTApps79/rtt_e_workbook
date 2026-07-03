@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>LINAC Console — Live 3D MPR & 6DoF Alignment</title>
+<style>
+  :root{
+    --bg:#0a0f16; --bg2:#0d1420; --panel:#121b29; 
+    --line:#243449; --ink:#e7eef7; --ink-mute:#64788f;
+    --cyan:#34d6c6; --amber:#f5b53d; --green:#2fd27a; --magenta: #e038c8;
+    --mono:ui-monospace,"SF Mono","Cascadia Code",Menlo,Consolas,monospace;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  body { 
+    margin: 0; padding: 15px; background: var(--bg); color: var(--ink); 
+    font-family: var(--sans); display: flex; gap: 15px; height: 100vh; box-sizing: border-box;
+  }
+  
+  /* MPR GRID */
+  .mpr-grid {
+    display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr;
+    gap: 10px; flex: 2;
+  }
+  .viewport-wrapper {
+    background: #000; border: 1px solid var(--line);
+    position: relative; overflow: hidden; display: flex; flex-direction: column;
+  }
+  .viewport-header {
+    background: var(--line); color: var(--ink-mute);
+    font-size: 11px; font-weight: bold; padding: 3px 8px;
+    text-transform: uppercase; position: absolute; top: 0; left: 0; right: 0; z-index: 10;
+    display: flex; justify-content: space-between;
+  }
+  
+  /* CANVAS SETTINGS */
+  .canvas-stack { position: absolute; top: 20px; bottom: 0; left: 0; right: 0; }
+  .canvas-layer { position: absolute; top:0; left:0; width:100%; height:100%; pointer-events: none; }
+  .mpr-canvas { width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated; margin-top:20px; }
+  
+  #axial-container { cursor: crosshair; pointer-events: auto; }
+  .blend-alpha { opacity: 0.5; mix-blend-mode: screen; }
+
+  /* CONTROLS */
+  .controls {
+    flex: 1; min-width: 320px; background: var(--panel); border: 1px solid var(--line); 
+    display: flex; flex-direction: column; padding: 15px; overflow-y: auto;
+  }
+  h2 { margin-top: 0; font-size: 18px; border-bottom: 1px solid var(--line); padding-bottom: 10px;}
+  .tool-group { margin-bottom: 15px; background: var(--bg2); padding: 12px; border: 1px solid var(--line); border-radius: 4px; }
+  .tool-label { font-size: 11px; color: var(--ink-mute); text-transform: uppercase; margin-bottom: 8px; display: block; font-weight:bold;}
+  .btn-row { display: flex; gap: 5px; margin-bottom: 5px; }
+  button {
+    background: var(--line); color: var(--ink); border: none; padding: 8px 10px; border-radius: 3px;
+    cursor: pointer; font-size: 12px; font-weight: bold; flex: 1; transition: 0.2s;
+  }
+  button:hover { background: var(--cyan); color: #000; }
+  
+  .readout { background: #000; border: 1px solid var(--line); padding: 10px; font-family: var(--mono); font-size: 13px; margin-top: auto; }
+  .readout-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
+  .status-bar { font-size: 12px; color: var(--amber); margin-top: 10px; font-weight: bold; }
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://unpkg.com/cornerstone-core"></script>
+<script src="https://unpkg.com/dicom-parser"></script>
+<script src="https://unpkg.com/cornerstone-wado-image-loader"></script>
+<script src="https://unpkg.com/cornerstone-math"></script>
+<script src="https://unpkg.com/hammerjs"></script>
+<script src="https://unpkg.com/cornerstone-tools"></script>
+
+</head>
+<body>
+
+  <div class="mpr-grid">
+    <div class="viewport-wrapper" id="axial-container">
+      <div class="viewport-header">
+        <span>Axial (Z-Plane)</span>
+        <span id="slice-indicator">Slice: 0 / 0</span>
+      </div>
+      <div class="canvas-stack">
+        <div id="axial-ref" class="canvas-layer"></div>
+        <div id="axial-cbct" class="canvas-layer blend-alpha" style="display:none;"></div>
+      </div>
+    </div>
+    
+    <div class="viewport-wrapper">
+      <div class="viewport-header">Coronal (Y-Plane)</div>
+      <canvas id="coronalCanvas" class="mpr-canvas"></canvas>
+    </div>
+    
+    <div class="viewport-wrapper">
+      <div class="viewport-header">Sagittal (X-Plane)</div>
+      <canvas id="sagittalCanvas" class="mpr-canvas"></canvas>
+    </div>
+    
+    <div class="viewport-wrapper">
+       <div class="viewport-header" style="color:var(--magenta);">Educational MPR Engine Active</div>
+       <div style="padding:40px 20px; text-align:center; color:var(--ink-mute); font-size:12px; font-family:var(--mono);">
+         Hover mouse over the Axial image to slice the 3D voxel volume in real-time. Use 6DoF controls to align the CBCT.
+       </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <h2>6DoF Image Registration</h2>
+    
+    <div class="tool-group">
+      <span class="tool-label">1. Import Curriculum Case (.ZIP)</span>
+      <input type="file" id="zipFile" accept=".zip" style="width:100%; font-size:12px;" />
+      <div id="loading-status" class="status-bar">Awaiting case file...</div>
+    </div>
+
+    <div class="tool-group">
+      <span class="tool-label">2. Simulate Setup Error</span>
+      <button id="btnSimulate" style="background:var(--amber); color:#000; width:100%;">Acquire Daily CBCT</button>
+    </div>
+
+    <div class="tool-group">
+      <span class="tool-label">3. 6DoF Manual Fine-Tune</span>
+      <!-- Translations -->
+      <div class="btn-row">
+        <button onclick="applyShift('x', -1)">◀ LAT (R)</button>
+        <button onclick="applyShift('x', 1)">LAT (L) ▶</button>
+      </div>
+      <div class="btn-row">
+        <button onclick="applyShift('y', -1)">▲ LNG (S)</button>
+        <button onclick="applyShift('y', 1)">LNG (I) ▼</button>
+      </div>
+      <div class="btn-row" style="margin-bottom: 12px;">
+        <button onclick="applyShift('z', -1)">VRT (Down)</button>
+        <button onclick="applyShift('z', 1)">VRT (Up)</button>
+      </div>
+      <!-- Rotations -->
+      <div class="btn-row">
+        <button onclick="applyShift('pitch', -0.5)">Pitch -</button>
+        <button onclick="applyShift('pitch', 0.5)">Pitch +</button>
+      </div>
+      <div class="btn-row">
+        <button onclick="applyShift('roll', -0.5)">Roll -</button>
+        <button onclick="applyShift('roll', 0.5)">Roll +</button>
+      </div>
+      <div class="btn-row">
+        <button onclick="applyShift('yaw', -0.5)">Yaw ↺</button>
+        <button onclick="applyShift('yaw', 0.5)">Yaw ↻</button>
+      </div>
+    </div>
+
+    <div class="readout">
+      <div style="color:var(--ink-mute); margin-bottom:8px; border-bottom:1px solid var(--line); padding-bottom:4px;">COUCH CORRECTIONS</div>
+      <div class="readout-row"><span>LAT (X):</span> <span class="val" id="out-x" style="color:var(--cyan)">0.0 mm</span></div>
+      <div class="readout-row"><span>LNG (Y):</span> <span class="val" id="out-y" style="color:var(--cyan)">0.0 mm</span></div>
+      <div class="readout-row"><span>VRT (Z):</span> <span class="val" id="out-z" style="color:var(--cyan)">0.0 mm</span></div>
+      <div class="readout-row"><span>PITCH:</span> <span class="val" id="out-pitch" style="color:var(--amber)">0.0 °</span></div>
+      <div class="readout-row"><span>ROLL:</span> <span class="val" id="out-roll" style="color:var(--amber)">0.0 °</span></div>
+      <div class="readout-row"><span>YAW:</span> <span class="val" id="out-yaw" style="color:var(--amber)">0.0 °</span></div>
+    </div>
+  </div>
+
+<script>
+  /* ===================== SIMULATOR STATE & MPR ENGINE ===================== */
+  const State = {
+    imageIds: [], currentIndex: 0,
+    pxSpacingX: 1, pxSpacingY: 1, sliceThickness: 2.5,
+    simulatedError: { x: 0, y: 0, z: 0, pitch: 0, roll: 0, yaw: 0 }, 
+    appliedCouch: { x: 0, y: 0, z: 0, pitch: 0, roll: 0, yaw: 0 }
+  };
+
+  // Educational MPR Engine - Builds a 3D Volume from 2D slices
+  const Engine3D = {
+    volume: [],
+    cols: 0, rows: 0, numSlices: 0,
+    window: 400, level: 40,
+
+    async buildVolume(imageIds) {
+      this.numSlices = imageIds.length;
+      this.volume = [];
+      
+      const img0 = await cornerstone.loadImage(imageIds[0]);
+      this.cols = img0.columns;
+      this.rows = img0.rows;
+
+      for(let i=0; i<imageIds.length; i++) {
+          const img = await cornerstone.loadImage(imageIds[i]);
+          this.volume.push({
+            pixels: img.getPixelData(),
+            intercept: img.intercept,
+            slope: img.slope
+          });
+      }
+    },
+
+    getGrayscale(val, intercept, slope) {
+      const hu = (val * slope) + intercept;
+      const min = this.level - (this.window / 2);
+      const max = this.level + (this.window / 2);
+      if (hu <= min) return 0;
+      if (hu >= max) return 255;
+      return Math.floor(((hu - min) / this.window) * 255);
+    },
+
+    drawMPR(x, y) {
+      if(this.volume.length === 0) return;
+      
+      const corCanvas = document.getElementById('coronalCanvas');
+      corCanvas.width = this.cols; corCanvas.height = this.numSlices;
+      const corCtx = corCanvas.getContext('2d');
+      const corData = corCtx.createImageData(this.cols, this.numSlices);
+
+      const sagCanvas = document.getElementById('sagittalCanvas');
+      sagCanvas.width = this.rows; sagCanvas.height = this.numSlices;
+      const sagCtx = sagCanvas.getContext('2d');
+      const sagData = sagCtx.createImageData(this.rows, this.numSlices);
+
+      for (let z = 0; z < this.numSlices; z++) {
+        const sliceInfo = this.volume[z];
+        
+        for (let i = 0; i < this.cols; i++) {
+          const rawVal = sliceInfo.pixels[y * this.cols + i];
+          const gray = this.getGrayscale(rawVal, sliceInfo.intercept, sliceInfo.slope);
+          const idx = (z * this.cols + i) * 4;
+          corData.data[idx] = gray; corData.data[idx+1] = gray; corData.data[idx+2] = gray; corData.data[idx+3] = 255;
+        }
+
+        for (let j = 0; j < this.rows; j++) {
+          const rawVal = sliceInfo.pixels[j * this.cols + x];
+          const gray = this.getGrayscale(rawVal, sliceInfo.intercept, sliceInfo.slope);
+          const idx = (z * this.rows + j) * 4;
+          sagData.data[idx] = gray; sagData.data[idx+1] = gray; sagData.data[idx+2] = gray; sagData.data[idx+3] = 255;
+        }
+      }
+
+      corCtx.putImageData(corData, 0, 0);
+      sagCtx.putImageData(sagData, 0, 0);
+    }
+  };
+
+  /* ===================== INIT & ZIP IMPORT ===================== */
+  cornerstoneWADOImageLoader.external.cornerstone = cornerstone;
+  cornerstoneWADOImageLoader.external.dicomParser = dicomParser;
+  cornerstoneTools.external.cornerstone = cornerstone;
+  cornerstoneTools.external.Hammer = Hammer;
+  cornerstoneTools.external.cornerstoneMath = cornerstoneMath;
+  cornerstoneTools.init();
+
+  const refEl = document.getElementById('axial-ref');
+  const cbctEl = document.getElementById('axial-cbct');
+  cornerstone.enable(refEl); cornerstone.enable(cbctEl);
+  
+  const statusEl = document.getElementById("loading-status");
+
+  document.getElementById("zipFile").addEventListener("change", async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    statusEl.textContent = "Unzipping & Sorting..."; statusEl.style.color = "var(--amber)";
+    try {
+      const zip = await JSZip.loadAsync(file);
+      const dicomFiles = [];
+      const promises = [];
+
+      zip.forEach((path, entry) => {
+        if (!entry.dir && (path.toLowerCase().endsWith('.dcm') || !path.includes('.'))) {
+          promises.push(entry.async("blob").then(b => dicomFiles.push(new File([b], entry.name))));
+        }
+      });
+      await Promise.all(promises);
+
+      dicomFiles.sort((a, b) => a.name.localeCompare(b.name, undefined, {numeric: true}));
+      State.imageIds = dicomFiles.map(f => cornerstoneWADOImageLoader.wadouri.fileManager.add(f));
+
+      const img0 = await cornerstone.loadImage(State.imageIds[0]);
+      State.pxSpacingX = img0.columnPixelSpacing || 1;
+      State.pxSpacingY = img0.rowPixelSpacing || 1;
+      cornerstone.displayImage(refEl, img0);
+      
+      cornerstoneTools.addStackStateManager(refEl, ['stack']);
+      cornerstoneTools.addToolState(refEl, 'stack', { currentImageIdIndex: 0, imageIds: State.imageIds });
+      cornerstoneTools.addTool(cornerstoneTools.StackScrollMouseWheelTool);
+      cornerstoneTools.setToolActive('StackScrollMouseWheel', { mouseButtonMask: 1 });
+
+      statusEl.textContent = "Building 3D Voxel Memory Array...";
+      await Engine3D.buildVolume(State.imageIds);
+      
+      statusEl.textContent = "3D Volume Ready. Scroll or Hover."; statusEl.style.color = "var(--green)";
+      document.getElementById("slice-indicator").textContent = `Slice: 1 / ${State.imageIds.length}`;
+      Engine3D.drawMPR(Math.floor(Engine3D.cols/2), Math.floor(Engine3D.rows/2));
+
+    } catch (err) {
+      console.error(err); statusEl.textContent = "ZIP load failed."; statusEl.style.color = "var(--magenta)";
+    }
+  });
+
+  /* ===================== INTERACTION LOGIC ===================== */
+  refEl.addEventListener('cornerstonetoolsstackscroll', async (e) => {
+    State.currentIndex = e.detail.newImageIdIndex;
+    document.getElementById("slice-indicator").textContent = `Slice: ${State.currentIndex + 1} / ${State.imageIds.length}`;
+    if(cbctEl.style.display !== "none") {
+      updateViewport();
+    }
+  });
+
+  document.getElementById("axial-container").addEventListener("mousemove", (e) => {
+    if(State.imageIds.length === 0) return;
+    const pt = cornerstone.pageToPixel(refEl, e.pageX, e.pageY);
+    const x = Math.floor(pt.x);
+    const y = Math.floor(pt.y);
+    if(x >= 0 && x < Engine3D.cols && y >= 0 && y < Engine3D.rows) {
+      Engine3D.drawMPR(x, y);
+    }
+  });
+
+  /* ===================== ALIGNMENT LOGIC (6DoF) ===================== */
+  document.getElementById("btnSimulate").addEventListener("click", async () => {
+    if(State.imageIds.length===0) return;
+    
+    // Generate simulated 6DoF Setup Error 
+    State.simulatedError = { 
+      x: (Math.random() * 20 - 10),     // LAT Error (mm)
+      y: (Math.random() * 20 - 10),     // LNG Error (mm)
+      z: (Math.random() * 14 - 7),      // VRT Error (mm)
+      pitch: (Math.random() * 6 - 3),   // Pitch Error (deg)
+      roll: (Math.random() * 6 - 3),    // Roll Error (deg)
+      yaw: (Math.random() * 10 - 5)     // Yaw Error (deg)
+    };
+    
+    State.appliedCouch = { x: 0, y: 0, z: 0, pitch: 0, roll: 0, yaw: 0 };
+    cbctEl.style.display = "block";
+    updateViewport();
+  });
+
+  window.applyShift = function(axis, amount) {
+    State.appliedCouch[axis] += amount;
+    updateViewport();
+  };
+
+  async function updateViewport() {
+    // 1. Calculate Net Totals
+    const netX = State.simulatedError.x + State.appliedCouch.x;
+    const netY = State.simulatedError.y + State.appliedCouch.y;
+    const netZ = State.simulatedError.z + State.appliedCouch.z;
+    const netYaw = State.simulatedError.yaw + State.appliedCouch.yaw;
+
+    // 2. Load the offset slice based on VRT (Z) variation
+    // Offset amount divided by slice thickness dictates which slice to overlay
+    const sliceOffset = Math.round(netZ / State.sliceThickness);
+    let cbctIndex = State.currentIndex + sliceOffset;
+    if (cbctIndex < 0) cbctIndex = 0;
+    if (cbctIndex >= State.imageIds.length) cbctIndex = State.imageIds.length - 1;
+
+    const image = await cornerstone.loadImage(State.imageIds[cbctIndex]);
+    cornerstone.displayImage(cbctEl, image);
+
+    // 3. Apply 2D Viewport transformations (LAT/LNG Translation & Yaw Rotation)
+    const viewport = cornerstone.getViewport(cbctEl);
+    if(viewport) {
+      viewport.translation.x = netX / State.pxSpacingX;
+      viewport.translation.y = netY / State.pxSpacingY;
+      viewport.rotation = netYaw;
+      cornerstone.setViewport(cbctEl, viewport);
+    }
+    
+    // 4. Update Readout UI
+    document.getElementById("out-x").textContent = State.appliedCouch.x.toFixed(1) + " mm";
+    document.getElementById("out-y").textContent = State.appliedCouch.y.toFixed(1) + " mm";
+    document.getElementById("out-z").textContent = State.appliedCouch.z.toFixed(1) + " mm";
+    document.getElementById("out-pitch").textContent = State.appliedCouch.pitch.toFixed(1) + " °";
+    document.getElementById("out-roll").textContent = State.appliedCouch.roll.toFixed(1) + " °";
+    document.getElementById("out-yaw").textContent = State.appliedCouch.yaw.toFixed(1) + " °";
+  }
+</script>
+</body>
+</html>
