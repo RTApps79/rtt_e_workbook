@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Virtual Venipuncture Practicum</title>
+<style>
+    :root{
+        --bg:#eef3f7;
+        --panel:#ffffff;
+        --ink:#25313c;
+        --muted:#60707f;
+        --brand:#005a9c;
+        --brand2:#0b7bdc;
+        --good:#1f9d55;
+        --bad:#d64545;
+        --warn:#d99000;
+        --line:#d8e1ea;
+        --shadow:0 10px 28px rgba(25,42,62,.08);
+    }
+    *{box-sizing:border-box}
+    body{
+        margin:0;
+        padding:20px;
+        font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+        background:var(--bg);
+        color:var(--ink);
+    }
+    h1{
+        margin:0 0 6px;
+        color:var(--brand);
+        text-align:center;
+    }
+    .subtitle{
+        margin:0 auto 18px;
+        max-width:1100px;
+        text-align:center;
+        color:var(--muted);
+        line-height:1.5;
+    }
+    .layout{
+        max-width:1400px;
+        margin:0 auto;
+        display:grid;
+        grid-template-columns: 1.2fr .9fr;
+        gap:16px;
+    }
+    .panel{
+        background:var(--panel);
+        border:1px solid var(--line);
+        border-radius:12px;
+        box-shadow:var(--shadow);
+        padding:16px;
+    }
+    .grid2{
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:12px;
+    }
+    .grid3{
+        display:grid;
+        grid-template-columns:repeat(3,1fr);
+        gap:10px;
+    }
+    .card{
+        border:1px solid var(--line);
+        border-radius:10px;
+        background:#fbfdff;
+        padding:12px;
+    }
+    .label{
+        display:block;
+        font-size:.78rem;
+        text-transform:uppercase;
+        letter-spacing:.04em;
+        color:var(--muted);
+        margin-bottom:6px;
+        font-weight:700;
+    }
+    .value{
+        font-size:1rem;
+        font-weight:700;
+        color:var(--ink);
+    }
+    .status{
+        padding:10px 12px;
+        border-radius:10px;
+        background:#f7fbff;
+        border:1px solid var(--line);
+        margin-bottom:12px;
+        color:var(--muted);
+    }
+    .status strong{color:var(--brand)}
+    .section-title{
+        margin:0 0 10px;
+        color:var(--brand);
+        font-size:1rem;
+        text-transform:uppercase;
+        letter-spacing:.04em;
+    }
+    .btnrow{
+        display:flex;
+        flex-wrap:wrap;
+        gap:8px;
+        margin-top:10px;
+    }
+    button{
+        border:0;
+        border-radius:8px;
+        padding:10px 14px;
+        cursor:pointer;
+        font-weight:700;
+        font-size:.95rem;
+        transition:.15s transform,.15s background-color,.15s opacity;
+    }
+    button:hover{transform:translateY(-1px)}
+    button:disabled{opacity:.45;cursor:not-allowed;transform:none}
+    .primary{background:var(--brand2);color:#fff}
+    .secondary{background:#647687;color:#fff}
+    .ghost{background:#eef5fb;color:var(--brand);border:1px solid #cfe0ef}
+    .good{background:var(--good);color:#fff}
+    .bad{background:var(--bad);color:#fff}
+    select, textarea, input{
+        width:100%;
+        border:1px solid var(--line);
+        border-radius:8px;
+        padding:10px;
+        font:inherit;
+        background:#fff;
+        color:var(--ink);
+    }
+    textarea{min-height:82px;resize:vertical}
+    .small{font-size:.9rem;color:var(--muted)}
+    .progress{
+        width:100%;
+        height:12px;
+        background:#edf2f7;
+        border-radius:999px;
+        overflow:hidden;
+        border:1px solid var(--line);
+    }
+    .bar{
+        height:100%;
+        width:0%;
+        background:linear-gradient(90deg,var(--brand2),#44b0ff);
+    }
+    .log{
+        max-height:220px;
+        overflow:auto;
+        font-size:.92rem;
+        line-height:1.45;
+        padding-right:6px;
+    }
+    .log-item{
+        border-bottom:1px solid #edf2f7;
+        padding:8px 0;
+    }
+    .log-item:last-child{border-bottom:0}
+    svg{
+        width:100%;
+        height:auto;
+        border:1px solid var(--line);
+        border-radius:12px;
+        background:#fff;
+    }
+    .skin{fill:#f3c9ad;stroke:#9d7c67;stroke-width:2}
+    .vein{fill:#a8d8ef;stroke:#3d86ad;stroke-width:1.5;cursor:pointer}
+    .vein:hover,.vein.selected{fill:#ffd45c;stroke:#c58a00}
+    .artery{fill:#e88d8d;stroke:#bf5a5a;stroke-width:1.5}
+    .target{fill:none;stroke:#1f9d55;stroke-width:3;stroke-dasharray:6 5;opacity:.0}
+    .target.show{opacity:1}
+    .hintbox{
+        border-left:4px solid var(--warn);
+        background:#fff8ea;
+        padding:10px 12px;
+        border-radius:8px;
+        color:#6b5300;
+    }
+    .feedback{
+        margin-top:10px;
+        min-height:50px;
+        padding:10px 12px;
+        border-radius:8px;
+        border:1px dashed var(--line);
+        background:#fbfdff;
+    }
+    .correct{color:var(--good);font-weight:800}
+    .incorrect{color:var(--bad);font-weight:800}
+    @media (max-width: 1000px){
+        .layout{grid-template-columns:1fr}
+    }
+</style>
+</head>
+<body>
+<h1>Virtual Venipuncture Practicum</h1>
+<p class="subtitle">This practicum guides learners through case review, vein selection, equipment choice, stepwise performance, and reflective debriefing. Each decision is logged for formative assessment and feedback.</p>
+
+<div class="layout">
+    <div class="panel">
+        <div class="grid2">
+            <div class="card">
+                <span class="label">Practicum Stage</span>
+                <div class="value" id="stage-value">1. Case Review</div>
+            </div>
+            <div class="card">
+                <span class="label">Performance Score</span>
+                <div class="value" id="score-value">0</div>
+            </div>
+            <div class="card">
+                <span class="label">Errors</span>
+                <div class="value" id="error-value">0</div>
+            </div>
+            <div class="card">
+                <span class="label">Completion</span>
+                <div class="value" id="complete-value">0%</div>
+            </div>
+        </div>
+
+        <div style="margin:14px 0">
+            <div class="progress"><div class="bar" id="progress-bar"></div></div>
+        </div>
+
+        <div class="status" id="case-box">
+            <strong>Patient case:</strong> An adult patient requires peripheral venous access for routine laboratory blood draw. The antecubital fossa is visible, and the patient has no known contraindications on either arm.
+        </div>
+
+        <div class="grid2">
+            <div class="card">
+                <span class="label">Access Goal</span>
+                <select id="goal-select">
+                    <option value="routine">Routine blood draw</option>
+                    <option value="contrast">Contrast injection</option>
+                    <option value="fragile">Fragile veins</option>
+                    <option value="distal">Distal access needed</option>
+                    <option value="pediatric">Pediatric patient</option>
+                </select>
+            </div>
+            <div class="card">
+                <span class="label">Patient Constraint</span>
+                <select id="constraint-select">
+                    <option value="none">No special restriction</option>
+                    <option value="dehydrated">Dehydrated</option>
+                    <option value="avf">AV fistula on one side</option>
+                    <option value="mastectomy">Prior mastectomy on one side</option>
+                    <option value="difficult">Difficult veins</option>
+                </select>
+            </div>
+        </div>
+
+        <div style="margin-top:14px">
+            <div class="section-title">Stage 1: Site Selection</div>
+            <p class="small">Select the vein you would choose first, then justify why it is appropriate for the case.</p>
+            <textarea id="reason-input" placeholder="Explain your selection in one or two sentences."></textarea>
+            <div class="btnrow">
+                <button class="primary" id="verify-site-btn">Verify Site Choice</button>
+                <button class="secondary" id="show-hint-btn">Show Hint</button>
+            </div>
+        </div>
+
+        <div class="feedback" id="feedback-text" aria-live="polite"></div>
+
+        <div style="margin-top:14px">
+            <div class="section-title">Stage 2: Equipment Selection</div>
+            <div class="grid3">
+                <label class="card"><span class="label">Catheter</span><input type="text" id="catheter-input" placeholder="e.g., 20G"></label>
+                <label class="card"><span class="label">Antiseptic</span><input type="text" id="prep-input" placeholder="e.g., chlorhexidine"></label>
+                <label class="card"><span class="label">Securement</span><input type="text" id="secure-input" placeholder="e.g., transparent dressing"></label>
+            </div>
+            <div class="btnrow">
+                <button class="primary" id="verify-equipment-btn" disabled>Verify Equipment Choice</button>
+            </div>
+        </div>
+
+        <div style="margin-top:14px">
+            <div class="section-title">Stage 3: Procedure Reflection</div>
+            <textarea id="reflection-input" placeholder="What step was most important and what would you do differently with a higher-risk patient?"></textarea>
+            <div class="btnrow">
+                <button class="good" id="finish-btn" disabled>Complete Practicum</button>
+                <button class="ghost" id="reset-btn">Reset Case</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="section-title">Anatomy View</div>
+        <svg id="arm-svg" viewBox="0 0 400 300" aria-label="Arm anatomy">
+            <path class="skin" d="M50 250 Q 0 200 50 100 C 70 50 200 40 250 80 Q 300 120 350 150 Q 400 200 350 250 Z"/>
+            <circle cx="200" cy="110" r="8" class="artery"/>
+            <text x="200" y="100" text-anchor="middle" font-size="10" fill="#bf5a5a">Artery</text>
+
+            <path id="median-cubital" class="vein" d="M100 150 Q 150 120 200 150 Q 250 180 300 150 C 280 160 250 170 200 160 Q 150 150 100 160 Z"/>
+            <text x="200" y="140" text-anchor="middle" font-size="12" fill="#31404f" pointer-events="none">Median Cubital</text>
+
+            <path id="cephalic" class="vein" d="M80 180 Q 120 200 160 190 Q 200 180 220 160 C 200 170 160 180 120 190 Q 80 200 60 190 Z"/>
+            <text x="140" y="180" text-anchor="middle" font-size="12" fill="#31404f" pointer-events="none">Cephalic</text>
+
+            <path id="basilic" class="vein" d="M250 160 Q 280 180 320 170 Q 350 160 370 180 C 350 170 320 160 280 170 Q 250 180 230 170 Z"/>
+            <text x="290" y="150" text-anchor="middle" font-size="12" fill="#31404f" pointer-events="none">Basilic</text>
+
+            <path id="hand-vein" class="vein" d="M100 230 Q 120 220 150 230 Q 180 240 200 230 C 180 225 150 220 120 225 Z"/>
+            <text x="150" y="220" text-anchor="middle" font-size="12" fill="#31404f" pointer-events="none">Hand Vein</text>
+
+            <circle id="target-ring" class="target" cx="200" cy="150" r="26"/>
+        </svg>
+
+        <div style="margin-top:14px">
+            <div class="section-title">Assessment Log</div>
+            <div class="log" id="log-box"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+const veins = document.querySelectorAll('.vein');
+const stageValue = document.getElementById('stage-value');
+const scoreValue = document.getElementById('score-value');
+const errorValue = document.getElementById('error-value');
+const completeValue = document.getElementById('complete-value');
+const progressBar = document.getElementById('progress-bar');
+const caseBox = document.getElementById('case-box');
+const feedbackText = document.getElementById('feedback-text');
+const reasonInput = document.getElementById('reason-input');
+const reflectionInput = document.getElementById('reflection-input');
+const logBox = document.getElementById('log-box');
+const verifySiteBtn = document.getElementById('verify-site-btn');
+const verifyEquipmentBtn = document.getElementById('verify-equipment-btn');
+const finishBtn = document.getElementById('finish-btn');
+const resetBtn = document.getElementById('reset-btn');
+const showHintBtn = document.getElementById('show-hint-btn');
+const goalSelect = document.getElementById('goal-select');
+const constraintSelect = document.getElementById('constraint-select');
+const targetRing = document.getElementById('target-ring');
+const catheterInput = document.getElementById('catheter-input');
+const prepInput = document.getElementById('prep-input');
+const secureInput = document.getElementById('secure-input');
+
+let stage = 1;
+let score = 0;
+let errors = 0;
+let completed = false;
+let selectedVein = null;
+let siteVerified = false;
+let equipmentVerified = false;
+let currentScenario = null;
+let logItems = [];
+
+const scenarios = [
+    {
+        goal: 'routine',
+        constraint: 'none',
+        case: 'Adult patient requires routine laboratory blood draw. The antecubital fossa is visible and accessible.',
+        correctVein: 'median-cubital',
+        hint: 'Choose the most stable antecubital site with the best balance of accessibility and safety.',
+        equipment: { catheter: '22G', prep: 'chlorhexidine', secure: 'transparent dressing' }
+    },
+    {
+        goal: 'contrast',
+        constraint: 'none',
+        case: 'Patient requires contrast injection. Vessel stability and caliber are important.',
+        correctVein: 'median-cubital',
+        hint: 'For higher-flow access, stability matters more than convenience.',
+        equipment: { catheter: '20G', prep: 'chlorhexidine', secure: 'transparent dressing' }
+    },
+    {
+        goal: 'distal',
+        constraint: 'difficult',
+        case: 'Ante-cubital veins are not readily available. A visible distal access site is needed.',
+        correctVein: 'hand-vein',
+        hint: 'Think about the back of the hand when proximal veins are not viable.',
+        equipment: { catheter: '22G', prep: 'chlorhexidine', secure: 'transparent dressing' }
+    },
+    {
+        goal: 'fragile',
+        constraint: 'dehydrated',
+        case: 'Dehydrated patient with fragile veins. Minimize trauma and repeated attempts.',
+        correctVein: 'cephalic',
+        hint: 'Choose a superficial option that may be easier to stabilize and visualize.',
+        equipment: { catheter: '22G', prep: 'chlorhexidine', secure: 'transparent dressing' }
+    },
+    {
+        goal: 'pediatric',
+        constraint: 'none',
+        case: 'Pediatric patient requires careful peripheral access. Proximal access is not ideal.',
+        correctVein: 'hand-vein',
+        hint: 'A distal visible vein may be more appropriate in a smaller patient.',
+        equipment: { catheter: '24G', prep: 'chlorhexidine', secure: 'transparent dressing' }
+    },
+    {
+        goal: 'routine',
+        constraint: 'mastectomy',
+        case: 'Patient has prior mastectomy on one side. Use the contralateral arm and choose the best visible vein.',
+        correctVein: 'median-cubital',
+        hint: 'Avoid the affected side and select the safest vein on the other arm.',
+        equipment: { catheter: '22G', prep: 'chlorhexidine', secure: 'transparent dressing' }
+    }
+];
+
+function pickScenario() {
+    return scenarios[Math.floor(Math.random() * scenarios.length)];
+}
+
+function log(message) {
+    logItems.unshift(`${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} — ${message}`);
+    logBox.innerHTML = logItems.map(x => `<div class="log-item">${x}</div>`).join('');
+}
+
+function updateProgress() {
+    const pct = Math.round((stage - 1) / 3 * 100);
+    progressBar.style.width = `${pct}%`;
+    completeValue.textContent = `${pct}%`;
+    stageValue.textContent = stage === 1 ? '1. Case Review' : stage === 2 ? '2. Equipment Selection' : stage === 3 ? '3. Reflection' : 'Complete';
+    scoreValue.textContent = score;
+    errorValue.textContent = errors;
+}
+
+function resetVeins() {
+    veins.forEach(v => v.classList.remove('selected'));
+}
+
+function loadScenario() {
+    currentScenario = pickScenario();
+    caseBox.innerHTML = `<strong>Patient case:</strong> ${currentScenario.case}`;
+    feedbackText.innerHTML = '';
+    reasonInput.value = '';
+    reflectionInput.value = '';
+    catheterInput.value = '';
+    prepInput.value = '';
+    secureInput.value = '';
+    selectedVein = null;
+    siteVerified = false;
+    equipmentVerified = false;
+    verifyEquipmentBtn.disabled = true;
+    finishBtn.disabled = true;
+    resetVeins();
+    targetRing.classList.remove('show');
+    updateProgress();
+    log(`New scenario loaded: ${currentScenario.goal} / ${currentScenario.constraint}`);
+}
+
+function showHint() {
+    feedbackText.innerHTML = `<span class="hint">Hint:</span> ${currentScenario.hint}`;
+    log('Hint requested by learner.');
+}
+
+function selectVein(e) {
+    if (completed) return;
+    resetVeins();
+    selectedVein = e.currentTarget.id;
+    e.currentTarget.classList.add('selected');
+    targetRing.classList.add('show');
+    log(`Vein selected: ${selectedVein}`);
+}
+
+function verifySite() {
+    if (!selectedVein) {
+        feedbackText.innerHTML = `<span class="incorrect">Select a vein first.</span>`;
+        errors++;
+        updateProgress();
+        return;
+    }
+
+    const response = reasonInput.value.trim();
+    const correct = selectedVein === currentScenario.correctVein;
+
+    if (correct) {
+        score += response.length > 0 ? 2 : 1;
+        feedbackText.innerHTML = `<span class="correct">Correct site selection.</span> ${response ? 'Your rationale was recorded.' : 'Add rationale next time for full credit.'}`;
+        log(`Site verified as correct. Rationale ${response ? 'provided' : 'not provided'}.`);
+        siteVerified = true;
+        verifyEquipmentBtn.disabled = false;
+        targetRing.classList.add('show');
+    } else {
+        errors++;
+        score = Math.max(0, score - 1);
+        feedbackText.innerHTML = `<span class="incorrect">Incorrect site.</span> Reconsider access safety, stability, and the clinical goal.`;
+        log(`Site verified as incorrect: ${selectedVein}`);
+    }
+    updateProgress();
+}
+
+function verifyEquipment() {
+    const q = currentScenario.equipment;
+    const catheter = catheterInput.value.trim().toUpperCase();
+    const prep = prepInput.value.trim().toLowerCase();
+    const secure = secureInput.value.trim().toLowerCase();
+
+    const ok =
+        catheter.includes(q.catheter) &&
+        prep.includes(q.prep) &&
+        secure.includes('dressing');
+
+    if (ok) {
+        score += 2;
+        feedbackText.innerHTML = `<span class="correct">Equipment selection appropriate.</span>`;
+        log('Equipment selection verified as correct.');
+        equipmentVerified = true;
+        finishBtn.disabled = false;
+    } else {
+        errors++;
+        score = Math.max(0, score - 1);
+        feedbackText.innerHTML = `<span class="incorrect">Equipment mismatch.</span> Check catheter size, antisepsis, and securement strategy for the scenario.`;
+        log('Equipment selection incorrect.');
+    }
+    updateProgress();
+}
+
+function finishPracticum() {
+    if (!siteVerified || !equipmentVerified) {
+        feedbackText.innerHTML = `<span class="incorrect">Complete all prior steps first.</span>`;
+        errors++;
+        updateProgress();
+        return;
+    }
+    stage = 4;
+    completed = true;
+    const refl = reflectionInput.value.trim();
+    score += refl.length > 0 ? 2 : 0;
+    feedbackText.innerHTML = `<span class="correct">Practicum completed.</span> ${refl ? 'Reflection recorded.' : 'Reflection was recommended for full learning value.'}`;
+    log('Practicum completed.');
+    updateProgress();
+}
+
+function resetPracticum() {
+    stage = 1;
+    score = 0;
+    errors = 0;
+    completed = false;
+    selectedVein = null;
+    siteVerified = false;
+    equipmentVerified = false;
+    logItems = [];
+    logBox.innerHTML = '';
+    loadScenario();
+    log('Practicum reset.');
+}
+
+veins.forEach(v => v.addEventListener('click', selectVein));
+verifySiteBtn.addEventListener('click', verifySite);
+verifyEquipmentBtn.addEventListener('click', verifyEquipment);
+finishBtn.addEventListener('click', finishPracticum);
+resetBtn.addEventListener('click', resetPracticum);
+showHintBtn.addEventListener('click', showHint);
+
+goalSelect.addEventListener('change', () => {
+    log(`Goal changed to ${goalSelect.value}`);
+});
+
+constraintSelect.addEventListener('change', () => {
+    log(`Constraint changed to ${constraintSelect.value}`);
+});
+
+loadScenario();
+log('Practicum initialized.');
+</script>
+</body>
+</html>
