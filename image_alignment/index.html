@@ -3,371 +3,736 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>LINAC Console — Live 3D MPR & 6DoF Alignment</title>
+<title>LINAC Console — 3D Image Alignment</title>
 <style>
-  :root{
-    --bg:#0a0f16; --bg2:#0d1420; --panel:#121b29; 
-    --line:#243449; --ink:#e7eef7; --ink-mute:#64788f;
-    --cyan:#34d6c6; --amber:#f5b53d; --green:#2fd27a; --magenta: #e038c8;
-    --mono:ui-monospace,"SF Mono","Cascadia Code",Menlo,Consolas,monospace;
-    --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  :root {
+    --bg: #0a0f16; --bg2: #0d1420; --panel: #121b29; 
+    --line: #243449; --ink: #e7eef7; --ink-mute: #64788f;
+    --cyan: #34d6c6; --amber: #f5b53d; --green: #2fd27a; --red: #e63946;
+    --mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   }
   body { 
     margin: 0; padding: 15px; background: var(--bg); color: var(--ink); 
     font-family: var(--sans); display: flex; gap: 15px; height: 100vh; box-sizing: border-box;
   }
   
-  /* MPR GRID */
+  /* 2x2 GRID LAYOUT */
   .mpr-grid {
     display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr;
-    gap: 10px; flex: 2;
+    gap: 10px; flex: 2; height: 100%;
   }
+  
+  /* VIEWPORTS */
   .viewport-wrapper {
-    background: #000; border: 1px solid var(--line);
-    position: relative; overflow: hidden; display: flex; flex-direction: column;
+    background: #000; border: 1px solid var(--line); border-radius: 6px;
+    position: relative; overflow: hidden; display: flex; justify-content: center; align-items: center;
   }
   .viewport-header {
     background: var(--line); color: var(--ink-mute);
-    font-size: 11px; font-weight: bold; padding: 3px 8px;
+    font-size: 11px; font-weight: bold; padding: 4px 8px;
     text-transform: uppercase; position: absolute; top: 0; left: 0; right: 0; z-index: 10;
     display: flex; justify-content: space-between;
   }
   
-  /* CANVAS SETTINGS */
-  .canvas-stack { position: absolute; top: 20px; bottom: 0; left: 0; right: 0; }
-  .canvas-layer { position: absolute; top:0; left:0; width:100%; height:100%; pointer-events: none; }
-  .mpr-canvas { width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated; margin-top:20px; }
+  /* CANVASES */
+  .canvas-stack { position: absolute; top: 25px; bottom: 0; left: 0; right: 0; display: flex; justify-content: center; align-items: center; transition: transform 0.2s ease; }
+  .align-canvas { max-width: 100%; max-height: 100%; object-fit: contain; position: absolute; image-rendering: pixelated; }
+  #coronalRef, #coronalCbct, #sagittalRef, #sagittalCbct { image-rendering: auto; }
   
-  #axial-container { cursor: crosshair; pointer-events: auto; }
-  .blend-alpha { opacity: 0.5; mix-blend-mode: screen; }
+  /* BLEND MODES */
+  .overlay-colorwash { mix-blend-mode: screen; filter: sepia(1) hue-rotate(130deg) saturate(3); }
+  .overlay-difference { mix-blend-mode: difference; filter: none; }
+  .overlay-checkerboard {
+    mix-blend-mode: normal; filter: none;
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2' height='2'%3E%3Crect width='1' height='1' x='0' y='0' fill='white'/%3E%3Crect width='1' height='1' x='1' y='1' fill='white'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2' height='2'%3E%3Crect width='1' height='1' x='0' y='0' fill='white'/%3E%3Crect width='1' height='1' x='1' y='1' fill='white'/%3E%3C/svg%3E");
+    -webkit-mask-repeat: repeat; mask-repeat: repeat;
+    -webkit-mask-size: calc(100% / var(--checker-n, 1)) calc(100% / var(--checker-n, 1));
+    mask-size: calc(100% / var(--checker-n, 1)) calc(100% / var(--checker-n, 1));
+  }
+  .cbct-layer { display: none; opacity: 0.6; transition: opacity 0.1s; pointer-events: none; }
 
-  /* CONTROLS */
+  /* CROSSHAIR / RETICLE */
+  .crosshair-overlay { position: absolute; top: 25px; bottom: 0; left: 0; right: 0; pointer-events: none; display: none; z-index: 5; }
+  .crosshair-overlay.active { display: block; }
+  .crosshair-overlay .ch-v { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--red); box-shadow: 0 0 4px var(--red); }
+  .crosshair-overlay .ch-h { position: absolute; left: 0; right: 0; height: 1px; background: var(--red); box-shadow: 0 0 4px var(--red); }
+  .crosshair-overlay .ch-dot { position: absolute; width: 7px; height: 7px; border-radius: 50%; border: 1px solid var(--red); background: rgba(230,57,70,0.25); transform: translate(-50%,-50%); }
+  .viewport-wrapper.crosshair-armed { cursor: crosshair; }
+
+  /* 4TH QUADRANT: DASHBOARD */
+  .dashboard {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 6px;
+    display: flex; flex-direction: column; padding: 15px; justify-content: space-between; overflow-y: auto;
+  }
+  .dash-section { background: var(--bg2); border: 1px solid var(--line); border-radius: 4px; padding: 12px; margin-bottom: 10px; }
+  .dash-title { font-size: 11px; color: var(--cyan); text-transform: uppercase; margin-bottom: 10px; font-weight: bold; letter-spacing: 0.5px; border-bottom: 1px solid var(--line); padding-bottom: 4px; }
+  
+  /* VERIFICATION & MSG */
+  .verify-btn { background: var(--cyan); color: #000; font-size: 14px; padding: 10px; width: 100%; margin-bottom: 10px; border: none; font-weight: bold; cursor: pointer; border-radius: 3px; }
+  .verify-btn:hover:not(:disabled) { background: #fff; }
+  .verify-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  
+  .verify-msg { font-size: 13px; text-align: center; font-weight: bold; padding: 10px; border-radius: 4px; background: #000; border: 1px dashed var(--line); min-height: 40px; display: flex; align-items: center; justify-content: center; flex-direction: column; line-height: 1.4; }
+  
+  /* INSTRUCTOR HINTS */
+  .helper-box { display: none; margin-top: 10px; padding: 10px; background: #1a1e24; border: 1px solid var(--amber); border-radius: 4px; }
+  .helper-title { font-size: 10px; color: var(--amber); text-transform: uppercase; font-weight: bold; margin-bottom: 6px; }
+  .helper-text { font-size: 11px; color: var(--ink-mute); line-height: 1.5; margin-bottom: 8px; font-family: var(--mono); }
+  .auto-align-btn { background: #2a313b; color: var(--ink); border: 1px solid var(--line); width: 100%; padding: 6px; font-size: 10px; cursor: pointer; border-radius: 3px; }
+  .auto-align-btn:hover { background: var(--cyan); color: #000; }
+
+  /* MINI CABINET */
+  .mini-cabinet { display: flex; align-items: center; justify-content: space-between; background: #1a1e24; padding: 10px; border: 2px inset #2a313b; border-radius: 4px; margin-top: 10px; }
+  .mu-led { color: var(--red); font-family: var(--mono); font-size: 24px; font-weight: bold; text-shadow: 0 0 5px rgba(230,57,70,0.5); }
+  .status-light { display: flex; align-items: center; gap: 6px; font-size: 10px; color: var(--ink-mute); font-weight: bold; }
+  .led-bulb { width: 12px; height: 12px; border-radius: 50%; background: #222; border: 1px solid #111; }
+  .led-bulb.on-green { background: var(--green); box-shadow: 0 0 5px var(--green); }
+  
+  /* SLIDERS & CONTROLS */
+  .control-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; font-size: 12px; font-weight: 500; }
+  input[type=range] { flex: 1; margin-left: 10px; accent-color: var(--cyan); }
+  select { background: #000; color: var(--cyan); border: 1px solid var(--line); padding: 4px; font-size: 11px; border-radius: 3px; outline: none; }
+
+  /* SIDEBAR CONTROLS */
   .controls {
-    flex: 1; min-width: 320px; background: var(--panel); border: 1px solid var(--line); 
+    width: 300px; background: var(--panel); border: 1px solid var(--line); border-radius: 6px;
     display: flex; flex-direction: column; padding: 15px; overflow-y: auto;
   }
   h2 { margin-top: 0; font-size: 18px; border-bottom: 1px solid var(--line); padding-bottom: 10px;}
   .tool-group { margin-bottom: 15px; background: var(--bg2); padding: 12px; border: 1px solid var(--line); border-radius: 4px; }
   .tool-label { font-size: 11px; color: var(--ink-mute); text-transform: uppercase; margin-bottom: 8px; display: block; font-weight:bold;}
   .btn-row { display: flex; gap: 5px; margin-bottom: 5px; }
-  button {
-    background: var(--line); color: var(--ink); border: none; padding: 8px 10px; border-radius: 3px;
-    cursor: pointer; font-size: 12px; font-weight: bold; flex: 1; transition: 0.2s;
-  }
-  button:hover { background: var(--cyan); color: #000; }
+  button.shift-btn { background: var(--line); color: var(--ink); border: none; padding: 8px; border-radius: 3px; cursor: pointer; font-size: 11px; font-weight: bold; flex: 1; transition: 0.2s; }
+  button.shift-btn:hover:not(:disabled) { background: var(--cyan); color: #000; }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
   
   .readout { background: #000; border: 1px solid var(--line); padding: 10px; font-family: var(--mono); font-size: 13px; margin-top: auto; }
   .readout-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
-  .status-bar { font-size: 12px; color: var(--amber); margin-top: 10px; font-weight: bold; }
+
+  /* ASPECT / RECON CONTROLS */
+  .mini-input { width: 55px; background: #000; color: var(--cyan); border: 1px solid var(--line); padding: 3px 4px; font-size: 11px; border-radius: 3px; font-family: var(--mono); }
+  .note-text { font-size: 10.5px; color: var(--ink-mute); line-height: 1.4; margin-top: 6px; }
+  .toggle-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; font-size: 12px; }
+  .toggle-row input[type=checkbox] { accent-color: var(--cyan); width: 15px; height: 15px; }
+  .scale-readout { color: var(--amber); font-family: var(--mono); }
+  .tool-btn { background: var(--line); color: var(--ink); border: none; padding: 7px; border-radius: 3px; cursor: pointer; font-size: 11px; font-weight: bold; flex: 1; }
+  .tool-btn.active { background: var(--red); color: #fff; }
+  .tool-btn:hover { filter: brightness(1.2); }
 </style>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<script src="https://unpkg.com/cornerstone-core"></script>
-<script src="https://unpkg.com/dicom-parser"></script>
-<script src="https://unpkg.com/cornerstone-wado-image-loader"></script>
-<script src="https://unpkg.com/cornerstone-math"></script>
-<script src="https://unpkg.com/hammerjs"></script>
-<script src="https://unpkg.com/cornerstone-tools"></script>
-
 </head>
 <body>
 
   <div class="mpr-grid">
-    <div class="viewport-wrapper" id="axial-container">
-      <div class="viewport-header">
-        <span>Axial (Z-Plane)</span>
-        <span id="slice-indicator">Slice: 0 / 0</span>
+    <div class="viewport-wrapper" id="axialWrapper">
+      <div class="viewport-header"><span>Axial (Z-Plane)</span><span id="slice-indicator">Slice: 0 / 0</span></div>
+      <div class="canvas-stack" id="axial-container" style="cursor: ns-resize;">
+        <canvas id="axialRef" class="align-canvas"></canvas>
+        <canvas id="axialCbct" class="align-canvas cbct-layer overlay-colorwash"></canvas>
       </div>
-      <div class="canvas-stack">
-        <div id="axial-ref" class="canvas-layer"></div>
-        <div id="axial-cbct" class="canvas-layer blend-alpha" style="display:none;"></div>
-      </div>
+      <div class="crosshair-overlay" id="axialCrosshair"><div class="ch-v"></div><div class="ch-h"></div><div class="ch-dot"></div></div>
     </div>
     
-    <div class="viewport-wrapper">
+    <div class="viewport-wrapper" id="coronalWrapper">
       <div class="viewport-header">Coronal (Y-Plane)</div>
-      <canvas id="coronalCanvas" class="mpr-canvas"></canvas>
+      <div class="canvas-stack">
+        <canvas id="coronalRef" class="align-canvas"></canvas>
+        <canvas id="coronalCbct" class="align-canvas cbct-layer overlay-colorwash"></canvas>
+      </div>
+      <div class="crosshair-overlay" id="coronalCrosshair"><div class="ch-v"></div><div class="ch-h"></div><div class="ch-dot"></div></div>
     </div>
     
-    <div class="viewport-wrapper">
+    <div class="viewport-wrapper" id="sagittalWrapper">
       <div class="viewport-header">Sagittal (X-Plane)</div>
-      <canvas id="sagittalCanvas" class="mpr-canvas"></canvas>
+      <div class="canvas-stack">
+        <canvas id="sagittalRef" class="align-canvas"></canvas>
+        <canvas id="sagittalCbct" class="align-canvas cbct-layer overlay-colorwash"></canvas>
+      </div>
+      <div class="crosshair-overlay" id="sagittalCrosshair"><div class="ch-v"></div><div class="ch-h"></div><div class="ch-dot"></div></div>
     </div>
-    
-    <div class="viewport-wrapper">
-       <div class="viewport-header" style="color:var(--magenta);">Educational MPR Engine Active</div>
-       <div style="padding:40px 20px; text-align:center; color:var(--ink-mute); font-size:12px; font-family:var(--mono);">
-         Hover mouse over the Axial image to slice the 3D voxel volume in real-time. Use 6DoF controls to align the CBCT.
-       </div>
+
+    <div class="dashboard">
+      
+      <div class="dash-section">
+        <div class="dash-title">Image Alignment Tools</div>
+        <div class="control-row">
+          <span>Global Zoom</span>
+          <input type="range" id="zoomSlider" min="0.5" max="3" step="0.1" value="1">
+        </div>
+        <div class="control-row">
+          <span>CBCT Opacity</span>
+          <input type="range" id="opacitySlider" min="0" max="1" step="0.05" value="0.6">
+        </div>
+        <div class="control-row">
+          <span>Blend Mode</span>
+          <select id="blendModeSelect">
+            <option value="overlay-colorwash">Color Wash (Cyan/Magenta)</option>
+            <option value="overlay-difference">Difference (Pixel Subtraction)</option>
+            <option value="overlay-checkerboard">Checkerboard (Tiled Compare)</option>
+          </select>
+        </div>
+        <div class="control-row" id="checkerRow" style="display:none;">
+          <span>Checker Grid</span>
+          <input type="range" id="checkerSlider" min="1" max="8" step="1" value="1">
+          <span id="checkerLabel" style="font-family:var(--mono); color:var(--amber); margin-left:8px; min-width:38px; text-align:right;">2×2</span>
+        </div>
+        <div class="note-text" id="checkerNote" style="display:none;">Coarse (2×2) shows gross offsets fastest. Increase the grid to hunt for subtler edge mismatches — a genuinely aligned pair shows continuous anatomy across every tile boundary.</div>
+
+        <div class="btn-row" style="margin-top:10px;">
+          <button class="tool-btn" id="btnCrosshair">⊹ Linked Reticle</button>
+          <button class="tool-btn" id="btnClearCrosshair">Clear</button>
+        </div>
+        <div class="note-text" id="crosshairNote" style="display:none;">Click any view to drop a linked point. The same anatomical location should land on real, continuous anatomy in <em>all three</em> planes — if it doesn't, your planes disagree about where that structure actually is.</div>
+      </div>
+
+      <div class="dash-section">
+        <div class="dash-title">Reconstruction (Coronal / Sagittal)</div>
+        <div class="toggle-row">
+          <span>Anatomically-correct aspect</span>
+          <input type="checkbox" id="aspectToggle" checked>
+        </div>
+        <div class="control-row">
+          <span>Pixel Spacing (mm)</span>
+          <input type="number" class="mini-input" id="pixelSpacing" value="0.5" min="0.1" max="3" step="0.05">
+        </div>
+        <div class="control-row">
+          <span>Slice Spacing (mm)</span>
+          <input type="number" class="mini-input" id="sliceSpacing" value="3.0" min="0.5" max="10" step="0.1">
+        </div>
+        <div class="control-row">
+          <span>Z-Scale Factor</span>
+          <span class="scale-readout" id="zScaleReadout">×6.0</span>
+        </div>
+        <div class="note-text">Reconstructions are built from a stack of 2D slices. If slice spacing ≠ pixel spacing (nearly always true), stretching the stack by slice/pixel spacing is required or coronal/sagittal views appear compressed and small lesions look flatter — and harder to localize — than they really are. Uncheck above to see the uncorrected (raw) version and compare.</div>
+      </div>
+
+      <div class="dash-section" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+        <div class="dash-title">Clinical Verification</div>
+        <button class="verify-btn" id="btnVerify" disabled>Verify Alignment</button>
+        <div class="verify-msg" id="verifyMsg">
+          <span style="color:var(--ink-mute)">Awaiting CBCT Acquisition...</span>
+        </div>
+        
+        <div class="helper-box" id="helperBox">
+          <div class="helper-title">Instructor Hints</div>
+          <div class="helper-text" id="hintText"></div>
+          <button class="auto-align-btn" onclick="autoAlign()">Auto-Align (Reveal Correct Setup)</button>
+        </div>
+      </div>
+
+      <div class="mini-cabinet" title="Backup MU Counter - Check during R&V failure">
+        <div style="font-size: 10px; color: #888; font-weight: bold; text-transform: uppercase;">Backup MU<br>Counter</div>
+        <div class="mu-led" id="backup-mu">000.0</div>
+        <div style="display:flex; flex-direction: column; gap:4px;">
+          <div class="status-light"><div class="led-bulb on-green"></div> Rdy</div>
+          <div class="status-light"><div class="led-bulb"></div> BmOn</div>
+        </div>
+      </div>
+
     </div>
   </div>
 
   <div class="controls">
-    <h2>6DoF Image Registration</h2>
+    <h2>Daily Treatment Setup</h2>
     
     <div class="tool-group">
-      <span class="tool-label">1. Import Curriculum Case (.ZIP)</span>
+      <span class="tool-label">1. Import Image Stack (.ZIP)</span>
       <input type="file" id="zipFile" accept=".zip" style="width:100%; font-size:12px;" />
-      <div id="loading-status" class="status-bar">Awaiting case file...</div>
+      <div id="loading-status" style="font-size: 12px; color: var(--amber); margin-top: 8px; font-weight: bold;">Awaiting case file...</div>
     </div>
 
     <div class="tool-group">
       <span class="tool-label">2. Simulate Setup Error</span>
-      <button id="btnSimulate" style="background:var(--amber); color:#000; width:100%;">Acquire Daily CBCT</button>
+      <button id="btnSimulate" class="shift-btn" disabled style="background:var(--amber); color:#000; width:100%;">Acquire Daily CBCT</button>
     </div>
 
     <div class="tool-group">
-      <span class="tool-label">3. 6DoF Manual Fine-Tune</span>
-      <!-- Translations -->
+      <span class="tool-label">3. Couch Corrections (6DoF)</span>
       <div class="btn-row">
-        <button onclick="applyShift('x', -1)">◀ LAT (R)</button>
-        <button onclick="applyShift('x', 1)">LAT (L) ▶</button>
+        <button class="shift-btn" onclick="applyShift('x', -1)">◀ L (LAT)</button>
+        <button class="shift-btn" onclick="applyShift('x', 1)">R ▶</button>
       </div>
       <div class="btn-row">
-        <button onclick="applyShift('y', -1)">▲ LNG (S)</button>
-        <button onclick="applyShift('y', 1)">LNG (I) ▼</button>
-      </div>
-      <div class="btn-row" style="margin-bottom: 12px;">
-        <button onclick="applyShift('z', -1)">VRT (Down)</button>
-        <button onclick="applyShift('z', 1)">VRT (Up)</button>
-      </div>
-      <!-- Rotations -->
-      <div class="btn-row">
-        <button onclick="applyShift('pitch', -0.5)">Pitch -</button>
-        <button onclick="applyShift('pitch', 0.5)">Pitch +</button>
+        <button class="shift-btn" onclick="applyShift('y', 1)">▼ DOWN (VRT)</button>
+        <button class="shift-btn" onclick="applyShift('y', -1)">UP ▲</button>
       </div>
       <div class="btn-row">
-        <button onclick="applyShift('roll', -0.5)">Roll -</button>
-        <button onclick="applyShift('roll', 0.5)">Roll +</button>
+        <button class="shift-btn" onclick="applyShift('z', -1)">▼ OUT (LNG)</button>
+        <button class="shift-btn" onclick="applyShift('z', 1)">IN ▲</button>
+      </div>
+      <div class="btn-row" style="margin-top: 10px;">
+        <button class="shift-btn" onclick="applyShift('pitch', -0.5)">- PITCH</button>
+        <button class="shift-btn" onclick="applyShift('pitch', 0.5)">+ PITCH</button>
       </div>
       <div class="btn-row">
-        <button onclick="applyShift('yaw', -0.5)">Yaw ↺</button>
-        <button onclick="applyShift('yaw', 0.5)">Yaw ↻</button>
+        <button class="shift-btn" onclick="applyShift('roll', -0.5)">- ROLL</button>
+        <button class="shift-btn" onclick="applyShift('roll', 0.5)">+ ROLL</button>
+      </div>
+      <div class="btn-row">
+        <button class="shift-btn" onclick="applyShift('yaw', -0.5)">- YAW (RTN)</button>
+        <button class="shift-btn" onclick="applyShift('yaw', 0.5)">+ YAW</button>
       </div>
     </div>
 
     <div class="readout">
-      <div style="color:var(--ink-mute); margin-bottom:8px; border-bottom:1px solid var(--line); padding-bottom:4px;">COUCH CORRECTIONS</div>
+      <div style="color:var(--ink-mute); margin-bottom:8px; border-bottom:1px solid var(--line); padding-bottom:4px;">APPLIED SHIFTS</div>
       <div class="readout-row"><span>LAT (X):</span> <span class="val" id="out-x" style="color:var(--cyan)">0.0 mm</span></div>
-      <div class="readout-row"><span>LNG (Y):</span> <span class="val" id="out-y" style="color:var(--cyan)">0.0 mm</span></div>
-      <div class="readout-row"><span>VRT (Z):</span> <span class="val" id="out-z" style="color:var(--cyan)">0.0 mm</span></div>
-      <div class="readout-row"><span>PITCH:</span> <span class="val" id="out-pitch" style="color:var(--amber)">0.0 °</span></div>
-      <div class="readout-row"><span>ROLL:</span> <span class="val" id="out-roll" style="color:var(--amber)">0.0 °</span></div>
-      <div class="readout-row"><span>YAW:</span> <span class="val" id="out-yaw" style="color:var(--amber)">0.0 °</span></div>
+      <div class="readout-row"><span>VRT (Y):</span> <span class="val" id="out-y" style="color:var(--cyan)">0.0 mm</span></div>
+      <div class="readout-row"><span>LNG (Z):</span> <span class="val" id="out-z" style="color:var(--cyan)">0.0 mm</span></div>
+      <div class="readout-row" style="margin-top:5px;"><span>PITCH:</span> <span class="val" id="out-pitch" style="color:var(--amber)">0.0°</span></div>
+      <div class="readout-row"><span>ROLL:</span> <span class="val" id="out-roll" style="color:var(--amber)">0.0°</span></div>
+      <div class="readout-row"><span>YAW (RTN):</span> <span class="val" id="out-yaw" style="color:var(--amber)">0.0°</span></div>
     </div>
   </div>
 
 <script>
-  /* ===================== SIMULATOR STATE & MPR ENGINE ===================== */
   const State = {
-    imageIds: [], currentIndex: 0,
-    pxSpacingX: 1, pxSpacingY: 1, sliceThickness: 2.5,
+    images: [], currentIndex: 0,
+    width: 0, height: 0, numSlices: 0, volumeData: null,
     simulatedError: { x: 0, y: 0, z: 0, pitch: 0, roll: 0, yaw: 0 }, 
-    appliedCouch: { x: 0, y: 0, z: 0, pitch: 0, roll: 0, yaw: 0 }
+    appliedCouch: { x: 0, y: 0, z: 0, pitch: 0, roll: 0, yaw: 0 },
+    isSimulating: false,
+    failedAttempts: 0,
+    tolerance: { dist: 2.0, rot: 1.0 }, // 2mm translational, 1° rotational tolerance
+    pixelSpacing: 0.5, sliceSpacing: 3.0, zScale: 6.0, aspectCorrect: true,
+    corH: 0, sagH: 0, // current on-screen coronal/sagittal canvas heights (px)
+    checkerN: 1,
+    crosshairArmed: false,
+    crosshair: null // { xFrac, yFrac, zFrac } in 0..1 volume-fraction coordinates, or null
   };
 
-  // Educational MPR Engine - Builds a 3D Volume from 2D slices
+  const UI = {
+    axRef: document.getElementById('axialRef'), axCbct: document.getElementById('axialCbct'),
+    corRef: document.getElementById('coronalRef'), corCbct: document.getElementById('coronalCbct'),
+    sagRef: document.getElementById('sagittalRef'), sagCbct: document.getElementById('sagittalCbct'),
+    status: document.getElementById('loading-status'), sliceInd: document.getElementById('slice-indicator'),
+    btnVerify: document.getElementById('btnVerify'), verifyMsg: document.getElementById('verifyMsg'),
+    helperBox: document.getElementById('helperBox'), hintText: document.getElementById('hintText'),
+    checkerRow: document.getElementById('checkerRow'), checkerSlider: document.getElementById('checkerSlider'),
+    checkerLabel: document.getElementById('checkerLabel'), checkerNote: document.getElementById('checkerNote'),
+    btnCrosshair: document.getElementById('btnCrosshair'), btnClearCrosshair: document.getElementById('btnClearCrosshair'),
+    crosshairNote: document.getElementById('crosshairNote'),
+    axCH: document.getElementById('axialCrosshair'), corCH: document.getElementById('coronalCrosshair'), sagCH: document.getElementById('sagittalCrosshair'),
+    axWrap: document.getElementById('axialWrapper'), corWrap: document.getElementById('coronalWrapper'), sagWrap: document.getElementById('sagittalWrapper'),
+    aspectToggle: document.getElementById('aspectToggle'), pixelSpacingIn: document.getElementById('pixelSpacing'),
+    sliceSpacingIn: document.getElementById('sliceSpacing'), zScaleReadout: document.getElementById('zScaleReadout')
+  };
+
   const Engine3D = {
-    volume: [],
-    cols: 0, rows: 0, numSlices: 0,
-    window: 400, level: 40,
+    offscreenCoronal: document.createElement('canvas'),
+    offscreenSagittal: document.createElement('canvas'),
+    
+    async buildVolume() {
+      State.volumeData = new Uint8Array(State.width * State.height * State.numSlices);
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = State.width; tempCanvas.height = State.height;
+      const ctx = tempCanvas.getContext('2d', { willReadFrequently: true });
 
-    async buildVolume(imageIds) {
-      this.numSlices = imageIds.length;
-      this.volume = [];
-      
-      const img0 = await cornerstone.loadImage(imageIds[0]);
-      this.cols = img0.columns;
-      this.rows = img0.rows;
-
-      for(let i=0; i<imageIds.length; i++) {
-          const img = await cornerstone.loadImage(imageIds[i]);
-          this.volume.push({
-            pixels: img.getPixelData(),
-            intercept: img.intercept,
-            slope: img.slope
-          });
+      for(let z = 0; z < State.numSlices; z++) {
+        ctx.drawImage(State.images[z], 0, 0);
+        const imgData = ctx.getImageData(0, 0, State.width, State.height).data;
+        const sliceOffset = z * State.width * State.height;
+        for(let i = 0; i < State.width * State.height; i++) {
+          State.volumeData[sliceOffset + i] = imgData[i * 4]; 
+        }
       }
     },
 
-    getGrayscale(val, intercept, slope) {
-      const hu = (val * slope) + intercept;
-      const min = this.level - (this.window / 2);
-      const max = this.level + (this.window / 2);
-      if (hu <= min) return 0;
-      if (hu >= max) return 255;
-      return Math.floor(((hu - min) / this.window) * 255);
-    },
-
-    drawMPR(x, y) {
-      if(this.volume.length === 0) return;
+    generateMPR() {
+      const midX = Math.floor(State.width / 2);
+      const midY = Math.floor(State.height / 2);
       
-      const corCanvas = document.getElementById('coronalCanvas');
-      corCanvas.width = this.cols; corCanvas.height = this.numSlices;
-      const corCtx = corCanvas.getContext('2d');
-      const corData = corCtx.createImageData(this.cols, this.numSlices);
+      this.offscreenCoronal.width = State.width; this.offscreenCoronal.height = State.numSlices;
+      this.offscreenSagittal.width = State.height; this.offscreenSagittal.height = State.numSlices;
+      
+      const corCtx = this.offscreenCoronal.getContext('2d');
+      const sagCtx = this.offscreenSagittal.getContext('2d');
+      const corData = corCtx.createImageData(State.width, State.numSlices);
+      const sagData = sagCtx.createImageData(State.height, State.numSlices);
 
-      const sagCanvas = document.getElementById('sagittalCanvas');
-      sagCanvas.width = this.rows; sagCanvas.height = this.numSlices;
-      const sagCtx = sagCanvas.getContext('2d');
-      const sagData = sagCtx.createImageData(this.rows, this.numSlices);
-
-      for (let z = 0; z < this.numSlices; z++) {
-        const sliceInfo = this.volume[z];
-        
-        for (let i = 0; i < this.cols; i++) {
-          const rawVal = sliceInfo.pixels[y * this.cols + i];
-          const gray = this.getGrayscale(rawVal, sliceInfo.intercept, sliceInfo.slope);
-          const idx = (z * this.cols + i) * 4;
-          corData.data[idx] = gray; corData.data[idx+1] = gray; corData.data[idx+2] = gray; corData.data[idx+3] = 255;
+      for (let z = 0; z < State.numSlices; z++) {
+        const sliceOffset = z * State.width * State.height;
+        for (let i = 0; i < State.width; i++) {
+          const val = State.volumeData[sliceOffset + (midY * State.width) + i];
+          const idx = (z * State.width + i) * 4;
+          corData.data.set([val, val, val, 255], idx);
         }
-
-        for (let j = 0; j < this.rows; j++) {
-          const rawVal = sliceInfo.pixels[j * this.cols + x];
-          const gray = this.getGrayscale(rawVal, sliceInfo.intercept, sliceInfo.slope);
-          const idx = (z * this.rows + j) * 4;
-          sagData.data[idx] = gray; sagData.data[idx+1] = gray; sagData.data[idx+2] = gray; sagData.data[idx+3] = 255;
+        for (let j = 0; j < State.height; j++) {
+          const val = State.volumeData[sliceOffset + (j * State.width) + midX];
+          const idx = (z * State.height + j) * 4;
+          sagData.data.set([val, val, val, 255], idx);
         }
       }
-
       corCtx.putImageData(corData, 0, 0);
       sagCtx.putImageData(sagData, 0, 0);
     }
   };
 
-  /* ===================== INIT & ZIP IMPORT ===================== */
-  cornerstoneWADOImageLoader.external.cornerstone = cornerstone;
-  cornerstoneWADOImageLoader.external.dicomParser = dicomParser;
-  cornerstoneTools.external.cornerstone = cornerstone;
-  cornerstoneTools.external.Hammer = Hammer;
-  cornerstoneTools.external.cornerstoneMath = cornerstoneMath;
-  cornerstoneTools.init();
+  /* ===================== RECONSTRUCTION SCALING ===================== */
+  // Coronal/sagittal are built from a stack of numSlices images. Displaying them
+  // 1px-per-slice only looks correct if slice spacing == in-plane pixel spacing,
+  // which is essentially never true. This rescales the visible canvases so 1mm
+  // in Z maps to the same physical distance as 1mm in-plane (or shows the raw,
+  // uncorrected version on demand for comparison/teaching).
+  function updateReconScale() {
+    State.pixelSpacing = Math.max(0.05, parseFloat(UI.pixelSpacingIn.value) || 0.5);
+    State.sliceSpacing = Math.max(0.1, parseFloat(UI.sliceSpacingIn.value) || 3.0);
+    State.aspectCorrect = UI.aspectToggle.checked;
+    State.zScale = State.aspectCorrect ? (State.sliceSpacing / State.pixelSpacing) : 1;
+    UI.zScaleReadout.textContent = '×' + State.zScale.toFixed(2) + (State.aspectCorrect ? '' : ' (raw/uncorrected)');
 
-  const refEl = document.getElementById('axial-ref');
-  const cbctEl = document.getElementById('axial-cbct');
-  cornerstone.enable(refEl); cornerstone.enable(cbctEl);
-  
-  const statusEl = document.getElementById("loading-status");
+    if (State.numSlices === 0) return;
 
+    State.corH = Math.max(1, Math.round(State.numSlices * State.zScale));
+    State.sagH = State.corH;
+
+    UI.corRef.width = State.width; UI.corRef.height = State.corH;
+    UI.corCbct.width = State.width; UI.corCbct.height = State.corH;
+    UI.sagRef.width = State.height; UI.sagRef.height = State.sagH;
+    UI.sagCbct.width = State.height; UI.sagCbct.height = State.sagH;
+
+    const corCtx = UI.corRef.getContext('2d');
+    corCtx.clearRect(0, 0, State.width, State.corH);
+    corCtx.drawImage(Engine3D.offscreenCoronal, 0, 0, State.width, State.numSlices, 0, 0, State.width, State.corH);
+
+    const sagCtx = UI.sagRef.getContext('2d');
+    sagCtx.clearRect(0, 0, State.height, State.sagH);
+    sagCtx.drawImage(Engine3D.offscreenSagittal, 0, 0, State.height, State.numSlices, 0, 0, State.height, State.sagH);
+
+    renderViewports();
+  }
+
+  UI.aspectToggle.addEventListener('change', updateReconScale);
+  UI.pixelSpacingIn.addEventListener('input', updateReconScale);
+  UI.sliceSpacingIn.addEventListener('input', updateReconScale);
+
+  /* ===================== INIT ===================== */
   document.getElementById("zipFile").addEventListener("change", async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    statusEl.textContent = "Unzipping & Sorting..."; statusEl.style.color = "var(--amber)";
+    UI.status.textContent = "Unzipping images..."; UI.status.style.color = "var(--amber)";
     try {
       const zip = await JSZip.loadAsync(file);
-      const dicomFiles = [];
-      const promises = [];
-
-      zip.forEach((path, entry) => {
-        if (!entry.dir && (path.toLowerCase().endsWith('.dcm') || !path.includes('.'))) {
-          promises.push(entry.async("blob").then(b => dicomFiles.push(new File([b], entry.name))));
-        }
-      });
-      await Promise.all(promises);
-
-      dicomFiles.sort((a, b) => a.name.localeCompare(b.name, undefined, {numeric: true}));
-      State.imageIds = dicomFiles.map(f => cornerstoneWADOImageLoader.wadouri.fileManager.add(f));
-
-      const img0 = await cornerstone.loadImage(State.imageIds[0]);
-      State.pxSpacingX = img0.columnPixelSpacing || 1;
-      State.pxSpacingY = img0.rowPixelSpacing || 1;
-      cornerstone.displayImage(refEl, img0);
+      const entries = Object.values(zip.files).filter(entry => !entry.dir && entry.name.match(/\.(jpg|jpeg|png)$/i));
+      entries.sort((a, b) => a.name.localeCompare(b.name, undefined, {numeric: true}));
       
-      cornerstoneTools.addStackStateManager(refEl, ['stack']);
-      cornerstoneTools.addToolState(refEl, 'stack', { currentImageIdIndex: 0, imageIds: State.imageIds });
-      cornerstoneTools.addTool(cornerstoneTools.StackScrollMouseWheelTool);
-      cornerstoneTools.setToolActive('StackScrollMouseWheel', { mouseButtonMask: 1 });
+      State.images = [];
+      for(let entry of entries) {
+        const base64 = await entry.async("base64");
+        const ext = entry.name.split('.').pop().toLowerCase();
+        const img = new Image();
+        img.src = `data:image/${ext === 'png' ? 'png' : 'jpeg'};base64,${base64}`;
+        await new Promise(r => img.onload = r);
+        State.images.push(img);
+      }
 
-      statusEl.textContent = "Building 3D Voxel Memory Array...";
-      await Engine3D.buildVolume(State.imageIds);
+      State.width = State.images[0].width; State.height = State.images[0].height; State.numSlices = State.images.length;
       
-      statusEl.textContent = "3D Volume Ready. Scroll or Hover."; statusEl.style.color = "var(--green)";
-      document.getElementById("slice-indicator").textContent = `Slice: 1 / ${State.imageIds.length}`;
-      Engine3D.drawMPR(Math.floor(Engine3D.cols/2), Math.floor(Engine3D.rows/2));
+      UI.axRef.width = State.width; UI.axRef.height = State.height; UI.axCbct.width = State.width; UI.axCbct.height = State.height;
 
+      UI.status.textContent = "Extracting 3D MPR Data...";
+      await Engine3D.buildVolume();
+      Engine3D.generateMPR();
+
+      State.currentIndex = Math.floor(State.numSlices / 2);
+      updateReconScale(); // sizes coronal/sagittal canvases with proper z-aspect and draws them, then renders all viewports
+      clearCrosshair();
+
+      UI.status.textContent = "Ready. Select 'Acquire Daily CBCT' to begin setup."; UI.status.style.color = "var(--green)";
+      document.getElementById('btnSimulate').disabled = false;
+      document.getElementById('backup-mu').textContent = "000.0";
     } catch (err) {
-      console.error(err); statusEl.textContent = "ZIP load failed."; statusEl.style.color = "var(--magenta)";
+      console.error(err); UI.status.textContent = "Load failed."; UI.status.style.color = "var(--red)";
     }
   });
 
-  /* ===================== INTERACTION LOGIC ===================== */
-  refEl.addEventListener('cornerstonetoolsstackscroll', async (e) => {
-    State.currentIndex = e.detail.newImageIdIndex;
-    document.getElementById("slice-indicator").textContent = `Slice: ${State.currentIndex + 1} / ${State.imageIds.length}`;
-    if(cbctEl.style.display !== "none") {
-      updateViewport();
-    }
+  /* ===================== DASHBOARD TOOLS ===================== */
+  
+  // Hardware-accelerated CSS Zoom
+  document.getElementById('zoomSlider').addEventListener('input', (e) => {
+    const stacks = document.querySelectorAll('.canvas-stack');
+    stacks.forEach(stack => stack.style.transform = `scale(${e.target.value})`);
   });
 
-  document.getElementById("axial-container").addEventListener("mousemove", (e) => {
-    if(State.imageIds.length === 0) return;
-    const pt = cornerstone.pageToPixel(refEl, e.pageX, e.pageY);
-    const x = Math.floor(pt.x);
-    const y = Math.floor(pt.y);
-    if(x >= 0 && x < Engine3D.cols && y >= 0 && y < Engine3D.rows) {
-      Engine3D.drawMPR(x, y);
-    }
+  document.getElementById('opacitySlider').addEventListener('input', (e) => {
+    const layers = document.querySelectorAll('.cbct-layer');
+    layers.forEach(layer => layer.style.opacity = e.target.value);
   });
 
-  /* ===================== ALIGNMENT LOGIC (6DoF) ===================== */
-  document.getElementById("btnSimulate").addEventListener("click", async () => {
-    if(State.imageIds.length===0) return;
+  document.getElementById('blendModeSelect').addEventListener('change', (e) => {
+    const layers = document.querySelectorAll('.cbct-layer');
+    layers.forEach(layer => {
+      layer.classList.remove('overlay-colorwash', 'overlay-difference', 'overlay-checkerboard');
+      layer.classList.add(e.target.value);
+    });
+    const isChecker = e.target.value === 'overlay-checkerboard';
+    UI.checkerRow.style.display = isChecker ? 'flex' : 'none';
+    UI.checkerNote.style.display = isChecker ? 'block' : 'none';
+  });
+
+  UI.checkerSlider.addEventListener('input', (e) => {
+    State.checkerN = parseInt(e.target.value, 10);
+    document.documentElement.style.setProperty('--checker-n', State.checkerN);
+    const side = State.checkerN * 2;
+    UI.checkerLabel.textContent = `${side}×${side}`;
+  });
+
+  /* ===================== RENDER ===================== */
+  function renderViewports() {
+    if (State.images.length === 0) return;
     
-    // Generate simulated 6DoF Setup Error 
+    const ctxAx = UI.axRef.getContext('2d');
+    ctxAx.clearRect(0, 0, State.width, State.height);
+    ctxAx.drawImage(State.images[State.currentIndex], 0, 0);
+    UI.sliceInd.textContent = `Slice: ${State.currentIndex + 1} / ${State.numSlices}`;
+
+    if (State.isSimulating) {
+      const netX = State.simulatedError.x + State.appliedCouch.x;
+      const netY = State.simulatedError.y + State.appliedCouch.y; 
+      const netZ = State.simulatedError.z + State.appliedCouch.z; 
+      
+      const rYaw = (State.simulatedError.yaw + State.appliedCouch.yaw) * (Math.PI/180);
+      const rPitch = (State.simulatedError.pitch + State.appliedCouch.pitch) * (Math.PI/180);
+      const rRoll = (State.simulatedError.roll + State.appliedCouch.roll) * (Math.PI/180);
+
+      let axSlice = Math.max(0, Math.min(State.numSlices - 1, Math.round(State.currentIndex + netZ)));
+      const ctxAxC = UI.axCbct.getContext('2d');
+      ctxAxC.clearRect(0, 0, State.width, State.height);
+      ctxAxC.save();
+      ctxAxC.translate(State.width/2 + netX, State.height/2 + netY);
+      ctxAxC.rotate(rYaw);
+      ctxAxC.translate(-State.width/2, -State.height/2);
+      ctxAxC.drawImage(State.images[axSlice], 0, 0);
+      ctxAxC.restore();
+
+      const corH = State.corH || State.numSlices;
+      const netZpx = netZ * State.zScale; // convert mm-ish couch shift into scaled display pixels
+      const ctxCorC = UI.corCbct.getContext('2d');
+      ctxCorC.clearRect(0, 0, State.width, corH);
+      ctxCorC.save();
+      ctxCorC.translate(State.width/2 + netX, corH/2 + netZpx);
+      ctxCorC.rotate(rRoll);
+      ctxCorC.translate(-State.width/2, -corH/2);
+      ctxCorC.drawImage(Engine3D.offscreenCoronal, 0, 0, State.width, State.numSlices, 0, 0, State.width, corH);
+      ctxCorC.restore();
+
+      const sagH = State.sagH || State.numSlices;
+      const ctxSagC = UI.sagCbct.getContext('2d');
+      ctxSagC.clearRect(0, 0, State.height, sagH);
+      ctxSagC.save();
+      ctxSagC.translate(State.height/2 + netY, sagH/2 + netZpx);
+      ctxSagC.rotate(rPitch);
+      ctxSagC.translate(-State.height/2, -sagH/2);
+      ctxSagC.drawImage(Engine3D.offscreenSagittal, 0, 0, State.height, State.numSlices, 0, 0, State.height, sagH);
+      ctxSagC.restore();
+    }
+
+    updateCrosshairDisplay();
+  }
+
+  document.getElementById("axial-container").addEventListener("wheel", (e) => {
+    e.preventDefault();
+    if(State.images.length === 0) return;
+    if (e.deltaY > 0 && State.currentIndex < State.numSlices - 1) State.currentIndex++;
+    if (e.deltaY < 0 && State.currentIndex > 0) State.currentIndex--;
+    renderViewports();
+  });
+
+  /* ===================== SIMULATION & VERIFICATION ===================== */
+  document.getElementById("btnSimulate").addEventListener("click", () => {
+    if(State.images.length === 0) return;
+    
     State.simulatedError = { 
-      x: (Math.random() * 20 - 10),     // LAT Error (mm)
-      y: (Math.random() * 20 - 10),     // LNG Error (mm)
-      z: (Math.random() * 14 - 7),      // VRT Error (mm)
-      pitch: (Math.random() * 6 - 3),   // Pitch Error (deg)
-      roll: (Math.random() * 6 - 3),    // Roll Error (deg)
-      yaw: (Math.random() * 10 - 5)     // Yaw Error (deg)
+      x: (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 8 + 2), 
+      y: (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 8 + 2),
+      z: (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 5 + 1),
+      pitch: (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 3 + 0.5),
+      roll: (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 3 + 0.5),
+      yaw: (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 3 + 0.5)
     };
     
     State.appliedCouch = { x: 0, y: 0, z: 0, pitch: 0, roll: 0, yaw: 0 };
-    cbctEl.style.display = "block";
-    updateViewport();
+    State.isSimulating = true;
+    State.failedAttempts = 0; // Reset attempts on new simulation
+    
+    const layers = document.querySelectorAll('.cbct-layer');
+    layers.forEach(layer => layer.style.display = "block");
+    
+    document.getElementById('backup-mu').textContent = (Math.random() * 100 + 150).toFixed(1);
+    
+    UI.helperBox.style.display = "none";
+    UI.btnVerify.disabled = false;
+    UI.verifyMsg.innerHTML = "<span style='color:var(--amber)'>CBCT Acquired. Please align images.</span>";
+    UI.verifyMsg.style.borderColor = "var(--line)";
+    
+    renderViewports(); updateReadouts();
   });
 
   window.applyShift = function(axis, amount) {
+    if(!State.isSimulating) return;
     State.appliedCouch[axis] += amount;
-    updateViewport();
+    
+    UI.verifyMsg.innerHTML = "<span style='color:var(--ink-mute)'>Shifts applied. Ready to verify.</span>";
+    UI.verifyMsg.style.borderColor = "var(--line)";
+    
+    renderViewports(); updateReadouts();
   };
 
-  async function updateViewport() {
-    // 1. Calculate Net Totals
-    const netX = State.simulatedError.x + State.appliedCouch.x;
-    const netY = State.simulatedError.y + State.appliedCouch.y;
-    const netZ = State.simulatedError.z + State.appliedCouch.z;
-    const netYaw = State.simulatedError.yaw + State.appliedCouch.yaw;
-
-    // 2. Load the offset slice based on VRT (Z) variation
-    // Offset amount divided by slice thickness dictates which slice to overlay
-    const sliceOffset = Math.round(netZ / State.sliceThickness);
-    let cbctIndex = State.currentIndex + sliceOffset;
-    if (cbctIndex < 0) cbctIndex = 0;
-    if (cbctIndex >= State.imageIds.length) cbctIndex = State.imageIds.length - 1;
-
-    const image = await cornerstone.loadImage(State.imageIds[cbctIndex]);
-    cornerstone.displayImage(cbctEl, image);
-
-    // 3. Apply 2D Viewport transformations (LAT/LNG Translation & Yaw Rotation)
-    const viewport = cornerstone.getViewport(cbctEl);
-    if(viewport) {
-      viewport.translation.x = netX / State.pxSpacingX;
-      viewport.translation.y = netY / State.pxSpacingY;
-      viewport.rotation = netYaw;
-      cornerstone.setViewport(cbctEl, viewport);
-    }
+  UI.btnVerify.addEventListener('click', () => {
+    if(!State.isSimulating) return;
     
-    // 4. Update Readout UI
-    document.getElementById("out-x").textContent = State.appliedCouch.x.toFixed(1) + " mm";
-    document.getElementById("out-y").textContent = State.appliedCouch.y.toFixed(1) + " mm";
-    document.getElementById("out-z").textContent = State.appliedCouch.z.toFixed(1) + " mm";
-    document.getElementById("out-pitch").textContent = State.appliedCouch.pitch.toFixed(1) + " °";
-    document.getElementById("out-roll").textContent = State.appliedCouch.roll.toFixed(1) + " °";
-    document.getElementById("out-yaw").textContent = State.appliedCouch.yaw.toFixed(1) + " °";
+    const netX = State.appliedCouch.x + State.simulatedError.x;
+    const netY = State.appliedCouch.y + State.simulatedError.y;
+    const netZ = State.appliedCouch.z + State.simulatedError.z;
+    const netPitch = State.appliedCouch.pitch + State.simulatedError.pitch;
+    const netRoll = State.appliedCouch.roll + State.simulatedError.roll;
+    const netYaw = State.appliedCouch.yaw + State.simulatedError.yaw;
+
+    const isPass = (Math.abs(netX) <= State.tolerance.dist && 
+                    Math.abs(netY) <= State.tolerance.dist && 
+                    Math.abs(netZ) <= State.tolerance.dist && 
+                    Math.abs(netPitch) <= State.tolerance.rot && 
+                    Math.abs(netRoll) <= State.tolerance.rot && 
+                    Math.abs(netYaw) <= State.tolerance.rot);
+
+    if (isPass) {
+      UI.verifyMsg.innerHTML = `<span style='color:var(--green); font-size:16px;'>✓ ALIGNMENT SUCCESSFUL</span><br><small style='color:var(--ink-mute); font-weight:normal; margin-top:4px;'>Residual error within clinical tolerance.<br>Ready for treatment delivery.</small>`;
+      UI.verifyMsg.style.borderColor = "var(--green)";
+      UI.helperBox.style.display = "none";
+    } else {
+      State.failedAttempts++;
+      UI.verifyMsg.innerHTML = `<span style='color:var(--red); font-size:16px;'>⚠ OUT OF TOLERANCE</span><br><small style='color:var(--ink-mute); font-weight:normal; margin-top:4px;'>Please realign structures in all three planes.</small>`;
+      UI.verifyMsg.style.borderColor = "var(--red)";
+      UI.verifyMsg.animate([ { transform: 'translateX(0)' }, { transform: 'translateX(-5px)' }, { transform: 'translateX(5px)' }, { transform: 'translateX(0)' } ], { duration: 300 });
+
+      // Trigger gamified helper logic after 2 fails
+      if (State.failedAttempts >= 2) {
+        generateHints(netX, netY, netZ, netPitch, netRoll, netYaw);
+      }
+    }
+  });
+
+  function generateHints(nx, ny, nz, np, nr, nyaw) {
+    UI.helperBox.style.display = "block";
+    let hints = [];
+    
+    if (Math.abs(nx) > State.tolerance.dist) hints.push(`LAT (X): Needs shift <strong>${nx > 0 ? 'Left ◀' : 'Right ▶'}</strong>`);
+    if (Math.abs(ny) > State.tolerance.dist) hints.push(`VRT (Y): Needs shift <strong>${ny > 0 ? 'Up ▲' : 'Down ▼'}</strong>`);
+    if (Math.abs(nz) > State.tolerance.dist) hints.push(`LNG (Z): Needs shift <strong>${nz > 0 ? 'Out ▼' : 'In ▲'}</strong>`);
+    
+    if (Math.abs(np) > State.tolerance.rot) hints.push(`PITCH: Needs <strong>${np > 0 ? '-' : '+'}</strong> rotation`);
+    if (Math.abs(nr) > State.tolerance.rot) hints.push(`ROLL: Needs <strong>${nr > 0 ? '-' : '+'}</strong> rotation`);
+    if (Math.abs(nyaw) > State.tolerance.rot) hints.push(`YAW: Needs <strong>${nyaw > 0 ? '-' : '+'}</strong> rotation`);
+
+    UI.hintText.innerHTML = hints.join('<br>');
   }
+
+  window.autoAlign = function() {
+    State.appliedCouch = {
+      x: -State.simulatedError.x,
+      y: -State.simulatedError.y,
+      z: -State.simulatedError.z,
+      pitch: -State.simulatedError.pitch,
+      roll: -State.simulatedError.roll,
+      yaw: -State.simulatedError.yaw
+    };
+    renderViewports(); updateReadouts();
+    UI.btnVerify.click(); // Trigger verify to show success state
+  };
+
+  function updateReadouts() {
+    document.getElementById("out-x").textContent = State.appliedCouch.x.toFixed(1) + " mm";
+    document.getElementById("out-y").textContent = State.appliedCouch.y.toFixed(1) + " mm"; 
+    document.getElementById("out-z").textContent = State.appliedCouch.z.toFixed(1) + " mm"; 
+    document.getElementById("out-pitch").textContent = State.appliedCouch.pitch.toFixed(1) + "°";
+    document.getElementById("out-roll").textContent = State.appliedCouch.roll.toFixed(1) + "°";
+    document.getElementById("out-yaw").textContent = State.appliedCouch.yaw.toFixed(1) + "°";
+  }
+
+  /* ===================== LINKED RETICLE / CROSSHAIR ===================== */
+  // A single 3D point, placed by clicking any plane, echoed onto the other two.
+  // Purpose: force the student to confirm the *same anatomical location* is
+  // consistent across all three reconstructions -- not just that two images
+  // look similar in one view.
+  UI.btnCrosshair.addEventListener('click', () => {
+    State.crosshairArmed = !State.crosshairArmed;
+    UI.btnCrosshair.classList.toggle('active', State.crosshairArmed);
+    UI.crosshairNote.style.display = State.crosshairArmed ? 'block' : 'none';
+    [UI.axWrap, UI.corWrap, UI.sagWrap].forEach(w => w.classList.toggle('crosshair-armed', State.crosshairArmed));
+  });
+
+  UI.btnClearCrosshair.addEventListener('click', clearCrosshair);
+
+  function clearCrosshair() {
+    State.crosshair = null;
+    [UI.axCH, UI.corCH, UI.sagCH].forEach(el => el.classList.remove('active'));
+  }
+
+  function clamp01(v) { return Math.max(0, Math.min(1, v)); }
+
+  function placeFromAxial(e) {
+    const rect = UI.axRef.getBoundingClientRect();
+    if (rect.width === 0) return;
+    const xFrac = clamp01((e.clientX - rect.left) / rect.width);
+    const yFrac = clamp01((e.clientY - rect.top) / rect.height);
+    const zFrac = clamp01((State.currentIndex + 0.5) / State.numSlices);
+    setCrosshair(xFrac, yFrac, zFrac);
+  }
+
+  function placeFromCoronal(e) {
+    const rect = UI.corRef.getBoundingClientRect();
+    if (rect.width === 0) return;
+    const xFrac = clamp01((e.clientX - rect.left) / rect.width);
+    const zFrac = clamp01((e.clientY - rect.top) / rect.height);
+    const yFrac = State.crosshair ? State.crosshair.yFrac : 0.5;
+    setCrosshair(xFrac, yFrac, zFrac);
+    jumpAxialToZ(zFrac);
+  }
+
+  function placeFromSagittal(e) {
+    const rect = UI.sagRef.getBoundingClientRect();
+    if (rect.width === 0) return;
+    const yFrac = clamp01((e.clientX - rect.left) / rect.width);
+    const zFrac = clamp01((e.clientY - rect.top) / rect.height);
+    const xFrac = State.crosshair ? State.crosshair.xFrac : 0.5;
+    setCrosshair(xFrac, yFrac, zFrac);
+    jumpAxialToZ(zFrac);
+  }
+
+  function jumpAxialToZ(zFrac) {
+    State.currentIndex = Math.max(0, Math.min(State.numSlices - 1, Math.round(zFrac * State.numSlices - 0.5)));
+    renderViewports();
+  }
+
+  function setCrosshair(xFrac, yFrac, zFrac) {
+    State.crosshair = { xFrac, yFrac, zFrac };
+    updateCrosshairDisplay();
+  }
+
+  function updateCrosshairDisplay() {
+    if (!State.crosshair) return;
+    const { xFrac, yFrac, zFrac } = State.crosshair;
+    [UI.axCH, UI.corCH, UI.sagCH].forEach(el => el.classList.add('active'));
+
+    positionReticle(UI.axCH, xFrac, yFrac);
+    positionReticle(UI.corCH, xFrac, zFrac);
+    positionReticle(UI.sagCH, yFrac, zFrac);
+  }
+
+  function positionReticle(el, leftFrac, topFrac) {
+    const v = el.querySelector('.ch-v'), h = el.querySelector('.ch-h'), d = el.querySelector('.ch-dot');
+    v.style.left = (leftFrac * 100) + '%';
+    h.style.top = (topFrac * 100) + '%';
+    d.style.left = (leftFrac * 100) + '%';
+    d.style.top = (topFrac * 100) + '%';
+  }
+
+  UI.axRef.addEventListener('click', (e) => { if (State.crosshairArmed && State.images.length) placeFromAxial(e); });
+  UI.corRef.addEventListener('click', (e) => { if (State.crosshairArmed && State.images.length) placeFromCoronal(e); });
+  UI.sagRef.addEventListener('click', (e) => { if (State.crosshairArmed && State.images.length) placeFromSagittal(e); });
 </script>
 </body>
 </html>
