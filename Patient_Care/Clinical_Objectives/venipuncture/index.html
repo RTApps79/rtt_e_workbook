@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case-Based Vein Selection Activity</title>
+    <style>
+        :root {
+            --bg: #f4f7f6;
+            --panel: #ffffff;
+            --ink: #333;
+            --brand: #005a9c;
+            --brand2: #007bff;
+            --good: #28a745;
+            --bad: #dc3545;
+            --warn: #f0ad4e;
+            --line: #cfd8dc;
+            --muted: #607d8b;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--ink);
+            line-height: 1.6;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: var(--brand);
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            max-width: 900px;
+            text-align: center;
+            margin: 0 0 18px 0;
+            color: #4f5b62;
+        }
+
+        .activity-container {
+            background-color: var(--panel);
+            border-radius: 10px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+            padding: 18px;
+            width: 100%;
+            max-width: 950px;
+        }
+
+        .topbar {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .stat {
+            background: #f9fbfc;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 10px 12px;
+        }
+
+        .stat-label {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--muted);
+            margin-bottom: 2px;
+        }
+
+        .stat-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--brand);
+        }
+
+        .case-panel {
+            border: 1px solid var(--line);
+            background: #f8fbff;
+            border-radius: 8px;
+            padding: 14px;
+            margin-bottom: 14px;
+        }
+
+        .case-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+
+        #case-text {
+            font-size: 1rem;
+            color: #304050;
+        }
+
+        #question-text {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--brand);
+            margin-bottom: 10px;
+            min-height: 44px;
+        }
+
+        #prompt-text {
+            color: #4f5b62;
+            margin-bottom: 12px;
+            min-height: 24px;
+        }
+
+        #reason-prompt {
+            display: block;
+            margin: 10px 0 6px;
+            font-weight: 600;
+            color: #455a64;
+            text-align: left;
+        }
+
+        #reason-input {
+            width: 100%;
+            min-height: 72px;
+            resize: vertical;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 10px;
+            font: inherit;
+            margin-bottom: 10px;
+        }
+
+        #feedback-text {
+            font-size: 1.02rem;
+            margin-top: 14px;
+            min-height: 46px;
+        }
+
+        #explain-text {
+            margin-top: 10px;
+            padding: 10px 12px;
+            background: #f8fbff;
+            border-left: 4px solid var(--brand2);
+            border-radius: 6px;
+            color: #304050;
+            min-height: 44px;
+        }
+
+        .correct { color: var(--good); font-weight: 700; }
+        .incorrect { color: var(--bad); font-weight: 700; }
+        .hint { color: #6c757d; font-size: 0.95rem; margin-top: 4px; }
+
+        #arm-svg {
+            width: 100%;
+            height: auto;
+            max-height: 520px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-top: 18px;
+            background-color: #fff;
+        }
+
+        .arm-skin {
+            fill: #fcd5b9;
+            stroke: #926f5b;
+            stroke-width: 2;
+        }
+
+        .vein {
+            fill: #9ed2ee;
+            stroke: #4590be;
+            stroke-width: 1.5;
+            cursor: pointer;
+            transition: fill 0.2s, stroke 0.2s, transform 0.1s;
+            outline: none;
+        }
+
+        .vein:hover,
+        .vein:focus {
+            fill: #6bbce8;
+            stroke: #2a6f99;
+            transform: scale(1.02);
+            transform-origin: center center;
+        }
+
+        .vein.selected {
+            fill: #ffd700;
+            stroke: #cc8400;
+            stroke-width: 2;
+        }
+
+        .vein.correct-answer {
+            fill: #28a745;
+            stroke: #1e7d34;
+            animation: pulse-correct 1s forwards;
+        }
+
+        .vein.incorrect-answer {
+            fill: #dc3545;
+            stroke: #c82333;
+            animation: shake 0.3s forwards;
+        }
+
+        .artery {
+            fill: #e88d8d;
+            stroke: #c25959;
+            stroke-width: 1.5;
+        }
+
+        .vein-label {
+            font-family: sans-serif;
+            font-size: 12px;
+            fill: #333;
+            pointer-events: none;
+            display: none;
+        }
+
+        .vein:hover + .vein-label,
+        .vein.selected + .vein-label {
+            display: block;
+        }
+
+        @keyframes pulse-correct {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+
+        .button-container {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .button {
+            font-size: 16px;
+            padding: 10px 18px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            background-color: var(--brand2);
+            color: white;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+            transform: translateY(-1px);
+        }
+
+        .button:active {
+            transform: translateY(1px);
+        }
+
+        .button.secondary { background-color: #546e7a; }
+        .button.secondary:hover { background-color: #41565f; }
+        .button.ghost { background-color: #e9f3fb; color: var(--brand); border: 1px solid #b7d3ea; }
+        .button.ghost:hover { background-color: #dcecf8; }
+
+        .footer-note {
+            margin-top: 14px;
+            font-size: 0.92rem;
+            color: #546e7a;
+            text-align: center;
+        }
+
+        @media (max-width: 760px) {
+            .topbar {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+            .activity-container {
+                padding: 14px;
+            }
+            #question-text {
+                font-size: 1.08rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<h1>Case-Based Vein Selection Challenge</h1>
+<p class="subtitle">Read the case, choose the best vein, and explain your reasoning. Focus on safety, accessibility, and the clinical goal of access.</p>
+
+<div class="activity-container" role="application" aria-label="Case-based vein selection activity">
+    <div class="topbar">
+        <div class="stat">
+            <div class="stat-label">Question</div>
+            <div class="stat-value" id="question-count">1 / 8</div>
+        </div>
+        <div class="stat">
+            <div class="stat-label">Score</div>
+            <div class="stat-value" id="score-count">0</div>
+        </div>
+        <div class="stat">
+            <div class="stat-label">Attempts</div>
+            <div class="stat-value" id="attempt-count">0</div>
+        </div>
+        <div class="stat">
+            <div class="stat-label">Accuracy</div>
+            <div class="stat-value" id="accuracy-count">0%</div>
+        </div>
+    </div>
+
+    <div class="case-panel">
+        <div class="case-label">Clinical Case</div>
+        <div id="case-text"></div>
+    </div>
+
+    <div id="question-text">Loading case...</div>
+    <div id="prompt-text"></div>
+
+    <label id="reason-prompt" for="reason-input">Why is this the best choice for this case?</label>
+    <textarea id="reason-input" placeholder="Explain your choice in one or two sentences."></textarea>
+
+    <div id="feedback-text" aria-live="polite"></div>
+    <div id="explain-text" aria-live="polite"></div>
+
+    <svg id="arm-svg" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid meet" aria-label="Arm anatomy illustration">
+        <path class="arm-skin" d="M50 250 Q 0 200 50 100 C 70 50 200 40 250 80 Q 300 120 350 150 Q 400 200 350 250 Z" />
+
+        <circle cx="200" cy="110" r="8" class="artery" />
+        <text x="200" y="100" text-anchor="middle" font-size="10" fill="#c25959" style="pointer-events: none;">Artery</text>
+
+        <path id="median-cubital" class="vein" tabindex="0" role="button" aria-label="Median Cubital Vein" data-name="Median Cubital Vein"
+              d="M100 150 Q 150 120 200 150 Q 250 180 300 150 C 280 160 250 170 200 160 Q 150 150 100 160 Z" />
+        <text x="200" y="140" class="vein-label" text-anchor="middle">Median Cubital</text>
+
+        <path id="cephalic" class="vein" tabindex="0" role="button" aria-label="Cephalic Vein" data-name="Cephalic Vein"
+              d="M80 180 Q 120 200 160 190 Q 200 180 220 160 C 200 170 160 180 120 190 Q 80 200 60 190 Z" />
+        <text x="140" y="180" class="vein-label" text-anchor="middle">Cephalic Vein</text>
+
+        <path id="basilic" class="vein" tabindex="0" role="button" aria-label="Basilic Vein" data-name="Basilic Vein"
+              d="M250 160 Q 280 180 320 170 Q 350 160 370 180 C 350 170 320 160 280 170 Q 250 180 230 170 Z" />
+        <text x="290" y="150" class="vein-label" text-anchor="middle">Basilic Vein</text>
+
+        <path id="hand-vein" class="vein" tabindex="0" role="button" aria-label="Dorsal Metacarpal Vein" data-name="Dorsal Metacarpal Vein"
+              d="M100 230 Q 120 220 150 230 Q 180 240 200 230 C 180 225 150 220 120 225 Z" />
+        <text x="150" y="220" class="vein-label" text-anchor="middle">Hand Vein</text>
+    </svg>
+
+    <div class="button-container">
+        <button class="button" id="next-question-btn">Next Question</button>
+        <button class="button secondary" id="show-hint-btn">Show Hint</button>
+        <button class="button ghost" id="reset-activity-btn">Restart Activity</button>
+    </div>
+
+    <div class="footer-note" id="status-note">Answer the current case before moving to the next one.</div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const veins = document.querySelectorAll('.vein');
+    const questionText = document.getElementById('question-text');
+    const caseText = document.getElementById('case-text');
+    const promptText = document.getElementById('prompt-text');
+    const feedbackText = document.getElementById('feedback-text');
+    const explainText = document.getElementById('explain-text');
+    const nextQuestionBtn = document.getElementById('next-question-btn');
+    const resetActivityBtn = document.getElementById('reset-activity-btn');
+    const showHintBtn = document.getElementById('show-hint-btn');
+    const reasonInput = document.getElementById('reason-input');
+    const questionCount = document.getElementById('question-count');
+    const scoreCount = document.getElementById('score-count');
+    const attemptCount = document.getElementById('attempt-count');
+    const accuracyCount = document.getElementById('accuracy-count');
+    const statusNote = document.getElementById('status-note');
+
+    let currentQuestionIndex = 0;
+    let currentCorrectVeinId = null;
+    let hasAnsweredCurrentQuestion = false;
+    let score = 0;
+    let attempts = 0;
+    let hintUsed = false;
+
+    const questions = [
+        {
+            case: "An adult patient needs routine venipuncture. The vein should be stable, superficial, and away from major nerves and arteries.",
+            prompt: "Which vein is the best choice?",
+            correctVeinId: "median-cubital",
+            hint: "This is often the most stable option in the antecubital fossa.",
+            feedback: "The Median Cubital Vein is usually preferred because it is superficial, relatively stable, and commonly safer than nearby structures.",
+            rationale: "This vein is often chosen first because it offers the best balance of accessibility and safety."
+        },
+        {
+            case: "A patient has a visible vein on the lateral side of the arm. The median cubital vein is not suitable for this case.",
+            prompt: "Which vein would you select?",
+            correctVeinId: "cephalic",
+            hint: "Look on the thumb side of the arm.",
+            feedback: "The Cephalic Vein is on the lateral side of the arm and can serve as a useful alternative site.",
+            rationale: "The cephalic vein is a reasonable backup option when the median cubital vein cannot be used."
+        },
+        {
+            case: "A patient has a large vein on the medial side of the arm, but deeper structures raise concern.",
+            prompt: "Which vein is shown?",
+            correctVeinId: "basilic",
+            hint: "Think pinky side of the arm.",
+            feedback: "The Basilic Vein lies medially and may be larger, but it is often a less preferred antecubital option because of nearby deeper structures.",
+            rationale: "It can be used, but it requires more caution because of the surrounding anatomy."
+        },
+        {
+            case: "A patient is dehydrated and antecubital veins are difficult to palpate. A visible distal option is needed.",
+            prompt: "Which vein should be considered?",
+            correctVeinId: "hand-vein",
+            hint: "Think about veins on the back of the hand.",
+            feedback: "Dorsal metacarpal veins can be useful distal options when antecubital sites are unavailable.",
+            rationale: "Distal access may be appropriate when proximal veins are not visible or palpable."
+        },
+        {
+            case: "A patient requires a power injection of contrast and all veins are viable. Choose the most stable option.",
+            prompt: "Which vein is the best choice?",
+            correctVeinId: "median-cubital",
+            hint: "Prioritize stability and vessel caliber.",
+            feedback: "The Median Cubital Vein is often favored because it is stable and reliable for higher-flow access needs.",
+            rationale: "The best option is the one most likely to tolerate access without infiltration."
+        },
+        {
+            case: "A pediatric patient needs a cautious access site. A more distal but visible vein is considered because the antecubital fossa is not ideal.",
+            prompt: "Which vein is the best match?",
+            correctVeinId: "hand-vein",
+            hint: "A distal site may be preferred when central access sites are not ideal.",
+            feedback: "Dorsal metacarpal veins can be appropriate distal options when antecubital access is not a good fit.",
+            rationale: "In smaller or more delicate patients, distal visible veins may be used carefully when needed."
+        },
+        {
+            case: "An adult patient needs routine access, and the safest antecubital vein should be chosen first.",
+            prompt: "Which vein is generally considered safest and most stable?",
+            correctVeinId: "median-cubital",
+            hint: "Choose the most consistent and least risky antecubital site.",
+            feedback: "The Median Cubital Vein is generally the safest and most stable antecubital option.",
+            rationale: "Its consistency and stability make it the usual first choice."
+        },
+        {
+            case: "A patient’s visible vein is on the medial side of the arm, but the clinician wants to avoid it unless necessary.",
+            prompt: "Which vein is being described?",
+            correctVeinId: "basilic",
+            hint: "This vein runs near the inner side of the arm.",
+            feedback: "The Basilic Vein is a medial vein and is often approached more cautiously.",
+            rationale: "It is recognizable by its medial location and potential proximity to deeper structures."
+        }
+    ];
+
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    const shuffledQuestions = shuffleArray([...questions]);
+
+    function updateStats() {
+        questionCount.textContent = `${Math.min(currentQuestionIndex + 1, shuffledQuestions.length)} / ${shuffledQuestions.length}`;
+        scoreCount.textContent = score;
+        attemptCount.textContent = attempts;
+        accuracyCount.textContent = attempts === 0 ? '0%' : `${Math.round((score / attempts) * 100)}%`;
+    }
+
+    function resetVeinStyling() {
+        veins.forEach(vein => vein.classList.remove('selected', 'correct-answer', 'incorrect-answer'));
+    }
+
+    function loadQuestion() {
+        if (currentQuestionIndex < shuffledQuestions.length) {
+            const q = shuffledQuestions[currentQuestionIndex];
+            caseText.textContent = q.case;
+            questionText.textContent = q.prompt;
+            promptText.textContent = "Select the best vein and explain why it fits this case.";
+            currentCorrectVeinId = q.correctVeinId;
+            feedbackText.innerHTML = '';
+            explainText.innerHTML = '';
+            reasonInput.value = '';
+            hasAnsweredCurrentQuestion = false;
+            hintUsed = false;
+            resetVeinStyling();
+            updateStats();
+            statusNote.textContent = "Use the anatomy and clinical case together to make your choice.";
+        } else {
+            caseText.textContent = "";
+            questionText.textContent = "Activity complete!";
+            promptText.textContent = "You have completed all scenarios. Restart to try a new randomized set.";
+            feedbackText.innerHTML = `<span class="correct">Finished.</span> Great work completing the activity.`;
+            explainText.textContent = "Review which veins were preferred in each case and why.";
+            currentCorrectVeinId = null;
+            resetVeinStyling();
+            updateStats();
+            statusNote.textContent = "Click Restart Activity to begin a new randomized round.";
+        }
+    }
+
+    function revealHint() {
+        if (currentCorrectVeinId === null || hasAnsweredCurrentQuestion) return;
+        const q = shuffledQuestions[currentQuestionIndex];
+        feedbackText.innerHTML = `<span class="hint">Hint:</span> ${q.hint}`;
+        hintUsed = true;
+    }
+
+    function handleVeinClick(event) {
+        if (hasAnsweredCurrentQuestion || currentCorrectVeinId === null) return;
+
+        resetVeinStyling();
+        const clickedVein = event.currentTarget;
+        clickedVein.classList.add('selected');
+
+        attempts++;
+        const q = shuffledQuestions[currentQuestionIndex];
+        const response = reasonInput.value.trim();
+
+        if (clickedVein.id === currentCorrectVeinId) {
+            score++;
+            feedbackText.innerHTML = `<span class="correct">Correct!</span> ${q.feedback}`;
+            explainText.innerHTML = response
+                ? `<strong>Your reasoning:</strong> ${response}<br><strong>Model rationale:</strong> ${q.rationale}`
+                : `<strong>Model rationale:</strong> ${q.rationale}`;
+            clickedVein.classList.add('correct-answer');
+        } else {
+            feedbackText.innerHTML = `<span class="incorrect">Incorrect.</span> ${q.feedback}`;
+            explainText.innerHTML = response
+                ? `<strong>Your reasoning:</strong> ${response}<br><strong>Model rationale:</strong> ${q.rationale}`
+                : `<strong>Model rationale:</strong> ${q.rationale}`;
+            clickedVein.classList.add('incorrect-answer');
+
+            setTimeout(() => {
+                const correctVein = document.getElementById(currentCorrectVeinId);
+                if (correctVein) correctVein.classList.add('correct-answer');
+            }, 900);
+        }
+
+        hasAnsweredCurrentQuestion = true;
+        updateStats();
+        statusNote.textContent = hintUsed
+            ? "Review the case and rationale, then move to the next question."
+            : "Great. Move to the next question when ready.";
+    }
+
+    function handleNextQuestion() {
+        if (currentCorrectVeinId !== null && !hasAnsweredCurrentQuestion) {
+            feedbackText.innerHTML = `<span class="incorrect">Please answer the current case first.</span>`;
+            return;
+        }
+        currentQuestionIndex++;
+        loadQuestion();
+    }
+
+    function resetActivity() {
+        currentQuestionIndex = 0;
+        score = 0;
+        attempts = 0;
+        shuffledQuestions.splice(0, shuffledQuestions.length, ...shuffleArray([...questions]));
+        loadQuestion();
+        updateStats();
+    }
+
+    veins.forEach(vein => {
+        vein.addEventListener('click', handleVeinClick);
+        vein.addEventListener('keydown', e => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleVeinClick(e);
+            }
+        });
+    });
+
+    nextQuestionBtn.addEventListener('click', handleNextQuestion);
+    resetActivityBtn.addEventListener('click', resetActivity);
+    showHintBtn.addEventListener('click', revealHint);
+
+    updateStats();
+    loadQuestion();
+});
+</script>
+
+</body>
+</html>
