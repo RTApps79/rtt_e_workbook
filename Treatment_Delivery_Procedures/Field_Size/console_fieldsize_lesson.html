@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Console Operations: Field Size Lesson</title>
+<style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; margin: 20px;
+            background-color: #f4f4f4; color: #333; display: flex; flex-direction: column; align-items: center; }
+        .container { background-color: #fff; padding: 25px 35px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 90%; max-width: 900px; margin-bottom: 30px; }
+        h1, h2, h3, h4 { color: #0056b3; }
+        h1 { text-align: center; border-bottom: 2px solid #0056b3; padding-bottom: 15px; margin-bottom: 30px; font-size: 2em; }
+        h2 { border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 30px; margin-bottom: 20px; color: #003d7a; font-size: 1.6em; }
+        h3 { color: #004085; margin-top: 25px; margin-bottom: 15px; font-size: 1.3em; }
+        h4 { color: #17a2b8; margin-top: 20px; margin-bottom: 10px; font-size: 1.1em; font-weight: 600; }
+        p, li { margin-bottom: 12px; font-size: 1.05em; }
+        ul, ol { margin-bottom: 15px; padding-left: 25px; }
+        strong { font-weight: 600; }
+        .highlight { background-color: #e6f7ff; padding: 2px 5px; border-radius: 3px; font-weight: 600; }
+        code { background-color: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; color: #c7254e; }
+        table.data-table { width: 90%; margin: 15px auto; border-collapse: collapse; }
+        table.data-table th, table.data-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        table.data-table th { background-color: #e9f5ff; color: #0056b3; font-weight: 600; }
+        table.data-table tr:nth-child(even) { background-color: #f9f9f9; }
+        .flip-lesson-container { border: 1px solid #b3d7ff; padding: 20px; border-radius: 8px; background-color: #f0f8ff; margin-bottom: 30px; }
+        .lesson-page { display: none; padding: 15px; border: 1px solid #ddeeff; background-color: #fff; border-radius: 5px; min-height: 400px; }
+        .lesson-page.active { display: block; }
+        .lesson-navigation { text-align: center; margin-top: 20px; }
+        .lesson-navigation button, .lesson-page .check-page-answers {
+            background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px;
+            cursor: pointer; font-size: 1em; margin: 5px 10px; transition: background-color 0.2s; }
+        .lesson-navigation button:hover, .lesson-page .check-page-answers:hover { background-color: #0056b3; }
+        .lesson-navigation button:disabled { background-color: #ccc; cursor: not-allowed; }
+        .page-indicator { font-style: italic; color: #555; margin: 10px 0; }
+        .key-principle { background-color: #e7f3ff; padding: 10px; margin-bottom:10px; border-left: 3px solid #007bff; border-radius: 3px; }
+        .interactive-question-block { background: #f9f9f9; padding: 15px; margin: 20px 0; border: 1px solid #e0e0e0; border-radius: 8px; }
+        .interactive-question-block .question-text { font-weight: bold; margin-bottom: 8px; font-size: 1em; color: #555; }
+        .interactive-question-block label { display: block; margin-left: 0; padding: 8px 12px; border-radius: 5px; cursor: pointer; border: 1px solid transparent; margin-bottom: 5px; }
+        .interactive-question-block input[type="radio"] { margin-right: 10px; vertical-align: middle; }
+        .interactive-question-block label:hover { background-color: #f0f8ff; }
+        .feedback-correct { background-color: #e8f8f0 !important; border-left: 4px solid #2ecc71 !important; }
+        .feedback-incorrect { background-color: #fdedec !important; border-left: 4px solid #e74c3c !important; }
+        .feedback-correct label.correct-option, .feedback-incorrect label.correct-option { font-weight: bold; color: #1E8449; }
+        .feedback-incorrect label.selected-incorrect { color: #A93226; }
+        .explanation { font-size: 0.9em; color: #444; margin-top: 5px; padding-left: 20px; }
+        .footer { text-align: center; margin-top: 30px; padding-top: 15px; border-top: 1px solid #ccc; font-size: 0.9em; color: #555; }
+</style>
+</head>
+<body>
+    <div class="container">
+        <h1>Console Operations: Understanding &amp; Setting Field Size</h1>
+        <div class="flip-lesson-container">
+            <h2>Interactive Lesson</h2>
+            <div id="lesson-page-1" class="lesson-page active">
+                <h3>Page 1: What "Field Size" Means at the Console</h3>
+                <p>The <span class="highlight">field size</span> is the dimension of the radiation beam at isocenter, defined by the collimator jaws. It's usually described as X &times; Y in centimeters &mdash; for example, a "10 &times; 10" field is 10 cm wide by 10 cm tall at isocenter.</p>
+                <p>Getting field size right matters for two reasons that pull in opposite directions:</p>
+                <ul>
+                    <li><strong>Coverage:</strong> the field must be large enough to cover the target volume with an adequate margin.</li>
+                    <li><strong>Sparing:</strong> the field must be no larger than necessary, or healthy tissue outside the target gets irradiated for no benefit.</li>
+                </ul>
+                <p>This lesson covers how field size is set and read at the console, before you practice it yourself in the simulator.</p>
+            </div>
+            <div id="lesson-page-2" class="lesson-page">
+                <h3>Page 2: Jaws &mdash; Symmetric vs. Asymmetric</h3>
+                <p>Field size is created by two pairs of collimator jaws: the <strong>X jaws</strong> (X1/X2) and the <strong>Y jaws</strong> (Y1/Y2). Each jaw in a pair can typically move independently.</p>
+                <div class="key-principle">
+                    <p><strong>Symmetric field:</strong> both jaws in a pair are equidistant from central axis (e.g., X1 = X2 = 5 cm gives a 10 cm wide field centered on the beam axis).</p>
+                    <p><strong>Asymmetric (independent) field:</strong> the jaws are set to different distances from central axis, shifting the field off-center without moving the isocenter itself &mdash; useful for half-beam blocks or matching adjacent fields.</p>
+                </div>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">A field defined by X1 = 4 cm and X2 = 8 cm (measured from central axis) is:</p>
+                    <label><input type="radio" name="lq_page2_1" value="A"> Symmetric</label>
+                    <label><input type="radio" name="lq_page2_1" value="B"> Asymmetric</label>
+                    <div class="explanation" style="display:none;">B. Since X1 and X2 are different distances from central axis, the field is shifted off-center &mdash; this is an asymmetric (independent jaw) field.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(2)">Check Answer</button>
+            </div>
+            <div id="lesson-page-3" class="lesson-page">
+                <h3>Page 3: Field Size Is Defined at Isocenter</h3>
+                <p>A key point that trips up new students: the field size number displayed at the console is always defined <span class="highlight">at isocenter</span> (typically 100 cm from the source), not at the patient's skin surface.</p>
+                <div class="key-principle">
+                    <p>Because the beam diverges from the source, the actual irradiated area is <em>smaller</em> than the stated field size at any distance closer to the source than isocenter, and <em>larger</em> at any distance beyond it.</p>
+                </div>
+                <p>This is why field size and SSD/SAD are always considered together &mdash; the same jaw settings produce a different footprint on the patient depending on how far the patient's surface or the target is from the source.</p>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">A 10 &times; 10 cm field is defined at isocenter (100 cm). At a distance closer to the source than isocenter, the actual beam footprint is:</p>
+                    <label><input type="radio" name="lq_page3_1" value="A"> Larger than 10 &times; 10 cm</label>
+                    <label><input type="radio" name="lq_page3_1" value="B"> Smaller than 10 &times; 10 cm</label>
+                    <label><input type="radio" name="lq_page3_1" value="C"> Exactly 10 &times; 10 cm</label>
+                    <div class="explanation" style="display:none;">B. Because the beam diverges outward from the source, the footprint is smaller than the stated field size at any distance closer than isocenter.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(3)">Check Answer</button>
+            </div>
+            <div id="lesson-page-4" class="lesson-page">
+                <h3>Page 4: Collimator Rotation vs. Field Size</h3>
+                <p>The collimator can also <span class="highlight">rotate</span> around the central axis, independent of the jaw settings. Rotating the collimator rotates the orientation of the rectangular field &mdash; it does not change the field's dimensions.</p>
+                <div class="key-principle">
+                    <p>Field size (how big) and collimator angle (which way it's oriented) are two separate console settings. Students sometimes confuse changing collimator angle with changing field shape &mdash; it only changes orientation.</p>
+                </div>
+                <p>For irregularly shaped targets, jaws alone only produce a rectangle. Shaping <em>within</em> that rectangle &mdash; blocking corners, following an organ's contour &mdash; is done with a Multi-Leaf Collimator (MLC), which is its own lesson.</p>
+            </div>
+            <div id="lesson-page-5" class="lesson-page">
+                <h3>Page 5: Ready for the Simulator</h3>
+                <p>You've now covered:</p>
+                <ol>
+                    <li>What field size means and why both coverage and sparing matter</li>
+                    <li>Symmetric vs. asymmetric (independent) jaw settings</li>
+                    <li>Why field size is always defined at isocenter, and how it changes with distance</li>
+                    <li>The difference between field size and collimator rotation</li>
+                </ol>
+                <p>The Field Size Simulator will let you practice setting X and Y jaws at the console and observe the resulting field. Click below to begin.</p>
+            </div>
+
+            <div class="lesson-navigation">
+                <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled>Previous Page</button>
+                <span class="page-indicator" id="lessonPageIndicator">Page 1 of 5</span>
+                <button id="nextLessonPage" onclick="changeLessonPage(1)">Next Page</button>
+                <button id="startActivityButton" onclick="window.location.href='field_size_simulator_activity.html'" style="display:none; background-color: #28a745;">Start Activity</button>
+            </div>
+        </div>
+        <div class="footer">Radiation Therapy E-Workbook &mdash; Treatment Delivery Procedures</div>
+    </div>
+    <script>
+        let currentLessonPage = 1;
+        const totalLessonPages = 5;
+        const lessonPages = document.querySelectorAll('.lesson-page');
+        const prevLessonButton = document.getElementById('prevLessonPage');
+        const nextLessonButton = document.getElementById('nextLessonPage');
+        const lessonPageIndicator = document.getElementById('lessonPageIndicator');
+        const startActivityButton = document.getElementById('startActivityButton');
+        const lessonCorrectAnswers = {"lq_page2_1": "B", "lq_page3_1": "B"};
+        function displayLessonPage() {
+            lessonPages.forEach((page, index) => page.classList.toggle('active', index === currentLessonPage - 1));
+            prevLessonButton.disabled = currentLessonPage === 1;
+            nextLessonButton.style.display = currentLessonPage === totalLessonPages ? 'none' : 'inline-block';
+            startActivityButton.style.display = currentLessonPage === totalLessonPages ? 'inline-block' : 'none';
+            lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
+        }
+        function changeLessonPage(direction) {
+            currentLessonPage += direction;
+            if (currentLessonPage < 1) currentLessonPage = 1;
+            if (currentLessonPage > totalLessonPages) currentLessonPage = totalLessonPages;
+            displayLessonPage();
+        }
+        function checkPageAnswers(pageNumber) {
+            const questionsOnPage = document.querySelectorAll(`#lesson-page-${pageNumber} .interactive-question-block`);
+            questionsOnPage.forEach(block => {
+                const radio = block.querySelector('input[type="radio"]');
+                if (!radio) return;
+                const questionName = radio.name;
+                if (!lessonCorrectAnswers.hasOwnProperty(questionName)) return;
+                const correctAnswerValue = lessonCorrectAnswers[questionName];
+                const selectedRadio = block.querySelector(`input[name="${questionName}"]:checked`);
+                const explanationDiv = block.querySelector('.explanation');
+                block.classList.remove('feedback-correct', 'feedback-incorrect');
+                block.querySelectorAll('label').forEach(label => label.classList.remove('correct-option', 'selected-incorrect'));
+                if (explanationDiv) explanationDiv.style.display = 'none';
+                if (selectedRadio) {
+                    const userAnswer = selectedRadio.value;
+                    const userSelectedLabel = selectedRadio.parentElement;
+                    if (userAnswer === correctAnswerValue) {
+                        block.classList.add('feedback-correct');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('correct-option');
+                    } else {
+                        block.classList.add('feedback-incorrect');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('selected-incorrect');
+                        const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                        if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                    }
+                } else {
+                    block.classList.add('feedback-incorrect');
+                    const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                    if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                }
+                if (explanationDiv) explanationDiv.style.display = 'block';
+            });
+        }
+        displayLessonPage();
+    </script>
+</body>
+</html>
