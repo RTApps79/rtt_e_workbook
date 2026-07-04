@@ -3,78 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Patient Care Menu</title>
+    <title>Patient Care - Main Menu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f4f4f4;
-            color: #333;
-        }
-        .container {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            max-width: 600px;
-            margin: auto;
-        }
-        h1 {
-            color: #0056b3;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        li {
-            margin-bottom: 10px;
-        }
-        li a {
-            display: block;
-            padding: 12px 15px;
-            background-color: #e9ecef;
-            color: #007bff;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-        }
-        li a:hover {
-            background-color: #d6e0e9;
-            color: #0056b3;
-        }
-        ul ul { /* Style for nested lists (sub-items) */
-            margin-top: 5px;
-            margin-left: 20px;
-            border-left: 2px solid #ccc;
-            padding-left: 10px;
-        }
-        ul ul li a {
-            background-color: #f8f9fa;
-            color: #6c757d;
-        }
-        ul ul li a:hover {
-            background-color: #e2e6ea;
-            color: #495057;
-        }
+        body { font-family: 'Inter', sans-serif; }
+        .hero-banner-pc { background: linear-gradient(to right, #0369a1, #0891b2); }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1>Patient Care</h1>
-        <ul>
-            <li><a href="Clinical_Objectives/index.html">Clinical Objectives</a></li>
-            <li>
-                <a href="#">Patient Identifiers</a>
-                <ul>
-                    <li><a href="Patient_Identifiers/index.html">Patient Identifiers Overview</a></li>
-                    <li><a href="Patient_Identifiers/patient_safety_id_lab.html">Patient Safety ID Lab</a></li>
-                </ul>
-            </li>
-            <li><a href="Patient_Journey/index.html">Patient Journey</a></li>
-            <li><a href="patient_journey_sequencer_activity.html">Patient Journey Sequencer Activity</a></li>
-        </ul>
+<body class="bg-slate-100 text-slate-800 flex flex-col min-h-screen">
+
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4 flex flex-col sm:flex-row justify-between items-center">
+            <h1 class="text-2xl font-bold text-sky-800">Patient Care</h1>
+            <a href="../index.html" class="mt-2 sm:mt-0 text-sm bg-slate-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-slate-700 transition-colors duration-300">
+                &larr; Back to Main Workbook
+            </a>
+        </div>
+    </header>
+
+    <section class="hero-banner-pc text-white py-14 px-6 text-center">
+        <div class="container mx-auto">
+            <h2 class="text-4xl font-bold mb-4">Radiation Therapy Patient Care</h2>
+            <p class="text-lg mb-4">Aligned to the ARRT Radiation Therapy Examination Content Specifications' Patient Care category.</p>
+        </div>
+    </section>
+
+    <div class="bg-sky-950 text-sky-100 py-4 px-6">
+      <div class="container mx-auto text-sm">
+        <span class="font-bold uppercase tracking-wide text-sky-300">ARRT Exam Content Cross-Reference</span>
+        <div class="mt-2 flex flex-wrap gap-2">
+            <span class="bg-sky-800 text-sky-100 text-xs font-mono px-2 py-1 rounded">Patient Care: 46 of 200 scored questions</span>
+            <span class="bg-sky-800 text-sky-100 text-xs font-mono px-2 py-1 rounded">Patient Interactions &amp; Management (29)</span>
+            <span class="bg-sky-800 text-sky-100 text-xs font-mono px-2 py-1 rounded">Patient &amp; Medical Record Management (17)</span>
+        </div>
+        <p class="text-xs text-sky-300 mt-2">Ethical and Legal Aspects (consent, HIPAA, legal doctrines, ARRT Standards of Ethics) is covered in the separate <a href="../Ethics/index.html" class="underline">Ethics module</a> rather than duplicated here.</p>
+      </div>
     </div>
+
+    <main class="container mx-auto px-6 py-12 flex-grow">
+        <h2 class="text-2xl font-semibold mb-2 text-center text-slate-700">Patient Interactions and Management</h2>
+        <p class="text-center text-sm text-slate-500 mb-8">Topics don't map one-to-one with lessons &mdash; each page below consolidates several related exam content bullets.</p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-14">
+
+            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col">
+                <h3 class="text-xl font-semibold mb-2 text-sky-700">Foundations of Patient Care</h3>
+                <p class="text-[11px] font-mono text-sky-500 mb-2">Ergonomics &amp; Monitoring &middot; Medical Emergencies &middot; Infection Control</p>
+                <p class="text-slate-600 mb-4 text-sm flex-grow">Vital signs, oxygen administration, safe patient transfers &amp; body mechanics, universal precautions, and BLS/AED basics.</p>
+                <a href="Clinical_Objectives/index.html" class="mt-auto inline-block bg-sky-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-sky-700 transition-colors duration-300 text-center">Start Lesson</a>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col">
+                <h3 class="text-xl font-semibold mb-2 text-sky-700">Patient Identification &amp; Safety</h3>
+                <p class="text-[11px] font-mono text-sky-500 mb-2">Ethical &amp; Legal (verification) &middot; Ergonomics &amp; Monitoring</p>
+                <p class="text-slate-600 mb-4 text-sm flex-grow">The "two identifier" rule, treatment site &amp; laterality verification, daily safety checks, and responding to unexpected events.</p>
+                <a href="Patient_Identifiers/index.html" class="mt-auto inline-block bg-sky-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-sky-700 transition-colors duration-300 text-center">Start Lesson</a>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col">
+                <h3 class="text-xl font-semibold mb-2 text-sky-700">The Patient's Journey</h3>
+                <p class="text-[11px] font-mono text-sky-500 mb-2">Treatment Volume Localization &middot; Documentation (workflow context)</p>
+                <p class="text-slate-600 mb-4 text-sm flex-grow">Consultation &rarr; simulation &rarr; dosimetry &rarr; treatment delivery &rarr; on-treatment monitoring &rarr; follow-up.</p>
+                <a href="Patient_Journey/index.html" class="mt-auto inline-block bg-sky-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-sky-700 transition-colors duration-300 text-center">Start Lesson</a>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col">
+                <h3 class="text-xl font-semibold mb-2 text-sky-700">Communication &amp; Patient Education</h3>
+                <p class="text-[11px] font-mono text-sky-500 mb-2">Interpersonal Communication</p>
+                <p class="text-slate-600 mb-4 text-sm flex-grow">Communication modes, language/cultural/cognitive barriers, patient education strategies, and support services (hospice, other professionals).</p>
+                <a href="Communication_Patient_Education/index.html" class="mt-auto inline-block bg-sky-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-sky-700 transition-colors duration-300 text-center">Start Lesson</a>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col">
+                <h3 class="text-xl font-semibold mb-2 text-sky-700">Equipment, Monitoring &amp; Emergencies</h3>
+                <p class="text-[11px] font-mono text-sky-500 mb-2">Ergonomics &amp; Monitoring &middot; Medical Emergencies</p>
+                <p class="text-slate-600 mb-4 text-sm flex-grow">Vital signs, oxygen therapy, chest tubes &amp; central lines, other equipment, and CPR basics &mdash; plus a hands-on vital signs simulator.</p>
+                <a href="Equipment_Monitoring_Emergencies/index.html" class="mt-auto inline-block bg-sky-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-sky-700 transition-colors duration-300 text-center">Start Lesson</a>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col">
+                <h3 class="text-xl font-semibold mb-2 text-sky-700">Infection Control &amp; Hazardous Materials</h3>
+                <p class="text-[11px] font-mono text-sky-500 mb-2">Infection Control &middot; Toxic/Hazardous Material Handling</p>
+                <p class="text-slate-600 mb-4 text-sm flex-grow">Chain of infection, asepsis, CDC standard &amp; transmission-based precautions, plus chemical/chemotherapy/metal handling and safety data sheets.</p>
+                <a href="Infection_Control_Hazardous_Materials/index.html" class="mt-auto inline-block bg-sky-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-sky-700 transition-colors duration-300 text-center">Start Lesson</a>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col">
+                <h3 class="text-xl font-semibold mb-2 text-sky-700">Pharmacology &amp; Contrast Media</h3>
+                <p class="text-[11px] font-mono text-sky-500 mb-2">Pharmacology</p>
+                <p class="text-slate-600 mb-4 text-sm flex-grow">Contrast media types and properties, appropriateness to procedure, complications/reactions, and emergency medications.</p>
+                <a href="Pharmacology_Contrast_Media/index.html" class="mt-auto inline-block bg-sky-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-sky-700 transition-colors duration-300 text-center">Start Lesson</a>
+            </div>
+
+        </div>
+
+        <h2 class="text-2xl font-semibold mb-2 text-center text-slate-700">Patient and Medical Record Management</h2>
+        <p class="text-center text-sm text-slate-500 mb-8">Both consolidated topics below are now live.</p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-14">
+
+            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col">
+                <h3 class="text-xl font-semibold mb-2 text-sky-700">Patient Evaluation &amp; Assessment</h3>
+                <p class="text-[11px] font-mono text-sky-500 mb-2">Evaluation &middot; Assessment</p>
+                <p class="text-slate-600 mb-4 text-sm flex-grow">Cancer risk factors and screening, history &amp; physical, imaging/diagnostic studies, treatment side effects, blood studies, and dietary counseling.</p>
+                <a href="Patient_Evaluation_Assessment/index.html" class="mt-auto inline-block bg-sky-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-sky-700 transition-colors duration-300 text-center">Start Lesson</a>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col">
+                <h3 class="text-xl font-semibold mb-2 text-sky-700">Medical Record Documentation</h3>
+                <p class="text-[11px] font-mono text-sky-500 mb-2">Documentation</p>
+                <p class="text-slate-600 mb-4 text-sm flex-grow">What belongs in a treatment record, record-keeping principles (accuracy, accountability, variance/medical events), and basic charge capture terminology.</p>
+                <a href="Medical_Record_Documentation/index.html" class="mt-auto inline-block bg-sky-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-sky-700 transition-colors duration-300 text-center">Start Lesson</a>
+            </div>
+
+        </div>
+
+        <h2 class="text-2xl font-semibold mb-6 text-center text-slate-700">Interactive Practice</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col">
+                <h3 class="text-xl font-semibold mb-3 text-sky-700">Patient Care Skills Challenge</h3>
+                <p class="text-slate-600 mb-4 text-sm flex-grow">Practice activity pairing with the Foundations lesson.</p>
+                <a href="patient_care_skills_activity.html" class="mt-auto inline-block bg-sky-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-sky-700 transition-colors duration-300 text-center">Start Activity</a>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col">
+                <h3 class="text-xl font-semibold mb-3 text-sky-700">Patient Safety &amp; ID Lab</h3>
+                <p class="text-slate-600 mb-4 text-sm flex-grow">Practice activity pairing with the Patient Identification &amp; Safety lesson.</p>
+                <a href="Patient_Identifiers/patient_safety_id_lab.html" class="mt-auto inline-block bg-sky-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-sky-700 transition-colors duration-300 text-center">Start Activity</a>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col">
+                <h3 class="text-xl font-semibold mb-3 text-sky-700">Patient Journey Sequencer</h3>
+                <p class="text-slate-600 mb-4 text-sm flex-grow">Practice activity pairing with The Patient's Journey lesson.</p>
+                <a href="Patient_Journey/patient_journey_sequencer_activity.html" class="mt-auto inline-block bg-sky-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-sky-700 transition-colors duration-300 text-center">Start Activity</a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-slate-800 text-slate-300 py-8 mt-12 text-center">
+        <div class="container mx-auto px-6">
+            <p>&copy; <span id="currentYear"></span> Radiation Therapy E-Workbook. All Rights Reserved.</p>
+            <p class="text-sm mt-1">Patient Care Module</p>
+        </div>
+    </footer>
+
+    <script>document.getElementById('currentYear').textContent = new Date().getFullYear();</script>
 </body>
 </html>
