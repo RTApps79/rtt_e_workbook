@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Medical Terminology</title>
+<style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; margin: 20px;
+            background-color: #f4f4f4; color: #333; display: flex; flex-direction: column; align-items: center; }
+        .container { background-color: #fff; padding: 25px 35px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 90%; max-width: 900px; margin-bottom: 30px; }
+        h1, h2, h3, h4 { color: #0056b3; }
+        h1 { text-align: center; border-bottom: 2px solid #0056b3; padding-bottom: 15px; margin-bottom: 30px; font-size: 2em; }
+        h2 { border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 30px; margin-bottom: 20px; color: #003d7a; font-size: 1.6em; }
+        h3 { color: #004085; margin-top: 25px; margin-bottom: 15px; font-size: 1.3em; }
+        h4 { color: #17a2b8; margin-top: 20px; margin-bottom: 10px; font-size: 1.1em; font-weight: 600; }
+        p, li { margin-bottom: 12px; font-size: 1.05em; }
+        ul, ol { margin-bottom: 15px; padding-left: 25px; }
+        strong { font-weight: 600; }
+        .highlight { background-color: #e6f7ff; padding: 2px 5px; border-radius: 3px; font-weight: 600; }
+        code { background-color: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; color: #c7254e; }
+        table.data-table { width: 90%; margin: 15px auto; border-collapse: collapse; }
+        table.data-table th, table.data-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        table.data-table th { background-color: #e9f5ff; color: #0056b3; font-weight: 600; }
+        table.data-table tr:nth-child(even) { background-color: #f9f9f9; }
+        .flip-lesson-container { border: 1px solid #b3d7ff; padding: 20px; border-radius: 8px; background-color: #f0f8ff; margin-bottom: 30px; }
+        .lesson-page { display: none; padding: 15px; border: 1px solid #ddeeff; background-color: #fff; border-radius: 5px; min-height: 400px; }
+        .lesson-page.active { display: block; }
+        .lesson-navigation { text-align: center; margin-top: 20px; }
+        .lesson-navigation button, .lesson-page .check-page-answers {
+            background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px;
+            cursor: pointer; font-size: 1em; margin: 5px 10px; transition: background-color 0.2s; }
+        .lesson-navigation button:hover, .lesson-page .check-page-answers:hover { background-color: #0056b3; }
+        .lesson-navigation button:disabled { background-color: #ccc; cursor: not-allowed; }
+        .page-indicator { font-style: italic; color: #555; margin: 10px 0; }
+        .key-principle { background-color: #e7f3ff; padding: 10px; margin-bottom:10px; border-left: 3px solid #007bff; border-radius: 3px; }
+        .interactive-question-block { background: #f9f9f9; padding: 15px; margin: 20px 0; border: 1px solid #e0e0e0; border-radius: 8px; }
+        .interactive-question-block .question-text { font-weight: bold; margin-bottom: 8px; font-size: 1em; color: #555; }
+        .interactive-question-block label { display: block; margin-left: 0; padding: 8px 12px; border-radius: 5px; cursor: pointer; border: 1px solid transparent; margin-bottom: 5px; }
+        .interactive-question-block input[type="radio"] { margin-right: 10px; vertical-align: middle; }
+        .interactive-question-block label:hover { background-color: #f0f8ff; }
+        .feedback-correct { background-color: #e8f8f0 !important; border-left: 4px solid #2ecc71 !important; }
+        .feedback-incorrect { background-color: #fdedec !important; border-left: 4px solid #e74c3c !important; }
+        .feedback-correct label.correct-option, .feedback-incorrect label.correct-option { font-weight: bold; color: #1E8449; }
+        .feedback-incorrect label.selected-incorrect { color: #A93226; }
+        .explanation { font-size: 0.9em; color: #444; margin-top: 5px; padding-left: 20px; }
+        .footer { text-align: center; margin-top: 30px; padding-top: 15px; border-top: 1px solid #ccc; font-size: 0.9em; color: #555; }
+
+        .nav-links-header { background-color: #fff; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 50; }
+</style>
+</head>
+<body>
+    <header class="nav-links-header">
+        <div style="max-width:900px;margin:0 auto;padding:12px 20px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;">
+            <strong style="color:#0056b3;">Medical Terminology: Foundations and Oncology Focus</strong>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                <a href="../index.html" style="font-size:0.8rem;background:#0056b3;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Back to Principles and Practice Lessons</a>
+                <a href="../../index.html" style="font-size:0.8rem;background:#64748b;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Main Workbook</a>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <h1>Medical Terminology: Foundations and Oncology Focus</h1>
+        <div class="flip-lesson-container">
+            <h2>Interactive Lesson</h2>
+            <div id="lesson-page-1" class="lesson-page active">
+                <h3>Part 1, Page 1: Medical Terms Are Built, Not Memorized</h3>
+                <p>Medical language looks intimidating until you realize it's built from a small, reusable set of pieces &mdash; mostly derived from Greek and Latin &mdash; combined the same way every time. Once you know the pieces, you can decode terms you've never seen before, rather than memorizing an endless vocabulary list.</p>
+                <div class="key-principle">
+                    <p>Every medical term is built from some combination of: a <strong>root</strong> (the core meaning, usually a body part or concept), a <strong>prefix</strong> (attached to the front, modifying meaning), a <strong>suffix</strong> (attached to the end, often indicating a condition or procedure), and sometimes a <strong>combining vowel</strong> (usually "o") that links pieces together for pronunciation.</p>
+                </div>
+            </div>
+            <div id="lesson-page-2" class="lesson-page">
+                <h3>Part 1, Page 2: Roots and Combining Vowels</h3>
+                <p>The <strong>root</strong> carries the core meaning &mdash; often a body part (cardi = heart, hepat = liver, nephr = kidney). When a root is joined to another root, or to a suffix that starts with a consonant, a <strong>combining vowel</strong> (almost always "o") is inserted to make the word pronounceable.</p>
+                <div class="key-principle">
+                    <p>If the suffix already starts with a vowel, the combining vowel is usually dropped. Example: <strong>arthr/o</strong> (joint) + <strong>-itis</strong> (inflammation) &rarr; <strong>arthritis</strong>, not "arthroitis" &mdash; the vowel is dropped because -itis already starts with a vowel.</p>
+                </div>
+            </div>
+            <div id="lesson-page-3" class="lesson-page">
+                <h3>Part 1, Page 3: Common Prefixes</h3>
+                <p>Prefixes typically indicate number, position, direction, time, or negation:</p>
+                <table class="data-table">
+                    <thead><tr><th>Category</th><th>Examples</th></tr></thead>
+                    <tbody>
+                        <tr><td>Number</td><td><strong>bi-</strong> (two), <strong>hemi-/semi-</strong> (half)</td></tr>
+                        <tr><td>Position</td><td><strong>sub-</strong> (under), <strong>epi-</strong> (upon, over), <strong>inter-</strong> (between)</td></tr>
+                        <tr><td>Direction</td><td><strong>intra-</strong> (within), <strong>extra-</strong> (outside of), <strong>ab-</strong> (away from)</td></tr>
+                        <tr><td>Time</td><td><strong>brady-</strong> (slow), <strong>tachy-</strong> (fast), <strong>ante-</strong> (before)</td></tr>
+                        <tr><td>Negation</td><td><strong>a-, an-</strong> (without), <strong>anti-</strong> (against)</td></tr>
+                    </tbody>
+                </table>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">The prefix "brady-" means:</p>
+                    <label><input type="radio" name="lq_p1p3_1" value="A"> Fast</label>
+                    <label><input type="radio" name="lq_p1p3_1" value="B"> Slow</label>
+                    <div class="explanation" style="display:none;">B. Brady- means slow (e.g., bradycardia = slow heart rate) — the opposite, tachy-, means fast.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(3)">Check Answer</button>
+            </div>
+            <div id="lesson-page-4" class="lesson-page">
+                <h3>Part 1, Page 4: Common Suffixes</h3>
+                <p>Suffixes generally fall into a few functional categories:</p>
+                <table class="data-table">
+                    <thead><tr><th>Type</th><th>Examples</th></tr></thead>
+                    <tbody>
+                        <tr><td>Condition / diagnostic</td><td><strong>-itis</strong> (inflammation), <strong>-osis</strong> (abnormal condition), <strong>-emia</strong> (blood condition)</td></tr>
+                        <tr><td>Procedure</td><td><strong>-ectomy</strong> (surgical removal), <strong>-otomy</strong> (incision into), <strong>-oscopy</strong> (visual examination)</td></tr>
+                        <tr><td>Adjectival</td><td><strong>-al, -ic, -ous</strong> (pertaining to)</td></tr>
+                        <tr><td>Symptom</td><td><strong>-algia/-dynia</strong> (pain), <strong>-rrhea</strong> (discharge)</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="lesson-page-5" class="lesson-page">
+                <h3>Part 1, Page 5: Decoding a Real Term</h3>
+                <p>Let's put the pieces together. Take the word <strong>pericarditis</strong>:</p>
+                <div class="key-principle">
+                    <p><strong>peri</strong> (prefix: around) + <strong>card</strong> (root: heart) + <strong>itis</strong> (suffix: inflammation of)<br>
+                    = "inflammation around the heart"</p>
+                </div>
+                <p>This is the whole skill in a nutshell: break an unfamiliar term into its pieces, translate each piece, and reassemble the meaning &mdash; no memorization of the whole word required.</p>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">Break down "hepatomegaly": hepat/o (liver) + -megaly (enlargement). What does it mean?</p>
+                    <label><input type="radio" name="lq_p1p5_1" value="A"> Liver inflammation</label>
+                    <label><input type="radio" name="lq_p1p5_1" value="B"> Enlarged liver</label>
+                    <div class="explanation" style="display:none;">B. Hepat/o = liver, -megaly = enlargement, so hepatomegaly literally means "enlarged liver."</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(5)">Check Answer</button>
+            </div>
+            <div id="lesson-page-6" class="lesson-page">
+                <h3>Part 1, Page 6: Levels of Body Organization</h3>
+                <p>The body is organized in a clear hierarchy, smallest to largest: <strong>cells</strong> &rarr; <strong>tissues</strong> (groups of similar cells) &rarr; <strong>organs</strong> (structures made of multiple tissue types working together) &rarr; <strong>organ systems</strong> (organs working toward a shared function) &rarr; the <strong>organism</strong> as a whole.</p>
+                <p>Knowing this hierarchy helps you place any new term in context &mdash; is it describing something at the cellular level, or an entire organ system?</p>
+            </div>
+            <div id="lesson-page-7" class="lesson-page">
+                <h3>Part 1, Page 7: Body Cavities and Regions</h3>
+                <p>The body has major cavities that house organs and protect them: the <strong>cranial</strong> and <strong>spinal</strong> cavities (dorsal body cavity, housing the brain and spinal cord), and the <strong>thoracic</strong>, <strong>abdominal</strong>, and <strong>pelvic</strong> cavities (ventral body cavity, housing the heart/lungs, digestive organs, and reproductive/urinary organs respectively).</p>
+                <p>Body regions further divide the body into named areas (e.g., abdominal quadrants) &mdash; a shared reference vocabulary that lets clinicians describe a location precisely without ambiguity.</p>
+            </div>
+            <div id="lesson-page-8" class="lesson-page">
+                <h3>Part 1, Page 8: Directional Terms</h3>
+                <p>Directional terms describe location relative to a standard reference position, and they're used constantly in setup documentation:</p>
+                <table class="data-table">
+                    <thead><tr><th>Term</th><th>Meaning</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>Anterior / Posterior</strong></td><td>Toward the front / toward the back</td></tr>
+                        <tr><td><strong>Superior / Inferior</strong></td><td>Toward the head / toward the feet</td></tr>
+                        <tr><td><strong>Medial / Lateral</strong></td><td>Toward the midline / away from the midline</td></tr>
+                        <tr><td><strong>Proximal / Distal</strong></td><td>Closer to the trunk / farther from the trunk</td></tr>
+                        <tr><td><strong>Superficial / Deep</strong></td><td>Closer to the skin surface / farther from it</td></tr>
+                    </tbody>
+                </table>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">A lesion described as "medial to the nipple" is located:</p>
+                    <label><input type="radio" name="lq_p1p8_1" value="A"> Toward the midline of the body, relative to the nipple</label>
+                    <label><input type="radio" name="lq_p1p8_1" value="B"> Away from the midline of the body, relative to the nipple</label>
+                    <div class="explanation" style="display:none;">A. Medial means toward the midline — the opposite, lateral, would mean away from the midline.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(8)">Check Answer</button>
+            </div>
+            <div id="lesson-page-9" class="lesson-page">
+                <h3>Part 1, Page 9: Body Planes</h3>
+                <p>Body planes are imaginary flat surfaces used to describe cross-sectional views &mdash; the exact same planes you already work with in CT simulation and treatment planning:</p>
+                <ul>
+                    <li><strong>Sagittal plane</strong> &mdash; divides the body into left and right</li>
+                    <li><strong>Frontal (coronal) plane</strong> &mdash; divides the body into anterior and posterior</li>
+                    <li><strong>Transverse (axial) plane</strong> &mdash; divides the body into superior and inferior</li>
+                </ul>
+                <p>These aren't just anatomy-class vocabulary &mdash; they're literally the same three planes your CT/simulation and treatment planning images are reconstructed in.</p>
+            </div>
+            <div id="lesson-page-10" class="lesson-page">
+                <h3>Part 1, Page 10: Transition to Oncology Terminology</h3>
+                <p>You've now covered the general skeleton of medical language: word components, prefixes, suffixes, decoding real terms, body organization, directional terms, and planes. This vocabulary applies across every area of medicine.</p>
+                <p>From here, the lesson shifts to vocabulary that's specifically built around cancer diagnosis, treatment, and documentation &mdash; the terminology you'll actually be reading and writing daily as a radiation therapist.</p>
+            </div>
+            <div id="lesson-page-11" class="lesson-page">
+                <h3>Part 2, Page 1: Why Oncology Has Its Own Vocabulary</h3>
+                <p>Cancer diagnosis, treatment, and tumor registry documentation rely on a specialized set of word roots and suffixes layered on top of general medical terminology. This section draws on the U.S. National Cancer Institute's SEER Program tumor registrar training materials &mdash; a public resource specifically built to teach exactly this vocabulary.</p>
+                <div class="key-principle">
+                    <p>The same rule applies here as in Part 1: you're not memorizing whole words, you're learning a smaller set of pieces that recombine constantly across cancer-related terms.</p>
+                </div>
+            </div>
+            <div id="lesson-page-12" class="lesson-page">
+                <h3>Part 2, Page 2: The Core Tumor Roots</h3>
+                <table class="data-table">
+                    <thead><tr><th>Root</th><th>Meaning</th><th>Note</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>onc/o</strong></td><td>Tumor</td><td>Root of "oncology" itself</td></tr>
+                        <tr><td><strong>carcin/o</strong></td><td>Cancer (literally "crab")</td><td>Specifically epithelial-tissue cancer</td></tr>
+                        <tr><td><strong>sarc/o</strong></td><td>Flesh</td><td>Root for connective-tissue cancers</td></tr>
+                        <tr><td><strong>-oma</strong></td><td>Tumor</td><td>By itself, doesn't specify benign or malignant</td></tr>
+                        <tr><td><strong>neo-</strong></td><td>New</td><td>As in "neoplasm" &mdash; new growth</td></tr>
+                    </tbody>
+                </table>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">The root carcin/o literally translates to which word?</p>
+                    <label><input type="radio" name="lq_p2p2_1" value="A"> Crab</label>
+                    <label><input type="radio" name="lq_p2p2_1" value="B"> Flesh</label>
+                    <div class="explanation" style="display:none;">A. Carcin/o comes from the Greek word for "crab" — the ancient association was the crab-like, spreading appearance of some tumors. Sarc/o is the one meaning "flesh."</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(12)">Check Answer</button>
+            </div>
+            <div id="lesson-page-13" class="lesson-page">
+                <h3>Part 2, Page 3: -oma vs. Carcinoma vs. Sarcoma</h3>
+                <p>This distinction matters clinically, not just linguistically:</p>
+                <div class="key-principle">
+                    <p><strong>-oma</strong> alone just means "tumor" &mdash; it doesn't say benign or malignant (e.g., a lipoma, a benign fatty tumor).<br>
+                    <strong>Carcinoma</strong> = a malignant tumor of <em>epithelial</em> origin (skin, glands, linings of organs) &mdash; the most common category of cancer.<br>
+                    <strong>Sarcoma</strong> = a malignant tumor of <em>connective</em> tissue origin (bone, muscle, fat, cartilage) &mdash; much less common than carcinoma, but distinct enough to always be named separately.</p>
+                </div>
+                <p>So "osteosarcoma" (oste/o = bone + sarcoma) is a malignant bone tumor, while "adenocarcinoma" (aden/o = gland + carcinoma) is a malignant tumor arising from glandular tissue.</p>
+            </div>
+            <div id="lesson-page-14" class="lesson-page">
+                <h3>Part 2, Page 4: Symptomatic Suffixes</h3>
+                <p>These describe what a patient is experiencing &mdash; the complaints found in a history and physical:</p>
+                <table class="data-table">
+                    <thead><tr><th>Suffix</th><th>Meaning</th><th>Example</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>-algia / -dynia</strong></td><td>Pain</td><td>arthralgia (joint pain)</td></tr>
+                        <tr><td><strong>-rrhea</strong></td><td>Flow, discharge</td><td>rhinorrhea (nasal discharge)</td></tr>
+                        <tr><td><strong>-rrhage</strong></td><td>Excessive flow, bursting forth</td><td>hemorrhage (excessive blood flow)</td></tr>
+                        <tr><td><strong>-megaly</strong></td><td>Enlargement</td><td>hepatomegaly (enlarged liver)</td></tr>
+                        <tr><td><strong>-penia</strong></td><td>Deficiency, lack of</td><td>leukopenia (low white blood cell count)</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="lesson-page-15" class="lesson-page">
+                <h3>Part 2, Page 5: Diagnostic Suffixes</h3>
+                <p>These appear constantly in diagnoses and chart documentation:</p>
+                <table class="data-table">
+                    <thead><tr><th>Suffix</th><th>Meaning</th><th>Example</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>-itis</strong></td><td>Inflammation of</td><td>esophagitis</td></tr>
+                        <tr><td><strong>-osis</strong></td><td>Abnormal condition of</td><td>leukocytosis</td></tr>
+                        <tr><td><strong>-emia</strong></td><td>Blood condition</td><td>leukemia</td></tr>
+                        <tr><td><strong>-stenosis</strong></td><td>Narrowing, stricture</td><td>esophageal stenosis</td></tr>
+                        <tr><td><strong>-ectasis</strong></td><td>Expansion, dilation</td><td>bronchiectasis</td></tr>
+                        <tr><td><strong>-ptosis</strong></td><td>Drooping, falling</td><td>nephroptosis (dropped kidney)</td></tr>
+                        <tr><td><strong>-plegia</strong></td><td>Paralysis</td><td>hemiplegia</td></tr>
+                        <tr><td><strong>-cele</strong></td><td>Hernia, protrusion</td><td>meningocele</td></tr>
+                    </tbody>
+                </table>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">A patient's chart notes "esophageal stenosis." What is happening to the esophagus?</p>
+                    <label><input type="radio" name="lq_p2p5_1" value="A"> It is narrowing</label>
+                    <label><input type="radio" name="lq_p2p5_1" value="B"> It is expanding</label>
+                    <div class="explanation" style="display:none;">A. -stenosis means narrowing/stricture — the opposite process, -ectasis, means expansion or dilation.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(15)">Check Answer</button>
+            </div>
+            <div id="lesson-page-16" class="lesson-page">
+                <h3>Part 2, Page 6: Growth and Formation Terms</h3>
+                <p>A cluster of related suffixes describe tissue growth patterns &mdash; and the differences between them matter enormously in oncology:</p>
+                <div class="key-principle">
+                    <p><strong>-plasia</strong> (formation, growth): <em>hyperplasia</em> = increased number of normal cells (usually benign); <em>dysplasia</em> = abnormal cell changes (potentially precancerous); <em>neoplasia</em> = new, uncontrolled growth (the general process behind tumor formation, benign or malignant).</p>
+                    <p><strong>-plasm</strong> (growth, formation, a formed substance): as in <em>neoplasm</em>, a new abnormal growth of tissue &mdash; the general clinical term for what's colloquially called a "tumor."</p>
+                    <p><strong>-genic</strong> (producing, forming): as in <em>carcinogenic</em> (cancer-causing) or <em>radiogenic</em>.</p>
+                    <p><strong>-oid</strong> (resembling, like): as in <em>lymphoid</em> (resembling lymphatic tissue).</p>
+                </div>
+            </div>
+            <div id="lesson-page-17" class="lesson-page">
+                <h3>Part 2, Page 7: Decoding Real Oncology Terms</h3>
+                <p>Let's apply everything from this section to terms you'll actually see in a chart:</p>
+                <table class="data-table">
+                    <thead><tr><th>Term</th><th>Breakdown</th><th>Meaning</th></tr></thead>
+                    <tbody>
+                        <tr><td>Adenocarcinoma</td><td>aden/o (gland) + carcinoma</td><td>Malignant tumor of glandular tissue</td></tr>
+                        <tr><td>Osteosarcoma</td><td>oste/o (bone) + sarcoma</td><td>Malignant tumor of bone</td></tr>
+                        <tr><td>Lymphadenopathy</td><td>lymph + aden/o (gland) + -pathy (disease)</td><td>Disease of the lymph nodes</td></tr>
+                        <tr><td>Hepatosplenomegaly</td><td>hepat/o (liver) + splen/o (spleen) + -megaly</td><td>Enlarged liver and spleen</td></tr>
+                        <tr><td>Leukopenia</td><td>leuk/o (white) + -penia (deficiency)</td><td>Low white blood cell count</td></tr>
+                    </tbody>
+                </table>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">Break down "chondrosarcoma": chondr/o means cartilage. What does the full term mean?</p>
+                    <label><input type="radio" name="lq_p2p7_1" value="A"> Malignant tumor of cartilage</label>
+                    <label><input type="radio" name="lq_p2p7_1" value="B"> Inflammation of cartilage</label>
+                    <div class="explanation" style="display:none;">A. Chondr/o (cartilage) + sarcoma (malignant connective-tissue tumor) = a malignant cartilage tumor.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(17)">Check Answer</button>
+            </div>
+            <div id="lesson-page-18" class="lesson-page">
+                <h3>Part 2, Page 8: Abbreviations in Cancer Documentation</h3>
+                <p>Beyond full terms, oncology charting relies heavily on standardized abbreviations &mdash; staging notation (T/N/M), grading (G1&ndash;G4), and treatment-related shorthand you'll see constantly in a chart. Getting comfortable reading these quickly is just as important as knowing the full-word vocabulary, since most day-to-day documentation uses the abbreviated form. (See the Medical Record Documentation lesson under Patient Care for how these fit into the treatment record itself.)</p>
+            </div>
+            <div id="lesson-page-19" class="lesson-page">
+                <h3>Part 2, Page 9: Wrap-Up and Sources</h3>
+                <p>You've now covered both halves: the general word-building skeleton of medical language (Part 1), and the specialized vocabulary layered on top of it for oncology specifically (Part 2) &mdash; tumor roots, the carcinoma/sarcoma distinction, symptomatic and diagnostic suffixes, and growth/formation terminology.</p>
+                <p class="text-sm" style="color:#666; margin-top:14px;">Sources: Ernstmeyer, K., &amp; Christman, E. (Eds.). <em>Medical Terminology 2e</em>. Open RN / WisTech Open, 2024. Licensed CC BY 4.0. &mdash; National Cancer Institute, SEER Program. <em>Self-Instructional Manual for Cancer Registrars, Book 3: Cancer Registrar Vocabulary &mdash; The Composition of Medical Terms</em>, 2nd ed. U.S. Department of Health and Human Services. Public domain (U.S. government work).</p>
+            </div>
+
+            <div class="lesson-navigation">
+                <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled>Previous Page</button>
+                <span class="page-indicator" id="lessonPageIndicator">Page 1 of 19</span>
+                <button id="nextLessonPage" onclick="changeLessonPage(1)">Next Page</button>
+                <button id="startActivityButton" onclick="window.location.href='../index.html'" style="display:none; background-color: #28a745;">Back to Menu</button>
+            </div>
+        </div>
+        <div class="footer">Radiation Therapy E-Workbook &mdash; Principles and Practice of Radiation Therapy I</div>
+    </div>
+    <script>
+        let currentLessonPage = 1;
+        const totalLessonPages = 19;
+        const lessonPages = document.querySelectorAll('.lesson-page');
+        const prevLessonButton = document.getElementById('prevLessonPage');
+        const nextLessonButton = document.getElementById('nextLessonPage');
+        const lessonPageIndicator = document.getElementById('lessonPageIndicator');
+        const startActivityButton = document.getElementById('startActivityButton');
+        const lessonCorrectAnswers = {"lq_p1p3_1": "B", "lq_p1p5_1": "B", "lq_p1p8_1": "A", "lq_p2p2_1": "A", "lq_p2p5_1": "A", "lq_p2p7_1": "A"};
+        function displayLessonPage() {
+            lessonPages.forEach((page, index) => page.classList.toggle('active', index === currentLessonPage - 1));
+            prevLessonButton.disabled = currentLessonPage === 1;
+            nextLessonButton.style.display = currentLessonPage === totalLessonPages ? 'none' : 'inline-block';
+            startActivityButton.style.display = currentLessonPage === totalLessonPages ? 'inline-block' : 'none';
+            lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
+        }
+        function changeLessonPage(direction) {
+            currentLessonPage += direction;
+            if (currentLessonPage < 1) currentLessonPage = 1;
+            if (currentLessonPage > totalLessonPages) currentLessonPage = totalLessonPages;
+            displayLessonPage();
+        }
+        function checkPageAnswers(pageNumber) {
+            const questionsOnPage = document.querySelectorAll(`#lesson-page-${pageNumber} .interactive-question-block`);
+            questionsOnPage.forEach(block => {
+                const radio = block.querySelector('input[type="radio"]');
+                if (!radio) return;
+                const questionName = radio.name;
+                if (!lessonCorrectAnswers.hasOwnProperty(questionName)) return;
+                const correctAnswerValue = lessonCorrectAnswers[questionName];
+                const selectedRadio = block.querySelector(`input[name="${questionName}"]:checked`);
+                const explanationDiv = block.querySelector('.explanation');
+                block.classList.remove('feedback-correct', 'feedback-incorrect');
+                block.querySelectorAll('label').forEach(label => label.classList.remove('correct-option', 'selected-incorrect'));
+                if (explanationDiv) explanationDiv.style.display = 'none';
+                if (selectedRadio) {
+                    const userAnswer = selectedRadio.value;
+                    const userSelectedLabel = selectedRadio.parentElement;
+                    if (userAnswer === correctAnswerValue) {
+                        block.classList.add('feedback-correct');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('correct-option');
+                    } else {
+                        block.classList.add('feedback-incorrect');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('selected-incorrect');
+                        const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                        if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                    }
+                } else {
+                    block.classList.add('feedback-incorrect');
+                    const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                    if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                }
+                if (explanationDiv) explanationDiv.style.display = 'block';
+            });
+        }
+        displayLessonPage();
+    </script>
+</body>
+</html>
