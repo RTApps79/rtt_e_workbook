@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Statistics Studio Practice Worksheet: RT Patient Outcomes Study</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    body { font-family: 'Inter', sans-serif; }
+    .rec-input { border: 1px solid #cbd5e1; border-radius: 4px; padding: 4px 8px; width: 100%; font-family: monospace; font-size: 0.85rem; }
+    .apa-box { width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 10px; font-size: 0.9rem; min-height: 70px; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #e2e8f0; padding: 6px 8px; font-size: 0.85rem; }
+    th { background: #f1f5f9; text-align: left; }
+    .h-badge { display:inline-block; background:#4338ca; color:#fff; font-size:0.7rem; font-weight:700; padding:2px 8px; border-radius:9999px; margin-right:8px; }
+    .step-path { font-family: monospace; background:#e2e8f0; padding: 2px 6px; border-radius: 4px; font-weight: 700; color:#0f172a; }
+</style>
+</head>
+<body class="bg-slate-100 text-slate-800">
+<header class="bg-white shadow-md sticky top-0 z-50">
+    <div class="container mx-auto px-6 py-3 flex flex-wrap justify-between items-center gap-2">
+        <strong class="text-indigo-700">Statistics Studio Practice Worksheet</strong>
+        <div class="flex gap-2">
+            <a href="../Statistics_Studio/index.html" target="_blank" class="text-xs sm:text-sm bg-indigo-600 text-white font-medium py-2 px-3 rounded-lg hover:bg-indigo-700">Open Statistics Studio &rarr;</a>
+            <a href="index.html" class="text-xs sm:text-sm bg-slate-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-slate-600">&larr; Back to Lesson</a>
+        </div>
+    </div>
+</header>
+
+<main class="container mx-auto px-6 py-8 max-w-4xl">
+    <div class="bg-white p-6 sm:p-8 rounded-xl shadow-lg">
+        <h1 class="text-2xl font-bold text-indigo-700 mb-1">RT Patient Outcomes Study (N = 50)</h1>
+        <p class="text-sm text-slate-500 mb-4">Dataset: <code>RT_PatientOutcomes_Sample.csv</code> &middot; Tool: RTApps Statistics Studio (no SPSS required)</p>
+        <div class="bg-indigo-50 border border-indigo-200 rounded-lg p-3 text-sm mb-6">
+            📋 <strong>Instructions:</strong> Complete all five analyses in Statistics Studio using the dataset above. For each analysis: (1) follow the steps, (2) record the key values in the table provided, (3) answer the interpretation questions, (4) write a results statement, and (5) paste a screenshot of the relevant results card at the end of this document before submitting.
+        </div>
+        <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 text-sm mb-8">
+            ⚠️ <strong>p-value note:</strong> When Statistics Studio displays "&lt; .001", report it exactly that way &mdash; do not round to .000. Significance threshold for all analyses: &alpha; = .05.
+        </div>
+
+        <h2 class="text-lg font-bold text-slate-700 mb-2">Dataset Variable Quick Reference</h2>
+        <table class="mb-8">
+            <thead><tr><th>Variable</th><th>Description</th><th>NOIR Level</th><th>Used In</th></tr></thead>
+            <tbody>
+                <tr><td>Patient_ID</td><td>Case identifier (1&ndash;50)</td><td>Nominal</td><td>ID only</td></tr>
+                <tr><td>Age</td><td>Age in years at treatment start</td><td>Ratio</td><td>Descriptive</td></tr>
+                <tr><td>Sex</td><td>Male / Female</td><td>Nominal</td><td>Descriptive</td></tr>
+                <tr><td>Treatment_Site</td><td>Breast / Prostate / HN</td><td>Nominal</td><td>ANOVA (IV)</td></tr>
+                <tr><td>Anxiety_Pre</td><td>STAI-State score at simulation (20&ndash;80)</td><td>Interval</td><td>Descriptive, Paired t</td></tr>
+                <tr><td>Anxiety_Post</td><td>STAI-State score end of treatment</td><td>Interval</td><td>Descriptive, Paired t</td></tr>
+                <tr><td>Setup_Error_mm</td><td>Mean CBCT setup error in mm</td><td>Ratio</td><td>Descriptive, ANOVA, Pearson r</td></tr>
+                <tr><td>Fractions_Completed</td><td>Total fractions delivered</td><td>Ratio</td><td>Descriptive</td></tr>
+                <tr><td>Therapist_Experience_Yrs</td><td>Primary therapist years of experience</td><td>Ratio</td><td>Pearson r (IV)</td></tr>
+                <tr><td>Education_Received</td><td>Pre-treatment education session: Yes/No</td><td>Nominal</td><td>Chi-Square (IV)</td></tr>
+                <tr><td>Satisfaction_Score</td><td>Post-treatment satisfaction 1&ndash;5 (recode to High &ge;4 / Low &le;3 <em>before uploading</em>)</td><td>Ordinal</td><td>Chi-Square (DV)</td></tr>
+            </tbody>
+        </table>
+
+        <!-- ANALYSIS 1 -->
+        <h2 class="text-xl font-bold text-indigo-700 mt-10 mb-2">Analysis 1 &mdash; Descriptive Statistics</h2>
+        <p class="text-sm text-slate-600 mb-2">Statistics Studio: <span class="step-path">2. Descriptive</span> for numeric variables, <span class="step-path">3. Frequencies</span> for categorical variables.</p>
+        <table class="mb-3">
+            <thead><tr><th>Variable</th><th>N</th><th>Mean (M)</th><th>SD</th><th>Min</th><th>Max</th></tr></thead>
+            <tbody id="descTable"></tbody>
+        </table>
+        <table class="mb-4">
+            <thead><tr><th>Categorical Variable</th><th>Category</th><th>n</th><th>%</th></tr></thead>
+            <tbody id="freqTable"></tbody>
+        </table>
+        <label class="block text-sm font-medium mb-1">1A. Looking at the means, what do you notice about Anxiety_Pre vs. Anxiety_Post at first glance?</label>
+        <textarea class="apa-box mb-4"></textarea>
+        <label class="block text-sm font-medium mb-1">1B. Write one APA-style sentence describing the sample (N, mean age, SD, site breakdown):</label>
+        <textarea class="apa-box mb-8" placeholder='Example: "The sample included N = ___ patients (M age = ___, SD = ___) receiving radiation therapy for breast (n = ___), prostate (n = ___), and head and neck (n = ___) cancers."'></textarea>
+
+        <!-- ANALYSIS 2 -->
+        <h2 class="text-xl font-bold text-indigo-700 mb-1"><span class="h-badge">H1</span>Analysis 2 &mdash; Paired-Samples t-Test</h2>
+        <p class="text-sm text-slate-600 mb-2">Statistics Studio: <span class="step-path">4. Group Tests &rarr; Paired-samples t test</span> &middot; Anxiety_Pre / Anxiety_Post</p>
+        <table class="mb-4">
+            <tbody>
+                <tr><td>Mean difference (Pre &minus; Post)</td><td><input class="rec-input"></td></tr>
+                <tr><td>SD of differences</td><td><input class="rec-input"></td></tr>
+                <tr><td>t statistic</td><td><input class="rec-input"></td></tr>
+                <tr><td>df</td><td><input class="rec-input"></td></tr>
+                <tr><td>p-value</td><td><input class="rec-input"></td></tr>
+                <tr><td>95% CI (lower, upper)</td><td><input class="rec-input"></td></tr>
+            </tbody>
+        </table>
+        <label class="block text-sm font-medium mb-1">2A. Does the 95% CI cross zero? What would that mean if it did?</label>
+        <textarea class="apa-box mb-4"></textarea>
+        <label class="block text-sm font-medium mb-1">2B. APA-style results statement:</label>
+        <textarea class="apa-box mb-4" placeholder='"A paired-samples t-test revealed a statistically significant [increase/decrease] in anxiety from pre-treatment (M = ___, SD = ___) to post-treatment (M = ___, SD = ___), t(___) = ___, p [=/<] ___. The 95% CI for the mean difference was [___, ___]."'></textarea>
+        <label class="block text-sm font-medium mb-1">2C. One clinical implication of this result:</label>
+        <textarea class="apa-box mb-2"></textarea>
+        <div class="mb-8 text-sm"><label class="mr-4"><input type="radio" name="h1decision"> Reject H&#8320;</label><label><input type="radio" name="h1decision"> Fail to reject H&#8320;</label></div>
+
+        <!-- ANALYSIS 3 -->
+        <h2 class="text-xl font-bold text-indigo-700 mb-1"><span class="h-badge">H2</span>Analysis 3 &mdash; One-Way ANOVA</h2>
+        <p class="text-sm text-slate-600 mb-2">Statistics Studio: <span class="step-path">4. Group Tests &rarr; One-way ANOVA</span> &middot; DV: Setup_Error_mm &middot; Group: Treatment_Site</p>
+        <p class="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded p-2 mb-3">Note: Statistics Studio reports Bonferroni-corrected pairwise comparisons instead of Tukey HSD &mdash; use the "p (Bonferroni)" column below.</p>
+        <table class="mb-3">
+            <thead><tr><th>Source</th><th>SS</th><th>df</th><th>MS</th><th>F</th><th>p</th></tr></thead>
+            <tbody>
+                <tr><td>Between Groups</td><td><input class="rec-input"></td><td><input class="rec-input"></td><td><input class="rec-input"></td><td><input class="rec-input"></td><td><input class="rec-input"></td></tr>
+                <tr><td>Within Groups</td><td><input class="rec-input"></td><td><input class="rec-input"></td><td><input class="rec-input"></td><td>&mdash;</td><td>&mdash;</td></tr>
+            </tbody>
+        </table>
+        <table class="mb-3">
+            <thead><tr><th>Treatment Site</th><th>n</th><th>Mean Setup Error (mm)</th><th>SD</th></tr></thead>
+            <tbody>
+                <tr><td>Breast</td><td><input class="rec-input"></td><td><input class="rec-input"></td><td><input class="rec-input"></td></tr>
+                <tr><td>Prostate</td><td><input class="rec-input"></td><td><input class="rec-input"></td><td><input class="rec-input"></td></tr>
+                <tr><td>HN</td><td><input class="rec-input"></td><td><input class="rec-input"></td><td><input class="rec-input"></td></tr>
+            </tbody>
+        </table>
+        <table class="mb-4">
+            <thead><tr><th>Comparison</th><th>Mean Diff.</th><th>p (Bonferroni)</th><th>Significant? (Y/N)</th></tr></thead>
+            <tbody>
+                <tr><td>Breast vs. Prostate</td><td><input class="rec-input"></td><td><input class="rec-input"></td><td><input class="rec-input"></td></tr>
+                <tr><td>Breast vs. HN</td><td><input class="rec-input"></td><td><input class="rec-input"></td><td><input class="rec-input"></td></tr>
+                <tr><td>Prostate vs. HN</td><td><input class="rec-input"></td><td><input class="rec-input"></td><td><input class="rec-input"></td></tr>
+            </tbody>
+        </table>
+        <label class="block text-sm font-medium mb-1">3A. Which site has the highest mean setup error? Which two sites are NOT significantly different?</label>
+        <textarea class="apa-box mb-4"></textarea>
+        <label class="block text-sm font-medium mb-1">3B. APA-style results statement:</label>
+        <textarea class="apa-box mb-4" placeholder='"A one-way ANOVA revealed a statistically significant difference in mean setup error across treatment sites, F(___, ___) = ___, p [=/<] ___. Bonferroni-corrected pairwise comparisons indicated that [site A] (M = ___, SD = ___) had significantly higher setup error than [site B] (M = ___, SD = ___), p = ___, but [site C] and [site D] did not differ significantly (p = ___)."'></textarea>
+        <label class="block text-sm font-medium mb-1">3C. Propose one clinical reason for the difference you found:</label>
+        <textarea class="apa-box mb-2"></textarea>
+        <div class="mb-8 text-sm"><label class="mr-4"><input type="radio" name="h2decision"> Reject H&#8320;</label><label><input type="radio" name="h2decision"> Fail to reject H&#8320;</label></div>
+
+        <!-- ANALYSIS 4 -->
+        <h2 class="text-xl font-bold text-indigo-700 mb-1"><span class="h-badge">H3</span>Analysis 4 &mdash; Chi-Square Test of Independence</h2>
+        <p class="text-sm text-slate-600 mb-2">Prep (in a spreadsheet, before upload): recode Satisfaction_Score into <code>Sat_HighLow</code> (4&ndash;5 = High, 1&ndash;3 = Low). Statistics Studio: <span class="step-path">6. Categorical</span> &middot; Row: Education_Received &middot; Column: Sat_HighLow</p>
+        <table class="mb-3">
+            <thead><tr><th>Education_Received</th><th>Sat &mdash; LOW (Obs/Exp)</th><th>Sat &mdash; HIGH (Obs/Exp)</th><th>Row Total</th></tr></thead>
+            <tbody>
+                <tr><td>No</td><td><input class="rec-input"></td><td><input class="rec-input"></td><td><input class="rec-input"></td></tr>
+                <tr><td>Yes</td><td><input class="rec-input"></td><td><input class="rec-input"></td><td><input class="rec-input"></td></tr>
+            </tbody>
+        </table>
+        <table class="mb-4">
+            <thead><tr><th>Statistic</th><th>Value</th><th>df</th><th>p</th></tr></thead>
+            <tbody><tr><td>Pearson Chi-Square</td><td><input class="rec-input"></td><td><input class="rec-input"></td><td><input class="rec-input"></td></tr></tbody>
+        </table>
+        <p class="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded p-2 mb-4">⚠️ Check: are all expected cell counts &ge; 5? If not, note this as a limitation.</p>
+        <label class="block text-sm font-medium mb-1">4A. Among patients who received education, what % reported High satisfaction? Among those who did not?</label>
+        <textarea class="apa-box mb-4"></textarea>
+        <label class="block text-sm font-medium mb-1">4B. APA-style results statement:</label>
+        <textarea class="apa-box mb-4" placeholder='"A chi-square test of independence revealed a statistically significant [/non-significant] association between pre-treatment education and patient satisfaction, χ²(___, N = ___) = ___, p [=/<] ___. Among patients who received education, ___% reported high satisfaction, compared to ___% of those who did not."'></textarea>
+        <label class="block text-sm font-medium mb-1">4C. Could this association be causal? What study design would be needed to claim causation?</label>
+        <textarea class="apa-box mb-2"></textarea>
+        <div class="mb-8 text-sm"><label class="mr-4"><input type="radio" name="h3decision"> Reject H&#8320;</label><label><input type="radio" name="h3decision"> Fail to reject H&#8320;</label></div>
+
+        <!-- ANALYSIS 5 -->
+        <h2 class="text-xl font-bold text-indigo-700 mb-1"><span class="h-badge">H4</span>Analysis 5 &mdash; Pearson Correlation</h2>
+        <p class="text-sm text-slate-600 mb-2">Statistics Studio: <span class="step-path">5. Relationships &rarr; Pearson correlation</span> &middot; X: Therapist_Experience_Yrs &middot; Y: Setup_Error_mm</p>
+        <table class="mb-4">
+            <tbody>
+                <tr><td>Pearson r</td><td><input class="rec-input"></td></tr>
+                <tr><td>p-value</td><td><input class="rec-input"></td></tr>
+                <tr><td>N</td><td><input class="rec-input"></td></tr>
+                <tr><td>Direction</td><td><input class="rec-input"></td></tr>
+                <tr><td>Strength (Cohen, 1988)</td><td><input class="rec-input"></td></tr>
+            </tbody>
+        </table>
+        <label class="block text-sm font-medium mb-1">5A. What's the direction of the correlation, and what does it mean in plain clinical language?</label>
+        <textarea class="apa-box mb-4"></textarea>
+        <label class="block text-sm font-medium mb-1">5B. APA-style results statement:</label>
+        <textarea class="apa-box mb-4" placeholder='"A Pearson correlation indicated a statistically significant [positive/negative] relationship between therapist years of experience and mean patient setup error, r(___) = ___, p [=/<] ___. This suggests that [clinical interpretation]."'></textarea>
+        <label class="block text-sm font-medium mb-1">5C. Pearson r measures correlation, not causation. List two confounding variables that might explain this relationship:</label>
+        <textarea class="apa-box mb-2"></textarea>
+        <div class="mb-8 text-sm"><label class="mr-4"><input type="radio" name="h4decision"> Reject H&#8320;</label><label><input type="radio" name="h4decision"> Fail to reject H&#8320;</label></div>
+
+        <!-- SYNTHESIS -->
+        <h2 class="text-xl font-bold text-indigo-700 mt-10 mb-2">Section 6 &mdash; Synthesis &amp; Reflection</h2>
+        <table class="mb-4">
+            <thead><tr><th>Hypothesis</th><th>Test</th><th>Key Statistic</th><th>p</th><th>Decision</th></tr></thead>
+            <tbody>
+                <tr><td>H1 &mdash; Anxiety pre vs. post</td><td>Paired t-test</td><td><input class="rec-input"></td><td><input class="rec-input"></td><td><input class="rec-input"></td></tr>
+                <tr><td>H2 &mdash; Setup error by site</td><td>One-way ANOVA</td><td><input class="rec-input"></td><td><input class="rec-input"></td><td><input class="rec-input"></td></tr>
+                <tr><td>H3 &mdash; Education &amp; satisfaction</td><td>Chi-Square</td><td><input class="rec-input"></td><td><input class="rec-input"></td><td><input class="rec-input"></td></tr>
+                <tr><td>H4 &mdash; Experience &amp; setup error</td><td>Pearson r</td><td><input class="rec-input"></td><td><input class="rec-input"></td><td><input class="rec-input"></td></tr>
+            </tbody>
+        </table>
+        <label class="block text-sm font-medium mb-1">6A. Which finding would be most actionable for a department to address immediately, and why?</label>
+        <textarea class="apa-box mb-4"></textarea>
+        <label class="block text-sm font-medium mb-1">6B. Summarize all four results in three sentences or fewer for a non-statistical audience:</label>
+        <textarea class="apa-box mb-4"></textarea>
+        <label class="block text-sm font-medium mb-1">6C. Applying this to your own work: which of these five analysis types is most likely to apply to a research question you'd want to investigate yourself? Identify your IV and DV.</label>
+        <textarea class="apa-box mb-8"></textarea>
+
+        <h2 class="text-lg font-bold text-slate-700 mb-2">Appendix &mdash; Statistics Studio Screenshots</h2>
+        <p class="text-sm text-slate-500 mb-4">Paste a screenshot of the relevant results card for each analysis below before submitting.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <div class="border-2 border-dashed border-slate-300 rounded-lg p-6 text-center text-slate-400 text-sm">Analysis 1 &mdash; Descriptive Statistics</div>
+            <div class="border-2 border-dashed border-slate-300 rounded-lg p-6 text-center text-slate-400 text-sm">Analysis 2 &mdash; Paired t-Test</div>
+            <div class="border-2 border-dashed border-slate-300 rounded-lg p-6 text-center text-slate-400 text-sm">Analysis 3 &mdash; One-Way ANOVA</div>
+            <div class="border-2 border-dashed border-slate-300 rounded-lg p-6 text-center text-slate-400 text-sm">Analysis 4 &mdash; Chi-Square</div>
+            <div class="border-2 border-dashed border-slate-300 rounded-lg p-6 text-center text-slate-400 text-sm">Analysis 5 &mdash; Pearson Correlation</div>
+        </div>
+        <p class="text-xs text-slate-400 border-t pt-4">Save your completed worksheet and submit per your course's instructions. All five screenshot sections should be populated before submission.</p>
+    </div>
+</main>
+
+<footer class="bg-slate-800 text-slate-300 py-6 mt-8 text-center">
+    <p class="text-sm">&copy; <span id="currentYear"></span> Radiation Therapy E-Workbook. All Rights Reserved.</p>
+</footer>
+<script>
+document.getElementById('currentYear').textContent = new Date().getFullYear();
+const descVars = ["Age","Anxiety_Pre","Anxiety_Post","Setup_Error_mm","Fractions_Completed"];
+document.getElementById('descTable').innerHTML = descVars.map(v =>
+    `<tr><td>${v}</td><td>50</td><td><input class="rec-input"></td><td><input class="rec-input"></td><td><input class="rec-input"></td><td><input class="rec-input"></td></tr>`
+).join('');
+const freqRows = [["Treatment_Site","Breast"],["Treatment_Site","Prostate"],["Treatment_Site","HN"],["Sex","Male"],["Sex","Female"]];
+document.getElementById('freqTable').innerHTML = freqRows.map(([v,c]) =>
+    `<tr><td>${v}</td><td>${c}</td><td><input class="rec-input"></td><td><input class="rec-input"></td></tr>`
+).join('');
+</script>
+</body>
+</html>
