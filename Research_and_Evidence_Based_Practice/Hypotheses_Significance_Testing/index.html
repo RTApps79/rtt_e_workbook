@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hypothesis Testing and Statistical Foundations</title>
+<style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; margin: 20px;
+            background-color: #f4f4f4; color: #333; display: flex; flex-direction: column; align-items: center; }
+        .container { background-color: #fff; padding: 25px 35px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 90%; max-width: 900px; margin-bottom: 30px; }
+        h1, h2, h3, h4 { color: #0056b3; }
+        h1 { text-align: center; border-bottom: 2px solid #0056b3; padding-bottom: 15px; margin-bottom: 30px; font-size: 2em; }
+        h2 { border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 30px; margin-bottom: 20px; color: #003d7a; font-size: 1.6em; }
+        h3 { color: #004085; margin-top: 25px; margin-bottom: 15px; font-size: 1.3em; }
+        h4 { color: #17a2b8; margin-top: 20px; margin-bottom: 10px; font-size: 1.1em; font-weight: 600; }
+        p, li { margin-bottom: 12px; font-size: 1.05em; }
+        ul, ol { margin-bottom: 15px; padding-left: 25px; }
+        strong { font-weight: 600; }
+        .highlight { background-color: #e6f7ff; padding: 2px 5px; border-radius: 3px; font-weight: 600; }
+        code { background-color: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; color: #c7254e; }
+        table.data-table { width: 90%; margin: 15px auto; border-collapse: collapse; }
+        table.data-table th, table.data-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        table.data-table th { background-color: #e9f5ff; color: #0056b3; font-weight: 600; }
+        table.data-table tr:nth-child(even) { background-color: #f9f9f9; }
+        .flip-lesson-container { border: 1px solid #b3d7ff; padding: 20px; border-radius: 8px; background-color: #f0f8ff; margin-bottom: 30px; }
+        .lesson-page { display: none; padding: 15px; border: 1px solid #ddeeff; background-color: #fff; border-radius: 5px; min-height: 400px; }
+        .lesson-page.active { display: block; }
+        .lesson-navigation { text-align: center; margin-top: 20px; }
+        .lesson-navigation button, .lesson-page .check-page-answers {
+            background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px;
+            cursor: pointer; font-size: 1em; margin: 5px 10px; transition: background-color 0.2s; }
+        .lesson-navigation button:hover, .lesson-page .check-page-answers:hover { background-color: #0056b3; }
+        .lesson-navigation button:disabled { background-color: #ccc; cursor: not-allowed; }
+        .page-indicator { font-style: italic; color: #555; margin: 10px 0; }
+        .key-principle { background-color: #e7f3ff; padding: 10px; margin-bottom:10px; border-left: 3px solid #007bff; border-radius: 3px; }
+        .interactive-question-block { background: #f9f9f9; padding: 15px; margin: 20px 0; border: 1px solid #e0e0e0; border-radius: 8px; }
+        .interactive-question-block .question-text { font-weight: bold; margin-bottom: 8px; font-size: 1em; color: #555; }
+        .interactive-question-block label { display: block; margin-left: 0; padding: 8px 12px; border-radius: 5px; cursor: pointer; border: 1px solid transparent; margin-bottom: 5px; }
+        .interactive-question-block input[type="radio"] { margin-right: 10px; vertical-align: middle; }
+        .interactive-question-block label:hover { background-color: #f0f8ff; }
+        .feedback-correct { background-color: #e8f8f0 !important; border-left: 4px solid #2ecc71 !important; }
+        .feedback-incorrect { background-color: #fdedec !important; border-left: 4px solid #e74c3c !important; }
+        .feedback-correct label.correct-option, .feedback-incorrect label.correct-option { font-weight: bold; color: #1E8449; }
+        .feedback-incorrect label.selected-incorrect { color: #A93226; }
+        .explanation { font-size: 0.9em; color: #444; margin-top: 5px; padding-left: 20px; }
+        .footer { text-align: center; margin-top: 30px; padding-top: 15px; border-top: 1px solid #ccc; font-size: 0.9em; color: #555; }
+
+        .nav-links-header { background-color: #fff; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 50; }
+</style>
+</head>
+<body>
+    <header class="nav-links-header">
+        <div style="max-width:900px;margin:0 auto;padding:12px 20px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;">
+            <strong style="color:#0056b3;">Hypotheses &amp; Significance Testing</strong>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                <a href="../index.html" style="font-size:0.8rem;background:#0056b3;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Back to Tool Menu</a>
+                <a href="../../index.html" style="font-size:0.8rem;background:#0056b3;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Modalities Menu</a>
+                <a href="../../index.html" style="font-size:0.8rem;background:#64748b;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Main Workbook</a>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <h1>Hypotheses &amp; Significance Testing</h1>
+        <div class="flip-lesson-container">
+            <h2>Interactive Lesson</h2>
+            <div id="lesson-page-1" class="lesson-page active">
+                <h3>Page 1: The Foundation of the Scientific Method</h3>
+                <p>Hypothesis testing is the formal process by which new scientific information gets added to what's already known, and previously held beliefs get rigorously tested for validity. If your hypothesis holds up, new knowledge is gained. If it doesn't, that's not failure &mdash; it's exactly how the process is supposed to work.</p>
+            </div>
+            <div id="lesson-page-2" class="lesson-page">
+                <h3>Page 2: The Steps of Hypothesis Testing</h3>
+                <ol>
+                    <li>Gather background information (literature review)</li>
+                    <li>Formulate the null hypothesis (H&#8320;)</li>
+                    <li>Design the study</li>
+                    <li>Decide on the significance level (&alpha;)</li>
+                    <li>Collect the data</li>
+                    <li>Calculate the sample statistic (p)</li>
+                    <li>Reject or fail to reject the null hypothesis, by comparing p to &alpha;</li>
+                    <li>Use the result to inform the next question</li>
+                </ol>
+            </div>
+            <div id="lesson-page-3" class="lesson-page">
+                <h3>Page 3: Null and Alternative Hypotheses</h3>
+                <p>A hypothesis is a declarative statement about how the study relates a cause (independent variable) to an effect (dependent variable).</p>
+                <div class="key-principle">
+                    <p><strong>Null Hypothesis (H&#8320;):</strong> assumes NO relationship or difference. This is the hypothesis formal statistical testing is actually built around &mdash; you're trying to find enough evidence to reject it.</p>
+                    <p><strong>Alternative Hypothesis (H<sub>a</sub> or H&#8321;):</strong> assumes a difference or association DOES exist. This is what the researcher expects or hopes to find.</p>
+                </div>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">Which hypothesis does a statistical test directly evaluate evidence against?</p>
+                    <label><input type="radio" name="lq_page3_1" value="A"> The null hypothesis</label>
+                    <label><input type="radio" name="lq_page3_1" value="B"> The alternative hypothesis</label>
+                    <div class="explanation" style="display:none;">A. Formal tests are built to attempt to reject the null hypothesis; you never directly "prove" the alternative.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(3)">Check Answer</button>
+            </div>
+            <div id="lesson-page-4" class="lesson-page">
+                <h3>Page 4: The Central Limit Theorem</h3>
+                <p>How do we mathematically show a difference exists? Most statistical tests rest on the <span class="highlight">Central Limit Theorem (CLT)</span>: if you take equally sized samples from a population, the distribution of those sample means will form a normal (bell-shaped) curve &mdash; even if the original population wasn't normally distributed &mdash; as long as the sample size is "large enough" (a common rule of thumb is n &ge; 30).</p>
+                <p>This is why so many statistical tests assume normality of the sampling distribution rather than the raw data itself.</p>
+            </div>
+            <div id="lesson-page-5" class="lesson-page">
+                <h3>Page 5: p-Values and Confidence Intervals</h3>
+                <div class="key-principle">
+                    <p><strong>p-value:</strong> the probability of getting your study's result by chance if the null hypothesis were actually true. If p &le; .05, the result is statistically significant (reject H&#8320;). If p &gt; .05, it's not (fail to reject H&#8320;).</p>
+                    <p><strong>Caution:</strong> a p-value only signals significance &mdash; it says nothing about the size or clinical importance of the effect.</p>
+                    <p><strong>Confidence Intervals (CI):</strong> give the actual range of plausible values for the effect, which is genuinely more clinically useful than a p-value alone. Non-overlapping 95% CIs between groups generally indicate a significant difference; heavy overlap generally does not.</p>
+                </div>
+            </div>
+            <div id="lesson-page-6" class="lesson-page">
+                <h3>Page 6: Type I and Type II Errors</h3>
+                <p>Because statistics work on probability, not certainty, two specific kinds of errors are possible:</p>
+                <ul>
+                    <li><strong>Type I Error (&alpha;)</strong> &mdash; a false positive. You reject a true null hypothesis: you claim your intervention worked when it actually didn't. Example: adopting an expensive new immobilization device because the data falsely suggested it improved accuracy.</li>
+                    <li><strong>Type II Error (&beta;)</strong> &mdash; a false negative. You fail to reject a false null hypothesis: a real difference exists, but your study didn't detect it &mdash; often because the sample size was too small. Example: abandoning an actually-effective skin-sparing protocol because the study "failed" to prove it worked.</li>
+                </ul>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">A study is underpowered due to a small sample and misses a real effect that was actually there. This is:</p>
+                    <label><input type="radio" name="lq_page6_1" value="A"> A Type I error</label>
+                    <label><input type="radio" name="lq_page6_1" value="B"> A Type II error</label>
+                    <div class="explanation" style="display:none;">B. Failing to detect a real effect &mdash; often due to insufficient sample size &mdash; is the classic signature of a Type II error.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(6)">Check Answer</button>
+            </div>
+            <div id="lesson-page-7" class="lesson-page">
+                <h3>Page 7: Statistical Power</h3>
+                <p>To avoid a Type II error, a study needs strong <span class="highlight">statistical power (1 &minus; &beta;)</span> &mdash; the probability of correctly rejecting the null hypothesis when it actually is false. Determining power requires four pieces: alpha (usually .05), the desired power (usually .80), the expected effect size, and the sample size.</p>
+                <p>In practice: bigger expected effects and larger samples both increase power, which is why sample-size planning matters before you ever collect data, not after.</p>
+            </div>
+            <div id="lesson-page-8" class="lesson-page">
+                <h3>Page 8: Choosing the Right Statistical Test</h3>
+                <p>Your variable's level of measurement (NOIR) determines which test is valid:</p>
+                <table class="data-table">
+                    <thead><tr><th>Test</th><th>When to use it</th></tr></thead>
+                    <tbody>
+                        <tr><td>Independent t-test</td><td>Comparing means of exactly two independent groups, continuous data</td></tr>
+                        <tr><td>Paired t-test</td><td>Comparing two measurements from the same subjects</td></tr>
+                        <tr><td>One-way ANOVA</td><td>Comparing means of three or more groups, continuous data</td></tr>
+                        <tr><td>Chi-square</td><td>Relationship between two categorical (nominal) variables</td></tr>
+                        <tr><td>Pearson correlation</td><td>Whether two continuous variables move together, no distinct groups</td></tr>
+                    </tbody>
+                </table>
+                <p>This is exactly the decision tree the Data Analysis Using Statistics Studio lesson puts into practice on a real dataset.</p>
+            </div>
+            <div id="lesson-page-9" class="lesson-page">
+                <h3>Page 9: Wrap-Up</h3>
+                <p>You've covered the steps of hypothesis testing, null vs. alternative hypotheses, the Central Limit Theorem, p-values and confidence intervals, Type I/II errors, statistical power, and matching a test to your data.</p>
+                <p>You now have everything needed to actually run these tests &mdash; that's the Data Analysis Using Statistics Studio lesson.</p>
+            </div>
+
+            <div class="lesson-navigation">
+                <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled>Previous Page</button>
+                <span class="page-indicator" id="lessonPageIndicator">Page 1 of 9</span>
+                <button id="nextLessonPage" onclick="changeLessonPage(1)">Next Page</button>
+                <button id="startActivityButton" onclick="window.location.href='../index.html'" style="display:none; background-color: #28a745;">Back to Menu</button>
+            </div>
+        </div>
+        <div class="footer">Radiation Therapy E-Workbook &mdash; Research and Evidence-Based Practice</div>
+    </div>
+    <script>
+        let currentLessonPage = 1;
+        const totalLessonPages = 9;
+        const lessonPages = document.querySelectorAll('.lesson-page');
+        const prevLessonButton = document.getElementById('prevLessonPage');
+        const nextLessonButton = document.getElementById('nextLessonPage');
+        const lessonPageIndicator = document.getElementById('lessonPageIndicator');
+        const startActivityButton = document.getElementById('startActivityButton');
+        const lessonCorrectAnswers = {"lq_page3_1": "A", "lq_page6_1": "B"};
+        function displayLessonPage() {
+            lessonPages.forEach((page, index) => page.classList.toggle('active', index === currentLessonPage - 1));
+            prevLessonButton.disabled = currentLessonPage === 1;
+            nextLessonButton.style.display = currentLessonPage === totalLessonPages ? 'none' : 'inline-block';
+            startActivityButton.style.display = currentLessonPage === totalLessonPages ? 'inline-block' : 'none';
+            lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
+        }
+        function changeLessonPage(direction) {
+            currentLessonPage += direction;
+            if (currentLessonPage < 1) currentLessonPage = 1;
+            if (currentLessonPage > totalLessonPages) currentLessonPage = totalLessonPages;
+            displayLessonPage();
+        }
+        function checkPageAnswers(pageNumber) {
+            const questionsOnPage = document.querySelectorAll(`#lesson-page-${pageNumber} .interactive-question-block`);
+            questionsOnPage.forEach(block => {
+                const radio = block.querySelector('input[type="radio"]');
+                if (!radio) return;
+                const questionName = radio.name;
+                if (!lessonCorrectAnswers.hasOwnProperty(questionName)) return;
+                const correctAnswerValue = lessonCorrectAnswers[questionName];
+                const selectedRadio = block.querySelector(`input[name="${questionName}"]:checked`);
+                const explanationDiv = block.querySelector('.explanation');
+                block.classList.remove('feedback-correct', 'feedback-incorrect');
+                block.querySelectorAll('label').forEach(label => label.classList.remove('correct-option', 'selected-incorrect'));
+                if (explanationDiv) explanationDiv.style.display = 'none';
+                if (selectedRadio) {
+                    const userAnswer = selectedRadio.value;
+                    const userSelectedLabel = selectedRadio.parentElement;
+                    if (userAnswer === correctAnswerValue) {
+                        block.classList.add('feedback-correct');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('correct-option');
+                    } else {
+                        block.classList.add('feedback-incorrect');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('selected-incorrect');
+                        const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                        if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                    }
+                } else {
+                    block.classList.add('feedback-incorrect');
+                    const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                    if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                }
+                if (explanationDiv) explanationDiv.style.display = 'block';
+            });
+        }
+        displayLessonPage();
+    </script>
+</body>
+</html>
