@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Building a Research Project</title>
+<style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; margin: 20px;
+            background-color: #f4f4f4; color: #333; display: flex; flex-direction: column; align-items: center; }
+        .container { background-color: #fff; padding: 25px 35px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 90%; max-width: 900px; margin-bottom: 30px; }
+        h1, h2, h3, h4 { color: #0056b3; }
+        h1 { text-align: center; border-bottom: 2px solid #0056b3; padding-bottom: 15px; margin-bottom: 30px; font-size: 2em; }
+        h2 { border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 30px; margin-bottom: 20px; color: #003d7a; font-size: 1.6em; }
+        h3 { color: #004085; margin-top: 25px; margin-bottom: 15px; font-size: 1.3em; }
+        h4 { color: #17a2b8; margin-top: 20px; margin-bottom: 10px; font-size: 1.1em; font-weight: 600; }
+        p, li { margin-bottom: 12px; font-size: 1.05em; }
+        ul, ol { margin-bottom: 15px; padding-left: 25px; }
+        strong { font-weight: 600; }
+        .highlight { background-color: #e6f7ff; padding: 2px 5px; border-radius: 3px; font-weight: 600; }
+        code { background-color: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; color: #c7254e; }
+        table.data-table { width: 90%; margin: 15px auto; border-collapse: collapse; }
+        table.data-table th, table.data-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        table.data-table th { background-color: #e9f5ff; color: #0056b3; font-weight: 600; }
+        table.data-table tr:nth-child(even) { background-color: #f9f9f9; }
+        .flip-lesson-container { border: 1px solid #b3d7ff; padding: 20px; border-radius: 8px; background-color: #f0f8ff; margin-bottom: 30px; }
+        .lesson-page { display: none; padding: 15px; border: 1px solid #ddeeff; background-color: #fff; border-radius: 5px; min-height: 400px; }
+        .lesson-page.active { display: block; }
+        .lesson-navigation { text-align: center; margin-top: 20px; }
+        .lesson-navigation button, .lesson-page .check-page-answers {
+            background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px;
+            cursor: pointer; font-size: 1em; margin: 5px 10px; transition: background-color 0.2s; }
+        .lesson-navigation button:hover, .lesson-page .check-page-answers:hover { background-color: #0056b3; }
+        .lesson-navigation button:disabled { background-color: #ccc; cursor: not-allowed; }
+        .page-indicator { font-style: italic; color: #555; margin: 10px 0; }
+        .key-principle { background-color: #e7f3ff; padding: 10px; margin-bottom:10px; border-left: 3px solid #007bff; border-radius: 3px; }
+        .interactive-question-block { background: #f9f9f9; padding: 15px; margin: 20px 0; border: 1px solid #e0e0e0; border-radius: 8px; }
+        .interactive-question-block .question-text { font-weight: bold; margin-bottom: 8px; font-size: 1em; color: #555; }
+        .interactive-question-block label { display: block; margin-left: 0; padding: 8px 12px; border-radius: 5px; cursor: pointer; border: 1px solid transparent; margin-bottom: 5px; }
+        .interactive-question-block input[type="radio"] { margin-right: 10px; vertical-align: middle; }
+        .interactive-question-block label:hover { background-color: #f0f8ff; }
+        .feedback-correct { background-color: #e8f8f0 !important; border-left: 4px solid #2ecc71 !important; }
+        .feedback-incorrect { background-color: #fdedec !important; border-left: 4px solid #e74c3c !important; }
+        .feedback-correct label.correct-option, .feedback-incorrect label.correct-option { font-weight: bold; color: #1E8449; }
+        .feedback-incorrect label.selected-incorrect { color: #A93226; }
+        .explanation { font-size: 0.9em; color: #444; margin-top: 5px; padding-left: 20px; }
+        .footer { text-align: center; margin-top: 30px; padding-top: 15px; border-top: 1px solid #ccc; font-size: 0.9em; color: #555; }
+
+        .nav-links-header { background-color: #fff; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 50; }
+</style>
+</head>
+<body>
+    <header class="nav-links-header">
+        <div style="max-width:900px;margin:0 auto;padding:12px 20px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;">
+            <strong style="color:#0056b3;">Building a Research Project</strong>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                <a href="../index.html" style="font-size:0.8rem;background:#0056b3;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Back to Tool Menu</a>
+                <a href="../../index.html" style="font-size:0.8rem;background:#0056b3;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Modalities Menu</a>
+                <a href="../../index.html" style="font-size:0.8rem;background:#64748b;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Main Workbook</a>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <h1>Building a Research Project</h1>
+        <div class="flip-lesson-container">
+            <h2>Interactive Lesson</h2>
+            <div id="lesson-page-1" class="lesson-page active">
+                <h3>Page 1: From Pieces to a Whole Project</h3>
+                <p>By now you've worked through forming a question, choosing a design, defining variables, planning your analysis, and understanding ethics approval. This lesson is about assembling those pieces into one coherent, well-written research project or proposal &mdash; the kind that could actually be submitted, reviewed, and acted on.</p>
+            </div>
+            <div id="lesson-page-2" class="lesson-page">
+                <h3>Page 2: Why the Methodology Matters</h3>
+                <p>A brilliant research question gets rejected if the methodology is flawed. The Methods section is the instruction manual for your research &mdash; it needs enough precision that another qualified professional could replicate your study without ever having to contact you for clarification.</p>
+            </div>
+            <div id="lesson-page-3" class="lesson-page">
+                <h3>Page 3: The Purpose Statement</h3>
+                <p>Every methodology section opens by grounding the reader: a direct, formal statement of what the study intends to accomplish, followed by the specific research question. Avoid flowery language.</p>
+                <div class="key-principle">
+                    <p><strong>Example:</strong> "The purpose of this quantitative, quasi-experimental study is to determine if the implementation of a standardized pre-treatment safety checklist reduces the frequency of reported setup errors in a radiation oncology department."</p>
+                </div>
+            </div>
+            <div id="lesson-page-4" class="lesson-page">
+                <h3>Page 4: Defining Your Participants</h3>
+                <p>You can't simply say "I am going to study patients." Define the boundaries of your population using explicit inclusion and exclusion criteria.</p>
+                <table class="data-table">
+                    <thead><tr><th></th><th>Clinical retrospective example</th><th>Educational example</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>Sample</strong></td><td>Convenience sample of 50 patient charts</td><td>Convenience sample of 30 undergraduate RT students</td></tr>
+                        <tr><td><strong>Inclusion</strong></td><td>Age 18+, intact prostate cancer, prescribed VMAT, treated in a defined date range</td><td>Currently enrolled; completed basic anatomy coursework</td></tr>
+                        <tr><td><strong>Exclusion</strong></td><td>Hip prostheses; concurrent pelvic node irradiation</td><td>Already completed clinical dosimetry rotations</td></tr>
+                    </tbody>
+                </table>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">Why does a methodology section need explicit inclusion/exclusion criteria rather than just "patients" or "students"?</p>
+                    <label><input type="radio" name="lq_page4_1" value="A"> It's a formatting requirement with no real analytical purpose</label>
+                    <label><input type="radio" name="lq_page4_1" value="B"> It defines exactly who the findings do and don't apply to, and lets someone else replicate the sample</label>
+                    <div class="explanation" style="display:none;">B. Precise criteria define the boundaries of your population and are essential for anyone trying to interpret or replicate your findings.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(4)">Check Answer</button>
+            </div>
+            <div id="lesson-page-5" class="lesson-page">
+                <h3>Page 5: Measures and Instruments</h3>
+                <p>State exactly what tools you're using to collect data &mdash; no detail is too small to specify.</p>
+                <ul>
+                    <li><strong>Clinical chart review:</strong> name the EMR system explicitly (e.g., ARIA, Mosaiq) and the exact data points extracted (e.g., "bladder volume in cc from the daily CBCT registration tab").</li>
+                    <li><strong>Educational survey:</strong> name the software (e.g., Qualtrics), the question types, and the validated instrument used if applicable (e.g., the STAI for anxiety).</li>
+                </ul>
+                <p>Vague instrumentation is one of the most common reasons a methodology section gets sent back for revision.</p>
+            </div>
+            <div id="lesson-page-6" class="lesson-page">
+                <h3>Page 6: Putting the Full Proposal Together</h3>
+                <p>A complete research proposal typically includes, in order:</p>
+                <ol>
+                    <li>Problem statement and PICO question</li>
+                    <li>Brief literature review establishing the gap</li>
+                    <li>Research design and rationale for choosing it</li>
+                    <li>Purpose statement</li>
+                    <li>Participants, with inclusion/exclusion criteria</li>
+                    <li>Measures and instruments</li>
+                    <li>Analysis plan, tied to your variables' NOIR levels</li>
+                    <li>Ethics considerations and anticipated IRB pathway</li>
+                </ol>
+                <p>Notice this is just the earlier lessons in this section, assembled in the order a reader needs to encounter them &mdash; nothing new to invent here, just organizing what you've already built.</p>
+            </div>
+            <div id="lesson-page-7" class="lesson-page">
+                <h3>Page 7: Presenting Your Work</h3>
+                <p>Whether you're presenting to a department quality-improvement meeting, a poster session, or a formal committee, the same discipline applies: lead with the problem and why it matters, state your question and design plainly, show your key result, and be direct about limitations. A three-sentence plain-language summary for a non-statistical audience is often harder to write than the full technical write-up &mdash; and usually more useful.</p>
+            </div>
+            <div id="lesson-page-8" class="lesson-page">
+                <h3>Page 8: Wrap-Up</h3>
+                <p>You've covered writing a purpose statement, defining participants with inclusion/exclusion criteria, specifying measures and instruments, assembling a full proposal structure, and presenting findings to different audiences.</p>
+                <p>That completes the research process from first observation to a finished, presentable project &mdash; you can revisit any lesson in this section independently whenever a specific step is what you need.</p>
+            </div>
+
+            <div class="lesson-navigation">
+                <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled>Previous Page</button>
+                <span class="page-indicator" id="lessonPageIndicator">Page 1 of 8</span>
+                <button id="nextLessonPage" onclick="changeLessonPage(1)">Next Page</button>
+                <button id="startActivityButton" onclick="window.location.href='../index.html'" style="display:none; background-color: #28a745;">Back to Menu</button>
+            </div>
+        </div>
+        <div class="footer">Radiation Therapy E-Workbook &mdash; Research and Evidence-Based Practice</div>
+    </div>
+    <script>
+        let currentLessonPage = 1;
+        const totalLessonPages = 8;
+        const lessonPages = document.querySelectorAll('.lesson-page');
+        const prevLessonButton = document.getElementById('prevLessonPage');
+        const nextLessonButton = document.getElementById('nextLessonPage');
+        const lessonPageIndicator = document.getElementById('lessonPageIndicator');
+        const startActivityButton = document.getElementById('startActivityButton');
+        const lessonCorrectAnswers = {"lq_page4_1": "B"};
+        function displayLessonPage() {
+            lessonPages.forEach((page, index) => page.classList.toggle('active', index === currentLessonPage - 1));
+            prevLessonButton.disabled = currentLessonPage === 1;
+            nextLessonButton.style.display = currentLessonPage === totalLessonPages ? 'none' : 'inline-block';
+            startActivityButton.style.display = currentLessonPage === totalLessonPages ? 'inline-block' : 'none';
+            lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
+        }
+        function changeLessonPage(direction) {
+            currentLessonPage += direction;
+            if (currentLessonPage < 1) currentLessonPage = 1;
+            if (currentLessonPage > totalLessonPages) currentLessonPage = totalLessonPages;
+            displayLessonPage();
+        }
+        function checkPageAnswers(pageNumber) {
+            const questionsOnPage = document.querySelectorAll(`#lesson-page-${pageNumber} .interactive-question-block`);
+            questionsOnPage.forEach(block => {
+                const radio = block.querySelector('input[type="radio"]');
+                if (!radio) return;
+                const questionName = radio.name;
+                if (!lessonCorrectAnswers.hasOwnProperty(questionName)) return;
+                const correctAnswerValue = lessonCorrectAnswers[questionName];
+                const selectedRadio = block.querySelector(`input[name="${questionName}"]:checked`);
+                const explanationDiv = block.querySelector('.explanation');
+                block.classList.remove('feedback-correct', 'feedback-incorrect');
+                block.querySelectorAll('label').forEach(label => label.classList.remove('correct-option', 'selected-incorrect'));
+                if (explanationDiv) explanationDiv.style.display = 'none';
+                if (selectedRadio) {
+                    const userAnswer = selectedRadio.value;
+                    const userSelectedLabel = selectedRadio.parentElement;
+                    if (userAnswer === correctAnswerValue) {
+                        block.classList.add('feedback-correct');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('correct-option');
+                    } else {
+                        block.classList.add('feedback-incorrect');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('selected-incorrect');
+                        const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                        if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                    }
+                } else {
+                    block.classList.add('feedback-incorrect');
+                    const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                    if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                }
+                if (explanationDiv) explanationDiv.style.display = 'block';
+            });
+        }
+        displayLessonPage();
+    </script>
+</body>
+</html>
