@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Personnel Monitoring and Dosimetry</title>
+<style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; margin: 20px;
+            background-color: #f4f4f4; color: #333; display: flex; flex-direction: column; align-items: center; }
+        .container { background-color: #fff; padding: 25px 35px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 90%; max-width: 900px; margin-bottom: 30px; }
+        h1, h2, h3, h4 { color: #0056b3; }
+        h1 { text-align: center; border-bottom: 2px solid #0056b3; padding-bottom: 15px; margin-bottom: 30px; font-size: 2em; }
+        h2 { border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 30px; margin-bottom: 20px; color: #003d7a; font-size: 1.6em; }
+        h3 { color: #004085; margin-top: 25px; margin-bottom: 15px; font-size: 1.3em; }
+        h4 { color: #17a2b8; margin-top: 20px; margin-bottom: 10px; font-size: 1.1em; font-weight: 600; }
+        p, li { margin-bottom: 12px; font-size: 1.05em; }
+        ul, ol { margin-bottom: 15px; padding-left: 25px; }
+        strong { font-weight: 600; }
+        .highlight { background-color: #e6f7ff; padding: 2px 5px; border-radius: 3px; font-weight: 600; }
+        code { background-color: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; color: #c7254e; }
+        table.data-table { width: 90%; margin: 15px auto; border-collapse: collapse; }
+        table.data-table th, table.data-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        table.data-table th { background-color: #e9f5ff; color: #0056b3; font-weight: 600; }
+        table.data-table tr:nth-child(even) { background-color: #f9f9f9; }
+        .flip-lesson-container { border: 1px solid #b3d7ff; padding: 20px; border-radius: 8px; background-color: #f0f8ff; margin-bottom: 30px; }
+        .lesson-page { display: none; padding: 15px; border: 1px solid #ddeeff; background-color: #fff; border-radius: 5px; min-height: 400px; }
+        .lesson-page.active { display: block; }
+        .lesson-navigation { text-align: center; margin-top: 20px; }
+        .lesson-navigation button, .lesson-page .check-page-answers {
+            background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px;
+            cursor: pointer; font-size: 1em; margin: 5px 10px; transition: background-color 0.2s; }
+        .lesson-navigation button:hover, .lesson-page .check-page-answers:hover { background-color: #0056b3; }
+        .lesson-navigation button:disabled { background-color: #ccc; cursor: not-allowed; }
+        .page-indicator { font-style: italic; color: #555; margin: 10px 0; }
+        .key-principle { background-color: #e7f3ff; padding: 10px; margin-bottom:10px; border-left: 3px solid #007bff; border-radius: 3px; }
+        .interactive-question-block { background: #f9f9f9; padding: 15px; margin: 20px 0; border: 1px solid #e0e0e0; border-radius: 8px; }
+        .interactive-question-block .question-text { font-weight: bold; margin-bottom: 8px; font-size: 1em; color: #555; }
+        .interactive-question-block label { display: block; margin-left: 0; padding: 8px 12px; border-radius: 5px; cursor: pointer; border: 1px solid transparent; margin-bottom: 5px; }
+        .interactive-question-block input[type="radio"] { margin-right: 10px; vertical-align: middle; }
+        .interactive-question-block label:hover { background-color: #f0f8ff; }
+        .feedback-correct { background-color: #e8f8f0 !important; border-left: 4px solid #2ecc71 !important; }
+        .feedback-incorrect { background-color: #fdedec !important; border-left: 4px solid #e74c3c !important; }
+        .feedback-correct label.correct-option, .feedback-incorrect label.correct-option { font-weight: bold; color: #1E8449; }
+        .feedback-incorrect label.selected-incorrect { color: #A93226; }
+        .explanation { font-size: 0.9em; color: #444; margin-top: 5px; padding-left: 20px; }
+        .footer { text-align: center; margin-top: 30px; padding-top: 15px; border-top: 1px solid #ccc; font-size: 0.9em; color: #555; }
+
+        .nav-links-header { background-color: #fff; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 50; }
+</style>
+</head>
+<body>
+    <header class="nav-links-header">
+        <div style="max-width:900px;margin:0 auto;padding:12px 20px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;">
+            <strong style="color:#0056b3;">Personnel Monitoring &amp; Dosimetry</strong>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                <a href="../index.html" style="font-size:0.8rem;background:#0056b3;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Back to Tool Menu</a>
+                <a href="../../index.html" style="font-size:0.8rem;background:#0056b3;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Modalities Menu</a>
+                <a href="../../index.html" style="font-size:0.8rem;background:#64748b;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Main Workbook</a>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <h1>Personnel Monitoring &amp; Dosimetry</h1>
+        <div class="flip-lesson-container">
+            <h2>Interactive Lesson</h2>
+            <div id="lesson-page-1" class="lesson-page active">
+                <h3>Page 1: The Three Pillars of Radiation Protection</h3>
+                <p>Radiation protection is the protection of people from the harmful effects of ionizing radiation exposure. It's achieved through three principles: <span class="highlight">justification</span> (the benefit must outweigh the risk), <span class="highlight">limitation</span> (dose limits aren't exceeded), and <span class="highlight">optimization</span> (exposure kept as low as reasonably achievable) &mdash; the same ALARA framework covered in its own lesson, built on Time, Distance, and Shielding.</p>
+            </div>
+            <div id="lesson-page-2" class="lesson-page">
+                <h3>Page 2: Units of Radiation Measurement</h3>
+                <table class="data-table">
+                    <thead><tr><th>Measures</th><th>Unit</th><th>Quantity</th></tr></thead>
+                    <tbody>
+                        <tr><td>Radioactivity of a source</td><td>Becquerel (Bq)</td><td>Radioactive decays per second</td></tr>
+                        <tr><td>Absorbed dose</td><td>Gray (Gy)</td><td>Energy absorbed per kg of tissue</td></tr>
+                        <tr><td>Exposure in air</td><td>Coulombs/kg (C/kg)</td><td>Radiation intensity charge measured in air</td></tr>
+                        <tr><td>Equivalent/occupational dose</td><td>Sievert (Sv)</td><td>Biological tissue damage</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="lesson-page-3" class="lesson-page">
+                <h3>Page 3: Dose Equivalent and Effective Dose</h3>
+                <div class="key-principle">
+                    <p><strong>Dose Equivalent:</strong> EqD = Dose (Gy) &times; W<sub>r</sub> (radiation weighting factor, based on the radiation's LET)</p>
+                    <p><strong>Effective Dose:</strong> EfD = W<sub>r</sub> &times; W<sub>t</sub> (tissue weighting factor) &times; Dose &mdash; accounts for partial-body or nonuniform irradiation.</p>
+                    <p><strong>Worked example:</strong> Alpha particles have W<sub>r</sub> = 20. The lung has W<sub>t</sub> = 0.12. If the lungs receive an absorbed dose of 0.5 Gy from alpha radiation:<br>
+                    EfD = 20 &times; 0.12 &times; 0.5 = <strong>1.2 Sv</strong></p>
+                </div>
+                <p>Tissue weighting factors: gonads 0.25, breast 0.15, red bone marrow/lung/colon/stomach 0.12, bladder/liver/esophagus 0.05, thyroid/bone surfaces 0.03, skin 0.01.</p>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">X-rays have a W<sub>r</sub> of 1. If the thyroid (W<sub>t</sub> = 0.03) receives an absorbed dose of 2 Gy from X-rays, what's the effective dose?</p>
+                    <label><input type="radio" name="lq_page3_1" value="A"> 0.06 Sv</label>
+                    <label><input type="radio" name="lq_page3_1" value="B"> 2 Sv</label>
+                    <div class="explanation" style="display:none;">A. EfD = Wr × Wt × Dose = 1 × 0.03 × 2 = 0.06 Sv.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(3)">Check Answer</button>
+            </div>
+            <div id="lesson-page-4" class="lesson-page">
+                <h3>Page 4: Occupational and Public Dose Limits</h3>
+                <p>Dose limits are set by the NCRP and follow a <strong>linear, non-threshold</strong> dose-response relationship &mdash; any dose carries some risk, so limits aim to keep that risk acceptably low.</p>
+                <table class="data-table">
+                    <thead><tr><th>Population / Site</th><th>Limit</th></tr></thead>
+                    <tbody>
+                        <tr><td>Radiation worker, whole body (annual)</td><td>50 mSv/yr</td></tr>
+                        <tr><td>Radiation worker, cumulative</td><td>10 mSv &times; age (e.g., 20 y/o worker: 200 mSv lifetime)</td></tr>
+                        <tr><td>Organs and extremities</td><td>500 mSv/yr</td></tr>
+                        <tr><td>Lens of eye (occupational)</td><td>150 mSv/yr</td></tr>
+                        <tr><td>General public (whole body)</td><td>1 mSv/yr (1/10 of occupational)</td></tr>
+                        <tr><td>General public, lens of eye</td><td>15 mSv/yr</td></tr>
+                    </tbody>
+                </table>
+                <p>Notice the general public limit is consistently 1/10 of the occupational limit for the same site &mdash; a pattern worth remembering rather than memorizing each number in isolation.</p>
+            </div>
+            <div id="lesson-page-5" class="lesson-page">
+                <h3>Page 5: The Pregnant Worker</h3>
+                <p>The <strong>first trimester</strong> is when the embryo is most radiosensitive. NCRP guidance calls for <em>voluntary</em> disclosure of pregnancy &mdash; a worker isn't required to disclose, but once she notifies her supervisor, she becomes a <span class="highlight">Declared Pregnant Worker (DPW)</span>.</p>
+                <div class="key-principle">
+                    <p>Once declared, fetal dose must not exceed <strong>0.5 mSv/month</strong> and <strong>5 mSv for the entire pregnancy</strong>. A second monitoring badge is worn at waist level (rather than collar level) to better estimate fetal dose.</p>
+                </div>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">Is a pregnant worker required to disclose her pregnancy to become a Declared Pregnant Worker?</p>
+                    <label><input type="radio" name="lq_page5_1" value="A"> Yes, it's mandatory</label>
+                    <label><input type="radio" name="lq_page5_1" value="B"> No, disclosure is voluntary</label>
+                    <div class="explanation" style="display:none;">B. NCRP guidance treats disclosure as voluntary — the DPW status and its added protections only begin once she chooses to notify her supervisor.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(5)">Check Answer</button>
+            </div>
+            <div id="lesson-page-6" class="lesson-page">
+                <h3>Page 6: Who Regulates Radiation Protection</h3>
+                <table class="data-table">
+                    <thead><tr><th>Organization</th><th>Role</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>NCRP</strong> (National Council on Radiation Protection and Measurements)</td><td>The radiation protection "watchdog" &mdash; makes dose limit recommendations</td></tr>
+                        <tr><td><strong>ICRP</strong> (International Commission on Radiological Protection)</td><td>Provides international recommendations and guidance; no enforcement authority</td></tr>
+                        <tr><td><strong>NRC</strong> (Nuclear Regulatory Commission)</td><td>Regulates civilian use of nuclear materials; licenses users; oversees facilities</td></tr>
+                        <tr><td><strong>UNSCEAR / BEIR</strong></td><td>Study and report on the biological effects of ionizing radiation</td></tr>
+                        <tr><td><strong>EPA / FDA</strong></td><td>Environmental and product/device-related radiation oversight</td></tr>
+                    </tbody>
+                </table>
+                <p>Every institution using radiation-producing equipment or radioactive materials must have a <strong>Radiation Safety Officer (RSO)</strong>, who specifies required survey meters and dosimeters, supervises their calibration and proper use, and reviews personnel dose reports for anomalies.</p>
+            </div>
+            <div id="lesson-page-7" class="lesson-page">
+                <h3>Page 7: Radiation Detection Instruments</h3>
+                <p>Beyond personal dosimeters, several instruments detect and measure radiation in the environment or at the treatment unit:</p>
+                <table class="data-table">
+                    <thead><tr><th>Instrument</th><th>Primary use</th></tr></thead>
+                    <tbody>
+                        <tr><td>Ionization chamber</td><td>Counts ion pairs; calibrates linear accelerators and measures treatment beam characteristics</td></tr>
+                        <tr><td>Geiger-Müller (GM) counter</td><td>Gas-filled tube, audible signal; surveys rooms/personnel after implants, finds lost sealed sources</td></tr>
+                        <tr><td>Portable ionization chamber ("cutie pie")</td><td>Surveys high-radioactivity storage areas and around machines like HDR units</td></tr>
+                        <tr><td>Scintillation counter</td><td>Sodium iodide crystal + photomultiplier tube; highly sensitive, mainly used in nuclear medicine</td></tr>
+                        <tr><td>Proportional counter</td><td>Gas-filled neutron detector; discriminates contamination type, used in some CT scanners</td></tr>
+                    </tbody>
+                </table>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">Which instrument is used to calibrate a linear accelerator's output?</p>
+                    <label><input type="radio" name="lq_page7_1" value="A"> Geiger-Müller counter</label>
+                    <label><input type="radio" name="lq_page7_1" value="B"> Ionization chamber</label>
+                    <div class="explanation" style="display:none;">B. Ionization chambers are the standard instrument for calibrating LINAC output and measuring beam characteristics.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(7)">Check Answer</button>
+            </div>
+            <div id="lesson-page-8" class="lesson-page">
+                <h3>Page 8: Personnel Monitoring Devices</h3>
+                <p>Personal dosimeters fall into two categories: <strong>active</strong> (electronic dosimeters, pocket ionization chambers &mdash; give immediate readings) and <strong>passive</strong> (film badges, TLDs, OSLs &mdash; require processing).</p>
+                <table class="data-table">
+                    <thead><tr><th>Device</th><th>How it works</th><th>Worth knowing</th></tr></thead>
+                    <tbody>
+                        <tr><td>Pocket ionization chamber</td><td>Gas-filled chamber, reads exposure directly</td><td>Immediate, accurate reading; but expensive, easily damaged, no permanent record</td></tr>
+                        <tr><td>Film badge</td><td>Film between metal filters (Al, Cu, Pb, or Sn)</td><td>Inexpensive and accurate; but can't be worn long-term, can fog from heat/humidity</td></tr>
+                        <tr><td>TLD (Thermoluminescent Dosimeter)</td><td>Lithium fluoride (LiF) crystals emit light proportional to dose when heated</td><td>Reusable, won't fog, wearable up to 3 months; but no permanent record after readout</td></tr>
+                        <tr><td>OSL (Optically Stimulated Luminescence)</td><td>Aluminum oxide (Al&#8322;O&#8323;) crystals, read via laser stimulation</td><td>More sensitive than film/TLD, can be reanalyzed, long-term stability</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="lesson-page-9" class="lesson-page">
+                <h3>Page 9: Wearing and Reading Your Monitor</h3>
+                <p>Monitors are worn at collar level, above the waist, near the thyroid &mdash; the area typically receiving the highest exposure. Declared Pregnant Workers wear a second badge at waist level.</p>
+                <div class="key-principle">
+                    <p>General rules: never share badges, never intentionally expose them, report accidental exposure or contamination immediately, don't wear your badge during your own medical imaging/treatment, and never take it to another institution.</p>
+                </div>
+                <p>A dosimeter badge report breaks dose into specific types: <strong>DDE</strong> (Deep Dose Equivalent, whole-body at 1 cm depth), <strong>LDE</strong> (Lens Dose Equivalent, at 0.3 cm depth), <strong>SDE,WB</strong> (Shallow Dose Equivalent, whole body, 0.007 cm depth), and <strong>SDE,ME</strong> (Shallow Dose Equivalent, maximum extremity).</p>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">You accidentally leave your film badge on a counter near a treatment room overnight. What should you do?</p>
+                    <label><input type="radio" name="lq_page9_1" value="A"> Say nothing since it was an accident, and continue wearing it as normal</label>
+                    <label><input type="radio" name="lq_page9_1" value="B"> Report the possible accidental exposure immediately</label>
+                    <div class="explanation" style="display:none;">B. Accidental badge exposures must be reported right away so the reading isn't misattributed to real occupational dose.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(9)">Check Answer</button>
+            </div>
+            <div id="lesson-page-10" class="lesson-page">
+                <h3>Page 10: Wrap-Up</h3>
+                <p>You've covered the three pillars of radiation protection, units of measurement, dose equivalent and effective dose calculations, occupational and public dose limits, pregnant worker policy, regulatory organizations, detection instruments, and personnel monitoring devices.</p>
+                <p>Next: how a facility itself is built and equipped to keep exposure controlled &mdash; warning systems, interlocks, and shielding.</p>
+            </div>
+
+            <div class="lesson-navigation">
+                <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled>Previous Page</button>
+                <span class="page-indicator" id="lessonPageIndicator">Page 1 of 10</span>
+                <button id="nextLessonPage" onclick="changeLessonPage(1)">Next Page</button>
+                <button id="startActivityButton" onclick="window.location.href='../index.html'" style="display:none; background-color: #28a745;">Back to Menu</button>
+            </div>
+        </div>
+        <div class="footer">Radiation Therapy E-Workbook &mdash; Radiation Protection</div>
+    </div>
+    <script>
+        let currentLessonPage = 1;
+        const totalLessonPages = 10;
+        const lessonPages = document.querySelectorAll('.lesson-page');
+        const prevLessonButton = document.getElementById('prevLessonPage');
+        const nextLessonButton = document.getElementById('nextLessonPage');
+        const lessonPageIndicator = document.getElementById('lessonPageIndicator');
+        const startActivityButton = document.getElementById('startActivityButton');
+        const lessonCorrectAnswers = {"lq_page3_1": "A", "lq_page5_1": "B", "lq_page7_1": "B", "lq_page9_1": "B"};
+        function displayLessonPage() {
+            lessonPages.forEach((page, index) => page.classList.toggle('active', index === currentLessonPage - 1));
+            prevLessonButton.disabled = currentLessonPage === 1;
+            nextLessonButton.style.display = currentLessonPage === totalLessonPages ? 'none' : 'inline-block';
+            startActivityButton.style.display = currentLessonPage === totalLessonPages ? 'inline-block' : 'none';
+            lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
+        }
+        function changeLessonPage(direction) {
+            currentLessonPage += direction;
+            if (currentLessonPage < 1) currentLessonPage = 1;
+            if (currentLessonPage > totalLessonPages) currentLessonPage = totalLessonPages;
+            displayLessonPage();
+        }
+        function checkPageAnswers(pageNumber) {
+            const questionsOnPage = document.querySelectorAll(`#lesson-page-${pageNumber} .interactive-question-block`);
+            questionsOnPage.forEach(block => {
+                const radio = block.querySelector('input[type="radio"]');
+                if (!radio) return;
+                const questionName = radio.name;
+                if (!lessonCorrectAnswers.hasOwnProperty(questionName)) return;
+                const correctAnswerValue = lessonCorrectAnswers[questionName];
+                const selectedRadio = block.querySelector(`input[name="${questionName}"]:checked`);
+                const explanationDiv = block.querySelector('.explanation');
+                block.classList.remove('feedback-correct', 'feedback-incorrect');
+                block.querySelectorAll('label').forEach(label => label.classList.remove('correct-option', 'selected-incorrect'));
+                if (explanationDiv) explanationDiv.style.display = 'none';
+                if (selectedRadio) {
+                    const userAnswer = selectedRadio.value;
+                    const userSelectedLabel = selectedRadio.parentElement;
+                    if (userAnswer === correctAnswerValue) {
+                        block.classList.add('feedback-correct');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('correct-option');
+                    } else {
+                        block.classList.add('feedback-incorrect');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('selected-incorrect');
+                        const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                        if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                    }
+                } else {
+                    block.classList.add('feedback-incorrect');
+                    const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                    if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                }
+                if (explanationDiv) explanationDiv.style.display = 'block';
+            });
+        }
+        displayLessonPage();
+    </script>
+</body>
+</html>
