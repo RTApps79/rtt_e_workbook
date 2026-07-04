@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Medical Terminology Simulator</title>
+  <style>
+    :root{
+      --bg:#f4f8fc;
+      --panel:#ffffff;
+      --ink:#132238;
+      --muted:#52637a;
+      --brand:#2563eb;
+      --brand2:#0f766e;
+      --good:#15803d;
+      --warn:#d97706;
+      --bad:#dc2626;
+      --line:#d7e2ee;
+      --shadow:0 14px 36px rgba(15,23,42,.10);
+      --chip:#eef4ff;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Arial, Helvetica, sans-serif;
+      background:linear-gradient(180deg,#f8fbff,#ebf2f9);
+      color:var(--ink);
+    }
+    header{
+      position:sticky;
+      top:0;
+      z-index:10;
+      background:#fff;
+      border-bottom:1px solid var(--line);
+      box-shadow:0 1px 3px rgba(0,0,0,.04);
+      padding:14px 18px;
+    }
+    .topbar{
+      max-width:1500px;
+      margin:0 auto;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .brand{
+      font-size:1.15rem;
+      font-weight:900;
+      color:var(--brand);
+    }
+    .subtitle{
+      color:var(--muted);
+      font-size:.92rem;
+    }
+    .shell{
+      max-width:1500px;
+      margin:0 auto;
+      padding:18px;
+    }
+    .hero{
+      background:linear-gradient(135deg,#ffffff,#f7fbff);
+      border:1px solid var(--line);
+      border-radius:18px;
+      box-shadow:var(--shadow);
+      padding:18px 20px;
+      margin-bottom:16px;
+    }
+    h1{
+      margin:0 0 8px;
+      font-size:2rem;
+      color:#17357d;
+    }
+    .hero p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.55;
+      max-width:1100px;
+    }
+    .badges{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
+    .badge{
+      background:var(--chip);
+      color:#1d4ed8;
+      border:1px solid #d6e4ff;
+      border-radius:999px;
+      padding:7px 10px;
+      font-size:.8rem;
+      font-weight:800;
+    }
+    .tabs{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-bottom:14px;
+    }
+    .tab{
+      border:0;
+      background:#e2e8f0;
+      color:#0f172a;
+      padding:10px 14px;
+      border-radius:10px;
+      font-weight:800;
+      cursor:pointer;
+    }
+    .tab.active{
+      background:var(--brand);
+      color:#fff;
+    }
+    .layout{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:16px;
+    }
+    @media(min-width:1180px){
+      .layout{grid-template-columns:.95fr 1.05fr}
+    }
+    .panel{
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:18px;
+      box-shadow:var(--shadow);
+      padding:18px;
+    }
+    .panel h2{
+      margin:0 0 12px;
+      font-size:1.05rem;
+      color:#17357d;
+      text-transform:uppercase;
+      letter-spacing:.05em;
+    }
+    .controlgrid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin-bottom:12px;
+    }
+    @media(max-width:760px){
+      .controlgrid{grid-template-columns:1fr}
+    }
+    .control{
+      border:1px solid var(--line);
+      background:#f8fbff;
+      border-radius:12px;
+      padding:12px;
+    }
+    .control label{
+      display:block;
+      font-size:.84rem;
+      font-weight:900;
+      color:#334155;
+      margin-bottom:8px;
+    }
+    select,input[type="range"],input[type="text"]{
+      width:100%;
+    }
+    .val{
+      margin-top:6px;
+      font-size:.82rem;
+      color:#64748b;
+      font-weight:700;
+    }
+    .buttons{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin:10px 0 14px;
+    }
+    button.action{
+      border:0;
+      border-radius:10px;
+      padding:10px 14px;
+      font-weight:900;
+      cursor:pointer;
+      transition:transform .12s ease, opacity .15s ease;
+    }
+    button.action:hover{transform:translateY(-1px)}
+    button.action:disabled{opacity:.55;cursor:not-allowed;transform:none}
+    .primary{background:var(--brand);color:#fff}
+    .secondary{background:#475569;color:#fff}
+    .ghost{background:#e2e8f0;color:#0f172a}
+    .status,.feedback,.score{
+      border-radius:12px;
+      padding:12px;
+      margin-bottom:10px;
+      line-height:1.45;
+    }
+    .status{background:#eff6ff;color:#1e3a8a;border:1px solid #bfdbfe}
+    .feedback{background:#fff7ed;color:#7c2d12;border:1px solid #fdba74}
+    .score{background:#ecfdf5;color:#166534;border:1px solid #bbf7d0}
+    .stage{
+      position:relative;
+      min-height:700px;
+      border-radius:18px;
+      overflow:hidden;
+      border:1px solid #cfe0f2;
+      background:linear-gradient(180deg,#f4f8ff,#e9f1fa);
+    }
+    .stage svg{width:100%;height:100%;display:block}
+    .floating{
+      position:absolute;
+      left:14px;
+      top:14px;
+      width:min(420px,calc(100% - 28px));
+      background:rgba(255,255,255,.94);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:12px;
+      box-shadow:0 8px 20px rgba(15,23,42,.08);
+      z-index:2;
+    }
+    .floating h3{
+      margin:0 0 8px;
+      font-size:1rem;
+      color:#17357d;
+    }
+    .floating p{
+      margin:0;
+      color:#334155;
+      line-height:1.45;
+      font-size:.92rem;
+    }
+    .section{
+      display:none;
+    }
+    .section.active{
+      display:block;
+    }
+    .word-bank{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:10px;
+    }
+    .word{
+      padding:9px 12px;
+      border-radius:999px;
+      border:1px solid #cfe0f2;
+      background:#fff;
+      cursor:pointer;
+      font-weight:800;
+      color:#0f172a;
+      user-select:none;
+    }
+    .word.selected{
+      background:#dbeafe;
+      border-color:#60a5fa;
+    }
+    .word.dragging{
+      opacity:.55;
+    }
+    .dropzone{
+      min-height:54px;
+      border:2px dashed #93c5fd;
+      background:#f8fbff;
+      border-radius:14px;
+      padding:10px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      align-items:center;
+    }
+    .dropzone.over{
+      background:#eff6ff;
+      border-color:#2563eb;
+    }
+    .mini-grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:12px;
+    }
+    @media(min-width:980px){
+      .mini-grid{grid-template-columns:1fr 1fr}
+    }
+    .card{
+      background:#f8fbff;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:14px;
+    }
+    .card h3{
+      margin:0 0 8px;
+      font-size:1rem;
+      color:#0f172a;
+    }
+    .card p, .card li{
+      color:#334155;
+      line-height:1.5;
+      font-size:.93rem;
+    }
+    .card ul{margin:8px 0 0 18px;padding:0}
+    .matchlist{
+      display:grid;
+      gap:8px;
+    }
+    .match-row{
+      display:grid;
+      grid-template-columns:1fr 1.2fr;
+      gap:10px;
+    }
+    @media(max-width:820px){
+      .match-row{grid-template-columns:1fr}
+    }
+    .match-row select{
+      padding:10px;
+      border-radius:10px;
+      border:1px solid #cbd5e1;
+      background:#fff;
+    }
+    .feedback-inline{
+      margin-top:6px;
+      font-size:.85rem;
+      font-weight:800;
+    }
+    .ok{color:var(--good)}
+    .bad{color:var(--bad)}
+    .warn{color:var(--warn)}
+    .meter{
+      height:12px;
+      border-radius:999px;
+      background:#dbeafe;
+      overflow:hidden;
+      border:1px solid #bfdbfe;
+      margin-top:8px;
+    }
+    .meter > div{
+      height:100%;
+      width:0%;
+      background:linear-gradient(90deg,#16a34a,#2563eb);
+      transition:width .25s ease;
+    }
+    .footer{
+      text-align:center;
+      color:#64748b;
+      font-size:.85rem;
+      padding:14px 0 22px;
+    }
+    .hidden{display:none !important}
+    .flash{
+      animation:flash 0.45s ease;
+    }
+    @keyframes flash{
+      0%{transform:scale(1)}
+      50%{transform:scale(1.015)}
+      100%{transform:scale(1)}
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div>
+    <div class="brand">Medical Terminology Simulator</div>
+    <div class="subtitle">Analyze word parts, interpret clinical clues, and build meaning interactively.</div>
+  </div>
+  <div class="subtitle">RTTApps-style learning activity</div>
+</header>
+
+<div class="shell">
+  <div class="hero">
+    <h1>Interactive Medical Terminology Lab</h1>
+    <p>
+      This simulator is designed to make learners think like clinicians. Instead of only matching words to definitions, users deconstruct terms, infer meanings from case clues, assemble word parts, and translate plain language into medical language.
+    </p>
+    <div class="badges">
+      <span class="badge">Word-part analysis</span>
+      <span class="badge">Clinical interpretation</span>
+      <span class="badge">Meaning building</span>
+      <span class="badge">Scenario reasoning</span>
+      <span class="badge">Interactive feedback</span>
+    </div>
+  </div>
+
+  <div class="layout">
+    <div class="panel">
+      <h2>Activity Controls</h2>
+
+      <div class="tabs">
+        <button class="tab active" data-tab="deconstruct">Deconstruct</button>
+        <button class="tab" data-tab="assemble">Assemble</button>
+        <button class="tab" data-tab="scenario">Scenario</button>
+        <button class="tab" data-tab="match">Match & Sort</button>
+      </div>
+
+      <div class="controlgrid">
+        <div class="control">
+          <label for="level">Difficulty level</label>
+          <input id="level" type="range" min="1" max="3" step="1" value="1">
+          <div class="val" id="levelLabel">Level 1: Core foundations</div>
+        </div>
+        <div class="control">
+          <label for="domain">Clinical domain</label>
+          <select id="domain">
+            <option value="general">General medical terminology</option>
+            <option value="anatomy">Anatomy and body systems</option>
+            <option value="diagnostic">Diagnosis and procedures</option>
+            <option value="rt">Radiation oncology / therapy</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="buttons">
+        <button class="action primary" id="checkBtn">Check answer</button>
+        <button class="action secondary" id="nextBtn">New prompt</button>
+        <button class="action ghost" id="resetBtn">Reset</button>
+      </div>
+
+      <div class="status" id="statusBox"></div>
+      <div class="feedback" id="feedbackBox"></div>
+      <div class="score" id="scoreBox"></div>
+
+      <div class="mini-grid">
+        <div class="card">
+          <h3>How this works</h3>
+          <ul>
+            <li>Break a term into prefix, root, and suffix.</li>
+            <li>Infer meaning from a case description.</li>
+            <li>Assemble a term from shuffled word parts.</li>
+            <li>Sort terms by meaning, system, or function.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Current prompt</h3>
+          <div id="promptBox"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Interactive Scene</h2>
+
+      <div class="section active" id="deconstructSection">
+        <div class="stage">
+          <div class="floating">
+            <h3>Word-part deconstruction</h3>
+            <p>
+              Click the term parts in the correct order. Then explain the word in plain language. The goal is not just recognition — it is analysis.
+            </p>
+          </div>
+          <svg viewBox="0 0 1200 700" aria-label="Medical terminology deconstruction scene">
+            <rect width="1200" height="700" fill="#eaf2fb"/>
+            <rect x="70" y="110" width="1060" height="500" rx="28" fill="#fff" stroke="#d5e2f0" stroke-width="3"/>
+            <text x="110" y="165" fill="#17357d" font-size="28" font-weight="800">Term analyzer</text>
+
+            <rect x="110" y="210" width="300" height="100" rx="18" fill="#dbeafe" stroke="#60a5fa" stroke-width="3"/>
+            <text x="260" y="245" text-anchor="middle" fill="#1e3a8a" font-size="22" font-weight="800" id="termWord">hypertension</text>
+            <text x="260" y="275" text-anchor="middle" fill="#334155" font-size="15" font-weight="700">Break the term into parts</text>
+
+            <rect x="110" y="350" width="500" height="190" rx="18" fill="#f8fbff" stroke="#cbd5e1" stroke-width="3"/>
+            <text x="135" y="388" fill="#0f172a" font-size="20" font-weight="800">Select the parts</text>
+            <text x="135" y="418" fill="#64748b" font-size="15" font-weight="700">Tap the pieces in order, then explain the meaning.</text>
+
+            <g id="partsArea"></g>
+
+            <rect x="660" y="210" width="420" height="330" rx="18" fill="#f8fbff" stroke="#cbd5e1" stroke-width="3"/>
+            <text x="685" y="248" fill="#0f172a" font-size="20" font-weight="800">Meaning builder</text>
+            <text x="685" y="282" fill="#334155" font-size="15" font-weight="700">Type a plain-language meaning:</text>
+            <foreignObject x="685" y="300" width="360" height="50">
+              <input id="meaningInput" type="text" placeholder="Example: abnormally high blood pressure" style="width:100%;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;font-size:15px;">
+            </foreignObject>
+            <text x="685" y="380" fill="#334155" font-size="15" font-weight="700">Guiding clues:</text>
+            <text id="clueText" x="685" y="418" fill="#1e3a8a" font-size="20" font-weight="800">Above / excessive + tension / pressure</text>
+            <text x="685" y="455" fill="#64748b" font-size="15" font-weight="700">Use the clue to infer the word's clinical meaning.</text>
+
+            <rect x="660" y="560" width="420" height="50" rx="12" fill="#ecfdf5" stroke="#bbf7d0" stroke-width="2"/>
+            <text x="680" y="592" fill="#166534" font-size="15" font-weight="800" id="deconstructHint">Hint: think prefix + root + suffix.</text>
+          </svg>
+        </div>
+      </div>
+
+      <div class="section" id="assembleSection">
+        <div class="stage">
+          <div class="floating">
+            <h3>Term assembly</h3>
+            <p>
+              Put the word parts into the right order. The answer is only correct if the final term matches the clinical idea and the part structure makes sense.
+            </p>
+          </div>
+          <svg viewBox="0 0 1200 700" aria-label="Medical terminology assembly scene">
+            <rect width="1200" height="700" fill="#edf7f8"/>
+            <rect x="70" y="110" width="1060" height="500" rx="28" fill="#fff" stroke="#d5e2f0" stroke-width="3"/>
+            <text x="110" y="165" fill="#0f766e" font-size="28" font-weight="800">Build the term</text>
+
+            <rect x="110" y="220" width="980" height="90" rx="18" fill="#f0fdfa" stroke="#99f6e4" stroke-width="3"/>
+            <text x="140" y="255" fill="#134e4a" font-size="18" font-weight="800">Drop the parts here in order:</text>
+            <foreignObject x="140" y="270" width="900" height="28">
+              <div id="dropzone" class="dropzone" tabindex="0" aria-label="Drop zone"></div>
+            </foreignObject>
+
+            <text x="110" y="360" fill="#0f172a" font-size="18" font-weight="800">Available parts:</text>
+            <foreignObject x="110" y="380" width="980" height="170">
+              <div id="wordBank" class="word-bank"></div>
+            </foreignObject>
+
+            <rect x="110" y="570" width="980" height="35" rx="10" fill="#eef4ff" stroke="#bfdbfe" stroke-width="2"/>
+            <text x="130" y="593" fill="#1e3a8a" font-size="15" font-weight="700" id="assemblyHint">Example structure: prefix + root + suffix.</text>
+          </svg>
+        </div>
+      </div>
+
+      <div class="section" id="scenarioSection">
+        <div class="stage">
+          <div class="floating">
+            <h3>Clinical scenario analyzer</h3>
+            <p>
+              Read the situation, decide what term best fits, and explain your reasoning. This is designed to train interpretation rather than memorization.
+            </p>
+          </div>
+          <svg viewBox="0 0 1200 700" aria-label="Medical terminology scenario scene">
+            <rect width="1200" height="700" fill="#f7f5ff"/>
+            <rect x="70" y="110" width="1060" height="500" rx="28" fill="#fff" stroke="#d5e2f0" stroke-width="3"/>
+            <text x="110" y="165" fill="#6d28d9" font-size="28" font-weight="800">Scenario lab</text>
+
+            <rect x="110" y="205" width="980" height="120" rx="18" fill="#f5f3ff" stroke="#ddd6fe" stroke-width="3"/>
+            <text x="140" y="244" fill="#334155" font-size="18" font-weight="800">Clinical clue</text>
+            <text id="scenarioText" x="140" y="282" fill="#0f172a" font-size="20" font-weight="700">
+              A patient has shortness of breath caused by fluid in the pleural space.
+            </text>
+
+            <rect x="110" y="360" width="470" height="190" rx="18" fill="#faf5ff" stroke="#e9d5ff" stroke-width="3"/>
+            <text x="140" y="400" fill="#0f172a" font-size="18" font-weight="800">Best term</text>
+            <foreignObject x="140" y="420" width="390" height="50">
+              <input id="termInput" type="text" placeholder="Type the best term here" style="width:100%;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;font-size:15px;">
+            </foreignObject>
+            <text x="140" y="490" fill="#334155" font-size="15" font-weight="700">Then explain why that term fits the clue.</text>
+
+            <rect x="620" y="360" width="470" height="190" rx="18" fill="#faf5ff" stroke="#e9d5ff" stroke-width="3"/>
+            <text x="650" y="400" fill="#0f172a" font-size="18" font-weight="800">Why this works</text>
+            <text id="reasonText" x="650" y="440" fill="#334155" font-size="16" font-weight="700">
+              Think about body part + condition + effect.
+            </text>
+            <text x="650" y="480" fill="#64748b" font-size="15" font-weight="700">
+              Users must interpret the clue, not just match words.
+            </text>
+          </svg>
+        </div>
+      </div>
+
+      <div class="section" id="matchSection">
+        <div class="stage">
+          <div class="floating">
+            <h3>Match and sort</h3>
+            <p>
+              Match terms to definitions, then sort them into categories. This reinforces recognition, system knowledge, and semantic grouping.
+            </p>
+          </div>
+          <svg viewBox="0 0 1200 700" aria-label="Medical terminology matching scene">
+            <rect width="1200" height="700" fill="#fff8ed"/>
+            <rect x="70" y="110" width="1060" height="500" rx="28" fill="#fff" stroke="#d5e2f0" stroke-width="3"/>
+            <text x="110" y="165" fill="#c2410c" font-size="28" font-weight="800">Match & sort board</text>
+
+            <rect x="110" y="205" width="430" height="370" rx="18" fill="#fff7ed" stroke="#fed7aa" stroke-width="3"/>
+            <text x="140" y="242" fill="#0f172a" font-size="18" font-weight="800">Terms</text>
+            <foreignObject x="140" y="260" width="370" height="290">
+              <div id="matchTerms" class="matchlist"></div>
+            </foreignObject>
+
+            <rect x="620" y="205" width="420" height="370" rx="18" fill="#fff7ed" stroke="#fed7aa" stroke-width="3"/>
+            <text x="650" y="242" fill="#0f172a" font-size="18" font-weight="800">Definitions</text>
+            <foreignObject x="650" y="260" width="360" height="290">
+              <div id="matchDefs" class="matchlist"></div>
+            </foreignObject>
+
+            <rect x="110" y="600" width="930" height="0" fill="none"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-top:16px;">
+    <h2>Progress and Answers</h2>
+    <div class="mini-grid">
+      <div class="card">
+        <h3>Progress meter</h3>
+        <div class="meter"><div id="meterFill"></div></div>
+        <p id="progressText" style="margin-top:10px;">Start by exploring the current activity.</p>
+      </div>
+      <div class="card">
+        <h3>Answer reveal</h3>
+        <div id="answerBox">Answers will appear here after checking.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">© 2026 RTTApps. All rights reserved.</div>
+</div>
+
+<script>
+const tabs=[...document.querySelectorAll('.tab')];
+const sections={
+  deconstruct:document.getElementById('deconstructSection'),
+  assemble:document.getElementById('assembleSection'),
+  scenario:document.getElementById('scenarioSection'),
+  match:document.getElementById('matchSection')
+};
+const level=document.getElementById('level');
+const levelLabel=document.getElementById('levelLabel');
+const domain=document.getElementById('domain');
+const statusBox=document.getElementById('statusBox');
+const feedbackBox=document.getElementById('feedbackBox');
+const scoreBox=document.getElementById('scoreBox');
+const promptBox=document.getElementById('promptBox');
+const checkBtn=document.getElementById('checkBtn');
+const nextBtn=document.getElementById('nextBtn');
+const resetBtn=document.getElementById('resetBtn');
+const meterFill=document.getElementById('meterFill');
+const progressText=document.getElementById('progressText');
+const answerBox=document.getElementById('answerBox');
+const termWord=document.getElementById('termWord');
+const clueText=document.getElementById('clueText');
+const meaningInput=document.getElementById('meaningInput');
+const deconstructHint=document.getElementById('deconstructHint');
+const dropzone=document.getElementById('dropzone');
+const wordBank=document.getElementById('wordBank');
+const scenarioText=document.getElementById('scenarioText');
+const termInput=document.getElementById('termInput');
+const reasonText=document.getElementById('reasonText');
+const matchTerms=document.getElementById('matchTerms');
+const matchDefs=document.getElementById('matchDefs');
+
+let active='deconstruct';
+let score=0;
+let current=null;
+let selectedParts=[];
+let assembled=[];
+let matchState={};
+
+const banks={
+  general:[
+    {term:'hypertension', parts:['hyper','tension'], meaning:'abnormally high blood pressure', clue:'Above / excessive + pressure'},
+    {term:'tachycardia', parts:['tachy','cardia'], meaning:'abnormally fast heart rate', clue:'Fast + heart'},
+    {term:'hypoglycemia', parts:['hypo','glyc','emia'], meaning:'low blood sugar in the blood', clue:'Below + sugar + blood condition'},
+    {term:'neuralgia', parts:['neur','algia'], meaning:'nerve pain', clue:'nerve + pain'},
+    {term:'edema', parts:['edema'], meaning:'swelling caused by fluid', clue:'fluid swelling'}
+  ],
+  anatomy:[
+    {term:'hepatomegaly', parts:['hepato','megaly'], meaning:'enlargement of the liver', clue:'liver + enlargement'},
+    {term:'cardiomegaly', parts:['cardio','megaly'], meaning:'enlargement of the heart', clue:'heart + enlargement'},
+    {term:'pulmonary', parts:['pulmon','ary'], meaning:'pertaining to the lungs', clue:'lung + pertaining to'},
+    {term:'osteitis', parts:['oste','itis'], meaning:'inflammation of bone', clue:'bone + inflammation'},
+    {term:'gastritis', parts:['gastr','itis'], meaning:'inflammation of the stomach', clue:'stomach + inflammation'}
+  ],
+  diagnostic:[
+    {term:'biopsy', parts:['bi','opsy'], meaning:'visual examination of living tissue', clue:'life/tissue + viewing'},
+    {term:'endoscopy', parts:['endo','scopy'], meaning:'visual examination from within', clue:'within + viewing'},
+    {term:'radiograph', parts:['radio','graph'], meaning:'recorded image made with radiation', clue:'radiation + recording'},
+    {term:'sonography', parts:['sono','graphy'], meaning:'imaging by sound', clue:'sound + process of recording'},
+    {term:'anemia', parts:['an','emia'], meaning:'condition of low blood', clue:'without + blood condition'}
+  ],
+  rt:[
+    {term:'simulation', parts:['simul','ation'], meaning:'the process of making a treatment setup approximation', clue:'make similar + process'},
+    {term:'immobilization', parts:['im','mobil','ization'], meaning:'the process of making the patient still', clue:'not + move + process'},
+    {term:'fraction', parts:['fract','ion'], meaning:'a divided portion of the total dose', clue:'break + noun'},
+    {term:'dosimetry', parts:['dosi','metry'], meaning:'measurement of absorbed dose', clue:'dose + measurement'},
+    {term:'brachytherapy', parts:['brachy','therapy'], meaning:'radiation treatment delivered at short distance', clue:'short + treatment'}
+  ]
+};
+
+const scenarios=[
+  {text:'A patient has shortness of breath caused by fluid in the pleural space.', term:'pleural effusion', reason:'Pleural refers to the lining around the lungs, and effusion means fluid buildup.'},
+  {text:'The physician documents inflammation of the liver.', term:'hepatitis', reason:'Hepat refers to liver, and -itis means inflammation.'},
+  {text:'A scan shows enlargement of the heart.', term:'cardiomegaly', reason:'Cardio means heart and megaly means enlargement.'},
+  {text:'The treatment team plans radiation delivered over many small sessions.', term:'fractionation', reason:'Fractionation means dividing a total dose into smaller portions.'}
+];
+
+const matchItems=[
+  {term:'hypertension', def:'abnormally high blood pressure', cat:'vital sign'},
+  {term:'biopsy', def:'removal or examination of tissue', cat:'procedure'},
+  {term:'osteitis', def:'inflammation of bone', cat:'anatomy'},
+  {term:'dosimetry', def:'measurement of radiation dose', cat:'radiation oncology'}
+];
+
+function setTab(name){
+  active=name;
+  tabs.forEach(t=>t.classList.toggle('active',t.dataset.tab===name));
+  Object.entries(sections).forEach(([k,v])=>v.classList.toggle('active',k===name));
+  updateUI();
+}
+
+function pick(arr){return arr[Math.floor(Math.random()*arr.length)];}
+
+function normalize(s){return (s||'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();}
+function includesAny(text, keys){text=normalize(text); return keys.some(k=>text.includes(k));}
+
+function setDifficulty(){
+  const lvl=Number(level.value);
+  levelLabel.textContent = lvl===1 ? 'Level 1: Core foundations' : lvl===2 ? 'Level 2: Word analysis' : 'Level 3: Clinical reasoning';
+}
+
+function updatePrompt(){
+  const bank=banks[domain.value];
+  current=pick(bank);
+  termWord.textContent=current.term;
+  clueText.textContent=current.clue;
+  deconstructHint.textContent=`Hint: ${current.parts.join(' + ')}.`;
+  promptBox.innerHTML = `
+    <p><strong>Term:</strong> ${current.term}</p>
+    <p><strong>Parts:</strong> ${current.parts.join(' + ')}</p>
+    <p><strong>Target meaning:</strong> hidden until checked</p>
+  `;
+  selectedParts=[];
+  assembled=[];
+  renderParts();
+  renderBank();
+  updateScenario();
+  updateMatches();
+  meaningInput.value='';
+  termInput.value='';
+  answerBox.textContent='Answers will appear here after checking.';
+  feedbackBox.textContent='';
+  progressText.textContent='Work through the current prompt before checking.';
+  meterFill.style.width = '25%';
+}
+
+function renderParts(){
+  const area=document.getElementById('partsArea');
+  area.innerHTML='';
+  const parts=current.parts.map(p=>({p, used:false}));
+  const x0=140, y0=450;
+  current.parts.forEach((part, i)=>{
+    const x=x0 + i*120;
+    const g=document.createElementNS('http://www.w3.org/2000/svg','g');
+    g.setAttribute('transform',`translate(${x} ${y0})`);
+    g.style.cursor='pointer';
+    g.addEventListener('click',()=>{
+      selectedParts.push(part);
+      updateSelectedText();
+      g.querySelector('rect').setAttribute('fill','#dbeafe');
+    });
+    g.innerHTML = `
+      <rect width="105" height="42" rx="12" fill="#fff" stroke="#cbd5e1" stroke-width="2"></rect>
+      <text x="52.5" y="26" text-anchor="middle" fill="#0f172a" font-size="16" font-weight="800">${part}</text>
+    `;
+    area.appendChild(g);
+  });
+  const sel=document.createElementNS('http://www.w3.org/2000/svg','text');
+  sel.setAttribute('x','135');
+  sel.setAttribute('y','520');
+  sel.setAttribute('fill','#334155');
+  sel.setAttribute('font-size','16');
+  sel.setAttribute('font-weight','700');
+  sel.textContent='Selected order: ';
+  sel.id='selectedText';
+  area.appendChild(sel);
+}
+
+function updateSelectedText(){
+  const t=document.getElementById('selectedText');
+  if(t) t.textContent = 'Selected order: ' + (selectedParts.length ? selectedParts.join(' + ') : 'none');
+}
+
+function renderBank(){
+  const shuffled=[...current.parts].sort(()=>Math.random()-0.5);
+  wordBank.innerHTML='';
+  dropzone.innerHTML='';
+  shuffled.forEach(p=>{
+    const d=document.createElement('div');
+    d.className='word';
+    d.textContent=p;
+    d.draggable=true;
+    d.addEventListener('dragstart',()=>d.classList.add('dragging'));
+    d.addEventListener('dragend',()=>d.classList.remove('dragging'));
+    d.addEventListener('click',()=>{
+      assembled.push(p);
+      updateDropzone();
+      d.remove();
+    });
+    wordBank.appendChild(d);
+  });
+}
+
+function updateDropzone(){
+  dropzone.innerHTML='';
+  assembled.forEach((p, idx)=>{
+    const span=document.createElement('div');
+    span.className='word selected';
+    span.textContent=p;
+    span.title='Click to remove';
+    span.addEventListener('click',()=>{
+      assembled.splice(idx,1);
+      updateDropzone();
+      renderBankFromAssembled();
+    });
+    dropzone.appendChild(span);
+  });
+}
+
+function renderBankFromAssembled(){
+  const currentWords=[...current.parts];
+  wordBank.innerHTML='';
+  [...current.parts].sort(()=>Math.random()-0.5).forEach(p=>{
+    if(assembled.includes(p)) return;
+    const d=document.createElement('div');
+    d.className='word';
+    d.textContent=p;
+    d.draggable=true;
+    d.addEventListener('click',()=>{
+      assembled.push(p);
+      updateDropzone();
+      d.remove();
+    });
+    wordBank.appendChild(d);
+  });
+}
+
+function updateScenario(){
+  const s=pick(scenarios);
+  scenarioText.textContent=s.text;
+  reasonText.textContent=s.reason;
+  termInput.value='';
+}
+
+function updateMatches(){
+  matchTerms.innerHTML='';
+  matchDefs.innerHTML='';
+  matchState={};
+  const defs=[...matchItems].sort(()=>Math.random()-0.5);
+  matchItems.forEach((item,i)=>{
+    const row=document.createElement('div');
+    row.className='match-row';
+    row.innerHTML=`<div><strong>${item.term}</strong></div>`;
+    const sel=document.createElement('select');
+    sel.innerHTML=`<option value="">Choose definition</option>` + defs.map(d=>`<option value="${d.def}">${d.def}</option>`).join('');
+    sel.dataset.term=item.term;
+    row.appendChild(sel);
+    const fb=document.createElement('div');
+    fb.className='feedback-inline';
+    fb.id='fb_'+item.term;
+    fb.textContent='';
+    row.appendChild(fb);
+    matchTerms.appendChild(row);
+    matchState[item.term]=item.def;
+  });
+  defs.forEach(def=>{
+    const div=document.createElement('div');
+    div.className='card';
+    div.style.marginBottom='8px';
+    div.innerHTML=`<strong>${def.def}</strong><div style="color:#64748b;font-size:.85rem;margin-top:4px;">Category: ${def.cat}</div>`;
+    matchDefs.appendChild(div);
+  });
+}
+
+function updateUI(){
+  setDifficulty();
+  if(active==='deconstruct'){
+    statusBox.textContent=`Analyze the term "${current.term}" by breaking it into meaningful parts.`;
+    feedbackBox.textContent='Click the displayed parts in order, then type the meaning.';
+    scoreBox.textContent='Focus on structure first, then interpretation.';
+  } else if(active==='assemble'){
+    statusBox.textContent='Assemble the word parts into a valid medical term.';
+    feedbackBox.textContent='Drag or click parts into the drop zone.';
+    scoreBox.textContent='A correct answer must make semantic and structural sense.';
+  } else if(active==='scenario'){
+    statusBox.textContent='Read the clinical clue and infer the best term.';
+    feedbackBox.textContent='Use the body system, process, and condition clues.';
+    scoreBox.textContent='Interpretation matters more than memorization.';
+  } else {
+    statusBox.textContent='Match terms to definitions and notice how concepts cluster by domain.';
+    feedbackBox.textContent='Then identify which category each term belongs to.';
+    scoreBox.textContent='Sorting by meaning helps build vocabulary networks.';
+  }
+  progressText.textContent=`Current activity: ${active}.`;
+}
+
+function checkAnswer(){
+  let fb='';
+  let reveal='';
+  if(active==='deconstruct'){
+    const partMatch = normalize(selectedParts.join(' ')) === normalize(current.parts.join(' '));
+    const meaning = normalize(meaningInput.value);
+    const meaningOK = includesAny(meaning,[current.meaning.split(' ')[0], current.meaning.split(' ')[1]||'']) || meaning.length>8;
+    if(partMatch && meaningOK){
+      score+=10;
+      fb='Correct: your part order and meaning are on target.';
+      reveal=`${current.term} means ${current.meaning}.`;
+    } else {
+      fb='Close, but review the word parts and refine the meaning.';
+      reveal=`Correct breakdown: ${current.parts.join(' + ')}. Meaning: ${current.meaning}.`;
+    }
+    answerBox.textContent=reveal;
+  } else if(active==='assemble'){
+    const attempt=assembled.join('');
+    const target=current.parts.join('');
+    if(attempt===target){
+      score+=10;
+      fb='Correct assembly.';
+      reveal=`${current.term}: ${current.meaning}.`;
+    } else {
+      fb='Not quite. Reorder the parts and try again.';
+      reveal=`Correct order: ${current.parts.join(' + ')}.`;
+    }
+    answerBox.textContent=reveal;
+  } else if(active==='scenario'){
+    const guess=normalize(termInput.value);
+    const target=normalize(pick(scenarios).term);
+    const alt=[normalize(s.term) for (s of scenarios)];
+    const found=scenarios.find(s=>normalize(s.term)===guess);
+    if(found){
+      score+=10;
+      fb='Good interpretation.';
+      reveal=`The best term is "${found.term}". ${found.reason}`;
+    } else {
+      fb='Check the clue and think about the body part or process involved.';
+      reveal='A strong answer names the condition or process described by the clue.';
+    }
+    answerBox.textContent=reveal;
+  } else {
+    let correct=0;
+    document.querySelectorAll('#matchTerms select').forEach(sel=>{
+      const term=sel.dataset.term;
+      const fbEl=document.getElementById('fb_'+term);
+      if(sel.value===matchState[term]){
+        correct++;
+        fbEl.textContent='Correct';
+        fbEl.className='feedback-inline ok';
+      } else {
+        fbEl.textContent='Try again';
+        fbEl.className='feedback-inline bad';
+      }
+    });
+    score += correct*5;
+    fb=`${correct} out of ${matchItems.length} matches are correct.`;
+    reveal='Matching works best when you associate each term with its function or system.';
+    answerBox.textContent=reveal;
+  }
+  feedbackBox.textContent=fb;
+  scoreBox.textContent=`Score: ${score}`;
+  meterFill.style.width=Math.min(100, 20 + score)%100 + '%';
+  document.querySelector('.panel').classList.add('flash');
+  setTimeout(()=>document.querySelector('.panel').classList.remove('flash'),450);
+}
+
+function nextPrompt(){
+  updatePrompt();
+  updateUI();
+  meterFill.style.width=Math.min(100, 20 + score)%100 + '%';
+}
+
+checkBtn.addEventListener('click',checkAnswer);
+nextBtn.addEventListener('click',nextPrompt);
+resetBtn.addEventListener('click',()=>{
+  score=0;
+  nextPrompt();
+  updateUI();
+});
+tabs.forEach(t=>t.addEventListener('click',()=>setTab(t.dataset.tab)));
+level.addEventListener('input',updateUI);
+domain.addEventListener('change',nextPrompt);
+
+updatePrompt();
+updateUI();
+</script>
+</body>
+</html>
