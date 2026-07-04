@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MRI Operation and Image Production</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#eef6ff;
+      --panel:#ffffff;
+      --ink:#1f2937;
+      --muted:#475569;
+      --brand:#1d4ed8;
+      --brand2:#2563eb;
+      --line:#d6e0eb;
+      --shadow:0 12px 30px rgba(15,23,42,.10);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:'Inter',sans-serif;
+      background:linear-gradient(180deg,#f8fbff,#eaf1f8);
+      color:var(--ink);
+    }
+    header{
+      position:sticky; top:0; z-index:10;
+      background:#fff;
+      border-bottom:1px solid var(--line);
+      box-shadow:0 1px 3px rgba(0,0,0,.05);
+      padding:12px 18px;
+      display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+    }
+    .brand{font-weight:700; color:var(--brand); letter-spacing:.01em}
+    .navlinks{display:flex; gap:8px; flex-wrap:wrap}
+    .navlinks a{
+      text-decoration:none;
+      color:#fff;
+      background:#64748b;
+      padding:8px 12px;
+      border-radius:8px;
+      font-size:.85rem;
+      font-weight:600;
+    }
+    .navlinks a.primary{background:var(--brand)}
+    .shell{max-width:1500px; margin:0 auto; padding:18px;}
+    .titlecard{
+      background:linear-gradient(135deg,#ffffff,#f6faff);
+      border:1px solid var(--line);
+      border-radius:18px;
+      box-shadow:var(--shadow);
+      padding:18px 20px;
+      margin-bottom:16px;
+    }
+    h1{margin:0;font-size:2rem;color:#17357d}
+    .subtitle{margin:8px 0 0;color:var(--muted);line-height:1.55;max-width:1100px}
+    .topmeta{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap}
+    .pill{
+      background:#eff6ff;
+      color:#1d4ed8;
+      border:1px solid #cfe0ff;
+      padding:7px 10px;
+      border-radius:999px;
+      font-size:.82rem;
+      font-weight:700;
+    }
+    .layout{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:16px;
+    }
+    @media (min-width: 1100px){
+      .layout{grid-template-columns: .98fr 1.02fr}
+    }
+    .panel{
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:18px;
+      box-shadow:var(--shadow);
+      padding:18px;
+      overflow:hidden;
+    }
+    .panel h2{
+      margin:0 0 12px;
+      font-size:1.08rem;
+      color:#17357d;
+      text-transform:uppercase;
+      letter-spacing:.05em;
+    }
+    .controls{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin-bottom:12px;
+    }
+    .control{
+      background:#f8fbff;
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:12px;
+    }
+    .control label{
+      display:block;
+      font-size:.84rem;
+      font-weight:700;
+      color:#334155;
+      margin-bottom:8px;
+    }
+    .control select,.control input[type="range"]{width:100%}
+    .control .val{
+      margin-top:6px;
+      font-size:.82rem;
+      color:#64748b;
+      font-weight:600;
+    }
+    .buttons{display:flex; gap:10px; flex-wrap:wrap; margin:10px 0 14px}
+    button{
+      border:0;
+      border-radius:10px;
+      padding:10px 14px;
+      font-weight:700;
+      cursor:pointer;
+      transition:transform .12s ease, opacity .15s ease;
+    }
+    button:hover{transform:translateY(-1px)}
+    button:disabled{opacity:.5; cursor:not-allowed; transform:none}
+    .btn-primary{background:var(--brand2); color:#fff}
+    .btn-secondary{background:#64748b; color:#fff}
+    .btn-ghost{background:#e2e8f0; color:#0f172a}
+    .info-box{
+      background:#f8fbff;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:14px;
+      margin-bottom:12px;
+      min-height:140px;
+    }
+    .info-box h3{
+      margin:0 0 6px;
+      font-size:1rem;
+      color:#0f172a;
+    }
+    .info-box p{
+      margin:6px 0;
+      color:#334155;
+      line-height:1.5;
+      font-size:.95rem;
+    }
+    .status{
+      background:#eff6ff;
+      color:#1e3a8a;
+      border:1px solid #bfdbfe;
+      border-radius:12px;
+      padding:12px;
+      margin-bottom:10px;
+      font-size:.93rem;
+      line-height:1.45;
+    }
+    .note{
+      background:#fff7ed;
+      color:#7c2d12;
+      border:1px solid #fdba74;
+      border-radius:12px;
+      padding:12px;
+      font-size:.92rem;
+      line-height:1.45;
+      margin-bottom:12px;
+    }
+    .flip-wrap{perspective:1600px}
+    .stage{
+      position:relative;
+      width:100%;
+      min-height:660px;
+      border-radius:18px;
+      overflow:hidden;
+      background:linear-gradient(180deg,#e6eef8,#dbeafe);
+      border:1px solid #cfe0f2;
+    }
+    .page{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:stretch;
+      justify-content:stretch;
+      transform-style:preserve-3d;
+      transition:transform .7s cubic-bezier(.2,.8,.2,1), opacity .35s ease;
+      opacity:0;
+      pointer-events:none;
+    }
+    .page.active{
+      opacity:1;
+      pointer-events:auto;
+      z-index:2;
+    }
+    .page-inner{
+      width:100%;
+      display:grid;
+      grid-template-columns:1.05fr .95fr;
+      min-height:660px;
+      background:#fff;
+    }
+    .page-text{
+      padding:24px;
+      background:linear-gradient(180deg,#ffffff,#f8fbff);
+      border-right:1px solid var(--line);
+    }
+    .page-text h3{
+      margin:0 0 10px;
+      font-size:1.45rem;
+      color:#17357d;
+    }
+    .page-text p{margin:0 0 10px; color:#334155; line-height:1.6}
+    .page-text ul{
+      margin:10px 0 0 18px;
+      color:#334155;
+      line-height:1.55;
+      padding:0;
+    }
+    .page-text li{margin:6px 0}
+    .page-quiz{
+      margin-top:14px;
+      background:#eff6ff;
+      border:1px solid #bfdbfe;
+      border-radius:12px;
+      padding:12px;
+      color:#1e3a8a;
+      font-size:.92rem;
+    }
+    .viz{
+      position:relative;
+      overflow:hidden;
+      background:linear-gradient(180deg,#dbeafe,#eef6ff);
+      min-height:660px;
+    }
+    .viz svg{
+      width:100%;
+      height:100%;
+      display:block;
+    }
+    .pulse{animation:pulse 1.6s ease-in-out infinite}
+    @keyframes pulse{0%,100%{opacity:.85; transform:scale(1)}50%{opacity:1; transform:scale(1.04)}}
+    .fadein{animation:fadein .6s ease both}
+    @keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .footer{
+      text-align:center;
+      color:#64748b;
+      font-size:.85rem;
+      padding:12px 0 22px;
+    }
+    .hidden{display:none !important}
+    @media (max-width:1099px){
+      .page-inner{grid-template-columns:1fr}
+      .page-text{border-right:0;border-bottom:1px solid var(--line)}
+      .stage{min-height:920px}
+      .viz{min-height:430px}
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="brand">MRI Operation and Image Production</div>
+  <div class="navlinks">
+    <a class="primary" href="#lesson">Lesson</a>
+    <a href="../index.html">Radiation Physics Menu</a>
+  </div>
+</header>
+
+<div class="shell" id="lesson">
+  <div class="titlecard">
+    <h1>MRI Operation and Image Production</h1>
+    <p class="subtitle">
+      This lesson explains how MRI produces images using the main magnet, gradient coils, radiofrequency excitation, signal reception, relaxation, and spatial encoding. It is designed as a flip-page module with in-code diagrams and animations so learners can connect the physics to the image they see on screen [file:20].
+    </p>
+    <div class="topmeta">
+      <span class="pill">Code-generated diagrams</span>
+      <span class="pill">No imported images</span>
+      <span class="pill">Physics + image formation</span>
+      <span class="pill">Animated learning pages</span>
+    </div>
+  </div>
+
+  <div class="layout">
+    <div class="panel">
+      <h2>Controls</h2>
+      <div class="controls">
+        <div class="control">
+          <label for="pageSelect">Page</label>
+          <select id="pageSelect">
+            <option value="0">1. MRI overview</option>
+            <option value="1">2. Magnet and spin</option>
+            <option value="2">3. RF excitation</option>
+            <option value="3">4. Relaxation and signal</option>
+            <option value="4">5. Gradients and encoding</option>
+            <option value="5">6. Slice selection</option>
+            <option value="6">7. Contrast mechanisms</option>
+            <option value="7">8. K-space idea</option>
+            <option value="8">9. Image reconstruction</option>
+            <option value="9">10. Summary and review</option>
+          </select>
+        </div>
+        <div class="control">
+          <label for="autoPlay">Auto-play page animation</label>
+          <input id="autoPlay" type="range" min="0" max="1" step="1" value="1">
+          <div class="val" id="autoPlayLabel">On</div>
+        </div>
+      </div>
+
+      <div class="buttons">
+        <button class="btn-primary" id="prevBtn">◀ Previous</button>
+        <button class="btn-primary" id="nextBtn">Next ▶</button>
+        <button class="btn-secondary" id="animateBtn">Replay Animation</button>
+        <button class="btn-ghost" id="resetBtn">Reset</button>
+      </div>
+
+      <div class="status" id="statusBox"></div>
+      <div class="note" id="noteBox"></div>
+
+      <div class="info-box" id="pageSummary"></div>
+
+      <div class="page-quiz" id="quizBox"></div>
+    </div>
+
+    <div class="panel flip-wrap">
+      <h2>Flip Pages</h2>
+      <div class="stage" id="stage">
+        <div class="page active" data-page="0">
+          <div class="page-inner">
+            <div class="page-text">
+              <h3>MRI overview</h3>
+              <p>
+                MRI uses a strong magnetic field, radiofrequency pulses, and gradient fields to create images with excellent soft-tissue contrast and no ionizing radiation [file:20].
+              </p>
+              <ul>
+                <li>The magnet aligns hydrogen nuclei.</li>
+                <li>RF pulses disturb that alignment.</li>
+                <li>Signals are received and converted into images.</li>
+              </ul>
+              <div class="page-quiz"><strong>Check:</strong> Why is MRI especially valuable in soft tissue imaging?</div>
+            </div>
+            <div class="viz">
+              <svg viewBox="0 0 700 660" aria-label="MRI overview diagram">
+                <rect width="700" height="660" fill="#dbeafe"/>
+                <circle cx="350" cy="320" r="150" fill="#bfdbfe" opacity=".5"/>
+                <circle cx="350" cy="320" r="115" fill="#93c5fd" opacity=".5"/>
+                <circle cx="350" cy="320" r="70" fill="#60a5fa" opacity=".5"/>
+                <path d="M120 320 C170 270, 230 270, 280 320 C330 370, 390 370, 440 320 C490 270, 550 270, 600 320" stroke="#f59e0b" stroke-width="8" fill="none"/>
+                <path d="M120 390 C170 340, 230 340, 280 390 C330 440, 390 440, 440 390 C490 340, 550 340, 600 390" stroke="#0ea5e9" stroke-width="8" fill="none"/>
+                <text x="350" y="150" text-anchor="middle" fill="#1e3a8a" font-size="26" font-weight="700">Magnet + RF + gradients</text>
+                <text x="350" y="560" text-anchor="middle" fill="#334155" font-size="18" font-weight="700">These fields work together to produce MR images.</text>
+                <circle cx="350" cy="320" r="20" fill="#ef4444" class="pulse"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="page" data-page="1">
+          <div class="page-inner">
+            <div class="page-text">
+              <h3>Magnet and spin</h3>
+              <p>
+                The main magnet aligns hydrogen nuclei so their tiny magnetic moments point in a preferred direction. This creates the starting condition needed for signal generation [file:20].
+              </p>
+              <ul>
+                <li>Protons behave like tiny magnets.</li>
+                <li>Without the main field, their directions are more random.</li>
+                <li>Alignment gives MRI its measurable signal source.</li>
+              </ul>
+              <div class="page-quiz"><strong>Check:</strong> What role does the main magnetic field play before imaging begins?</div>
+            </div>
+            <div class="viz">
+              <svg viewBox="0 0 700 660" aria-label="Spin alignment diagram">
+                <rect width="700" height="660" fill="#eef6ff"/>
+                <circle cx="350" cy="310" r="150" fill="#bfdbfe" opacity=".45"/>
+                <g stroke="#1d4ed8" stroke-width="8" stroke-linecap="round">
+                  <path d="M220 220 L220 170"/>
+                  <path d="M270 260 L270 200"/>
+                  <path d="M320 210 L320 160"/>
+                  <path d="M380 255 L380 200"/>
+                  <path d="M430 220 L430 170"/>
+                  <path d="M480 265 L480 210"/>
+                  <path d="M530 225 L530 170"/>
+                </g>
+                <g stroke="#64748b" stroke-width="8" stroke-linecap="round" opacity=".45">
+                  <path d="M240 430 L240 480"/>
+                  <path d="M300 390 L300 450"/>
+                  <path d="M360 440 L360 490"/>
+                  <path d="M420 380 L420 450"/>
+                  <path d="M500 430 L500 485"/>
+                </g>
+                <text x="350" y="130" text-anchor="middle" fill="#1e3a8a" font-size="24" font-weight="700">Aligned spins in the magnetic field</text>
+                <text x="350" y="560" text-anchor="middle" fill="#334155" font-size="18" font-weight="700">More alignment means a stronger measurable signal.</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="page" data-page="2">
+          <div class="page-inner">
+            <div class="page-text">
+              <h3>RF excitation</h3>
+              <p>
+                A radiofrequency pulse tips the aligned spins away from equilibrium so they can generate a detectable signal as they return toward alignment [file:20].
+              </p>
+              <ul>
+                <li>RF energy excites the spins.</li>
+                <li>The flip angle describes how far they are tipped.</li>
+                <li>The system then listens for the returning signal.</li>
+              </ul>
+              <div class="page-quiz"><strong>Check:</strong> What happens after the spins are tipped by the RF pulse?</div>
+            </div>
+            <div class="viz">
+              <svg viewBox="0 0 700 660" aria-label="RF excitation diagram">
+                <rect width="700" height="660" fill="#ecfeff"/>
+                <circle cx="340" cy="330" r="140" fill="#dbeafe" opacity=".45"/>
+                <path d="M140 330 L250 330" stroke="#f59e0b" stroke-width="10" stroke-linecap="round"/>
+                <polygon points="250,330 230,320 230,340" fill="#f59e0b"/>
+                <text x="145" y="295" fill="#b45309" font-size="20" font-weight="700">RF pulse</text>
+                <g transform="translate(360 205)" stroke="#1d4ed8" stroke-width="7" stroke-linecap="round">
+                  <path d="M0 0 L0 70"/>
+                  <path d="M30 10 L30 80"/>
+                  <path d="M60 0 L60 70"/>
+                  <path d="M90 12 L90 82"/>
+                </g>
+                <path d="M350 330 C350 280, 390 250, 440 245" stroke="#2563eb" stroke-width="8" fill="none"/>
+                <path d="M350 330 C340 360, 330 390, 340 425" stroke="#16a34a" stroke-width="8" fill="none"/>
+                <text x="475" y="235" fill="#1e3a8a" font-size="20" font-weight="700">Tipped spins</text>
+                <text x="475" y="420" fill="#166534" font-size="20" font-weight="700">Return signal begins</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="page" data-page="3">
+          <div class="page-inner">
+            <div class="page-text">
+              <h3>Relaxation and signal</h3>
+              <p>
+                Once the RF pulse stops, the spins relax back toward equilibrium and emit signal that the receiver coil can detect. T1 and T2 behavior help determine how bright or dark tissues appear [file:20].
+              </p>
+              <ul>
+                <li>Relaxation is the return to baseline.</li>
+                <li>Longitudinal and transverse behaviors differ.</li>
+                <li>Signal decay is part of normal MR physics.</li>
+              </ul>
+              <div class="page-quiz"><strong>Check:</strong> Why does the signal not stay constant after excitation?</div>
+            </div>
+            <div class="viz">
+              <svg viewBox="0 0 700 660" aria-label="Relaxation and signal diagram">
+                <rect width="700" height="660" fill="#f8fbff"/>
+                <path d="M90 500 C190 160, 450 120, 610 200" stroke="#2563eb" stroke-width="8" fill="none"/>
+                <path d="M90 300 C220 180, 420 210, 610 320" stroke="#16a34a" stroke-width="8" fill="none"/>
+                <circle cx="150" cy="440" r="10" fill="#2563eb"/>
+                <circle cx="300" cy="260" r="10" fill="#2563eb"/>
+                <circle cx="460" cy="190" r="10" fill="#2563eb"/>
+                <circle cx="150" cy="380" r="10" fill="#16a34a"/>
+                <circle cx="320" cy="280" r="10" fill="#16a34a"/>
+                <circle cx="520" cy="305" r="10" fill="#16a34a"/>
+                <text x="120" y="140" fill="#1e3a8a" font-size="22" font-weight="700">Signal decay curves</text>
+                <text x="120" y="170" fill="#334155" font-size="16" font-weight="700">T1 and T2 relaxation shape tissue contrast.</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="page" data-page="4">
+          <div class="page-inner">
+            <div class="page-text">
+              <h3>Gradients and encoding</h3>
+              <p>
+                Gradient coils create small, controlled changes in magnetic field strength so the scanner can determine where each signal originated from. This is how MRI creates spatial information [file:20].
+              </p>
+              <ul>
+                <li>Gradients vary the field across space.</li>
+                <li>They enable frequency and phase encoding.</li>
+                <li>They are essential for making images from raw signal.</li>
+              </ul>
+              <div class="page-quiz"><strong>Check:</strong> What problem do gradients solve during image formation?</div>
+            </div>
+            <div class="viz">
+              <svg viewBox="0 0 700 660" aria-label="Gradient encoding diagram">
+                <rect width="700" height="660" fill="#dbeafe"/>
+                <rect x="150" y="150" width="400" height="360" rx="28" fill="#fff" stroke="#cbd5e1" stroke-width="3"/>
+                <path d="M210 250 L210 430" stroke="#94a3b8" stroke-width="3"/>
+                <path d="M280 220 L280 460" stroke="#94a3b8" stroke-width="3"/>
+                <path d="M350 190 L350 490" stroke="#94a3b8" stroke-width="3"/>
+                <path d="M420 220 L420 460" stroke="#94a3b8" stroke-width="3"/>
+                <path d="M490 250 L490 430" stroke="#94a3b8" stroke-width="3"/>
+                <path d="M210 260 L490 260" stroke="#2563eb" stroke-width="6" stroke-dasharray="12 10"/>
+                <path d="M210 330 L490 330" stroke="#0ea5e9" stroke-width="6" stroke-dasharray="12 10"/>
+                <path d="M210 400 L490 400" stroke="#f59e0b" stroke-width="6" stroke-dasharray="12 10"/>
+                <text x="350" y="115" text-anchor="middle" fill="#1e3a8a" font-size="24" font-weight="700">Spatial encoding with gradients</text>
+                <text x="350" y="560" text-anchor="middle" fill="#334155" font-size="18" font-weight="700">Different positions experience slightly different fields.</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="page" data-page="5">
+          <div class="page-inner">
+            <div class="page-text">
+              <h3>Slice selection</h3>
+              <p>
+                By combining a gradient with a carefully timed RF pulse, the scanner excites only a selected slice of tissue. This limits the signal to a thin section of the body [file:20].
+              </p>
+              <ul>
+                <li>The slice is chosen by frequency and field location.</li>
+                <li>Only spins in the targeted slice are excited.</li>
+                <li>That lets the scanner build image by image through the body.</li>
+              </ul>
+              <div class="page-quiz"><strong>Check:</strong> Why is slice selection useful in MRI?</div>
+            </div>
+            <div class="viz">
+              <svg viewBox="0 0 700 660" aria-label="Slice selection diagram">
+                <rect width="700" height="660" fill="#eef6ff"/>
+                <ellipse cx="350" cy="330" rx="190" ry="150" fill="#bfdbfe" opacity=".45"/>
+                <rect x="170" y="295" width="360" height="70" rx="14" fill="#1d4ed8" opacity=".85"/>
+                <path d="M150 330 L240 330" stroke="#f59e0b" stroke-width="10" stroke-linecap="round"/>
+                <path d="M460 330 L550 330" stroke="#f59e0b" stroke-width="10" stroke-linecap="round"/>
+                <polygon points="240,330 220,320 220,340" fill="#f59e0b"/>
+                <polygon points="460,330 480,320 480,340" fill="#f59e0b"/>
+                <text x="350" y="145" text-anchor="middle" fill="#1e3a8a" font-size="24" font-weight="700">Only one slice is excited</text>
+                <text x="350" y="560" text-anchor="middle" fill="#334155" font-size="18" font-weight="700">Slice selection helps localize signal to a thin section.</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="page" data-page="6">
+          <div class="page-inner">
+            <div class="page-text">
+              <h3>Contrast mechanisms</h3>
+              <p>
+                MRI contrast depends on tissue properties and on how the pulse sequence is designed. T1, T2, proton density, diffusion, perfusion, and other factors can all alter how tissues appear [file:20].
+              </p>
+              <ul>
+                <li>Sequence choice changes appearance.</li>
+                <li>Different tissues relax differently.</li>
+                <li>Functional information can also be captured.</li>
+              </ul>
+              <div class="page-quiz"><strong>Check:</strong> Why can the same anatomy look different on different MRI sequences?</div>
+            </div>
+            <div class="viz">
+              <svg viewBox="0 0 700 660" aria-label="Contrast mechanism diagram">
+                <rect width="700" height="660" fill="#f8fbff"/>
+                <rect x="80" y="170" width="160" height="260" rx="18" fill="#e2e8f0"/>
+                <rect x="100" y="210" width="120" height="45" rx="8" fill="#93c5fd"/>
+                <rect x="100" y="275" width="120" height="45" rx="8" fill="#60a5fa"/>
+                <rect x="100" y="340" width="120" height="45" rx="8" fill="#2563eb"/>
+                <rect x="280" y="170" width="160" height="260" rx="18" fill="#e2e8f0"/>
+                <rect x="300" y="210" width="120" height="45" rx="8" fill="#dbeafe"/>
+                <rect x="300" y="275" width="120" height="45" rx="8" fill="#bfdbfe"/>
+                <rect x="300" y="340" width="120" height="45" rx="8" fill="#93c5fd"/>
+                <rect x="480" y="170" width="160" height="260" rx="18" fill="#e2e8f0"/>
+                <rect x="500" y="210" width="120" height="45" rx="8" fill="#fde68a"/>
+                <rect x="500" y="275" width="120" height="45" rx="8" fill="#fbbf24"/>
+                <rect x="500" y="340" width="120" height="45" rx="8" fill="#f59e0b"/>
+                <text x="160" y="465" text-anchor="middle" fill="#1e3a8a" font-size="18" font-weight="700">T1-weighted</text>
+                <text x="340" y="465" text-anchor="middle" fill="#1e3a8a" font-size="18" font-weight="700">T2-weighted</text>
+                <text x="560" y="465" text-anchor="middle" fill="#1e3a8a" font-size="18" font-weight="700">Other contrasts</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="page" data-page="7">
+          <div class="page-inner">
+            <div class="page-text">
+              <h3>K-space idea</h3>
+              <p>
+                The scanner does not build the image directly in picture form. It collects spatial frequency information first, often explained using k-space, and then reconstructs the image from that data [file:20].
+              </p>
+              <ul>
+                <li>Central data affect overall brightness and contrast.</li>
+                <li>Outer data affect detail and sharp edges.</li>
+                <li>Ordering of acquisition influences image quality.</li>
+              </ul>
+              <div class="page-quiz"><strong>Check:</strong> What do you think changes if the center of k-space is sampled differently?</div>
+            </div>
+            <div class="viz">
+              <svg viewBox="0 0 700 660" aria-label="K-space diagram">
+                <rect width="700" height="660" fill="#eef6ff"/>
+                <rect x="120" y="140" width="460" height="380" rx="22" fill="#fff" stroke="#cbd5e1" stroke-width="3"/>
+                <path d="M350 160 L350 500" stroke="#94a3b8" stroke-width="2"/>
+                <path d="M140 330 L560 330" stroke="#94a3b8" stroke-width="2"/>
+                <g fill="#2563eb">
+                  <circle cx="350" cy="330" r="18" class="pulse"/>
+                  <circle cx="310" cy="290" r="10"/>
+                  <circle cx="390" cy="290" r="10"/>
+                  <circle cx="310" cy="370" r="10"/>
+                  <circle cx="390" cy="370" r="10"/>
+                  <circle cx="270" cy="250" r="8"/>
+                  <circle cx="430" cy="250" r="8"/>
+                  <circle cx="270" cy="410" r="8"/>
+                  <circle cx="430" cy="410" r="8"/>
+                </g>
+                <text x="350" y="110" text-anchor="middle" fill="#1e3a8a" font-size="24" font-weight="700">Sampling information first</text>
+                <text x="350" y="560" text-anchor="middle" fill="#334155" font-size="18" font-weight="700">Center: contrast. Outer edges: detail.</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="page" data-page="8">
+          <div class="page-inner">
+            <div class="page-text">
+              <h3>Image reconstruction</h3>
+              <p>
+                After signal acquisition, the system transforms raw data into an image that radiologists and RT teams can interpret. The final appearance depends on reconstruction and sequence parameters [file:20].
+              </p>
+              <ul>
+                <li>Raw data become a visible image.</li>
+                <li>Noise, motion, and sequence choice affect the result.</li>
+                <li>Good acquisition produces useful anatomy for planning and guidance.</li>
+              </ul>
+              <div class="page-quiz"><strong>Check:</strong> Why do motion and acquisition settings matter before reconstruction?</div>
+            </div>
+            <div class="viz">
+              <svg viewBox="0 0 700 660" aria-label="Image reconstruction diagram">
+                <rect width="700" height="660" fill="#dbeafe"/>
+                <rect x="85" y="235" width="135" height="180" rx="14" fill="#fff" stroke="#cbd5e1" stroke-width="3"/>
+                <path d="M110 260 H195 M110 290 H195 M110 320 H195 M110 350 H195 M110 380 H195" stroke="#94a3b8" stroke-width="4"/>
+                <path d="M220 325 L310 325" stroke="#2563eb" stroke-width="8" stroke-linecap="round" stroke-dasharray="14 10"/>
+                <polygon points="310,325 290,315 290,335" fill="#2563eb"/>
+                <rect x="360" y="210" width="250" height="240" rx="20" fill="#fff" stroke="#cbd5e1" stroke-width="3"/>
+                <rect x="390" y="240" width="190" height="180" fill="#f8fbff" stroke="#93c5fd" stroke-width="2"/>
+                <circle cx="485" cy="330" r="52" fill="#93c5fd" opacity=".7"/>
+                <circle cx="460" cy="315" r="12" fill="#1d4ed8"/>
+                <circle cx="505" cy="310" r="10" fill="#1d4ed8"/>
+                <circle cx="500" cy="355" r="8" fill="#1d4ed8"/>
+                <text x="160" y="205" text-anchor="middle" fill="#1e3a8a" font-size="20" font-weight="700">Raw data</text>
+                <text x="485" y="195" text-anchor="middle" fill="#1e3a8a" font-size="20" font-weight="700">Reconstructed image</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="page" data-page="9">
+          <div class="page-inner">
+            <div class="page-text">
+              <h3>Summary and review</h3>
+              <p>
+                MRI produces images by aligning hydrogen nuclei, exciting them with RF, encoding location with gradients, and reconstructing the acquired signal into visible anatomy. The same principles that make MRI useful also explain why sequence choice affects contrast [file:20].
+              </p>
+              <ul>
+                <li>Magnet creates alignment.</li>
+                <li>RF excites and produces signal.</li>
+                <li>Gradients encode position.</li>
+                <li>Reconstruction turns signal into an image.</li>
+              </ul>
+              <div class="page-quiz"><strong>Check:</strong> Can you explain the full chain from spin alignment to final image?</div>
+            </div>
+            <div class="viz">
+              <svg viewBox="0 0 700 660" aria-label="MRI image formation summary diagram">
+                <rect width="700" height="660" fill="#eef6ff"/>
+                <g transform="translate(80 190)">
+                  <rect x="0" y="0" width="110" height="110" rx="18" fill="#dbeafe" stroke="#60a5fa" stroke-width="3"/>
+                  <text x="55" y="48" text-anchor="middle" fill="#1e3a8a" font-size="18" font-weight="700">Align</text>
+                  <text x="55" y="72" text-anchor="middle" fill="#1e3a8a" font-size="14">magnet</text>
+                </g>
+                <g transform="translate(215 190)">
+                  <rect x="0" y="0" width="110" height="110" rx="18" fill="#bfdbfe" stroke="#2563eb" stroke-width="3"/>
+                  <text x="55" y="48" text-anchor="middle" fill="#1e3a8a" font-size="18" font-weight="700">Excite</text>
+                  <text x="55" y="72" text-anchor="middle" fill="#1e3a8a" font-size="14">RF pulse</text>
+                </g>
+                <g transform="translate(350 190)">
+                  <rect x="0" y="0" width="110" height="110" rx="18" fill="#dbeafe" stroke="#0ea5e9" stroke-width="3"/>
+                  <text x="55" y="48" text-anchor="middle" fill="#1e3a8a" font-size="18" font-weight="700">Encode</text>
+                  <text x="55" y="72" text-anchor="middle" fill="#1e3a8a" font-size="14">gradients</text>
+                </g>
+                <g transform="translate(485 190)">
+                  <rect x="0" y="0" width="110" height="110" rx="18" fill="#dcfce7" stroke="#16a34a" stroke-width="3"/>
+                  <text x="55" y="48" text-anchor="middle" fill="#166534" font-size="18" font-weight="700">Image</text>
+                  <text x="55" y="72" text-anchor="middle" fill="#166534" font-size="14">recon</text>
+                </g>
+                <path d="M190 245 L215 245" stroke="#2563eb" stroke-width="8" stroke-linecap="round"/>
+                <path d="M325 245 L350 245" stroke="#2563eb" stroke-width="8" stroke-linecap="round"/>
+                <path d="M460 245 L485 245" stroke="#2563eb" stroke-width="8" stroke-linecap="round"/>
+                <text x="350" y="390" text-anchor="middle" fill="#334155" font-size="20" font-weight="700">From physics to picture</text>
+                <text x="350" y="425" text-anchor="middle" fill="#64748b" font-size="16">Alignment → excitation → encoding → reconstruction</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      MRI operation and image production — flip-page lesson draft
+    </div>
+  </div>
+</div>
+
+<script>
+  const pages = [...document.querySelectorAll('.page')];
+  const pageSelect = document.getElementById('pageSelect');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const animateBtn = document.getElementById('animateBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const statusBox = document.getElementById('statusBox');
+  const noteBox = document.getElementById('noteBox');
+  const pageSummary = document.getElementById('pageSummary');
+  const quizBox = document.getElementById('quizBox');
+  const autoPlay = document.getElementById('autoPlay');
+  const autoPlayLabel = document.getElementById('autoPlayLabel');
+
+  const content = [
+    {title:'MRI overview', summary:'MRI uses a strong magnetic field, RF pulses, and gradients to produce images without ionizing radiation [file:20].', note:'Start with the full pipeline before splitting it into parts.', quiz:'What makes MRI fundamentally different from CT in terms of radiation exposure?'},
+    {title:'Magnet and spin', summary:'The main magnetic field aligns hydrogen nuclei, creating the magnetic starting point for signal production [file:20].', note:'Alignment is the foundation of signal generation.', quiz:'Why do protons need to be aligned before MRI can collect useful signal?'},
+    {title:'RF excitation', summary:'An RF pulse tips spins away from equilibrium so the system can detect the returning signal [file:20].', note:'The flip angle and pulse timing influence how much signal is produced.', quiz:'What happens to the spin population immediately after RF excitation?'},
+    {title:'Relaxation and signal', summary:'As spins relax back toward equilibrium, the scanner receives signal that can be shaped by T1 and T2 behavior [file:20].', note:'Relaxation is the source of contrast differences between tissues.', quiz:'Why do different tissues appear differently once relaxation begins?'},
+    {title:'Gradients and encoding', summary:'Gradient coils create small field variations that encode spatial location in the signal [file:20].', note:'Gradients are what turn raw signal into spatial information.', quiz:'What imaging problem do gradients solve?'},
+    {title:'Slice selection', summary:'A gradient plus an RF pulse allows the scanner to excite only a selected slice of tissue [file:20].', note:'Slice selection helps the scanner image a thin section rather than the whole body at once.', quiz:'Why is slice selection useful in routine MRI?'},
+    {title:'Contrast mechanisms', summary:'Tissue properties and sequence design determine MRI contrast, including T1, T2, proton density, diffusion, and perfusion effects [file:20].', note:'The same anatomy can look different on different sequences because contrast is sequence dependent.', quiz:'Why can one tissue look bright on one sequence and dark on another?'},
+    {title:'K-space idea', summary:'MRI often samples spatial frequency information first and reconstructs the image from that data [file:20].', note:'A simplified k-space visualization helps learners connect sampling to final image detail.', quiz:'What do you expect to change if the center of k-space is sampled differently?'},
+    {title:'Image reconstruction', summary:'Raw MR data are converted into visible anatomy through reconstruction, with image quality influenced by motion and sequence settings [file:20].', note:'Acquisition quality matters because reconstruction cannot fully repair poor input data.', quiz:'Why do motion and acquisition settings matter before reconstruction?'},
+    {title:'Summary and review', summary:'MRI image production follows a chain from alignment to excitation, encoding, and reconstruction [file:20].', note:'This final page gives learners a compact mental model of the whole process.', quiz:'Can you describe the entire MRI image formation sequence in order?'}
+  ];
+
+  let current = 0;
+  let timer = null;
+
+  function setPage(index){
+    index = Math.max(0, Math.min(pages.length - 1, index));
+    current = index;
+    pageSelect.value = String(index);
+    pages.forEach((p,i)=>{ p.classList.toggle('active', i===index); });
+    const c = content[index];
+    statusBox.innerHTML = `<strong>Page ${index+1} of 10.</strong> ${c.summary}`;
+    noteBox.textContent = c.note;
+    pageSummary.innerHTML = `<h3>${c.title}</h3><p>${c.summary}</p>`;
+    quizBox.innerHTML = `<strong>Prompt:</strong> ${c.quiz}`;
+    animateCurrentPage();
+  }
+
+  function animateCurrentPage(){
+    clearTimeout(timer);
+    if(current === 0){
+      const svg = pages[current].querySelector('svg');
+      svg.classList.remove('fadein');
+      void svg.offsetWidth;
+      svg.classList.add('fadein');
+    }
+  }
+
+  function next(){ setPage((current + 1) % pages.length); }
+  function prev(){ setPage((current - 1 + pages.length) % pages.length); }
+
+  pageSelect.addEventListener('change', ()=> setPage(parseInt(pageSelect.value,10)));
+  nextBtn.addEventListener('click', next);
+  prevBtn.addEventListener('click', prev);
+  animateBtn.addEventListener('click', animateCurrentPage);
+  resetBtn.addEventListener('click', ()=> setPage(0));
+
+  autoPlay.addEventListener('input', ()=>{
+    autoPlayLabel.textContent = autoPlay.value === '1' ? 'On' : 'Off';
+  });
+
+  setPage(0);
+</script>
+</body>
+</html>
