@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Console Ops: MLC Lesson</title>
+<title>Console Operations: Field Size Lesson</title>
 <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; margin: 20px;
             background-color: #f4f4f4; color: #333; display: flex; flex-direction: column; align-items: center; }
@@ -45,80 +45,93 @@
         .feedback-incorrect label.selected-incorrect { color: #A93226; }
         .explanation { font-size: 0.9em; color: #444; margin-top: 5px; padding-left: 20px; }
         .footer { text-align: center; margin-top: 30px; padding-top: 15px; border-top: 1px solid #ccc; font-size: 0.9em; color: #555; }
+
+        .nav-links-header { background-color: #fff; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 50; }
 </style>
 </head>
 <body>
+    <header class="nav-links-header">
+        <div style="max-width:900px;margin:0 auto;padding:12px 20px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;">
+            <strong style="color:#0056b3;">Console Operations: Understanding &amp; Setting Field Size</strong>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                <a href="index.html" style="font-size:0.8rem;background:#0056b3;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Back to Tool Menu</a>
+                <a href="../../Clinical_Practice/Modalities_Equipment_Terminology/index.html" style="font-size:0.8rem;background:#0056b3;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Modalities Menu</a>
+                <a href="../../index.html" style="font-size:0.8rem;background:#64748b;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Main Workbook</a>
+            </div>
+        </div>
+    </header>
     <div class="container">
-        <h1>Console Ops: MLCs &amp; Field Shaping</h1>
+        <h1>Console Operations: Understanding &amp; Setting Field Size</h1>
         <div class="flip-lesson-container">
             <h2>Interactive Lesson</h2>
             <div id="lesson-page-1" class="lesson-page active">
-                <h3>Page 1: Introduction to Multi-Leaf Collimators</h3>
-                <p>A <span class="highlight">Multi-Leaf Collimator (MLC)</span> is a set of many thin, motorized tungsten leaves arranged in two opposing banks inside the treatment head. Each leaf can move independently in and out of the beam.</p>
-                <p>MLCs replaced custom cerrobend (low-melting-point alloy) blocks, which had to be hand-cast for every patient and every field. An MLC can form a new field shape in seconds, entirely from the console.</p>
-                <div class="key-principle">
-                    <p>Because the two banks of leaves face each other across the field, the pattern they form together defines the beam's aperture &mdash; the shape actually irradiating the patient, within the rectangle set by the jaws.</p>
-                </div>
+                <h3>Page 1: What "Field Size" Means at the Console</h3>
+                <p>The <span class="highlight">field size</span> is the dimension of the radiation beam at isocenter, defined by the collimator jaws. It's usually described as X &times; Y in centimeters &mdash; for example, a "10 &times; 10" field is 10 cm wide by 10 cm tall at isocenter.</p>
+                <p>Getting field size right matters for two reasons that pull in opposite directions:</p>
+                <ul>
+                    <li><strong>Coverage:</strong> the field must be large enough to cover the target volume with an adequate margin.</li>
+                    <li><strong>Sparing:</strong> the field must be no larger than necessary, or healthy tissue outside the target gets irradiated for no benefit.</li>
+                </ul>
+                <p>This lesson covers how field size is set and read at the console, before you practice it yourself in the simulator.</p>
             </div>
             <div id="lesson-page-2" class="lesson-page">
-                <h3>Page 2: Leaf Width and Spatial Resolution</h3>
-                <p>Each MLC leaf has a fixed width projected at isocenter &mdash; commonly 5 mm or 10 mm, though high-resolution MLCs use narrower leaves (sometimes down to 2.5&ndash;5 mm) near the central axis.</p>
+                <h3>Page 2: Jaws &mdash; Symmetric vs. Asymmetric</h3>
+                <p>Field size is created by two pairs of collimator jaws: the <strong>X jaws</strong> (X1/X2) and the <strong>Y jaws</strong> (Y1/Y2). Each jaw in a pair can typically move independently.</p>
                 <div class="key-principle">
-                    <p><strong>Narrower leaves</strong> = finer spatial resolution = a smoother, more conformal field edge, at the cost of more leaves (and more mechanical complexity) to cover the same field.</p>
-                    <p><strong>Wider leaves</strong> produce a more visible "staircase" pattern along curved or diagonal target edges, since each leaf can only move in a straight line.</p>
+                    <p><strong>Symmetric field:</strong> both jaws in a pair are equidistant from central axis (e.g., X1 = X2 = 5 cm gives a 10 cm wide field centered on the beam axis).</p>
+                    <p><strong>Asymmetric (independent) field:</strong> the jaws are set to different distances from central axis, shifting the field off-center without moving the isocenter itself &mdash; useful for half-beam blocks or matching adjacent fields.</p>
                 </div>
                 <h4>Quick Check!</h4>
                 <div class="interactive-question-block">
-                    <p class="question-text">A target has a smoothly curved edge. Compared to a 10 mm leaf-width MLC, a 5 mm leaf-width MLC will produce:</p>
-                    <label><input type="radio" name="lq_page2_1" value="A"> A less conformal edge</label>
-                    <label><input type="radio" name="lq_page2_1" value="B"> A more conformal edge</label>
-                    <label><input type="radio" name="lq_page2_1" value="C"> No difference</label>
-                    <div class="explanation" style="display:none;">B. Narrower leaves can approximate a curve more finely, producing less of a staircase pattern and better conformality.</div>
+                    <p class="question-text">A field defined by X1 = 4 cm and X2 = 8 cm (measured from central axis) is:</p>
+                    <label><input type="radio" name="lq_page2_1" value="A"> Symmetric</label>
+                    <label><input type="radio" name="lq_page2_1" value="B"> Asymmetric</label>
+                    <div class="explanation" style="display:none;">B. Since X1 and X2 are different distances from central axis, the field is shifted off-center &mdash; this is an asymmetric (independent jaw) field.</div>
                 </div>
                 <button class="check-page-answers" onclick="checkPageAnswers(2)">Check Answer</button>
             </div>
             <div id="lesson-page-3" class="lesson-page">
-                <h3>Page 3: MLC Field Shaping for Conformal Blocking</h3>
-                <p>For a <span class="highlight">static</span> field, the MLC leaves move once to form a shape that stays fixed for the entire beam-on time &mdash; conforming the field to the target's beam's-eye-view outline while blocking nearby organs at risk (OARs).</p>
-                <p>This is the modern replacement for custom blocking: instead of casting a block for every unique field shape, the planning system commands the MLC leaves directly, and the shape is reproducible and instantly adjustable.</p>
+                <h3>Page 3: Field Size Is Defined at Isocenter</h3>
+                <p>A key point that trips up new students: the field size number displayed at the console is always defined <span class="highlight">at isocenter</span> (typically 100 cm from the source), not at the patient's skin surface.</p>
                 <div class="key-principle">
-                    <p>Static MLC shaping is used for conventional 3D conformal fields. Dynamic MLC motion &mdash; where the leaves keep moving <em>during</em> beam-on &mdash; is used for intensity modulation, covered next.</p>
+                    <p>Because the beam diverges from the source, the actual irradiated area is <em>smaller</em> than the stated field size at any distance closer to the source than isocenter, and <em>larger</em> at any distance beyond it.</p>
                 </div>
-            </div>
-            <div id="lesson-page-4" class="lesson-page">
-                <h3>Page 4: MLC in IMRT and VMAT</h3>
-                <p>In <span class="highlight">Intensity-Modulated Radiation Therapy (IMRT)</span> and <span class="highlight">Volumetric Modulated Arc Therapy (VMAT)</span>, the MLC leaves move <em>while the beam is on</em>, varying the shape (and effectively the intensity pattern) delivered across the field.</p>
-                <ul>
-                    <li><strong>Step-and-shoot:</strong> the beam turns off, the leaves move to a new shape, the beam turns back on &mdash; repeated for many segments.</li>
-                    <li><strong>Sliding window (dynamic MLC):</strong> the beam stays on continuously while leaves sweep across the field at varying speeds, modulating dose by how long each point is exposed.</li>
-                    <li><strong>VMAT:</strong> combines continuous gantry rotation with simultaneous dynamic MLC motion and variable dose rate.</li>
-                </ul>
+                <p>This is why field size and SSD/SAD are always considered together &mdash; the same jaw settings produce a different footprint on the patient depending on how far the patient's surface or the target is from the source.</p>
                 <h4>Quick Check!</h4>
                 <div class="interactive-question-block">
-                    <p class="question-text">Which technique keeps the beam on continuously while sweeping the leaves across the field?</p>
-                    <label><input type="radio" name="lq_page4_1" value="A"> Step-and-shoot</label>
-                    <label><input type="radio" name="lq_page4_1" value="B"> Sliding window</label>
-                    <div class="explanation" style="display:none;">B. Sliding window (dynamic MLC) keeps the beam on continuously while leaves move at varying speeds.</div>
+                    <p class="question-text">A 10 &times; 10 cm field is defined at isocenter (100 cm). At a distance closer to the source than isocenter, the actual beam footprint is:</p>
+                    <label><input type="radio" name="lq_page3_1" value="A"> Larger than 10 &times; 10 cm</label>
+                    <label><input type="radio" name="lq_page3_1" value="B"> Smaller than 10 &times; 10 cm</label>
+                    <label><input type="radio" name="lq_page3_1" value="C"> Exactly 10 &times; 10 cm</label>
+                    <div class="explanation" style="display:none;">B. Because the beam diverges outward from the source, the footprint is smaller than the stated field size at any distance closer than isocenter.</div>
                 </div>
-                <button class="check-page-answers" onclick="checkPageAnswers(4)">Check Answer</button>
+                <button class="check-page-answers" onclick="checkPageAnswers(3)">Check Answer</button>
+            </div>
+            <div id="lesson-page-4" class="lesson-page">
+                <h3>Page 4: Collimator Rotation vs. Field Size</h3>
+                <p>The collimator can also <span class="highlight">rotate</span> around the central axis, independent of the jaw settings. Rotating the collimator rotates the orientation of the rectangular field &mdash; it does not change the field's dimensions.</p>
+                <div class="key-principle">
+                    <p>Field size (how big) and collimator angle (which way it's oriented) are two separate console settings. Students sometimes confuse changing collimator angle with changing field shape &mdash; it only changes orientation.</p>
+                </div>
+                <p>For irregularly shaped targets, jaws alone only produce a rectangle. Shaping <em>within</em> that rectangle &mdash; blocking corners, following an organ's contour &mdash; is done with a Multi-Leaf Collimator (MLC), which is its own lesson.</p>
             </div>
             <div id="lesson-page-5" class="lesson-page">
-                <h3>Page 5: Ready for the Activity</h3>
+                <h3>Page 5: Ready for the Simulator</h3>
                 <p>You've now covered:</p>
                 <ol>
-                    <li>What an MLC is and why it replaced cerrobend blocks</li>
-                    <li>How leaf width affects conformality</li>
-                    <li>Static MLC shaping for conformal blocking</li>
-                    <li>Dynamic MLC motion in IMRT (step-and-shoot, sliding window) and VMAT</li>
+                    <li>What field size means and why both coverage and sparing matter</li>
+                    <li>Symmetric vs. asymmetric (independent) jaw settings</li>
+                    <li>Why field size is always defined at isocenter, and how it changes with distance</li>
+                    <li>The difference between field size and collimator rotation</li>
                 </ol>
-                <p>The MLC &amp; Field Shaping activity will let you practice shaping a field around a target while blocking an OAR. Click below to begin.</p>
+                <p>The Field Size Simulator will let you practice setting X and Y jaws at the console and observe the resulting field. Click below to begin.</p>
             </div>
 
             <div class="lesson-navigation">
                 <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled>Previous Page</button>
                 <span class="page-indicator" id="lessonPageIndicator">Page 1 of 5</span>
                 <button id="nextLessonPage" onclick="changeLessonPage(1)">Next Page</button>
-                <button id="startActivityButton" onclick="window.location.href='mlc_field_shaping_activity.html'" style="display:none; background-color: #28a745;">Start Activity</button>
+                <button id="startActivityButton" onclick="window.location.href='field_size_simulator_activity.html'" style="display:none; background-color: #28a745;">Start Activity</button>
             </div>
         </div>
         <div class="footer">Radiation Therapy E-Workbook &mdash; Treatment Delivery Procedures</div>
@@ -131,7 +144,7 @@
         const nextLessonButton = document.getElementById('nextLessonPage');
         const lessonPageIndicator = document.getElementById('lessonPageIndicator');
         const startActivityButton = document.getElementById('startActivityButton');
-        const lessonCorrectAnswers = {"lq_page2_1": "B", "lq_page4_1": "B"};
+        const lessonCorrectAnswers = {"lq_page2_1": "B", "lq_page3_1": "B"};
         function displayLessonPage() {
             lessonPages.forEach((page, index) => page.classList.toggle('active', index === currentLessonPage - 1));
             prevLessonButton.disabled = currentLessonPage === 1;
