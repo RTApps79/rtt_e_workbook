@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Communication and Patient Education</title>
+<style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; margin: 20px;
+            background-color: #f4f4f4; color: #333; display: flex; flex-direction: column; align-items: center; }
+        .container { background-color: #fff; padding: 25px 35px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 90%; max-width: 900px; margin-bottom: 30px; }
+        h1, h2, h3, h4 { color: #0056b3; }
+        h1 { text-align: center; border-bottom: 2px solid #0056b3; padding-bottom: 15px; margin-bottom: 30px; font-size: 2em; }
+        h2 { border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 30px; margin-bottom: 20px; color: #003d7a; font-size: 1.6em; }
+        h3 { color: #004085; margin-top: 25px; margin-bottom: 15px; font-size: 1.3em; }
+        h4 { color: #17a2b8; margin-top: 20px; margin-bottom: 10px; font-size: 1.1em; font-weight: 600; }
+        p, li { margin-bottom: 12px; font-size: 1.05em; }
+        ul, ol { margin-bottom: 15px; padding-left: 25px; }
+        strong { font-weight: 600; }
+        .highlight { background-color: #e6f7ff; padding: 2px 5px; border-radius: 3px; font-weight: 600; }
+        code { background-color: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; color: #c7254e; }
+        table.data-table { width: 90%; margin: 15px auto; border-collapse: collapse; }
+        table.data-table th, table.data-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        table.data-table th { background-color: #e9f5ff; color: #0056b3; font-weight: 600; }
+        table.data-table tr:nth-child(even) { background-color: #f9f9f9; }
+        .flip-lesson-container { border: 1px solid #b3d7ff; padding: 20px; border-radius: 8px; background-color: #f0f8ff; margin-bottom: 30px; }
+        .lesson-page { display: none; padding: 15px; border: 1px solid #ddeeff; background-color: #fff; border-radius: 5px; min-height: 400px; }
+        .lesson-page.active { display: block; }
+        .lesson-navigation { text-align: center; margin-top: 20px; }
+        .lesson-navigation button, .lesson-page .check-page-answers {
+            background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px;
+            cursor: pointer; font-size: 1em; margin: 5px 10px; transition: background-color 0.2s; }
+        .lesson-navigation button:hover, .lesson-page .check-page-answers:hover { background-color: #0056b3; }
+        .lesson-navigation button:disabled { background-color: #ccc; cursor: not-allowed; }
+        .page-indicator { font-style: italic; color: #555; margin: 10px 0; }
+        .key-principle { background-color: #e7f3ff; padding: 10px; margin-bottom:10px; border-left: 3px solid #007bff; border-radius: 3px; }
+        .interactive-question-block { background: #f9f9f9; padding: 15px; margin: 20px 0; border: 1px solid #e0e0e0; border-radius: 8px; }
+        .interactive-question-block .question-text { font-weight: bold; margin-bottom: 8px; font-size: 1em; color: #555; }
+        .interactive-question-block label { display: block; margin-left: 0; padding: 8px 12px; border-radius: 5px; cursor: pointer; border: 1px solid transparent; margin-bottom: 5px; }
+        .interactive-question-block input[type="radio"] { margin-right: 10px; vertical-align: middle; }
+        .interactive-question-block label:hover { background-color: #f0f8ff; }
+        .feedback-correct { background-color: #e8f8f0 !important; border-left: 4px solid #2ecc71 !important; }
+        .feedback-incorrect { background-color: #fdedec !important; border-left: 4px solid #e74c3c !important; }
+        .feedback-correct label.correct-option, .feedback-incorrect label.correct-option { font-weight: bold; color: #1E8449; }
+        .feedback-incorrect label.selected-incorrect { color: #A93226; }
+        .explanation { font-size: 0.9em; color: #444; margin-top: 5px; padding-left: 20px; }
+        .footer { text-align: center; margin-top: 30px; padding-top: 15px; border-top: 1px solid #ccc; font-size: 0.9em; color: #555; }
+
+        .nav-links-header { background-color: #fff; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 50; }
+</style>
+</head>
+<body>
+    <header class="nav-links-header">
+        <div style="max-width:900px;margin:0 auto;padding:12px 20px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;">
+            <strong style="color:#0056b3;">Communication &amp; Patient Education</strong>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                <a href="../index.html" style="font-size:0.8rem;background:#0056b3;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Back to Tool Menu</a>
+                <a href="../../index.html" style="font-size:0.8rem;background:#0056b3;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Modalities Menu</a>
+                <a href="../../index.html" style="font-size:0.8rem;background:#64748b;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Main Workbook</a>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <h1>Communication &amp; Patient Education</h1>
+        <div class="flip-lesson-container">
+            <h2>Interactive Lesson</h2>
+            <div id="lesson-page-1" class="lesson-page active">
+                <h3>Page 1: Communication Is the Job, Not a Soft Skill</h3>
+                <p>Securing a patient's cooperation, day after day, through simulation and every treatment fraction, is one of the most important and most challenging parts of being a radiation therapist. Communication and patient safety go hand in hand &mdash; a patient who understands and trusts you is a patient who holds still, follows instructions, and tells you when something feels wrong.</p>
+                <p>All communication with patients must be <span class="highlight">patient-focused, accurate, timely, and within your scope of practice</span>.</p>
+            </div>
+            <div id="lesson-page-2" class="lesson-page">
+                <h3>Page 2: Human Diversity and Cultural Competency</h3>
+                <p>Every patient brings their own age, race, religion, ethnicity, gender identity, ability, and life circumstances into the treatment room. None of that is a barrier to good care &mdash; it's context you need to work with.</p>
+                <div class="key-principle">
+                    <p>Four core values underpin respectful, rights-based care: <strong>autonomy, dignity, equality, and solidarity</strong>. Consent for treatment cannot happen without sensitivity to a patient's cultural and language needs &mdash; use professional interpreters, not family members, whenever language is a barrier.</p>
+                </div>
+                <p>Becoming culturally competent is a process: recognize diversity as a value, build awareness of how cross-cultural interactions play out, and practice honest self-assessment of your own assumptions.</p>
+            </div>
+            <div id="lesson-page-3" class="lesson-page">
+                <h3>Page 3: Verbal and Nonverbal Communication</h3>
+                <p><strong>Verbal communication</strong> includes spoken and written words &mdash; and also slang, jargon, and humor, all of which can land very differently than intended with an anxious patient.</p>
+                <p><strong>Nonverbal communication</strong> (sometimes called paralanguage) often says more than your words: body language, touch, professional appearance, physical presence, eye contact, and personal hygiene all shape whether a patient feels safe with you.</p>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">Which of the following is an example of nonverbal communication?</p>
+                    <label><input type="radio" name="lq_page3_1" value="A"> Explaining the treatment schedule out loud</label>
+                    <label><input type="radio" name="lq_page3_1" value="B"> Maintaining eye contact and an open posture</label>
+                    <label><input type="radio" name="lq_page3_1" value="C"> Reading the physician's written order</label>
+                    <div class="explanation" style="display:none;">B. Eye contact and posture are nonverbal (paralanguage) cues, unlike spoken explanations or written orders.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(3)">Check Answer</button>
+            </div>
+            <div id="lesson-page-4" class="lesson-page">
+                <h3>Page 4: Age, Impairments, and Communication Challenges</h3>
+                <p>Age is <span class="highlight">not</span> a barrier to effective communication &mdash; but it does change your approach. With older patients: maintain eye contact, speak clearly and a bit more slowly, speak <em>to</em> them rather than around them, and treat them with patience and respect.</p>
+                <p>Language barriers, cultural and social factors, and physical, sensory, or cognitive impairments all call for the same underlying skill: slow down, check understanding frequently, and adjust your explanation rather than repeating the same words louder.</p>
+            </div>
+            <div id="lesson-page-5" class="lesson-page">
+                <h3>Page 5: Terminal Patients</h3>
+                <p>Radiation oncology staff work with terminal patients often. Death is part of the natural cycle of life, and healthcare's attitude toward it has shifted toward being more open and more respectful of a dying patient's own wishes.</p>
+                <div class="key-principle">
+                    <p>Patients, families, and loved ones need to move through grief in their own individualized timeframe. <strong>Patient autonomy</strong> &mdash; respecting the choices a patient makes about their own care and how they want to spend their remaining time &mdash; is central here.</p>
+                </div>
+            </div>
+            <div id="lesson-page-6" class="lesson-page">
+                <h3>Page 6: Communicating with Family and Friends</h3>
+                <p>Before you say anything to a patient's family or friends about their condition or care, you need the patient's permission &mdash; otherwise you risk a <span class="highlight">HIPAA violation</span>, regardless of good intentions.</p>
+                <p>When you do have permission: introduce yourself professionally, briefly explain the procedure, and explain why they need to step out of the room during beam-on. Empathy toward family members is just as powerful as empathy toward the patient.</p>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">A patient's adult child asks you how the treatment is going. What should you do first?</p>
+                    <label><input type="radio" name="lq_page6_1" value="A"> Give a brief, reassuring summary since they're clearly family</label>
+                    <label><input type="radio" name="lq_page6_1" value="B"> Confirm the patient has given permission to share information with this person</label>
+                    <div class="explanation" style="display:none;">B. Being family doesn't automatically grant access to health information &mdash; you need the patient's permission first, every time.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(6)">Check Answer</button>
+            </div>
+            <div id="lesson-page-7" class="lesson-page">
+                <h3>Page 7: The AIDET Framework</h3>
+                <p><span class="highlight">AIDET</span> is a widely used structure for consistent, compassionate patient communication:</p>
+                <ul>
+                    <li><strong>A</strong>cknowledge &mdash; greet the patient by name, make eye contact</li>
+                    <li><strong>I</strong>ntroduce &mdash; yourself, your role, and your experience</li>
+                    <li><strong>D</strong>uration &mdash; how long the visit or step will take</li>
+                    <li><strong>E</strong>xplanation &mdash; what you're about to do and why</li>
+                    <li><strong>T</strong>hank you &mdash; for their time, patience, or trust</li>
+                </ul>
+                <p>Running through AIDET at each new step of a visit turns a routine interaction into one that feels respectful and predictable &mdash; which matters enormously to an anxious patient.</p>
+            </div>
+            <div id="lesson-page-8" class="lesson-page">
+                <h3>Page 8: Patient Education</h3>
+                <p>Part of your role is explaining, in plain language: the purpose of a treatment or procedure, how long it will take, and what dose or exposure is involved. You'll also field questions comparing radiation therapy to other imaging modalities, and reinforce pre- and post-treatment instructions (skin care, diet, medications).</p>
+                <p>Clear education supports <strong>treatment compliance</strong> &mdash; a patient who understands why they need to hold still, keep their positioning marks, or follow a skin-care routine is far more likely to actually do it.</p>
+            </div>
+            <div id="lesson-page-9" class="lesson-page">
+                <h3>Page 9: Support Services</h3>
+                <p>You're one part of a larger care team. Know when and how to loop in:</p>
+                <ul>
+                    <li><strong>Hospice</strong> &mdash; for patients transitioning to comfort-focused, palliative care</li>
+                    <li><strong>Dietitians</strong> &mdash; for nutrition and side-effect management</li>
+                    <li><strong>Clergy / chaplaincy</strong> &mdash; for spiritual support</li>
+                    <li><strong>Social workers</strong> &mdash; for financial, transportation, or family support needs</li>
+                </ul>
+                <p>Recognizing when a patient needs support beyond what you can offer &mdash; and knowing who to call &mdash; is itself a communication skill.</p>
+            </div>
+            <div id="lesson-page-10" class="lesson-page">
+                <h3>Page 10: Wrap-Up</h3>
+                <p>You've covered cultural competency, verbal and nonverbal communication, age and impairment-related adjustments, terminal patient care, family communication and HIPAA, the AIDET framework, patient education, and the broader support team.</p>
+                <p>None of this replaces clinical judgment in the moment &mdash; but it gives you a consistent foundation to build on with every patient you meet.</p>
+            </div>
+
+            <div class="lesson-navigation">
+                <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled>Previous Page</button>
+                <span class="page-indicator" id="lessonPageIndicator">Page 1 of 10</span>
+                <button id="nextLessonPage" onclick="changeLessonPage(1)">Next Page</button>
+                <button id="startActivityButton" onclick="window.location.href='../index.html'" style="display:none; background-color: #28a745;">Back to Patient Care Menu</button>
+            </div>
+        </div>
+        <div class="footer">Radiation Therapy E-Workbook &mdash; Patient Care</div>
+    </div>
+    <script>
+        let currentLessonPage = 1;
+        const totalLessonPages = 10;
+        const lessonPages = document.querySelectorAll('.lesson-page');
+        const prevLessonButton = document.getElementById('prevLessonPage');
+        const nextLessonButton = document.getElementById('nextLessonPage');
+        const lessonPageIndicator = document.getElementById('lessonPageIndicator');
+        const startActivityButton = document.getElementById('startActivityButton');
+        const lessonCorrectAnswers = {"lq_page3_1": "B", "lq_page6_1": "B"};
+        function displayLessonPage() {
+            lessonPages.forEach((page, index) => page.classList.toggle('active', index === currentLessonPage - 1));
+            prevLessonButton.disabled = currentLessonPage === 1;
+            nextLessonButton.style.display = currentLessonPage === totalLessonPages ? 'none' : 'inline-block';
+            startActivityButton.style.display = currentLessonPage === totalLessonPages ? 'inline-block' : 'none';
+            lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
+        }
+        function changeLessonPage(direction) {
+            currentLessonPage += direction;
+            if (currentLessonPage < 1) currentLessonPage = 1;
+            if (currentLessonPage > totalLessonPages) currentLessonPage = totalLessonPages;
+            displayLessonPage();
+        }
+        function checkPageAnswers(pageNumber) {
+            const questionsOnPage = document.querySelectorAll(`#lesson-page-${pageNumber} .interactive-question-block`);
+            questionsOnPage.forEach(block => {
+                const radio = block.querySelector('input[type="radio"]');
+                if (!radio) return;
+                const questionName = radio.name;
+                if (!lessonCorrectAnswers.hasOwnProperty(questionName)) return;
+                const correctAnswerValue = lessonCorrectAnswers[questionName];
+                const selectedRadio = block.querySelector(`input[name="${questionName}"]:checked`);
+                const explanationDiv = block.querySelector('.explanation');
+                block.classList.remove('feedback-correct', 'feedback-incorrect');
+                block.querySelectorAll('label').forEach(label => label.classList.remove('correct-option', 'selected-incorrect'));
+                if (explanationDiv) explanationDiv.style.display = 'none';
+                if (selectedRadio) {
+                    const userAnswer = selectedRadio.value;
+                    const userSelectedLabel = selectedRadio.parentElement;
+                    if (userAnswer === correctAnswerValue) {
+                        block.classList.add('feedback-correct');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('correct-option');
+                    } else {
+                        block.classList.add('feedback-incorrect');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('selected-incorrect');
+                        const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                        if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                    }
+                } else {
+                    block.classList.add('feedback-incorrect');
+                    const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                    if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                }
+                if (explanationDiv) explanationDiv.style.display = 'block';
+            });
+        }
+        displayLessonPage();
+    </script>
+</body>
+</html>
