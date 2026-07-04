@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photon Interactions with Matter Simulator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; }
+        .sim-container { display: grid; grid-template-columns: 1fr; gap: 2rem; padding: 1.5rem; max-width: 1500px; margin: auto; }
+        @media (min-width: 1100px) { .sim-container { grid-template-columns: minmax(420px, 1fr) 1.5fr; } }
+        .panel { background-color: white; border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); padding: 1.5rem 2rem; }
+        h1 { font-size: 1.875rem; font-weight: 700; color: #1e3a8a; }
+        h2 { font-size: 1.25rem; font-weight: 600; color: #1e293b; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; margin-top: 1.25rem; }
+        .control-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+        .control-card { background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:12px; }
+        .control-label { display:block; font-size:0.85rem; font-weight:600; color:#334155; margin-bottom:6px; }
+        .control-value { margin-top:6px; font-size:0.8rem; color:#64748b; }
+        .status-box { margin-top:12px; padding:12px; border-radius:10px; background:#eff6ff; color:#1e3a8a; border:1px solid #bfdbfe; font-size:0.95rem; }
+        .recommendation { margin-top:10px; padding:10px 12px; border-left:4px solid #2563eb; background:#f8fbff; border-radius:8px; color:#334155; }
+        .scorebox { margin-top:12px; padding:10px 12px; border-radius:10px; background:#f8fafc; border:1px solid #e2e8f0; font-size:0.92rem; color:#334155; }
+        .scorebox strong { color:#0f172a; }
+
+        .visualization-area { position: relative; width: 100%; height: 560px; background: linear-gradient(180deg, #e2e8f0 0%, #dbeafe 100%); border-radius: 0.75rem; overflow: hidden; }
+        #animation-layer { position: absolute; inset: 0; pointer-events: none; }
+        .field-label { position:absolute; font-size:0.78rem; color:#475569; background:rgba(255,255,255,0.75); padding:4px 8px; border-radius:999px; border:1px solid rgba(148,163,184,0.35); }
+        .field-z { top:12px; left:12px; }
+        .field-energy { top:12px; right:12px; }
+
+        .target-atom { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 210px; height: 210px; }
+        .shell { position:absolute; border-radius:50%; border:2px solid rgba(148,163,184,0.9); left:50%; top:50%; transform:translate(-50%,-50%); }
+        .shell.one { width:70px; height:70px; }
+        .shell.two { width:130px; height:130px; }
+        .shell.three { width:190px; height:190px; }
+        .nucleus { position: absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:52px; height:52px; border-radius:50%; background: radial-gradient(circle at 35% 30%, #fca5a5 0%, #ef4444 42%, #991b1b 100%); box-shadow:0 0 0 2px rgba(127,29,29,0.15) inset; }
+        .nucleus::after { content:''; position:absolute; inset:12px; border-radius:50%; background:radial-gradient(circle, rgba(255,255,255,0.35), rgba(255,255,255,0)); }
+        .nucleon { position:absolute; width:9px; height:9px; border-radius:50%; opacity:0.95; }
+        .proton { background:#ef4444; }
+        .neutron { background:#64748b; }
+
+        .electron { position:absolute; width:14px; height:14px; border-radius:50%; background: radial-gradient(circle at 35% 30%, #93c5fd 0%, #3b82f6 55%, #1d4ed8 100%); box-shadow:0 0 0 2px rgba(255,255,255,0.65) inset, 0 0 10px rgba(59,130,246,0.25); transform:translate(-50%,-50%); }
+        .electron::after { content:'−'; position:absolute; inset:0; display:grid; place-items:center; color:white; font-weight:700; font-size:11px; line-height:1; }
+        .electron.vacated { background: transparent; box-shadow:none; border:2px dashed #f59e0b; }
+        .electron.vacated::after { content:''; }
+        .electron.hidden { display:none; }
+        .electron.inner { top:50%; left:50%; }
+        .electron.outer { top:50%; left:50%; }
+
+        .orbit { position:absolute; left:50%; top:50%; border-radius:50%; border:1px dashed rgba(59,130,246,0.28); transform:translate(-50%,-50%); }
+        .orbit.one { width:70px; height:70px; }
+        .orbit.two { width:130px; height:130px; }
+        .orbit.three { width:190px; height:190px; }
+        .orbit.glow { border-color: rgba(59,130,246,0.5); box-shadow:0 0 0 1px rgba(59,130,246,0.08), 0 0 28px rgba(59,130,246,0.15); }
+
+        #caption-container { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); width: 92%; text-align: center; background-color: rgba(255, 255, 255, 0.84); padding: 8px 12px; border-radius: 0.6rem; font-style: italic; color: #1e293b; transition: opacity 0.25s ease; opacity: 0; border:1px solid rgba(148,163,184,0.35); }
+        .photon { position: absolute; width: 16px; height: 16px; border-radius: 50%; box-shadow: 0 0 16px 6px; top: 50%; transform: translateY(-50%); opacity:1; }
+        .photon::after { content:''; position:absolute; inset:-7px; border-radius:50%; border:2px solid rgba(255,255,255,0.55); opacity:0.35; }
+        .photon-low { background: #60a5fa; box-shadow: 0 0 16px 6px #60a5fa; }
+        .photon-mid { background: #facc15; box-shadow: 0 0 16px 6px #facc15; }
+        .photon-high { background: #fb7185; box-shadow: 0 0 16px 6px #fb7185; }
+        .photon-vhigh { background: #a78bfa; box-shadow: 0 0 18px 7px #a78bfa; }
+        .photon-xhigh { background: #f8fafc; box-shadow: 0 0 18px 8px #f8fafc; }
+        .photon-ghost { opacity:0.25; }
+
+        .ejected-particle { position: absolute; border-radius: 50%; animation-fill-mode: forwards; animation-timing-function: ease-out; }
+        .photoelectron, .compton-electron, .pair-electron { width: 15px; height: 15px; background: radial-gradient(circle, #60a5fa, #1d4ed8); box-shadow: 0 0 0 2px rgba(255,255,255,0.6) inset; }
+        .positron { width: 15px; height: 15px; background: radial-gradient(circle, #fca5a5, #ef4444); box-shadow: 0 0 0 2px rgba(255,255,255,0.6) inset; }
+        .ejected-neutron { width: 18px; height: 18px; background: radial-gradient(circle, #94a3b8, #475569); box-shadow:0 0 0 2px rgba(255,255,255,0.35) inset; }
+
+        @keyframes photon-approach-center { from { left: -8%; } to { left: calc(50% - 8px); } }
+        @keyframes photon-approach-inner-shell { from { left: -8%; } to { left: calc(50% + 23px); } }
+        @keyframes photon-approach-outer-shell { from { left: -8%; } to { left: calc(50% + 48px); } }
+        @keyframes photon-deflect-up { from { left: calc(50% - 8px); top: 50%; } to { left: 78%; top: 20%; } }
+        @keyframes photon-deflect-down { from { left: calc(50% - 8px); top: 50%; } to { left: 77%; top: 76%; } }
+        @keyframes photon-deflect-left { from { left: calc(50% - 8px); top: 50%; } to { left: 25%; top: 28%; } }
+        @keyframes electron-eject-up { from { transform: translate(-50%, -50%) scale(0.95); opacity:1; } to { transform: translate(220px, -170px) scale(1); opacity:1; } }
+        @keyframes electron-eject-down { from { transform: translate(-50%, -50%) scale(0.95); opacity:1; } to { transform: translate(210px, 170px) scale(1); opacity:1; } }
+        @keyframes electron-eject-right { from { transform: translate(-50%, -50%) scale(0.95); opacity:1; } to { transform: translate(250px, -40px) scale(1); opacity:1; } }
+        @keyframes pair-electron-eject { from { transform: translate(-50%,-50%); } to { transform: translate(220px, 160px); } }
+        @keyframes positron-eject { from { transform: translate(-50%,-50%); } to { transform: translate(230px, -170px); } }
+        @keyframes neutron-eject { from { transform: translate(-50%, -50%); } to { transform: translate(-210px, 42px); } }
+        @keyframes atom-wiggle { 0%, 100% { transform: translate(-50%, -50%) rotate(0deg); } 25% { transform: translate(-51%, -49%) rotate(-1deg); } 75% { transform: translate(-49%, -51%) rotate(1deg); } }
+        @keyframes nucleus-flash { 0%,100% { filter:none; } 50% { filter:brightness(1.18) saturate(1.15); } }
+        @keyframes vacancy-pulse { 0%,100% { transform:translate(-50%,-50%) scale(1); opacity:0.85; } 50% { transform:translate(-50%,-50%) scale(1.12); opacity:1; } }
+        .vacancy-pulse { animation: vacancy-pulse 0.9s ease-in-out infinite; }
+
+        .control-note { font-size:0.8rem; color:#64748b; margin-top:6px; }
+        .mini-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px; }
+        .mini-card { background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:10px 12px; }
+        .mini-card .head { font-size:0.75rem; text-transform:uppercase; color:#64748b; font-weight:700; margin-bottom:4px; }
+        .mini-card .body { font-size:0.94rem; color:#0f172a; font-weight:600; }
+        button[disabled] { opacity:0.55; cursor:not-allowed; }
+    </style>
+</head>
+<body>
+    <header style="background:#fff;box-shadow:0 1px 3px 0 rgba(0,0,0,0.1);padding:12px 20px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;">
+        <strong style="color:#1e3a8a;">Photon Interactions Simulator</strong>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <a href="lesson.html" style="font-size:0.8rem;background:#1e3a8a;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Back to Lesson</a>
+            <a href="../index.html" style="font-size:0.8rem;background:#64748b;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Radiation Physics Menu</a>
+        </div>
+    </header>
+    <div class="sim-container">
+        <div class="panel">
+            <h1>Photon Interactions</h1>
+            <p class="text-slate-600 mt-2">Select an interaction type, set atomic number and beam energy, then play the animation. The simulator will show how the parameters influence the likely outcome.</p>
+
+            <h2>1. Interaction Model</h2>
+            <div class="mt-3">
+                <label for="interaction-select" class="block text-sm font-medium text-gray-700">Select Interaction Type</label>
+                <select id="interaction-select" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                    <option value="auto">Auto: Most Likely Interaction</option>
+                    <option value="coherent">Coherent Scattering</option>
+                    <option value="photoelectric">Photoelectric Effect</option>
+                    <option value="compton">Compton Scattering</option>
+                    <option value="pair_production">Pair Production</option>
+                    <option value="photodisintegration">Photodisintegration</option>
+                </select>
+                <p class="control-note">Auto mode uses atomic number and beam energy to choose the dominant interaction.</p>
+            </div>
+
+            <h2>2. Material and Beam</h2>
+            <div class="control-grid mt-3">
+                <div class="control-card">
+                    <label for="atomic-number" class="control-label">Atomic Number (Z)</label>
+                    <input id="atomic-number" type="range" min="1" max="92" value="13">
+                    <div class="control-value"><span id="atomic-number-value">13</span> <span class="text-slate-400">(low Z → high Z)</span></div>
+                </div>
+                <div class="control-card">
+                    <label for="beam-energy" class="control-label">Beam Energy</label>
+                    <input id="beam-energy" type="range" min="10" max="20000" value="120" step="10">
+                    <div class="control-value"><span id="beam-energy-value">120</span> keV</div>
+                </div>
+            </div>
+
+            <div class="mini-grid">
+                <div class="mini-card">
+                    <div class="head">Likely interaction</div>
+                    <div class="body" id="likely-interaction">Compton Scattering</div>
+                </div>
+                <div class="mini-card">
+                    <div class="head">Teaching note</div>
+                    <div class="body" id="teaching-note">Mid-energy photons often favor Compton interactions.</div>
+                </div>
+            </div>
+
+            <div id="description-panel" class="mt-4 p-4 bg-slate-50 rounded-lg min-h-[150px]"></div>
+            <div id="status-box" class="status-box"></div>
+            <div id="recommendation-box" class="recommendation"></div>
+            <div id="score-box" class="scorebox"><strong>Assessment:</strong> No simulation run yet.</div>
+
+            <div class="mt-6 flex gap-4">
+                <button id="play-button" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors">▶️ Play Animation</button>
+                <button id="reset-button" class="w-full bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded transition-colors">🔄 Reset</button>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="visualization-area" id="visualization-area">
+                <div class="field-label field-z" id="field-z-label">Z = 13</div>
+                <div class="field-label field-energy" id="field-energy-label">120 keV</div>
+                <div class="target-atom" id="target-atom">
+                    <div class="shell one"></div>
+                    <div class="shell two"></div>
+                    <div class="shell three"></div>
+                    <div class="orbit one"></div>
+                    <div class="orbit two"></div>
+                    <div class="orbit three"></div>
+                    <div class="nucleus" id="nucleus"></div>
+                    <div class="electron inner" id="inner-e"></div>
+                    <div class="electron outer" id="outer-e"></div>
+                </div>
+                <div id="animation-layer"></div>
+                <div id="caption-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center py-6">
+        <p class="text-sm text-slate-500">&copy; 2025 RadtherapyApps79. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        const select = document.getElementById('interaction-select');
+        const descriptionPanel = document.getElementById('description-panel');
+        const playButton = document.getElementById('play-button');
+        const resetButton = document.getElementById('reset-button');
+        const animationLayer = document.getElementById('animation-layer');
+        const targetAtom = document.getElementById('target-atom');
+        const captionContainer = document.getElementById('caption-container');
+        const atomicNumber = document.getElementById('atomic-number');
+        const atomicNumberValue = document.getElementById('atomic-number-value');
+        const beamEnergy = document.getElementById('beam-energy');
+        const beamEnergyValue = document.getElementById('beam-energy-value');
+        const fieldZLabel = document.getElementById('field-z-label');
+        const fieldEnergyLabel = document.getElementById('field-energy-label');
+        const likelyInteraction = document.getElementById('likely-interaction');
+        const teachingNote = document.getElementById('teaching-note');
+        const statusBox = document.getElementById('status-box');
+        const recommendationBox = document.getElementById('recommendation-box');
+        const scoreBox = document.getElementById('score-box');
+        const nucleus = document.getElementById('nucleus');
+        const innerElectron = document.getElementById('inner-e');
+        const outerElectron = document.getElementById('outer-e');
+
+        const state = {
+            isAnimating: false,
+            runCount: 0,
+            correctAutoSelections: 0
+        };
+
+        const interactions = {
+            coherent: {
+                title: 'Coherent Scattering',
+                energy: 'Low (< 10 keV)',
+                threshold: 10,
+                description: "A low-energy photon interacts with the atom's electron cloud as a whole. The photon changes direction with essentially no ionization.",
+                photonClass: 'photon-low',
+                animationPath: 'photon-approach-center',
+                recommend: 'Best illustrated with low beam energy and any atomic number, especially when no electron is removed.',
+                teaching: 'Coherent scattering is elastic: the photon is deflected, but the atom remains intact.'
+            },
+            photoelectric: {
+                title: 'Photoelectric Effect',
+                energy: 'Low to Medium',
+                threshold: 10,
+                description: "The incident photon is completely absorbed by an inner-shell electron. That electron is ejected as a photoelectron, leaving an inner-shell vacancy.",
+                photonClass: 'photon-mid',
+                animationPath: 'photon-approach-inner-shell',
+                recommend: 'Favored at lower energies and higher atomic numbers because tightly bound electrons are more likely to absorb the photon.',
+                teaching: 'After absorption, the shell electron should disappear and a vacancy should remain visible.'
+            },
+            compton: {
+                title: 'Compton Scattering',
+                energy: 'Medium to High',
+                threshold: 30,
+                description: "The photon collides with a loosely bound outer-shell electron, ejecting it while the photon loses energy and continues at a new angle.",
+                photonClass: 'photon-high',
+                animationPath: 'photon-approach-outer-shell',
+                recommend: 'Dominant across broad therapeutic energy ranges and less dependent on atomic number than the photoelectric effect.',
+                teaching: 'The original outer-shell electron should be removed, and the scattered photon should be shown separately.'
+            },
+            pair_production: {
+                title: 'Pair Production',
+                energy: 'Very High (> 1.022 MeV)',
+                threshold: 1022,
+                description: "A high-energy photon passes near the nucleus and converts into an electron-positron pair. The photon is annihilated in the process.",
+                photonClass: 'photon-vhigh',
+                animationPath: 'photon-approach-center',
+                recommend: 'Only available above 1.022 MeV. Probability rises with higher beam energy.',
+                teaching: 'The incoming photon should not remain visible after conversion.'
+            },
+            photodisintegration: {
+                title: 'Photodisintegration',
+                energy: 'Extremely High (> 10 MeV)',
+                threshold: 10000,
+                description: "The photon is absorbed by the nucleus, which becomes unstable and ejects a nucleon, commonly a neutron.",
+                photonClass: 'photon-xhigh',
+                animationPath: 'photon-approach-center',
+                recommend: 'Requires very high photon energy and is most relevant at high-energy accelerator conditions.',
+                teaching: 'The nucleus should visibly recoil or flash, and the emitted particle should depart cleanly.'
+            }
+        };
+
+        function getLikelyInteraction(Z, energyKeV) {
+            if (energyKeV >= interactions.photodisintegration.threshold) return 'photodisintegration';
+            if (energyKeV >= interactions.pair_production.threshold) return 'pair_production';
+            if (energyKeV <= 100 && Z >= 20) return 'photoelectric';
+            if (energyKeV <= 25) return 'coherent';
+            return 'compton';
+        }
+
+        function clearAnimation() {
+            animationLayer.innerHTML = '';
+            captionContainer.style.opacity = '0';
+            targetAtom.style.animation = 'none';
+            nucleus.style.animation = 'none';
+            innerElectron.className = 'electron inner';
+            outerElectron.className = 'electron outer';
+            innerElectron.style.display = 'block';
+            outerElectron.style.display = 'block';
+            innerElectron.style.left = '50%';
+            innerElectron.style.top = '50%';
+            innerElectron.style.transform = 'translate(23px, -50%)';
+            outerElectron.style.left = '50%';
+            outerElectron.style.top = '50%';
+            outerElectron.style.transform = 'translate(48px, -50%)';
+            playButton.disabled = false;
+            resetButton.disabled = true;
+        }
+
+        function showCaption(text) {
+            captionContainer.textContent = text;
+            captionContainer.style.opacity = '1';
+        }
+
+        function updateControls() {
+            atomicNumberValue.textContent = atomicNumber.value;
+            beamEnergyValue.textContent = beamEnergy.value;
+            fieldZLabel.textContent = `Z = ${atomicNumber.value}`;
+            fieldEnergyLabel.textContent = `${beamEnergy.value} keV`;
+            const likely = getLikelyInteraction(parseInt(atomicNumber.value, 10), parseInt(beamEnergy.value, 10));
+            likelyInteraction.textContent = interactions[likely].title;
+            teachingNote.textContent = interactions[likely].teaching;
+        }
+
+        function updateDescription() {
+            const key = select.value;
+            const activeKey = key === 'auto'
+                ? getLikelyInteraction(parseInt(atomicNumber.value, 10), parseInt(beamEnergy.value, 10))
+                : key;
+            const data = interactions[activeKey];
+            descriptionPanel.innerHTML = `<h3 class="font-bold text-lg text-gray-800">${data.title}</h3><p class="text-sm font-medium text-indigo-600">Typical Energy: ${data.energy}</p><p class="mt-2 text-gray-600">${data.description}</p>`;
+            statusBox.innerHTML = `<strong>Current model:</strong> Z = ${atomicNumber.value}, Beam Energy = ${beamEnergy.value} keV. <strong>Selected:</strong> ${key === 'auto' ? 'Auto' : data.title}.`;
+            recommendationBox.innerHTML = `<strong>Why this matters:</strong> ${data.recommend}`;
+        }
+
+        function appendParticle(className, styles = {}) {
+            const el = document.createElement('div');
+            el.className = className;
+            Object.entries(styles).forEach(([k, v]) => el.style[k] = v);
+            animationLayer.appendChild(el);
+            return el;
+        }
+
+        function assessInteraction(type) {
+            const Z = parseInt(atomicNumber.value, 10);
+            const E = parseInt(beamEnergy.value, 10);
+            if (type === 'photoelectric') return (E <= 100 && Z >= 20) ? 'Good match: low energy and higher Z favor photoelectric absorption.' : 'This is less likely at the chosen energy/Z, but shown for teaching purposes.';
+            if (type === 'compton') return (E > 25 && E < 10000) ? 'Good match: midrange energy commonly favors Compton scattering.' : 'This interaction is still valid, but the chosen conditions may not strongly favor it.';
+            if (type === 'pair_production') return (E >= 1022) ? 'Good match: beam energy exceeds the pair-production threshold.' : 'This interaction is not physically available below 1.022 MeV.';
+            if (type === 'photodisintegration') return (E >= 10000) ? 'Good match: very high beam energy can cause photodisintegration.' : 'This interaction requires much higher energy than the current setting.';
+            if (type === 'coherent') return (E <= 25) ? 'Good match: coherent scattering is most plausible at lower energies.' : 'This interaction is less likely at the current energy, but is kept as a conceptual option.';
+            return '';
+        }
+
+        function playAnimation() {
+            if (state.isAnimating) return;
+            state.isAnimating = true;
+            state.runCount += 1;
+            clearAnimation();
+            playButton.disabled = true;
+            resetButton.disabled = false;
+
+            const chosen = select.value === 'auto'
+                ? getLikelyInteraction(parseInt(atomicNumber.value, 10), parseInt(beamEnergy.value, 10))
+                : select.value;
+            const data = interactions[chosen];
+
+            if (select.value === 'auto') {
+                state.correctAutoSelections += 1;
+                scoreBox.innerHTML = `<strong>Assessment:</strong> Auto mode selected <strong>${data.title}</strong> for Z=${atomicNumber.value} and ${beamEnergy.value} keV.`;
+            } else {
+                scoreBox.innerHTML = `<strong>Assessment:</strong> Manual interaction selected: <strong>${data.title}</strong>. ${assessInteraction(chosen)}`;
+            }
+
+            showCaption(`Incoming photon approaching the target atom...`);
+            const photon = document.createElement('div');
+            photon.className = `photon ${data.photonClass}`;
+            photon.style.left = '-8%';
+            photon.style.animation = `${data.animationPath} 1.4s linear forwards`;
+            animationLayer.appendChild(photon);
+
+            if (chosen === 'photoelectric') {
+                setTimeout(() => {
+                    innerElectron.classList.add('vacated', 'vacancy-pulse');
+                    innerElectron.textContent = '';
+                    showCaption('The photon is absorbed by an inner-shell electron. A vacancy remains in the shell.');
+                }, 1200);
+            }
+
+            if (chosen === 'compton') {
+                setTimeout(() => {
+                    outerElectron.classList.add('hidden');
+                    showCaption('The outer-shell electron is ejected while the photon continues in a new direction.');
+                }, 1200);
+            }
+
+            if (chosen === 'pair_production') {
+                setTimeout(() => {
+                    showCaption('The photon converts into matter: an electron and positron pair.');
+                }, 1200);
+            }
+
+            if (chosen === 'photodisintegration') {
+                setTimeout(() => {
+                    nucleus.style.animation = 'nucleus-flash 0.6s ease-in-out';
+                    showCaption('The nucleus absorbs the photon and becomes excited/unstable.');
+                }, 1100);
+            }
+
+            setTimeout(() => {
+                photon.remove();
+                switch (chosen) {
+                    case 'coherent': {
+                        targetAtom.style.animation = 'atom-wiggle 0.55s linear';
+                        const scatteredPhoton = appendParticle(`photon ${data.photonClass} photon-ghost`);
+                        scatteredPhoton.style.left = '54%';
+                        scatteredPhoton.style.top = '50%';
+                        scatteredPhoton.style.animation = 'photon-deflect-up 1.1s ease-out forwards';
+                        showCaption('The photon scatters with essentially no energy loss.');
+                        break;
+                    }
+                    case 'photoelectric': {
+                        innerElectron.classList.add('hidden');
+                        innerElectron.classList.remove('vacated');
+                        const vacancy = document.createElement('div');
+                        vacancy.className = 'electron vacated vacancy-pulse';
+                        vacancy.style.left = 'calc(50% + 23px)';
+                        vacancy.style.top = '50%';
+                        animationLayer.appendChild(vacancy);
+                        showCaption('The photoelectron leaves the atom, and the vacancy is visible in the inner shell.');
+                        break;
+                    }
+                    case 'compton': {
+                        const recoil = appendParticle('ejected-particle compton-electron');
+                        recoil.style.left = 'calc(50% + 48px)';
+                        recoil.style.top = '50%';
+                        recoil.style.animation = 'electron-eject-down 1.15s ease-out forwards';
+                        const scatteredPhoton = appendParticle(`photon ${data.photonClass}`);
+                        scatteredPhoton.style.left = '50%';
+                        scatteredPhoton.style.top = '50%';
+                        scatteredPhoton.style.animation = 'photon-deflect-down 1.1s ease-out forwards';
+                        showCaption('The electron is ejected and the photon is scattered at lower energy.');
+                        break;
+                    }
+                    case 'pair_production': {
+                        const electron = appendParticle('ejected-particle pair-electron');
+                        electron.style.left = '50%';
+                        electron.style.top = '50%';
+                        electron.style.animation = 'pair-electron-eject 1.1s ease-out forwards';
+                        const positron = appendParticle('ejected-particle positron');
+                        positron.style.left = '50%';
+                        positron.style.top = '50%';
+                        positron.style.animation = 'positron-eject 1.1s ease-out forwards';
+                        showCaption('The photon is destroyed and converted into an electron-positron pair.');
+                        break;
+                    }
+                    case 'photodisintegration': {
+                        const neutron = appendParticle('ejected-particle ejected-neutron');
+                        neutron.style.left = '50%';
+                        neutron.style.top = '50%';
+                        neutron.style.animation = 'neutron-eject 1.1s ease-out forwards';
+                        targetAtom.style.animation = 'atom-wiggle 0.35s linear';
+                        showCaption('The nucleus ejects a neutron after absorbing the photon.');
+                        break;
+                    }
+                }
+            }, 1500);
+
+            setTimeout(() => {
+                state.isAnimating = false;
+                playButton.disabled = false;
+            }, 3200);
+        }
+
+        function resetAnimation() {
+            state.isAnimating = false;
+            clearAnimation();
+            updateDescription();
+            updateControls();
+            scoreBox.innerHTML = '<strong>Assessment:</strong> No simulation run yet.';
+        }
+
+        select.addEventListener('change', () => {
+            resetAnimation();
+            updateDescription();
+        });
+        atomicNumber.addEventListener('input', () => { updateControls(); updateDescription(); });
+        beamEnergy.addEventListener('input', () => { updateControls(); updateDescription(); });
+        playButton.addEventListener('click', playAnimation);
+        resetButton.addEventListener('click', resetAnimation);
+
+        updateControls();
+        updateDescription();
+        clearAnimation();
+        resetButton.disabled = true;
+    </script>
+</body>
+</html>
