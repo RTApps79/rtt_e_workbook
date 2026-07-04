@@ -5,7 +5,290 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Understanding the Linear Accelerator</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@4<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Understanding the Linear Accelerator - Lesson</title>
+<style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; margin: 20px;
+            background-color: #f4f4f4; color: #333; display: flex; flex-direction: column; align-items: center; }
+        .container { background-color: #fff; padding: 25px 35px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 90%; max-width: 900px; margin-bottom: 30px; }
+        h1, h2, h3, h4 { color: #0056b3; }
+        h1 { text-align: center; border-bottom: 2px solid #0056b3; padding-bottom: 15px; margin-bottom: 30px; font-size: 2em; }
+        h2 { border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 30px; margin-bottom: 20px; color: #003d7a; font-size: 1.6em; }
+        h3 { color: #004085; margin-top: 25px; margin-bottom: 15px; font-size: 1.3em; }
+        h4 { color: #17a2b8; margin-top: 20px; margin-bottom: 10px; font-size: 1.1em; font-weight: 600; }
+        p, li { margin-bottom: 12px; font-size: 1.05em; }
+        ul, ol { margin-bottom: 15px; padding-left: 25px; }
+        strong { font-weight: 600; }
+        .highlight { background-color: #e6f7ff; padding: 2px 5px; border-radius: 3px; font-weight: 600; }
+        code { background-color: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; color: #c7254e; }
+        table.data-table { width: 90%; margin: 15px auto; border-collapse: collapse; }
+        table.data-table th, table.data-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        table.data-table th { background-color: #e9f5ff; color: #0056b3; font-weight: 600; }
+        table.data-table tr:nth-child(even) { background-color: #f9f9f9; }
+        .flip-lesson-container { border: 1px solid #b3d7ff; padding: 20px; border-radius: 8px; background-color: #f0f8ff; margin-bottom: 30px; }
+        .lesson-page { display: none; padding: 15px; border: 1px solid #ddeeff; background-color: #fff; border-radius: 5px; min-height: 400px; }
+        .lesson-page.active { display: block; }
+        .lesson-navigation { text-align: center; margin-top: 20px; }
+        .lesson-navigation button, .lesson-page .check-page-answers {
+            background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px;
+            cursor: pointer; font-size: 1em; margin: 5px 10px; transition: background-color 0.2s; }
+        .lesson-navigation button:hover, .lesson-page .check-page-answers:hover { background-color: #0056b3; }
+        .lesson-navigation button:disabled { background-color: #ccc; cursor: not-allowed; }
+        .page-indicator { font-style: italic; color: #555; margin: 10px 0; }
+        .key-principle { background-color: #e7f3ff; padding: 10px; margin-bottom:10px; border-left: 3px solid #007bff; border-radius: 3px; }
+        .interactive-question-block { background: #f9f9f9; padding: 15px; margin: 20px 0; border: 1px solid #e0e0e0; border-radius: 8px; }
+        .interactive-question-block .question-text { font-weight: bold; margin-bottom: 8px; font-size: 1em; color: #555; }
+        .interactive-question-block label { display: block; margin-left: 0; padding: 8px 12px; border-radius: 5px; cursor: pointer; border: 1px solid transparent; margin-bottom: 5px; }
+        .interactive-question-block input[type="radio"] { margin-right: 10px; vertical-align: middle; }
+        .interactive-question-block label:hover { background-color: #f0f8ff; }
+        .feedback-correct { background-color: #e8f8f0 !important; border-left: 4px solid #2ecc71 !important; }
+        .feedback-incorrect { background-color: #fdedec !important; border-left: 4px solid #e74c3c !important; }
+        .feedback-correct label.correct-option, .feedback-incorrect label.correct-option { font-weight: bold; color: #1E8449; }
+        .feedback-incorrect label.selected-incorrect { color: #A93226; }
+        .explanation { font-size: 0.9em; color: #444; margin-top: 5px; padding-left: 20px; }
+        .footer { text-align: center; margin-top: 30px; padding-top: 15px; border-top: 1px solid #ccc; font-size: 0.9em; color: #555; }
+
+        .nav-links-header { background-color: #fff; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 50; }
+</style>
+</head>
+<body>
+    <header class="nav-links-header">
+        <div style="max-width:900px;margin:0 auto;padding:12px 20px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;">
+            <strong style="color:#0056b3;">Understanding the Linear Accelerator</strong>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                <a href="index.html" style="font-size:0.8rem;background:#0056b3;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Back to Tool Menu</a>
+                <a href="../../Clinical_Practice/Modalities_Equipment_Terminology/index.html" style="font-size:0.8rem;background:#0056b3;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Modalities Menu</a>
+                <a href="../../index.html" style="font-size:0.8rem;background:#64748b;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Main Workbook</a>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <h1>Understanding the Linear Accelerator</h1>
+        <div class="flip-lesson-container">
+            <h2>Interactive Lesson</h2>
+            <div id="lesson-page-1" class="lesson-page active">
+                <h3>Page 1: Before the Linear Accelerator</h3>
+                <p>Modern LINACs didn't appear out of nowhere &mdash; treatment equipment evolved in stages, each one pushing toward deeper penetration, better skin sparing, and more clinical efficiency.</p>
+                <table class="data-table">
+                    <thead><tr><th>Era / Device</th><th>Energy</th><th>Notes</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>Grenz Ray (1925)</strong></td><td>&lt; 20 kV</td><td>Gustav Bucky's tube; sits between X-ray and UV on the EM spectrum; used for superficial skin cancers</td></tr>
+                        <tr><td><strong>Superficial Therapy</strong></td><td>40&ndash;150 kV</td><td>SSD 15&ndash;20 cm; cones collimate the beam, placed in contact with skin</td></tr>
+                        <tr><td><strong>Orthovoltage</strong></td><td>100&ndash;500 kV</td><td>SSD 50 cm; for years the most penetrating beam available; still used for skin lesions today</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="lesson-page-2" class="lesson-page">
+                <h3>Page 2: The High-Energy Era</h3>
+                <p>At 1 MV and above, equipment gains real depth penetration, better skin sparing, and clinical efficiency &mdash; several competing designs emerged before the linear accelerator became the standard:</p>
+                <table class="data-table">
+                    <thead><tr><th>Device</th><th>Energy</th><th>Key idea</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>Van de Graaff Generator (1931)</strong></td><td>~2 MV</td><td>First electrostatic generator to produce high-energy X-rays</td></tr>
+                        <tr><td><strong>Betatron (1941)</strong></td><td>~2.5 MV</td><td>Doughnut-shaped circular orbit; accelerates both electrons and photons</td></tr>
+                        <tr><td><strong>Cyclotron</strong></td><td>up to 40 MeV (protons)</td><td>Two D-shaped magnets ("Dees") accelerate charged particles in an expanding spiral; foundation of proton therapy</td></tr>
+                        <tr><td><strong>Cobalt-60 Unit</strong></td><td>~1.25 MeV avg (gamma)</td><td>Artificially activated Co-59 isotope in a double-welded steel capsule; the mainstay of external beam RT until the linear accelerator; first practical unit to penetrate below 0.5 cm skin depth</td></tr>
+                    </tbody>
+                </table>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">Which of these historical devices is the direct ancestor of modern proton therapy?</p>
+                    <label><input type="radio" name="lq_page2_1" value="A"> Betatron</label>
+                    <label><input type="radio" name="lq_page2_1" value="B"> Cyclotron</label>
+                    <div class="explanation" style="display:none;">B. The cyclotron's dual-magnet, spiral-acceleration design is the foundation proton therapy machines still build on.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(2)">Check Answer</button>
+            </div>
+            <div id="lesson-page-3" class="lesson-page">
+                <h3>Page 3: Introduction to the Linear Accelerator</h3>
+                <p>The <span class="highlight">linear accelerator (LINAC)</span> is the workhorse machine of external beam radiation therapy. It accelerates electrons to high energy and uses them to produce either a high-energy photon beam or an electron treatment beam, aimed precisely at a patient's tumor.</p>
+                <p>Early linear accelerators were large and bulky compared to today's machines, which are compact and fully computer-driven.</p>
+            </div>
+            <div id="lesson-page-4" class="lesson-page">
+                <h3>Page 4: Major Component Overview</h3>
+                <p>At a high level, a LINAC has four functional groups:</p>
+                <ul>
+                    <li><strong>The gantry</strong> &mdash; the rotating structure housing the beam-generating and beam-shaping hardware, which rotates around the patient.</li>
+                    <li><strong>The drive stand</strong> &mdash; houses supporting electronics and, on many machines, part of the waveguide and klystron/magnetron. The gantry rotates on bearings within the drive stand.</li>
+                    <li><strong>The patient support system</strong> &mdash; the treatment couch (also called the "tabletop" or "patient support assembly"), which moves in multiple axes to position the patient at isocenter.</li>
+                    <li><strong>The control console</strong> &mdash; where the therapist sets up and delivers the treatment, outside the treatment room.</li>
+                </ul>
+            </div>
+            <div id="lesson-page-5" class="lesson-page">
+                <h3>Page 5: Electron Gun and Waveguide</h3>
+                <p>Electrons originate at the <span class="highlight">electron gun</span>, which functions as the cathode &mdash; a heated cathode that releases electrons via thermionic emission.</p>
+                <div class="key-principle">
+                    <p>These electrons are injected into the <strong>waveguide</strong>, a hollow, tube-like structure using radiofrequency electromagnetic radiation (microwaves) to accelerate them to nearly the speed of light. A <strong>circulator</strong> directs energy into the waveguide and prevents reflected microwaves from traveling backward.</p>
+                </div>
+                <p>Lower-energy machines (up to about 12 MeV) typically use a <strong>magnetron</strong> (self-contained oscillator); higher-energy machines use a <strong>klystron</strong> (amplifier), which requires a separate low-power microwave source to amplify.</p>
+            </div>
+            <div id="lesson-page-6" class="lesson-page">
+                <h3>Page 6: The Bending Magnet</h3>
+                <p>On most LINAC designs, the accelerated electron beam travels through the waveguide but needs to be redirected toward the patient. The <span class="highlight">bending magnet</span> does this &mdash; redirecting electrons toward the exit window of the treatment head.</p>
+                <div class="key-principle">
+                    <p>An <strong>achromatic bending magnet</strong> (commonly a 270&deg; or "slalom" design) bends electrons of slightly different energies back to the same focal point, keeping the beam narrow and consistent despite small energy variations picked up in the waveguide.</p>
+                </div>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">What is the main purpose of the bending magnet?</p>
+                    <label><input type="radio" name="lq_page6_1" value="A"> To slow the electrons down before they hit the target</label>
+                    <label><input type="radio" name="lq_page6_1" value="B"> To redirect the electron beam toward the patient and refocus it</label>
+                    <label><input type="radio" name="lq_page6_1" value="C"> To produce the flattening of the beam profile</label>
+                    <div class="explanation" style="display:none;">B. The bending magnet redirects the beam (often through 270&deg;) toward the patient and refocuses electrons of slightly different energies to the same point.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(6)">Check Answer</button>
+            </div>
+            <div id="lesson-page-7" class="lesson-page">
+                <h3>Page 7: Treatment Head &mdash; Target and Flattening Filter</h3>
+                <p>Once redirected, the electron beam either strikes a <span class="highlight">target</span> (typically tungsten, a high-atomic-number material) to produce photons via <strong>bremsstrahlung</strong> ("braking radiation"), or the target is retracted and the electrons themselves are used directly for electron treatments.</p>
+                <div class="key-principle">
+                    <p>For photon beams, the raw bremsstrahlung output is much more intense along the central axis than at the edges (forward-peaked). A <strong>flattening filter</strong> attenuates the center more than the edges to produce a uniform ("flat") beam profile across the field.</p>
+                    <p>For electron treatments, both the target and flattening filter are moved <em>out</em> of the beam path, and a <strong>scattering foil</strong> is moved <em>in</em> to spread the narrow electron beam into a usable field.</p>
+                </div>
+            </div>
+            <div id="lesson-page-8" class="lesson-page">
+                <h3>Page 8: Ion Chambers &mdash; Dose and Symmetry Monitoring</h3>
+                <p>Below the flattening filter sit sealed <strong>dual ion chambers</strong> (dose monitor chambers) that continuously measure beam output and symmetry in real time as the beam is delivered.</p>
+                <div class="key-principle">
+                    <p>Two independent ion chambers provide redundancy &mdash; if the primary and secondary readings disagree beyond tolerance, the beam is automatically terminated. The ion chamber is what signals the machine to shut off once the requested dose (monitor units) has been delivered &mdash; a core radiation safety interlock, not just a dosimetry convenience.</p>
+                </div>
+            </div>
+            <div id="lesson-page-9" class="lesson-page">
+                <h3>Page 9: Collimation &mdash; Primary and Secondary Collimators</h3>
+                <p>The beam next passes through the <strong>primary collimator</strong>, a fixed conical opening that sets the <em>maximum</em> possible field size the machine can ever produce.</p>
+                <p>Beyond that, the <strong>secondary collimators</strong> (the X and Y jaws) define the actual field size for a given treatment, within the limit set by the primary collimator. The jaws move to generate a customized field shape &mdash; this is covered in depth in the Field Size lesson.</p>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">Which collimator sets the absolute maximum field size the machine can physically produce?</p>
+                    <label><input type="radio" name="lq_page9_1" value="A"> The primary collimator</label>
+                    <label><input type="radio" name="lq_page9_1" value="B"> The secondary collimator (jaws)</label>
+                    <div class="explanation" style="display:none;">A. The primary collimator is a fixed opening that sets the absolute maximum field size; the jaws then define the actual field within that limit.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(9)">Check Answer</button>
+            </div>
+            <div id="lesson-page-10" class="lesson-page">
+                <h3>Page 10: The MLC and Field Light</h3>
+                <p>Sitting below the secondary jaws is the <span class="highlight">Multi-Leaf Collimator</span> &mdash; covered in detail in its own lesson. Mechanically, it's simply the next beam-shaping layer in the head, after the jaws.</p>
+                <p>The <strong>field light</strong> simulates the radiation field by illuminating the secondary collimator and MLC area, letting staff visually confirm field shape and position without turning on the actual beam.</p>
+            </div>
+            <div id="lesson-page-11" class="lesson-page">
+                <h3>Page 11: Gantry, Couch, and Isocenter</h3>
+                <p>The <span class="highlight">gantry</span> rotates the entire treatment head around a horizontal axis, allowing the beam to enter the patient from virtually any angle in that plane.</p>
+                <p>The <span class="highlight">couch</span> (tabletop) moves independently in vertical, lateral, and longitudinal directions, and on many machines can also rotate. Together, gantry angle and couch position determine where the beam enters and where it's aimed.</p>
+                <div class="key-principle">
+                    <p>The <strong>isocenter</strong> is the fixed point in space where the central axis of the beam passes regardless of gantry angle &mdash; typically 100 cm from the source. Aligning the tumor to isocenter is the entire point of simulation and setup.</p>
+                </div>
+            </div>
+            <div id="lesson-page-12" class="lesson-page">
+                <h3>Page 12: Imaging Systems &mdash; OBI, EPID, and CBCT</h3>
+                <p>Modern LINACs carry onboard imaging to verify patient position before (and sometimes during) treatment: the kV imaging device (On-Board Imager) and the Electronic Portal Imaging Device (EPID), which replaced film with silicon imaging technology reviewed immediately online. Both are covered in depth in the Image Production lesson.</p>
+            </div>
+            <div id="lesson-page-13" class="lesson-page">
+                <h3>Page 13: The Control Console and Modulator Cabinet</h3>
+                <p>The <strong>control console</strong> was developed specifically to reduce the risk of treatment errors, allowing verification of setup parameters before beam-on. The <strong>modulator cabinet</strong> houses the pulsed power supply and supporting electronics that drive the whole accelerator.</p>
+                <p>Safety systems built around the console and treatment room &mdash; interlocks, emergency-off controls, warning lights &mdash; are covered in depth in the Console Operations &amp; Interlocks lesson.</p>
+            </div>
+            <div id="lesson-page-14" class="lesson-page">
+                <h3>Page 14: Medical Accelerator Hazards and Safety Considerations</h3>
+                <p>A LINAC has many layered safety interlocks that stop the beam or prevent it from starting if a condition isn't met &mdash; door interlocks, collision-avoidance sensors, dose-rate and symmetry checks from the ion chambers, and more. Any one of these tripping halts treatment immediately.</p>
+                <p>You've now covered the full beam path: electron gun &rarr; waveguide &rarr; bending magnet &rarr; target/flattening filter &rarr; ion chambers &rarr; collimation (primary, jaws, MLC) &rarr; gantry/couch/isocenter &rarr; imaging &rarr; safety interlocks &mdash; plus the equipment history leading up to it.</p>
+                <p>The LINAC Operations Lab will let you identify these components and practice the setup sequence. Click below to begin.</p>
+            </div>
+
+            <div class="lesson-navigation">
+                <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled>Previous Page</button>
+                <span class="page-indicator" id="lessonPageIndicator">Page 1 of 14</span>
+                <button id="nextLessonPage" onclick="changeLessonPage(1)">Next Page</button>
+                <button id="startActivityButton" onclick="window.location.href='linac_operations_lab_activity.html'" style="display:none; background-color: #28a745;">Start Activity</button>
+            </div>
+        </div>
+        <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #b3d7ff;">
+            <h3 style="text-align:center; color:#0056b3;">Go Deeper on Linear Accelerator Operations</h3>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px;">
+                <a href="Image_Production/index.html" style="display:block; background:#f0f8ff; border:1px solid #b3d7ff; border-radius:8px; padding:14px; text-decoration:none; color:#0056b3;">
+                    <strong>Image Production</strong>
+                    <p style="font-size:0.85em; color:#334155; margin-top:4px;">kV imaging, EPID, CBCT, and IGRT</p>
+                </a>
+                <a href="Console_Operations_and_Interlocks/index.html" style="display:block; background:#f0f8ff; border:1px solid #b3d7ff; border-radius:8px; padding:14px; text-decoration:none; color:#0056b3;">
+                    <strong>Console Operations &amp; Interlocks</strong>
+                    <p style="font-size:0.85em; color:#334155; margin-top:4px;">Minor/Major/Dosimetry interlocks and clearing procedures</p>
+                </a>
+                <a href="equipment_review_quiz.html" style="display:block; background:#f0f8ff; border:1px solid #b3d7ff; border-radius:8px; padding:14px; text-decoration:none; color:#0056b3;">
+                    <strong>Equipment Review Quiz</strong>
+                    <p style="font-size:0.85em; color:#334155; margin-top:4px;">24-question review from a published RT study guide</p>
+                </a>
+                <a href="clinical_lab_worksheet.html" style="display:block; background:#f0f8ff; border:1px solid #b3d7ff; border-radius:8px; padding:14px; text-decoration:none; color:#0056b3;">
+                    <strong>Clinical Lab Worksheet</strong>
+                    <p style="font-size:0.85em; color:#334155; margin-top:4px;">Hands-on component ID, ISL calculations, and MU timing</p>
+                </a>
+            </div>
+        </div>
+        <div class="footer">Radiation Therapy E-Workbook &mdash; Treatment Delivery Procedures</div>
+    </div>
+    <script>
+        let currentLessonPage = 1;
+        const totalLessonPages = 14;
+        const lessonPages = document.querySelectorAll('.lesson-page');
+        const prevLessonButton = document.getElementById('prevLessonPage');
+        const nextLessonButton = document.getElementById('nextLessonPage');
+        const lessonPageIndicator = document.getElementById('lessonPageIndicator');
+        const startActivityButton = document.getElementById('startActivityButton');
+        const lessonCorrectAnswers = {"lq_page2_1": "B", "lq_page6_1": "B", "lq_page9_1": "A"};
+        function displayLessonPage() {
+            lessonPages.forEach((page, index) => page.classList.toggle('active', index === currentLessonPage - 1));
+            prevLessonButton.disabled = currentLessonPage === 1;
+            nextLessonButton.style.display = currentLessonPage === totalLessonPages ? 'none' : 'inline-block';
+            startActivityButton.style.display = currentLessonPage === totalLessonPages ? 'inline-block' : 'none';
+            lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
+        }
+        function changeLessonPage(direction) {
+            currentLessonPage += direction;
+            if (currentLessonPage < 1) currentLessonPage = 1;
+            if (currentLessonPage > totalLessonPages) currentLessonPage = totalLessonPages;
+            displayLessonPage();
+        }
+        function checkPageAnswers(pageNumber) {
+            const questionsOnPage = document.querySelectorAll(`#lesson-page-${pageNumber} .interactive-question-block`);
+            questionsOnPage.forEach(block => {
+                const radio = block.querySelector('input[type="radio"]');
+                if (!radio) return;
+                const questionName = radio.name;
+                if (!lessonCorrectAnswers.hasOwnProperty(questionName)) return;
+                const correctAnswerValue = lessonCorrectAnswers[questionName];
+                const selectedRadio = block.querySelector(`input[name="${questionName}"]:checked`);
+                const explanationDiv = block.querySelector('.explanation');
+                block.classList.remove('feedback-correct', 'feedback-incorrect');
+                block.querySelectorAll('label').forEach(label => label.classList.remove('correct-option', 'selected-incorrect'));
+                if (explanationDiv) explanationDiv.style.display = 'none';
+                if (selectedRadio) {
+                    const userAnswer = selectedRadio.value;
+                    const userSelectedLabel = selectedRadio.parentElement;
+                    if (userAnswer === correctAnswerValue) {
+                        block.classList.add('feedback-correct');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('correct-option');
+                    } else {
+                        block.classList.add('feedback-incorrect');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('selected-incorrect');
+                        const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                        if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                    }
+                } else {
+                    block.classList.add('feedback-incorrect');
+                    const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                    if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                }
+                if (explanationDiv) explanationDiv.style.display = 'block';
+            });
+        }
+        displayLessonPage();
+    </script>
+</body>
+</html>00;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
