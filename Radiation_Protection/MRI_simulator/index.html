@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MRI Safety & Imaging Simulator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#eef6ff;
+      --panel:#ffffff;
+      --ink:#1e293b;
+      --muted:#475569;
+      --brand:#1d4ed8;
+      --brand2:#2563eb;
+      --good:#16a34a;
+      --warn:#d97706;
+      --bad:#dc2626;
+      --line:#d6e0eb;
+      --shadow:0 14px 36px rgba(15,23,42,.12);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:'Inter',sans-serif;
+      color:var(--ink);
+      background:linear-gradient(180deg,#f8fbff,#eaf1f8);
+    }
+    header{
+      position:sticky;
+      top:0;
+      z-index:20;
+      background:#fff;
+      border-bottom:1px solid var(--line);
+      box-shadow:0 1px 3px rgba(0,0,0,.05);
+      padding:12px 18px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .brand{font-weight:800;color:var(--brand);letter-spacing:.01em}
+    .navlinks{display:flex;gap:8px;flex-wrap:wrap}
+    .navlinks a{
+      text-decoration:none;color:#fff;background:#64748b;
+      padding:8px 12px;border-radius:8px;font-size:.85rem;font-weight:700
+    }
+    .navlinks a.primary{background:var(--brand)}
+    .shell{max-width:1600px;margin:0 auto;padding:18px}
+    .hero{
+      background:linear-gradient(135deg,#ffffff,#f5faff);
+      border:1px solid var(--line);
+      border-radius:18px;
+      box-shadow:var(--shadow);
+      padding:18px 20px;
+      margin-bottom:16px;
+    }
+    h1{margin:0;font-size:2rem;color:#17357d}
+    .subtitle{margin:8px 0 0;color:var(--muted);line-height:1.55;max-width:1200px}
+    .pillrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    .pill{
+      background:#eff6ff;color:#1d4ed8;border:1px solid #cfe0ff;
+      padding:7px 10px;border-radius:999px;font-size:.82rem;font-weight:800
+    }
+    .layout{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:16px;
+    }
+    @media(min-width:1180px){
+      .layout{grid-template-columns:.95fr 1.05fr}
+    }
+    .panel{
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:18px;
+      box-shadow:var(--shadow);
+      padding:18px;
+      overflow:hidden;
+    }
+    .panel h2{
+      margin:0 0 12px;
+      font-size:1.05rem;
+      color:#17357d;
+      text-transform:uppercase;
+      letter-spacing:.05em;
+    }
+    .toolbar{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin-bottom:12px;
+    }
+    @media(max-width:720px){.toolbar{grid-template-columns:1fr}}
+    .control{
+      background:#f8fbff;
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:12px;
+    }
+    .control label{
+      display:block;font-size:.84rem;font-weight:800;color:#334155;margin-bottom:8px
+    }
+    .control select,.control input[type="range"], .control input[type="checkbox"]{width:100%}
+    .control .val{margin-top:6px;font-size:.82rem;color:#64748b;font-weight:700}
+    .buttons{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 14px}
+    button{
+      border:0;border-radius:10px;padding:10px 14px;font-weight:800;cursor:pointer;
+      transition:transform .12s ease, opacity .15s ease;
+    }
+    button:hover{transform:translateY(-1px)}
+    button:disabled{opacity:.5;cursor:not-allowed;transform:none}
+    .btn-primary{background:var(--brand2);color:#fff}
+    .btn-secondary{background:#64748b;color:#fff}
+    .btn-ghost{background:#e2e8f0;color:#0f172a}
+    .status,.note,.score{
+      border-radius:12px;padding:12px;margin-bottom:10px;font-size:.93rem;line-height:1.45
+    }
+    .status{background:#eff6ff;color:#1e3a8a;border:1px solid #bfdbfe}
+    .note{background:#fff7ed;color:#7c2d12;border:1px solid #fdba74}
+    .score{background:#ecfdf5;color:#166534;border:1px solid #bbf7d0}
+    .modegrid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:16px;
+    }
+    .tabbar{
+      display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px
+    }
+    .tab{
+      background:#e2e8f0;color:#0f172a;border:0;padding:10px 14px;border-radius:10px;font-weight:800;cursor:pointer
+    }
+    .tab.active{background:var(--brand2);color:#fff}
+    .mode{
+      display:none;
+    }
+    .mode.active{display:block}
+    .stage{
+      position:relative;
+      width:100%;
+      min-height:680px;
+      border-radius:18px;
+      overflow:hidden;
+      border:1px solid #cfe0f2;
+      background:linear-gradient(180deg,#dbeafe,#eef6ff);
+    }
+    .stage svg{width:100%;height:100%;display:block}
+    .floating{
+      position:absolute;
+      left:14px; top:14px;
+      background:rgba(255,255,255,.92);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:12px;
+      width:min(380px,calc(100% - 28px));
+      box-shadow:0 8px 20px rgba(15,23,42,.08);
+    }
+    .floating h3{margin:0 0 8px;font-size:1rem;color:#17357d}
+    .floating p{margin:0;color:#334155;line-height:1.45;font-size:.92rem}
+    .legend{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:8px;
+      margin-top:10px
+    }
+    .legend div{
+      border-radius:10px;padding:8px 10px;font-size:.8rem;font-weight:800;text-align:center
+    }
+    .lg-safe{background:#dcfce7;color:#166534}
+    .lg-cond{background:#fef3c7;color:#92400e}
+    .lg-unsafe{background:#fee2e2;color:#991b1b}
+    .grid-two{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:12px;
+    }
+    @media(min-width:960px){.grid-two{grid-template-columns:1fr 1fr}}
+    .card{
+      background:#f8fbff;border:1px solid var(--line);border-radius:14px;padding:14px
+    }
+    .card h3{margin:0 0 8px;color:#0f172a;font-size:1rem}
+    .card p, .card li{color:#334155;line-height:1.5;font-size:.93rem}
+    .card ul{margin:8px 0 0 18px;padding:0}
+    .checklist{
+      display:grid;
+      gap:8px;
+      margin-top:10px;
+    }
+    .check-item{
+      display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);
+      border-radius:10px;padding:10px 12px
+    }
+    .check-dot{
+      width:18px;height:18px;border-radius:50%;border:2px solid #94a3b8;position:relative;flex:0 0 auto;background:#fff
+    }
+    .check-item.done .check-dot{background:#16a34a;border-color:#16a34a}
+    .check-item.done .check-dot::after{
+      content:'';position:absolute;left:5px;top:1px;width:4px;height:8px;border-right:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(45deg)
+    }
+    .minirow{
+      display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px
+    }
+    .mini{
+      border:1px solid var(--line);background:#f8fbff;border-radius:12px;padding:10px
+    }
+    .mini .head{font-size:.75rem;font-weight:900;text-transform:uppercase;color:#64748b;margin-bottom:4px}
+    .mini .body{color:#0f172a;font-weight:700;font-size:.94rem;line-height:1.4}
+    .footer{text-align:center;color:#64748b;font-size:.85rem;padding:12px 0 22px}
+    .hidden{display:none !important}
+    .blink{animation:blink 1.2s infinite}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
+    .pulse{animation:pulse 1.6s ease-in-out infinite}
+    @keyframes pulse{0%,100%{transform:scale(1);opacity:.85}50%{transform:scale(1.04);opacity:1}}
+    .drag-hint{
+      position:absolute;right:14px;top:14px;background:rgba(255,255,255,.92);border:1px solid var(--line);
+      border-radius:14px;padding:10px 12px;font-size:.84rem;font-weight:700;color:#334155
+    }
+    .zone-note{
+      position:absolute;right:14px;bottom:14px;background:rgba(255,255,255,.92);border:1px solid var(--line);
+      border-radius:14px;padding:10px 12px;font-size:.84rem;font-weight:700;color:#334155;max-width:360px
+    }
+    .selectgrid{
+      display:grid;grid-template-columns:1fr 1fr;gap:12px
+    }
+    @media(max-width:760px){.selectgrid{grid-template-columns:1fr}}
+    .selectgrid button{
+      background:#e2e8f0;color:#0f172a;border:1px solid #cbd5e1
+    }
+    .selectgrid button.active{
+      background:#2563eb;color:#fff;border-color:#2563eb
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="brand">MRI Safety & Imaging Simulator</div>
+  <div class="navlinks">
+    <a class="primary" href="#sim">Simulator</a>
+    <a href="../index.html">Radiation Physics Menu</a>
+  </div>
+</header>
+
+<div class="shell" id="sim">
+  <div class="hero">
+    <h1>Interactive MRI Safety & Imaging Simulator</h1>
+    <p class="subtitle">
+      This simulator combines MRI image formation, patient screening, and ACR-style zone safety principles into one interactive learning tool. It reflects the RT-focused MRI safety workflow, including the four-zone concept, daily screening, device labeling, and the major field-related hazards of static, gradient, and RF exposure [file:20][file:21].
+    </p>
+    <div class="pillrow">
+      <span class="pill">Image formation</span>
+      <span class="pill">Screening workflow</span>
+      <span class="pill">Zone I–IV safety</span>
+      <span class="pill">MR Safe / Conditional / Unsafe</span>
+      <span class="pill">RT-focused</span>
+    </div>
+  </div>
+
+  <div class="layout">
+    <div class="panel">
+      <h2>Simulator Controls</h2>
+
+      <div class="tabbar">
+        <button class="tab active" data-tab="imaging">Imaging</button>
+        <button class="tab" data-tab="screening">Screening</button>
+        <button class="tab" data-tab="zones">Zone Safety</button>
+      </div>
+
+      <div class="toolbar">
+        <div class="control">
+          <label for="patientType">Patient scenario</label>
+          <select id="patientType">
+            <option value="clean">No implant / fully cleared</option>
+            <option value="fiducial">Gold fiducial marker</option>
+            <option value="cied">Cardiac implantable electronic device</option>
+            <option value="vacuum">Vacuum cushion + clothing loop risk</option>
+            <option value="qa">QA device brought near scanner</option>
+          </select>
+        </div>
+        <div class="control">
+          <label for="scanMode">Imaging mode</label>
+          <select id="scanMode">
+            <option value="t1">T1-weighted</option>
+            <option value="t2">T2-weighted</option>
+            <option value="pd">Proton density</option>
+            <option value="motion">Motion tracking</option>
+          </select>
+        </div>
+        <div class="control">
+          <label for="riskLevel">RF / gradient intensity</label>
+          <input id="riskLevel" type="range" min="0" max="100" step="1" value="30">
+          <div class="val" id="riskLabel">Moderate</div>
+        </div>
+        <div class="control">
+          <label for="zoneEntry">Current zone</label>
+          <select id="zoneEntry">
+            <option value="1">Zone I</option>
+            <option value="2">Zone II</option>
+            <option value="3">Zone III</option>
+            <option value="4">Zone IV</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="buttons">
+        <button class="btn-primary" id="runBtn">Run check</button>
+        <button class="btn-secondary" id="resetBtn">Reset</button>
+        <button class="btn-ghost" id="animateBtn">Replay animation</button>
+      </div>
+
+      <div class="status" id="statusBox"></div>
+      <div class="note" id="noteBox"></div>
+      <div class="score" id="scoreBox"></div>
+
+      <div class="grid-two">
+        <div class="card">
+          <h3>Checklist</h3>
+          <div class="checklist" id="checklist"></div>
+        </div>
+        <div class="card">
+          <h3>Scenario summary</h3>
+          <div id="summaryBox"></div>
+        </div>
+      </div>
+
+      <div class="minirow">
+        <div class="mini">
+          <div class="head">Label state</div>
+          <div class="body" id="labelState">MR Safe</div>
+        </div>
+        <div class="mini">
+          <div class="head">Primary risk</div>
+          <div class="body" id="primaryRisk">None</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Interactive Scene</h2>
+
+      <div class="mode active" id="imagingMode">
+        <div class="stage" id="imagingStage">
+          <div class="floating">
+            <h3>Image formation</h3>
+            <p>
+              Use the scan mode and RF/gradient slider to see a simplified MRI image react to excitation, signal contrast, and motion. The goal is to connect the physics of alignment, RF excitation, relaxation, and gradients to what the image looks like [file:20].
+            </p>
+            <div class="legend">
+              <div class="lg-safe">Low risk</div>
+              <div class="lg-cond">Conditional</div>
+              <div class="lg-unsafe">Unsafe</div>
+            </div>
+          </div>
+          <svg viewBox="0 0 1200 680" aria-label="MRI imaging simulator">
+            <defs>
+              <linearGradient id="magnetG" x1="0" x2="1">
+                <stop offset="0%" stop-color="#1d4ed8"/>
+                <stop offset="100%" stop-color="#60a5fa"/>
+              </linearGradient>
+              <linearGradient id="beamG" x1="0" x2="1">
+                <stop offset="0%" stop-color="#fde68a" stop-opacity="1"/>
+                <stop offset="100%" stop-color="#fde68a" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <rect width="1200" height="680" fill="#dbeafe"/>
+            <circle cx="720" cy="340" r="190" fill="url(#beamG)" opacity=".25" class="pulse"/>
+            <rect x="650" y="165" width="190" height="350" rx="34" fill="url(#magnetG)" opacity=".95"/>
+            <rect x="700" y="225" width="90" height="230" rx="20" fill="#eff6ff"/>
+            <rect x="885" y="260" width="130" height="160" rx="18" fill="#94a3b8"/>
+            <rect x="900" y="272" width="100" height="136" rx="14" fill="#cbd5e1"/>
+            <path d="M170 340 C240 340, 290 340, 360 340" stroke="#f59e0b" stroke-width="12" fill="none" stroke-linecap="round"/>
+            <path d="M360 340 L650 340" stroke="#2563eb" stroke-width="8" stroke-linecap="round" stroke-dasharray="16 12"/>
+            <circle cx="170" cy="340" r="18" fill="#f59e0b"/>
+            <circle cx="360" cy="340" r="18" fill="#2563eb"/>
+            <circle cx="470" cy="340" r="16" fill="#22c55e" class="pulse"/>
+            <text x="130" y="300" fill="#334155" font-size="24" font-weight="700">RF pulse</text>
+            <text x="665" y="150" fill="#1e3a8a" font-size="26" font-weight="700">MRI scanner</text>
+            <text x="900" y="235" fill="#334155" font-size="20" font-weight="700">Image output</text>
+            <text x="900" y="470" fill="#334155" font-size="18" font-weight="700">Signal changes with the selected mode</text>
+            <rect x="70" y="470" width="400" height="120" rx="18" fill="#fff" stroke="#cbd5e1" stroke-width="3"/>
+            <text x="95" y="505" fill="#1e3a8a" font-size="18" font-weight="800">Contrast preview</text>
+            <text id="contrastText" x="95" y="540" fill="#334155" font-size="16" font-weight="600">T1-weighted: fat brighter, fluid darker</text>
+            <text id="riskText" x="95" y="570" fill="#334155" font-size="16" font-weight="600">Risk level: moderate</text>
+          </svg>
+          <div class="zone-note">Static field, gradients, and RF are simplified here as interactive learning cues, not clinical measurement values [file:20].</div>
+        </div>
+      </div>
+
+      <div class="mode" id="screeningMode">
+        <div class="stage" id="screeningStage">
+          <div class="floating">
+            <h3>Screening workflow</h3>
+            <p>
+              Screening starts early and should be repeated daily in RT. Select a patient scenario, then run the checklist to see whether the patient can enter the scanner room safely [file:20].
+            </p>
+            <div class="legend">
+              <div class="lg-safe">Proceed</div>
+              <div class="lg-cond">Review conditions</div>
+              <div class="lg-unsafe">Stop</div>
+            </div>
+          </div>
+          <svg viewBox="0 0 1200 680" aria-label="MRI screening simulator">
+            <rect width="1200" height="680" fill="#eef6ff"/>
+            <rect x="65" y="90" width="420" height="500" rx="28" fill="#fff" stroke="#cbd5e1" stroke-width="3"/>
+            <text x="95" y="135" fill="#1e3a8a" font-size="24" font-weight="800">MR screening checklist</text>
+            <g id="screenGraphic" transform="translate(110 180)">
+              <circle cx="130" cy="75" r="48" fill="#dbeafe" stroke="#60a5fa" stroke-width="3"/>
+              <rect x="92" y="132" width="76" height="135" rx="24" fill="#bfdbfe" stroke="#60a5fa" stroke-width="3"/>
+              <text x="130" y="290" text-anchor="middle" fill="#334155" font-size="16" font-weight="700">Patient</text>
+              <path d="M220 62 L330 62" stroke="#94a3b8" stroke-width="6" stroke-linecap="round"/>
+              <path d="M220 122 L330 122" stroke="#94a3b8" stroke-width="6" stroke-linecap="round"/>
+              <path d="M220 182 L330 182" stroke="#94a3b8" stroke-width="6" stroke-linecap="round"/>
+              <path d="M220 242 L330 242" stroke="#94a3b8" stroke-width="6" stroke-linecap="round"/>
+              <circle cx="245" cy="62" r="10" fill="#94a3b8"/>
+              <circle cx="245" cy="122" r="10" fill="#94a3b8"/>
+              <circle cx="245" cy="182" r="10" fill="#94a3b8"/>
+              <circle cx="245" cy="242" r="10" fill="#94a3b8"/>
+              <text x="345" y="68" fill="#334155" font-size="16" font-weight="700">Questionnaire</text>
+              <text x="345" y="128" fill="#334155" font-size="16" font-weight="700">Device labels</text>
+              <text x="345" y="188" fill="#334155" font-size="16" font-weight="700">Daily re-check</text>
+              <text x="345" y="248" fill="#334155" font-size="16" font-weight="700">Final clearance</text>
+            </g>
+            <rect x="555" y="90" width="580" height="500" rx="28" fill="#fff" stroke="#cbd5e1" stroke-width="3"/>
+            <text x="585" y="135" fill="#1e3a8a" font-size="24" font-weight="800">Device and safety labels</text>
+
+            <g id="labelVisual">
+              <rect x="600" y="195" width="130" height="130" rx="18" fill="#dcfce7" stroke="#16a34a" stroke-width="3"/>
+              <text x="665" y="245" text-anchor="middle" fill="#166534" font-size="22" font-weight="800">MR</text>
+              <text x="665" y="275" text-anchor="middle" fill="#166534" font-size="20" font-weight="800">Safe</text>
+
+              <rect x="775" y="195" width="130" height="130" rx="18" fill="#fef3c7" stroke="#d97706" stroke-width="3"/>
+              <text x="840" y="245" text-anchor="middle" fill="#92400e" font-size="18" font-weight="800">MR</text>
+              <text x="840" y="275" text-anchor="middle" fill="#92400e" font-size="18" font-weight="800">Conditional</text>
+
+              <rect x="950" y="195" width="130" height="130" rx="18" fill="#fee2e2" stroke="#dc2626" stroke-width="3"/>
+              <path d="M985 230 L1045 290 M1045 230 L985 290" stroke="#dc2626" stroke-width="8" stroke-linecap="round"/>
+              <text x="1015" y="320" text-anchor="middle" fill="#991b1b" font-size="20" font-weight="800">Unsafe</text>
+
+              <text x="665" y="375" text-anchor="middle" fill="#334155" font-size="15" font-weight="700">No known hazards</text>
+              <text x="840" y="375" text-anchor="middle" fill="#334155" font-size="15" font-weight="700">Only under conditions</text>
+              <text x="1015" y="375" text-anchor="middle" fill="#334155" font-size="15" font-weight="700">Do not enter scanner room</text>
+            </g>
+
+            <rect x="65" y="620" width="1070" height="40" rx="12" fill="#dbeafe" opacity=".95"/>
+            <text id="screenFooter" x="85" y="646" fill="#1e3a8a" font-size="16" font-weight="700">Daily screening protects RT patients because safety status can change between fractions [file:20].</text>
+          </svg>
+        </div>
+      </div>
+
+      <div class="mode" id="zoneMode">
+        <div class="stage" id="zoneStage">
+          <div class="floating">
+            <h3>Zone safety</h3>
+            <p>
+              The ACR-style four-zone concept moves from public access to the scanner room. Choose a zone and a scenario, then see whether access is allowed and what the key warning should be [file:20][file:21].
+            </p>
+            <div class="legend">
+              <div class="lg-safe">Allowed</div>
+              <div class="lg-cond">Condition-based</div>
+              <div class="lg-unsafe">Restricted</div>
+            </div>
+          </div>
+          <svg viewBox="0 0 1200 680" aria-label="MRI zone safety simulator">
+            <rect width="1200" height="680" fill="#f8fbff"/>
+            <circle cx="760" cy="340" r="250" fill="#dbeafe"/>
+            <circle cx="760" cy="340" r="195" fill="#bfdbfe"/>
+            <circle cx="760" cy="340" r="135" fill="#93c5fd"/>
+            <circle cx="760" cy="340" r="78" fill="#1d4ed8"/>
+            <rect x="742" y="322" width="36" height="36" rx="8" fill="#fff"/>
+            <text x="760" y="120" text-anchor="middle" fill="#1e3a8a" font-size="30" font-weight="800">Zone I</text>
+            <text x="760" y="186" text-anchor="middle" fill="#1e3a8a" font-size="28" font-weight="800">Zone II</text>
+            <text x="760" y="250" text-anchor="middle" fill="#fff" font-size="26" font-weight="800">Zone III</text>
+            <text x="760" y="345" text-anchor="middle" fill="#fff" font-size="26" font-weight="800">Zone IV</text>
+            <text x="760" y="383" text-anchor="middle" fill="#fff" font-size="18" font-weight="700">Scanner room</text>
+            <path d="M260 540 L1160 540" stroke="#64748b" stroke-width="6" stroke-dasharray="16 10"/>
+            <text x="265" y="570" fill="#334155" font-size="18" font-weight="800">5-gauss line</text>
+
+            <g id="zoneObjects">
+              <g id="objSafe" transform="translate(150 180)">
+                <rect x="0" y="0" width="150" height="90" rx="18" fill="#dcfce7" stroke="#16a34a" stroke-width="4"/>
+                <text x="75" y="37" text-anchor="middle" fill="#166534" font-size="22" font-weight="800">MR Safe</text>
+                <text x="75" y="62" text-anchor="middle" fill="#166534" font-size="15" font-weight="700">Clamp / plastic tool</text>
+              </g>
+              <g id="objCond" transform="translate(150 300)">
+                <rect x="0" y="0" width="150" height="90" rx="18" fill="#fef3c7" stroke="#d97706" stroke-width="4"/>
+                <text x="75" y="37" text-anchor="middle" fill="#92400e" font-size="20" font-weight="800">MR Conditional</text>
+                <text x="75" y="62" text-anchor="middle" fill="#92400e" font-size="15" font-weight="700">Only under limits</text>
+              </g>
+              <g id="objUnsafe" transform="translate(150 420)">
+                <rect x="0" y="0" width="150" height="90" rx="18" fill="#fee2e2" stroke="#dc2626" stroke-width="4"/>
+                <path d="M25 22 L55 52 M55 22 L25 52" stroke="#dc2626" stroke-width="8" stroke-linecap="round"/>
+                <text x="105" y="37" text-anchor="middle" fill="#991b1b" font-size="20" font-weight="800">MR Unsafe</text>
+                <text x="105" y="62" text-anchor="middle" fill="#991b1b" font-size="15" font-weight="700">Do not enter</text>
+              </g>
+            </g>
+
+            <rect x="905" y="115" width="230" height="470" rx="24" fill="#fff" stroke="#cbd5e1" stroke-width="3"/>
+            <text x="1020" y="155" text-anchor="middle" fill="#1e3a8a" font-size="22" font-weight="800">Zone status</text>
+            <text id="zoneTitle" x="1020" y="220" text-anchor="middle" fill="#0f172a" font-size="24" font-weight="800">Zone I</text>
+            <text id="zoneDesc" x="1020" y="260" text-anchor="middle" fill="#334155" font-size="16" font-weight="700">Public access area</text>
+            <circle cx="1020" cy="350" r="48" fill="#dcfce7"/>
+            <path id="zoneIcon" d="M1004 350 L1016 362 L1038 338" stroke="#16a34a" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <text id="zoneWarn" x="1020" y="435" text-anchor="middle" fill="#166534" font-size="18" font-weight="800">Allowed</text>
+            <text id="zoneRule" x="1020" y="470" text-anchor="middle" fill="#334155" font-size="15" font-weight="700">Choose a zone and scenario</text>
+            <text x="1020" y="515" text-anchor="middle" fill="#64748b" font-size="14" font-weight="700">Zone IV requires strict access control</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    MRI safety and imaging simulator — interactive HTML draft
+  </div>
+</div>
+
+<script>
+  const tabs = [...document.querySelectorAll('.tab')];
+  const modes = {
+    imaging: document.getElementById('imagingMode'),
+    screening: document.getElementById('screeningMode'),
+    zones: document.getElementById('zoneMode')
+  };
+  const patientType = document.getElementById('patientType');
+  const scanMode = document.getElementById('scanMode');
+  const riskLevel = document.getElementById('riskLevel');
+  const riskLabel = document.getElementById('riskLabel');
+  const zoneEntry = document.getElementById('zoneEntry');
+  const runBtn = document.getElementById('runBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const animateBtn = document.getElementById('animateBtn');
+  const statusBox = document.getElementById('statusBox');
+  const noteBox = document.getElementById('noteBox');
+  const scoreBox = document.getElementById('scoreBox');
+  const checklist = document.getElementById('checklist');
+  const summaryBox = document.getElementById('summaryBox');
+  const labelState = document.getElementById('labelState');
+  const primaryRisk = document.getElementById('primaryRisk');
+  const contrastText = document.getElementById('contrastText');
+  const riskText = document.getElementById('riskText');
+  const zoneTitle = document.getElementById('zoneTitle');
+  const zoneDesc = document.getElementById('zoneDesc');
+  const zoneWarn = document.getElementById('zoneWarn');
+  const zoneRule = document.getElementById('zoneRule');
+  const zoneIcon = document.getElementById('zoneIcon');
+  const screenFooter = document.getElementById('screenFooter');
+
+  let activeTab = 'imaging';
+
+  const labels = {
+    clean: {label:'MR Safe', risk:'None', summary:'No implant or accessory risk. Patient should still undergo routine screening before each fraction.', checklist:['Questionnaire complete','No implant/device concerns','Daily re-check complete','Cleared for Zone IV']},
+    fiducial: {label:'MR Conditional', risk:'Susceptibility artifact', summary:'A gold fiducial marker can be MR Conditional and may create image artifact or localization uncertainty depending on sequence and orientation [file:20][file:21].', checklist:['Confirm exact device model','Verify scan conditions','Review artifact risk','Proceed only if conditions are met']},
+    cied: {label:'MR Conditional or Unsafe', risk:'High concern', summary:'A cardiac implantable electronic device requires specific device-level review, and some configurations may be unsafe without strict conditions [file:20][file:21].', checklist:['Identify device model','Check MR conditions','Escalate to MR safety team','Do not auto-clear']},
+    vacuum: {label:'MR Conditional', risk:'Burn / loop risk', summary:'Vacuum cushions are usually non-ferromagnetic, but thermal insulation, conductive contact, and loops can raise burn risk [file:20].', checklist:['Avoid skin-to-skin loops','Check clothing','Remove conductive accessories','Position safely']},
+    qa: {label:'MR Unsafe until reviewed', risk:'Projectile / electronics', summary:'QA devices often contain motors, cables, and ferromagnetic parts that require formal evaluation before MR use [file:20].', checklist:['Verify components','Keep outside 5-gauss line','Check electronics','Use distance principle']},
+  };
+
+  const imagingSummaries = {
+    t1: 'T1-weighted: fat brighter, fluid darker',
+    t2: 'T2-weighted: fluid brighter, edema emphasized',
+    pd: 'Proton density: signal reflects proton density and sequence balance',
+    motion: 'Motion tracking: real-time imaging emphasis with motion sensitivity'
+  };
+
+  function setTab(name){
+    activeTab = name;
+    tabs.forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+    Object.entries(modes).forEach(([k,v]) => v.classList.toggle('active', k === name));
+    updateAll();
+  }
+
+  function renderChecklist(items){
+    checklist.innerHTML = '';
+    items.forEach((txt, i) => {
+      const div = document.createElement('div');
+      div.className = 'check-item';
+      if(i < 2) div.classList.add('done');
+      div.innerHTML = `<div class="check-dot"></div><div>${txt}</div>`;
+      checklist.appendChild(div);
+    });
+  }
+
+  function getRiskLabel(v){
+    v = Number(v);
+    if(v < 25) return 'Low';
+    if(v < 60) return 'Moderate';
+    if(v < 85) return 'Elevated';
+    return 'High';
+  }
+
+  function updateImaging(){
+    const mode = scanMode.value;
+    contrastText.textContent = imagingSummaries[mode];
+    const risk = getRiskLabel(riskLevel.value);
+    riskText.textContent = `Risk level: ${risk.toLowerCase()}`;
+    labelState.textContent = mode === 'motion' ? 'Motion emphasis' : 'MR image output';
+    primaryRisk.textContent = risk === 'Low' ? 'Minimal' : risk + ' RF / gradient exposure';
+  }
+
+  function updateScreening(){
+    const s = labels[patientType.value];
+    renderChecklist(s.checklist);
+    summaryBox.innerHTML = `
+      <p><strong>Scenario:</strong> ${patientType.options[patientType.selectedIndex].text}</p>
+      <p><strong>Safety state:</strong> ${s.label}</p>
+      <p>${s.summary}</p>
+    `;
+    labelState.textContent = s.label;
+    primaryRisk.textContent = s.risk;
+    screenFooter.textContent = patientType.value === 'clean'
+      ? 'Routine screening still applies before each fraction [file:20].'
+      : 'Daily screening is essential in RT because safety status can change between fractions [file:20].';
+  }
+
+  function updateZones(){
+    const z = Number(zoneEntry.value);
+    let title = `Zone ${['I','II','III','IV'][z-1]}`;
+    let desc = [
+      'Public access area',
+      'Transition / controlled access',
+      'Post-screening restricted area',
+      'Scanner room'
+    ][z-1];
+    let warn = ['Allowed','Controlled','Restricted','Highly restricted'][z-1];
+    let rule = [
+      'General public access',
+      'Screening begins here',
+      'Only screened personnel and patients',
+      'No unauthorized entry'
+    ][z-1];
+
+    zoneTitle.textContent = title;
+    zoneDesc.textContent = desc;
+    zoneWarn.textContent = warn;
+    zoneRule.textContent = rule;
+
+    const s = labels[patientType.value];
+    let iconColor = '#16a34a';
+    let iconPath = 'M1004 350 L1016 362 L1038 338';
+    if(z === 4 && (patientType.value === 'qa' || patientType.value === 'cied')) {
+      iconColor = '#dc2626';
+      iconPath = 'M1005 330 L1035 370 M1035 330 L1005 370';
+      zoneWarn.textContent = 'Stop';
+      zoneRule.textContent = 'Must review device labeling and MR conditions first';
+    } else if(z === 4 && patientType.value === 'vacuum') {
+      iconColor = '#d97706';
+      iconPath = 'M1004 350 L1016 362 L1038 338';
+      zoneWarn.textContent = 'Proceed with caution';
+      zoneRule.textContent = 'Check conductive contact and loop risk';
+    } else if(z === 3 && patientType.value === 'qa') {
+      iconColor = '#d97706';
+      iconPath = 'M1004 350 L1016 362 L1038 338';
+      zoneWarn.textContent = 'Conditional';
+      zoneRule.textContent = 'Keep QA equipment outside the 5-gauss line';
+    } else if(z === 4 && patientType.value === 'fiducial') {
+      iconColor = '#d97706';
+      iconPath = 'M1004 350 L1016 362 L1038 338';
+      zoneWarn.textContent = 'Conditional';
+      zoneRule.textContent = 'Proceed only if the exact MR conditions are met';
+    }
+    zoneIcon.setAttribute('d', iconPath);
+    zoneIcon.setAttribute('stroke', iconColor);
+
+    summaryBox.innerHTML = `
+      <p><strong>${title}</strong>: ${desc}.</p>
+      <p><strong>Patient/device:</strong> ${patientType.options[patientType.selectedIndex].text}</p>
+      <p><strong>Access rule:</strong> ${rule}</p>
+    `;
+    labelState.textContent = s.label;
+    primaryRisk.textContent = s.risk;
+  }
+
+  function updateAll(){
+    if(activeTab === 'imaging'){
+      updateImaging();
+      summaryBox.innerHTML = `
+        <p><strong>${scanMode.options[scanMode.selectedIndex].text}</strong></p>
+        <p>${imagingSummaries[scanMode.value]}</p>
+        <p>The RF / gradient slider shows a simplified effect on image confidence and safety burden [file:20].</p>
+      `;
+      primaryRisk.textContent = getRiskLabel(riskLevel.value) + ' exposure';
+      labelState.textContent = 'MR image formation';
+      renderChecklist(['Select scan mode','Tune RF/gradient intensity','Observe signal change','Review image output']);
+    }
+    if(activeTab === 'screening'){
+      updateScreening();
+    }
+    if(activeTab === 'zones'){
+      updateZones();
+    }
+
+    statusBox.textContent = `Current mode: ${activeTab.toUpperCase()} | Patient scenario: ${patientType.options[patientType.selectedIndex].text}`;
+    noteBox.textContent = activeTab === 'imaging'
+      ? 'Imaging mode uses simplified visual cues; it is meant to teach contrast and signal behavior, not to calculate clinical MRI parameters [file:20].'
+      : activeTab === 'screening'
+      ? 'Screening in RT should happen early and again before each treatment fraction [file:20].'
+      : 'Zone safety is based on controlled access and clear signage, especially around Zone III and Zone IV [file:20].';
+    scoreBox.textContent = `Risk meter: ${getRiskLabel(riskLevel.value)} (${riskLevel.value}/100)`;
+    riskLabel.textContent = getRiskLabel(riskLevel.value);
+  }
+
+  tabs.forEach(t => t.addEventListener('click', ()=> setTab(t.dataset.tab)));
+  [patientType, scanMode, riskLevel, zoneEntry].forEach(el => el.addEventListener('input', updateAll));
+  runBtn.addEventListener('click', updateAll);
+  resetBtn.addEventListener('click', ()=>{
+    patientType.value = 'clean';
+    scanMode.value = 't1';
+    riskLevel.value = 30;
+    zoneEntry.value = 1;
+    setTab('imaging');
+  });
+  animateBtn.addEventListener('click', ()=>{
+    document.querySelectorAll('svg').forEach(svg => {
+      svg.classList.remove('pulse');
+      void svg.offsetWidth;
+      svg.classList.add('pulse');
+      setTimeout(()=> svg.classList.remove('pulse'), 800);
+    });
+  });
+
+  setTab('imaging');
+</script>
+</body>
+</html>
