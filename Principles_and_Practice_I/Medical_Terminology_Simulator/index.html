@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RTApps Terminology Builder</title>
+  <style>
+    :root{
+      --bg:#eaf2fb;
+      --bg2:#f8fbff;
+      --panel:#ffffff;
+      --panel2:#f6f9fe;
+      --ink:#0f1e33;
+      --muted:#5b6b82;
+      --line:#d7e3f2;
+      --brand:#2563eb;
+      --brand-dark:#1d4ed8;
+      --teal:#0f766e;
+      --purple:#7c3aed;
+      --orange:#d97706;
+      --green:#16a34a;
+      --red:#dc2626;
+      --yellow:#f59e0b;
+      --shadow:0 16px 48px rgba(15,23,42,.11);
+      --soft-shadow:0 8px 20px rgba(15,23,42,.07);
+      --radius:22px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(37,99,235,.18), transparent 28rem),
+        radial-gradient(circle at bottom right, rgba(15,118,110,.14), transparent 30rem),
+        linear-gradient(180deg,#f8fbff 0%,#eaf2fb 100%);
+      min-height:100vh;
+    }
+    button, input, select, textarea{font:inherit}
+    button{cursor:pointer}
+    a{color:var(--brand)}
+    .skip-link{
+      position:absolute;left:-999px;top:12px;background:#fff;color:#000;padding:10px 12px;border-radius:10px;z-index:100
+    }
+    .skip-link:focus{left:12px}
+    header{
+      position:sticky;top:0;z-index:50;
+      background:rgba(255,255,255,.92);
+      backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--line);
+      box-shadow:0 2px 8px rgba(15,23,42,.04);
+    }
+    .topbar{
+      max-width:1540px;margin:0 auto;padding:12px 18px;
+      display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;
+    }
+    .brand-wrap{display:flex;align-items:center;gap:12px}
+    .logo{
+      width:44px;height:44px;border-radius:14px;
+      background:linear-gradient(135deg,var(--brand),var(--teal));
+      color:#fff;display:grid;place-items:center;font-size:24px;font-weight:900;
+      box-shadow:0 10px 20px rgba(37,99,235,.22);
+    }
+    .brand{font-size:1.08rem;font-weight:950;letter-spacing:.01em;color:#133a7c}
+    .subbrand{font-size:.86rem;color:var(--muted);font-weight:650}
+    .top-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+    .btn{
+      border:1px solid transparent;border-radius:12px;padding:10px 13px;font-weight:900;
+      display:inline-flex;align-items:center;gap:7px;transition:transform .12s ease, box-shadow .12s ease, background .12s ease;
+    }
+    .btn:hover{transform:translateY(-1px);box-shadow:var(--soft-shadow)}
+    .btn:focus-visible{outline:3px solid rgba(37,99,235,.25);outline-offset:2px}
+    .btn.primary{background:var(--brand);color:#fff}
+    .btn.secondary{background:#334155;color:#fff}
+    .btn.ghost{background:#eef4fb;color:#10233d;border-color:#d7e3f2}
+    .btn.good{background:var(--green);color:#fff}
+    .btn.warn{background:var(--orange);color:#fff}
+    .btn.small{padding:7px 10px;font-size:.86rem;border-radius:10px}
+    .btn:disabled{opacity:.52;cursor:not-allowed;transform:none;box-shadow:none}
+
+    .shell{max-width:1540px;margin:0 auto;padding:18px}
+    .hero{
+      border:1px solid rgba(215,227,242,.95);border-radius:28px;padding:22px;
+      background:linear-gradient(135deg,rgba(255,255,255,.98),rgba(246,250,255,.93));
+      box-shadow:var(--shadow);position:relative;overflow:hidden;margin-bottom:16px;
+    }
+    .hero:after{
+      content:"";position:absolute;right:-90px;top:-110px;width:300px;height:300px;border-radius:50%;
+      background:radial-gradient(circle, rgba(37,99,235,.16), transparent 65%);
+    }
+    .hero-grid{display:grid;grid-template-columns:1fr;gap:16px;position:relative;z-index:1}
+    @media(min-width:1100px){.hero-grid{grid-template-columns:1.25fr .75fr}}
+    h1{margin:0 0 8px;font-size:clamp(2rem,3vw,3.4rem);line-height:1.03;color:#0f2f70;letter-spacing:-.04em}
+    .hero p{margin:0;color:var(--muted);font-size:1rem;line-height:1.62;max-width:980px}
+    .badge-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+    .badge{
+      padding:7px 10px;border-radius:999px;background:#eff6ff;color:#1d4ed8;border:1px solid #d8e8ff;
+      font-weight:850;font-size:.78rem;
+    }
+    .hero-card{
+      background:#fff;border:1px solid var(--line);border-radius:20px;padding:15px;box-shadow:var(--soft-shadow);
+    }
+    .hero-card h3{margin:0 0 8px;font-size:1rem;color:#0f2f70}
+    .hero-stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+    .hero-stat{background:#f8fbff;border:1px solid #e2ebf6;border-radius:16px;padding:10px;text-align:center}
+    .hero-stat strong{display:block;font-size:1.35rem;color:#0f2f70}
+    .hero-stat span{font-size:.74rem;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+
+    .layout{display:grid;grid-template-columns:1fr;gap:16px;align-items:start}
+    @media(min-width:1220px){.layout{grid-template-columns:430px 1fr}}
+    .panel{
+      background:rgba(255,255,255,.96);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;
+    }
+    .panel-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+    .panel h2{margin:0;font-size:.94rem;letter-spacing:.08em;text-transform:uppercase;color:#16377d}
+    .kbd{font-size:.75rem;background:#f1f5f9;border:1px solid #cbd5e1;border-bottom-width:2px;border-radius:7px;padding:2px 6px;color:#334155;font-weight:900}
+
+    .tabs{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:13px}
+    @media(min-width:650px) and (max-width:1219px){.tabs{grid-template-columns:repeat(3,1fr)}}
+    .tab{
+      border:1px solid #d6e2ef;border-radius:14px;background:#f3f7fc;color:#10233d;padding:11px 9px;font-weight:950;
+      display:flex;align-items:center;justify-content:center;gap:7px;min-height:44px;
+    }
+    .tab.active{background:var(--brand);color:#fff;border-color:var(--brand);box-shadow:0 10px 22px rgba(37,99,235,.18)}
+    .tab .tab-icon{font-size:1.05rem}
+
+    .control-grid{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:12px}
+    .control{border:1px solid #d6e2ef;background:#f8fbff;border-radius:16px;padding:12px}
+    .control label{display:block;font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;color:#334155;font-weight:950;margin-bottom:7px}
+    select,input[type="range"],input[type="text"],textarea{width:100%;border:1px solid #cbd5e1;border-radius:12px;background:#fff;color:#0f172a;padding:10px 11px}
+    textarea{resize:vertical;min-height:78px;line-height:1.45}
+    .hint-line{font-size:.82rem;color:var(--muted);font-weight:700;margin-top:7px;line-height:1.4}
+    .level-buttons{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px}
+    .level-btn{border:1px solid #d8e3f0;background:#fff;border-radius:14px;padding:10px;text-align:left;color:#0f172a;font-weight:850}
+    .level-btn.active{border-color:var(--brand);background:#eff6ff;color:#1d4ed8}
+    .level-btn span{display:block;font-size:.78rem;color:#64748b;font-weight:700;margin-top:2px}
+
+    .status-card{border-radius:16px;padding:12px;border:1px solid #bfdbfe;background:#eff6ff;color:#1e3a8a;line-height:1.45;font-weight:750;margin-bottom:10px}
+    .feedback-card{border-radius:16px;padding:12px;border:1px solid #fed7aa;background:#fff7ed;color:#7c2d12;line-height:1.45;font-weight:750;min-height:50px}
+    .feedback-card.correct{border-color:#bbf7d0;background:#ecfdf5;color:#166534}
+    .feedback-card.wrong{border-color:#fecaca;background:#fef2f2;color:#991b1b}
+
+    .scoreboard{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+    .scorebox{background:#f8fbff;border:1px solid #e2ebf6;border-radius:16px;padding:11px;text-align:center}
+    .scorebox strong{display:block;color:#0f2f70;font-size:1.35rem}
+    .scorebox span{display:block;color:#64748b;font-size:.74rem;font-weight:900;text-transform:uppercase;letter-spacing:.04em}
+    .meter{height:12px;border-radius:999px;background:#dbeafe;overflow:hidden;border:1px solid #bfdbfe}
+    .meter > div{height:100%;width:0%;background:linear-gradient(90deg,#16a34a,#2563eb,#7c3aed);transition:width .25s ease}
+    .tools{display:flex;flex-wrap:wrap;gap:8px;margin-top:11px}
+
+    .main-stage{min-height:720px;display:grid;grid-template-rows:auto 1fr;gap:12px}
+    .stage-top{display:flex;justify-content:space-between;gap:12px;align-items:start;flex-wrap:wrap}
+    .prompt-card{background:linear-gradient(135deg,#f8fbff,#ffffff);border:1px solid var(--line);border-radius:18px;padding:14px;box-shadow:var(--soft-shadow);flex:1;min-width:280px}
+    .prompt-card h3{margin:0 0 7px;color:#0f2f70;font-size:1.1rem}
+    .prompt-card p{margin:0;color:#52637a;line-height:1.5}
+    .pill-row{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+    .pill{border:1px solid #d7e3f2;background:#fff;border-radius:999px;padding:6px 9px;font-size:.78rem;font-weight:900;color:#334155}
+    .scene{
+      border:1px solid #cfe0f2;border-radius:22px;background:linear-gradient(180deg,#f7fbff,#edf4fb);overflow:hidden;position:relative;min-height:620px;
+    }
+    .section{display:none;padding:16px;height:100%}
+    .section.active{display:block}
+    .section-grid{display:grid;grid-template-columns:1fr;gap:14px}
+    @media(min-width:980px){.section-grid.two{grid-template-columns:.95fr 1.05fr}.section-grid.three{grid-template-columns:repeat(3,1fr)}}
+    .lesson-card{background:rgba(255,255,255,.96);border:1px solid #d7e3f2;border-radius:20px;padding:15px;box-shadow:var(--soft-shadow)}
+    .lesson-card h3{margin:0 0 9px;color:#0f2f70;font-size:1.05rem}
+    .lesson-card p{margin:0 0 9px;color:#334155;line-height:1.55}
+    .lesson-card ul{margin:8px 0 0 18px;padding:0;color:#334155;line-height:1.55}
+    .term-large{font-size:clamp(2.2rem,5vw,4.6rem);font-weight:950;color:#0f2f70;letter-spacing:-.04em;margin:4px 0 6px}
+    .definition{font-size:1.08rem;color:#334155;line-height:1.55}
+    .part-row{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+    .chip{
+      display:inline-flex;align-items:center;gap:7px;padding:10px 12px;border:1px solid #cfe0f2;background:#fff;border-radius:999px;
+      font-weight:950;color:#0f172a;box-shadow:0 5px 12px rgba(15,23,42,.05);user-select:none
+    }
+    .chip.draggable{cursor:grab}.chip.draggable:active{cursor:grabbing}
+    .chip.selected{background:#dbeafe;border-color:#60a5fa;color:#1d4ed8}
+    .chip.good{background:#dcfce7;border-color:#86efac;color:#166534}
+    .chip.bad{background:#fee2e2;border-color:#fca5a5;color:#991b1b}
+
+    .scale-viz{background:#fff;border:1px solid #d7e3f2;border-radius:22px;padding:12px;min-height:300px}
+    .scale-viz svg{width:100%;height:auto;display:block}
+    .level-node{cursor:pointer;transition:opacity .2s ease, transform .2s ease;transform-origin:center}
+    .level-node:hover{opacity:.85}
+
+    .term-list{display:grid;gap:9px;max-height:320px;overflow:auto;padding-right:4px}
+    .term-button{border:1px solid #d7e3f2;background:#fff;border-radius:15px;padding:12px;text-align:left;display:grid;gap:4px}
+    .term-button strong{color:#0f172a}.term-button span{font-size:.86rem;color:#64748b;font-weight:750}
+    .term-button.active{background:#eff6ff;border-color:#60a5fa}
+
+    .dropzone{min-height:82px;border:2px dashed #93c5fd;background:#f8fbff;border-radius:18px;padding:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;transition:background .12s ease,border-color .12s ease}
+    .dropzone.over{background:#eff6ff;border-color:#2563eb}
+    .drop-hint{color:#64748b;font-weight:800}
+    .word-bank{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+    .assembled-term{font-size:1.3rem;font-weight:950;color:#0f2f70;margin-top:10px;min-height:34px}
+    .meaning-preview{background:#f8fbff;border:1px solid #d7e3f2;border-radius:16px;padding:12px;color:#334155;line-height:1.5}
+
+    .option-list{display:grid;gap:10px;margin-top:12px}
+    .option{border:1px solid #d7e3f2;border-radius:16px;background:#fff;padding:13px;text-align:left;display:flex;gap:10px;align-items:flex-start;font-weight:850}
+    .option:hover{border-color:#93c5fd;background:#f8fbff}
+    .option.selected{border-color:#2563eb;background:#eff6ff;color:#1d4ed8}
+    .option.correct{border-color:#86efac;background:#dcfce7;color:#166534}
+    .option.wrong{border-color:#fca5a5;background:#fee2e2;color:#991b1b}
+    .option-marker{width:26px;height:26px;border-radius:50%;border:1px solid #cbd5e1;background:#f8fafc;display:grid;place-items:center;flex:0 0 auto;font-size:.82rem;font-weight:950}
+
+    .match-wrap{display:grid;grid-template-columns:1fr;gap:12px}
+    @media(min-width:900px){.match-wrap{grid-template-columns:1fr 1fr}}
+    .match-row{display:grid;grid-template-columns:1fr;gap:6px;margin-bottom:10px;border:1px solid #d7e3f2;border-radius:16px;background:#fff;padding:12px}
+    .match-row label{font-weight:950;color:#0f172a}
+    .inline-result{font-size:.84rem;font-weight:900;margin-top:4px;color:#64748b}
+    .inline-result.ok{color:#166534}.inline-result.no{color:#991b1b}
+    .def-card{background:#fff;border:1px solid #d7e3f2;border-radius:16px;padding:12px;margin-bottom:10px}
+    .def-card strong{color:#0f172a}.def-card div{color:#64748b;font-size:.86rem;font-weight:800;margin-top:4px}
+
+    .flashcard{
+      min-height:300px;border-radius:24px;border:1px solid #d7e3f2;background:linear-gradient(135deg,#ffffff,#f8fbff);
+      display:grid;place-items:center;text-align:center;padding:24px;box-shadow:var(--soft-shadow);position:relative;overflow:hidden;
+    }
+    .flashcard:before{content:"";position:absolute;inset:auto -50px -90px auto;width:220px;height:220px;border-radius:50%;background:rgba(37,99,235,.10)}
+    .flash-front{font-size:clamp(2rem,5vw,4rem);font-weight:950;color:#0f2f70;letter-spacing:-.04em;position:relative;z-index:1}
+    .flash-back{font-size:1.18rem;line-height:1.55;color:#334155;position:relative;z-index:1;max-width:720px}
+    .flash-meta{position:absolute;top:14px;left:14px;background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;border-radius:999px;padding:7px 10px;font-weight:950;font-size:.8rem}
+
+    .quiz-grid{display:grid;grid-template-columns:1fr;gap:12px}
+    .quiz-progress{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;color:#334155;font-weight:900}
+    .results-table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;overflow:hidden;border:1px solid #d7e3f2}
+    .results-table th,.results-table td{padding:9px;border-bottom:1px solid #edf2f7;text-align:left;font-size:.9rem}
+    .results-table th{background:#f8fbff;color:#0f2f70;text-transform:uppercase;letter-spacing:.04em;font-size:.78rem}
+
+    .modal-backdrop{position:fixed;inset:0;background:rgba(15,23,42,.55);display:none;align-items:center;justify-content:center;z-index:100;padding:18px}
+    .modal-backdrop.open{display:flex}
+    .modal{background:#fff;border-radius:24px;border:1px solid var(--line);box-shadow:0 25px 80px rgba(0,0,0,.3);max-width:780px;width:100%;max-height:88vh;overflow:auto;padding:18px}
+    .modal h2{margin:0 0 10px;color:#0f2f70}.modal p,.modal li{color:#334155;line-height:1.55}.modal pre{white-space:pre-wrap;background:#0f172a;color:#e2e8f0;border-radius:16px;padding:12px;overflow:auto}
+    .modal-head{display:flex;justify-content:space-between;gap:10px;align-items:start;margin-bottom:8px}
+
+    .toast{position:fixed;right:18px;bottom:18px;background:#0f172a;color:#fff;border-radius:16px;padding:12px 14px;box-shadow:0 18px 40px rgba(0,0,0,.2);font-weight:850;display:none;z-index:120;max-width:360px}
+    .toast.show{display:block;animation:pop .18s ease-out}
+    @keyframes pop{from{transform:translateY(8px);opacity:.4}to{transform:translateY(0);opacity:1}}
+
+    .footer{text-align:center;color:#64748b;font-size:.84rem;padding:16px 0 22px;font-weight:700}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    .hidden{display:none!important}
+    @media(max-width:720px){
+      .shell{padding:12px}.hero{padding:17px;border-radius:22px}.panel{padding:12px}.scene{min-height:610px}.scoreboard{grid-template-columns:1fr 1fr 1fr}.hero-stat-grid{grid-template-columns:1fr 1fr 1fr}.top-actions{width:100%}.top-actions .btn{flex:1;justify-content:center}.tabs{grid-template-columns:1fr 1fr}.section{padding:12px}
+    }
+    @media print{
+      header,.tabs,.tools,.top-actions,.btn,.modal-backdrop,.toast{display:none!important}
+      body{background:#fff}.panel,.hero,.scene,.lesson-card,.prompt-card{box-shadow:none}.layout{display:block}.scene{min-height:auto}.section{display:block!important;page-break-inside:avoid}
+    }
+  </style>
+</head>
+<body>
+<a class="skip-link" href="#mainContent">Skip to simulator</a>
+<header>
+  <div class="topbar">
+    <div class="brand-wrap">
+      <div class="logo" aria-hidden="true">T</div>
+      <div>
+        <div class="brand">RTApps Terminology Builder</div>
+        <div class="subbrand">Medical terminology → oncology terminology → radiation therapy terminology</div>
+      </div>
+    </div>
+    <div class="top-actions">
+      <button class="btn ghost small" id="helpBtn">Help</button>
+      <button class="btn ghost small" id="exportBtn">Export progress</button>
+      <button class="btn ghost small" id="printBtn">Print</button>
+    </div>
+  </div>
+</header>
+
+<main class="shell" id="mainContent">
+  <section class="hero" aria-labelledby="pageTitle">
+    <div class="hero-grid">
+      <div>
+        <h1 id="pageTitle">Terminology Builder</h1>
+        <p>
+          A lightweight browser-based simulator for building medical vocabulary from word parts, clinical context, and anatomy scale. Learners move from foundation terms to oncology and radiation therapy terms through exploration, assembly, matching, flashcards, and short checks for understanding.
+        </p>
+        <div class="badge-row" aria-label="Core features">
+          <span class="badge">Word-part assembly</span>
+          <span class="badge">Clinical clues</span>
+          <span class="badge">Self-check practice</span>
+          <span class="badge">Progress tracking</span>
+          <span class="badge">No server required</span>
+        </div>
+      </div>
+      <div class="hero-card">
+        <h3>Session snapshot</h3>
+        <p>Progress saves locally in this browser. Use export if you want a portable summary.</p>
+        <div class="hero-stat-grid">
+          <div class="hero-stat"><strong id="heroCorrect">0</strong><span>Correct</span></div>
+          <div class="hero-stat"><strong id="heroAttempts">0</strong><span>Attempts</span></div>
+          <div class="hero-stat"><strong id="heroAccuracy">0%</strong><span>Accuracy</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="layout">
+    <aside class="panel" aria-label="Simulator controls">
+      <div class="panel-title">
+        <h2>Dashboard Controls</h2>
+        <span class="kbd">local</span>
+      </div>
+
+      <nav class="tabs" aria-label="Activity tabs">
+        <button class="tab active" data-tab="explorer"><span class="tab-icon">🧭</span>Explorer</button>
+        <button class="tab" data-tab="assembly"><span class="tab-icon">🧩</span>Assembly</button>
+        <button class="tab" data-tab="scenario"><span class="tab-icon">🩺</span>Scenario</button>
+        <button class="tab" data-tab="match"><span class="tab-icon">🔗</span>Match</button>
+        <button class="tab" data-tab="flashcards"><span class="tab-icon">🃏</span>Flashcards</button>
+        <button class="tab" data-tab="quiz"><span class="tab-icon">✅</span>Quick Check</button>
+      </nav>
+
+      <div class="control-grid">
+        <div class="control">
+          <label for="trackSelect">Terminology track</label>
+          <select id="trackSelect">
+            <option value="general">General medical terminology</option>
+            <option value="oncology">Oncology terminology</option>
+            <option value="rt">Radiation therapy terminology</option>
+          </select>
+          <div class="hint-line">Changing the track updates terms, scenarios, and matching items.</div>
+        </div>
+        <div class="control">
+          <label>Anatomy scale focus</label>
+          <div class="level-buttons" id="levelButtons">
+            <button class="level-btn active" data-level="cell">🧬 Cell<span>roots, affixes, processes</span></button>
+            <button class="level-btn" data-level="tissue">🧫 Tissue<span>histology and pathology</span></button>
+            <button class="level-btn" data-level="organ">🫀 Organ<span>site-specific terms</span></button>
+            <button class="level-btn" data-level="human">🧍 Human<span>whole patient workflow</span></button>
+          </div>
+        </div>
+        <div class="control">
+          <label for="difficultyRange">Difficulty</label>
+          <input id="difficultyRange" type="range" min="1" max="3" value="1" step="1" />
+          <div class="hint-line" id="difficultyLabel">Level 1: foundational recognition</div>
+        </div>
+      </div>
+
+      <div class="scoreboard" aria-label="Performance metrics">
+        <div class="scorebox"><strong id="scoreValue">0</strong><span>XP</span></div>
+        <div class="scorebox"><strong id="streakValue">0</strong><span>Streak</span></div>
+        <div class="scorebox"><strong id="masteryValue">0%</strong><span>Mastery</span></div>
+      </div>
+      <div class="meter" aria-label="Mastery meter"><div id="masteryMeter"></div></div>
+
+      <div class="status-card" id="statusBox">Loading simulator...</div>
+      <div class="feedback-card" id="feedbackBox">Select a mode or press New Prompt to begin.</div>
+
+      <div class="tools">
+        <button class="btn primary" id="checkBtn">Check</button>
+        <button class="btn secondary" id="newBtn">New prompt</button>
+        <button class="btn ghost" id="hintBtn">Hint</button>
+        <button class="btn ghost" id="resetBtn">Reset</button>
+      </div>
+    </aside>
+
+    <section class="panel main-stage" aria-label="Interactive terminology simulator">
+      <div class="stage-top">
+        <div class="prompt-card" id="promptCard">
+          <h3 id="promptTitle">Current prompt</h3>
+          <p id="promptText">Choose a tab to begin.</p>
+          <div class="pill-row" id="promptPills"></div>
+        </div>
+        <div class="prompt-card" style="max-width:360px;">
+          <h3>Answer / explanation</h3>
+          <p id="answerBox">Answer feedback appears here after checking.</p>
+        </div>
+      </div>
+
+      <div class="scene">
+        <section class="section active" id="explorerSection" aria-labelledby="explorerTitle">
+          <div class="section-grid two">
+            <div class="lesson-card">
+              <h3 id="explorerTitle">Scale explorer</h3>
+              <p>Click a level in the visualization or the control panel. Then select a term to inspect its word parts and meaning.</p>
+              <div class="scale-viz" id="scaleViz" aria-label="Anatomy scale visualization">
+                <svg viewBox="0 0 760 390" role="img" aria-label="Cell, tissue, organ, and human scale map">
+                  <defs>
+                    <linearGradient id="gradBlue" x1="0" x2="1"><stop offset="0" stop-color="#dbeafe"/><stop offset="1" stop-color="#eff6ff"/></linearGradient>
+                    <linearGradient id="gradTeal" x1="0" x2="1"><stop offset="0" stop-color="#ccfbf1"/><stop offset="1" stop-color="#f0fdfa"/></linearGradient>
+                    <linearGradient id="gradPurple" x1="0" x2="1"><stop offset="0" stop-color="#ede9fe"/><stop offset="1" stop-color="#faf5ff"/></linearGradient>
+                    <linearGradient id="gradOrange" x1="0" x2="1"><stop offset="0" stop-color="#ffedd5"/><stop offset="1" stop-color="#fff7ed"/></linearGradient>
+                  </defs>
+                  <rect x="16" y="22" width="728" height="336" rx="32" fill="#f8fbff" stroke="#d7e3f2" stroke-width="3"/>
+                  <path d="M118 196 C240 70 468 70 642 196" fill="none" stroke="#bfdbfe" stroke-width="12" stroke-linecap="round" opacity=".7"/>
+                  <g class="level-node" data-level="cell" tabindex="0">
+                    <circle cx="118" cy="196" r="60" fill="url(#gradBlue)" stroke="#60a5fa" stroke-width="4"/>
+                    <text x="118" y="188" text-anchor="middle" font-size="34">🧬</text>
+                    <text x="118" y="232" text-anchor="middle" fill="#1d4ed8" font-size="19" font-weight="900">Cell</text>
+                  </g>
+                  <g class="level-node" data-level="tissue" tabindex="0">
+                    <circle cx="290" cy="124" r="60" fill="url(#gradTeal)" stroke="#2dd4bf" stroke-width="4"/>
+                    <text x="290" y="116" text-anchor="middle" font-size="34">🧫</text>
+                    <text x="290" y="160" text-anchor="middle" fill="#0f766e" font-size="19" font-weight="900">Tissue</text>
+                  </g>
+                  <g class="level-node" data-level="organ" tabindex="0">
+                    <circle cx="470" cy="124" r="60" fill="url(#gradPurple)" stroke="#a78bfa" stroke-width="4"/>
+                    <text x="470" y="116" text-anchor="middle" font-size="34">🫀</text>
+                    <text x="470" y="160" text-anchor="middle" fill="#6d28d9" font-size="19" font-weight="900">Organ</text>
+                  </g>
+                  <g class="level-node" data-level="human" tabindex="0">
+                    <circle cx="642" cy="196" r="60" fill="url(#gradOrange)" stroke="#fb923c" stroke-width="4"/>
+                    <text x="642" y="188" text-anchor="middle" font-size="34">🧍</text>
+                    <text x="642" y="232" text-anchor="middle" fill="#c2410c" font-size="19" font-weight="900">Human</text>
+                  </g>
+                  <rect id="activeLevelBand" x="72" y="292" width="616" height="40" rx="18" fill="#eff6ff" stroke="#bfdbfe"/>
+                  <text id="activeLevelText" x="380" y="317" text-anchor="middle" fill="#1e3a8a" font-size="17" font-weight="900">Focus: Cell — word parts and microscopic processes</text>
+                </svg>
+              </div>
+            </div>
+            <div class="lesson-card">
+              <h3>Term deck</h3>
+              <div class="term-list" id="termDeck"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="assemblySection" aria-labelledby="assemblyTitle">
+          <div class="section-grid two">
+            <div class="lesson-card">
+              <h3 id="assemblyTitle">Build the term</h3>
+              <p>Place the word parts in the correct order. You can drag, tap, or use the keyboard focus and Enter key.</p>
+              <div class="dropzone" id="assemblyDrop" tabindex="0" aria-label="Assembly drop zone">
+                <span class="drop-hint">Drop or tap parts here...</span>
+              </div>
+              <div class="assembled-term" id="assembledTerm"></div>
+              <div class="word-bank" id="wordBank"></div>
+            </div>
+            <div class="lesson-card">
+              <h3>Interpretation guide</h3>
+              <p id="assemblyGuide">Use the clue to infer the order and meaning.</p>
+              <div class="meaning-preview" id="assemblyMeaning">Meaning will appear after checking.</div>
+              <div class="tools">
+                <button class="btn ghost" id="undoPartBtn">Undo part</button>
+                <button class="btn ghost" id="clearAssemblyBtn">Clear assembly</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="scenarioSection" aria-labelledby="scenarioTitle">
+          <div class="section-grid two">
+            <div class="lesson-card">
+              <h3 id="scenarioTitle">Clinical clue</h3>
+              <p id="scenarioClue">A clinical clue appears here.</p>
+              <div class="option-list" id="scenarioOptions"></div>
+            </div>
+            <div class="lesson-card">
+              <h3>Reasoning notes</h3>
+              <p>Write a short explanation before or after selecting an option. This area is not graded, but it reinforces clinical vocabulary reasoning.</p>
+              <textarea id="reasoningText" placeholder="Example: This term fits because the prefix means..., the root means..., and the clinical clue describes..."></textarea>
+              <div class="meaning-preview" id="scenarioReason">Reasoning support will appear here.</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="matchSection" aria-labelledby="matchTitle">
+          <div class="section-grid two">
+            <div class="lesson-card">
+              <h3 id="matchTitle">Match terms to definitions</h3>
+              <div id="matchRows"></div>
+            </div>
+            <div class="lesson-card">
+              <h3>Definition bank</h3>
+              <div id="definitionBank"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="flashcardsSection" aria-labelledby="flashTitle">
+          <div class="section-grid two">
+            <div class="lesson-card">
+              <h3 id="flashTitle">Flashcard practice</h3>
+              <div class="flashcard" id="flashcard" tabindex="0" role="button" aria-label="Flashcard. Press Enter to flip.">
+                <div class="flash-meta" id="flashMeta">Card 1</div>
+                <div class="flash-front" id="flashFront">Term</div>
+                <div class="flash-back hidden" id="flashBack">Definition</div>
+              </div>
+              <div class="tools">
+                <button class="btn secondary" id="flipCardBtn">Flip</button>
+                <button class="btn good" id="knownBtn">I know it</button>
+                <button class="btn warn" id="reviewBtn">Review again</button>
+              </div>
+            </div>
+            <div class="lesson-card">
+              <h3>Flashcard queue</h3>
+              <p id="flashStatus">Use this mode for low-stakes practice. Marking “I know it” adds progress.</p>
+              <div class="term-list" id="flashQueue"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="quizSection" aria-labelledby="quizTitle">
+          <div class="quiz-grid">
+            <div class="lesson-card">
+              <div class="quiz-progress">
+                <h3 id="quizTitle" style="margin:0;">Quick check</h3>
+                <span id="quizCounter">Question 1 of 10</span>
+              </div>
+              <p id="quizQuestion">Press Start / New prompt to generate a check.</p>
+              <div class="option-list" id="quizOptions"></div>
+              <div class="tools">
+                <button class="btn primary" id="startQuizBtn">Start new 10-question check</button>
+                <button class="btn secondary" id="nextQuizBtn">Next question</button>
+              </div>
+            </div>
+            <div class="lesson-card">
+              <h3>Quick-check results</h3>
+              <div id="quizResults">No quiz results yet.</div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+  </div>
+
+  <div class="footer">© 2026 RTApps. Educational simulation tool for basic terminology practice. Not a clinical decision-support system.</div>
+</main>
+
+<div class="modal-backdrop" id="helpModal" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="helpTitle">How to use this simulator</h2>
+      <button class="btn ghost small" id="closeHelpBtn">Close</button>
+    </div>
+    <ul>
+      <li><strong>Explorer:</strong> inspect terms by track and anatomy scale.</li>
+      <li><strong>Assembly:</strong> build terms from word parts by dragging or tapping chips.</li>
+      <li><strong>Scenario:</strong> interpret clinical clues and select the best term.</li>
+      <li><strong>Match:</strong> match terms to definitions and review categories.</li>
+      <li><strong>Flashcards:</strong> flip cards and mark known/review.</li>
+      <li><strong>Quick Check:</strong> complete a 10-question mixed practice set.</li>
+    </ul>
+    <p>Progress is saved only in this browser using local storage. No data is sent anywhere.</p>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="exportModal" role="dialog" aria-modal="true" aria-labelledby="exportTitle">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="exportTitle">Progress export</h2>
+      <button class="btn ghost small" id="closeExportBtn">Close</button>
+    </div>
+    <p>Copy this JSON summary or save it with the download button.</p>
+    <pre id="exportPre"></pre>
+    <div class="tools">
+      <button class="btn primary" id="downloadJsonBtn">Download JSON</button>
+      <button class="btn ghost" id="copyJsonBtn">Copy to clipboard</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  'use strict';
+
+  const STORAGE_KEY = 'rtappsTerminologyBuilder.v2';
+  const levelLabels = {
+    cell: { icon:'🧬', title:'Cell', desc:'word parts and microscopic processes' },
+    tissue: { icon:'🧫', title:'Tissue', desc:'histology and pathology language' },
+    organ: { icon:'🫀', title:'Organ', desc:'site-specific and anatomy terms' },
+    human: { icon:'🧍', title:'Human', desc:'whole-patient care and workflow terms' }
+  };
+
+  const data = {
+    general: {
+      label:'General medical terminology',
+      cell: [
+        {term:'hypertension', parts:['hyper','tension'], meaning:'abnormally high blood pressure', clue:'above normal + pressure', category:'vital sign'},
+        {term:'tachycardia', parts:['tachy','cardia'], meaning:'abnormally fast heart rate', clue:'fast + heart', category:'cardiovascular'},
+        {term:'hypoglycemia', parts:['hypo','glyc','emia'], meaning:'low blood sugar', clue:'below normal + sugar + blood condition', category:'laboratory'},
+        {term:'neuralgia', parts:['neur','algia'], meaning:'nerve pain', clue:'nerve + pain', category:'symptom'}
+      ],
+      tissue: [
+        {term:'edema', parts:['edema'], meaning:'swelling caused by fluid accumulation', clue:'fluid swelling', category:'tissue response'},
+        {term:'anemia', parts:['an','emia'], meaning:'condition of low or deficient blood components', clue:'without + blood condition', category:'laboratory'},
+        {term:'necrosis', parts:['necr','osis'], meaning:'death of tissue', clue:'death + condition', category:'pathology'},
+        {term:'fibrosis', parts:['fibr','osis'], meaning:'formation of fibrous or scar-like tissue', clue:'fiber + condition', category:'tissue change'}
+      ],
+      organ: [
+        {term:'hepatomegaly', parts:['hepato','megaly'], meaning:'enlargement of the liver', clue:'liver + enlargement', category:'organ change'},
+        {term:'cardiomegaly', parts:['cardio','megaly'], meaning:'enlargement of the heart', clue:'heart + enlargement', category:'organ change'},
+        {term:'pulmonary', parts:['pulmon','ary'], meaning:'pertaining to the lungs', clue:'lung + pertaining to', category:'anatomy'},
+        {term:'gastritis', parts:['gastr','itis'], meaning:'inflammation of the stomach', clue:'stomach + inflammation', category:'inflammation'}
+      ],
+      human: [
+        {term:'biopsy', parts:['bi','opsy'], meaning:'examination of living tissue', clue:'life + viewing', category:'procedure'},
+        {term:'endoscopy', parts:['endo','scopy'], meaning:'visual examination from within', clue:'within + viewing', category:'procedure'},
+        {term:'radiograph', parts:['radio','graph'], meaning:'recorded image made with radiation', clue:'radiation + recording', category:'imaging'},
+        {term:'prognosis', parts:['pro','gnosis'], meaning:'predicted outcome of a condition', clue:'before + knowledge', category:'clinical reasoning'}
+      ]
+    },
+    oncology: {
+      label:'Oncology terminology',
+      cell: [
+        {term:'neoplasm', parts:['neo','plasm'], meaning:'new growth; may be benign or malignant', clue:'new + growth', category:'tumor language'},
+        {term:'dysplasia', parts:['dys','plasia'], meaning:'abnormal development or growth', clue:'bad/abnormal + formation', category:'cellular change'},
+        {term:'mitosis', parts:['mit','osis'], meaning:'cell division', clue:'division + process', category:'cell process'},
+        {term:'carcinoma', parts:['carcin','oma'], meaning:'malignant tumor of epithelial origin', clue:'cancer + tumor', category:'cancer type'}
+      ],
+      tissue: [
+        {term:'histology', parts:['hist','ology'], meaning:'study of tissues', clue:'tissue + study of', category:'diagnostic science'},
+        {term:'pathology', parts:['path','ology'], meaning:'study of disease', clue:'disease + study of', category:'diagnostic science'},
+        {term:'metastasis', parts:['meta','stasis'], meaning:'spread of disease from one site to another', clue:'change/beyond + standing', category:'disease progression'},
+        {term:'necrotic', parts:['necr','otic'], meaning:'relating to tissue death', clue:'death + pertaining to', category:'tissue change'}
+      ],
+      organ: [
+        {term:'hepatocellular', parts:['hepato','cellular'], meaning:'relating to liver cells', clue:'liver + cells', category:'organ/cell descriptor'},
+        {term:'pulmonary', parts:['pulmon','ary'], meaning:'relating to the lungs', clue:'lung + pertaining to', category:'anatomy'},
+        {term:'oncologic', parts:['onc','ologic'], meaning:'relating to tumors or cancer care', clue:'tumor + pertaining to study', category:'oncology care'},
+        {term:'lymphadenopathy', parts:['lymph','adeno','pathy'], meaning:'disease or abnormality of lymph nodes', clue:'lymph + gland + disease', category:'nodal disease'}
+      ],
+      human: [
+        {term:'staging', parts:['stag','ing'], meaning:'classification of extent of disease', clue:'placing disease into stage', category:'disease classification'},
+        {term:'remission', parts:['re','mission'], meaning:'reduction or disappearance of disease signs', clue:'send back/reduction', category:'disease status'},
+        {term:'palliative', parts:['pall','iative'], meaning:'relieving symptoms without necessarily curing disease', clue:'relief-focused care', category:'treatment goal'},
+        {term:'metastatic', parts:['meta','static'], meaning:'describing disease that has spread to distant sites', clue:'beyond + relating to spread', category:'disease progression'}
+      ]
+    },
+    rt: {
+      label:'Radiation therapy terminology',
+      cell: [
+        {term:'radiobiology', parts:['radio','bio','logy'], meaning:'study of radiation effects on living systems', clue:'radiation + life + study', category:'science'},
+        {term:'fraction', parts:['fract','ion'], meaning:'one divided portion of the total treatment dose', clue:'break/divide + noun', category:'dose delivery'},
+        {term:'dosimetry', parts:['dosi','metry'], meaning:'measurement or calculation of absorbed dose', clue:'dose + measurement', category:'physics'},
+        {term:'isocenter', parts:['iso','center'], meaning:'fixed central reference point used for treatment geometry', clue:'equal + center', category:'geometry'}
+      ],
+      tissue: [
+        {term:'toxicity', parts:['toxic','ity'], meaning:'harmful treatment-related effect on tissue or organ function', clue:'poison/harm + condition', category:'side effect'},
+        {term:'fibrosis', parts:['fibr','osis'], meaning:'scar-like tissue change after injury or treatment', clue:'fiber + condition', category:'late effect'},
+        {term:'mucositis', parts:['muco','itis'], meaning:'inflammation of mucous membranes', clue:'mucus/mucosa + inflammation', category:'side effect'},
+        {term:'dermatitis', parts:['dermat','itis'], meaning:'inflammation of the skin', clue:'skin + inflammation', category:'side effect'}
+      ],
+      organ: [
+        {term:'simulation', parts:['simul','ation'], meaning:'process used to establish a reproducible treatment setup', clue:'make similar + process', category:'workflow'},
+        {term:'immobilization', parts:['im','mobil','ization'], meaning:'process of limiting patient movement for reproducibility', clue:'not + move + process', category:'setup'},
+        {term:'fractionation', parts:['fract','ion','ation'], meaning:'dividing a total treatment dose into multiple sessions', clue:'break/divide + noun + process', category:'dose delivery'},
+        {term:'dosimetric', parts:['dosi','metric'], meaning:'relating to dose measurement or calculation', clue:'dose + measuring', category:'physics'}
+      ],
+      human: [
+        {term:'planning', parts:['plan','ning'], meaning:'designing the treatment approach before delivery', clue:'map out the treatment', category:'workflow'},
+        {term:'verification', parts:['ver','i','fi','cation'], meaning:'checking setup or parameters for correctness', clue:'make true/correct + process', category:'safety'},
+        {term:'workflow', parts:['work','flow'], meaning:'sequence of clinical tasks', clue:'process path', category:'operations'},
+        {term:'treatment', parts:['treat','ment'], meaning:'therapy given to manage disease', clue:'care process', category:'therapy'}
+      ]
+    }
+  };
+
+  const scenarioBank = {
+    general: [
+      {text:'A patient has abnormally high blood pressure documented before a procedure.', answer:'hypertension', reason:'Hyper- means excessive or above normal, and tension refers to pressure.'},
+      {text:'A patient describes sharp nerve pain after surgery.', answer:'neuralgia', reason:'Neur/o refers to nerve, and -algia means pain.'},
+      {text:'A lab result suggests too little glucose in the blood.', answer:'hypoglycemia', reason:'Hypo- means low, glyc/o refers to sugar, and -emia means blood condition.'},
+      {text:'The report describes inflammation of the stomach.', answer:'gastritis', reason:'Gastr/o means stomach, and -itis means inflammation.'}
+    ],
+    oncology: [
+      {text:'A pathology report describes a malignant epithelial tumor.', answer:'carcinoma', reason:'Carcin/o refers to cancer, and -oma refers to tumor or mass.'},
+      {text:'The disease has spread from the primary site to distant bone.', answer:'metastasis', reason:'Metastasis describes spread from one site to another.'},
+      {text:'The care team classifies the disease extent as stage III.', answer:'staging', reason:'Staging classifies the extent or spread of cancer.'},
+      {text:'The goal of treatment is symptom relief rather than cure.', answer:'palliative', reason:'Palliative care focuses on relief of symptoms and quality of life.'}
+    ],
+    rt: [
+      {text:'The treatment course is divided into many small daily doses.', answer:'fractionation', reason:'Fractionation divides total dose into multiple treatment sessions.'},
+      {text:'The patient is positioned and marked to make future treatment setup reproducible.', answer:'simulation', reason:'Simulation establishes the reproducible treatment setup.'},
+      {text:'The therapist checks the setup before treatment delivery.', answer:'verification', reason:'Verification means checking that setup or treatment parameters are correct.'},
+      {text:'A mask is used to limit motion and improve reproducibility.', answer:'immobilization', reason:'Immobilization limits movement during setup and treatment.'}
+    ]
+  };
+
+  const $ = (id)=>document.getElementById(id);
+  const tabs = Array.from(document.querySelectorAll('.tab'));
+  const sections = {
+    explorer: $('explorerSection'),
+    assembly: $('assemblySection'),
+    scenario: $('scenarioSection'),
+    match: $('matchSection'),
+    flashcards: $('flashcardsSection'),
+    quiz: $('quizSection')
+  };
+
+  let state = {
+    activeTab:'explorer', track:'general', level:'cell', difficulty:1,
+    xp:0, correct:0, attempts:0, streak:0, bestStreak:0,
+    selectedTermIndex:0, assembly:[], currentScenario:null, selectedScenario:null,
+    flashIndex:0, flashFlipped:false, knownTerms:{},
+    quiz:{active:false, items:[], index:0, correct:0, responses:[]}
+  };
+
+  function loadState(){
+    try{
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+      state = {...state, ...saved, quiz:{...state.quiz, ...(saved.quiz || {})}};
+      if(!data[state.track]) state.track='general';
+      if(!data[state.track][state.level]) state.level='cell';
+    }catch(err){ console.warn('Could not load saved state', err); }
+  }
+  function saveState(){
+    const copy = {...state, currentScenario:null, selectedScenario:null};
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(copy));
+  }
+  function toast(msg){
+    const el = $('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toast.timer);
+    toast.timer = setTimeout(()=>el.classList.remove('show'), 2600);
+  }
+  function norm(s){ return String(s || '').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim(); }
+  function shuffle(arr){
+    const a = [...arr];
+    for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+    return a;
+  }
+  function pool(track=state.track, level=state.level){ return data[track][level]; }
+  function allTerms(track=state.track){
+    return ['cell','tissue','organ','human'].flatMap(level => data[track][level].map(item => ({...item, level})));
+  }
+  function currentTerm(){
+    const p = pool();
+    if(state.selectedTermIndex >= p.length) state.selectedTermIndex = 0;
+    return p[state.selectedTermIndex];
+  }
+  function setFeedback(message, type='neutral'){
+    const box = $('feedbackBox');
+    box.textContent = message;
+    box.classList.remove('correct','wrong');
+    if(type === 'correct') box.classList.add('correct');
+    if(type === 'wrong') box.classList.add('wrong');
+  }
+  function award(points, isCorrect=true){
+    state.attempts += 1;
+    if(isCorrect){
+      state.correct += 1;
+      state.streak += 1;
+      state.bestStreak = Math.max(state.bestStreak, state.streak);
+      state.xp += points;
+    }else{
+      state.streak = 0;
+      state.xp = Math.max(0, state.xp - Math.min(3, points));
+    }
+    saveState();
+    updateMetrics();
+  }
+  function accuracy(){ return state.attempts ? Math.round((state.correct/state.attempts)*100) : 0; }
+  function mastery(){
+    const totalTerms = Object.values(data).flatMap(track => ['cell','tissue','organ','human'].flatMap(level => track[level].map(x => x.term))).length;
+    const known = Object.keys(state.knownTerms || {}).length;
+    const xpPart = Math.min(60, state.xp);
+    const knownPart = totalTerms ? Math.round((known/totalTerms)*40) : 0;
+    return Math.min(100, xpPart + knownPart);
+  }
+
+  function updateMetrics(){
+    $('scoreValue').textContent = state.xp;
+    $('streakValue').textContent = state.streak;
+    $('masteryValue').textContent = mastery() + '%';
+    $('masteryMeter').style.width = mastery() + '%';
+    $('heroCorrect').textContent = state.correct;
+    $('heroAttempts').textContent = state.attempts;
+    $('heroAccuracy').textContent = accuracy() + '%';
+    const term = currentTerm();
+    const trackLabel = data[state.track].label;
+    $('statusBox').textContent = `${trackLabel} | ${levelLabels[state.level].title} focus | ${term.term}`;
+  }
+
+  function updateDifficultyLabel(){
+    const label = state.difficulty === 1 ? 'Level 1: foundational recognition' : state.difficulty === 2 ? 'Level 2: interpretation and word parts' : 'Level 3: clinical reasoning';
+    $('difficultyLabel').textContent = label;
+  }
+
+  function setTab(tab){
+    state.activeTab = tab;
+    tabs.forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tab));
+    Object.entries(sections).forEach(([name, section]) => section.classList.toggle('active', name === tab));
+    renderPrompt();
+    if(tab === 'quiz' && !state.quiz.active) startQuiz();
+    saveState();
+  }
+  function setLevel(level){
+    state.level = level;
+    state.selectedTermIndex = 0;
+    state.assembly = [];
+    document.querySelectorAll('.level-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.level === level));
+    document.querySelectorAll('.level-node').forEach(node => node.style.opacity = node.dataset.level === level ? '1' : '.58');
+    const lvl = levelLabels[level];
+    $('activeLevelText').textContent = `Focus: ${lvl.title} — ${lvl.desc}`;
+    renderAll();
+    saveState();
+  }
+  function setTrack(track){
+    state.track = track;
+    state.selectedTermIndex = 0;
+    state.assembly = [];
+    state.flashIndex = 0;
+    state.quiz.active = false;
+    renderAll();
+    saveState();
+  }
+
+  function renderPrompt(){
+    const t = currentTerm();
+    const trackLabel = data[state.track].label;
+    const levelLabel = levelLabels[state.level];
+    let title = `${levelLabel.icon} ${levelLabel.title} focus`;
+    let text = `Current term: ${t.term}. Use the active mode to practice meaning, word parts, and context.`;
+    if(state.activeTab === 'assembly') text = `Build “${t.term}” from its word parts. Clue: ${t.clue}.`;
+    if(state.activeTab === 'scenario' && state.currentScenario) text = state.currentScenario.text;
+    if(state.activeTab === 'match') text = `Match ${trackLabel.toLowerCase()} terms to definitions.`;
+    if(state.activeTab === 'flashcards') text = `Flip terms from the ${trackLabel.toLowerCase()} deck.`;
+    if(state.activeTab === 'quiz') text = 'Answer 10 mixed questions from the current terminology track.';
+    $('promptTitle').textContent = title;
+    $('promptText').textContent = text;
+    $('promptPills').innerHTML = [trackLabel, levelLabel.title, `Difficulty ${state.difficulty}`, state.activeTab].map(x=>`<span class="pill">${escapeHTML(x)}</span>`).join('');
+  }
+
+  function escapeHTML(s){
+    return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  }
+
+  function renderExplorer(){
+    const deck = $('termDeck');
+    deck.innerHTML = '';
+    pool().forEach((term, idx)=>{
+      const btn = document.createElement('button');
+      btn.className = 'term-button' + (idx === state.selectedTermIndex ? ' active' : '');
+      btn.innerHTML = `<strong>${escapeHTML(term.term)}</strong><span>${escapeHTML(term.meaning)}</span><span>Parts: ${escapeHTML(term.parts.join(' + '))}</span>`;
+      btn.addEventListener('click', ()=>{
+        state.selectedTermIndex = idx;
+        state.assembly = [];
+        renderAll();
+        toast(`Selected ${term.term}`);
+      });
+      deck.appendChild(btn);
+    });
+  }
+
+  function renderAssembly(){
+    const t = currentTerm();
+    $('assemblyGuide').textContent = `Clue: ${t.clue}. Target term: ${t.term}.`;
+    $('assemblyMeaning').textContent = 'Build the term first. Then press Check to reveal the meaning.';
+    renderDropZone();
+    renderWordBank();
+  }
+  function renderDropZone(){
+    const drop = $('assemblyDrop');
+    drop.innerHTML = '';
+    if(!state.assembly.length){
+      const hint = document.createElement('span');
+      hint.className = 'drop-hint';
+      hint.textContent = 'Drop or tap parts here...';
+      drop.appendChild(hint);
+    } else {
+      state.assembly.forEach((part, idx)=>{
+        const chip = document.createElement('button');
+        chip.className = 'chip selected';
+        chip.type = 'button';
+        chip.textContent = part;
+        chip.title = 'Remove this part';
+        chip.addEventListener('click', ()=>{ state.assembly.splice(idx,1); renderAssembly(); });
+        drop.appendChild(chip);
+      });
+    }
+    $('assembledTerm').textContent = state.assembly.join('');
+  }
+  function renderWordBank(){
+    const t = currentTerm();
+    const bank = $('wordBank');
+    bank.innerHTML = '';
+    const remaining = t.parts.filter((part, idx)=>{
+      const usedCount = state.assembly.filter(x=>x===part).length;
+      const upToIndex = t.parts.slice(0, idx+1).filter(x=>x===part).length;
+      return usedCount < upToIndex;
+    });
+    shuffle(remaining).forEach(part=>{
+      const chip = document.createElement('button');
+      chip.className = 'chip draggable';
+      chip.type = 'button';
+      chip.textContent = part;
+      chip.draggable = true;
+      chip.addEventListener('click', ()=>addPart(part));
+      chip.addEventListener('dragstart', e=>{ e.dataTransfer.setData('text/plain', part); });
+      bank.appendChild(chip);
+    });
+  }
+  function addPart(part){
+    state.assembly.push(part);
+    renderAssembly();
+  }
+
+  function renderScenario(){
+    if(!state.currentScenario){
+      state.currentScenario = pickScenario();
+      state.selectedScenario = null;
+    }
+    const s = state.currentScenario;
+    $('scenarioClue').textContent = s.text;
+    $('scenarioReason').textContent = 'Select the best term. The explanation will appear after checking.';
+    const options = buildScenarioOptions(s.answer);
+    const list = $('scenarioOptions');
+    list.innerHTML = '';
+    options.forEach((opt, idx)=>{
+      const btn = document.createElement('button');
+      btn.className = 'option' + (state.selectedScenario === opt ? ' selected' : '');
+      btn.type = 'button';
+      btn.innerHTML = `<span class="option-marker">${String.fromCharCode(65+idx)}</span><span>${escapeHTML(opt)}</span>`;
+      btn.addEventListener('click', ()=>{
+        state.selectedScenario = opt;
+        renderScenario();
+      });
+      list.appendChild(btn);
+    });
+  }
+  function pickScenario(){ return shuffle(scenarioBank[state.track])[0]; }
+  function buildScenarioOptions(answer){
+    const terms = allTerms(state.track).map(x=>x.term);
+    const distractors = shuffle(terms.filter(x=>norm(x)!==norm(answer))).slice(0,3);
+    return shuffle([answer, ...distractors]);
+  }
+
+  function renderMatch(){
+    const items = allTerms(state.track).slice(0,8);
+    const defs = shuffle(items);
+    const rows = $('matchRows');
+    const bank = $('definitionBank');
+    rows.innerHTML = '';
+    bank.innerHTML = '';
+    items.forEach(item=>{
+      const row = document.createElement('div');
+      row.className = 'match-row';
+      row.innerHTML = `<label for="match_${item.term}">${escapeHTML(item.term)}</label>`;
+      const sel = document.createElement('select');
+      sel.id = `match_${item.term}`;
+      sel.dataset.term = item.term;
+      sel.innerHTML = `<option value="">Choose definition</option>` + defs.map(d=>`<option value="${escapeHTML(d.meaning)}">${escapeHTML(d.meaning)}</option>`).join('');
+      const result = document.createElement('div');
+      result.id = `result_${item.term}`;
+      result.className = 'inline-result';
+      result.textContent = 'Not checked';
+      row.appendChild(sel);
+      row.appendChild(result);
+      rows.appendChild(row);
+    });
+    defs.forEach(item=>{
+      const card = document.createElement('div');
+      card.className = 'def-card';
+      card.innerHTML = `<strong>${escapeHTML(item.meaning)}</strong><div>Category: ${escapeHTML(item.category)} | Level: ${escapeHTML(levelLabels[item.level].title)}</div>`;
+      bank.appendChild(card);
+    });
+  }
+
+  function renderFlashcards(){
+    const terms = allTerms(state.track);
+    if(state.flashIndex >= terms.length) state.flashIndex = 0;
+    const card = terms[state.flashIndex];
+    $('flashMeta').textContent = `Card ${state.flashIndex+1} of ${terms.length} • ${levelLabels[card.level].title}`;
+    $('flashFront').textContent = card.term;
+    $('flashBack').innerHTML = `${escapeHTML(card.meaning)}<br><br><strong>Parts:</strong> ${escapeHTML(card.parts.join(' + '))}`;
+    $('flashFront').classList.toggle('hidden', state.flashFlipped);
+    $('flashBack').classList.toggle('hidden', !state.flashFlipped);
+    $('flashStatus').textContent = `Deck: ${data[state.track].label}. Known terms are saved locally.`;
+    const queue = $('flashQueue');
+    queue.innerHTML = '';
+    terms.forEach((item, idx)=>{
+      const key = `${state.track}:${item.level}:${item.term}`;
+      const btn = document.createElement('button');
+      btn.className = 'term-button' + (idx === state.flashIndex ? ' active' : '');
+      btn.innerHTML = `<strong>${escapeHTML(item.term)} ${state.knownTerms[key] ? '✓' : ''}</strong><span>${escapeHTML(item.meaning)}</span>`;
+      btn.addEventListener('click', ()=>{ state.flashIndex = idx; state.flashFlipped=false; renderFlashcards(); renderPrompt(); });
+      queue.appendChild(btn);
+    });
+  }
+
+  function startQuiz(){
+    const terms = allTerms(state.track);
+    const questions = [];
+    const shuffledTerms = shuffle(terms);
+    for(let i=0;i<Math.min(10, shuffledTerms.length);i++){
+      const term = shuffledTerms[i];
+      const type = i % 2 === 0 ? 'definition' : 'term';
+      if(type === 'definition'){
+        const options = shuffle([term.meaning, ...shuffle(terms.filter(x=>x.term!==term.term)).slice(0,3).map(x=>x.meaning)]);
+        questions.push({type, prompt:`What is the best meaning of “${term.term}”?`, answer:term.meaning, options, term});
+      } else {
+        const options = shuffle([term.term, ...shuffle(terms.filter(x=>x.term!==term.term)).slice(0,3).map(x=>x.term)]);
+        questions.push({type, prompt:`Which term matches this meaning: ${term.meaning}?`, answer:term.term, options, term});
+      }
+    }
+    state.quiz = {active:true, items:questions, index:0, correct:0, responses:[]};
+    renderQuiz();
+    renderPrompt();
+    saveState();
+  }
+  function renderQuiz(){
+    if(!state.quiz.active || !state.quiz.items.length){
+      $('quizQuestion').textContent = 'Press Start new 10-question check.';
+      $('quizOptions').innerHTML = '';
+      $('quizCounter').textContent = 'Not started';
+      return;
+    }
+    const item = state.quiz.items[state.quiz.index];
+    $('quizCounter').textContent = `Question ${state.quiz.index+1} of ${state.quiz.items.length}`;
+    $('quizQuestion').textContent = item.prompt;
+    const existing = state.quiz.responses[state.quiz.index];
+    const list = $('quizOptions');
+    list.innerHTML = '';
+    item.options.forEach((opt, idx)=>{
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      let cls = 'option';
+      if(existing){
+        if(opt === item.answer) cls += ' correct';
+        else if(opt === existing.selected) cls += ' wrong';
+      }
+      btn.className = cls;
+      btn.disabled = !!existing;
+      btn.innerHTML = `<span class="option-marker">${String.fromCharCode(65+idx)}</span><span>${escapeHTML(opt)}</span>`;
+      btn.addEventListener('click', ()=>answerQuiz(opt));
+      list.appendChild(btn);
+    });
+    renderQuizResults();
+  }
+  function answerQuiz(selected){
+    const item = state.quiz.items[state.quiz.index];
+    const isCorrect = selected === item.answer;
+    if(!state.quiz.responses[state.quiz.index]){
+      state.quiz.responses[state.quiz.index] = {selected, correct:item.answer, isCorrect, prompt:item.prompt};
+      if(isCorrect) state.quiz.correct += 1;
+      award(isCorrect ? 8 : 5, isCorrect);
+      setFeedback(isCorrect ? 'Correct.' : `Not quite. Correct answer: ${item.answer}.`, isCorrect ? 'correct' : 'wrong');
+      $('answerBox').textContent = `${item.term.term}: ${item.term.meaning}. Parts: ${item.term.parts.join(' + ')}.`;
+      renderQuiz();
+      saveState();
+    }
+  }
+  function nextQuiz(){
+    if(!state.quiz.active) return startQuiz();
+    if(state.quiz.index < state.quiz.items.length - 1){
+      state.quiz.index += 1;
+      renderQuiz();
+      saveState();
+    } else {
+      setFeedback(`Quick check complete: ${state.quiz.correct} of ${state.quiz.items.length} correct.`, state.quiz.correct >= 8 ? 'correct' : 'neutral');
+      toast('Quick check complete');
+    }
+  }
+  function renderQuizResults(){
+    const target = $('quizResults');
+    if(!state.quiz.active || !state.quiz.items.length){ target.textContent = 'No quiz results yet.'; return; }
+    const rows = state.quiz.responses.filter(Boolean);
+    if(!rows.length){ target.textContent = 'Answer questions to build a results table.'; return; }
+    target.innerHTML = `<table class="results-table"><thead><tr><th>#</th><th>Result</th><th>Your answer</th><th>Correct</th></tr></thead><tbody>${rows.map((r,i)=>`<tr><td>${i+1}</td><td>${r.isCorrect ? 'Correct' : 'Review'}</td><td>${escapeHTML(r.selected)}</td><td>${escapeHTML(r.correct)}</td></tr>`).join('')}</tbody></table>`;
+  }
+
+  function checkCurrent(){
+    if(state.activeTab === 'explorer'){
+      const t = currentTerm();
+      $('answerBox').textContent = `${t.term}: ${t.meaning}. Word parts: ${t.parts.join(' + ')}. Category: ${t.category}.`;
+      setFeedback('Explorer mode is for review. Use Assembly, Scenario, Match, Flashcards, or Quick Check for scored practice.', 'neutral');
+      return;
+    }
+    if(state.activeTab === 'assembly'){
+      const t = currentTerm();
+      const attempt = state.assembly.join('');
+      const target = t.parts.join('');
+      const correct = attempt === target;
+      award(correct ? 10 : 7, correct);
+      $('assemblyMeaning').textContent = `${t.term}: ${t.meaning}.`;
+      $('answerBox').textContent = correct ? `Correct: ${t.parts.join(' + ')} = ${t.term}.` : `Correct order: ${t.parts.join(' + ')} = ${t.term}.`;
+      setFeedback(correct ? 'Correct assembly. Good word-part recognition.' : 'The order is not correct yet. Review the clue and try again.', correct ? 'correct' : 'wrong');
+      return;
+    }
+    if(state.activeTab === 'scenario'){
+      const s = state.currentScenario;
+      if(!state.selectedScenario){ setFeedback('Select an answer choice first.', 'neutral'); return; }
+      const correct = norm(state.selectedScenario) === norm(s.answer);
+      award(correct ? 10 : 7, correct);
+      $('scenarioReason').textContent = s.reason;
+      $('answerBox').textContent = `Best term: ${s.answer}. ${s.reason}`;
+      setFeedback(correct ? 'Correct clinical interpretation.' : `Review the clue. Best term: ${s.answer}.`, correct ? 'correct' : 'wrong');
+      document.querySelectorAll('#scenarioOptions .option').forEach(btn=>{
+        const txt = btn.textContent.slice(1).trim();
+        btn.classList.toggle('correct', norm(txt) === norm(s.answer));
+        btn.classList.toggle('wrong', norm(txt) === norm(state.selectedScenario) && !correct);
+      });
+      return;
+    }
+    if(state.activeTab === 'match'){
+      const terms = allTerms(state.track).slice(0,8);
+      let correctCount = 0;
+      terms.forEach(item=>{
+        const sel = Array.from(document.querySelectorAll('#matchRows select')).find(x => x.dataset.term === item.term);
+        const res = $(`result_${item.term}`);
+        const ok = sel && sel.value === item.meaning;
+        if(ok) correctCount += 1;
+        if(res){ res.textContent = ok ? 'Correct' : `Review: ${item.meaning}`; res.className = 'inline-result ' + (ok ? 'ok' : 'no'); }
+      });
+      const allCorrect = correctCount === terms.length;
+      award(allCorrect ? 12 : 6, allCorrect);
+      $('answerBox').textContent = `${correctCount} of ${terms.length} matches correct.`;
+      setFeedback(`${correctCount} of ${terms.length} matches correct.`, allCorrect ? 'correct' : 'wrong');
+      return;
+    }
+    if(state.activeTab === 'flashcards'){
+      state.flashFlipped = !state.flashFlipped;
+      renderFlashcards();
+      return;
+    }
+    if(state.activeTab === 'quiz'){
+      const item = state.quiz.items[state.quiz.index];
+      if(item && !state.quiz.responses[state.quiz.index]) setFeedback('Select one of the answer choices in the quiz panel.', 'neutral');
+      else nextQuiz();
+    }
+  }
+
+  function newPrompt(){
+    if(state.activeTab === 'scenario'){
+      state.currentScenario = pickScenario();
+      state.selectedScenario = null;
+      $('reasoningText').value = '';
+      renderScenario();
+    } else if(state.activeTab === 'quiz'){
+      startQuiz();
+    } else if(state.activeTab === 'flashcards'){
+      state.flashIndex = (state.flashIndex + 1) % allTerms(state.track).length;
+      state.flashFlipped = false;
+      renderFlashcards();
+    } else {
+      state.selectedTermIndex = (state.selectedTermIndex + 1) % pool().length;
+      state.assembly = [];
+      renderAll();
+    }
+    setFeedback('New prompt loaded.', 'neutral');
+    saveState();
+  }
+
+  function showHint(){
+    const t = currentTerm();
+    if(state.activeTab === 'assembly'){
+      const next = t.parts[state.assembly.length];
+      setFeedback(next ? `Hint: the next part is “${next}.”` : `Hint: the assembled term should be “${t.term}.”`, 'neutral');
+    } else if(state.activeTab === 'scenario' && state.currentScenario){
+      setFeedback(`Hint: think about this concept — ${state.currentScenario.reason}`, 'neutral');
+    } else if(state.activeTab === 'match'){
+      setFeedback('Hint: match broad meaning first, then check category patterns in the definition bank.', 'neutral');
+    } else if(state.activeTab === 'quiz'){
+      const item = state.quiz.items[state.quiz.index];
+      if(item) setFeedback(`Hint: this item relates to ${item.term.category}.`, 'neutral');
+    } else {
+      setFeedback(`Hint: ${t.clue}.`, 'neutral');
+    }
+  }
+
+  function markKnown(known){
+    const terms = allTerms(state.track);
+    const card = terms[state.flashIndex];
+    const key = `${state.track}:${card.level}:${card.term}`;
+    if(known){
+      state.knownTerms[key] = {date:new Date().toISOString(), meaning:card.meaning};
+      award(4, true);
+      toast('Marked known');
+    } else {
+      delete state.knownTerms[key];
+      state.streak = 0;
+      toast('Marked for review');
+    }
+    state.flashIndex = (state.flashIndex + 1) % terms.length;
+    state.flashFlipped = false;
+    renderAll();
+    saveState();
+  }
+
+  function resetProgress(){
+    if(confirm('Reset local progress for this simulator?')){
+      localStorage.removeItem(STORAGE_KEY);
+      state.xp=0; state.correct=0; state.attempts=0; state.streak=0; state.bestStreak=0; state.knownTerms={}; state.quiz={active:false,items:[],index:0,correct:0,responses:[]};
+      renderAll();
+      toast('Progress reset');
+    }
+  }
+
+  function exportSummary(){
+    const summary = {
+      app:'RTApps Terminology Builder',
+      exported_at:new Date().toISOString(),
+      track:data[state.track].label,
+      level:levelLabels[state.level].title,
+      xp:state.xp,
+      correct:state.correct,
+      attempts:state.attempts,
+      accuracy_percent:accuracy(),
+      streak:state.streak,
+      best_streak:state.bestStreak,
+      mastery_percent:mastery(),
+      known_terms:state.knownTerms,
+      quiz_responses:state.quiz.responses
+    };
+    $('exportPre').textContent = JSON.stringify(summary, null, 2);
+    $('exportModal').classList.add('open');
+  }
+
+  function downloadJSON(){
+    const blob = new Blob([$('exportPre').textContent], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'rtapps_terminology_builder_progress.json';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+  async function copyJSON(){
+    try{ await navigator.clipboard.writeText($('exportPre').textContent); toast('Copied export JSON'); }
+    catch(err){ toast('Copy failed. Select and copy manually.'); }
+  }
+
+  function renderAll(){
+    $('trackSelect').value = state.track;
+    $('difficultyRange').value = state.difficulty;
+    document.querySelectorAll('.level-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.level === state.level));
+    document.querySelectorAll('.level-node').forEach(node => node.style.opacity = node.dataset.level === state.level ? '1' : '.58');
+    $('activeLevelText').textContent = `Focus: ${levelLabels[state.level].title} — ${levelLabels[state.level].desc}`;
+    updateDifficultyLabel();
+    renderPrompt();
+    renderExplorer();
+    renderAssembly();
+    renderScenario();
+    renderMatch();
+    renderFlashcards();
+    renderQuiz();
+    updateMetrics();
+  }
+
+  function bindEvents(){
+    tabs.forEach(btn => btn.addEventListener('click', ()=>setTab(btn.dataset.tab)));
+    $('trackSelect').addEventListener('change', e=>setTrack(e.target.value));
+    $('difficultyRange').addEventListener('input', e=>{ state.difficulty = Number(e.target.value); updateDifficultyLabel(); renderPrompt(); saveState(); });
+    document.querySelectorAll('.level-btn').forEach(btn => btn.addEventListener('click', ()=>setLevel(btn.dataset.level)));
+    document.querySelectorAll('.level-node').forEach(node => {
+      node.addEventListener('click', ()=>setLevel(node.dataset.level));
+      node.addEventListener('keydown', e=>{ if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); setLevel(node.dataset.level); }});
+    });
+    $('assemblyDrop').addEventListener('dragover', e=>{ e.preventDefault(); $('assemblyDrop').classList.add('over'); });
+    $('assemblyDrop').addEventListener('dragleave', ()=> $('assemblyDrop').classList.remove('over'));
+    $('assemblyDrop').addEventListener('drop', e=>{ e.preventDefault(); $('assemblyDrop').classList.remove('over'); const part=e.dataTransfer.getData('text/plain'); if(part) addPart(part); });
+    $('undoPartBtn').addEventListener('click', ()=>{ state.assembly.pop(); renderAssembly(); });
+    $('clearAssemblyBtn').addEventListener('click', ()=>{ state.assembly = []; renderAssembly(); });
+    $('checkBtn').addEventListener('click', checkCurrent);
+    $('newBtn').addEventListener('click', newPrompt);
+    $('hintBtn').addEventListener('click', showHint);
+    $('resetBtn').addEventListener('click', resetProgress);
+    $('flipCardBtn').addEventListener('click', ()=>{ state.flashFlipped = !state.flashFlipped; renderFlashcards(); });
+    $('flashcard').addEventListener('click', ()=>{ state.flashFlipped = !state.flashFlipped; renderFlashcards(); });
+    $('flashcard').addEventListener('keydown', e=>{ if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); state.flashFlipped = !state.flashFlipped; renderFlashcards(); }});
+    $('knownBtn').addEventListener('click', ()=>markKnown(true));
+    $('reviewBtn').addEventListener('click', ()=>markKnown(false));
+    $('startQuizBtn').addEventListener('click', startQuiz);
+    $('nextQuizBtn').addEventListener('click', nextQuiz);
+    $('helpBtn').addEventListener('click', ()=> $('helpModal').classList.add('open'));
+    $('closeHelpBtn').addEventListener('click', ()=> $('helpModal').classList.remove('open'));
+    $('helpModal').addEventListener('click', e=>{ if(e.target === $('helpModal')) $('helpModal').classList.remove('open'); });
+    $('exportBtn').addEventListener('click', exportSummary);
+    $('closeExportBtn').addEventListener('click', ()=> $('exportModal').classList.remove('open'));
+    $('exportModal').addEventListener('click', e=>{ if(e.target === $('exportModal')) $('exportModal').classList.remove('open'); });
+    $('downloadJsonBtn').addEventListener('click', downloadJSON);
+    $('copyJsonBtn').addEventListener('click', copyJSON);
+    $('printBtn').addEventListener('click', ()=>window.print());
+    document.addEventListener('keydown', e=>{
+      if(e.key === 'Escape'){
+        $('helpModal').classList.remove('open');
+        $('exportModal').classList.remove('open');
+      }
+      if(e.altKey && e.key.toLowerCase() === 'n') newPrompt();
+      if(e.altKey && e.key.toLowerCase() === 'c') checkCurrent();
+    });
+  }
+
+  function init(){
+    loadState();
+    bindEvents();
+    setTab(state.activeTab || 'explorer');
+    renderAll();
+    setFeedback('Ready. Choose an activity and press New prompt or Check.', 'neutral');
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
