@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MRI in Radiotherapy Practice</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#eaf1f8;
+      --panel:#ffffff;
+      --ink:#1f2937;
+      --muted:#475569;
+      --brand:#1d4ed8;
+      --brand2:#2563eb;
+      --line:#d6e0eb;
+      --good:#15803d;
+      --warn:#b45309;
+      --bad:#b91c1c;
+      --shadow:0 12px 30px rgba(15,23,42,.10);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:'Inter',sans-serif;
+      background:linear-gradient(180deg,#f8fbff,#eaf1f8);
+      color:var(--ink);
+    }
+    header{
+      position:sticky; top:0; z-index:10;
+      background:#fff;
+      border-bottom:1px solid var(--line);
+      box-shadow:0 1px 3px rgba(0,0,0,.05);
+      padding:12px 18px;
+      display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+    }
+    .brand{font-weight:700; color:var(--brand); letter-spacing:.01em}
+    .navlinks{display:flex; gap:8px; flex-wrap:wrap}
+    .navlinks a{
+      text-decoration:none;
+      color:#fff;
+      background:#64748b;
+      padding:8px 12px;
+      border-radius:8px;
+      font-size:.85rem;
+      font-weight:600;
+    }
+    .navlinks a.primary{background:var(--brand)}
+    .shell{
+      max-width:1500px;
+      margin:0 auto;
+      padding:18px;
+    }
+    .titlecard{
+      background:linear-gradient(135deg,#ffffff,#f6faff);
+      border:1px solid var(--line);
+      border-radius:18px;
+      box-shadow:var(--shadow);
+      padding:18px 20px;
+      margin-bottom:16px;
+    }
+    h1{margin:0;font-size:2rem;color:#17357d}
+    .subtitle{margin:8px 0 0;color:var(--muted);line-height:1.55;max-width:1100px}
+    .topmeta{
+      margin-top:12px;
+      display:flex; gap:10px; flex-wrap:wrap;
+    }
+    .pill{
+      background:#eff6ff;
+      color:#1d4ed8;
+      border:1px solid #cfe0ff;
+      padding:7px 10px;
+      border-radius:999px;
+      font-size:.82rem;
+      font-weight:700;
+    }
+
+    .layout{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:16px;
+    }
+    @media (min-width: 1100px){
+      .layout{grid-template-columns: 1.02fr .98fr}
+    }
+    .panel{
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:18px;
+      box-shadow:var(--shadow);
+      padding:18px;
+      overflow:hidden;
+    }
+    .panel h2{
+      margin:0 0 12px;
+      font-size:1.08rem;
+      color:#17357d;
+      text-transform:uppercase;
+      letter-spacing:.05em;
+    }
+
+    .controls{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin-bottom:12px;
+    }
+    .control{
+      background:#f8fbff;
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:12px;
+    }
+    .control label{
+      display:block;
+      font-size:.84rem;
+      font-weight:700;
+      color:#334155;
+      margin-bottom:8px;
+    }
+    .control select,.control input[type="range"]{
+      width:100%;
+    }
+    .control .val{
+      margin-top:6px;
+      font-size:.82rem;
+      color:#64748b;
+      font-weight:600;
+    }
+
+    .buttons{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin:10px 0 14px;
+    }
+    button{
+      border:0;
+      border-radius:10px;
+      padding:10px 14px;
+      font-weight:700;
+      cursor:pointer;
+      transition:transform .12s ease, opacity .15s ease;
+    }
+    button:hover{transform:translateY(-1px)}
+    button:disabled{opacity:.5; cursor:not-allowed; transform:none}
+    .btn-primary{background:var(--brand2); color:#fff}
+    .btn-secondary{background:#64748b; color:#fff}
+    .btn-ghost{background:#e2e8f0; color:#0f172a}
+
+    .info-box{
+      background:#f8fbff;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:14px;
+      margin-bottom:12px;
+      min-height:140px;
+    }
+    .info-box h3{
+      margin:0 0 6px;
+      font-size:1rem;
+      color:#0f172a;
+    }
+    .info-box p{
+      margin:6px 0;
+      color:#334155;
+      line-height:1.5;
+      font-size:.95rem;
+    }
+
+    .status{
+      background:#eff6ff;
+      color:#1e3a8a;
+      border:1px solid #bfdbfe;
+      border-radius:12px;
+      padding:12px;
+      margin-bottom:10px;
+      font-size:.93rem;
+      line-height:1.45;
+    }
+    .status strong{color:#17357d}
+    .note{
+      background:#fff7ed;
+      color:#7c2d12;
+      border:1px solid #fdba74;
+      border-radius:12px;
+      padding:12px;
+      font-size:.92rem;
+      line-height:1.45;
+      margin-bottom:12px;
+    }
+
+    .flip-wrap{
+      perspective: 1600px;
+    }
+    .stage{
+      position:relative;
+      width:100%;
+      min-height:660px;
+      border-radius:18px;
+      overflow:hidden;
+      background:linear-gradient(180deg,#e6eef8,#dbeafe);
+      border:1px solid #cfe0f2;
+    }
+    .page{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:stretch;
+      justify-content:stretch;
+      transform-style:preserve-3d;
+      transition:transform .7s cubic-bezier(.2,.8,.2,1), opacity .35s ease;
+      opacity:0;
+      pointer-events:none;
+    }
+    .page.active{
+      opacity:1;
+      pointer-events:auto;
+      z-index:2;
+    }
+    .page.turning{
+      transform:rotateY(-90deg);
+      opacity:0;
+    }
+    .page-inner{
+      width:100%;
+      display:grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap:0;
+      min-height:660px;
+      background:#fff;
+    }
+    .page-text{
+      padding:24px;
+      background:linear-gradient(180deg,#ffffff,#f8fbff);
+      border-right:1px solid var(--line);
+    }
+    .page-text h3{
+      margin:0 0 10px;
+      font-size:1.45rem;
+      color:#17357d;
+    }
+    .page-text p{
+      margin:0 0 10px;
+      color:#334155;
+      line-height:1.6;
+    }
+    .page-text ul{
+      margin:10px 0 0 18px;
+      color:#334155;
+      line-height:1.55;
+      padding:0;
+    }
+    .page-text li{margin:6px 0}
+    .page-quiz{
+      margin-top:14px;
+      background:#eff6ff;
+      border:1px solid #bfdbfe;
+      border-radius:12px;
+      padding:12px;
+      color:#1e3a8a;
+      font-size:.92rem;
+    }
+
+    .viz{
+      position:relative;
+      overflow:hidden;
+      background:linear-gradient(180deg,#dbeafe,#eef6ff);
+      min-height:660px;
+    }
+    .viz svg{
+      width:100%;
+      height:100%;
+      display:block;
+    }
+
+    .fadein{animation:fadein .6s ease both}
+    @keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+    .pulse{animation:pulse 1.6s ease-in-out infinite}
+    @keyframes pulse{0%,100%{opacity:.85; transform:scale(1)}50%{opacity:1; transform:scale(1.04)}}
+
+    .checklist{
+      display:grid;
+      gap:8px;
+      margin-top:10px;
+    }
+    .check-item{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:10px;
+      padding:10px 12px;
+      color:#334155;
+    }
+    .check-dot{
+      width:18px; height:18px;
+      border-radius:50%;
+      border:2px solid #94a3b8;
+      position:relative;
+      flex:0 0 auto;
+      background:#fff;
+    }
+    .check-item.done .check-dot{
+      background:#16a34a;
+      border-color:#16a34a;
+    }
+    .check-item.done .check-dot::after{
+      content:'';
+      position:absolute;
+      left:5px; top:1px;
+      width:4px; height:8px;
+      border-right:2px solid #fff;
+      border-bottom:2px solid #fff;
+      transform:rotate(45deg);
+    }
+
+    .mini-row{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin-top:12px;
+    }
+    .mini-card{
+      border:1px solid var(--line);
+      background:#f8fbff;
+      border-radius:12px;
+      padding:10px;
+    }
+    .mini-card .head{
+      font-size:.75rem;
+      font-weight:800;
+      text-transform:uppercase;
+      color:#64748b;
+      margin-bottom:4px;
+      letter-spacing:.04em;
+    }
+    .mini-card .body{
+      color:#0f172a;
+      font-weight:600;
+      font-size:.95rem;
+      line-height:1.4;
+    }
+
+    .footer{
+      text-align:center;
+      color:#64748b;
+      font-size:.85rem;
+      padding:12px 0 22px;
+    }
+
+    .hidden{display:none !important}
+
+    @media (max-width: 1099px){
+      .page-inner{grid-template-columns:1fr}
+      .page-text{border-right:0;border-bottom:1px solid var(--line)}
+      .stage{min-height:920px}
+      .viz{min-height:430px}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">MRI in Radiotherapy Practice</div>
+    <div class="navlinks">
+      <a class="primary" href="#lesson">Lesson</a>
+      <a href="../index.html">Radiation Physics Menu</a>
+    </div>
+  </header>
+
+  <div class="shell" id="lesson">
+    <div class="titlecard">
+      <h1>MRI in Radiotherapy Practice</h1>
+      <p class="subtitle">
+        This flip-page lesson introduces the MRI environment used in radiotherapy, the main safety hazards, the role of zoning and screening, and how labeling, implants, immobilization devices, QA equipment, and staff training shape safe clinical workflow [file:20][file:21].
+      </p>
+      <div class="topmeta">
+        <span class="pill">Code-generated diagrams</span>
+        <span class="pill">No imported images</span>
+        <span class="pill">Animated learning pages</span>
+        <span class="pill">RT safety focus</span>
+      </div>
+    </div>
+
+    <div class="layout">
+      <div class="panel">
+        <h2>Controls</h2>
+        <div class="controls">
+          <div class="control">
+            <label for="pageSelect">Page</label>
+            <select id="pageSelect">
+              <option value="0">1. Why MRI in RT</option>
+              <option value="1">2. MRI hazards</option>
+              <option value="2">3. Static field risk</option>
+              <option value="3">4. Gradient and RF hazards</option>
+              <option value="4">5. Zoning and access</option>
+              <option value="5">6. Screening workflow</option>
+              <option value="6">7. Device labeling</option>
+              <option value="7">8. Implants and accessories</option>
+              <option value="8">9. QA equipment</option>
+              <option value="9">10. Training and review</option>
+            </select>
+          </div>
+          <div class="control">
+            <label for="autoPlay">Auto-play page animation</label>
+            <input id="autoPlay" type="range" min="0" max="1" step="1" value="1">
+            <div class="val" id="autoPlayLabel">On</div>
+          </div>
+        </div>
+
+        <div class="buttons">
+          <button class="btn-primary" id="prevBtn">◀ Previous</button>
+          <button class="btn-primary" id="nextBtn">Next ▶</button>
+          <button class="btn-secondary" id="animateBtn">Replay Animation</button>
+          <button class="btn-ghost" id="resetBtn">Reset</button>
+        </div>
+
+        <div class="status" id="statusBox"></div>
+        <div class="note" id="noteBox"></div>
+
+        <div class="info-box" id="pageSummary"></div>
+
+        <div class="mini-row">
+          <div class="mini-card">
+            <div class="head">Current focus</div>
+            <div class="body" id="focusLabel">MRI and RT workflow</div>
+          </div>
+          <div class="mini-card">
+            <div class="head">Safety theme</div>
+            <div class="body" id="themeLabel">Why MRI safety matters in radiotherapy</div>
+          </div>
+        </div>
+
+        <div class="page-quiz" id="quizBox"></div>
+      </div>
+
+      <div class="panel flip-wrap">
+        <h2>Flip Pages</h2>
+        <div class="stage" id="stage">
+          <div class="page active" data-page="0">
+            <div class="page-inner">
+              <div class="page-text">
+                <h3>Why MRI is used in RT</h3>
+                <p>
+                  MRI is increasingly used in radiotherapy because it provides excellent soft-tissue contrast, can show functional information, and supports real-time imaging without ionizing radiation [file:20].
+                </p>
+                <ul>
+                  <li>Improves tumor and organ visualization.</li>
+                  <li>Helps setup accuracy and adaptive workflows.</li>
+                  <li>Supports motion tracking without extra dose.</li>
+                </ul>
+                <div class="page-quiz">
+                  <strong>Check:</strong> Why is MRI especially useful when daily adaptation or motion tracking is needed?
+                </div>
+              </div>
+              <div class="viz">
+                <svg viewBox="0 0 700 660" aria-label="MRI and RT concept diagram">
+                  <defs>
+                    <linearGradient id="magnetGrad" x1="0" x2="1">
+                      <stop offset="0%" stop-color="#1d4ed8"/>
+                      <stop offset="100%" stop-color="#60a5fa"/>
+                    </linearGradient>
+                    <radialGradient id="beamGlow">
+                      <stop offset="0%" stop-color="#fde68a" stop-opacity="1"/>
+                      <stop offset="100%" stop-color="#fde68a" stop-opacity="0"/>
+                    </radialGradient>
+                  </defs>
+                  <rect x="0" y="0" width="700" height="660" fill="#dbeafe"/>
+                  <circle cx="455" cy="330" r="150" fill="url(#beamGlow)" opacity=".35" class="pulse"/>
+                  <rect x="390" y="180" width="150" height="300" rx="24" fill="url(#magnetGrad)" opacity=".95"/>
+                  <rect x="430" y="230" width="70" height="200" rx="18" fill="#eff6ff"/>
+                  <rect x="560" y="265" width="90" height="130" rx="14" fill="#94a3b8"/>
+                  <rect x="565" y="272" width="80" height="116" rx="12" fill="#cbd5e1"/>
+                  <path d="M120 330 C170 330, 220 330, 270 330" stroke="#f59e0b" stroke-width="10" fill="none" stroke-linecap="round"/>
+                  <circle cx="120" cy="330" r="14" fill="#f59e0b"/>
+                  <circle cx="270" cy="330" r="14" fill="#f59e0b"/>
+                  <text x="70" y="294" fill="#334155" font-size="22" font-weight="700">Patient</text>
+                  <text x="410" y="165" fill="#1e3a8a" font-size="24" font-weight="700">MRI scanner</text>
+                  <text x="560" y="240" fill="#334155" font-size="18" font-weight="700">RT guidance</text>
+                  <path d="M290 330 L390 330" stroke="#2563eb" stroke-width="8" stroke-linecap="round" stroke-dasharray="14 12"/>
+                  <text x="275" y="300" fill="#2563eb" font-size="18" font-weight="700">Soft tissue detail</text>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="page" data-page="1">
+            <div class="page-inner">
+              <div class="page-text">
+                <h3>MRI hazards in RT</h3>
+                <p>
+                  In the RT environment, MRI safety concerns come from the static magnetic field, gradient fields, and RF energy used during imaging [file:20].
+                </p>
+                <ul>
+                  <li>Static field: attraction, torque, projectile risk.</li>
+                  <li>Gradient field: induced currents, nerve stimulation, noise.</li>
+                  <li>RF field: heating and burn risk, especially with conductive materials.</li>
+                </ul>
+                <div class="page-quiz">
+                  <strong>Check:</strong> Which MRI component is most associated with projectile risk?
+                </div>
+              </div>
+              <div class="viz">
+                <svg viewBox="0 0 700 660" aria-label="MRI hazards diagram">
+                  <rect width="700" height="660" fill="#e2e8f0"/>
+                  <circle cx="350" cy="330" r="58" fill="#ef4444" opacity=".95"/>
+                  <circle cx="350" cy="330" r="28" fill="#fee2e2"/>
+                  <path d="M80 190 L270 240" stroke="#1d4ed8" stroke-width="10" stroke-linecap="round"/>
+                  <path d="M80 330 L270 330" stroke="#f59e0b" stroke-width="10" stroke-linecap="round" stroke-dasharray="10 12"/>
+                  <path d="M80 470 L270 420" stroke="#dc2626" stroke-width="10" stroke-linecap="round"/>
+                  <text x="82" y="170" fill="#1e3a8a" font-size="20" font-weight="700">Static field</text>
+                  <text x="82" y="310" fill="#b45309" font-size="20" font-weight="700">Gradient field</text>
+                  <text x="82" y="495" fill="#b91c1c" font-size="20" font-weight="700">RF field</text>
+                  <rect x="505" y="225" width="150" height="210" rx="22" fill="#cbd5e1"/>
+                  <rect x="535" y="270" width="90" height="120" rx="18" fill="#eff6ff"/>
+                  <text x="526" y="255" fill="#334155" font-size="18" font-weight="700">Patient / device</text>
+                  <path d="M430 330 L505 330" stroke="#334155" stroke-width="8" stroke-dasharray="12 12"/>
+                  <circle cx="610" cy="330" r="20" fill="#f59e0b" class="pulse"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="page" data-page="2">
+            <div class="page-inner">
+              <div class="page-text">
+                <h3>Static field risk</h3>
+                <p>
+                  The static magnetic field can exert translational force and torque on ferromagnetic objects, creating dangerous projectile effects if equipment or devices are brought too close [file:20].
+                </p>
+                <ul>
+                  <li>Risk increases with stronger fields and proximity.</li>
+                  <li>Material composition matters.</li>
+                  <li>The 5-gauss line is a key safety boundary.</li>
+                </ul>
+                <div class="page-quiz">
+                  <strong>Check:</strong> Why is the 5-gauss line important in MRI suite design?
+                </div>
+              </div>
+              <div class="viz">
+                <svg viewBox="0 0 700 660" aria-label="Static field projectile diagram">
+                  <defs>
+                    <linearGradient id="fieldGrad" x1="0" x2="1">
+                      <stop offset="0%" stop-color="#dbeafe"/>
+                      <stop offset="100%" stop-color="#bfdbfe"/>
+                    </linearGradient>
+                  </defs>
+                  <rect width="700" height="660" fill="url(#fieldGrad)"/>
+                  <circle cx="430" cy="330" r="155" fill="#93c5fd" opacity=".22"/>
+                  <circle cx="430" cy="330" r="120" fill="#60a5fa" opacity=".16"/>
+                  <circle cx="430" cy="330" r="85" fill="#2563eb" opacity=".14"/>
+                  <circle cx="430" cy="330" r="50" fill="#1d4ed8" opacity=".12"/>
+                  <rect x="480" y="305" width="110" height="50" rx="8" fill="#64748b"/>
+                  <rect x="120" y="275" width="90" height="110" rx="10" fill="#9ca3af" transform="rotate(-18 120 275)"/>
+                  <path d="M208 321 C270 312, 310 320, 352 328" stroke="#dc2626" stroke-width="6" fill="none" stroke-dasharray="8 10"/>
+                  <polygon points="350,328 332,318 334,338" fill="#dc2626"/>
+                  <text x="75" y="145" fill="#334155" font-size="22" font-weight="700">Ferromagnetic item</text>
+                  <text x="445" y="160" fill="#1e3a8a" font-size="22" font-weight="700">MRI magnet</text>
+                  <text x="100" y="545" fill="#b91c1c" font-size="18" font-weight="700">Projectile risk increases near the bore</text>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="page" data-page="3">
+            <div class="page-inner">
+              <div class="page-text">
+                <h3>Gradient and RF hazards</h3>
+                <p>
+                  Rapidly switched gradient fields can induce currents, stimulation, and acoustic noise, while RF energy can heat tissue and conductive materials [file:20].
+                </p>
+                <ul>
+                  <li>Gradient switching: dB/dt-related effects.</li>
+                  <li>RF exposure: SAR and heating.</li>
+                  <li>Conductive loops and skin contact can increase burn risk.</li>
+                </ul>
+                <div class="page-quiz">
+                  <strong>Check:</strong> What parameter is commonly used to describe RF heating risk?
+                </div>
+              </div>
+              <div class="viz">
+                <svg viewBox="0 0 700 660" aria-label="Gradient and RF hazard diagram">
+                  <rect width="700" height="660" fill="#ecfeff"/>
+                  <path d="M70 260 C115 210, 165 210, 210 260 C255 310, 305 310, 350 260 C395 210, 445 210, 490 260 C535 310, 585 310, 630 260" stroke="#0ea5e9" stroke-width="8" fill="none"/>
+                  <path d="M70 330 C115 280, 165 280, 210 330 C255 380, 305 380, 350 330 C395 280, 445 280, 490 330 C535 380, 585 380, 630 330" stroke="#22c55e" stroke-width="8" fill="none" opacity=".85"/>
+                  <path d="M70 400 C115 350, 165 350, 210 400 C255 450, 305 450, 350 400 C395 350, 445 350, 490 400 C535 450, 585 450, 630 400" stroke="#f97316" stroke-width="8" fill="none"/>
+                  <circle cx="350" cy="330" r="68" fill="#fff7ed" stroke="#fb923c" stroke-width="4"/>
+                  <path d="M310 330 L390 330" stroke="#fb923c" stroke-width="6" stroke-linecap="round"/>
+                  <circle cx="350" cy="330" r="18" fill="#fb7185" class="pulse"/>
+                  <path d="M430 140 L540 140" stroke="#f59e0b" stroke-width="8" stroke-linecap="round"/>
+                  <path d="M430 140 L430 200" stroke="#f59e0b" stroke-width="8" stroke-linecap="round"/>
+                  <text x="438" y="125" fill="#b45309" font-size="18" font-weight="700">RF energy</text>
+                  <text x="70" y="610" fill="#0f766e" font-size="20" font-weight="700">Gradient switching and RF heating are separate safety concerns.</text>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="page" data-page="4">
+            <div class="page-inner">
+              <div class="page-text">
+                <h3>Zoning and access</h3>
+                <p>
+                  The ACR four-zone concept helps manage MRI access in radiotherapy settings, with progressively more restricted access from public areas to the scanner room [file:20].
+                </p>
+                <ul>
+                  <li>Zone I: public access.</li>
+                  <li>Zone II: controlled transition area.</li>
+                  <li>Zone III: screened area with restricted access.</li>
+                  <li>Zone IV: scanner room.</li>
+                </ul>
+                <div class="page-quiz">
+                  <strong>Check:</strong> Which zone contains the MRI scanner itself?
+                </div>
+              </div>
+              <div class="viz">
+                <svg viewBox="0 0 700 660" aria-label="MRI zoning diagram">
+                  <rect width="700" height="660" fill="#f8fbff"/>
+                  <circle cx="350" cy="330" r="250" fill="#dbeafe"/>
+                  <circle cx="350" cy="330" r="185" fill="#bfdbfe"/>
+                  <circle cx="350" cy="330" r="125" fill="#93c5fd"/>
+                  <circle cx="350" cy="330" r="72" fill="#1d4ed8"/>
+                  <rect x="332" y="312" width="36" height="36" rx="8" fill="#fff"/>
+                  <text x="350" y="180" text-anchor="middle" fill="#1e3a8a" font-size="26" font-weight="700">Zone I</text>
+                  <text x="350" y="235" text-anchor="middle" fill="#1e3a8a" font-size="24" font-weight="700">Zone II</text>
+                  <text x="350" y="285" text-anchor="middle" fill="#fff" font-size="22" font-weight="700">Zone III</text>
+                  <text x="350" y="340" text-anchor="middle" fill="#fff" font-size="22" font-weight="700">Zone IV</text>
+                  <text x="350" y="392" text-anchor="middle" fill="#fff" font-size="18" font-weight="700">Scanner room</text>
+                  <path d="M80 560 L620 560" stroke="#64748b" stroke-width="6" stroke-dasharray="16 10"/>
+                  <text x="75" y="590" fill="#334155" font-size="18" font-weight="700">5-gauss line / access boundary</text>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="page" data-page="5">
+            <div class="page-inner">
+              <div class="page-text">
+                <h3>Screening workflow</h3>
+                <p>
+                  Screening should begin as early as possible, ideally before the simulation or treatment visit, and should be repeated daily because safety status can change over a course of treatment [file:20].
+                </p>
+                <ul>
+                  <li>Use questionnaires and record review.</li>
+                  <li>Confirm implants, devices, and accessories.</li>
+                  <li>Perform daily checks before each fraction.</li>
+                  <li>Use ferromagnetic screening when indicated.</li>
+                </ul>
+                <div class="checklist" id="checklist">
+                  <div class="check-item"><div class="check-dot"></div><div>Review the MR questionnaire</div></div>
+                  <div class="check-item"><div class="check-dot"></div><div>Confirm implanted devices and labels</div></div>
+                  <div class="check-item"><div class="check-dot"></div><div>Check for new accessories or metal</div></div>
+                  <div class="check-item"><div class="check-dot"></div><div>Perform final screening before entry</div></div>
+                </div>
+                <div class="page-quiz">
+                  <strong>Check:</strong> Why is daily screening important in radiotherapy?
+                </div>
+              </div>
+              <div class="viz">
+                <svg viewBox="0 0 700 660" aria-label="Screening workflow animation">
+                  <rect width="700" height="660" fill="#eef6ff"/>
+                  <rect x="90" y="170" width="150" height="310" rx="18" fill="#fff" stroke="#cbd5e1" stroke-width="3"/>
+                  <rect x="88" y="170" width="154" height="60" rx="18" fill="#1d4ed8"/>
+                  <text x="165" y="207" text-anchor="middle" fill="#fff" font-size="22" font-weight="700">Screen</text>
+                  <path d="M250 325 L430 325" stroke="#2563eb" stroke-width="8" stroke-linecap="round" stroke-dasharray="14 10"/>
+                  <circle cx="300" cy="325" r="12" fill="#2563eb" class="pulse"/>
+                  <rect x="460" y="145" width="170" height="350" rx="22" fill="#dbeafe" stroke="#93c5fd" stroke-width="3"/>
+                  <text x="545" y="185" text-anchor="middle" fill="#1e3a8a" font-size="20" font-weight="700">Cleared</text>
+                  <circle cx="545" cy="265" r="30" fill="#16a34a"/>
+                  <path d="M532 265 L542 277 L559 251" stroke="#fff" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                  <text x="545" y="340" text-anchor="middle" fill="#334155" font-size="18" font-weight="700">Enter Zone IV</text>
+                  <text x="545" y="370" text-anchor="middle" fill="#334155" font-size="18" font-weight="700">only after screen</text>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="page" data-page="6">
+            <div class="page-inner">
+              <div class="page-text">
+                <h3>Device labeling</h3>
+                <p>
+                  Items and devices used near the MR environment should be identified as MR Safe, MR Conditional, or MR Unsafe, with MR Conditional devices only used under specified conditions [file:21].
+                </p>
+                <ul>
+                  <li>MR Unsafe: do not enter the scanner room.</li>
+                  <li>MR Conditional: only under labeled conditions.</li>
+                  <li>MR Safe: no known MR hazards.</li>
+                </ul>
+                <div class="page-quiz">
+                  <strong>Check:</strong> What does MR Conditional mean?
+                </div>
+              </div>
+              <div class="viz">
+                <svg viewBox="0 0 700 660" aria-label="MRI safety labeling diagram">
+                  <rect width="700" height="660" fill="#f8fbff"/>
+                  <rect x="70" y="95" width="560" height="470" rx="24" fill="#fff" stroke="#cbd5e1" stroke-width="3"/>
+                  <g transform="translate(120,175)">
+                    <circle cx="0" cy="0" r="50" fill="#fecaca"/>
+                    <path d="M-28 -28 L28 28 M28 -28 L-28 28" stroke="#b91c1c" stroke-width="10" stroke-linecap="round"/>
+                    <text x="0" y="88" text-anchor="middle" fill="#b91c1c" font-size="20" font-weight="800">MR Unsafe</text>
+                  </g>
+                  <g transform="translate(350,175)">
+                    <polygon points="0,-54 54,42 -54,42" fill="#fde68a" stroke="#d97706" stroke-width="4"/>
+                    <text x="0" y="16" text-anchor="middle" fill="#92400e" font-size="20" font-weight="800">MR Conditional</text>
+                  </g>
+                  <g transform="translate(560,175)">
+                    <rect x="-50" y="-50" width="100" height="100" rx="8" fill="#dcfce7" stroke="#15803d" stroke-width="4"/>
+                    <path d="M-28 0 L-8 18 L28 -18" stroke="#15803d" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                    <text x="0" y="88" text-anchor="middle" fill="#15803d" font-size="20" font-weight="800">MR Safe</text>
+                  </g>
+                  <text x="350" y="370" text-anchor="middle" fill="#334155" font-size="18" font-weight="700">Match the label to the device and its conditions before entry.</text>
+                  <text x="350" y="405" text-anchor="middle" fill="#64748b" font-size="16">Static field strength • spatial gradient • dB/dt • SAR • coil restrictions</text>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="page" data-page="7">
+            <div class="page-inner">
+              <div class="page-text">
+                <h3>Implants and accessories</h3>
+                <p>
+                  Passive implants, fiducials, immobilization devices, and carbon-fiber accessories can cause forces, heating, image artifacts, or geometric distortion depending on their material and configuration [file:20].
+                </p>
+                <ul>
+                  <li>Implants may displace or heat.</li>
+                  <li>Carbon fiber can create susceptibility artifacts.</li>
+                  <li>Vacuum cushions and loops require burn prevention.</li>
+                </ul>
+                <div class="page-quiz">
+                  <strong>Check:</strong> Why do conductive loops matter in MRI?
+                </div>
+              </div>
+              <div class="viz">
+                <svg viewBox="0 0 700 660" aria-label="Implants and accessories diagram">
+                  <rect width="700" height="660" fill="#ecfeff"/>
+                  <rect x="95" y="185" width="510" height="250" rx="26" fill="#fff" stroke="#cbd5e1" stroke-width="3"/>
+                  <circle cx="250" cy="310" r="70" fill="#cbd5e1"/>
+                  <circle cx="250" cy="310" r="38" fill="#94a3b8"/>
+                  <rect x="355" y="250" width="140" height="120" rx="20" fill="#dbeafe" stroke="#60a5fa" stroke-width="3"/>
+                  <path d="M380 310 C405 270, 445 270, 470 310 C445 350, 405 350, 380 310Z" fill="#fde68a" opacity=".9"/>
+                  <path d="M135 250 C175 230, 210 230, 240 250" stroke="#fb7185" stroke-width="6" fill="none"/>
+                  <path d="M135 370 C175 390, 210 390, 240 370" stroke="#fb7185" stroke-width="6" fill="none"/>
+                  <text x="250" y="420" text-anchor="middle" fill="#334155" font-size="18" font-weight="700">Implant / fiducial region</text>
+                  <text x="425" y="410" text-anchor="middle" fill="#334155" font-size="18" font-weight="700">Accessory device</text>
+                  <text x="350" y="510" text-anchor="middle" fill="#0f766e" font-size="18" font-weight="700">Avoid conductive loops and direct skin contact with conductive materials.</text>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="page" data-page="8">
+            <div class="page-inner">
+              <div class="page-text">
+                <h3>QA equipment in RT</h3>
+                <p>
+                  Physics QA devices often need special evaluation because of projectile risk, electronic interference, image artifacts, and measurement changes in the MR environment [file:20].
+                </p>
+                <ul>
+                  <li>Check for ferromagnetic parts.</li>
+                  <li>Keep sensitive electronics outside the 5-gauss line.</li>
+                  <li>Consider motor and sensor redesigns for MR use.</li>
+                </ul>
+                <div class="page-quiz">
+                  <strong>Check:</strong> What is the “distance principle” in MR-safe equipment design?
+                </div>
+              </div>
+              <div class="viz">
+                <svg viewBox="0 0 700 660" aria-label="QA equipment diagram">
+                  <rect width="700" height="660" fill="#f8fbff"/>
+                  <circle cx="470" cy="330" r="150" fill="#bfdbfe" opacity=".5"/>
+                  <circle cx="470" cy="330" r="110" fill="#93c5fd" opacity=".35"/>
+                  <circle cx="470" cy="330" r="72" fill="#60a5fa" opacity=".25"/>
+                  <rect x="120" y="235" width="160" height="190" rx="18" fill="#fff" stroke="#cbd5e1" stroke-width="3"/>
+                  <rect x="145" y="270" width="110" height="40" rx="8" fill="#e2e8f0"/>
+                  <rect x="145" y="330" width="110" height="40" rx="8" fill="#e2e8f0"/>
+                  <rect x="520" y="260" width="90" height="140" rx="16" fill="#64748b"/>
+                  <path d="M280 330 L390 330" stroke="#2563eb" stroke-width="8" stroke-linecap="round" stroke-dasharray="16 10"/>
+                  <circle cx="340" cy="330" r="12" fill="#2563eb" class="pulse"/>
+                  <text x="140" y="200" fill="#334155" font-size="20" font-weight="700">QA device</text>
+                  <text x="500" y="225" fill="#1e3a8a" font-size="20" font-weight="700">MRI magnet</text>
+                  <text x="118" y="500" fill="#334155" font-size="16" font-weight="700">Sensitive electronics outside the fringe field</text>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="page" data-page="9">
+            <div class="page-inner">
+              <div class="page-text">
+                <h3>Training and review</h3>
+                <p>
+                  Safe MRI practice in RT requires written policies, regular review, and training for staff working in the MR environment, especially in zones III and IV [file:20].
+                </p>
+                <ul>
+                  <li>Use onboarding plus annual refresher education.</li>
+                  <li>Define MR personnel responsibilities clearly.</li>
+                  <li>Update procedures as technology and workflows change.</li>
+                </ul>
+                <div class="page-quiz">
+                  <strong>Check:</strong> Why must MR safety training be repeated regularly?
+                </div>
+              </div>
+              <div class="viz">
+                <svg viewBox="0 0 700 660" aria-label="Training workflow diagram">
+                  <rect width="700" height="660" fill="#eef6ff"/>
+                  <circle cx="190" cy="330" r="58" fill="#dbeafe" stroke="#60a5fa" stroke-width="4"/>
+                  <text x="190" y="325" text-anchor="middle" fill="#1e3a8a" font-size="18" font-weight="700">Level 1</text>
+                  <text x="190" y="348" text-anchor="middle" fill="#1e3a8a" font-size="14">Basic MR safety</text>
+                  <circle cx="350" cy="330" r="58" fill="#bfdbfe" stroke="#2563eb" stroke-width="4"/>
+                  <text x="350" y="325" text-anchor="middle" fill="#1e3a8a" font-size="18" font-weight="700">Level 2</text>
+                  <text x="350" y="348" text-anchor="middle" fill="#1e3a8a" font-size="14">Zone III/IV work</text>
+                  <circle cx="510" cy="330" r="58" fill="#d1fae5" stroke="#16a34a" stroke-width="4"/>
+                  <text x="510" y="325" text-anchor="middle" fill="#166534" font-size="18" font-weight="700">Program</text>
+                  <text x="510" y="348" text-anchor="middle" fill="#166534" font-size="14">Policy & review</text>
+                  <path d="M248 330 L292 330" stroke="#2563eb" stroke-width="8" stroke-linecap="round"/>
+                  <path d="M408 330 L452 330" stroke="#16a34a" stroke-width="8" stroke-linecap="round"/>
+                  <path d="M190 430 C260 500, 440 500, 510 430" stroke="#f59e0b" stroke-width="6" fill="none" stroke-dasharray="10 10"/>
+                  <text x="350" y="560" text-anchor="middle" fill="#334155" font-size="18" font-weight="700">Train, review, and update continuously.</text>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      MRI in Radiotherapy Practice — flip-page lesson draft
+    </div>
+  </div>
+
+  <script>
+    const pages = [...document.querySelectorAll('.page')];
+    const pageSelect = document.getElementById('pageSelect');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const animateBtn = document.getElementById('animateBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const statusBox = document.getElementById('statusBox');
+    const noteBox = document.getElementById('noteBox');
+    const pageSummary = document.getElementById('pageSummary');
+    const quizBox = document.getElementById('quizBox');
+    const focusLabel = document.getElementById('focusLabel');
+    const themeLabel = document.getElementById('themeLabel');
+    const autoPlay = document.getElementById('autoPlay');
+    const autoPlayLabel = document.getElementById('autoPlayLabel');
+    const checklist = document.querySelectorAll('#checklist .check-item');
+
+    const content = [
+      {
+        focus:'Why MRI matters in RT',
+        theme:'Soft tissue detail and non-ionizing imaging',
+        summary:`MRI is useful in RT because it improves tumor and organ visualization, supports adaptive workflows, and allows real-time tracking without ionizing radiation [file:20].`,
+        note:`This page introduces the clinical motivation for integrating MRI into radiotherapy.`,
+        quiz:`Think about cases where soft-tissue contrast is critical, such as head and neck or abdominal targets.`
+      },
+      {
+        focus:'MRI hazards',
+        theme:'Static, gradient, and RF risks',
+        summary:`The major MRI hazards in RT come from the static magnetic field, gradient switching, and RF energy. Each can affect patients, staff, and equipment differently [file:20].`,
+        note:`The lesson distinguishes the three key hazard sources so learners can associate each with the right type of risk.`,
+        quiz:`Which hazard is most associated with heating, and which is most associated with projectile risk?`
+      },
+      {
+        focus:'Static field risk',
+        theme:'Projectiles, torque, and the 5-gauss line',
+        summary:`Ferromagnetic items can experience strong attraction and torque in the static magnetic field. Site design must respect the 5-gauss boundary and fringe field behavior [file:20].`,
+        note:`This page visually demonstrates why the magnet room needs strict access control.`,
+        quiz:`Where should ferromagnetic equipment be kept relative to the magnet?`
+      },
+      {
+        focus:'Gradient and RF hazards',
+        theme:'dB/dt, PNST, SAR, and burns',
+        summary:`Gradient switching can induce currents and stimulation, while RF energy can cause tissue heating and burns. SAR and conductive loop prevention are core concepts [file:20].`,
+        note:`The gradient and RF hazards are separate problems even though both are time-varying fields.`,
+        quiz:`What would you do to reduce heating risk in a conductive setup?`
+      },
+      {
+        focus:'Zoning and access',
+        theme:'Four-zone MRI access model',
+        summary:`The ACR four-zone approach helps control access from public areas to the scanner room. RT facilities should mark zones clearly and pair MRI and radiation safety signage [file:20].`,
+        note:`This page is a simple way to show how access becomes more restricted near the scanner.`,
+        quiz:`Which zone is essentially the scanner room itself?`
+      },
+      {
+        focus:'Screening workflow',
+        theme:'Repeat screening daily in RT',
+        summary:`Screening should start early and be repeated before each fraction because patient status and devices can change over time. Questionnaire review and final screening are both important [file:20].`,
+        note:`The checklist animation highlights the repeated screening steps that protect daily workflow.`,
+        quiz:`Why is a one-time screen not enough for radiotherapy patients?`
+      },
+      {
+        focus:'Device labeling',
+        theme:'MR Safe, MR Conditional, MR Unsafe',
+        summary:`Devices should be clearly identified as MR Safe, MR Conditional, or MR Unsafe. MR Conditional devices require specific conditions to be met before use [file:21].`,
+        note:`This page reinforces the meaning of the labeling categories and their practical implications.`,
+        quiz:`What must be checked before using a device labeled MR Conditional?`
+      },
+      {
+        focus:'Implants and accessories',
+        theme:'Artifacts, heating, loops, and displacement',
+        summary:`Implants, fiducials, vacuum cushions, and carbon-fiber accessories can produce force, heating, or image artifacts. Conductive loops and direct skin contact are especially important safety concerns [file:20].`,
+        note:`This page emphasizes that RT accessories also need MR review, not just implanted devices.`,
+        quiz:`Why can carbon fiber still be a concern in MRI even though it is not a ferromagnetic metal?`
+      },
+      {
+        focus:'QA equipment',
+        theme:'Move electronics away from the fringe field',
+        summary:`QA devices may need redesign or relocation because they can be affected by force, electronics interference, artifacts, and altered measurement accuracy. Distance from the magnet is a key mitigation strategy [file:20].`,
+        note:`This page demonstrates the “distance principle” for equipment safety and function.`,
+        quiz:`What kinds of parts are most likely to need to stay outside the 5-gauss line?`
+      },
+      {
+        focus:'Training and review',
+        theme:'Policies, roles, and ongoing education',
+        summary:`Safe integration of MRI in RT depends on written policies, role-based training, annual refreshers, and regular review of workflows. Personnel working in zones III and IV need deeper training [file:20].`,
+        note:`This final page turns safety concepts into a sustainable program rather than a one-time checklist.`,
+        quiz:`Why is ongoing training necessary even after initial MR safety education?`
+      }
+    ];
+
+    let current = 0;
+    let timer = null;
+
+    function setPage(index, instant=false){
+      index = Math.max(0, Math.min(pages.length - 1, index));
+      current = index;
+      pageSelect.value = String(index);
+
+      pages.forEach((p,i)=>{
+        p.classList.remove('active','turning');
+        if(i===index) p.classList.add('active');
+      });
+
+      const c = content[index];
+      focusLabel.textContent = c.focus;
+      themeLabel.textContent = c.theme;
+      pageSummary.innerHTML = `<h3>${c.focus}</h3><p>${c.summary}</p>`;
+      noteBox.textContent = c.note;
+      quizBox.innerHTML = `<strong>Prompt:</strong> ${c.quiz}`;
+      statusBox.innerHTML = `<strong>Page ${index+1} of 10.</strong> ${c.summary}`;
+      animateCurrentPage();
+
+      if(!instant){
+        resetTimedChecklist();
+      }
+    }
+
+    function animateCurrentPage(){
+      clearTimeout(timer);
+      const page = current;
+      if(page === 5){
+        let i = 0;
+        checklist.forEach(el => el.classList.remove('done'));
+        const steps = () => {
+          if(i < checklist.length){
+            checklist[i].classList.add('done');
+            i++;
+            timer = setTimeout(steps, 650);
+          }
+        };
+        timer = setTimeout(steps, 300);
+      }
+    }
+
+    function resetTimedChecklist(){
+      checklist.forEach(el => el.classList.remove('done'));
+      if(current === 5 && autoPlay.value === '1'){
+        animateCurrentPage();
+      }
+    }
+
+    function next(){
+      setPage((current + 1) % pages.length);
+    }
+    function prev(){
+      setPage((current - 1 + pages.length) % pages.length);
+    }
+
+    pageSelect.addEventListener('change', ()=> setPage(parseInt(pageSelect.value,10)));
+    nextBtn.addEventListener('click', next);
+    prevBtn.addEventListener('click', prev);
+    animateBtn.addEventListener('click', ()=> animateCurrentPage());
+    resetBtn.addEventListener('click', ()=> setPage(0, true));
+
+    autoPlay.addEventListener('input', ()=>{
+      autoPlayLabel.textContent = autoPlay.value === '1' ? 'On' : 'Off';
+      if(autoPlay.value === '1') animateCurrentPage();
+    });
+
+    setPage(0, true);
+  </script>
+</body>
+</html>
