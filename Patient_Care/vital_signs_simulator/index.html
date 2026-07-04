@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vital Signs Simulator</title>
+<style>
+body {
+background-color: #333;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+min-height: 100vh;
+font-family: 'Lucida Console', 'Consolas', monospace;
+overflow-x: hidden;
+margin: 0;
+padding-bottom: 40px;
+}
+.nav-links-header { background-color: #1a1a1a; width: 100%; box-sizing: border-box; padding: 10px 20px;
+    display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; }
+.nav-links-header strong { color: #ddd; font-family: 'Inter', sans-serif; }
+.nav-links-header a { font-size: 0.8rem; background: #0056b3; color: #fff; font-weight: 500; padding: 8px 12px;
+    border-radius: 6px; text-decoration: none; font-family: 'Inter', sans-serif; }
+.nav-links-header a.workbook { background: #64748b; }
+.sim-body { display: flex; flex-direction: column; align-items: center; margin-top: 24px; }
+.monitor-screen {
+background-color: #00001a;
+border: 3px solid #444;
+border-radius: 8px;
+padding: 15px;
+width: 800px;
+max-width: 92vw;
+height: 450px;
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+grid-template-rows: repeat(2, 1fr);
+gap: 10px;
+color: #ffffff;
+overflow: hidden;
+margin-bottom: 20px;
+position: relative;
+}
+.watermark {
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%) rotate(-30deg);
+font-size: 6em;
+font-weight: bold;
+color: rgba(255, 255, 255, 0.08);
+pointer-events: none;
+z-index: 10;
+white-space: nowrap;
+}
+.vital-sign-section {
+background-color: #000000;
+border: 1px solid #222;
+border-radius: 5px;
+padding: 10px 15px;
+display: flex;
+flex-direction: column;
+justify-content: space-between;
+position: relative;
+z-index: 1;
+}
+.vital-header { display: flex; justify-content: space-between; align-items: baseline; width: 100%; }
+.label { font-size: 1.1em; font-weight: bold; text-transform: uppercase; }
+.unit { font-size: 0.8em; color: #aaaaaa; }
+.reading { flex-grow: 1; display: flex; align-items: center; justify-content: flex-end; padding-right: 5px; overflow: hidden; white-space: nowrap; }
+.value { font-size: 4em; font-weight: bold; line-height: 1; }
+.ecg .label, .ecg .value { color: #00ff00; } .ecg .unit { color: #90ee90; } .ecg .waveform svg path { stroke: #00ff00; }
+.spo2 .label, .spo2 .value { color: #00ffff; } .spo2 .unit { color: #add8e6; } .spo2 .waveform svg path { stroke: #00ffff; }
+.nibp .label, .nibp .value { color: #ffff00; } .nibp .unit { color: #dddd00; }
+.nibp .value { font-size: 2.8em; display: flex; align-items: baseline; }
+.nibp .map { font-size: 0.5em; margin-left: 8px; color: #cccccc; }
+.nibp .timestamp { font-size: 0.7em; color: #aaaaaa; text-align: right; margin-top: 5px; position: absolute; bottom: 5px; right: 15px; }
+.resp .label, .resp .value { color: #ffffff; } .resp .unit { color: #cccccc; } .resp .waveform svg path { stroke: #ffffff; stroke-dasharray: 5, 5; }
+.temp .label, .temp .value { color: #ffffff; } .temp .unit { color: #cccccc; } .temp .value { font-size: 3em; }
+.placeholder { background-color: #111; border: 1px dashed #333; }
+.waveform { width: 100%; height: 50px; margin-top: 5px; overflow: hidden; }
+.waveform svg { width: 100%; height: 100%; }
+.waveform svg path { fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+#update-button {
+padding: 10px 20px; font-size: 1.1em; font-family: 'Lucida Console', 'Consolas', monospace;
+background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s ease;
+}
+#update-button:hover { background-color: #45a049; }
+#update-button:active { background-color: #3e8e41; }
+.sim-links { margin-top: 16px; }
+.sim-links a { color: #9ec9ff; font-family: 'Inter', sans-serif; font-size: 0.85rem; margin: 0 8px; }
+</style>
+</head>
+<body>
+<header class="nav-links-header">
+    <strong>Vital Signs Simulator</strong>
+    <div>
+        <a href="worksheet.html">Practice Worksheet</a>
+        <a href="index.html">&larr; Back to Lesson</a>
+        <a href="../index.html" class="workbook">&larr; Patient Care Menu</a>
+    </div>
+</header>
+<div class="sim-body">
+<div class="monitor-screen">
+<div class="watermark">RTApps</div>
+<div class="vital-sign-section ecg">
+<div class="vital-header"> <span class="label">HR</span> <span class="unit">bpm</span> </div>
+<div class="reading"> <span class="value" id="hr-value">--</span> </div>
+<div class="waveform"> <svg viewBox="0 0 100 40" preserveAspectRatio="none"><path d="M0 20 L10 20 L15 10 L25 30 L30 20 L80 20 L85 15 L90 25 L95 20 L100 20" /></svg> </div>
+</div>
+<div class="vital-sign-section spo2">
+<div class="vital-header"> <span class="label">SpO2</span> <span class="unit">%</span> </div>
+<div class="reading"> <span class="value" id="spo2-value">--</span> </div>
+<div class="waveform"> <svg viewBox="0 0 100 40" preserveAspectRatio="none"><path d="M0 25 Q 12.5 5, 25 25 T 50 25 T 75 25 T 100 25" /></svg> </div>
+</div>
+<div class="vital-sign-section nibp">
+<div class="vital-header"> <span class="label">NIBP</span> <span class="unit">mmHg</span> </div>
+<div class="reading"> <span class="value"> <span id="nibp-sys-value">--</span>/<span id="nibp-dia-value">--</span><span class="map">(<span id="nibp-map-value">--</span>)</span> </span> </div>
+<div class="timestamp" id="nibp-time">--:-- --</div>
+</div>
+<div class="vital-sign-section resp">
+<div class="vital-header"> <span class="label">RR</span> <span class="unit">/min</span> </div>
+<div class="reading"> <span class="value" id="rr-value">--</span> </div>
+<div class="waveform"> <svg viewBox="0 0 100 40" preserveAspectRatio="none"><path d="M0 30 Q 25 10, 50 30 T 100 30" /></svg> </div>
+</div>
+<div class="vital-sign-section temp">
+<div class="vital-header"> <span class="label">Temp</span> <span class="unit" id="temp-unit">&deg;F (&deg;C)</span> </div>
+<div class="reading"> <span class="value" id="temp-value">--.-</span> </div>
+</div>
+<div class="vital-sign-section placeholder"></div>
+</div>
+<button id="update-button">Generate New Vitals</button>
+</div>
+<script>
+const hrValueEl = document.getElementById('hr-value');
+const spo2ValueEl = document.getElementById('spo2-value');
+const rrValueEl = document.getElementById('rr-value');
+const tempValueEl = document.getElementById('temp-value');
+const tempUnitEl = document.getElementById('temp-unit');
+const nibpSysValueEl = document.getElementById('nibp-sys-value');
+const nibpDiaValueEl = document.getElementById('nibp-dia-value');
+const nibpMapValueEl = document.getElementById('nibp-map-value');
+const nibpTimeEl = document.getElementById('nibp-time');
+const updateButton = document.getElementById('update-button');
+const normalRanges = { hr: { min: 60, max: 100 }, spo2: { min: 95, max: 100 }, rr: { min: 12, max: 20 }, temp: { min: 97.0, max: 99.0 }, nibpSys: { min: 100, max: 120 }, nibpDia: { min: 60, max: 80 } };
+const wideRanges = { hr: { min: 40, max: 160 }, spo2: { min: 85, max: 100 }, rr: { min: 6, max: 35 }, temp: { min: 95.0, max: 104.0 }, nibpSys: { min: 80, max: 190 }, nibpDia: { min: 45, max: 110 } };
+function getRandomInt(min, max) { min = Math.ceil(min); max = Math.floor(max); return Math.floor(Math.random() * (max - min + 1)) + min; }
+function getRandomFloat(min, max, decimals) { const str = (Math.random() * (max - min) + min).toFixed(decimals); return parseFloat(str); }
+function updateHR(ranges) { hrValueEl.textContent = getRandomInt(ranges.hr.min, ranges.hr.max); }
+function updateSpO2(ranges) { spo2ValueEl.textContent = getRandomInt(ranges.spo2.min, ranges.spo2.max); }
+function updateRR(ranges) { rrValueEl.textContent = getRandomInt(ranges.rr.min, ranges.rr.max); }
+function updateTemp(ranges) { const tempF = getRandomFloat(ranges.temp.min, ranges.temp.max, 1); tempValueEl.textContent = tempF.toFixed(1); tempUnitEl.textContent = `°F (°C)`; }
+function updateNIBP(ranges) {
+    const systolic = getRandomInt(ranges.nibpSys.min, ranges.nibpSys.max);
+    const minDiastolic = ranges.nibpDia.min;
+    const maxPossibleDiastolic = Math.min(ranges.nibpDia.max, systolic - 15);
+    const effectiveMinDiastolic = Math.min(minDiastolic, maxPossibleDiastolic);
+    const diastolic = getRandomInt(effectiveMinDiastolic, maxPossibleDiastolic);
+    const map = Math.round(diastolic + (systolic - diastolic) / 3);
+    nibpSysValueEl.textContent = systolic; nibpDiaValueEl.textContent = diastolic; nibpMapValueEl.textContent = map;
+    const now = new Date();
+    nibpTimeEl.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+function updateVitals() {
+    const generateNormal = Math.random() < 0.5;
+    const rangesToUse = generateNormal ? normalRanges : wideRanges;
+    updateHR(rangesToUse); updateSpO2(rangesToUse); updateRR(rangesToUse); updateTemp(rangesToUse); updateNIBP(rangesToUse);
+}
+updateButton.addEventListener('click', updateVitals);
+</script>
+</body>
+</html>
