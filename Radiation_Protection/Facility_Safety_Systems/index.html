@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Facility Safety Systems</title>
+<style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; margin: 20px;
+            background-color: #f4f4f4; color: #333; display: flex; flex-direction: column; align-items: center; }
+        .container { background-color: #fff; padding: 25px 35px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 90%; max-width: 900px; margin-bottom: 30px; }
+        h1, h2, h3, h4 { color: #0056b3; }
+        h1 { text-align: center; border-bottom: 2px solid #0056b3; padding-bottom: 15px; margin-bottom: 30px; font-size: 2em; }
+        h2 { border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 30px; margin-bottom: 20px; color: #003d7a; font-size: 1.6em; }
+        h3 { color: #004085; margin-top: 25px; margin-bottom: 15px; font-size: 1.3em; }
+        h4 { color: #17a2b8; margin-top: 20px; margin-bottom: 10px; font-size: 1.1em; font-weight: 600; }
+        p, li { margin-bottom: 12px; font-size: 1.05em; }
+        ul, ol { margin-bottom: 15px; padding-left: 25px; }
+        strong { font-weight: 600; }
+        .highlight { background-color: #e6f7ff; padding: 2px 5px; border-radius: 3px; font-weight: 600; }
+        code { background-color: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; color: #c7254e; }
+        table.data-table { width: 90%; margin: 15px auto; border-collapse: collapse; }
+        table.data-table th, table.data-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        table.data-table th { background-color: #e9f5ff; color: #0056b3; font-weight: 600; }
+        table.data-table tr:nth-child(even) { background-color: #f9f9f9; }
+        .flip-lesson-container { border: 1px solid #b3d7ff; padding: 20px; border-radius: 8px; background-color: #f0f8ff; margin-bottom: 30px; }
+        .lesson-page { display: none; padding: 15px; border: 1px solid #ddeeff; background-color: #fff; border-radius: 5px; min-height: 400px; }
+        .lesson-page.active { display: block; }
+        .lesson-navigation { text-align: center; margin-top: 20px; }
+        .lesson-navigation button, .lesson-page .check-page-answers {
+            background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px;
+            cursor: pointer; font-size: 1em; margin: 5px 10px; transition: background-color 0.2s; }
+        .lesson-navigation button:hover, .lesson-page .check-page-answers:hover { background-color: #0056b3; }
+        .lesson-navigation button:disabled { background-color: #ccc; cursor: not-allowed; }
+        .page-indicator { font-style: italic; color: #555; margin: 10px 0; }
+        .key-principle { background-color: #e7f3ff; padding: 10px; margin-bottom:10px; border-left: 3px solid #007bff; border-radius: 3px; }
+        .interactive-question-block { background: #f9f9f9; padding: 15px; margin: 20px 0; border: 1px solid #e0e0e0; border-radius: 8px; }
+        .interactive-question-block .question-text { font-weight: bold; margin-bottom: 8px; font-size: 1em; color: #555; }
+        .interactive-question-block label { display: block; margin-left: 0; padding: 8px 12px; border-radius: 5px; cursor: pointer; border: 1px solid transparent; margin-bottom: 5px; }
+        .interactive-question-block input[type="radio"] { margin-right: 10px; vertical-align: middle; }
+        .interactive-question-block label:hover { background-color: #f0f8ff; }
+        .feedback-correct { background-color: #e8f8f0 !important; border-left: 4px solid #2ecc71 !important; }
+        .feedback-incorrect { background-color: #fdedec !important; border-left: 4px solid #e74c3c !important; }
+        .feedback-correct label.correct-option, .feedback-incorrect label.correct-option { font-weight: bold; color: #1E8449; }
+        .feedback-incorrect label.selected-incorrect { color: #A93226; }
+        .explanation { font-size: 0.9em; color: #444; margin-top: 5px; padding-left: 20px; }
+        .footer { text-align: center; margin-top: 30px; padding-top: 15px; border-top: 1px solid #ccc; font-size: 0.9em; color: #555; }
+
+        .nav-links-header { background-color: #fff; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 50; }
+</style>
+</head>
+<body>
+    <header class="nav-links-header">
+        <div style="max-width:900px;margin:0 auto;padding:12px 20px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;">
+            <strong style="color:#0056b3;">Facility Safety Systems</strong>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                <a href="../index.html" style="font-size:0.8rem;background:#0056b3;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Back to Tool Menu</a>
+                <a href="../../index.html" style="font-size:0.8rem;background:#0056b3;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Modalities Menu</a>
+                <a href="../../index.html" style="font-size:0.8rem;background:#64748b;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Main Workbook</a>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <h1>Facility Safety Systems</h1>
+        <div class="flip-lesson-container">
+            <h2>Interactive Lesson</h2>
+            <div id="lesson-page-1" class="lesson-page active">
+                <h3>Page 1: Controlling Exposure at the Facility Level</h3>
+                <p>Personal dosimeters tell you how much dose someone received &mdash; but a facility also needs physical and procedural systems that prevent unnecessary exposure from happening in the first place. This lesson covers area classification, warning systems, interlocks, and shielding design.</p>
+            </div>
+            <div id="lesson-page-2" class="lesson-page">
+                <h3>Page 2: Controlled vs. Uncontrolled Areas</h3>
+                <table class="data-table">
+                    <thead><tr><th>Area type</th><th>Definition</th><th>Dose limit</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>Controlled area</strong></td><td>Access is controlled specifically for radiation protection; must be clearly marked</td><td>1 mSv/week (50 mSv/year)</td></tr>
+                        <tr><td><strong>Uncontrolled area</strong></td><td>Individuals present aren't monitored by a radiation safety program</td><td>0.1 mSv/week (5 mSv/year)</td></tr>
+                    </tbody>
+                </table>
+                <p>Notice the uncontrolled area limit is 1/10th of the controlled area limit &mdash; the same public-vs-occupational ratio that shows up throughout radiation protection.</p>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">A hospital hallway adjacent to a treatment vault, where members of the public may walk without radiation monitoring, is best classified as:</p>
+                    <label><input type="radio" name="lq_page2_1" value="A"> A controlled area</label>
+                    <label><input type="radio" name="lq_page2_1" value="B"> An uncontrolled area</label>
+                    <div class="explanation" style="display:none;">B. Since the people present aren't monitored by a radiation safety program, this space is classified — and dose-limited — as uncontrolled.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(2)">Check Answer</button>
+            </div>
+            <div id="lesson-page-3" class="lesson-page">
+                <h3>Page 3: Warning Signs and Lights</h3>
+                <p>Entrances to treatment rooms must be clearly marked with signs warning of potential radiation presence.</p>
+                <div class="key-principle">
+                    <p><strong>Important distinction:</strong> warning lights (at the control panel, room entrance, and on the treatment machine) indicate the machine is <em>turned on</em> &mdash; they do <strong>not</strong> necessarily indicate radiation is actually being produced at that instant. Don't confuse "machine powered on" with "beam on."</p>
+                </div>
+            </div>
+            <div id="lesson-page-4" class="lesson-page">
+                <h3>Page 4: Door Interlocks</h3>
+                <p>Treatment room entrances are engineered so that opening the door automatically turns off the machine or returns a source to a safe shielded position. This is a hard physical safety mechanism, not just a procedural rule &mdash; it functions even if a therapist forgets a step.</p>
+            </div>
+            <div id="lesson-page-5" class="lesson-page">
+                <h3>Page 5: Staying Connected to the Patient</h3>
+                <p>Because the therapist must leave the room during beam-on, maintaining both visual and auditory contact with the patient is essential &mdash; typically via closed-circuit TV and a two-way intercom. This isn't just about patient comfort; it's how a therapist would immediately notice a medical emergency or a patient movement problem during treatment.</p>
+            </div>
+            <div id="lesson-page-6" class="lesson-page">
+                <h3>Page 6: Emergency Off Controls</h3>
+                <p>Emergency off buttons immediately remove electrical power from the treatment machine. They're placed in multiple locations for a reason &mdash; treatment room walls, on the treatment couch itself, near the exit, and at the control panel &mdash; so that whoever needs to stop the machine, wherever they are in the room, can reach one quickly.</p>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">Why are emergency off controls placed in multiple locations throughout the treatment room?</p>
+                    <label><input type="radio" name="lq_page6_1" value="A"> So whoever needs to stop the machine can reach a control quickly regardless of where they're standing</label>
+                    <label><input type="radio" name="lq_page6_1" value="B"> It's simply a regulatory formality with no practical purpose</label>
+                    <div class="explanation" style="display:none;">A. Multiple emergency-off locations exist so that in an actual emergency, someone doesn't have to cross the room to reach a single control.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(6)">Check Answer</button>
+            </div>
+            <div id="lesson-page-7" class="lesson-page">
+                <h3>Page 7: Mazes and Shielding Construction</h3>
+                <p>Treatment rooms are physically built to prevent radiation leakage and scattered radiation from escaping a high-dose area:</p>
+                <ul>
+                    <li><strong>Mazes</strong> &mdash; bent hallway entrances that force scattered radiation to bounce multiple times (losing energy each time) before it could reach an open doorway, instead of a straight shot out</li>
+                    <li><strong>Doors</strong> &mdash; lead-lined, often around 7 inches thick, and can weigh up to 4,200 lbs</li>
+                    <li><strong>Walls</strong> &mdash; thick concrete construction, engineered based on the beam energy the room is designed for</li>
+                </ul>
+                <p>This is why treatment vaults can't simply be relocated within a building without significant construction &mdash; the room itself is part of the radiation safety system.</p>
+            </div>
+            <div id="lesson-page-8" class="lesson-page">
+                <h3>Page 8: Wrap-Up</h3>
+                <p>You've covered controlled vs. uncontrolled area classification, warning signs and lights, door interlocks, patient communication systems, emergency off controls, and maze/shielding construction.</p>
+                <p>Together with Personnel Monitoring &amp; Dosimetry and ALARA, this completes the core radiation protection picture: how much dose is tracked, how it's limited by policy, and how the facility itself is physically built to control it.</p>
+            </div>
+
+            <div class="lesson-navigation">
+                <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled>Previous Page</button>
+                <span class="page-indicator" id="lessonPageIndicator">Page 1 of 8</span>
+                <button id="nextLessonPage" onclick="changeLessonPage(1)">Next Page</button>
+                <button id="startActivityButton" onclick="window.location.href='../index.html'" style="display:none; background-color: #28a745;">Back to Menu</button>
+            </div>
+        </div>
+        <div class="footer">Radiation Therapy E-Workbook &mdash; Radiation Protection</div>
+    </div>
+    <script>
+        let currentLessonPage = 1;
+        const totalLessonPages = 8;
+        const lessonPages = document.querySelectorAll('.lesson-page');
+        const prevLessonButton = document.getElementById('prevLessonPage');
+        const nextLessonButton = document.getElementById('nextLessonPage');
+        const lessonPageIndicator = document.getElementById('lessonPageIndicator');
+        const startActivityButton = document.getElementById('startActivityButton');
+        const lessonCorrectAnswers = {"lq_page2_1": "B", "lq_page6_1": "A"};
+        function displayLessonPage() {
+            lessonPages.forEach((page, index) => page.classList.toggle('active', index === currentLessonPage - 1));
+            prevLessonButton.disabled = currentLessonPage === 1;
+            nextLessonButton.style.display = currentLessonPage === totalLessonPages ? 'none' : 'inline-block';
+            startActivityButton.style.display = currentLessonPage === totalLessonPages ? 'inline-block' : 'none';
+            lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
+        }
+        function changeLessonPage(direction) {
+            currentLessonPage += direction;
+            if (currentLessonPage < 1) currentLessonPage = 1;
+            if (currentLessonPage > totalLessonPages) currentLessonPage = totalLessonPages;
+            displayLessonPage();
+        }
+        function checkPageAnswers(pageNumber) {
+            const questionsOnPage = document.querySelectorAll(`#lesson-page-${pageNumber} .interactive-question-block`);
+            questionsOnPage.forEach(block => {
+                const radio = block.querySelector('input[type="radio"]');
+                if (!radio) return;
+                const questionName = radio.name;
+                if (!lessonCorrectAnswers.hasOwnProperty(questionName)) return;
+                const correctAnswerValue = lessonCorrectAnswers[questionName];
+                const selectedRadio = block.querySelector(`input[name="${questionName}"]:checked`);
+                const explanationDiv = block.querySelector('.explanation');
+                block.classList.remove('feedback-correct', 'feedback-incorrect');
+                block.querySelectorAll('label').forEach(label => label.classList.remove('correct-option', 'selected-incorrect'));
+                if (explanationDiv) explanationDiv.style.display = 'none';
+                if (selectedRadio) {
+                    const userAnswer = selectedRadio.value;
+                    const userSelectedLabel = selectedRadio.parentElement;
+                    if (userAnswer === correctAnswerValue) {
+                        block.classList.add('feedback-correct');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('correct-option');
+                    } else {
+                        block.classList.add('feedback-incorrect');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('selected-incorrect');
+                        const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                        if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                    }
+                } else {
+                    block.classList.add('feedback-incorrect');
+                    const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                    if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                }
+                if (explanationDiv) explanationDiv.style.display = 'block';
+            });
+        }
+        displayLessonPage();
+    </script>
+</body>
+</html>
