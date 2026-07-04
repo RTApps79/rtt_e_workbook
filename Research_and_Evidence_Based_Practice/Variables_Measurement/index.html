@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Variables, Measurement, and Feasibility</title>
+<style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; margin: 20px;
+            background-color: #f4f4f4; color: #333; display: flex; flex-direction: column; align-items: center; }
+        .container { background-color: #fff; padding: 25px 35px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 90%; max-width: 900px; margin-bottom: 30px; }
+        h1, h2, h3, h4 { color: #0056b3; }
+        h1 { text-align: center; border-bottom: 2px solid #0056b3; padding-bottom: 15px; margin-bottom: 30px; font-size: 2em; }
+        h2 { border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 30px; margin-bottom: 20px; color: #003d7a; font-size: 1.6em; }
+        h3 { color: #004085; margin-top: 25px; margin-bottom: 15px; font-size: 1.3em; }
+        h4 { color: #17a2b8; margin-top: 20px; margin-bottom: 10px; font-size: 1.1em; font-weight: 600; }
+        p, li { margin-bottom: 12px; font-size: 1.05em; }
+        ul, ol { margin-bottom: 15px; padding-left: 25px; }
+        strong { font-weight: 600; }
+        .highlight { background-color: #e6f7ff; padding: 2px 5px; border-radius: 3px; font-weight: 600; }
+        code { background-color: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; color: #c7254e; }
+        table.data-table { width: 90%; margin: 15px auto; border-collapse: collapse; }
+        table.data-table th, table.data-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        table.data-table th { background-color: #e9f5ff; color: #0056b3; font-weight: 600; }
+        table.data-table tr:nth-child(even) { background-color: #f9f9f9; }
+        .flip-lesson-container { border: 1px solid #b3d7ff; padding: 20px; border-radius: 8px; background-color: #f0f8ff; margin-bottom: 30px; }
+        .lesson-page { display: none; padding: 15px; border: 1px solid #ddeeff; background-color: #fff; border-radius: 5px; min-height: 400px; }
+        .lesson-page.active { display: block; }
+        .lesson-navigation { text-align: center; margin-top: 20px; }
+        .lesson-navigation button, .lesson-page .check-page-answers {
+            background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px;
+            cursor: pointer; font-size: 1em; margin: 5px 10px; transition: background-color 0.2s; }
+        .lesson-navigation button:hover, .lesson-page .check-page-answers:hover { background-color: #0056b3; }
+        .lesson-navigation button:disabled { background-color: #ccc; cursor: not-allowed; }
+        .page-indicator { font-style: italic; color: #555; margin: 10px 0; }
+        .key-principle { background-color: #e7f3ff; padding: 10px; margin-bottom:10px; border-left: 3px solid #007bff; border-radius: 3px; }
+        .interactive-question-block { background: #f9f9f9; padding: 15px; margin: 20px 0; border: 1px solid #e0e0e0; border-radius: 8px; }
+        .interactive-question-block .question-text { font-weight: bold; margin-bottom: 8px; font-size: 1em; color: #555; }
+        .interactive-question-block label { display: block; margin-left: 0; padding: 8px 12px; border-radius: 5px; cursor: pointer; border: 1px solid transparent; margin-bottom: 5px; }
+        .interactive-question-block input[type="radio"] { margin-right: 10px; vertical-align: middle; }
+        .interactive-question-block label:hover { background-color: #f0f8ff; }
+        .feedback-correct { background-color: #e8f8f0 !important; border-left: 4px solid #2ecc71 !important; }
+        .feedback-incorrect { background-color: #fdedec !important; border-left: 4px solid #e74c3c !important; }
+        .feedback-correct label.correct-option, .feedback-incorrect label.correct-option { font-weight: bold; color: #1E8449; }
+        .feedback-incorrect label.selected-incorrect { color: #A93226; }
+        .explanation { font-size: 0.9em; color: #444; margin-top: 5px; padding-left: 20px; }
+        .footer { text-align: center; margin-top: 30px; padding-top: 15px; border-top: 1px solid #ccc; font-size: 0.9em; color: #555; }
+
+        .nav-links-header { background-color: #fff; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 50; }
+</style>
+</head>
+<body>
+    <header class="nav-links-header">
+        <div style="max-width:900px;margin:0 auto;padding:12px 20px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;">
+            <strong style="color:#0056b3;">Variables &amp; Measurement</strong>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                <a href="../index.html" style="font-size:0.8rem;background:#0056b3;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Back to Tool Menu</a>
+                <a href="../../index.html" style="font-size:0.8rem;background:#0056b3;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Modalities Menu</a>
+                <a href="../../index.html" style="font-size:0.8rem;background:#64748b;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Main Workbook</a>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <h1>Variables &amp; Measurement</h1>
+        <div class="flip-lesson-container">
+            <h2>Interactive Lesson</h2>
+            <div id="lesson-page-1" class="lesson-page active">
+                <h3>Page 1: A Great Idea Needs Measurable Variables</h3>
+                <p>Once you've picked a study design, you need to decide how to actually build it. In research, a brilliant idea is useless if you can't accurately define and measure the outcomes involved.</p>
+            </div>
+            <div id="lesson-page-2" class="lesson-page">
+                <h3>Page 2: Independent and Dependent Variables</h3>
+                <p>Every research question tries to figure out if one thing affects another. To study that scientifically, label the pieces:</p>
+                <ul>
+                    <li><strong>Independent Variable (IV)</strong> &mdash; the cause. The variable the researcher manipulates, introduces, or categorizes.</li>
+                    <li><strong>Dependent Variable (DV)</strong> &mdash; the effect. The outcome being measured, which depends on the IV.</li>
+                </ul>
+            </div>
+            <div id="lesson-page-3" class="lesson-page">
+                <h3>Page 3: Operationalization</h3>
+                <p>You can't measure abstract concepts like "comfort" or "efficiency" directly &mdash; you have to <span class="highlight">operationalize</span> them into concrete, measurable data.</p>
+                <div class="key-principle">
+                    <p><strong>Vague concept:</strong> IV = Music, DV = Patient anxiety.</p>
+                    <p><strong>Operationalized:</strong> IV = listening to a patient-selected playlist via headphones vs. no headphones. DV = the patient's numerical score on the State-Trait Anxiety Inventory (STAI).</p>
+                </div>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">Which of these is a properly operationalized dependent variable?</p>
+                    <label><input type="radio" name="lq_page3_1" value="A"> Patient comfort</label>
+                    <label><input type="radio" name="lq_page3_1" value="B"> Patient's numerical score on a standardized anxiety survey</label>
+                    <div class="explanation" style="display:none;">B. "Comfort" is abstract; a specific, standardized, numerical measure is what makes a variable actually measurable.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(3)">Check Answer</button>
+            </div>
+            <div id="lesson-page-4" class="lesson-page">
+                <h3>Page 4: Confounding Variables</h3>
+                <p>The clinical environment is messy. An IV rarely affects a DV in a perfect vacuum &mdash; you have to anticipate "hidden" variables that can skew your data.</p>
+                <div class="key-principle">
+                    <p><strong>Confounding variable ("the third wheel"):</strong> an outside influence that changes the effect of both the IV and DV, making it look like there's a direct relationship when there isn't.</p>
+                    <p><strong>Example:</strong> studying whether a new skin cream (IV) reduces radiation dermatitis (DV) &mdash; but some patients are on concurrent chemotherapy, which independently worsens skin reactions. Chemotherapy is confounding your results.</p>
+                </div>
+            </div>
+            <div id="lesson-page-5" class="lesson-page">
+                <h3>Page 5: Control and Moderating Variables</h3>
+                <div class="key-principle">
+                    <p><strong>Control variable ("the bouncer"):</strong> a confounding variable you've identified and deliberately kept constant to neutralize it. Fix the skin cream study by only enrolling patients <em>not</em> receiving concurrent chemotherapy &mdash; chemotherapy is now a controlled variable.</p>
+                    <p><strong>Moderating variable ("the volume dial"):</strong> a variable that changes the strength or direction of the IV&ndash;DV relationship without causing the outcome itself. Example: studying whether Deep Inspiration Breath Hold (IV) reduces mean heart dose (DV) &mdash; but it works far better for some patients than others because chest wall anatomy moderates how effective it is.</p>
+                </div>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">Two useful questions when hunting for hidden variables: "What else could cause my outcome besides my intervention?" finds confounders. What question helps find moderators?</p>
+                    <label><input type="radio" name="lq_page5_1" value="A"> "Would my intervention work better for some people than others, and why?"</label>
+                    <label><input type="radio" name="lq_page5_1" value="B"> "Did I remember to randomize my sample?"</label>
+                    <div class="explanation" style="display:none;">A. Moderators change how well an intervention works for different subgroups &mdash; asking where the effect is stronger or weaker points you toward them.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(5)">Check Answer</button>
+            </div>
+            <div id="lesson-page-6" class="lesson-page">
+                <h3>Page 6: Levels of Measurement &mdash; NOIR</h3>
+                <p>Once a dependent variable is operationalized, classify its level of measurement. This single decision dictates which statistical test you're allowed to use later. Remember it as <span class="highlight">NOIR</span>:</p>
+                <table class="data-table">
+                    <thead><tr><th>Level</th><th>Definition</th><th>Example</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>N</strong>ominal</td><td>Categories with no inherent order</td><td>Sex, treatment site, mask type</td></tr>
+                        <tr><td><strong>O</strong>rdinal</td><td>Ranked categories, unequal distance between ranks</td><td>Likert scales, toxicity grades</td></tr>
+                        <tr><td><strong>I</strong>nterval</td><td>Equal distance between points, no true zero</td><td>Temperature in Celsius</td></tr>
+                        <tr><td><strong>R</strong>atio</td><td>Equal intervals with a true zero</td><td>Dose (Gy), setup error (mm), test scores (%)</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="lesson-page-7" class="lesson-page">
+                <h3>Page 7: The Feasibility Reality Check</h3>
+                <p>Before finalizing your variables, run a feasibility check against what you can actually pull off in your available time and setting:</p>
+                <ul>
+                    <li><strong>Sample size:</strong> quantitative studies generally need at least 30 data points per group for reasonable statistical power. Can you realistically gather that much data in your available window?</li>
+                    <li><strong>Retrospective vs. prospective:</strong> prospective studies (collecting new data as it happens) are highly susceptible to delays. Retrospective studies (using existing historical data) are usually faster and more feasible on a tight timeline.</li>
+                    <li><strong>Scope and permissions:</strong> as a student researcher, you typically cannot alter a patient's actual treatment. Workflow observations, educational tools, and anonymous surveys are usually far easier to get approved than anything touching clinical care decisions.</li>
+                </ul>
+            </div>
+            <div id="lesson-page-8" class="lesson-page">
+                <h3>Page 8: Wrap-Up</h3>
+                <p>You've covered independent and dependent variables, operationalization, confounding/control/moderating variables, the NOIR levels of measurement, and a practical feasibility check.</p>
+                <p>Next: your variable's level of measurement determines exactly which statistical test is valid for testing your hypothesis &mdash; that's where we're headed next.</p>
+            </div>
+
+            <div class="lesson-navigation">
+                <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled>Previous Page</button>
+                <span class="page-indicator" id="lessonPageIndicator">Page 1 of 8</span>
+                <button id="nextLessonPage" onclick="changeLessonPage(1)">Next Page</button>
+                <button id="startActivityButton" onclick="window.location.href='../index.html'" style="display:none; background-color: #28a745;">Back to Menu</button>
+            </div>
+        </div>
+        <div class="footer">Radiation Therapy E-Workbook &mdash; Research and Evidence-Based Practice</div>
+    </div>
+    <script>
+        let currentLessonPage = 1;
+        const totalLessonPages = 8;
+        const lessonPages = document.querySelectorAll('.lesson-page');
+        const prevLessonButton = document.getElementById('prevLessonPage');
+        const nextLessonButton = document.getElementById('nextLessonPage');
+        const lessonPageIndicator = document.getElementById('lessonPageIndicator');
+        const startActivityButton = document.getElementById('startActivityButton');
+        const lessonCorrectAnswers = {"lq_page3_1": "B", "lq_page5_1": "A"};
+        function displayLessonPage() {
+            lessonPages.forEach((page, index) => page.classList.toggle('active', index === currentLessonPage - 1));
+            prevLessonButton.disabled = currentLessonPage === 1;
+            nextLessonButton.style.display = currentLessonPage === totalLessonPages ? 'none' : 'inline-block';
+            startActivityButton.style.display = currentLessonPage === totalLessonPages ? 'inline-block' : 'none';
+            lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
+        }
+        function changeLessonPage(direction) {
+            currentLessonPage += direction;
+            if (currentLessonPage < 1) currentLessonPage = 1;
+            if (currentLessonPage > totalLessonPages) currentLessonPage = totalLessonPages;
+            displayLessonPage();
+        }
+        function checkPageAnswers(pageNumber) {
+            const questionsOnPage = document.querySelectorAll(`#lesson-page-${pageNumber} .interactive-question-block`);
+            questionsOnPage.forEach(block => {
+                const radio = block.querySelector('input[type="radio"]');
+                if (!radio) return;
+                const questionName = radio.name;
+                if (!lessonCorrectAnswers.hasOwnProperty(questionName)) return;
+                const correctAnswerValue = lessonCorrectAnswers[questionName];
+                const selectedRadio = block.querySelector(`input[name="${questionName}"]:checked`);
+                const explanationDiv = block.querySelector('.explanation');
+                block.classList.remove('feedback-correct', 'feedback-incorrect');
+                block.querySelectorAll('label').forEach(label => label.classList.remove('correct-option', 'selected-incorrect'));
+                if (explanationDiv) explanationDiv.style.display = 'none';
+                if (selectedRadio) {
+                    const userAnswer = selectedRadio.value;
+                    const userSelectedLabel = selectedRadio.parentElement;
+                    if (userAnswer === correctAnswerValue) {
+                        block.classList.add('feedback-correct');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('correct-option');
+                    } else {
+                        block.classList.add('feedback-incorrect');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('selected-incorrect');
+                        const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                        if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                    }
+                } else {
+                    block.classList.add('feedback-incorrect');
+                    const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                    if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                }
+                if (explanationDiv) explanationDiv.style.display = 'block';
+            });
+        }
+        displayLessonPage();
+    </script>
+</body>
+</html>
