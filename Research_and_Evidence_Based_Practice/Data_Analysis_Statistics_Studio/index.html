@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Analysis Using Statistics Studio</title>
+<style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; margin: 20px;
+            background-color: #f4f4f4; color: #333; display: flex; flex-direction: column; align-items: center; }
+        .container { background-color: #fff; padding: 25px 35px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 90%; max-width: 900px; margin-bottom: 30px; }
+        h1, h2, h3, h4 { color: #0056b3; }
+        h1 { text-align: center; border-bottom: 2px solid #0056b3; padding-bottom: 15px; margin-bottom: 30px; font-size: 2em; }
+        h2 { border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 30px; margin-bottom: 20px; color: #003d7a; font-size: 1.6em; }
+        h3 { color: #004085; margin-top: 25px; margin-bottom: 15px; font-size: 1.3em; }
+        h4 { color: #17a2b8; margin-top: 20px; margin-bottom: 10px; font-size: 1.1em; font-weight: 600; }
+        p, li { margin-bottom: 12px; font-size: 1.05em; }
+        ul, ol { margin-bottom: 15px; padding-left: 25px; }
+        strong { font-weight: 600; }
+        .highlight { background-color: #e6f7ff; padding: 2px 5px; border-radius: 3px; font-weight: 600; }
+        code { background-color: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; color: #c7254e; }
+        table.data-table { width: 90%; margin: 15px auto; border-collapse: collapse; }
+        table.data-table th, table.data-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        table.data-table th { background-color: #e9f5ff; color: #0056b3; font-weight: 600; }
+        table.data-table tr:nth-child(even) { background-color: #f9f9f9; }
+        .flip-lesson-container { border: 1px solid #b3d7ff; padding: 20px; border-radius: 8px; background-color: #f0f8ff; margin-bottom: 30px; }
+        .lesson-page { display: none; padding: 15px; border: 1px solid #ddeeff; background-color: #fff; border-radius: 5px; min-height: 400px; }
+        .lesson-page.active { display: block; }
+        .lesson-navigation { text-align: center; margin-top: 20px; }
+        .lesson-navigation button, .lesson-page .check-page-answers {
+            background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px;
+            cursor: pointer; font-size: 1em; margin: 5px 10px; transition: background-color 0.2s; }
+        .lesson-navigation button:hover, .lesson-page .check-page-answers:hover { background-color: #0056b3; }
+        .lesson-navigation button:disabled { background-color: #ccc; cursor: not-allowed; }
+        .page-indicator { font-style: italic; color: #555; margin: 10px 0; }
+        .key-principle { background-color: #e7f3ff; padding: 10px; margin-bottom:10px; border-left: 3px solid #007bff; border-radius: 3px; }
+        .interactive-question-block { background: #f9f9f9; padding: 15px; margin: 20px 0; border: 1px solid #e0e0e0; border-radius: 8px; }
+        .interactive-question-block .question-text { font-weight: bold; margin-bottom: 8px; font-size: 1em; color: #555; }
+        .interactive-question-block label { display: block; margin-left: 0; padding: 8px 12px; border-radius: 5px; cursor: pointer; border: 1px solid transparent; margin-bottom: 5px; }
+        .interactive-question-block input[type="radio"] { margin-right: 10px; vertical-align: middle; }
+        .interactive-question-block label:hover { background-color: #f0f8ff; }
+        .feedback-correct { background-color: #e8f8f0 !important; border-left: 4px solid #2ecc71 !important; }
+        .feedback-incorrect { background-color: #fdedec !important; border-left: 4px solid #e74c3c !important; }
+        .feedback-correct label.correct-option, .feedback-incorrect label.correct-option { font-weight: bold; color: #1E8449; }
+        .feedback-incorrect label.selected-incorrect { color: #A93226; }
+        .explanation { font-size: 0.9em; color: #444; margin-top: 5px; padding-left: 20px; }
+        .footer { text-align: center; margin-top: 30px; padding-top: 15px; border-top: 1px solid #ccc; font-size: 0.9em; color: #555; }
+
+        .nav-links-header { background-color: #fff; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 50; }
+</style>
+</head>
+<body>
+    <header class="nav-links-header">
+        <div style="max-width:900px;margin:0 auto;padding:12px 20px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;">
+            <strong style="color:#0056b3;">Data Analysis Using Statistics Studio</strong>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                <a href="../index.html" style="font-size:0.8rem;background:#0056b3;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Back to Tool Menu</a>
+                <a href="../../index.html" style="font-size:0.8rem;background:#0056b3;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Modalities Menu</a>
+                <a href="../../index.html" style="font-size:0.8rem;background:#64748b;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Main Workbook</a>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <h1>Data Analysis Using Statistics Studio</h1>
+        <div class="flip-lesson-container">
+            <h2>Interactive Lesson</h2>
+            <div id="lesson-page-1" class="lesson-page active">
+                <h3>Page 1: No SPSS Required</h3>
+                <p>This module traditionally requires access to IBM SPSS through a university VDI or portal login. Here, you'll run the exact same five analyses using <strong>RTApps Statistics Studio</strong> &mdash; a free, in-browser statistics tool built for this course. No installation, no license, no VDI wait times. Your data never leaves your browser.</p>
+                <p>The statistical reasoning is identical either way &mdash; you're still forming hypotheses, choosing the right test, and interpreting output. Only the click-path changes.</p>
+            </div>
+            <div id="lesson-page-2" class="lesson-page">
+                <h3>Page 2: Translating SPSS Concepts to Statistics Studio</h3>
+                <p>If you've seen SPSS terminology before, here's the direct translation:</p>
+                <table class="data-table">
+                    <thead><tr><th>SPSS term</th><th>Statistics Studio equivalent</th></tr></thead>
+                    <tbody>
+                        <tr><td>Data View</td><td>The dataset preview table after you load a CSV</td></tr>
+                        <tr><td>Variable View</td><td>Not needed &mdash; Statistics Studio detects numeric vs. categorical columns automatically</td></tr>
+                        <tr><td>Output Viewer</td><td>The results cards that appear below each analysis panel</td></tr>
+                        <tr><td>Sig. (2-tailed)</td><td><strong>p</strong> &mdash; shown directly in each results card</td></tr>
+                        <tr><td>Analyze menu</td><td>The numbered sidebar (Data, Descriptive, Frequencies, Group Tests, Relationships, Categorical&hellip;)</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="lesson-page-3" class="lesson-page">
+                <h3>Page 3: Loading the Dataset</h3>
+                <p>Open Statistics Studio and go to <strong>1. Data</strong>. Upload <a href="RT_PatientOutcomes_Sample.csv" download class="highlight">RT_PatientOutcomes_Sample.csv</a> directly &mdash; no import wizard, no manual variable type declarations.</p>
+                <div class="key-principle">
+                    <p><strong>One real prep step remains:</strong> for the Chi-Square analysis later, you'll need <em>Satisfaction_Score</em> (1&ndash;5) collapsed into a two-level <em>High/Low</em> category. Do this in a spreadsheet <em>before</em> uploading &mdash; add a column with a formula like <code>=IF(Satisfaction_Score&gt;=4,"High","Low")</code>, save, then upload. This is a completely standard data-prep step in any real research workflow, not something unique to SPSS.</p>
+                </div>
+            </div>
+            <div id="lesson-page-4" class="lesson-page">
+                <h3>Page 4: Analysis 1 &mdash; Descriptive Statistics</h3>
+                <p>Go to <strong>2. Descriptive</strong>. Select <em>Age</em>, run it, record the mean and SD. Repeat for <em>Anxiety_Pre</em>, <em>Anxiety_Post</em>, <em>Setup_Error_mm</em>, and <em>Fractions_Completed</em>.</p>
+                <p>For <em>Treatment_Site</em> and <em>Sex</em>, go to <strong>3. Frequencies</strong> instead &mdash; these are categorical, so you want counts and percentages per category, not a mean.</p>
+                <p>Every published study opens with this step: describe your sample before testing anything.</p>
+            </div>
+            <div id="lesson-page-5" class="lesson-page">
+                <h3>Page 5: Analysis 2 &mdash; Paired-Samples t-Test (Tests H1)</h3>
+                <p>Go to <strong>4. Group Tests</strong> &rarr; <em>Paired-samples t test</em>. Set <em>Anxiety_Pre</em> as the first variable and <em>Anxiety_Post</em> as the second. Run it.</p>
+                <div class="key-principle">
+                    <p>Same 50 patients, measured twice &mdash; that's what makes this <em>paired</em> rather than independent. Record the mean difference, t, df, p, and the 95% confidence interval directly from the results card.</p>
+                </div>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">Why is a paired t-test the correct choice for comparing Anxiety_Pre to Anxiety_Post?</p>
+                    <label><input type="radio" name="lq_page5_1" value="A"> Because there are more than two groups</label>
+                    <label><input type="radio" name="lq_page5_1" value="B"> Because the same patients were measured at both time points</label>
+                    <div class="explanation" style="display:none;">B. Pairing accounts for each patient's own baseline, which is only valid when the same subjects are measured twice.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(5)">Check Answer</button>
+            </div>
+            <div id="lesson-page-6" class="lesson-page">
+                <h3>Page 6: Analysis 3 &mdash; One-Way ANOVA (Tests H2)</h3>
+                <p>Still in <strong>4. Group Tests</strong>, find the <em>One-way ANOVA</em> card. Set <em>Treatment_Site</em> as the group variable and <em>Setup_Error_mm</em> as the numeric outcome. Run it.</p>
+                <div class="key-principle">
+                    <p><strong>One real difference from SPSS:</strong> Statistics Studio's post-hoc pairwise comparisons use a <strong>Bonferroni correction</strong> rather than Tukey HSD. Both control for the fact that testing multiple pairs inflates your false-positive risk &mdash; Bonferroni is simply a more conservative, more transparent method to compute by hand or in open-source code. Your conclusions (which pairs differ) will typically match; the exact p-values will not match an SPSS Tukey table digit-for-digit.</p>
+                </div>
+                <p>Record the F statistic, both degrees of freedom, p, and &eta;&sup2; from the ANOVA table, then the three pairwise comparisons from the post-hoc table.</p>
+            </div>
+            <div id="lesson-page-7" class="lesson-page">
+                <h3>Page 7: Analysis 4 &mdash; Chi-Square Test (Tests H3)</h3>
+                <p>Go to <strong>6. Categorical</strong>. Set <em>Education_Received</em> as the row variable and your recoded <em>Sat_HighLow</em> column as the column variable (the one you created in Page 3). Run it.</p>
+                <p>Check the observed and expected counts table first &mdash; if any expected cell count is below 5, that's a real limitation to report, not something to ignore.</p>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">If an expected cell count in your chi-square table is below 5, what should you do?</p>
+                    <label><input type="radio" name="lq_page7_1" value="A"> Report it as a limitation of the chi-square assumption</label>
+                    <label><input type="radio" name="lq_page7_1" value="B"> Ignore it since the test still ran</label>
+                    <div class="explanation" style="display:none;">A. Expected counts below 5 violate a key chi-square assumption and should be explicitly noted as a limitation.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(7)">Check Answer</button>
+            </div>
+            <div id="lesson-page-8" class="lesson-page">
+                <h3>Page 8: Analysis 5 &mdash; Pearson Correlation (Tests H4)</h3>
+                <p>Go to <strong>5. Relationships</strong> &rarr; <em>Pearson correlation</em>. Set <em>Therapist_Experience_Yrs</em> as X and <em>Setup_Error_mm</em> as Y. Run it &mdash; Statistics Studio also draws the scatterplot automatically.</p>
+                <p>Record r, p, direction, and strength (Statistics Studio labels the strength descriptor for you using Cohen's 1988 guidelines &mdash; no need to look it up separately).</p>
+            </div>
+            <div id="lesson-page-9" class="lesson-page">
+                <h3>Page 9: Synthesis</h3>
+                <p>Across your four hypothesis tests (H1&ndash;H4), you now have a decision for each: reject or fail to reject the null. Pull those four decisions together and think about which single finding would be most actionable for a radiation therapy department to act on immediately.</p>
+                <p><strong>Applying this to your own work:</strong> which of these five analysis types &mdash; descriptive, paired t, ANOVA, chi-square, or Pearson r &mdash; is most likely to fit a research question you'd want to investigate yourself? That choice comes directly from the variables you'd be measuring and their NOIR level (see the Variables &amp; Measurement lesson).</p>
+            </div>
+            <div id="lesson-page-10" class="lesson-page">
+                <h3>Page 10: Ready for the Worksheet</h3>
+                <p>You've now covered the full workflow: loading data, descriptive statistics, paired t-test, one-way ANOVA with Bonferroni post-hoc, chi-square, and Pearson correlation &mdash; all without installing anything.</p>
+                <p>The practice worksheet walks through all five analyses on this same dataset, with APA-style write-up templates for each. Click below to open it.</p>
+            </div>
+
+            <div class="lesson-navigation">
+                <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled>Previous Page</button>
+                <span class="page-indicator" id="lessonPageIndicator">Page 1 of 10</span>
+                <button id="nextLessonPage" onclick="changeLessonPage(1)">Next Page</button>
+                <button id="startActivityButton" onclick="window.location.href='worksheet.html'" style="display:none; background-color: #28a745;">Start Activity</button>
+            </div>
+        </div>
+        <div class="footer">Radiation Therapy E-Workbook &mdash; Research and Evidence-Based Practice</div>
+    </div>
+    <script>
+        let currentLessonPage = 1;
+        const totalLessonPages = 10;
+        const lessonPages = document.querySelectorAll('.lesson-page');
+        const prevLessonButton = document.getElementById('prevLessonPage');
+        const nextLessonButton = document.getElementById('nextLessonPage');
+        const lessonPageIndicator = document.getElementById('lessonPageIndicator');
+        const startActivityButton = document.getElementById('startActivityButton');
+        const lessonCorrectAnswers = {"lq_page5_1": "B", "lq_page7_1": "A"};
+        function displayLessonPage() {
+            lessonPages.forEach((page, index) => page.classList.toggle('active', index === currentLessonPage - 1));
+            prevLessonButton.disabled = currentLessonPage === 1;
+            nextLessonButton.style.display = currentLessonPage === totalLessonPages ? 'none' : 'inline-block';
+            startActivityButton.style.display = currentLessonPage === totalLessonPages ? 'inline-block' : 'none';
+            lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
+        }
+        function changeLessonPage(direction) {
+            currentLessonPage += direction;
+            if (currentLessonPage < 1) currentLessonPage = 1;
+            if (currentLessonPage > totalLessonPages) currentLessonPage = totalLessonPages;
+            displayLessonPage();
+        }
+        function checkPageAnswers(pageNumber) {
+            const questionsOnPage = document.querySelectorAll(`#lesson-page-${pageNumber} .interactive-question-block`);
+            questionsOnPage.forEach(block => {
+                const radio = block.querySelector('input[type="radio"]');
+                if (!radio) return;
+                const questionName = radio.name;
+                if (!lessonCorrectAnswers.hasOwnProperty(questionName)) return;
+                const correctAnswerValue = lessonCorrectAnswers[questionName];
+                const selectedRadio = block.querySelector(`input[name="${questionName}"]:checked`);
+                const explanationDiv = block.querySelector('.explanation');
+                block.classList.remove('feedback-correct', 'feedback-incorrect');
+                block.querySelectorAll('label').forEach(label => label.classList.remove('correct-option', 'selected-incorrect'));
+                if (explanationDiv) explanationDiv.style.display = 'none';
+                if (selectedRadio) {
+                    const userAnswer = selectedRadio.value;
+                    const userSelectedLabel = selectedRadio.parentElement;
+                    if (userAnswer === correctAnswerValue) {
+                        block.classList.add('feedback-correct');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('correct-option');
+                    } else {
+                        block.classList.add('feedback-incorrect');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('selected-incorrect');
+                        const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                        if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                    }
+                } else {
+                    block.classList.add('feedback-incorrect');
+                    const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                    if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                }
+                if (explanationDiv) explanationDiv.style.display = 'block';
+            });
+        }
+        displayLessonPage();
+    </script>
+</body>
+</html>
