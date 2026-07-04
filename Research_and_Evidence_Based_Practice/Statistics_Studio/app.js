@@ -125,7 +125,6 @@
     $("runFrequency").addEventListener("click", runFrequency);
     $("runIndependentT").addEventListener("click", runIndependentT);
     $("runPairedT").addEventListener("click", runPairedT);
-    $("runAnova").addEventListener("click", runAnova);
     $("runCorrelation").addEventListener("click", runCorrelation);
     $("runRegression").addEventListener("click", runRegression);
     $("runChiSquare").addEventListener("click", runChiSquare);
@@ -238,8 +237,6 @@
     fillSelect("indGroupB", [], false);
     fillSelect("pairedBeforeVar", numeric, false);
     fillSelect("pairedAfterVar", numeric, false);
-    fillSelect("anovaGroupVar", categorical, false);
-    fillSelect("anovaNumericVar", numeric, false);
     fillSelect("corrXVar", numeric, false);
     fillSelect("corrYVar", numeric, false);
     fillSelect("regXVar", numeric, false);
@@ -370,34 +367,6 @@
         <div class="result-card"><h3>APA-style result</h3><div class="interpretation">${esc(S.apaT(r))} The paired difference ${esc(S.significancePhrase(r.p))}.</div></div>
         <div class="result-card"><h3>Assumption checklist</h3>${assumptionList(r.assumptions)}</div>`;
       recordResult("paired_t_test", r);
-    } catch (err) { errorResult("groupResults", err); }
-  }
-
-  function runAnova() {
-    try {
-      requireData();
-      const groupVar = $("anovaGroupVar").value;
-      const numericVar = $("anovaNumericVar").value;
-      const r = S.oneWayANOVA(state.rows, groupVar, numericVar);
-      const groupRows = r.groups.map(g => [g.key, g.n, S.formatNumber(g.mean, 3), S.formatNumber(g.sd, 3)]);
-      const anovaRows = [
-        ["Between groups", S.formatNumber(r.ssBetween, 3), r.dfBetween, S.formatNumber(r.msBetween, 3), S.formatNumber(r.F, 3), S.formatP(r.p)],
-        ["Within groups", S.formatNumber(r.ssWithin, 3), r.dfWithin, S.formatNumber(r.msWithin, 3), "—", "—"],
-        ["Total", S.formatNumber(r.ssTotal, 3), r.dfBetween + r.dfWithin, "—", "—", "—"]
-      ];
-      const compRows = r.comparisons.map(c => [
-        `${c.groupA} vs. ${c.groupB}`, S.formatNumber(c.meanDifference, 3), S.formatNumber(c.t, 3),
-        S.formatP(c.pRaw), S.formatP(c.pBonferroni)
-      ]);
-      $("groupResults").innerHTML = `
-        <div class="result-card"><h3>Group descriptives</h3>${simpleTable(["Group", "N", "Mean", "SD"], groupRows)}</div>
-        <div class="result-card"><h3>${esc(r.method)}</h3>${simpleTable(["Source", "SS", "df", "MS", "F", "p"], anovaRows)}
-          <p class="help-text mt-1">&eta;&sup2; = ${S.formatNumber(r.etaSquared, 3)}</p></div>
-        <div class="result-card"><h3>Pairwise comparisons (Bonferroni-corrected)</h3>${simpleTable(["Comparison", "Mean diff.", "t", "p (raw)", "p (Bonferroni)"], compRows)}
-          <p class="help-text mt-1">Bonferroni correction multiplies each raw p-value by the number of comparisons (${r.comparisons.length}), capped at 1.0. This is a standard, transparent alternative to Tukey HSD.</p></div>
-        <div class="result-card"><h3>APA-style result</h3><div class="interpretation">${esc(S.apaAnova(r))} The overall difference across groups ${esc(S.significancePhrase(r.p))}.</div></div>
-        <div class="result-card"><h3>Assumption checklist</h3>${assumptionList(r.assumptions)}</div>`;
-      recordResult("one_way_anova", r);
     } catch (err) { errorResult("groupResults", err); }
   }
 
