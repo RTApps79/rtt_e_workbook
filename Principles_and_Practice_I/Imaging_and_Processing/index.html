@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Imaging and Processing in Radiation Oncology</title>
+<style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; margin: 20px;
+            background-color: #f4f4f4; color: #333; display: flex; flex-direction: column; align-items: center; }
+        .container { background-color: #fff; padding: 25px 35px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 90%; max-width: 900px; margin-bottom: 30px; }
+        h1, h2, h3, h4 { color: #0056b3; }
+        h1 { text-align: center; border-bottom: 2px solid #0056b3; padding-bottom: 15px; margin-bottom: 30px; font-size: 2em; }
+        h2 { border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 30px; margin-bottom: 20px; color: #003d7a; font-size: 1.6em; }
+        h3 { color: #004085; margin-top: 25px; margin-bottom: 15px; font-size: 1.3em; }
+        h4 { color: #17a2b8; margin-top: 20px; margin-bottom: 10px; font-size: 1.1em; font-weight: 600; }
+        p, li { margin-bottom: 12px; font-size: 1.05em; }
+        ul, ol { margin-bottom: 15px; padding-left: 25px; }
+        strong { font-weight: 600; }
+        .highlight { background-color: #e6f7ff; padding: 2px 5px; border-radius: 3px; font-weight: 600; }
+        code { background-color: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; color: #c7254e; }
+        table.data-table { width: 90%; margin: 15px auto; border-collapse: collapse; }
+        table.data-table th, table.data-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        table.data-table th { background-color: #e9f5ff; color: #0056b3; font-weight: 600; }
+        table.data-table tr:nth-child(even) { background-color: #f9f9f9; }
+        .flip-lesson-container { border: 1px solid #b3d7ff; padding: 20px; border-radius: 8px; background-color: #f0f8ff; margin-bottom: 30px; }
+        .lesson-page { display: none; padding: 15px; border: 1px solid #ddeeff; background-color: #fff; border-radius: 5px; min-height: 400px; }
+        .lesson-page.active { display: block; }
+        .lesson-navigation { text-align: center; margin-top: 20px; }
+        .lesson-navigation button, .lesson-page .check-page-answers {
+            background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px;
+            cursor: pointer; font-size: 1em; margin: 5px 10px; transition: background-color 0.2s; }
+        .lesson-navigation button:hover, .lesson-page .check-page-answers:hover { background-color: #0056b3; }
+        .lesson-navigation button:disabled { background-color: #ccc; cursor: not-allowed; }
+        .page-indicator { font-style: italic; color: #555; margin: 10px 0; }
+        .key-principle { background-color: #e7f3ff; padding: 10px; margin-bottom:10px; border-left: 3px solid #007bff; border-radius: 3px; }
+        .interactive-question-block { background: #f9f9f9; padding: 15px; margin: 20px 0; border: 1px solid #e0e0e0; border-radius: 8px; }
+        .interactive-question-block .question-text { font-weight: bold; margin-bottom: 8px; font-size: 1em; color: #555; }
+        .interactive-question-block label { display: block; margin-left: 0; padding: 8px 12px; border-radius: 5px; cursor: pointer; border: 1px solid transparent; margin-bottom: 5px; }
+        .interactive-question-block input[type="radio"] { margin-right: 10px; vertical-align: middle; }
+        .interactive-question-block label:hover { background-color: #f0f8ff; }
+        .feedback-correct { background-color: #e8f8f0 !important; border-left: 4px solid #2ecc71 !important; }
+        .feedback-incorrect { background-color: #fdedec !important; border-left: 4px solid #e74c3c !important; }
+        .feedback-correct label.correct-option, .feedback-incorrect label.correct-option { font-weight: bold; color: #1E8449; }
+        .feedback-incorrect label.selected-incorrect { color: #A93226; }
+        .explanation { font-size: 0.9em; color: #444; margin-top: 5px; padding-left: 20px; }
+        .footer { text-align: center; margin-top: 30px; padding-top: 15px; border-top: 1px solid #ccc; font-size: 0.9em; color: #555; }
+
+        .nav-links-header { background-color: #fff; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 50; }
+</style>
+</head>
+<body>
+    <header class="nav-links-header">
+        <div style="max-width:900px;margin:0 auto;padding:12px 20px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;">
+            <strong style="color:#0056b3;">Imaging and Processing in Radiation Oncology</strong>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                <a href="../index.html" style="font-size:0.8rem;background:#0056b3;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Back to Principles and Practice Lessons</a>
+                <a href="../../index.html" style="font-size:0.8rem;background:#64748b;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Back to Main Workbook</a>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <h1>Imaging and Processing in Radiation Oncology</h1>
+        <div class="flip-lesson-container">
+            <h2>Interactive Lesson</h2>
+            <div id="lesson-page-1" class="lesson-page active">
+                <h3>Page 1: Imaging Is Woven Through the Whole RT Process</h3>
+                <p>Medical imaging has transformed how radiation therapy is simulated, planned, and delivered. Different modalities each contribute distinct information, and modern planning often <span class="highlight">fuses</span> multiple modalities together &mdash; combining, say, the anatomical detail of CT with the soft-tissue contrast of MRI or the functional information from PET.</p>
+            </div>
+            <div id="lesson-page-2" class="lesson-page">
+                <h3>Page 2: Diagnostic X-Ray and Fluoroscopy</h3>
+                <p><strong>Plain film X-ray:</strong> fast, high-resolution, inexpensive. Best for bone and calcium-dense tissue &mdash; fractures, dental imaging, chest and abdominal survey views. The patient must hold still (sometimes hold their breath) since motion blurs the image.</p>
+                <p><strong>Fluoroscopy:</strong> real-time X-ray imaging, used for things like guiding orthopedic implant placement during surgery, catheter/pacemaker insertion, or watching contrast agents (like barium) move through the body live.</p>
+            </div>
+            <div id="lesson-page-3" class="lesson-page">
+                <h3>Page 3: Mammography</h3>
+                <p>A specialized low-dose X-ray technique for breast imaging, used both as a screening tool (detecting cancer before symptoms appear) and diagnostically (evaluating a lump, pain, or discharge). <span class="highlight">Digital mammography</span> converts X-rays to electrical signals rather than film &mdash; and can reduce dose by up to 50% compared to conventional film, with newer software cutting dose further while keeping image quality.</p>
+            </div>
+            <div id="lesson-page-4" class="lesson-page">
+                <h3>Page 4: CT (Computed Tomography)</h3>
+                <p>CT provides far more detail than plain X-ray, especially for soft tissue and blood vessels, and scans complete in seconds. The <strong>gantry</strong> &mdash; a rotating frame with an X-ray tube on one side and a detector on the other &mdash; produces a fan-shaped beam that generates thousands of sectional views per rotation, reconstructed into cross-sectional images.</p>
+                <div class="key-principle">
+                    <p>Image brightness reflects beam attenuation: <strong>bone appears white</strong> (high attenuation), <strong>air appears black</strong> (low attenuation).</p>
+                </div>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">On a CT image, why does bone appear white?</p>
+                    <label><input type="radio" name="lq_page4_1" value="A"> Bone has high beam attenuation</label>
+                    <label><input type="radio" name="lq_page4_1" value="B"> Bone has low beam attenuation</label>
+                    <div class="explanation" style="display:none;">A. Denser tissue like bone attenuates (blocks) more of the beam, which the reconstruction displays as bright/white.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(4)">Check Answer</button>
+            </div>
+            <div id="lesson-page-5" class="lesson-page">
+                <h3>Page 5: PET and Nuclear Medicine</h3>
+                <p>PET (Positron Emission Tomography) uses small amounts of radioactive tracers (radiopharmaceuticals), injected, swallowed, or inhaled, which accumulate in the tissue being studied and emit gamma rays as they decay. A scanner detects this and a computer reconstructs images showing both structure <em>and function</em> &mdash; useful for locating lymph node involvement before cancer surgery, evaluating tumors, or investigating neurological conditions like seizures.</p>
+            </div>
+            <div id="lesson-page-6" class="lesson-page">
+                <h3>Page 6: MRI</h3>
+                <p>MRI uses a powerful magnetic field and radiofrequency pulses &mdash; <strong>no ionizing radiation at all</strong> &mdash; to produce cross-sectional images with excellent soft-tissue contrast, especially useful for brain tumors, spinal inflammation, and vascular assessment.</p>
+                <div class="key-principle">
+                    <p>A superconducting magnet creates the static field; gradient coils focus the field on the specific body region; RF pulses are turned on and off, and the energy absorbed/reflected by tissue is measured to reconstruct the image. (The tapping sound during a scan comes from the gradient magnets switching on and off.)</p>
+                </div>
+                <p>Because of the strong magnetic field, patients with certain implants (like most pacemakers) generally cannot be scanned &mdash; see the MRI Safety Screening lesson under Radiation Protection for the full screening picture. Newer technology combines MRI directly with linear accelerators for real-time adaptive treatment planning.</p>
+            </div>
+            <div id="lesson-page-7" class="lesson-page">
+                <h3>Page 7: Ultrasound</h3>
+                <p>Ultrasound uses high-frequency sound waves (not ionizing radiation, no contrast agent needed) to produce live, moving images &mdash; making it a strong choice for imaging pediatric patients or women of childbearing age. Common uses include abdominal, cardiac, breast, and vascular imaging, plus obstetric/prenatal assessment.</p>
+            </div>
+            <div id="lesson-page-8" class="lesson-page">
+                <h3>Page 8: Radiation Therapy Imaging &mdash; kV vs. MV</h3>
+                <p>Modern linear accelerators carry their own onboard imaging (OBI) using kV X-rays and flat panel detectors, mounted via a retractable arm. This kV system can acquire real-time 2D images (compared against DRRs for setup verification), fluoroscopic sequences, and <strong>CBCT</strong> (Cone Beam CT &mdash; using a wider beam angle than conventional CT to capture a larger volume per rotation).</p>
+                <div class="key-principle">
+                    <p>Before onboard kV imaging became standard, <strong>MV portal images</strong> (using the treatment beam itself) were the only verification option &mdash; but at megavoltage energies, Compton scattering dominates, producing poor subject contrast that makes it hard to distinguish soft tissue from bone. kV imaging gives substantially better image quality at a much lower dose, which is why it's now the standard for daily setup verification.</p>
+                </div>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">Why did MV portal imaging historically produce poor image contrast compared to kV imaging?</p>
+                    <label><input type="radio" name="lq_page8_1" value="A"> Compton scattering dominates at megavoltage energies, reducing subject contrast</label>
+                    <label><input type="radio" name="lq_page8_1" value="B"> MV beams can't penetrate the patient at all</label>
+                    <div class="explanation" style="display:none;">A. At MV energies, Compton scattering (largely independent of atomic number) dominates over photoelectric absorption, which is what actually creates contrast between different tissue types.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(8)">Check Answer</button>
+            </div>
+            <div id="lesson-page-9" class="lesson-page">
+                <h3>Page 9: Wrap-Up</h3>
+                <p>You've covered diagnostic X-ray and fluoroscopy, mammography, CT, PET, MRI, ultrasound, and radiation therapy's own onboard kV/CBCT imaging compared to older MV portal imaging.</p>
+                <p>The common thread: every modality trades off dose, speed, cost, and the specific kind of information it reveals &mdash; which is exactly why modern planning increasingly fuses several of them together rather than relying on just one.</p>
+            </div>
+
+            <div class="lesson-navigation">
+                <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled>Previous Page</button>
+                <span class="page-indicator" id="lessonPageIndicator">Page 1 of 9</span>
+                <button id="nextLessonPage" onclick="changeLessonPage(1)">Next Page</button>
+                <button id="startActivityButton" onclick="window.location.href='../index.html'" style="display:none; background-color: #28a745;">Back to Menu</button>
+            </div>
+        </div>
+        <div class="footer">Radiation Therapy E-Workbook &mdash; Principles and Practice of Radiation Therapy I</div>
+    </div>
+    <script>
+        let currentLessonPage = 1;
+        const totalLessonPages = 9;
+        const lessonPages = document.querySelectorAll('.lesson-page');
+        const prevLessonButton = document.getElementById('prevLessonPage');
+        const nextLessonButton = document.getElementById('nextLessonPage');
+        const lessonPageIndicator = document.getElementById('lessonPageIndicator');
+        const startActivityButton = document.getElementById('startActivityButton');
+        const lessonCorrectAnswers = {"lq_page4_1": "A", "lq_page8_1": "A"};
+        function displayLessonPage() {
+            lessonPages.forEach((page, index) => page.classList.toggle('active', index === currentLessonPage - 1));
+            prevLessonButton.disabled = currentLessonPage === 1;
+            nextLessonButton.style.display = currentLessonPage === totalLessonPages ? 'none' : 'inline-block';
+            startActivityButton.style.display = currentLessonPage === totalLessonPages ? 'inline-block' : 'none';
+            lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
+        }
+        function changeLessonPage(direction) {
+            currentLessonPage += direction;
+            if (currentLessonPage < 1) currentLessonPage = 1;
+            if (currentLessonPage > totalLessonPages) currentLessonPage = totalLessonPages;
+            displayLessonPage();
+        }
+        function checkPageAnswers(pageNumber) {
+            const questionsOnPage = document.querySelectorAll(`#lesson-page-${pageNumber} .interactive-question-block`);
+            questionsOnPage.forEach(block => {
+                const radio = block.querySelector('input[type="radio"]');
+                if (!radio) return;
+                const questionName = radio.name;
+                if (!lessonCorrectAnswers.hasOwnProperty(questionName)) return;
+                const correctAnswerValue = lessonCorrectAnswers[questionName];
+                const selectedRadio = block.querySelector(`input[name="${questionName}"]:checked`);
+                const explanationDiv = block.querySelector('.explanation');
+                block.classList.remove('feedback-correct', 'feedback-incorrect');
+                block.querySelectorAll('label').forEach(label => label.classList.remove('correct-option', 'selected-incorrect'));
+                if (explanationDiv) explanationDiv.style.display = 'none';
+                if (selectedRadio) {
+                    const userAnswer = selectedRadio.value;
+                    const userSelectedLabel = selectedRadio.parentElement;
+                    if (userAnswer === correctAnswerValue) {
+                        block.classList.add('feedback-correct');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('correct-option');
+                    } else {
+                        block.classList.add('feedback-incorrect');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('selected-incorrect');
+                        const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                        if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                    }
+                } else {
+                    block.classList.add('feedback-incorrect');
+                    const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                    if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                }
+                if (explanationDiv) explanationDiv.style.display = 'block';
+            });
+        }
+        displayLessonPage();
+    </script>
+</body>
+</html>
