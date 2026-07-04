@@ -133,9 +133,7 @@
       background:#e2e8f0;color:#0f172a;border:0;padding:10px 14px;border-radius:10px;font-weight:800;cursor:pointer
     }
     .tab.active{background:var(--brand2);color:#fff}
-    .mode{
-      display:none;
-    }
+    .mode{display:none}
     .mode.active{display:block}
     .stage{
       position:relative;
@@ -156,6 +154,7 @@
       padding:12px;
       width:min(380px,calc(100% - 28px));
       box-shadow:0 8px 20px rgba(15,23,42,.08);
+      z-index:2;
     }
     .floating h3{margin:0 0 8px;font-size:1rem;color:#17357d}
     .floating p{margin:0;color:#334155;line-height:1.45;font-size:.92rem}
@@ -175,6 +174,7 @@
       display:grid;
       grid-template-columns:1fr;
       gap:12px;
+      margin-top:12px;
     }
     @media(min-width:960px){.grid-two{grid-template-columns:1fr 1fr}}
     .card{
@@ -197,7 +197,9 @@
     }
     .check-item.done .check-dot{background:#16a34a;border-color:#16a34a}
     .check-item.done .check-dot::after{
-      content:'';position:absolute;left:5px;top:1px;width:4px;height:8px;border-right:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(45deg)
+      content:'';
+      position:absolute;left:5px;top:1px;width:4px;height:8px;
+      border-right:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(45deg)
     }
     .minirow{
       display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px
@@ -209,18 +211,8 @@
     .mini .body{color:#0f172a;font-weight:700;font-size:.94rem;line-height:1.4}
     .footer{text-align:center;color:#64748b;font-size:.85rem;padding:12px 0 22px}
     .hidden{display:none !important}
-    .blink{animation:blink 1.2s infinite}
-    @keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
     .pulse{animation:pulse 1.6s ease-in-out infinite}
     @keyframes pulse{0%,100%{transform:scale(1);opacity:.85}50%{transform:scale(1.04);opacity:1}}
-    .drag-hint{
-      position:absolute;right:14px;top:14px;background:rgba(255,255,255,.92);border:1px solid var(--line);
-      border-radius:14px;padding:10px 12px;font-size:.84rem;font-weight:700;color:#334155
-    }
-    .zone-note{
-      position:absolute;right:14px;bottom:14px;background:rgba(255,255,255,.92);border:1px solid var(--line);
-      border-radius:14px;padding:10px 12px;font-size:.84rem;font-weight:700;color:#334155;max-width:360px
-    }
     .selectgrid{
       display:grid;grid-template-columns:1fr 1fr;gap:12px
     }
@@ -246,7 +238,7 @@
   <div class="hero">
     <h1>Interactive MRI Safety & Imaging Simulator</h1>
     <p class="subtitle">
-      This simulator combines MRI image formation, patient screening, and ACR-style zone safety principles into one interactive learning tool. It reflects the RT-focused MRI safety workflow, including the four-zone concept, daily screening, device labeling, and the major field-related hazards of static, gradient, and RF exposure [file:20][file:21].
+      This simulator combines MRI image formation, patient screening, and ACR-style zone safety principles into one interactive learning tool. It reflects the RT-focused MRI safety workflow, including the four-zone concept, daily screening, device labeling, and the major field-related hazards of static, gradient, and RF exposure.
     </p>
     <div class="pillrow">
       <span class="pill">Image formation</span>
@@ -344,7 +336,7 @@
           <div class="floating">
             <h3>Image formation</h3>
             <p>
-              Use the scan mode and RF/gradient slider to see a simplified MRI image react to excitation, signal contrast, and motion. The goal is to connect the physics of alignment, RF excitation, relaxation, and gradients to what the image looks like [file:20].
+              Use the scan mode and RF/gradient slider to see a simplified MRI image react to excitation, signal contrast, and motion. The goal is to connect the physics of alignment, RF excitation, relaxation, and gradients to what the image looks like.
             </p>
             <div class="legend">
               <div class="lg-safe">Low risk</div>
@@ -383,7 +375,6 @@
             <text id="contrastText" x="95" y="540" fill="#334155" font-size="16" font-weight="600">T1-weighted: fat brighter, fluid darker</text>
             <text id="riskText" x="95" y="570" fill="#334155" font-size="16" font-weight="600">Risk level: moderate</text>
           </svg>
-          <div class="zone-note">Static field, gradients, and RF are simplified here as interactive learning cues, not clinical measurement values [file:20].</div>
         </div>
       </div>
 
@@ -392,7 +383,7 @@
           <div class="floating">
             <h3>Screening workflow</h3>
             <p>
-              Screening starts early and should be repeated daily in RT. Select a patient scenario, then run the checklist to see whether the patient can enter the scanner room safely [file:20].
+              Screening starts early and should be repeated daily in RT. Select a patient scenario, then run the checklist to see whether the patient can enter the scanner room safely.
             </p>
             <div class="legend">
               <div class="lg-safe">Proceed</div>
@@ -443,7 +434,7 @@
             </g>
 
             <rect x="65" y="620" width="1070" height="40" rx="12" fill="#dbeafe" opacity=".95"/>
-            <text id="screenFooter" x="85" y="646" fill="#1e3a8a" font-size="16" font-weight="700">Daily screening protects RT patients because safety status can change between fractions [file:20].</text>
+            <text id="screenFooter" x="85" y="646" fill="#1e3a8a" font-size="16" font-weight="700">Daily screening protects RT patients because safety status can change between fractions.</text>
           </svg>
         </div>
       </div>
@@ -453,7 +444,7 @@
           <div class="floating">
             <h3>Zone safety</h3>
             <p>
-              The ACR-style four-zone concept moves from public access to the scanner room. Choose a zone and a scenario, then see whether access is allowed and what the key warning should be [file:20][file:21].
+              The ACR-style four-zone concept moves from public access to the scanner room. Choose a zone and a scenario, then see whether access is allowed and what the key warning should be.
             </p>
             <div class="legend">
               <div class="lg-safe">Allowed</div>
@@ -550,10 +541,10 @@
 
   const labels = {
     clean: {label:'MR Safe', risk:'None', summary:'No implant or accessory risk. Patient should still undergo routine screening before each fraction.', checklist:['Questionnaire complete','No implant/device concerns','Daily re-check complete','Cleared for Zone IV']},
-    fiducial: {label:'MR Conditional', risk:'Susceptibility artifact', summary:'A gold fiducial marker can be MR Conditional and may create image artifact or localization uncertainty depending on sequence and orientation [file:20][file:21].', checklist:['Confirm exact device model','Verify scan conditions','Review artifact risk','Proceed only if conditions are met']},
-    cied: {label:'MR Conditional or Unsafe', risk:'High concern', summary:'A cardiac implantable electronic device requires specific device-level review, and some configurations may be unsafe without strict conditions [file:20][file:21].', checklist:['Identify device model','Check MR conditions','Escalate to MR safety team','Do not auto-clear']},
-    vacuum: {label:'MR Conditional', risk:'Burn / loop risk', summary:'Vacuum cushions are usually non-ferromagnetic, but thermal insulation, conductive contact, and loops can raise burn risk [file:20].', checklist:['Avoid skin-to-skin loops','Check clothing','Remove conductive accessories','Position safely']},
-    qa: {label:'MR Unsafe until reviewed', risk:'Projectile / electronics', summary:'QA devices often contain motors, cables, and ferromagnetic parts that require formal evaluation before MR use [file:20].', checklist:['Verify components','Keep outside 5-gauss line','Check electronics','Use distance principle']},
+    fiducial: {label:'MR Conditional', risk:'Susceptibility artifact', summary:'A gold fiducial marker can be MR Conditional and may create image artifact or localization uncertainty depending on sequence and orientation.', checklist:['Confirm exact device model','Verify scan conditions','Review artifact risk','Proceed only if conditions are met']},
+    cied: {label:'MR Conditional or Unsafe', risk:'High concern', summary:'A cardiac implantable electronic device requires specific device-level review, and some configurations may be unsafe without strict conditions.', checklist:['Identify device model','Check MR conditions','Escalate to MR safety team','Do not auto-clear']},
+    vacuum: {label:'MR Conditional', risk:'Burn / loop risk', summary:'Vacuum cushions are usually non-ferromagnetic, but thermal insulation, conductive contact, and loops can raise burn risk.', checklist:['Avoid skin-to-skin loops','Check clothing','Remove conductive accessories','Position safely']},
+    qa: {label:'MR Unsafe until reviewed', risk:'Projectile / electronics', summary:'QA devices often contain motors, cables, and ferromagnetic parts that require formal evaluation before MR use.', checklist:['Verify components','Keep outside 5-gauss line','Check electronics','Use distance principle']},
   };
 
   const imagingSummaries = {
@@ -609,8 +600,8 @@
     labelState.textContent = s.label;
     primaryRisk.textContent = s.risk;
     screenFooter.textContent = patientType.value === 'clean'
-      ? 'Routine screening still applies before each fraction [file:20].'
-      : 'Daily screening is essential in RT because safety status can change between fractions [file:20].';
+      ? 'Routine screening still applies before each fraction.'
+      : 'Daily screening is essential in RT because safety status can change between fractions.';
   }
 
   function updateZones(){
@@ -677,7 +668,7 @@
       summaryBox.innerHTML = `
         <p><strong>${scanMode.options[scanMode.selectedIndex].text}</strong></p>
         <p>${imagingSummaries[scanMode.value]}</p>
-        <p>The RF / gradient slider shows a simplified effect on image confidence and safety burden [file:20].</p>
+        <p>The RF / gradient slider shows a simplified effect on image confidence and safety burden.</p>
       `;
       primaryRisk.textContent = getRiskLabel(riskLevel.value) + ' exposure';
       labelState.textContent = 'MR image formation';
@@ -692,10 +683,10 @@
 
     statusBox.textContent = `Current mode: ${activeTab.toUpperCase()} | Patient scenario: ${patientType.options[patientType.selectedIndex].text}`;
     noteBox.textContent = activeTab === 'imaging'
-      ? 'Imaging mode uses simplified visual cues; it is meant to teach contrast and signal behavior, not to calculate clinical MRI parameters [file:20].'
+      ? 'Imaging mode uses simplified visual cues; it is meant to teach contrast and signal behavior, not to calculate clinical MRI parameters.'
       : activeTab === 'screening'
-      ? 'Screening in RT should happen early and again before each treatment fraction [file:20].'
-      : 'Zone safety is based on controlled access and clear signage, especially around Zone III and Zone IV [file:20].';
+      ? 'Screening in RT should happen early and again before each treatment fraction.'
+      : 'Zone safety is based on controlled access and clear signage, especially around Zone III and Zone IV.';
     scoreBox.textContent = `Risk meter: ${getRiskLabel(riskLevel.value)} (${riskLevel.value}/100)`;
     riskLabel.textContent = getRiskLabel(riskLevel.value);
   }
