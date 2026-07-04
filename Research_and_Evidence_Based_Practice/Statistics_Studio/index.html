@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RTApps Statistics Studio</title>
+  <meta name="description" content="A lightweight browser-based educational statistics simulator for generic classroom, lab, survey, and assessment datasets." />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="hero">
+      <div class="brand-row">
+        <span class="badge">RTApps</span>
+        <span class="badge">Browser-only</span>
+        <span class="badge">No SPSS required for basic practice</span>
+      </div>
+      <h1>Statistics Studio</h1>
+      <p>
+        A lightweight, generic statistics simulator for teaching simple analyses. Paste a CSV file, choose variables, run common descriptive or inferential tests, and generate plain-language and APA-style interpretations. All calculations run locally in the browser.
+      </p>
+      <div class="hero-actions no-print">
+        <a class="btn light" href="#data-panel">Load data</a>
+        <a class="btn light" href="#analysis-panel">Run analyses</a>
+        <a class="btn light" href="#export-panel">Export results</a>
+      </div>
+    </header>
+ 
+    <div class="main-grid">
+      <aside class="sidebar no-print" aria-label="Statistics Studio navigation">
+        <h2>Analysis Menu</h2>
+        <button class="nav-button active" data-target="data-panel"><span>1. Data</span><span>CSV</span></button>
+        <button class="nav-button" data-target="analysis-panel"><span>2. Descriptive</span><span>Mean/SD</span></button>
+        <button class="nav-button" data-target="frequency-panel"><span>3. Frequencies</span><span>Counts</span></button>
+        <button class="nav-button" data-target="groups-panel"><span>4. Group Tests</span><span>t tests</span></button>
+        <button class="nav-button" data-target="relationships-panel"><span>5. Relationships</span><span>r / β</span></button>
+        <button class="nav-button" data-target="categorical-panel"><span>6. Categorical</span><span>χ²</span></button>
+        <button class="nav-button" data-target="likert-panel"><span>7. Likert</span><span>Survey</span></button>
+        <button class="nav-button" data-target="confusion-panel"><span>8. Confusion Matrix</span><span>Metrics</span></button>
+        <button class="nav-button" data-target="export-panel"><span>9. Export</span><span>Report</span></button>
+      </aside>
+ 
+      <main class="content-stack">
+        <section id="data-panel" class="panel">
+          <div class="panel-header">
+            <div>
+              <h2>1. Load or paste data</h2>
+              <p class="lede">Use comma-separated data with a header row. For example: <code>student_id,group,pre_score,post_score</code>. Data stay in the browser unless the user downloads an export.</p>
+            </div>
+          </div>
+ 
+          <div class="card-grid">
+            <div class="card">
+              <h3>Sample datasets</h3>
+              <p>Use these generic datasets to practice analyses before importing your own data.</p>
+              <div id="sampleButtons" class="flex-row"></div>
+            </div>
+            <div class="card">
+              <h3>Upload CSV</h3>
+              <p>Small classroom datasets are ideal. Large datasets are outside the intended scope.</p>
+              <input id="csvFileInput" type="file" accept=".csv,text/csv,text/plain" />
+            </div>
+            <div class="card">
+              <h3>Dataset label</h3>
+              <label>Optional name
+                <input id="datasetNameInput" type="text" placeholder="Example: Pre/Post Scores" />
+              </label>
+            </div>
+          </div>
+ 
+          <div class="mt-2">
+            <label>CSV data
+              <textarea id="csvInput" spellcheck="false" aria-label="CSV input area"></textarea>
+            </label>
+          </div>
+ 
+          <div class="flex-row mt-2 no-print">
+            <button id="loadCsvButton">Load dataset</button>
+            <button id="copySampleButton" class="secondary">Copy current CSV</button>
+            <button id="downloadCsvButton" class="secondary">Download CSV</button>
+            <button id="clearDataButton" class="danger">Clear</button>
+          </div>
+ 
+          <div id="dataStatus" class="status-bar"></div>
+          <div id="dataPreview" class="results"></div>
+        </section>
+ 
+        <section id="analysis-panel" class="panel hidden">
+          <div class="panel-header">
+            <div>
+              <h2>2. Descriptive statistics</h2>
+              <p class="lede">Summarize one numeric variable with mean, median, standard deviation, quartiles, range, histogram, and box plot.</p>
+            </div>
+          </div>
+          <div class="form-grid">
+            <label>Numeric variable
+              <select id="descVariable"></select>
+            </label>
+            <div class="flex-row"><button id="runDescriptive">Run descriptive statistics</button></div>
+          </div>
+          <div id="descResults" class="results"></div>
+        </section>
+ 
+        <section id="frequency-panel" class="panel hidden">
+          <div class="panel-header">
+            <div>
+              <h2>3. Frequency table</h2>
+              <p class="lede">Summarize a categorical, ordinal, or text variable with counts, percentages, and a bar chart.</p>
+            </div>
+          </div>
+          <div class="form-grid">
+            <label>Variable
+              <select id="freqVariable"></select>
+            </label>
+            <div class="flex-row"><button id="runFrequency">Run frequency table</button></div>
+          </div>
+          <div id="freqResults" class="results"></div>
+        </section>
+ 
+        <section id="groups-panel" class="panel hidden">
+          <div class="panel-header">
+            <div>
+              <h2>4. Group comparisons</h2>
+              <p class="lede">Run an independent-samples t test for two groups or a paired-samples t test for matched before/after variables.</p>
+            </div>
+          </div>
+ 
+          <div class="card-grid">
+            <div class="card">
+              <h3>Independent-samples t test</h3>
+              <div class="form-grid">
+                <label>Group variable
+                  <select id="indGroupVar"></select>
+                </label>
+                <label>Numeric outcome
+                  <select id="indNumericVar"></select>
+                </label>
+                <label>Group A
+                  <select id="indGroupA"></select>
+                </label>
+                <label>Group B
+                  <select id="indGroupB"></select>
+                </label>
+                <label style="display:flex; align-items:center; gap:8px; grid-template-columns:auto 1fr;">
+                  <input id="equalVarianceCheck" type="checkbox" /> Assume equal variances
+                </label>
+              </div>
+              <div class="flex-row mt-2"><button id="runIndependentT">Run independent t test</button></div>
+            </div>
+ 
+            <div class="card">
+              <h3>Paired-samples t test</h3>
+              <div class="form-grid">
+                <label>Before / first variable
+                  <select id="pairedBeforeVar"></select>
+                </label>
+                <label>After / second variable
+                  <select id="pairedAfterVar"></select>
+                </label>
+              </div>
+              <div class="flex-row mt-2"><button id="runPairedT">Run paired t test</button></div>
+            </div>
+ 
+            <div class="card">
+              <h3>One-way ANOVA <span class="help-text">(3+ groups)</span></h3>
+              <div class="form-grid">
+                <label>Group variable
+                  <select id="anovaGroupVar"></select>
+                </label>
+                <label>Numeric outcome
+                  <select id="anovaNumericVar"></select>
+                </label>
+              </div>
+              <div class="flex-row mt-2"><button id="runAnova">Run one-way ANOVA</button></div>
+              <p class="help-text mt-1">Post-hoc pairwise comparisons use Bonferroni-corrected pooled-variance t tests, not Tukey HSD &mdash; see the technical notes.</p>
+            </div>
+          </div>
+          <div id="groupResults" class="results"></div>
+        </section>
+ 
+        <section id="relationships-panel" class="panel hidden">
+          <div class="panel-header">
+            <div>
+              <h2>5. Relationships between numeric variables</h2>
+              <p class="lede">Calculate Pearson correlation or simple linear regression with scatterplots.</p>
+            </div>
+          </div>
+ 
+          <div class="card-grid">
+            <div class="card">
+              <h3>Pearson correlation</h3>
+              <div class="form-grid">
+                <label>X variable
+                  <select id="corrXVar"></select>
+                </label>
+                <label>Y variable
+                  <select id="corrYVar"></select>
+                </label>
+              </div>
+              <div class="flex-row mt-2"><button id="runCorrelation">Run correlation</button></div>
+            </div>
+ 
+            <div class="card">
+              <h3>Simple linear regression</h3>
+              <div class="form-grid">
+                <label>Predictor X
+                  <select id="regXVar"></select>
+                </label>
+                <label>Outcome Y
+                  <select id="regYVar"></select>
+                </label>
+              </div>
+              <div class="flex-row mt-2"><button id="runRegression">Run regression</button></div>
+            </div>
+          </div>
+          <div id="relationshipResults" class="results"></div>
+        </section>
+ 
+        <section id="categorical-panel" class="panel hidden">
+          <div class="panel-header">
+            <div>
+              <h2>6. Chi-square test of independence</h2>
+              <p class="lede">Compare two categorical variables using observed counts, expected counts, χ², p value, and Cramer's V.</p>
+            </div>
+          </div>
+          <div class="form-grid">
+            <label>Row variable
+              <select id="chiRowVar"></select>
+            </label>
+            <label>Column variable
+              <select id="chiColVar"></select>
+            </label>
+            <div class="flex-row"><button id="runChiSquare">Run chi-square</button></div>
+          </div>
+          <div id="categoricalResults" class="results"></div>
+        </section>
+ 
+        <section id="likert-panel" class="panel hidden">
+          <div class="panel-header">
+            <div>
+              <h2>7. Likert survey summary</h2>
+              <p class="lede">Summarize ordinal survey items. The scale average is intentionally simple and assumes selected items are scored in the same direction.</p>
+            </div>
+          </div>
+          <div class="form-grid">
+            <label>Likert/ordinal variables
+              <select id="likertVars" multiple></select>
+            </label>
+            <div class="flex-row"><button id="runLikert">Run Likert summary</button></div>
+          </div>
+          <div id="likertResults" class="results"></div>
+        </section>
+ 
+        <section id="confusion-panel" class="panel hidden">
+          <div class="panel-header">
+            <div>
+              <h2>8. Confusion matrix metrics</h2>
+              <p class="lede">Calculate sensitivity, specificity, positive predictive value, negative predictive value, accuracy, and F1 score from either dataset columns or manual counts.</p>
+            </div>
+          </div>
+ 
+          <div class="card-grid">
+            <div class="card">
+              <h3>From dataset columns</h3>
+              <div class="form-grid">
+                <label>Actual status variable
+                  <select id="confActualVar"></select>
+                </label>
+                <label>Response / predicted variable
+                  <select id="confPredictedVar"></select>
+                </label>
+                <label>Positive label
+                  <input id="positiveLabel" type="text" value="positive" />
+                </label>
+              </div>
+              <div class="flex-row mt-2"><button id="runConfusionFromData">Run from data</button></div>
+            </div>
+ 
+            <div class="card">
+              <h3>Manual counts</h3>
+              <div class="form-grid">
+                <label>True positives
+                  <input id="manualTP" type="number" min="0" value="8" />
+                </label>
+                <label>True negatives
+                  <input id="manualTN" type="number" min="0" value="10" />
+                </label>
+                <label>False positives
+                  <input id="manualFP" type="number" min="0" value="2" />
+                </label>
+                <label>False negatives
+                  <input id="manualFN" type="number" min="0" value="3" />
+                </label>
+              </div>
+              <div class="flex-row mt-2"><button id="runConfusionManual">Run manual matrix</button></div>
+            </div>
+          </div>
+          <div id="confusionResults" class="results"></div>
+        </section>
+ 
+        <section id="export-panel" class="panel hidden">
+          <div class="panel-header">
+            <div>
+              <h2>9. Export and print</h2>
+              <p class="lede">Download a JSON or CSV summary of analyses, or print the visible report. Exports do not include hidden secure materials or any data not loaded by the user.</p>
+            </div>
+            <div class="flex-row no-print">
+              <button id="downloadResultsJsonButton">Download JSON</button>
+              <button id="downloadResultsCsvButton" class="secondary">Download CSV summary</button>
+              <button id="printReportButton" class="secondary">Print / Save PDF</button>
+            </div>
+          </div>
+          <div id="exportResults" class="results"><div class="help-text">Run at least one analysis to create an exportable summary.</div></div>
+        </section>
+ 
+        <section class="panel">
+          <h2>Scope and limitations</h2>
+          <p class="lede">
+            This tool is intended for classroom practice, lab exercises, basic QI-style summaries, and research-literacy instruction. It is not a full replacement for professional statistical software for high-stakes publication, complex models, large datasets, or regulated analyses. Results should be verified before formal use.
+          </p>
+        </section>
+ 
+        <footer class="footer">
+          RTApps Statistics Studio. Static HTML/CSS/JavaScript. No external dependencies. Generic educational templates only.
+        </footer>
+      </main>
+    </div>
+  </div>
+ 
+  <script src="js/stats-core.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
