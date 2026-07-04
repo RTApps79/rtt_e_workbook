@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Research Ethics and IRB Navigation</title>
+<style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; margin: 20px;
+            background-color: #f4f4f4; color: #333; display: flex; flex-direction: column; align-items: center; }
+        .container { background-color: #fff; padding: 25px 35px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 90%; max-width: 900px; margin-bottom: 30px; }
+        h1, h2, h3, h4 { color: #0056b3; }
+        h1 { text-align: center; border-bottom: 2px solid #0056b3; padding-bottom: 15px; margin-bottom: 30px; font-size: 2em; }
+        h2 { border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 30px; margin-bottom: 20px; color: #003d7a; font-size: 1.6em; }
+        h3 { color: #004085; margin-top: 25px; margin-bottom: 15px; font-size: 1.3em; }
+        h4 { color: #17a2b8; margin-top: 20px; margin-bottom: 10px; font-size: 1.1em; font-weight: 600; }
+        p, li { margin-bottom: 12px; font-size: 1.05em; }
+        ul, ol { margin-bottom: 15px; padding-left: 25px; }
+        strong { font-weight: 600; }
+        .highlight { background-color: #e6f7ff; padding: 2px 5px; border-radius: 3px; font-weight: 600; }
+        code { background-color: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; color: #c7254e; }
+        table.data-table { width: 90%; margin: 15px auto; border-collapse: collapse; }
+        table.data-table th, table.data-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        table.data-table th { background-color: #e9f5ff; color: #0056b3; font-weight: 600; }
+        table.data-table tr:nth-child(even) { background-color: #f9f9f9; }
+        .flip-lesson-container { border: 1px solid #b3d7ff; padding: 20px; border-radius: 8px; background-color: #f0f8ff; margin-bottom: 30px; }
+        .lesson-page { display: none; padding: 15px; border: 1px solid #ddeeff; background-color: #fff; border-radius: 5px; min-height: 400px; }
+        .lesson-page.active { display: block; }
+        .lesson-navigation { text-align: center; margin-top: 20px; }
+        .lesson-navigation button, .lesson-page .check-page-answers {
+            background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px;
+            cursor: pointer; font-size: 1em; margin: 5px 10px; transition: background-color 0.2s; }
+        .lesson-navigation button:hover, .lesson-page .check-page-answers:hover { background-color: #0056b3; }
+        .lesson-navigation button:disabled { background-color: #ccc; cursor: not-allowed; }
+        .page-indicator { font-style: italic; color: #555; margin: 10px 0; }
+        .key-principle { background-color: #e7f3ff; padding: 10px; margin-bottom:10px; border-left: 3px solid #007bff; border-radius: 3px; }
+        .interactive-question-block { background: #f9f9f9; padding: 15px; margin: 20px 0; border: 1px solid #e0e0e0; border-radius: 8px; }
+        .interactive-question-block .question-text { font-weight: bold; margin-bottom: 8px; font-size: 1em; color: #555; }
+        .interactive-question-block label { display: block; margin-left: 0; padding: 8px 12px; border-radius: 5px; cursor: pointer; border: 1px solid transparent; margin-bottom: 5px; }
+        .interactive-question-block input[type="radio"] { margin-right: 10px; vertical-align: middle; }
+        .interactive-question-block label:hover { background-color: #f0f8ff; }
+        .feedback-correct { background-color: #e8f8f0 !important; border-left: 4px solid #2ecc71 !important; }
+        .feedback-incorrect { background-color: #fdedec !important; border-left: 4px solid #e74c3c !important; }
+        .feedback-correct label.correct-option, .feedback-incorrect label.correct-option { font-weight: bold; color: #1E8449; }
+        .feedback-incorrect label.selected-incorrect { color: #A93226; }
+        .explanation { font-size: 0.9em; color: #444; margin-top: 5px; padding-left: 20px; }
+        .footer { text-align: center; margin-top: 30px; padding-top: 15px; border-top: 1px solid #ccc; font-size: 0.9em; color: #555; }
+
+        .nav-links-header { background-color: #fff; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 50; }
+</style>
+</head>
+<body>
+    <header class="nav-links-header">
+        <div style="max-width:900px;margin:0 auto;padding:12px 20px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;">
+            <strong style="color:#0056b3;">Research Ethics &amp; IRB Navigation</strong>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                <a href="../index.html" style="font-size:0.8rem;background:#0056b3;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Back to Tool Menu</a>
+                <a href="../../index.html" style="font-size:0.8rem;background:#0056b3;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Modalities Menu</a>
+                <a href="../../index.html" style="font-size:0.8rem;background:#64748b;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Main Workbook</a>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <h1>Research Ethics &amp; IRB Navigation</h1>
+        <div class="flip-lesson-container">
+            <h2>Interactive Lesson</h2>
+            <div id="lesson-page-1" class="lesson-page active">
+                <h3>Page 1: Why Research Ethics Oversight Exists</h3>
+                <p>History includes real examples of medical research that exploited vulnerable populations, prioritized data over human safety, and skipped informed consent. To keep that from happening at modern institutions, federal regulations require an <span class="highlight">Institutional Review Board (IRB)</span> &mdash; a committee of scientists, non-scientists, and community members who review every research proposal before any data is collected. An IRB has the authority to approve, modify, or reject a study based on ethical standards.</p>
+            </div>
+            <div id="lesson-page-2" class="lesson-page">
+                <h3>Page 2: The Three Pillars of Ethical Research (The Belmont Report)</h3>
+                <div class="key-principle">
+                    <p><strong>Respect for Persons:</strong> patients must give informed consent &mdash; they need to know exactly what the study involves, the risks, and that they can withdraw at any time without penalty.</p>
+                    <p><strong>Beneficence:</strong> do no harm. Maximize potential benefit to participants while minimizing risk or discomfort.</p>
+                    <p><strong>Justice:</strong> the burdens and benefits of research must be distributed fairly. You can't test risky treatments only on vulnerable or low-income populations, and you can't reserve effective experimental treatments only for those who can pay for access.</p>
+                </div>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">A study only recruits participants from a low-income clinic for a higher-risk experimental procedure, while a wealthier clinic's patients are never asked. This violates:</p>
+                    <label><input type="radio" name="lq_page2_1" value="A"> Beneficence</label>
+                    <label><input type="radio" name="lq_page2_1" value="B"> Justice</label>
+                    <div class="explanation" style="display:none;">B. Distributing research burdens unevenly across populations by income or vulnerability is exactly what the Justice principle prohibits.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(2)">Check Answer</button>
+            </div>
+            <div id="lesson-page-3" class="lesson-page">
+                <h3>Page 3: The Three IRB Review Pathways</h3>
+                <p>Not all research carries the same risk, so IRBs use three tiers of review:</p>
+                <table class="data-table">
+                    <thead><tr><th>Pathway</th><th>Risk level</th><th>Example</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>Exempt</strong></td><td>Less than "minimal risk" (no greater than everyday life)</td><td>Anonymous surveys; retrospective chart review with data fully de-identified before you ever see it</td></tr>
+                        <tr><td><strong>Expedited</strong></td><td>Minimal risk, but identifiable data</td><td>Chart review where you personally log into the EMR to extract data; non-anonymous focus groups</td></tr>
+                        <tr><td><strong>Full Board</strong></td><td>More than minimal risk</td><td>Altering a patient's standard of care; testing new clinical interventions directly on patients</td></tr>
+                    </tbody>
+                </table>
+                <p>Student and early-career researchers generally want to design studies that fall into Exempt or Expedited review whenever the research question allows it &mdash; Full Board review takes considerably longer to approve.</p>
+            </div>
+            <div id="lesson-page-4" class="lesson-page">
+                <h3>Page 4: Informed Consent</h3>
+                <p>The cornerstone of ethical research is autonomy. If you're interacting with humans at all &mdash; even just an email survey &mdash; they need to give informed consent. A proper consent form avoids heavy medical jargon and clearly states:</p>
+                <ul>
+                    <li><strong>Voluntariness</strong> &mdash; participation is voluntary, and declining carries no penalty</li>
+                    <li><strong>Procedures</strong> &mdash; exactly what participants will be asked to do, and how long it takes</li>
+                    <li><strong>Confidentiality</strong> &mdash; how their identity and data will be protected</li>
+                </ul>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">A consent form should generally be written at approximately what reading level?</p>
+                    <label><input type="radio" name="lq_page4_1" value="A"> Graduate/professional reading level, to be precise</label>
+                    <label><input type="radio" name="lq_page4_1" value="B"> Roughly an 8th-grade reading level</label>
+                    <div class="explanation" style="display:none;">B. Consent forms need to be genuinely understandable to the general public, not just precise &mdash; roughly an 8th-grade reading level is the common standard.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(4)">Check Answer</button>
+            </div>
+            <div id="lesson-page-5" class="lesson-page">
+                <h3>Page 5: When Consent Isn't Practical &mdash; the Waiver</h3>
+                <p>If you're pulling historical data from an EMR for a retrospective review, you often can't realistically contact hundreds of past patients for consent. In that situation, you can apply to the IRB for a <span class="highlight">Waiver of Informed Consent</span>. You have to demonstrate that the research couldn't practically be carried out without the waiver, and that waiving consent won't adversely affect participants' rights.</p>
+            </div>
+            <div id="lesson-page-6" class="lesson-page">
+                <h3>Page 6: The Analysis Plan</h3>
+                <p>An IRB application requires you to state explicitly what you intend to do with the data once collected &mdash; this prevents open-ended "fishing expeditions" through the dataset after the fact. Your analysis plan should be brief, formal, and directly aligned with the statistical test your hypothesis and variable types actually call for.</p>
+                <div class="key-principle">
+                    <p><strong>Example analysis plan:</strong> "Data will be entered into a spreadsheet and analyzed using Statistics Studio. Descriptive statistics, including means and standard deviations, will be calculated for exam scores. To determine whether there is a statistically significant difference in spatial recognition competency between the didactic group and the simulation group, an independent-samples t-test will be used, with a significance threshold of p &lt; .05."</p>
+                </div>
+            </div>
+            <div id="lesson-page-7" class="lesson-page">
+                <h3>Page 7: Quality Improvement vs. Human Subjects Research</h3>
+                <p>Not all data collection in a clinical environment counts as "research" requiring full IRB oversight:</p>
+                <ul>
+                    <li><strong>Quality Improvement (QI)</strong> &mdash; implementing known best practices to improve a process or patient care at your specific facility. Doesn't typically require full IRB oversight.</li>
+                    <li><strong>Human Subjects Research</strong> &mdash; designed to test a hypothesis and generate new, generalizable knowledge applicable to the wider field. This requires strict IRB approval.</li>
+                </ul>
+                <p>Knowing which category your project falls into &mdash; before you start &mdash; saves significant time later.</p>
+            </div>
+            <div id="lesson-page-8" class="lesson-page">
+                <h3>Page 8: Wrap-Up</h3>
+                <p>You've covered the purpose of the IRB, the Belmont Report's three pillars, the three review pathways, informed consent and waivers, writing an analysis plan, and the QI vs. human subjects research distinction.</p>
+                <p>With ethics approval pathways understood, the last piece is pulling everything &mdash; question, design, variables, analysis plan, and ethics &mdash; into one coherent, presentable research project.</p>
+            </div>
+
+            <div class="lesson-navigation">
+                <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled>Previous Page</button>
+                <span class="page-indicator" id="lessonPageIndicator">Page 1 of 8</span>
+                <button id="nextLessonPage" onclick="changeLessonPage(1)">Next Page</button>
+                <button id="startActivityButton" onclick="window.location.href='../index.html'" style="display:none; background-color: #28a745;">Back to Menu</button>
+            </div>
+        </div>
+        <div class="footer">Radiation Therapy E-Workbook &mdash; Research and Evidence-Based Practice</div>
+    </div>
+    <script>
+        let currentLessonPage = 1;
+        const totalLessonPages = 8;
+        const lessonPages = document.querySelectorAll('.lesson-page');
+        const prevLessonButton = document.getElementById('prevLessonPage');
+        const nextLessonButton = document.getElementById('nextLessonPage');
+        const lessonPageIndicator = document.getElementById('lessonPageIndicator');
+        const startActivityButton = document.getElementById('startActivityButton');
+        const lessonCorrectAnswers = {"lq_page2_1": "B", "lq_page4_1": "B"};
+        function displayLessonPage() {
+            lessonPages.forEach((page, index) => page.classList.toggle('active', index === currentLessonPage - 1));
+            prevLessonButton.disabled = currentLessonPage === 1;
+            nextLessonButton.style.display = currentLessonPage === totalLessonPages ? 'none' : 'inline-block';
+            startActivityButton.style.display = currentLessonPage === totalLessonPages ? 'inline-block' : 'none';
+            lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
+        }
+        function changeLessonPage(direction) {
+            currentLessonPage += direction;
+            if (currentLessonPage < 1) currentLessonPage = 1;
+            if (currentLessonPage > totalLessonPages) currentLessonPage = totalLessonPages;
+            displayLessonPage();
+        }
+        function checkPageAnswers(pageNumber) {
+            const questionsOnPage = document.querySelectorAll(`#lesson-page-${pageNumber} .interactive-question-block`);
+            questionsOnPage.forEach(block => {
+                const radio = block.querySelector('input[type="radio"]');
+                if (!radio) return;
+                const questionName = radio.name;
+                if (!lessonCorrectAnswers.hasOwnProperty(questionName)) return;
+                const correctAnswerValue = lessonCorrectAnswers[questionName];
+                const selectedRadio = block.querySelector(`input[name="${questionName}"]:checked`);
+                const explanationDiv = block.querySelector('.explanation');
+                block.classList.remove('feedback-correct', 'feedback-incorrect');
+                block.querySelectorAll('label').forEach(label => label.classList.remove('correct-option', 'selected-incorrect'));
+                if (explanationDiv) explanationDiv.style.display = 'none';
+                if (selectedRadio) {
+                    const userAnswer = selectedRadio.value;
+                    const userSelectedLabel = selectedRadio.parentElement;
+                    if (userAnswer === correctAnswerValue) {
+                        block.classList.add('feedback-correct');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('correct-option');
+                    } else {
+                        block.classList.add('feedback-incorrect');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('selected-incorrect');
+                        const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                        if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                    }
+                } else {
+                    block.classList.add('feedback-incorrect');
+                    const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                    if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                }
+                if (explanationDiv) explanationDiv.style.display = 'block';
+            });
+        }
+        displayLessonPage();
+    </script>
+</body>
+</html>
