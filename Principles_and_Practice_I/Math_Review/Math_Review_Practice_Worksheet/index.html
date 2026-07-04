@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math Review Practice Worksheet</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    body { font-family: 'Inter', sans-serif; }
+    .prob-card { background: white; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px; margin-bottom: 14px; }
+    .answer-box { display: none; background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 10px; margin-top: 10px; font-size: 0.9rem; color: #14532d; }
+    .reveal-btn { background: #4338ca; color: white; font-size: 0.8rem; font-weight: 600; padding: 6px 12px; border-radius: 6px; }
+</style>
+</head>
+<body class="bg-slate-100 text-slate-800">
+<header class="bg-white shadow-md sticky top-0 z-50">
+    <div class="container mx-auto px-6 py-3 flex flex-wrap justify-between items-center gap-2">
+        <strong class="text-violet-700">Math Review Practice Worksheet</strong>
+        <a href="index.html" class="text-xs sm:text-sm bg-slate-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-slate-600">&larr; Back to Lesson</a>
+    </div>
+</header>
+
+<main class="container mx-auto px-6 py-8 max-w-3xl">
+    <div class="bg-white p-6 sm:p-8 rounded-xl shadow-lg">
+        <h1 class="text-2xl font-bold text-violet-700 mb-2">Practice Problems</h1>
+        <p class="text-sm text-slate-500 mb-6">Work each problem out fully before revealing the answer. These combine magnification, field size at varying SSD, and inverse-square dose corrections &mdash; the same math you'll be asked to verify in an actual clinic.</p>
+
+        <div class="prob-card">
+            <p><strong>1.</strong> An object in the patient (e.g., the width of a vertebral body) measures 5.3 cm. Its image on the receptor measures 7.5 cm. What is the magnification factor?</p>
+            <button class="reveal-btn" onclick="this.nextElementSibling.style.display='block'">Show Answer</button>
+            <div class="answer-box">M = image size / object size = 7.5 / 5.3 = <strong>1.42</strong></div>
+        </div>
+
+        <div class="prob-card">
+            <p><strong>2.</strong> Beam intensity is 30 cGy/MU at 100 cm. What is the intensity at 90 cm?</p>
+            <button class="reveal-btn" onclick="this.nextElementSibling.style.display='block'">Show Answer</button>
+            <div class="answer-box">I&#8322; = I&#8321; &times; (D&#8321;/D&#8322;)&sup2; = 30 &times; (100/90)&sup2; = 30 &times; 1.235 = <strong>37.0 cGy/MU</strong></div>
+        </div>
+
+        <div class="prob-card">
+            <p><strong>3.</strong> A treatment is prescribed at 100 cm SAD. If the field size indicator reads 14 cm, what is the field size at the patient's surface if the SSD is 75 cm?</p>
+            <button class="reveal-btn" onclick="this.nextElementSibling.style.display='block'">Show Answer</button>
+            <div class="answer-box">Field size scales linearly with distance from the source: FS(surface) = FS(indicator) &times; (SSD/SAD) = 14 &times; (75/100) = <strong>10.5 cm</strong></div>
+        </div>
+
+        <div class="prob-card">
+            <p><strong>4.</strong> A simulator field size display shows 10 &times; 16 cm at 100 cm SAD. What will the field size measure on the patient's skin at 89 cm SSD?</p>
+            <button class="reveal-btn" onclick="this.nextElementSibling.style.display='block'">Show Answer</button>
+            <div class="answer-box">10 &times; (89/100) = 8.9 cm, and 16 &times; (89/100) = 14.24 cm &rarr; <strong>8.9 &times; 14.24 cm</strong></div>
+        </div>
+
+        <div class="prob-card">
+            <p><strong>5.</strong> A dose was calculated to be 250 cGy at 80 cm SSD. What would the new dose be if the patient were actually treated at 95 cm SSD (same monitor units)?</p>
+            <button class="reveal-btn" onclick="this.nextElementSibling.style.display='block'">Show Answer</button>
+            <div class="answer-box">D&#8322; = D&#8321; &times; (D&#8321;/D&#8322;)&sup2; = 250 &times; (80/95)&sup2; = 250 &times; 0.709 = <strong>177.3 cGy</strong> — notice this is a real underdose if the SSD error goes uncorrected.</div>
+        </div>
+
+        <div class="prob-card">
+            <p><strong>6.</strong> A patient was to receive 40 Gy in 20 daily fractions of 2 Gy at 80 cm SSD. If every treatment was mistakenly given at 70 cm SSD instead (same MU setting each day), what total dose would the patient actually receive?</p>
+            <button class="reveal-btn" onclick="this.nextElementSibling.style.display='block'">Show Answer</button>
+            <div class="answer-box">Total dose = 40 &times; (80/70)&sup2; = 40 &times; 1.306 = <strong>52.2 Gy</strong> — a significant, clinically serious overdose. This is exactly why verifying SSD/SAD setup every fraction matters, not just at simulation.</div>
+        </div>
+
+        <div class="prob-card">
+            <p><strong>7.</strong> A field size measures 15 &times; 15 cm at isocenter, and 10 &times; 10 cm on the patient's skin. What is the magnification factor?</p>
+            <button class="reveal-btn" onclick="this.nextElementSibling.style.display='block'">Show Answer</button>
+            <div class="answer-box">M = larger (farther/isocenter) size / smaller (closer/skin) size = 15 / 10 = <strong>1.5</strong></div>
+        </div>
+
+        <div class="prob-card">
+            <p><strong>8.</strong> A patient has an IFD (intra-field distance / patient separation) of 20 cm. In an SAD treatment, what is the magnification factor if the SID is 120 cm?</p>
+            <button class="reveal-btn" onclick="this.nextElementSibling.style.display='block'">Show Answer</button>
+            <div class="answer-box">In an SAD technique, isocenter is placed at mid-separation depth &mdash; so the object being imaged (isocenter) sits at SOD = SAD = 100 cm, the standard convention. The IFD confirms *how* that mid-depth was found (half of the 20 cm separation), but isocenter itself is still at 100 cm from the source.<br>M = SID / SOD = 120 / 100 = <strong>1.2</strong></div>
+        </div>
+
+        <p class="text-xs text-slate-400 border-t pt-4 mt-6">These calculations use simplified geometric relationships for teaching purposes; always follow your department's verified calculation and QA procedures for actual patient treatment.</p>
+    </div>
+</main>
+
+<footer class="bg-slate-800 text-slate-300 py-6 mt-8 text-center">
+    <p class="text-sm">&copy; <span id="currentYear"></span> Radiation Therapy E-Workbook. All Rights Reserved.</p>
+</footer>
+<script>document.getElementById('currentYear').textContent = new Date().getFullYear();</script>
+</body>
+</html>
