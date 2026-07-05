@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Treatment Planning Fundamentals</title>
+<style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; margin: 20px;
+            background-color: #f4f4f4; color: #333; display: flex; flex-direction: column; align-items: center; }
+        .container { background-color: #fff; padding: 25px 35px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 90%; max-width: 900px; margin-bottom: 30px; }
+        h1, h2, h3, h4 { color: #0056b3; }
+        h1 { text-align: center; border-bottom: 2px solid #0056b3; padding-bottom: 15px; margin-bottom: 30px; font-size: 2em; }
+        h2 { border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 30px; margin-bottom: 20px; color: #003d7a; font-size: 1.6em; }
+        h3 { color: #004085; margin-top: 25px; margin-bottom: 15px; font-size: 1.3em; }
+        h4 { color: #17a2b8; margin-top: 20px; margin-bottom: 10px; font-size: 1.1em; font-weight: 600; }
+        p, li { margin-bottom: 12px; font-size: 1.05em; }
+        ul, ol { margin-bottom: 15px; padding-left: 25px; }
+        strong { font-weight: 600; }
+        .highlight { background-color: #e6f7ff; padding: 2px 5px; border-radius: 3px; font-weight: 600; }
+        code { background-color: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; color: #c7254e; }
+        table.data-table { width: 90%; margin: 15px auto; border-collapse: collapse; }
+        table.data-table th, table.data-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        table.data-table th { background-color: #e9f5ff; color: #0056b3; font-weight: 600; }
+        table.data-table tr:nth-child(even) { background-color: #f9f9f9; }
+        .flip-lesson-container { border: 1px solid #b3d7ff; padding: 20px; border-radius: 8px; background-color: #f0f8ff; margin-bottom: 30px; }
+        .lesson-page { display: none; padding: 15px; border: 1px solid #ddeeff; background-color: #fff; border-radius: 5px; min-height: 400px; }
+        .lesson-page.active { display: block; }
+        .lesson-navigation { text-align: center; margin-top: 20px; }
+        .lesson-navigation button, .lesson-page .check-page-answers {
+            background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px;
+            cursor: pointer; font-size: 1em; margin: 5px 10px; transition: background-color 0.2s; }
+        .lesson-navigation button:hover, .lesson-page .check-page-answers:hover { background-color: #0056b3; }
+        .lesson-navigation button:disabled { background-color: #ccc; cursor: not-allowed; }
+        .page-indicator { font-style: italic; color: #555; margin: 10px 0; }
+        .key-principle { background-color: #e7f3ff; padding: 10px; margin-bottom:10px; border-left: 3px solid #007bff; border-radius: 3px; }
+        .interactive-question-block { background: #f9f9f9; padding: 15px; margin: 20px 0; border: 1px solid #e0e0e0; border-radius: 8px; }
+        .interactive-question-block .question-text { font-weight: bold; margin-bottom: 8px; font-size: 1em; color: #555; }
+        .interactive-question-block label { display: block; margin-left: 0; padding: 8px 12px; border-radius: 5px; cursor: pointer; border: 1px solid transparent; margin-bottom: 5px; }
+        .interactive-question-block input[type="radio"] { margin-right: 10px; vertical-align: middle; }
+        .interactive-question-block label:hover { background-color: #f0f8ff; }
+        .feedback-correct { background-color: #e8f8f0 !important; border-left: 4px solid #2ecc71 !important; }
+        .feedback-incorrect { background-color: #fdedec !important; border-left: 4px solid #e74c3c !important; }
+        .feedback-correct label.correct-option, .feedback-incorrect label.correct-option { font-weight: bold; color: #1E8449; }
+        .feedback-incorrect label.selected-incorrect { color: #A93226; }
+        .explanation { font-size: 0.9em; color: #444; margin-top: 5px; padding-left: 20px; }
+        .footer { text-align: center; margin-top: 30px; padding-top: 15px; border-top: 1px solid #ccc; font-size: 0.9em; color: #555; }
+
+        .nav-links-header { background-color: #fff; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 50; }
+</style>
+</head>
+<body>
+    <header class="nav-links-header">
+        <div style="max-width:900px;margin:0 auto;padding:12px 20px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;">
+            <strong style="color:#0056b3;">Treatment Planning Fundamentals</strong>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                <a href="../index.html" style="font-size:0.8rem;background:#0056b3;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Medical Dosimetry Menu</a>
+                <a href="../../index.html" style="font-size:0.8rem;background:#64748b;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Main Workbook</a>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <h1>Treatment Planning Fundamentals</h1>
+        <div class="flip-lesson-container">
+            <h2>Interactive Lesson</h2>
+            <div id="lesson-page-1" class="lesson-page active">
+                <h3>Page 1: Core Terminology</h3>
+                <table class="data-table">
+                    <thead><tr><th>Term</th><th>Meaning</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>Isocenter</strong></td><td>The point of intersection of the three axes of rotation: collimator, gantry, and couch</td></tr>
+                        <tr><td><strong>d</strong></td><td>Depth of isocenter or tumor</td></tr>
+                        <tr><td><strong>SSD / SAD</strong></td><td>Source-to-Surface Distance / Source-to-Axis Distance (100 cm)</td></tr>
+                        <tr><td><strong>IFD</strong></td><td>Separation/thickness of the patient</td></tr>
+                        <tr><td><strong>CA / CAX</strong></td><td>Central Axis</td></tr>
+                    </tbody>
+                </table>
+                <p>You'll see these same terms throughout every site-specific planning lesson &mdash; they're the shared vocabulary of the entire planning process.</p>
+            </div>
+            <div id="lesson-page-2" class="lesson-page">
+                <h3>Page 2: Simulation Covers Seven Anatomic Locations</h3>
+                <p>Simulation (using CT, MRI, and/or PET) is organized around seven anatomic regions: <strong>Brain, Head and Neck, Thorax, Breast, Abdomen, Pelvis, and Skeletal</strong> &mdash; the exact same seven sites this workbook's Site-Specific Planning section is built around.</p>
+                <div class="key-principle">
+                    <p>The goal of simulation: identify the affected area, determine the optimum treatment position, identify the target volume and adjacent normal organs relative to external skin marks, use that information for dosimetry planning, and document everything for reproducible daily setup.</p>
+                </div>
+            </div>
+            <div id="lesson-page-3" class="lesson-page">
+                <h3>Page 3: The Nine-Step CT Simulation Procedure</h3>
+                <ol>
+                    <li>Presimulation planning</li>
+                    <li>Room preparation</li>
+                    <li>Explanation of procedure (to the patient)</li>
+                    <li>Patient positioning and immobilization</li>
+                    <li>CT data acquisition</li>
+                    <li>Target and normal tissue localization</li>
+                    <li>Virtual simulation of treatment fields</li>
+                    <li>Generation of dose distributions</li>
+                    <li>Documentation of pertinent data</li>
+                </ol>
+                <p><strong>Positioning is the foundation</strong> of everything downstream &mdash; good setups and accurate treatment delivery start with good simulation and immobilization, whether that's simple (a headrest) or complex (a custom thermoplastic mask).</p>
+            </div>
+            <div id="lesson-page-4" class="lesson-page">
+                <h3>Page 4: Contrast and Localization</h3>
+                <p><strong>Contrast media</strong> (barium sulfate, iodinated contrast, negative contrast agents) can help localize tumor volume and normal critical structures that would otherwise be hard to distinguish on CT. Careful patient evaluation is needed beforehand, since some agents carry a real risk of severe allergic reaction.</p>
+                <p><strong>Localization</strong> is the geometric definition of the position and extent of the tumor or anatomical structures, referenced to surface marks used for treatment setup &mdash; it ends in the placement of isocenter.</p>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">What must be checked before administering contrast media during simulation?</p>
+                    <label><input type="radio" name="lq_page4_1" value="A"> The patient's insurance coverage</label>
+                    <label><input type="radio" name="lq_page4_1" value="B"> The patient's risk of a severe allergic reaction</label>
+                    <div class="explanation" style="display:none;">B. Some contrast agents carry real allergic reaction risk, so careful patient evaluation is required before administration.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(4)">Check Answer</button>
+            </div>
+            <div id="lesson-page-5" class="lesson-page">
+                <h3>Page 5: Contouring and ICRU Treatment Planning Volumes</h3>
+                <p><strong>Contouring</strong> is the reproduction of a body shape and internal structures, typically drawn through the transverse plane of the treatment beam. Once contoured, the ICRU treatment planning volumes build on each other:</p>
+                <table class="data-table">
+                    <thead><tr><th>Volume</th><th>Definition</th></tr></thead>
+                    <tbody>
+                        <tr><td>GTV / CTV / PTV</td><td>The core target hierarchy (see the Brain planning lesson for a worked example)</td></tr>
+                        <tr><td><strong>Treated Volume</strong></td><td>Encompasses additional margin around the target volume to account for limitations in treatment technique</td></tr>
+                        <tr><td><strong>Irradiated Volume</strong></td><td>The volume of tissue receiving a significant dose (&gt;50% of the specified target dose) &mdash; tissue in front of, behind, and around the target</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="lesson-page-6" class="lesson-page">
+                <h3>Page 6: Motion and Measuring Separation</h3>
+                <p><strong>Interfraction motion</strong> is the change in target position from one treatment day to another. <strong>Intrafraction motion</strong> is the change in target position <em>during</em> a single treatment delivery &mdash; respiratory motion in the thorax is the classic example.</p>
+                <p><strong>IFD (separation)</strong> &mdash; the patient's thickness along the central axis &mdash; is most often measured directly from CT images today, though it can also be measured manually with a <strong>caliper</strong> (a sliding-leg ruler). Separation is used to help determine SSD.</p>
+            </div>
+            <div id="lesson-page-7" class="lesson-page">
+                <h3>Page 7: DVH and the Treatment Plan</h3>
+                <p>The <strong>Dose Volume Histogram (DVH)</strong> graphs radiation dose against tissue volume &mdash; the standard tool for evaluating a plan and comparing doses between different plans or structures (directly related to the therapeutic ratio concept).</p>
+                <p>A complete treatment plan specifies: number of fields, gantry/collimator/couch angles, beam energy, field size, MLC blocking, beam modifiers, monitor units, isocenter, and the DVH itself.</p>
+            </div>
+            <div id="lesson-page-8" class="lesson-page">
+                <h3>Page 8: Verification</h3>
+                <p><span class="highlight">Verification</span> is the final check before treatment is actually delivered. A <strong>Digitally Reconstructed Radiograph (DRR)</strong> is a computer-generated emulation of a radiograph from the beam's-eye view, used to compare against images taken on the actual treatment machine &mdash; confirming the anatomy-to-beam relationship matches the plan.</p>
+                <p><strong>Orthogonal images</strong> are two images taken 90&deg; apart, verifying alignment in two planes at once rather than just one.</p>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">Why are orthogonal images (90&deg; apart) used for verification rather than a single image?</p>
+                    <label><input type="radio" name="lq_page8_1" value="A"> A single image can only confirm alignment in one plane; two images 90° apart confirm alignment more completely</label>
+                    <label><input type="radio" name="lq_page8_1" value="B"> Orthogonal images use less radiation than a single image</label>
+                    <div class="explanation" style="display:none;">A. One image alone can't rule out a positioning error along the direction the beam travels — a second image from a different angle is needed to confirm 3D alignment.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(8)">Check Answer</button>
+            </div>
+            <div id="lesson-page-9" class="lesson-page">
+                <h3>Page 9: Body Planes and Field Size</h3>
+                <p><strong>AP images</strong> show anatomy in the <strong>coronal plane</strong> (inferior/superior and left/right). <strong>Lateral images</strong> show anatomy in the <strong>sagittal plane</strong> (inferior/superior and anterior/posterior).</p>
+                <p><strong>Field size</strong> is defined by the secondary collimator dimensions (width &times; length) &mdash; on the <strong>skin surface</strong> for SSD technique, or <strong>at isocenter</strong> for SAD technique. This is the same distinction covered in the Isodose Distribution lesson.</p>
+            </div>
+            <div id="lesson-page-10" class="lesson-page">
+                <h3>Page 10: Wrap-Up</h3>
+                <p>You've covered core terminology, the seven anatomic simulation sites, the nine-step CT simulation procedure, contrast and localization, contouring and ICRU volumes, motion types, DVH, verification and DRRs, and body planes/field size definitions.</p>
+                <p>This is the conceptual foundation underneath every site-specific planning lesson in this section &mdash; each one assumes you understand the process covered here.</p>
+            </div>
+
+            <div class="lesson-navigation">
+                <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled>Previous Page</button>
+                <span class="page-indicator" id="lessonPageIndicator">Page 1 of 10</span>
+                <button id="nextLessonPage" onclick="changeLessonPage(1)">Next Page</button>
+                <button id="startActivityButton" onclick="window.location.href='../index.html'" style="display:none; background-color: #28a745;">Back to Menu</button>
+            </div>
+        </div>
+        <div class="footer">Radiation Therapy E-Workbook &mdash; Medical Dosimetry</div>
+    </div>
+    <script>
+        let currentLessonPage = 1;
+        const totalLessonPages = 10;
+        const lessonPages = document.querySelectorAll('.lesson-page');
+        const prevLessonButton = document.getElementById('prevLessonPage');
+        const nextLessonButton = document.getElementById('nextLessonPage');
+        const lessonPageIndicator = document.getElementById('lessonPageIndicator');
+        const startActivityButton = document.getElementById('startActivityButton');
+        const lessonCorrectAnswers = {"lq_page4_1": "B", "lq_page8_1": "A"};
+        function displayLessonPage() {
+            lessonPages.forEach((page, index) => page.classList.toggle('active', index === currentLessonPage - 1));
+            prevLessonButton.disabled = currentLessonPage === 1;
+            nextLessonButton.style.display = currentLessonPage === totalLessonPages ? 'none' : 'inline-block';
+            startActivityButton.style.display = currentLessonPage === totalLessonPages ? 'inline-block' : 'none';
+            lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
+        }
+        function changeLessonPage(direction) {
+            currentLessonPage += direction;
+            if (currentLessonPage < 1) currentLessonPage = 1;
+            if (currentLessonPage > totalLessonPages) currentLessonPage = totalLessonPages;
+            displayLessonPage();
+        }
+        function checkPageAnswers(pageNumber) {
+            const questionsOnPage = document.querySelectorAll(`#lesson-page-${pageNumber} .interactive-question-block`);
+            questionsOnPage.forEach(block => {
+                const radio = block.querySelector('input[type="radio"]');
+                if (!radio) return;
+                const questionName = radio.name;
+                if (!lessonCorrectAnswers.hasOwnProperty(questionName)) return;
+                const correctAnswerValue = lessonCorrectAnswers[questionName];
+                const selectedRadio = block.querySelector(`input[name="${questionName}"]:checked`);
+                const explanationDiv = block.querySelector('.explanation');
+                block.classList.remove('feedback-correct', 'feedback-incorrect');
+                block.querySelectorAll('label').forEach(label => label.classList.remove('correct-option', 'selected-incorrect'));
+                if (explanationDiv) explanationDiv.style.display = 'none';
+                if (selectedRadio) {
+                    const userAnswer = selectedRadio.value;
+                    const userSelectedLabel = selectedRadio.parentElement;
+                    if (userAnswer === correctAnswerValue) {
+                        block.classList.add('feedback-correct');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('correct-option');
+                    } else {
+                        block.classList.add('feedback-incorrect');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('selected-incorrect');
+                        const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                        if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                    }
+                } else {
+                    block.classList.add('feedback-incorrect');
+                    const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                    if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                }
+                if (explanationDiv) explanationDiv.style.display = 'block';
+            });
+        }
+        displayLessonPage();
+    </script>
+</body>
+</html>
