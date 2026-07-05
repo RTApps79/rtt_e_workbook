@@ -1,104 +1,233 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Isodose Distribution - Main Menu</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Inter', sans-serif; }
-        .hero-banner-x { background: linear-gradient(to right, #4338ca, #7e22ce); }
-    </style>
-</head>
-<body class="bg-slate-100 text-slate-800 flex flex-col min-h-screen">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Isodose Distribution</title>
+<style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; margin: 20px;
+            background-color: #f4f4f4; color: #333; display: flex; flex-direction: column; align-items: center; }
+        .container { background-color: #fff; padding: 25px 35px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 90%; max-width: 900px; margin-bottom: 30px; }
+        h1, h2, h3, h4 { color: #0056b3; }
+        h1 { text-align: center; border-bottom: 2px solid #0056b3; padding-bottom: 15px; margin-bottom: 30px; font-size: 2em; }
+        h2 { border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 30px; margin-bottom: 20px; color: #003d7a; font-size: 1.6em; }
+        h3 { color: #004085; margin-top: 25px; margin-bottom: 15px; font-size: 1.3em; }
+        h4 { color: #17a2b8; margin-top: 20px; margin-bottom: 10px; font-size: 1.1em; font-weight: 600; }
+        p, li { margin-bottom: 12px; font-size: 1.05em; }
+        ul, ol { margin-bottom: 15px; padding-left: 25px; }
+        strong { font-weight: 600; }
+        .highlight { background-color: #e6f7ff; padding: 2px 5px; border-radius: 3px; font-weight: 600; }
+        code { background-color: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; color: #c7254e; }
+        table.data-table { width: 90%; margin: 15px auto; border-collapse: collapse; }
+        table.data-table th, table.data-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        table.data-table th { background-color: #e9f5ff; color: #0056b3; font-weight: 600; }
+        table.data-table tr:nth-child(even) { background-color: #f9f9f9; }
+        .flip-lesson-container { border: 1px solid #b3d7ff; padding: 20px; border-radius: 8px; background-color: #f0f8ff; margin-bottom: 30px; }
+        .lesson-page { display: none; padding: 15px; border: 1px solid #ddeeff; background-color: #fff; border-radius: 5px; min-height: 400px; }
+        .lesson-page.active { display: block; }
+        .lesson-navigation { text-align: center; margin-top: 20px; }
+        .lesson-navigation button, .lesson-page .check-page-answers {
+            background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px;
+            cursor: pointer; font-size: 1em; margin: 5px 10px; transition: background-color 0.2s; }
+        .lesson-navigation button:hover, .lesson-page .check-page-answers:hover { background-color: #0056b3; }
+        .lesson-navigation button:disabled { background-color: #ccc; cursor: not-allowed; }
+        .page-indicator { font-style: italic; color: #555; margin: 10px 0; }
+        .key-principle { background-color: #e7f3ff; padding: 10px; margin-bottom:10px; border-left: 3px solid #007bff; border-radius: 3px; }
+        .interactive-question-block { background: #f9f9f9; padding: 15px; margin: 20px 0; border: 1px solid #e0e0e0; border-radius: 8px; }
+        .interactive-question-block .question-text { font-weight: bold; margin-bottom: 8px; font-size: 1em; color: #555; }
+        .interactive-question-block label { display: block; margin-left: 0; padding: 8px 12px; border-radius: 5px; cursor: pointer; border: 1px solid transparent; margin-bottom: 5px; }
+        .interactive-question-block input[type="radio"] { margin-right: 10px; vertical-align: middle; }
+        .interactive-question-block label:hover { background-color: #f0f8ff; }
+        .feedback-correct { background-color: #e8f8f0 !important; border-left: 4px solid #2ecc71 !important; }
+        .feedback-incorrect { background-color: #fdedec !important; border-left: 4px solid #e74c3c !important; }
+        .feedback-correct label.correct-option, .feedback-incorrect label.correct-option { font-weight: bold; color: #1E8449; }
+        .feedback-incorrect label.selected-incorrect { color: #A93226; }
+        .explanation { font-size: 0.9em; color: #444; margin-top: 5px; padding-left: 20px; }
+        .footer { text-align: center; margin-top: 30px; padding-top: 15px; border-top: 1px solid #ccc; font-size: 0.9em; color: #555; }
 
-    <header class="bg-white shadow-md sticky top-0 z-50">
-        <div class="container mx-auto px-6 py-4 flex flex-col sm:flex-row justify-between items-center">
-            <h1 class="text-2xl font-bold text-violet-800">Isodose Distribution</h1>
-            <a href="../index.html" class="mt-2 sm:mt-0 text-sm bg-slate-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-slate-700 transition-colors duration-300">
-                &larr; Back to Treatment Planning
-            </a>
+        .nav-links-header { background-color: #fff; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 50; }
+</style>
+</head>
+<body>
+    <header class="nav-links-header">
+        <div style="max-width:900px;margin:0 auto;padding:12px 20px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;">
+            <strong style="color:#0056b3;">Isodose Distribution</strong>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                <a href="../index.html" style="font-size:0.8rem;background:#0056b3;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Medical Dosimetry Menu</a>
+                <a href="../../index.html" style="font-size:0.8rem;background:#64748b;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Main Workbook</a>
+            </div>
         </div>
     </header>
+    <div class="container">
+        <h1>Isodose Distribution</h1>
+        <div class="flip-lesson-container">
+            <h2>Interactive Lesson</h2>
+            <div id="lesson-page-1" class="lesson-page active">
+                <h3>Page 1: SSD vs. SAD Treatment Approaches</h3>
+                <p>Two setup approaches define how a beam is positioned relative to the patient:</p>
+                <table class="data-table">
+                    <thead><tr><th>Approach</th><th>Reference point</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>SSD (Source-to-Skin Distance)</strong></td><td>The distance from source to the patient's skin surface is fixed (commonly 100 cm); depth is measured from there</td></tr>
+                        <tr><td><strong>SAD (Source-to-Axis Distance)</strong></td><td>The distance from source to isocenter is fixed (commonly 100 cm); isocenter sits at a defined depth inside the patient, and the couch/gantry rotate around it</td></tr>
+                    </tbody>
+                </table>
+                <p>Multi-field, multi-angle plans overwhelmingly use SAD/isocentric technique, since it lets the gantry rotate to different angles without having to re-measure SSD at every new angle.</p>
+            </div>
+            <div id="lesson-page-2" class="lesson-page">
+                <h3>Page 2: Depth, Separation, and Key Terms</h3>
+                <p><strong>Depth</strong> for dose calculation is commonly taken at D<sub>max</sub>, at a specific prescription depth, or at the patient's midline. <strong>Separation (IFD)</strong> is the patient's thickness in the beam direction &mdash; surface-to-surface, either AP/PA or lateral &mdash; and it directly determines where midline and isocenter actually sit.</p>
+                <div class="key-principle">
+                    <p><strong>Isocenter</strong> is the fixed point in space the beam's central axis passes through regardless of gantry angle. <strong>Isodose lines/curves</strong> connect points receiving the same percentage of dose, and the full <strong>isodose distribution</strong> is the 2D or 3D map of dose throughout the treated volume &mdash; the entire subject of this lesson.</p>
+                </div>
+            </div>
+            <div id="lesson-page-3" class="lesson-page">
+                <h3>Page 3: Percentage Depth Dose (PDD)</h3>
+                <p><span class="highlight">Percentage Depth Dose</span> expresses dose at any depth as a percentage of the dose at D<sub>max</sub>, for a fixed SSD. PDD tables are built per beam energy and field size &mdash; larger fields and higher energies both produce higher PDD at a given depth (more forward-scattered dose, deeper penetration).</p>
+                <div class="key-principle">
+                    <p><strong>Worked example:</strong> A dose of 2500 cGy is prescribed at 6.5 cm depth, where PDD = 62.5%. Given Dose (at D<sub>max</sub>) = 2500 / 0.625 = <strong>4000 cGy</strong>.</p>
+                </div>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">As field size increases, what generally happens to PDD at a given depth?</p>
+                    <label><input type="radio" name="lq_page3_1" value="A"> PDD increases</label>
+                    <label><input type="radio" name="lq_page3_1" value="B"> PDD decreases</label>
+                    <div class="explanation" style="display:none;">A. Larger fields produce more forward/lateral scatter contributing to dose at depth, increasing PDD.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(3)">Check Answer</button>
+            </div>
+            <div id="lesson-page-4" class="lesson-page">
+                <h3>Page 4: Extended SSD and Mayneord's F Factor</h3>
+                <p>If a patient must be treated at a non-standard SSD (extended beyond the calibration distance), the PDD table values no longer directly apply &mdash; the beam's inverse-square falloff and scatter conditions have both changed.</p>
+                <div class="key-principle">
+                    <p><strong>Mayneord's F Factor</strong> corrects PDD between two different SSDs, combining an inverse-square correction with a scatter correction. A helpful mnemonic: <strong>"old and deep" (old SSD + depth) times "new and short"</strong> &mdash; capturing the ratio structure of the formula. Extending the SSD generally makes the beam "colder" (lower output) at a given point unless compensated for.</p>
+                </div>
+            </div>
+            <div id="lesson-page-5" class="lesson-page">
+                <h3>Page 5: TMR, TPR, and SAR</h3>
+                <p>For SAD/isocentric technique, dose is calculated differently than for SSD technique, since the reference point (isocenter) is fixed inside the patient rather than at the skin:</p>
+                <ul>
+                    <li><strong>TMR (Tissue-Maximum Ratio)</strong> &mdash; compares dose at a given depth to dose at D<sub>max</sub>, both at the same distance from the source, independent of SSD. This is the standard tool for SAD calculations.</li>
+                    <li><strong>TPR (Tissue-Phantom Ratio)</strong> &mdash; a related ratio using a reference depth other than D<sub>max</sub>.</li>
+                    <li><strong>SAR (Scatter-Air Ratio)</strong> &mdash; isolates the scatter contribution to dose, used in the Clarkson method for irregular field calculations, where the field is broken into sectors and scatter is summed sector-by-sector.</li>
+                </ul>
+            </div>
+            <div id="lesson-page-6" class="lesson-page">
+                <h3>Page 6: Rotational and Arc Treatments</h3>
+                <p>In a <span class="highlight">rotational/arc treatment</span>, the beam stays on while the gantry moves continuously &mdash; a full rotation is 360&deg;; an arc is any span less than that, with a defined start and stop angle.</p>
+                <div class="key-principle">
+                    <p>Dose is delivered as <strong>cGy per degree</strong> of rotation. Depth for a rotational field is calculated using an <strong>average TAR</strong>, obtained by measuring tumor depth/radius at multiple angular intervals around the full rotation and averaging the resulting TAR values &mdash; since the beam path length through the patient changes continuously as the gantry rotates.</p>
+                </div>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">Why is an "average TAR" used for rotational field dose calculations rather than a single TAR value?</p>
+                    <label><input type="radio" name="lq_page6_1" value="A"> Because the depth to the tumor changes continuously as the gantry rotates around the patient</label>
+                    <label><input type="radio" name="lq_page6_1" value="B"> Because rotational treatments don't actually use TAR at all</label>
+                    <div class="explanation" style="display:none;">A. As the gantry rotates, the beam's path length to the tumor changes continuously, so an average across multiple angles better represents the actual dose delivered.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(6)">Check Answer</button>
+            </div>
+            <div id="lesson-page-7" class="lesson-page">
+                <h3>Page 7: Gap Calculations for Abutting Fields</h3>
+                <p>When two adjacent fields are needed to cover a target too large for one field, they can be <span class="highlight">abutted</span> &mdash; but because photon beams diverge from their source, simply placing field edges together on the skin would create a hot spot at depth (where the diverging beams overlap) or a cold spot (where they diverge apart). A calculated <strong>gap</strong> on the skin surface compensates for this divergence.</p>
+                <div class="key-principle">
+                    <p><strong>Gap = (L<sub>1</sub>/2)(d/SSD<sub>1</sub>) + (L<sub>2</sub>/2)(d/SSD<sub>2</sub>)</strong>, where L is each field's length, d is the depth where the fields should meet exactly, and SSD is each field's source-to-skin distance. Electron fields are also commonly abutted, using similar logic adapted for electron beam characteristics.</p>
+                </div>
+            </div>
+            <div id="lesson-page-8" class="lesson-page">
+                <h3>Page 8: Entrance and Exit Dose</h3>
+                <p>In an opposed-field setup (e.g., AP/PA), each beam delivers its highest dose near D<sub>max</sub> on the <strong>entrance</strong> side, then falls off with depth &mdash; but some dose still exits the far side of the patient as the beam continues past isocenter. This <strong>exit dose</strong> from the opposing beam adds to the entrance dose of the beam on that side, which is exactly why opposed pairs of fields combine to deliver more uniform dose across the target than a single field ever could.</p>
+            </div>
+            <div id="lesson-page-9" class="lesson-page">
+                <h3>Page 9: Bolus</h3>
+                <p><strong>Bolus</strong> is a tissue-equivalent material placed directly on the patient's skin to modify the dose distribution &mdash; specifically to eliminate the skin-sparing effect when a superficial target needs full dose at the surface, or to compensate for irregular patient contours.</p>
+                <p>The companion Bolus Effect simulator below lets you see exactly how adding bolus shifts D<sub>max</sub> toward the skin surface. Click below to open it.</p>
+            </div>
+            <div id="lesson-page-10" class="lesson-page">
+                <h3>Page 10: Wrap-Up</h3>
+                <p>You've covered SSD vs. SAD technique, PDD and extended-SSD correction (Mayneord's F factor), TMR/TPR/SAR for isocentric calculations, rotational/arc treatment dosimetry, gap calculations for abutting fields, entrance/exit dose in opposed pairs, and bolus.</p>
+                <p>Two hands-on companions are available: the Bolus Effect simulator, and a full Depth Dose calculation worksheet with real practice problems.</p>
+            </div>
 
-    <section class="hero-banner-x text-white py-16 px-6 text-center">
-        <div class="container mx-auto">
-            <h2 class="text-4xl font-bold mb-4">Isodose Curves, Wedges, and Field Modifiers</h2>
-            <p class="text-lg mb-8">How beam modifiers reshape the dose distribution — wedges, bolus, arcs, and magnification.</p>
+            <div class="lesson-navigation">
+                <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled>Previous Page</button>
+                <span class="page-indicator" id="lessonPageIndicator">Page 1 of 10</span>
+                <button id="nextLessonPage" onclick="changeLessonPage(1)">Next Page</button>
+                <button id="startActivityButton" onclick="window.location.href='bolus_simulator.html'" style="display:none; background-color: #28a745;">Start Activity</button>
+            </div>
         </div>
-    </section>
-
-    <main class="container mx-auto px-6 py-12 flex-grow">
-        <div class="max-w-2xl mx-auto text-center mb-10">
-            <span class="inline-block text-xs font-bold uppercase tracking-wide bg-amber-100 text-amber-700 px-3 py-1 rounded-full mb-4">Module under construction</span>
-            <p class="text-slate-600">This module's content is being pulled together from source course material. Planned pieces:</p>
+        <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #b3d7ff;">
+            <h3 style="text-align:center; color:#0056b3;">Companion Activities</h3>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px;">
+                <a href="bolus_simulator.html" style="display:block; background:#f0f8ff; border:1px solid #b3d7ff; border-radius:8px; padding:14px; text-decoration:none; color:#0056b3;">
+                    <strong>Bolus Effect Simulator</strong>
+                    <p style="font-size:0.85em; color:#334155; margin-top:4px;">See how bolus shifts Dmax toward the skin surface</p>
+                </a>
+                <a href="depth_dose_worksheet.html" style="display:block; background:#f0f8ff; border:1px solid #b3d7ff; border-radius:8px; padding:14px; text-decoration:none; color:#0056b3;">
+                    <strong>Depth Dose Worksheet</strong>
+                    <p style="font-size:0.85em; color:#334155; margin-top:4px;">Practice problems calculating dose at depth</p>
+                </a>
+            </div>
         </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div class="bg-white p-6 rounded-xl shadow-lg opacity-60 flex flex-col">
-                <div class="flex justify-between items-start mb-3">
-                    <h3 class="text-xl font-semibold text-slate-500">Isodose Distribution Lecture</h3>
-                    <span class="text-[10px] font-bold uppercase tracking-wide bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full whitespace-nowrap ml-2">planned</span>
-                </div>
-                <p class="text-slate-500 mb-4 text-sm flex-grow">Core lecture on isodose curves and site planning principles.</p>
-                <span class="inline-block bg-slate-200 text-slate-500 font-medium py-2 px-4 rounded-lg cursor-not-allowed text-center">Not yet available</span>
-            </div>
-            <div class="bg-white p-6 rounded-xl shadow-lg opacity-60 flex flex-col">
-                <div class="flex justify-between items-start mb-3">
-                    <h3 class="text-xl font-semibold text-slate-500">Arc Rotation Lab</h3>
-                    <span class="text-[10px] font-bold uppercase tracking-wide bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full whitespace-nowrap ml-2">planned</span>
-                </div>
-                <p class="text-slate-500 mb-4 text-sm flex-grow">Practice constructing isodose distributions for arc treatments.</p>
-                <span class="inline-block bg-slate-200 text-slate-500 font-medium py-2 px-4 rounded-lg cursor-not-allowed text-center">Not yet available</span>
-            </div>
-            <div class="bg-white p-6 rounded-xl shadow-lg opacity-60 flex flex-col">
-                <div class="flex justify-between items-start mb-3">
-                    <h3 class="text-xl font-semibold text-slate-500">Wedges, Hinge Angles, and Bolus Lab</h3>
-                    <span class="text-[10px] font-bold uppercase tracking-wide bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full whitespace-nowrap ml-2">planned</span>
-                </div>
-                <p class="text-slate-500 mb-4 text-sm flex-grow">Applying wedge and bolus modifiers to a treatment field.</p>
-                <span class="inline-block bg-slate-200 text-slate-500 font-medium py-2 px-4 rounded-lg cursor-not-allowed text-center">Not yet available</span>
-            </div>
-            <div class="bg-white p-6 rounded-xl shadow-lg opacity-60 flex flex-col">
-                <div class="flex justify-between items-start mb-3">
-                    <h3 class="text-xl font-semibold text-slate-500">Direct Proportions &amp; Magnification Lab</h3>
-                    <span class="text-[10px] font-bold uppercase tracking-wide bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full whitespace-nowrap ml-2">planned</span>
-                </div>
-                <p class="text-slate-500 mb-4 text-sm flex-grow">Field size magnification and proportion calculations.</p>
-                <span class="inline-block bg-slate-200 text-slate-500 font-medium py-2 px-4 rounded-lg cursor-not-allowed text-center">Not yet available</span>
-            </div>
-            <div class="bg-white p-6 rounded-xl shadow-lg opacity-60 flex flex-col">
-                <div class="flex justify-between items-start mb-3">
-                    <h3 class="text-xl font-semibold text-slate-500">Inverse Square Law Applications Lab</h3>
-                    <span class="text-[10px] font-bold uppercase tracking-wide bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full whitespace-nowrap ml-2">planned</span>
-                </div>
-                <p class="text-slate-500 mb-4 text-sm flex-grow">Applying the inverse square law to dose-rate problems.</p>
-                <span class="inline-block bg-slate-200 text-slate-500 font-medium py-2 px-4 rounded-lg cursor-not-allowed text-center">Not yet available</span>
-            </div>
-            <div class="bg-white p-6 rounded-xl shadow-lg opacity-60 flex flex-col">
-                <div class="flex justify-between items-start mb-3">
-                    <h3 class="text-xl font-semibold text-slate-500">Quiz</h3>
-                    <span class="text-[10px] font-bold uppercase tracking-wide bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full whitespace-nowrap ml-2">planned</span>
-                </div>
-                <p class="text-slate-500 mb-4 text-sm flex-grow">Self-check quiz covering isodose distribution.</p>
-                <span class="inline-block bg-slate-200 text-slate-500 font-medium py-2 px-4 rounded-lg cursor-not-allowed text-center">Not yet available</span>
-            </div>
-
-        </div>
-
-    </main>
-
-    <footer class="bg-slate-800 text-slate-300 py-8 mt-12 text-center">
-        <div class="container mx-auto px-6">
-            <p>&copy; <span id="currentYear"></span> Radiation Therapy E-Workbook. All Rights Reserved.</p>
-            <p class="text-sm mt-1">Isodose Distribution Module</p>
-        </div>
-    </footer>
-
+        <div class="footer">Radiation Therapy E-Workbook &mdash; Medical Dosimetry</div>
+    </div>
     <script>
-        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        let currentLessonPage = 1;
+        const totalLessonPages = 10;
+        const lessonPages = document.querySelectorAll('.lesson-page');
+        const prevLessonButton = document.getElementById('prevLessonPage');
+        const nextLessonButton = document.getElementById('nextLessonPage');
+        const lessonPageIndicator = document.getElementById('lessonPageIndicator');
+        const startActivityButton = document.getElementById('startActivityButton');
+        const lessonCorrectAnswers = {"lq_page3_1": "A", "lq_page6_1": "A"};
+        function displayLessonPage() {
+            lessonPages.forEach((page, index) => page.classList.toggle('active', index === currentLessonPage - 1));
+            prevLessonButton.disabled = currentLessonPage === 1;
+            nextLessonButton.style.display = currentLessonPage === totalLessonPages ? 'none' : 'inline-block';
+            startActivityButton.style.display = currentLessonPage === totalLessonPages ? 'inline-block' : 'none';
+            lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
+        }
+        function changeLessonPage(direction) {
+            currentLessonPage += direction;
+            if (currentLessonPage < 1) currentLessonPage = 1;
+            if (currentLessonPage > totalLessonPages) currentLessonPage = totalLessonPages;
+            displayLessonPage();
+        }
+        function checkPageAnswers(pageNumber) {
+            const questionsOnPage = document.querySelectorAll(`#lesson-page-${pageNumber} .interactive-question-block`);
+            questionsOnPage.forEach(block => {
+                const radio = block.querySelector('input[type="radio"]');
+                if (!radio) return;
+                const questionName = radio.name;
+                if (!lessonCorrectAnswers.hasOwnProperty(questionName)) return;
+                const correctAnswerValue = lessonCorrectAnswers[questionName];
+                const selectedRadio = block.querySelector(`input[name="${questionName}"]:checked`);
+                const explanationDiv = block.querySelector('.explanation');
+                block.classList.remove('feedback-correct', 'feedback-incorrect');
+                block.querySelectorAll('label').forEach(label => label.classList.remove('correct-option', 'selected-incorrect'));
+                if (explanationDiv) explanationDiv.style.display = 'none';
+                if (selectedRadio) {
+                    const userAnswer = selectedRadio.value;
+                    const userSelectedLabel = selectedRadio.parentElement;
+                    if (userAnswer === correctAnswerValue) {
+                        block.classList.add('feedback-correct');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('correct-option');
+                    } else {
+                        block.classList.add('feedback-incorrect');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('selected-incorrect');
+                        const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                        if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                    }
+                } else {
+                    block.classList.add('feedback-incorrect');
+                    const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                    if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                }
+                if (explanationDiv) explanationDiv.style.display = 'block';
+            });
+        }
+        displayLessonPage();
     </script>
-
 </body>
 </html>
