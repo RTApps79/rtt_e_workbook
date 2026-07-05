@@ -94,7 +94,28 @@
                 </table>
             </div>
             <div id="lesson-page-4" class="lesson-page">
-                <h3>Page 4: Organ-at-Risk Constraints</h3>
+                <h3>Page 4: Target Volumes</h3>
+                <p>Thoracic target volumes follow the same motion-aware sequence as the abdomen, plus a nodal consideration specific to lung disease:</p>
+                <table class="data-table">
+                    <thead><tr><th>Volume</th><th>Thorax-specific consideration</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>GTV</strong></td><td>Primary tumor, contoured on lung windows; PET/CT fusion is commonly used to help distinguish tumor from atelectasis (collapsed lung)</td></tr>
+                        <tr><td><strong>CTV</strong></td><td>GTV plus a margin for microscopic spread; for locally advanced disease, involved mediastinal/hilar nodal stations are included as a separate nodal CTV</td></tr>
+                        <tr><td><strong>ITV</strong></td><td>CTV expanded to cover the full respiratory motion envelope captured on 4D-CT &mdash; often the single largest expansion in the whole sequence for a lower-lobe tumor</td></tr>
+                        <tr><td><strong>PTV</strong></td><td>ITV plus setup margin; for early-stage SBRT, margins are kept as tight as the motion-management technique allows, since the dose per fraction is ablative</td></tr>
+                    </tbody>
+                </table>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">Why might a lower-lobe lung tumor need a larger ITV expansion than an upper-lobe tumor?</p>
+                    <label><input type="radio" name="lq_page4_1" value="A"> Lower-lobe tumors typically move more with respiration, closer to the diaphragm</label>
+                    <label><input type="radio" name="lq_page4_1" value="B"> ITV size doesn't vary by tumor location</label>
+                    <div class="explanation" style="display:none;">A. Tumors closer to the diaphragm generally experience greater respiratory excursion, which directly increases how much the ITV needs to expand to cover that motion.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(4)">Check Answer</button>
+            </div>
+            <div id="lesson-page-5" class="lesson-page">
+                <h3>Page 5: Organ-at-Risk Constraints</h3>
                 <table class="data-table">
                     <thead><tr><th>Structure</th><th>Constraint (conventional fractionation)</th></tr></thead>
                     <tbody>
@@ -109,24 +130,24 @@
                 <h4>Quick Check!</h4>
                 <div class="interactive-question-block">
                     <p class="question-text">What does "Lung V20" specifically describe?</p>
-                    <label><input type="radio" name="lq_page4_1" value="A"> The percentage of lung volume receiving at least 20 Gy</label>
-                    <label><input type="radio" name="lq_page4_1" value="B"> The number of lung fields used in the plan</label>
+                    <label><input type="radio" name="lq_page5_1" value="A"> The percentage of lung volume receiving at least 20 Gy</label>
+                    <label><input type="radio" name="lq_page5_1" value="B"> The number of lung fields used in the plan</label>
                     <div class="explanation" style="display:none;">A. V20 is a dose-volume metric — the fraction of total lung volume receiving 20 Gy or more, a key predictor of pneumonitis risk.</div>
                 </div>
-                <button class="check-page-answers" onclick="checkPageAnswers(4)">Check Answer</button>
-            </div>
-            <div id="lesson-page-5" class="lesson-page">
-                <h3>Page 5: Techniques — Conventional vs. SBRT</h3>
-                <p><strong>Conventionally fractionated IMRT/VMAT</strong> is standard for locally advanced disease. <strong>SBRT</strong> has become the standard of care for medically inoperable, early-stage (small, peripheral) lung tumors &mdash; delivering ablative dose in just 3&ndash;5 fractions, which demands excellent immobilization, motion management, and image guidance given how little margin for error exists at that dose per fraction.</p>
+                <button class="check-page-answers" onclick="checkPageAnswers(5)">Check Answer</button>
             </div>
             <div id="lesson-page-6" class="lesson-page">
-                <h3>Page 6: Wrap-Up</h3>
-                <p>You've covered why respiratory motion dominates thoracic planning, 4D-CT and the ITV concept, the four motion-management approaches, key OAR constraints (especially Lung V20), and conventional vs. SBRT technique selection.</p>
+                <h3>Page 6: Techniques — Conventional vs. SBRT</h3>
+                <p><strong>Conventionally fractionated IMRT/VMAT</strong> (commonly 60&ndash;66 Gy in 30&ndash;33 fractions) is standard for locally advanced disease. <strong>SBRT</strong> (commonly 48&ndash;54 Gy in 3&ndash;5 fractions) has become the standard of care for medically inoperable, early-stage (small, peripheral) lung tumors &mdash; delivering ablative dose in far fewer fractions, which demands excellent immobilization, motion management, and image guidance given how little margin for error exists at that dose per fraction.</p>
+            </div>
+            <div id="lesson-page-7" class="lesson-page">
+                <h3>Page 7: Wrap-Up</h3>
+                <p>You've covered why respiratory motion dominates thoracic planning, 4D-CT and the ITV concept, the four motion-management approaches, thorax-specific target volume considerations, key OAR constraints (especially Lung V20), and conventional vs. SBRT technique selection with typical dose ranges.</p>
             </div>
 
             <div class="lesson-navigation">
                 <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled>Previous Page</button>
-                <span class="page-indicator" id="lessonPageIndicator">Page 1 of 6</span>
+                <span class="page-indicator" id="lessonPageIndicator">Page 1 of 7</span>
                 <button id="nextLessonPage" onclick="changeLessonPage(1)">Next Page</button>
                 <button id="startActivityButton" onclick="window.location.href='../../Treatment_Planning_Suite/index.html?dataset=demo'" style="display:none; background-color: #28a745;">Open Treatment Planning Suite</button>
             </div>
@@ -135,13 +156,13 @@
     </div>
     <script>
         let currentLessonPage = 1;
-        const totalLessonPages = 6;
+        const totalLessonPages = 7;
         const lessonPages = document.querySelectorAll('.lesson-page');
         const prevLessonButton = document.getElementById('prevLessonPage');
         const nextLessonButton = document.getElementById('nextLessonPage');
         const lessonPageIndicator = document.getElementById('lessonPageIndicator');
         const startActivityButton = document.getElementById('startActivityButton');
-        const lessonCorrectAnswers = {"lq_page2_1": "B", "lq_page4_1": "A"};
+        const lessonCorrectAnswers = {"lq_page2_1": "B", "lq_page4_1": "A", "lq_page5_1": "A"};
         function displayLessonPage() {
             lessonPages.forEach((page, index) => page.classList.toggle('active', index === currentLessonPage - 1));
             prevLessonButton.disabled = currentLessonPage === 1;
