@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>RadTherapy Rivals Ultimate Edition - Build 2</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI,Arial,sans-serif}
+body{overflow:hidden;background:#050816;color:#fff;height:100vh}
+canvas{position:fixed;top:0;left:0;z-index:-2}
+#nebula{position:fixed;inset:0;z-index:-3;background:
+radial-gradient(circle at 20% 30%,rgba(0,255,255,.28),transparent 25%),
+radial-gradient(circle at 80% 20%,rgba(255,0,200,.25),transparent 22%),
+radial-gradient(circle at 60% 80%,rgba(128,0,255,.25),transparent 30%),
+linear-gradient(135deg,#03040c,#07142a 45%,#090514)}
+#hud{position:fixed;top:14px;left:14px;z-index:20;display:flex;gap:18px;align-items:center}
+.pill{border:1px solid #25f7ff;border-radius:999px;padding:8px 14px;background:rgba(0,0,0,.45);box-shadow:0 0 16px rgba(0,255,255,.35)}
+.bar{width:220px;height:18px;background:#151827;border-radius:30px;overflow:hidden;border:1px solid #38e9ff}
+.fill{height:100%;width:0%;background:linear-gradient(90deg,#00f6ff,#7cff6b,#ffe95a)}
+#scoreBoard{position:fixed;right:18px;top:16px;z-index:20;background:rgba(0,0,0,.45);border:1px solid #ff4df3;border-radius:18px;padding:12px 18px;box-shadow:0 0 18px rgba(255,0,230,.35)}
+.player{margin:6px 0;font-size:1.05rem}
+#game,#screen{height:100vh;width:100vw}
+#game{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+h1{font-size:clamp(2.8rem,7vw,6rem);letter-spacing:2px;text-shadow:0 0 10px #00f6ff,0 0 24px #00f6ff,0 0 42px #ff00df;animation:titlePulse 2.6s infinite}
+@keyframes titlePulse{50%{transform:scale(1.035);filter:hue-rotate(40deg)}}
+.subtitle{margin-top:12px;font-size:1.25rem;opacity:.86}
+.menu{display:grid;grid-template-columns:repeat(3,minmax(230px,310px));gap:18px;margin-top:42px}
+.card{height:150px;border:2px solid #00f6ff;border-radius:24px;background:linear-gradient(145deg,rgba(0,255,255,.09),rgba(255,0,255,.08));display:flex;flex-direction:column;justify-content:center;align-items:center;cursor:pointer;transition:.25s;backdrop-filter:blur(6px);box-shadow:inset 0 0 18px rgba(0,255,255,.08)}
+.card:hover{transform:translateY(-8px) scale(1.035);box-shadow:0 0 18px #00f6ff,0 0 34px rgba(255,0,255,.65)}
+.card b{font-size:1.28rem}.card span{font-size:.86rem;opacity:.78;margin-top:8px;width:85%}
+#screen{display:none;padding:76px 24px 24px}
+.panel{max-width:1180px;margin:auto;border:2px solid #00f6ff;border-radius:24px;background:rgba(0,0,0,.64);box-shadow:0 0 28px rgba(0,255,255,.25);padding:24px;position:relative;overflow:hidden}
+.panel:before{content:"";position:absolute;inset:-80px;background:conic-gradient(from 90deg,transparent,#00f6ff22,transparent,#ff00ff22,transparent);animation:spin 8s linear infinite;z-index:-1}
+@keyframes spin{to{transform:rotate(360deg)}}
+.topline{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:18px}
+button{border:0;border-radius:14px;padding:12px 18px;background:#00f6ff;color:#041019;font-weight:800;cursor:pointer;transition:.18s}
+button:hover{transform:scale(1.05);filter:brightness(1.1)}
+.ghost{background:transparent;color:#fff;border:1px solid #00f6ff}
+.question{font-size:1.7rem;line-height:1.35;margin:18px 0}
+.answers{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.answer{padding:18px;border:2px solid #fff;border-radius:16px;cursor:pointer;transition:.18s;background:rgba(255,255,255,.04)}
+.answer:hover{background:#00f6ff;color:#001216;transform:scale(1.025)}
+.timer{font-size:2rem;color:#ffe95a;text-shadow:0 0 12px #ffe95a}
+.result{text-align:center;font-size:2.5rem;margin-top:22px}
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(130px);z-index:50;background:linear-gradient(90deg,#111b33,#321640);border:1px solid #ffe95a;border-radius:18px;padding:16px 24px;box-shadow:0 0 24px #ffe95a;transition:.35s;font-weight:800}
+#toast.show{transform:translateX(-50%) translateY(0)}
+.vault{height:570px;display:grid;grid-template-columns:1.2fr .8fr;gap:18px}
+.scene{position:relative;border:1px solid #37f7ff;border-radius:22px;background:radial-gradient(circle at center,#10264c,#050816 65%);overflow:hidden}
+.floor{position:absolute;left:-20%;right:-20%;bottom:-80px;height:240px;background:repeating-linear-gradient(90deg,rgba(0,246,255,.25) 0 2px,transparent 2px 80px),linear-gradient(#0b1b36,#060914);transform:perspective(600px) rotateX(62deg)}
+.linac-arm{position:absolute;width:250px;height:250px;border:34px solid #dfe7ef;border-left-color:transparent;border-bottom-color:#9fb2c5;border-radius:50%;left:160px;top:80px;animation:gantryRotate 8s ease-in-out infinite alternate;filter:drop-shadow(0 0 18px #00f6ff)}
+@keyframes gantryRotate{from{transform:rotate(-38deg)}to{transform:rotate(42deg)}}
+.linac-head{position:absolute;width:120px;height:92px;background:linear-gradient(#f4f7fb,#8195aa);border-radius:18px;left:320px;top:170px;box-shadow:0 0 22px #00f6ff;animation:headGlow 1.4s infinite alternate}
+@keyframes headGlow{to{box-shadow:0 0 36px #ffe95a}}
+.beam{position:absolute;left:305px;top:250px;width:170px;height:260px;background:linear-gradient(rgba(255,240,80,.8),rgba(255,240,80,.05));clip-path:polygon(48% 0,62% 0,100% 100%,0 100%);filter:blur(1px);opacity:.0;animation:beamPulse 2.4s infinite}
+@keyframes beamPulse{40%,70%{opacity:.75}0%,100%{opacity:.08}}
+.couch{position:absolute;width:330px;height:42px;background:linear-gradient(90deg,#d6e8ff,#758ca7);border-radius:24px;left:240px;bottom:132px;animation:couchMove 4s ease-in-out infinite alternate}
+@keyframes couchMove{to{transform:translateX(38px)}}
+.patient{position:absolute;width:120px;height:34px;background:#f6c7a6;border-radius:45%;left:340px;bottom:172px;animation:patientBreathe 1.8s infinite}
+@keyframes patientBreathe{50%{transform:scaleY(1.13)}}
+.lasers:before,.lasers:after{content:"";position:absolute;background:#ff1744;box-shadow:0 0 15px #ff1744}
+.lasers:before{width:100%;height:2px;top:285px;left:0}.lasers:after{width:2px;height:100%;left:397px;top:0}
+.mlc{position:absolute;right:26px;top:26px;width:250px;height:180px;border:2px solid #00f6ff;border-radius:18px;padding:16px;background:rgba(0,0,0,.55)}
+.leaf{height:10px;margin:5px 0;background:#b6c7d9;border-radius:8px;animation:leafDance 2s infinite alternate}
+.leaf:nth-child(even){animation-delay:.3s}
+@keyframes leafDance{to{width:45%}}
+.infoGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.info{border:1px solid rgba(255,255,255,.24);border-radius:14px;padding:12px;background:rgba(255,255,255,.05)}
+.errorList{display:grid;gap:10px;margin-top:14px}
+.errorItem{padding:13px;border:1px solid #fff;border-radius:14px;cursor:pointer;background:rgba(255,255,255,.05)}
+.errorItem.selected{background:#ffe95a;color:#111}
+.pathGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}
+.pathCard{min-height:120px;border:1px solid #ff4df3;border-radius:18px;padding:14px;background:rgba(255,0,230,.07);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;cursor:pointer}
+.pathCard:hover{transform:scale(1.04);box-shadow:0 0 18px #ff4df3}
+input{padding:14px;border-radius:14px;border:2px solid #00f6ff;background:#07142a;color:white;font-size:1.1rem}
+@media(max-width:900px){.menu{grid-template-columns:1fr}.vault{grid-template-columns:1fr;height:auto}.scene{height:460px}.answers{grid-template-columns:1fr}.pathGrid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+
+<body>
+<div id="nebula"></div>
+<canvas id="bg"></canvas>
+
+<div id="hud">
+  <div class="pill">Turn: <span id="turn">Player 1</span></div>
+  <div class="pill">XP <div class="bar"><div class="fill" id="xpFill"></div></div></div>
+  <div class="pill">Streak: <span id="streak">0</span></div>
+</div>
+
+<div id="scoreBoard">
+  <div class="player">Player 1: <span id="p1">0</span></div>
+  <div class="player">Player 2: <span id="p2">0</span></div>
+</div>
+
+<div id="toast"></div>
+
+<div id="game">
+  <h1>RADTHERAPY RIVALS</h1>
+  <div class="subtitle">Ultimate Radiation Oncology Arena — Build 2</div>
+
+  <div class="menu">
+    <div class="card" onclick="startRoyale()"><b>⚡ Radiation Royale</b><span>Fast clinical knowledge battle</span></div>
+    <div class="card" onclick="startDoseDuel()"><b>🧮 Dose Duel</b><span>MU and dose calculation combat</span></div>
+    <div class="card" onclick="startTimeout()"><b>🏥 Time-Out Showdown</b><span>Find unsafe treatment errors before beam-on</span></div>
+    <div class="card" onclick="startLinac()"><b>☢ LINAC Legends</b><span>Animated treatment vault + beam geometry</span></div>
+    <div class="card" onclick="startPathology()"><b>🧬 Pathology Sprint</b><span>Oncology pathology and staging clues</span></div>
+    <div class="card" onclick="resetGame()"><b>🔄 Reset Match</b><span>Clear scores, XP, and streaks</span></div>
+  </div>
+</div>
+
+<div id="screen"></div>
+
+<script>
+/* =========================
+   PARTICLE BACKGROUND
+========================= */
+const canvas=document.getElementById("bg");
+const ctx=canvas.getContext("2d");
+canvas.width=innerWidth; canvas.height=innerHeight;
+
+let particles=[];
+for(let i=0;i<220;i++){
+  particles.push({
+    x:Math.random()*canvas.width,
+    y:Math.random()*canvas.height,
+    r:Math.random()*2.6+.4,
+    dx:(Math.random()-.5)*1.2,
+    dy:(Math.random()-.5)*1.2,
+    hue:Math.random()*360
+  });
+}
+
+function animate(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach(p=>{
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=`hsla(${p.hue},100%,65%,.82)`;
+    ctx.shadowBlur=12;
+    ctx.shadowColor=`hsl(${p.hue},100%,65%)`;
+    ctx.fill();
+    p.x+=p.dx; p.y+=p.dy; p.hue+=.25;
+    if(p.x<0)p.x=canvas.width;
+    if(p.x>canvas.width)p.x=0;
+    if(p.y<0)p.y=canvas.height;
+    if(p.y>canvas.height)p.y=0;
+  });
+  requestAnimationFrame(animate);
+}
+animate();
+
+/* =========================
+   AUDIO
+========================= */
+let audioCtx;
+function beep(freq=440,duration=.12,type="sine"){
+  try{
+    audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();
+    const o=audioCtx.createOscillator();
+    const g=audioCtx.createGain();
+    o.type=type; o.frequency.value=freq;
+    o.connect(g); g.connect(audioCtx.destination);
+    g.gain.setValueAtTime(.08,audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+duration);
+    o.start(); o.stop(audioCtx.currentTime+duration);
+  }catch(e){}
+}
+function successSound(){beep(660,.12,"triangle");setTimeout(()=>beep(880,.12,"triangle"),120)}
+function failSound(){beep(180,.18,"sawtooth");setTimeout(()=>beep(120,.18,"sawtooth"),140)}
+function beamSound(){beep(260,.2,"sawtooth");setTimeout(()=>beep(520,.2,"sine"),140)}
+
+/* =========================
+   STATE
+========================= */
+let currentPlayer=1,p1Score=0,p2Score=0,xp=0,streak=0;
+let timerInterval=null;
+
+function updateHUD(){
+  document.getElementById("p1").innerText=p1Score;
+  document.getElementById("p2").innerText=p2Score;
+  document.getElementById("xpFill").style.width=(xp%100)+"%";
+  document.getElementById("turn").innerText="Player "+currentPlayer;
+  document.getElementById("streak").innerText=streak;
+}
+function addScore(points){
+  if(currentPlayer===1)p1Score+=points; else p2Score+=points;
+  xp+=Math.max(5,Math.floor(points/10));
+  updateHUD();
+}
+function nextTurn(){
+  currentPlayer=currentPlayer===1?2:1;
+  updateHUD();
+}
+function showToast(msg){
+  const t=document.getElementById("toast");
+  t.innerText=msg;
+  t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),2600);
+}
+function achievement(name){
+  showToast("🏆 Achievement unlocked: "+name);
+  successSound();
+}
+function home(){
+  clearInterval(timerInterval);
+  document.getElementById("screen").style.display="none";
+  document.getElementById("game").style.display="flex";
+}
+function resetGame(){
+  p1Score=0;p2Score=0;xp=0;streak=0;currentPlayer=1;
+  updateHUD();
+  achievement("Fresh Start Protocol");
+}
+
+/* =========================
+   CONTENT BANKS
+========================= */
+const royaleQuestions=[
+{q:"Which cell cycle phase is generally most radiosensitive?",a:["M phase","S phase","G0 phase","Late S phase"],correct:0,why:"M phase is generally highly radiosensitive; late S phase is more radioresistant."},
+{q:"PTV stands for:",a:["Planning Target Volume","Primary Tumor Vessel","Photon Treatment Volume","Patient Therapy Volume"],correct:0,why:"PTV accounts for setup uncertainty and internal motion around the CTV."},
+{q:"Which structure is classically considered a serial organ?",a:["Spinal cord","Lung","Liver","Parotid gland"],correct:0,why:"Damage to a small segment of a serial organ such as spinal cord can cause severe functional loss."},
+{q:"A common conventional fraction size is:",a:["2 Gy per fraction","10 Gy per fraction","15 Gy per fraction","0.2 Gy per fraction"],correct:0,why:"Many conventional external beam regimens use about 1.8–2.0 Gy per fraction."},
+{q:"GTV means:",a:["Gross Tumor Volume","General Treatment Volume","Gantry Target Value","Guided Therapy Vector"],correct:0,why:"GTV is visible or palpable gross disease."},
+{q:"Which technique commonly uses many beamlets and inverse planning?",a:["IMRT","Manual AP/PA only","Single electron field","Orthovoltage only"],correct:0,why:"IMRT uses modulated beamlets optimized to meet target and OAR objectives."},
+{q:"Which term describes dose received by an organ at risk?",a:["OAR dose","SSD","Source axis distance","Wedge angle"],correct:0,why:"OAR dose is monitored to reduce normal tissue complications."},
+{q:"In radiation therapy, ALARA means:",a:["As Low As Reasonably Achievable","Always Localize And Re-Align","Automated Linear Accelerator Rotation Axis","Acute Lung And Radiation Assessment"],correct:0,why:"ALARA is a radiation protection principle."}
+];
+
+const timeoutCases=[
+{
+patient:"Maya Carter",
+diagnosis:"Left breast invasive ductal carcinoma",
+rx:"42.56 Gy / 16 fractions + boost",
+today:"Fraction 7",
+items:["Patient identity verified","Consent signed","Left breast plan loaded","Daily imaging completed","Physics QA complete","Bolus documented for chest wall even though this is intact breast","Treatment site marker appears on right side"],
+errors:[5,6],
+critical:[6]
+},
+{
+patient:"Andre Lewis",
+diagnosis:"Stage III non-small cell lung cancer",
+rx:"60 Gy / 30 fractions",
+today:"Fraction 18",
+items:["Patient reports increased dyspnea today","Correct patient selected","CBCT match approved","Prescription matches treatment plan","Couch longitudinal shift sign reversed from approved setup note","Pacemaker status not reviewed"],
+errors:[4,5],
+critical:[4,5]
+},
+{
+patient:"Elena Park",
+diagnosis:"Glioblastoma multiforme",
+rx:"60 Gy / 30 fractions",
+today:"Fraction 1",
+items:["Thermoplastic mask present","Plan approved by physician","Laterality not applicable","Isocenter shifts entered","Final timeout skipped due to schedule delay","Image guidance pending but beam is enabled"],
+errors:[4,5],
+critical:[4,5]
+}
+];
+
+const pathologyCases=[
+{
+clue:"Biopsy shows adenocarcinoma of the prostate. PSA is elevated. Definitive radiation therapy may include IMRT or brachytherapy depending on risk group.",
+answer:"Prostate cancer",
+options:["Prostate cancer","Glioblastoma","Hodgkin lymphoma","Cervical cancer"]
+},
+{
+clue:"Patient has HPV-associated squamous cell carcinoma involving the oropharynx. Treatment may include chemoradiation with attention to parotid and spinal cord constraints.",
+answer:"Oropharyngeal cancer",
+options:["Oropharyngeal cancer","Pancreatic cancer","Seminoma","Melanoma"]
+},
+{
+clue:"High-grade primary brain tumor treated with maximal safe resection followed by radiation therapy with concurrent and adjuvant temozolomide.",
+answer:"Glioblastoma",
+options:["Glioblastoma","Basal cell carcinoma","Wilms tumor","Thyroid cancer"]
+},
+{
+clue:"Limited-stage disease may be treated with combined modality therapy. Involved-site radiation therapy is commonly discussed.",
+answer:"Hodgkin lymphoma",
+options:["Hodgkin lymphoma","Renal cell carcinoma","Rectal adenocarcinoma","Esophageal cancer"]
+}
+];
+
+/* =========================
+   RADIATION ROYALE
+========================= */
+function startRoyale(){
+  clearInterval(timerInterval);
+  document.getElementById("game").style.display="none";
+  const screen=document.getElementById("screen");
+  screen.style.display="block";
+  const q=royaleQuestions[Math.floor(Math.random()*royaleQuestions.length)];
+
+  screen.innerHTML=`
+  <div class="panel">
+    <div class="topline">
+      <button class="ghost" onclick="home()">← Hub</button>
+      <div class="timer" id="timer">15</div>
+      <div class="pill">Radiation Royale</div>
+    </div>
+    <div class="question">${q.q}</div>
+    <div class="answers">
+      ${q.a.map((x,i)=>`<div class="answer" onclick="answerRoyale(${i},${q.correct},\`${q.why.replace(/`/g,"")}\`)">${x}</div>`).join("")}
+    </div>
+    <div id="feedback"></div>
+  </div>`;
+  countdown(()=>{failSound();streak=0;nextTurn();startRoyale();});
+}
+
+function answerRoyale(choice,correct,why){
+  clearInterval(timerInterval);
+  const f=document.getElementById("feedback");
+  if(choice===correct){
+    streak++;
+    let bonus=streak>=3?50:0;
+    addScore(100+bonus);
+    successSound();
+    f.innerHTML=`<div class="result">✅ Correct ${bonus?"+ Streak Bonus":""}</div><p style="text-align:center;margin-top:10px">${why}</p>`;
+    if(streak===3)achievement("Hot Streak: Clinical Mode");
+  }else{
+    streak=0;
+    failSound();
+    f.innerHTML=`<div class="result">❌ Incorrect</div><p style="text-align:center;margin-top:10px">${why}</p>`;
+  }
+  updateHUD();
+  nextTurn();
+  setTimeout(startRoyale,2600);
+}
+
+function countdown(onZero){
+  let t=15;
+  document.getElementById("timer").innerText=t;
+  timerInterval=setInterval(()=>{
+    t--;
+    const el=document.getElementById("timer");
+    if(el)el.innerText=t;
+    if(t<=0){clearInterval(timerInterval);onZero();}
+  },1000);
+}
+
+/* =========================
+   DOSE DUEL
+========================= */
+function startDoseDuel(){
+  clearInterval(timerInterval);
+  document.getElementById("game").style.display="none";
+  const screen=document.getElementById("screen");
+  screen.style.display="block";
+
+  const problems=[
+    {dose:200,pdd:67,output:1.00,txt:"SSD setup using PDD"},
+    {dose:180,pdd:72,output:1.00,txt:"SSD setup using PDD"},
+    {dose:250,pdd:80,output:1.00,txt:"SSD setup using PDD"},
+    {dose:200,pdd:100,output:0.98,txt:"Open field output factor included"}
+  ];
+  const p=problems[Math.floor(Math.random()*problems.length)];
+  const ans=Math.round(p.dose/(p.output*(p.pdd/100)));
+
+  screen.innerHTML=`
+  <div class="panel">
+    <div class="topline">
+      <button class="ghost" onclick="home()">← Hub</button>
+      <div class="pill">Dose Duel</div>
+      <div class="pill">Tolerance ±2 MU</div>
+    </div>
+    <div class="vault">
+      <div class="scene">
+        <div class="floor"></div>
+        <div class="linac-arm"></div>
+        <div class="linac-head"></div>
+        <div class="beam"></div>
+        <div class="couch"></div>
+        <div class="patient"></div>
+        <div class="lasers"></div>
+        <div class="mlc">
+          <div class="leaf" style="width:80%"></div><div class="leaf" style="width:60%"></div>
+          <div class="leaf" style="width:72%"></div><div class="leaf" style="width:50%"></div>
+          <div class="leaf" style="width:68%"></div><div class="leaf" style="width:57%"></div>
+          <div class="leaf" style="width:78%"></div><div class="leaf" style="width:62%"></div>
+        </div>
+      </div>
+      <div>
+        <h2>🧮 MU Calculation</h2>
+        <div class="infoGrid">
+          <div class="info">Prescription<br><b>${p.dose} cGy</b></div>
+          <div class="info">PDD<br><b>${p.pdd}%</b></div>
+          <div class="info">Output<br><b>${p.output} cGy/MU</b></div>
+          <div class="info">Setup<br><b>${p.txt}</b></div>
+        </div>
+        <p style="margin:18px 0">Formula: MU = Dose / (Output × PDD decimal)</p>
+        <input id="muInput" type="number" placeholder="Enter MU"/>
+        <button onclick="checkMU(${ans})">Submit MU</button>
+        <div id="feedback"></div>
+      </div>
+    </div>
+  </div>`;
+  beamSound();
+}
+
+function checkMU(correct){
+  const val=parseInt(document.getElementById("muInput").value);
+  const f=document.getElementById("feedback");
+  if(Math.abs(val-correct)<=2){
+    streak++;
+    addScore(150+(streak>=3?50:0));
+    successSound();
+    f.innerHTML=`<div class="result">🔥 Correct: ${correct} MU</div>`;
+    if(streak===2)achievement("MU Monster Slayer");
+  }else{
+    streak=0;
+    failSound();
+    f.innerHTML=`<div class="result">❌ Correct MU: ${correct}</div>`;
+  }
+  updateHUD();
+  nextTurn();
+}
+
+/* =========================
+   TREATMENT TIME-OUT SHOWDOWN
+========================= */
+let selectedErrors=[];
+function startTimeout(){
+  clearInterval(timerInterval);
+  selectedErrors=[];
+  document.getElementById("game").style.display="none";
+  const screen=document.getElementById("screen");
+  screen.style.display="block";
+  const c=timeoutCases[Math.floor(Math.random()*timeoutCases.length)];
+
+  screen.innerHTML=`
+  <div class="panel">
+    <div class="topline">
+      <button class="ghost" onclick="home()">← Hub</button>
+      <div class="timer" id="timer">30</div>
+      <div class="pill">Treatment Time-Out Showdown</div>
+    </div>
+    <div class="vault">
+      <div class="scene">
+        <div class="floor"></div>
+        <div class="linac-arm"></div>
+        <div class="linac-head"></div>
+        <div class="beam"></div>
+        <div class="couch"></div>
+        <div class="patient"></div>
+        <div class="lasers"></div>
+      </div>
+      <div>
+        <h2>Patient Safety Check</h2>
+        <div class="infoGrid">
+          <div class="info">Patient<br><b>${c.patient}</b></div>
+          <div class="info">Diagnosis<br><b>${c.diagnosis}</b></div>
+          <div class="info">Prescription<br><b>${c.rx}</b></div>
+          <div class="info">Today<br><b>${c.today}</b></div>
+        </div>
+        <p style="margin-top:14px">Select every item that should stop treatment before beam-on.</p>
+        <div class="errorList">
+          ${c.items.map((x,i)=>`<div class="errorItem" onclick="toggleError(this,${i})">${x}</div>`).join("")}
+        </div>
+        <br>
+        <button onclick="submitTimeout(${JSON.stringify(c.errors)},${JSON.stringify(c.critical)})">Lock Time-Out Decision</button>
+        <div id="feedback"></div>
+      </div>
+    </div>
+  </div>`;
+
+  let t=30;
+  timerInterval=setInterval(()=>{
+    t--;
+    const el=document.getElementById("timer");
+    if(el)el.innerText=t;
+    if(t<=0){
+      clearInterval(timerInterval);
+      submitTimeout(c.errors,c.critical);
+    }
+  },1000);
+}
+
+function toggleError(el,i){
+  el.classList.toggle("selected");
+  if(selectedErrors.includes(i)){
+    selectedErrors=selectedErrors.filter(x=>x!==i);
+  }else{
+    selectedErrors.push(i);
+  }
+  beep(520,.05,"square");
+}
+
+function submitTimeout(errors,critical){
+  clearInterval(timerInterval);
+  let correct=0,falseAlarm=0,missed=0;
+  selectedErrors.forEach(i=>errors.includes(i)?correct++:falseAlarm++);
+  errors.forEach(i=>{if(!selectedErrors.includes(i))missed++;});
+  let points=correct*125-falseAlarm*50-missed*100;
+  if(points<0)points=0;
+  addScore(points);
+
+  const perfect=correct===errors.length && falseAlarm===0 && missed===0;
+  if(perfect){
+    streak++;
+    successSound();
+    achievement("Beam Stop Hero");
+  }else{
+    streak=0;
+    failSound();
+  }
+
+  document.getElementById("feedback").innerHTML=`
+    <div class="result">${perfect?"✅ Safe to hold treatment":"⚠️ Review Needed"}</div>
+    <p style="text-align:center;margin-top:10px">
+      Correct safety catches: ${correct} | False alarms: ${falseAlarm} | Missed: ${missed}<br>
+      Points awarded: ${points}
+    </p>`;
+  updateHUD();
+  nextTurn();
+}
+
+/* =========================
+   LINAC LEGENDS VISUAL MODE
+========================= */
+function startLinac(){
+  clearInterval(timerInterval);
+  document.getElementById("game").style.display="none";
+  const screen=document.getElementById("screen");
+  screen.style.display="block";
+
+  screen.innerHTML=`
+  <div class="panel">
+    <div class="topline">
+      <button class="ghost" onclick="home()">← Hub</button>
+      <div class="pill">LINAC Legends</div>
+      <div class="pill">Visual Beam Geometry Sandbox</div>
+    </div>
+    <div class="vault">
+      <div class="scene">
+        <div class="floor"></div>
+        <div class="linac-arm" id="gantry"></div>
+        <div class="linac-head"></div>
+        <div class="beam" id="beam"></div>
+        <div class="couch" id="couch"></div>
+        <div class="patient"></div>
+        <div class="lasers"></div>
+        <div class="mlc">
+          <div class="leaf" style="width:80%"></div><div class="leaf" style="width:60%"></div>
+          <div class="leaf" style="width:72%"></div><div class="leaf" style="width:50%"></div>
+          <div class="leaf" style="width:68%"></div><div class="leaf" style="width:57%"></div>
+          <div class="leaf" style="width:78%"></div><div class="leaf" style="width:62%"></div>
+        </div>
+      </div>
+      <div>
+        <h2>☢ Plan Challenge</h2>
+        <p style="margin:12px 0">Choose the best clinical goal. This mode rewards visual reasoning and treatment planning principles.</p>
+        <div class="answers">
+          <div class="answer" onclick="linacChoice(true)">Prioritize PTV coverage while respecting spinal cord constraint</div>
+          <div class="answer" onclick="linacChoice(false)">Increase dose to all tissues equally for simplicity</div>
+          <div class="answer" onclick="linacChoice(false)">Ignore OARs if the target dose is prescribed</div>
+          <div class="answer" onclick="linacChoice(true)">Use image guidance before treatment delivery</div>
+        </div>
+        <div class="infoGrid">
+          <div class="info">Gantry<br><b id="gRead">Rotating</b></div>
+          <div class="info">Beam<br><b>Photon</b></div>
+          <div class="info">MLC<br><b>Dynamic</b></div>
+          <div class="info">IGRT<br><b>Required</b></div>
+        </div>
+        <div id="feedback"></div>
+      </div>
+    </div>
+  </div>`;
+  beamSound();
+}
+
+function linacChoice(good){
+  if(good){
+    streak++;
+    addScore(125);
+    successSound();
+    document.getElementById("feedback").innerHTML=`<div class="result">✅ Clinically sound choice</div>`;
+    if(streak===4)achievement("Vault Guardian");
+  }else{
+    streak=0;
+    failSound();
+    document.getElementById("feedback").innerHTML=`<div class="result">❌ Unsafe planning logic</div>`;
+  }
+  updateHUD();
+  nextTurn();
+}
+
+/* =========================
+   PATHOLOGY SPRINT
+========================= */
+function startPathology(){
+  clearInterval(timerInterval);
+  document.getElementById("game").style.display="none";
+  const screen=document.getElementById("screen");
+  screen.style.display="block";
+  const c=pathologyCases[Math.floor(Math.random()*pathologyCases.length)];
+  screen.innerHTML=`
+  <div class="panel">
+    <div class="topline">
+      <button class="ghost" onclick="home()">← Hub</button>
+      <div class="timer" id="timer">20</div>
+      <div class="pill">Pathology Sprint</div>
+    </div>
+    <h2>🧬 Oncology Clue</h2>
+    <div class="question">${c.clue}</div>
+    <div class="pathGrid">
+      ${c.options.map(o=>`<div class="pathCard" onclick="checkPathology('${o.replace(/'/g,"")}','${c.answer.replace(/'/g,"")}')">${o}</div>`).join("")}
+    </div>
+    <div id="feedback"></div>
+  </div>`;
+  countdown(()=>{failSound();streak=0;nextTurn();startPathology();});
+}
+
+function checkPathology(choice,answer){
+  clearInterval(timerInterval);
+  if(choice===answer){
+    streak++;
+    addScore(125);
+    successSound();
+    document.getElementById("feedback").innerHTML=`<div class="result">✅ ${answer}</div>`;
+    if(streak===5)achievement("Tumor Board Legend");
+  }else{
+    streak=0;
+    failSound();
+    document.getElementById("feedback").innerHTML=`<div class="result">❌ Correct: ${answer}</div>`;
+  }
+  updateHUD();
+  nextTurn();
+  setTimeout(startPathology,2300);
+}
+
+/* =========================
+   INIT
+========================= */
+window.onresize=()=>{canvas.width=innerWidth;canvas.height=innerHeight};
+updateHUD();
+</script>
+</body>
+</html>
