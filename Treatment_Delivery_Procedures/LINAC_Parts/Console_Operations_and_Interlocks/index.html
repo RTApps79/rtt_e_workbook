@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Console Operations and Interlocks</title>
+<style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; margin: 20px;
+            background-color: #f4f4f4; color: #333; display: flex; flex-direction: column; align-items: center; }
+        .container { background-color: #fff; padding: 25px 35px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 90%; max-width: 900px; margin-bottom: 30px; }
+        h1, h2, h3, h4 { color: #0056b3; }
+        h1 { text-align: center; border-bottom: 2px solid #0056b3; padding-bottom: 15px; margin-bottom: 30px; font-size: 2em; }
+        h2 { border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 30px; margin-bottom: 20px; color: #003d7a; font-size: 1.6em; }
+        h3 { color: #004085; margin-top: 25px; margin-bottom: 15px; font-size: 1.3em; }
+        h4 { color: #17a2b8; margin-top: 20px; margin-bottom: 10px; font-size: 1.1em; font-weight: 600; }
+        p, li { margin-bottom: 12px; font-size: 1.05em; }
+        ul, ol { margin-bottom: 15px; padding-left: 25px; }
+        strong { font-weight: 600; }
+        .highlight { background-color: #e6f7ff; padding: 2px 5px; border-radius: 3px; font-weight: 600; }
+        code { background-color: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; color: #c7254e; }
+        table.data-table { width: 90%; margin: 15px auto; border-collapse: collapse; }
+        table.data-table th, table.data-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        table.data-table th { background-color: #e9f5ff; color: #0056b3; font-weight: 600; }
+        table.data-table tr:nth-child(even) { background-color: #f9f9f9; }
+        .flip-lesson-container { border: 1px solid #b3d7ff; padding: 20px; border-radius: 8px; background-color: #f0f8ff; margin-bottom: 30px; }
+        .lesson-page { display: none; padding: 15px; border: 1px solid #ddeeff; background-color: #fff; border-radius: 5px; min-height: 400px; }
+        .lesson-page.active { display: block; }
+        .lesson-navigation { text-align: center; margin-top: 20px; }
+        .lesson-navigation button, .lesson-page .check-page-answers {
+            background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px;
+            cursor: pointer; font-size: 1em; margin: 5px 10px; transition: background-color 0.2s; }
+        .lesson-navigation button:hover, .lesson-page .check-page-answers:hover { background-color: #0056b3; }
+        .lesson-navigation button:disabled { background-color: #ccc; cursor: not-allowed; }
+        .page-indicator { font-style: italic; color: #555; margin: 10px 0; }
+        .key-principle { background-color: #e7f3ff; padding: 10px; margin-bottom:10px; border-left: 3px solid #007bff; border-radius: 3px; }
+        .interactive-question-block { background: #f9f9f9; padding: 15px; margin: 20px 0; border: 1px solid #e0e0e0; border-radius: 8px; }
+        .interactive-question-block .question-text { font-weight: bold; margin-bottom: 8px; font-size: 1em; color: #555; }
+        .interactive-question-block label { display: block; margin-left: 0; padding: 8px 12px; border-radius: 5px; cursor: pointer; border: 1px solid transparent; margin-bottom: 5px; }
+        .interactive-question-block input[type="radio"] { margin-right: 10px; vertical-align: middle; }
+        .interactive-question-block label:hover { background-color: #f0f8ff; }
+        .feedback-correct { background-color: #e8f8f0 !important; border-left: 4px solid #2ecc71 !important; }
+        .feedback-incorrect { background-color: #fdedec !important; border-left: 4px solid #e74c3c !important; }
+        .feedback-correct label.correct-option, .feedback-incorrect label.correct-option { font-weight: bold; color: #1E8449; }
+        .feedback-incorrect label.selected-incorrect { color: #A93226; }
+        .explanation { font-size: 0.9em; color: #444; margin-top: 5px; padding-left: 20px; }
+        .footer { text-align: center; margin-top: 30px; padding-top: 15px; border-top: 1px solid #ccc; font-size: 0.9em; color: #555; }
+
+        .nav-links-header { background-color: #fff; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 50; }
+</style>
+</head>
+<body>
+    <header class="nav-links-header">
+        <div style="max-width:900px;margin:0 auto;padding:12px 20px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;">
+            <strong style="color:#0056b3;">Console Operations &amp; Interlocks</strong>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                <a href="../index.html" style="font-size:0.8rem;background:#0056b3;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Back to Tool Menu</a>
+                <a href="../../../Clinical_Practice/Modalities_Equipment_Terminology/index.html" style="font-size:0.8rem;background:#0056b3;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Modalities Menu</a>
+                <a href="../../../index.html" style="font-size:0.8rem;background:#64748b;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Main Workbook</a>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <h1>Console Operations &amp; Interlocks</h1>
+        <div class="flip-lesson-container">
+            <h2>Interactive Lesson</h2>
+            <div id="lesson-page-1" class="lesson-page active">
+                <h3>Page 1: Why Interlocks Exist</h3>
+                <p>An interlock is a safety condition the machine continuously checks. If a condition isn't met, the machine won't start the beam &mdash; or if it's already running, it stops immediately. Interlocks aren't obstacles to work around; they're the reason a LINAC is safe to operate at all.</p>
+                <div class="key-principle">
+                    <p>Interlocks fall into three categories, and knowing which category you're dealing with tells you what to do next: <strong>Minor</strong>, <strong>Major</strong>, and <strong>Dosimetry</strong>.</p>
+                </div>
+            </div>
+            <div id="lesson-page-2" class="lesson-page">
+                <h3>Page 2: Minor Interlocks</h3>
+                <p>Minor interlocks involve conditions that can easily be corrected &mdash; the machine flags something simple and lets you fix it on the spot.</p>
+                <table class="data-table">
+                    <thead><tr><th>Code</th><th>Meaning</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>DOOR</strong></td><td>The treatment room door is open</td></tr>
+                        <tr><td><strong>ACC</strong></td><td>The accessory mounted on the treatment unit doesn't match what was selected at the console</td></tr>
+                        <tr><td><strong>KEY</strong></td><td>An issue with the keyswitch/key-based access control</td></tr>
+                        <tr><td><strong>MLC</strong></td><td>An MLC-related positioning or communication issue</td></tr>
+                        <tr><td><strong>PNDT</strong></td><td>An issue detected via the hand pendant</td></tr>
+                    </tbody>
+                </table>
+                <p>To clear a DOOR interlock, for example, you simply close the door. That's the defining feature of a minor interlock &mdash; the fix is usually obvious once you know what the code means.</p>
+            </div>
+            <div id="lesson-page-3" class="lesson-page">
+                <h3>Page 3: Clearing Minor Interlocks</h3>
+                <p>The exact clearing procedure depends on when the interlock is detected:</p>
+                <div class="key-principle">
+                    <p><strong>At end of calibration/check cycle:</strong> the console displays an active interlock list with the message "MINOR INTERLOCK &mdash; # MU REMAINING" or "MINOR INTERLOCK, PRESS ENTER TO CONTINUE." If "PRESS ENTER TO CONTINUE" appears, pressing Enter clears it. Otherwise, you correct the actual cause (e.g., close the door) before it clears.</p>
+                    <p><strong>During beam-on:</strong> the beam terminates immediately and all motion stops. The same message pattern applies &mdash; correct the cause, or if it can't be cleared, record the MU and time remaining and remove the patient from the room if appropriate.</p>
+                </div>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">A DOOR interlock trips mid-treatment. What's the immediate machine response?</p>
+                    <label><input type="radio" name="lq_page3_1" value="A"> The beam terminates immediately and all motion stops</label>
+                    <label><input type="radio" name="lq_page3_1" value="B"> The machine finishes the current MU and then pauses</label>
+                    <div class="explanation" style="display:none;">A. Interlocks detected during beam-on cause immediate termination — the machine doesn't wait to finish the current delivery.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(3)">Check Answer</button>
+            </div>
+            <div id="lesson-page-4" class="lesson-page">
+                <h3>Page 4: Major Interlocks</h3>
+                <p>Major interlocks alert you to conditions that could actually <strong>damage the accelerator</strong> if not corrected &mdash; these are treated with more caution than minor interlocks.</p>
+                <table class="data-table">
+                    <thead><tr><th>Code</th><th>Meaning</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>CTRL</strong></td><td>A control system fault &mdash; requires running diagnostics to clear</td></tr>
+                        <tr><td><strong>KFIL / MFIL</strong></td><td>Klystron or magnetron filament-related fault</td></tr>
+                        <tr><td><strong>PUMP</strong></td><td>A pump system fault (e.g., vacuum pump)</td></tr>
+                        <tr><td><strong>VAC1</strong></td><td>A vacuum system fault</td></tr>
+                        <tr><td><strong>FLOW</strong></td><td>A cooling flow system fault</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="lesson-page-5" class="lesson-page">
+                <h3>Page 5: Clearing Major Interlocks</h3>
+                <p>The procedure is more involved than a minor interlock:</p>
+                <ol>
+                    <li>The console displays the SELECT MAJOR MODE screen and an active interlock list, with a message to turn the power key to STANDBY.</li>
+                    <li>Turn the POWER keyswitch to STANDBY.</li>
+                    <li><strong>Record</strong> in the daily log or service log: date, time, interlock type, system state (including all setup/position parameters), and any other observations. If it happened during beam-on, record MU delivered and elapsed time too.</li>
+                    <li>Check the cause. Correct it if possible, or notify the physicist/repair technician. Remove the patient from the room if appropriate.</li>
+                    <li>For a CTRL interlock specifically, you must run diagnostics (F2 DIAG) while still in STANDBY before it will clear.</li>
+                    <li>Turn the key back to ON. If the interlock reappears after clearing, <strong>do not continue</strong> &mdash; this is not something to retry repeatedly.</li>
+                </ol>
+                <div class="key-principle">
+                    <p>The documentation step isn't optional paperwork &mdash; a service history that shows an interlock recurring over time is exactly what helps a physicist or repair technician catch a developing problem before it becomes a bigger failure.</p>
+                </div>
+            </div>
+            <div id="lesson-page-6" class="lesson-page">
+                <h3>Page 6: Dosimetry Interlocks</h3>
+                <p>The beam passes through the dual ion chambers, which continuously check flatness, symmetry, and other dosimetric qualities. <span class="highlight">Dosimetry interlocks</span> are triggered when these readings fall outside tolerance.</p>
+                <div class="key-principle">
+                    <p>Because momentary beam variations are common and usually transient, a second attempt is often successful. However, clearing a dosimetry interlock requires entering a password to continue &mdash; a deliberate extra step, since these interlocks relate directly to whether the delivered dose was actually correct.</p>
+                </div>
+                <table class="data-table">
+                    <thead><tr><th>Code</th><th>Meaning</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>DOS1</strong></td><td>Primary dosimetry channel reached the set MU value &mdash; this is actually the <em>normal</em> beam termination signal, not a fault</td></tr>
+                        <tr><td><strong>SYM1 / SYM2</strong></td><td>Beam symmetry outside tolerance</td></tr>
+                        <tr><td><strong>ION1</strong></td><td>Primary ion chamber reading issue</td></tr>
+                    </tbody>
+                </table>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">What must you do to clear a dosimetry interlock and continue treatment?</p>
+                    <label><input type="radio" name="lq_page6_1" value="A"> Simply press Enter, same as a minor interlock</label>
+                    <label><input type="radio" name="lq_page6_1" value="B"> Enter a password before continuing</label>
+                    <div class="explanation" style="display:none;">B. Dosimetry interlocks require a password to continue, since they relate directly to whether the delivered dose was actually correct — an intentional extra safety step.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(6)">Check Answer</button>
+            </div>
+            <div id="lesson-page-7" class="lesson-page">
+                <h3>Page 7: Reading an Interlock Code</h3>
+                <p>Real interlock codes are short, specific, and traceable to a particular subsystem. A few more examples worth recognizing:</p>
+                <table class="data-table">
+                    <thead><tr><th>Code</th><th>Category</th><th>Meaning</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>AIR</strong></td><td>Minor</td><td>Facility air pressure below spec &mdash; can indirectly trigger other interlocks like TARG or TDRV</td></tr>
+                        <tr><td><strong>BMAG</strong></td><td>Minor</td><td>Bending magnet power supply or current outside tolerance for the selected energy mode</td></tr>
+                        <tr><td><strong>CARR</strong></td><td>Minor</td><td>Carrousel (energy/mode selector) not in the correct position, or a communication failure with its controller</td></tr>
+                        <tr><td><strong>ENSW</strong></td><td>Minor</td><td>The accelerator's energy switch isn't in the correct position for the selected mode</td></tr>
+                        <tr><td><strong>CNF</strong></td><td>Minor</td><td>Configuration data (field sizes, position readouts, motion limits) wasn't properly sent to the control computer</td></tr>
+                    </tbody>
+                </table>
+                <p>Notice the pattern: each code maps to one specific subsystem, and the "possible reasons" behind it are usually a short, specific list &mdash; not a vague catch-all.</p>
+            </div>
+            <div id="lesson-page-8" class="lesson-page">
+                <h3>Page 8: Beyond Interlocks &mdash; Other Safety Features</h3>
+                <p>Interlocks work alongside other safety systems already covered elsewhere: warning lights and signs, emergency-off controls placed at multiple points in the room, and motion-enable bars that require continuous physical input from the therapist to allow couch/gantry motion &mdash; releasing the bar stops movement immediately. Together, these form layered protection: procedural (interlocks), physical (emergency-offs, motion-enable), and environmental (shielding, warning systems).</p>
+            </div>
+            <div id="lesson-page-9" class="lesson-page">
+                <h3>Page 9: Wrap-Up</h3>
+                <p>You've covered the three interlock categories (Minor, Major, Dosimetry), how each is detected and cleared, specific real interlock codes across several LINAC subsystems, and how interlocks fit into the broader layered safety system.</p>
+                <p>None of this replaces hands-on training on your specific machine and vendor &mdash; interlock codes and exact clearing procedures vary between manufacturers and software versions &mdash; but the underlying logic (what category, what it protects, how you clear it) transfers across machines.</p>
+            </div>
+
+            <div class="lesson-navigation">
+                <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled>Previous Page</button>
+                <span class="page-indicator" id="lessonPageIndicator">Page 1 of 9</span>
+                <button id="nextLessonPage" onclick="changeLessonPage(1)">Next Page</button>
+                <button id="startActivityButton" onclick="window.location.href='../index.html'" style="display:none; background-color: #28a745;">Back to LINAC Menu</button>
+            </div>
+        </div>
+        <div class="footer">Radiation Therapy E-Workbook &mdash; Treatment Delivery Procedures</div>
+    </div>
+    <script>
+        let currentLessonPage = 1;
+        const totalLessonPages = 9;
+        const lessonPages = document.querySelectorAll('.lesson-page');
+        const prevLessonButton = document.getElementById('prevLessonPage');
+        const nextLessonButton = document.getElementById('nextLessonPage');
+        const lessonPageIndicator = document.getElementById('lessonPageIndicator');
+        const startActivityButton = document.getElementById('startActivityButton');
+        const lessonCorrectAnswers = {"lq_page3_1": "A", "lq_page6_1": "B"};
+        function displayLessonPage() {
+            lessonPages.forEach((page, index) => page.classList.toggle('active', index === currentLessonPage - 1));
+            prevLessonButton.disabled = currentLessonPage === 1;
+            nextLessonButton.style.display = currentLessonPage === totalLessonPages ? 'none' : 'inline-block';
+            startActivityButton.style.display = currentLessonPage === totalLessonPages ? 'inline-block' : 'none';
+            lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
+        }
+        function changeLessonPage(direction) {
+            currentLessonPage += direction;
+            if (currentLessonPage < 1) currentLessonPage = 1;
+            if (currentLessonPage > totalLessonPages) currentLessonPage = totalLessonPages;
+            displayLessonPage();
+        }
+        function checkPageAnswers(pageNumber) {
+            const questionsOnPage = document.querySelectorAll(`#lesson-page-${pageNumber} .interactive-question-block`);
+            questionsOnPage.forEach(block => {
+                const radio = block.querySelector('input[type="radio"]');
+                if (!radio) return;
+                const questionName = radio.name;
+                if (!lessonCorrectAnswers.hasOwnProperty(questionName)) return;
+                const correctAnswerValue = lessonCorrectAnswers[questionName];
+                const selectedRadio = block.querySelector(`input[name="${questionName}"]:checked`);
+                const explanationDiv = block.querySelector('.explanation');
+                block.classList.remove('feedback-correct', 'feedback-incorrect');
+                block.querySelectorAll('label').forEach(label => label.classList.remove('correct-option', 'selected-incorrect'));
+                if (explanationDiv) explanationDiv.style.display = 'none';
+                if (selectedRadio) {
+                    const userAnswer = selectedRadio.value;
+                    const userSelectedLabel = selectedRadio.parentElement;
+                    if (userAnswer === correctAnswerValue) {
+                        block.classList.add('feedback-correct');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('correct-option');
+                    } else {
+                        block.classList.add('feedback-incorrect');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('selected-incorrect');
+                        const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                        if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                    }
+                } else {
+                    block.classList.add('feedback-incorrect');
+                    const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                    if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                }
+                if (explanationDiv) explanationDiv.style.display = 'block';
+            });
+        }
+        displayLessonPage();
+    </script>
+</body>
+</html>
