@@ -1,555 +1,222 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive CT & Radioisotope Safety Activities</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f0f4f8;
-        }
-        .activity-card {
-            background-color: white;
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            transition: all 0.3s ease;
-        }
-        .activity-card:hover {
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
-        }
-        .tab-button {
-            transition: all 0.3s ease;
-        }
-        .tab-button.active {
-            color: #0891b2; /* Cyan */
-            border-bottom-color: #0891b2;
-        }
-        .draggable {
-            cursor: grab;
-            user-select: none;
-        }
-        .dragging {
-            opacity: 0.5;
-            background-color: #cffafe;
-        }
-        .drop-zone {
-            border: 2px dashed #cbd5e1;
-            transition: background-color 0.3s ease;
-        }
-        .drop-zone.hovered {
-            background-color: #cffafe;
-            border-color: #0891b2;
-        }
-        .feedback {
-            font-size: 0.875rem;
-            font-weight: 500;
-        }
-        .feedback.correct {
-            color: #16a34a;
-        }
-        .feedback.incorrect {
-            color: #dc2626;
-        }
-        .quiz-option.correct {
-            background-color: #dcfce7;
-            border-left: 4px solid #22c55e;
-        }
-        .quiz-option.incorrect {
-            background-color: #fee2e2;
-            border-left: 4px solid #ef4444;
-        }
-        .label-dot {
-            position: absolute;
-            width: 24px;
-            height: 24px;
-            background-color: rgba(8, 145, 178, 0.8);
-            border-radius: 50%;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 14px;
-            font-weight: bold;
-        }
-        .label-dot:hover {
-            transform: scale(1.2);
-            background-color: rgba(6, 182, 212, 1);
-        }
-        .label-popup {
-            position: absolute;
-            background-color: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 0.5rem;
-            padding: 0.75rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            z-index: 10;
-            width: 220px;
-            visibility: hidden;
-            opacity: 0;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-            pointer-events: none;
-        }
-        .label-popup.visible {
-            visibility: visible;
-            opacity: 1;
-        }
-        .diagram-container svg {
-            width: 100%;
-            height: auto;
-            border-radius: 0.5rem;
-            background-color: #f8fafc;
-            border: 1px solid #e2e8f0;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Radioactivity and Isotopes</title>
+<style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; margin: 20px;
+            background-color: #f4f4f4; color: #333; display: flex; flex-direction: column; align-items: center; }
+        .container { background-color: #fff; padding: 25px 35px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 90%; max-width: 900px; margin-bottom: 30px; }
+        h1, h2, h3, h4 { color: #0056b3; }
+        h1 { text-align: center; border-bottom: 2px solid #0056b3; padding-bottom: 15px; margin-bottom: 30px; font-size: 2em; }
+        h2 { border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 30px; margin-bottom: 20px; color: #003d7a; font-size: 1.6em; }
+        h3 { color: #004085; margin-top: 25px; margin-bottom: 15px; font-size: 1.3em; }
+        h4 { color: #17a2b8; margin-top: 20px; margin-bottom: 10px; font-size: 1.1em; font-weight: 600; }
+        p, li { margin-bottom: 12px; font-size: 1.05em; }
+        ul, ol { margin-bottom: 15px; padding-left: 25px; }
+        strong { font-weight: 600; }
+        .highlight { background-color: #e6f7ff; padding: 2px 5px; border-radius: 3px; font-weight: 600; }
+        code { background-color: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; color: #c7254e; }
+        table.data-table { width: 90%; margin: 15px auto; border-collapse: collapse; }
+        table.data-table th, table.data-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        table.data-table th { background-color: #e9f5ff; color: #0056b3; font-weight: 600; }
+        table.data-table tr:nth-child(even) { background-color: #f9f9f9; }
+        .flip-lesson-container { border: 1px solid #b3d7ff; padding: 20px; border-radius: 8px; background-color: #f0f8ff; margin-bottom: 30px; }
+        .lesson-page { display: none; padding: 15px; border: 1px solid #ddeeff; background-color: #fff; border-radius: 5px; min-height: 400px; }
+        .lesson-page.active { display: block; }
+        .lesson-navigation { text-align: center; margin-top: 20px; }
+        .lesson-navigation button, .lesson-page .check-page-answers {
+            background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px;
+            cursor: pointer; font-size: 1em; margin: 5px 10px; transition: background-color 0.2s; }
+        .lesson-navigation button:hover, .lesson-page .check-page-answers:hover { background-color: #0056b3; }
+        .lesson-navigation button:disabled { background-color: #ccc; cursor: not-allowed; }
+        .page-indicator { font-style: italic; color: #555; margin: 10px 0; }
+        .key-principle { background-color: #e7f3ff; padding: 10px; margin-bottom:10px; border-left: 3px solid #007bff; border-radius: 3px; }
+        .interactive-question-block { background: #f9f9f9; padding: 15px; margin: 20px 0; border: 1px solid #e0e0e0; border-radius: 8px; }
+        .interactive-question-block .question-text { font-weight: bold; margin-bottom: 8px; font-size: 1em; color: #555; }
+        .interactive-question-block label { display: block; margin-left: 0; padding: 8px 12px; border-radius: 5px; cursor: pointer; border: 1px solid transparent; margin-bottom: 5px; }
+        .interactive-question-block input[type="radio"] { margin-right: 10px; vertical-align: middle; }
+        .interactive-question-block label:hover { background-color: #f0f8ff; }
+        .feedback-correct { background-color: #e8f8f0 !important; border-left: 4px solid #2ecc71 !important; }
+        .feedback-incorrect { background-color: #fdedec !important; border-left: 4px solid #e74c3c !important; }
+        .feedback-correct label.correct-option, .feedback-incorrect label.correct-option { font-weight: bold; color: #1E8449; }
+        .feedback-incorrect label.selected-incorrect { color: #A93226; }
+        .explanation { font-size: 0.9em; color: #444; margin-top: 5px; padding-left: 20px; }
+        .footer { text-align: center; margin-top: 30px; padding-top: 15px; border-top: 1px solid #ccc; font-size: 0.9em; color: #555; }
+
+        .nav-links-header { background-color: #fff; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 50; }
+</style>
 </head>
-<body class="antialiased text-slate-800">
-
-    <div class="container mx-auto p-4 md:p-8">
-        <header class="text-center mb-10">
-            <h1 class="text-4xl md:text-5xl font-bold text-slate-900">CT & Radioisotope Safety</h1>
-            <p class="text-lg text-slate-600 mt-2">Interactive Learning Activities</p>
-        </header>
-
-        <!-- Tabs for different activities -->
-        <div class="mb-8 border-b border-slate-200">
-            <nav class="-mb-px flex space-x-6" aria-label="Tabs">
-                <button onclick="showActivity('matching')" class="tab-button active whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">Matching Game</button>
-                <button onclick="showActivity('quiz')" class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">Multiple Choice</button>
-                <button onclick="showActivity('fill-in-blank')" class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">Fill in the Blank</button>
-                <button onclick="showActivity('labeling')" class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">Diagram Labeling</button>
-            </nav>
-        </div>
-
-        <!-- Activity Sections -->
-        <div id="activities">
-            <!-- Matching Activity -->
-            <div id="matching" class="activity-content">
-                <div class="activity-card p-6 md:p-8">
-                    <h2 class="text-2xl font-semibold mb-4">Exercise 1: Matching</h2>
-                    <p class="text-slate-600 mb-6">Drag the terms on the left to their correct definitions on the right.</p>
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <div id="terms-container" class="space-y-3">
-                            <!-- Terms will be dynamically inserted here -->
-                        </div>
-                        <div id="definitions-container" class="space-y-3">
-                            <!-- Definitions will be dynamically inserted here -->
-                        </div>
-                    </div>
-                    <div class="mt-8 text-center">
-                        <button onclick="checkMatchingAnswers()" class="bg-cyan-600 text-white font-semibold py-2 px-6 rounded-lg hover:bg-cyan-700 transition-colors">Check Answers</button>
-                        <button onclick="resetMatching()" class="ml-4 bg-slate-200 text-slate-800 font-semibold py-2 px-6 rounded-lg hover:bg-slate-300 transition-colors">Reset</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Multiple Choice Quiz -->
-            <div id="quiz" class="activity-content hidden">
-                <div class="activity-card p-6 md:p-8">
-                    <h2 class="text-2xl font-semibold mb-4">Exercise 2: Multiple Choice Quiz</h2>
-                    <p class="text-slate-600 mb-6">Select the best answer for each question.</p>
-                    <div id="quiz-container" class="space-y-8">
-                        <!-- Quiz questions will be dynamically inserted here -->
-                    </div>
-                    <div class="mt-8 text-center">
-                        <button onclick="submitQuiz()" class="bg-cyan-600 text-white font-semibold py-2 px-6 rounded-lg hover:bg-cyan-700 transition-colors">Submit Quiz</button>
-                        <p id="quiz-result" class="mt-4 font-semibold text-lg"></p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Fill in the Blank Activity -->
-            <div id="fill-in-blank" class="activity-content hidden">
-                <div class="activity-card p-6 md:p-8">
-                    <h2 class="text-2xl font-semibold mb-4">Exercise 4: Fill in the Blank</h2>
-                    <p class="text-slate-600 mb-6">Fill in the blanks with the correct words from the word bank.</p>
-                    <div id="word-bank" class="mb-6 p-4 bg-cyan-50 border border-cyan-200 rounded-lg flex flex-wrap gap-2">
-                        <!-- Word bank will be dynamically inserted here -->
-                    </div>
-                    <div id="fill-in-blank-container" class="space-y-4 text-lg leading-relaxed">
-                        <!-- Sentences will be dynamically inserted here -->
-                    </div>
-                     <div class="mt-8 text-center">
-                        <button onclick="checkFillInBlank()" class="bg-cyan-600 text-white font-semibold py-2 px-6 rounded-lg hover:bg-cyan-700 transition-colors">Check Answers</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Diagram Labeling Activity -->
-            <div id="labeling" class="activity-content hidden">
-                <div class="activity-card p-6 md:p-8">
-                    <h2 class="text-2xl font-semibold mb-4">Exercise 5: Diagram Labeling</h2>
-                    <p class="text-slate-600 mb-6">Hover over the numbered dots to reveal information about the PET/CT imaging process.</p>
-                    <div class="flex flex-col items-center justify-center">
-                        <div class="relative diagram-container w-full max-w-3xl">
-                            <h3 class="text-xl font-semibold text-center mb-4">PET/CT Imaging Principle</h3>
-                            <svg viewBox="0 0 800 400" aria-labelledby="pet-title" role="img">
-                                <title id="pet-title">A diagram illustrating the process of PET/CT imaging.</title>
-                                <!-- Scanner Gantry -->
-                                <ellipse cx="400" cy="200" rx="350" ry="180" fill="#e0f2f1" stroke="#4db6ac" stroke-width="2"/>
-                                <ellipse cx="400" cy="200" rx="300" ry="150" fill="white"/>
-                                <text x="100" y="50" class="fill-slate-600 font-semibold">PET Detector Ring</text>
-                                <!-- Patient -->
-                                <rect x="250" y="180" width="300" height="40" fill="#b2dfdb"/>
-                                <ellipse cx="400" cy="170" rx="50" ry="20" fill="#80cbc4"/>
-                                <text x="400" y="240" text-anchor="middle" class="fill-slate-700">Patient</text>
-                                <!-- Tumor with FDG -->
-                                <circle cx="420" cy="165" r="10" fill="#f44336"/>
-                                <!-- Annihilation Event -->
-                                <g>
-                                    <circle cx="425" cy="168" r="3" fill="#ffeb3b" stroke="#fbc02d" stroke-width="1"/>
-                                    <text x="430" y="160" font-size="12px" class="fill-slate-800">e+</text>
-                                    <circle cx="428" cy="172" r="3" fill="#90caf9" stroke="#1976d2" stroke-width="1"/>
-                                    <text x="433" y="180" font-size="12px" class="fill-slate-800">e-</text>
-                                </g>
-                                <!-- Photons -->
-                                <line x1="427" y1="170" x2="690" y2="100" stroke="#f06292" stroke-width="2" stroke-dasharray="4,4"/>
-                                <line x1="427" y1="170" x2="164" y2="240" stroke="#f06292" stroke-width="2" stroke-dasharray="4,4"/>
-                            </svg>
-                             <!-- Interactive Dots -->
-                            <div id="pet-labels-container"></div>
-                        </div>
-                    </div>
-                    <div id="label-popup" class="label-popup"></div>
-                </div>
+<body>
+    <header class="nav-links-header">
+        <div style="max-width:900px;margin:0 auto;padding:12px 20px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;">
+            <strong style="color:#0056b3;">Radioactivity and Isotopes</strong>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                <a href="../index.html" style="font-size:0.8rem;background:#0056b3;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Back to Radiation Physics Menu</a>
+                <a href="../../index.html" style="font-size:0.8rem;background:#64748b;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Main Workbook</a>
             </div>
         </div>
+    </header>
+    <div class="container">
+        <h1>Radioactivity and Isotopes</h1>
+        <div class="flip-lesson-container">
+            <h2>Interactive Lesson</h2>
+            <div id="lesson-page-1" class="lesson-page active">
+                <h3>Page 1: A Quick Review of the Atom</h3>
+                <p>All matter is made of elements and compounds. An <strong>atom</strong> is the smallest part of an element; a <strong>molecule</strong> is the smallest part of a compound. Electrons orbit the nucleus in shells; the <strong>atomic number</strong> is the number of protons in the nucleus, and the <strong>mass number</strong> is the number of protons plus neutrons.</p>
+                <div class="key-principle">
+                    <p>Atoms with the same atomic number but different mass numbers are <strong>isotopes</strong> of an element. Radioactive isotopes have unstable nuclei.</p>
+                </div>
+            </div>
+            <div id="lesson-page-2" class="lesson-page">
+                <h3>Page 2: What Makes Radioactivity Happen</h3>
+                <p><span class="highlight">Radioactivity</span> is a phenomenon in which radiation &mdash; particles, electromagnetic radiation, or both &mdash; is given off by the nuclei of elements. A strong nuclear force holds the nucleons (protons and neutrons) together, but this only works when the nucleus has a correct <strong>proton-to-neutron ratio</strong>.</p>
+                <div class="key-principle">
+                    <p>Protons repel each other (like charges); neutrons help counteract this. If the neutron:proton ratio is wrong &mdash; too many or too few neutrons &mdash; the nucleus becomes unstable and eventually disintegrates, a process called <strong>radioactive decay</strong>. Some high-atomic-number nuclides (like uranium, Z=92) have no stable isotope at all.</p>
+                </div>
+                <p>Radioactivity is a <strong>nuclear</strong> process, not an electron/chemical one &mdash; it isn't influenced by chemical changes or environmental conditions, and the rate of decay can't be controlled.</p>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">Can chemical reactions or environmental changes affect the rate of radioactive decay?</p>
+                    <label><input type="radio" name="lq_page2_1" value="A"> Yes, chemical bonding can slow or speed up decay</label>
+                    <label><input type="radio" name="lq_page2_1" value="B"> No — radioactivity is a nuclear process unaffected by chemical or environmental conditions</label>
+                    <div class="explanation" style="display:none;">B. Since radioactivity originates in the nucleus (not the orbital electrons), it's completely independent of chemical bonding or environmental conditions.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(2)">Check Answer</button>
+            </div>
+            <div id="lesson-page-3" class="lesson-page">
+                <h3>Page 3: Measuring Activity</h3>
+                <p><strong>Activity</strong> is the rate of decay. The SI unit is the <span class="highlight">Becquerel (Bq)</span>, where 1 Bq = 1 transformation per second. Because a becquerel represents an extremely small activity, the <strong>megabecquerel (MBq)</strong> &mdash; 10<sup>6</sup> Bq &mdash; is more commonly used in practice.</p>
+                <p>When an unstable nucleus decays, it forms a new nuclide called a <strong>daughter product</strong>, which may itself be stable or may require a whole chain of further transformations before reaching a stable end product.</p>
+            </div>
+            <div id="lesson-page-4" class="lesson-page">
+                <h3>Page 4: Modes of Radioactive Decay</h3>
+                <p>Unstable nuclei return toward stability through one of several decay modes:</p>
+                <table class="data-table">
+                    <thead><tr><th>Mode</th><th>What happens</th><th>Example</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>&beta;<sup>&minus;</sup> (negatron) emission</strong></td><td>A neutron converts to a proton, emitting an electron and antineutrino</td><td><sup>60</sup>Co &rarr; <sup>60</sup>Ni + e<sup>&minus;</sup></td></tr>
+                        <tr><td><strong>&beta;<sup>+</sup> (positron) emission</strong></td><td>A proton converts to a neutron, emitting a positron and neutrino</td><td><sup>22</sup>Na &rarr; <sup>22</sup>Ne + e<sup>+</sup></td></tr>
+                        <tr><td><strong>Electron capture (EC)</strong></td><td>An atomic electron is captured, converting a proton to a neutron</td><td><sup>57</sup>Co + e<sup>&minus;</sup> &rarr; <sup>57</sup>Fe</td></tr>
+                        <tr><td><strong>&alpha; emission</strong></td><td>The nucleus emits a helium nucleus (2 protons + 2 neutrons)</td><td><sup>238</sup>U &rarr; <sup>231</sup>Pa + &alpha;</td></tr>
+                    </tbody>
+                </table>
+                <p>Gamma emission and internal conversion also occur, typically after another decay mode leaves the daughter nucleus in an excited state that then releases energy as a gamma photon.</p>
+            </div>
+            <div id="lesson-page-5" class="lesson-page">
+                <h3>Page 5: The Decay Curve</h3>
+                <p>As a radioactive sample decays, its activity decreases because progressively less active material remains. Plotting activity against time produces an <span class="highlight">exponential decay curve</span> &mdash; the same mathematical shape used to describe Cobalt-60 source decay and half-life calculations.</p>
+            </div>
+            <div id="lesson-page-6" class="lesson-page">
+                <h3>Page 6: Isotopes, Isobars, Isotones, and Isomers</h3>
+                <p>These four terms are easy to mix up &mdash; each describes a different kind of relationship between nuclides:</p>
+                <table class="data-table">
+                    <thead><tr><th>Term</th><th>Same...</th><th>Different...</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>Isotopes</strong></td><td>Atomic number (protons)</td><td>Mass number (neutrons)</td></tr>
+                        <tr><td><strong>Isobars</strong></td><td>Mass number</td><td>Atomic number</td></tr>
+                        <tr><td><strong>Isotones</strong></td><td>Number of neutrons</td><td>Atomic number</td></tr>
+                        <tr><td><strong>Isomers</strong></td><td>Both protons and neutrons (same nuclide)</td><td>Energy level/state</td></tr>
+                    </tbody>
+                </table>
+                <p>Example of isotopes: carbon has isotopes with mass numbers from 12 to 14 (same 6 protons, different neutron counts). Example of isobars: <sup>64</sup>Ni (28 protons) and <sup>64</sup>Zn (30 protons) share mass number 64 but are different elements.</p>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">Two nuclides have the same mass number but different atomic numbers. What's their relationship?</p>
+                    <label><input type="radio" name="lq_page6_1" value="A"> Isotopes</label>
+                    <label><input type="radio" name="lq_page6_1" value="B"> Isobars</label>
+                    <div class="explanation" style="display:none;">B. Same mass number, different atomic number defines isobars — the reverse of isotopes.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(6)">Check Answer</button>
+            </div>
+            <div id="lesson-page-7" class="lesson-page">
+                <h3>Page 7: Natural vs. Artificial Radioisotopes</h3>
+                <p>Many unstable isotopes occur <strong>naturally</strong> &mdash; uranium and radium are classic examples. Others are <strong>artificially produced</strong> in nuclear reactors or particle accelerators, such as Strontium-90 and Cobalt-60, both of which have real clinical applications.</p>
+            </div>
+            <div id="lesson-page-8" class="lesson-page">
+                <h3>Page 8: Radioactive Isotopes in Radiation Therapy</h3>
+                <p>Several radioisotopes are used directly in treatment, especially in brachytherapy:</p>
+                <ul>
+                    <li><strong>Iodine-125 (I-125)</strong> and <strong>Iridium-192 (Ir-192)</strong> &mdash; prostate seed implants</li>
+                    <li><strong>Palladium-103 (Pd-103)</strong> &mdash; another common seed implant isotope</li>
+                    <li><strong>Ir-192</strong> &mdash; also used for interstitial implants and breast brachytherapy</li>
+                    <li><strong>Strontium-90 (Sr-90)</strong> &mdash; a pure beta emitter, used in intravascular brachytherapy and some superficial applications</li>
+                </ul>
+                <p>Each isotope is chosen based on its half-life, emission type, and energy &mdash; matching the physical properties of the decay to the specific clinical application.</p>
+            </div>
+            <div id="lesson-page-9" class="lesson-page">
+                <h3>Page 9: Wrap-Up</h3>
+                <p>You've covered what makes a nucleus radioactive, how activity is measured, the major decay modes with real nuclear equations, the isotope/isobar/isotone/isomer distinctions, and where radioisotopes show up directly in radiation therapy.</p>
+                <p>This connects directly to Cobalt-60's role in the equipment history covered in the LINAC lesson, and to the brachytherapy isotopes you'll encounter in site-specific treatment planning.</p>
+            </div>
+
+            <div class="lesson-navigation">
+                <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled>Previous Page</button>
+                <span class="page-indicator" id="lessonPageIndicator">Page 1 of 9</span>
+                <button id="nextLessonPage" onclick="changeLessonPage(1)">Next Page</button>
+                <button id="startActivityButton" onclick="window.location.href='../index.html'" style="display:none; background-color: #28a745;">Back to Menu</button>
+            </div>
+        </div>
+        <div class="footer">Radiation Therapy E-Workbook &mdash; Radiation Physics</div>
     </div>
-
     <script>
-        // --- Data from PDF ---
-        const matchingData = [
-            { id: 1, term: 'Pitch (CT)', definition: 'The relationship between the movement of the patient couch and the x-ray beam collimation dimension.' },
-            { id: 2, term: 'Iterative Reconstruction (CT)', definition: 'A process of repeatedly modifying CT data to create an image with the lowest possible noise, reducing patient dose.' },
-            { id: 3, term: 'Annihilation Radiation (PET)', definition: 'Two 511-keV photons created when a positron collides with an electron, used for PET imaging.' },
-            { id: 4, term: 'Radioisotopes', definition: 'Unstable atoms that spontaneously undergo transformations to rectify their unbalanced arrangement.' },
-            { id: 5, term: 'PET', definition: 'An imaging modality that examines metabolic processes within the body using positron-emitting radioisotopes.' },
-            { id: 6, term: 'Tube Current Modulation (CT)', definition: 'An automatic exposure control method that adjusts the mA during a scan to reduce patient dose.' },
-            { id: 7, term: 'FDG (Fluorodeoxyglucose)', definition: 'A radioactive tracer similar to glucose, used in PET to detect metabolically active cells like cancer.' },
-            { id: 8, term: 'Technetium-99m', definition: 'The most common short-lived radioisotope used in diagnostic nuclear medicine.' },
-            { id: 9, term: 'Dirty Bomb', definition: 'A radioactive dispersal device; a conventional explosive mixed with radioactive material.' },
-            { id: 10, term: 'CTDIvol', definition: 'A CT-specific dose marker representing the average absorbed dose within the scanned volume.' },
-        ];
-
-        const quizData = [
-            {
-                question: "PET (Positron Emission Tomography) is an important imaging modality because it primarily examines:",
-                options: ["Anatomical structures", "Bone density", "Metabolic processes", "Blood flow speed"],
-                answer: "Metabolic processes"
-            },
-            {
-                question: "In CT imaging, what is the effect of increasing the pitch (e.g., from 1 to 1.5)?",
-                options: ["Patient dose increases", "Patient dose decreases", "Image noise decreases", "Scan time increases"],
-                answer: "Patient dose decreases"
-            },
-            {
-                question: "Annihilation radiation, the basis for PET imaging, consists of two photons each with an energy of:",
-                options: ["140 keV", "511 keV", "1.02 MeV", "Varies with the isotope"],
-                answer: "511 keV"
-            },
-            {
-                question: "Miscentering a patient by just 2 cm in a CT scanner can increase their radiation dose by as much as:",
-                options: ["5%", "10%", "25%", "50%"],
-                answer: "25%"
-            },
-            {
-                question: "In the event of a radiological emergency involving radioactive iodine, what can be administered to block its uptake in the thyroid gland?",
-                options: ["Potassium iodide", "Barium sulfate", "Saline solution", "FDG"],
-                answer: "Potassium iodide"
-            }
-        ];
-
-        const fillInBlankData = {
-            wordBank: ["annihilation", "CTDIvol", "dose", "FDG", "helical", "interslice scatter", "iteration", "metabolic", "neutrons", "pitch", "positron", "protons", "tube current modulation"],
-            sentences: [
-                "Isotopes are atoms that have the same number of {protons} within the nucleus but have different numbers of {neutrons}.",
-                "PET makes use of {annihilation} radiation events, which occur when a {positron} meets an electron.",
-                "{FDG} is a radioactive tracer that is taken up by cancerous cells and reveals their location.",
-                "In CT, {tube current modulation} can help to reduce patient dose by adjusting the mA based on patient anatomy.",
-                "When a series of adjacent CT slices is obtained, some radiation scatters from the slice being made into the adjacent slices. This is called {interslice scatter}.",
-                "A repeat process used in CT to reconstruct images with the lowest noise possible is referred to as {iteration}.",
-                "When the spiral scan {pitch} ratio is approximately 1, the spiral CT patient dose is comparable to that produced by conventional CT.",
-                "{CTDIvol} and dose length product (DLP) are required dose markers for CT scanners."
-            ]
-        };
-        
-        const petLabelData = [
-            { id: 1, name: 'FDG Injection & Uptake', description: 'The patient is injected with FDG, a radioactive sugar. Cancer cells, being highly metabolic, absorb more of this tracer.', top: '41%', left: '52.5%' },
-            { id: 2, name: 'Positron Emission', description: 'The Fluorine-18 in the FDG decays, emitting a positron (a positively charged electron, e+).', top: '35%', left: '58%' },
-            { id: 3, name: 'Annihilation Event', description: 'The positron travels a very short distance before colliding with an electron (e-) in the tissue. They annihilate each other.', top: '42%', left: '53.5%' },
-            { id: 4, name: '511-keV Photon Detection', description: 'The annihilation converts their mass into two 511-keV gamma photons that travel in opposite directions (180° apart).', top: '30%', left: '70%' },
-            { id: 5, name: 'Image Creation', description: 'The PET detector ring detects these pairs of photons. A computer analyzes millions of these events to reconstruct a 3D map of metabolic activity.', top: '20%', left: '30%' },
-        ];
-
-        // --- Tab Navigation ---
-        const activities = document.querySelectorAll('.activity-content');
-        const tabButtons = document.querySelectorAll('.tab-button');
-
-        function showActivity(activityId) {
-            activities.forEach(activity => activity.classList.add('hidden'));
-            document.getElementById(activityId).classList.remove('hidden');
-            tabButtons.forEach(button => button.classList.remove('active'));
-            event.target.classList.add('active');
+        let currentLessonPage = 1;
+        const totalLessonPages = 9;
+        const lessonPages = document.querySelectorAll('.lesson-page');
+        const prevLessonButton = document.getElementById('prevLessonPage');
+        const nextLessonButton = document.getElementById('nextLessonPage');
+        const lessonPageIndicator = document.getElementById('lessonPageIndicator');
+        const startActivityButton = document.getElementById('startActivityButton');
+        const lessonCorrectAnswers = {"lq_page2_1": "B", "lq_page6_1": "B"};
+        function displayLessonPage() {
+            lessonPages.forEach((page, index) => page.classList.toggle('active', index === currentLessonPage - 1));
+            prevLessonButton.disabled = currentLessonPage === 1;
+            nextLessonButton.style.display = currentLessonPage === totalLessonPages ? 'none' : 'inline-block';
+            startActivityButton.style.display = currentLessonPage === totalLessonPages ? 'inline-block' : 'none';
+            lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
         }
-
-        // --- Matching Activity Logic ---
-        const termsContainer = document.getElementById('terms-container');
-        const definitionsContainer = document.getElementById('definitions-container');
-        let draggedItem = null;
-
-        function initializeMatching() {
-            termsContainer.innerHTML = '';
-            definitionsContainer.innerHTML = '';
-            const shuffledTerms = [...matchingData].sort(() => Math.random() - 0.5);
-            const shuffledDefs = [...matchingData].sort(() => Math.random() - 0.5);
-
-            shuffledTerms.forEach(item => {
-                const termEl = document.createElement('div');
-                termEl.className = 'p-3 bg-slate-100 rounded-lg draggable';
-                termEl.textContent = item.term;
-                termEl.draggable = true;
-                termEl.dataset.id = item.id;
-                termsContainer.appendChild(termEl);
-            });
-
-            shuffledDefs.forEach(item => {
-                const defContainer = document.createElement('div');
-                defContainer.className = 'flex items-center gap-3';
-                const dropZone = document.createElement('div');
-                dropZone.className = 'w-48 h-12 drop-zone rounded-lg flex items-center justify-center text-slate-500 text-sm p-2';
-                dropZone.dataset.id = item.id;
-                dropZone.textContent = 'Drop here';
-                const defText = document.createElement('div');
-                defText.className = 'flex-1';
-                defText.textContent = item.definition;
-                defContainer.append(dropZone, defText);
-                definitionsContainer.appendChild(defContainer);
-            });
-            addMatchingEventListeners();
+        function changeLessonPage(direction) {
+            currentLessonPage += direction;
+            if (currentLessonPage < 1) currentLessonPage = 1;
+            if (currentLessonPage > totalLessonPages) currentLessonPage = totalLessonPages;
+            displayLessonPage();
         }
-        
-        function resetMatching() {
-            initializeMatching();
-            document.querySelectorAll('.feedback').forEach(f => f.remove());
-        }
-
-        function addMatchingEventListeners() {
-            const draggables = document.querySelectorAll('.draggable');
-            const dropZones = document.querySelectorAll('.drop-zone');
-
-            draggables.forEach(draggable => {
-                draggable.addEventListener('dragstart', () => {
-                    draggedItem = draggable;
-                    setTimeout(() => draggable.classList.add('dragging'), 0);
-                });
-                draggable.addEventListener('dragend', () => {
-                    draggedItem.classList.remove('dragging');
-                    draggedItem = null;
-                });
-            });
-
-            dropZones.forEach(zone => {
-                zone.addEventListener('dragover', e => {
-                    e.preventDefault();
-                    zone.classList.add('hovered');
-                });
-                zone.addEventListener('dragleave', () => zone.classList.remove('hovered'));
-                zone.addEventListener('drop', e => {
-                    e.preventDefault();
-                    zone.classList.remove('hovered');
-                    if (draggedItem) {
-                        if (zone.children.length > 0) {
-                            termsContainer.appendChild(zone.firstElementChild);
-                        }
-                        zone.innerHTML = '';
-                        zone.appendChild(draggedItem);
-                        draggedItem.classList.remove('draggable', 'bg-slate-100');
-                        draggedItem.classList.add('bg-cyan-100');
-                        draggedItem.draggable = false;
-                    }
-                });
-            });
-        }
-        
-        function checkMatchingAnswers() {
-            document.querySelectorAll('.drop-zone').forEach(zone => {
-                const droppedItem = zone.querySelector('div');
-                const isCorrect = droppedItem && zone.dataset.id === droppedItem.dataset.id;
-                const oldFeedback = zone.parentElement.querySelector('.feedback');
-                if(oldFeedback) oldFeedback.remove();
-                const feedback = document.createElement('span');
-                feedback.className = 'feedback';
-                if (isCorrect) {
-                    feedback.textContent = 'Correct!';
-                    feedback.classList.add('correct');
-                    zone.style.borderColor = '#22c55e';
-                } else {
-                    feedback.textContent = 'Incorrect';
-                    feedback.classList.add('incorrect');
-                    zone.style.borderColor = '#ef4444';
-                }
-                zone.parentElement.appendChild(feedback);
-            });
-        }
-
-        // --- Multiple Choice Quiz Logic ---
-        const quizContainer = document.getElementById('quiz-container');
-
-        function initializeQuiz() {
-            quizData.forEach((q, index) => {
-                const questionBlock = document.createElement('div');
-                questionBlock.className = 'quiz-question';
-                const questionText = document.createElement('p');
-                questionText.className = 'font-semibold mb-3';
-                questionText.textContent = `${index + 1}. ${q.question}`;
-                questionBlock.appendChild(questionText);
-                const optionsList = document.createElement('div');
-                optionsList.className = 'space-y-2';
-                q.options.forEach(option => {
-                    const optionLabel = document.createElement('label');
-                    optionLabel.className = 'quiz-option flex items-center p-3 border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-50';
-                    const radioInput = document.createElement('input');
-                    radioInput.type = 'radio';
-                    radioInput.name = `question${index}`;
-                    radioInput.value = option;
-                    radioInput.className = 'h-4 w-4 text-cyan-600 border-gray-300 focus:ring-cyan-500';
-                    const optionText = document.createElement('span');
-                    optionText.className = 'ml-3';
-                    optionText.textContent = option;
-                    optionLabel.append(radioInput, optionText);
-                    optionsList.appendChild(optionLabel);
-                });
-                questionBlock.appendChild(optionsList);
-                quizContainer.appendChild(questionBlock);
-            });
-        }
-        
-        function submitQuiz() {
-            let score = 0;
-            quizData.forEach((q, index) => {
-                const radios = document.getElementsByName(`question${index}`);
-                radios[0].closest('.space-y-2').querySelectorAll('label').forEach(label => label.classList.remove('correct', 'incorrect'));
-                for (const radio of radios) {
-                    const label = radio.parentElement;
-                    if (radio.checked) {
-                        if (radio.value === q.answer) {
-                            score++;
-                            label.classList.add('correct');
-                        } else {
-                            label.classList.add('incorrect');
-                        }
-                    }
-                    if (radio.value === q.answer && !label.classList.contains('correct')) {
-                       label.classList.add('correct');
-                    }
-                }
-            });
-            document.getElementById('quiz-result').textContent = `You scored ${score} out of ${quizData.length}!`;
-        }
-
-        // --- Fill in the Blank Logic ---
-        const wordBankContainer = document.getElementById('word-bank');
-        const sentencesContainer = document.getElementById('fill-in-blank-container');
-
-        function initializeFillInBlank() {
-            wordBankContainer.innerHTML = '';
-            sentencesContainer.innerHTML = '';
-            fillInBlankData.wordBank.forEach(word => {
-                const wordEl = document.createElement('span');
-                wordEl.className = 'bg-white px-2 py-1 rounded text-sm font-medium cursor-pointer border border-slate-300';
-                wordEl.textContent = word;
-                wordEl.onclick = e => {
-                    const activeInput = document.querySelector('input.active-blank');
-                    if (activeInput) activeInput.value = e.target.textContent;
-                };
-                wordBankContainer.appendChild(wordEl);
-            });
-
-            fillInBlankData.sentences.forEach(sentence => {
-                const p = document.createElement('p');
-                const parts = sentence.split(/(\{[^}]+\})/);
-                parts.forEach(part => {
-                    if (part.startsWith('{') && part.endsWith('}')) {
-                        const answer = part.slice(1, -1);
-                        const input = document.createElement('input');
-                        input.type = 'text';
-                        input.dataset.answer = answer.toLowerCase();
-                        input.className = 'inline-block w-36 mx-1 px-2 py-1 border-b-2 border-slate-300 focus:border-cyan-500 focus:outline-none transition bg-slate-50 rounded-t-md';
-                        input.onfocus = e => {
-                            document.querySelectorAll('input.active-blank').forEach(el => el.classList.remove('active-blank'));
-                            e.target.classList.add('active-blank');
-                        }
-                        p.appendChild(input);
+        function checkPageAnswers(pageNumber) {
+            const questionsOnPage = document.querySelectorAll(`#lesson-page-${pageNumber} .interactive-question-block`);
+            questionsOnPage.forEach(block => {
+                const radio = block.querySelector('input[type="radio"]');
+                if (!radio) return;
+                const questionName = radio.name;
+                if (!lessonCorrectAnswers.hasOwnProperty(questionName)) return;
+                const correctAnswerValue = lessonCorrectAnswers[questionName];
+                const selectedRadio = block.querySelector(`input[name="${questionName}"]:checked`);
+                const explanationDiv = block.querySelector('.explanation');
+                block.classList.remove('feedback-correct', 'feedback-incorrect');
+                block.querySelectorAll('label').forEach(label => label.classList.remove('correct-option', 'selected-incorrect'));
+                if (explanationDiv) explanationDiv.style.display = 'none';
+                if (selectedRadio) {
+                    const userAnswer = selectedRadio.value;
+                    const userSelectedLabel = selectedRadio.parentElement;
+                    if (userAnswer === correctAnswerValue) {
+                        block.classList.add('feedback-correct');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('correct-option');
                     } else {
-                        p.appendChild(document.createTextNode(part));
+                        block.classList.add('feedback-incorrect');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('selected-incorrect');
+                        const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                        if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
                     }
-                });
-                sentencesContainer.appendChild(p);
-            });
-        }
-        
-        function checkFillInBlank() {
-            sentencesContainer.querySelectorAll('input').forEach(input => {
-                if (input.value.trim().toLowerCase() === input.dataset.answer) {
-                    input.style.borderColor = '#22c55e';
-                    input.style.backgroundColor = '#dcfce7';
                 } else {
-                    input.style.borderColor = '#ef4444';
-                    input.style.backgroundColor = '#fee2e2';
+                    block.classList.add('feedback-incorrect');
+                    const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                    if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
                 }
+                if (explanationDiv) explanationDiv.style.display = 'block';
             });
         }
-        
-        // --- Diagram Labeling Logic ---
-        const petLabelsContainer = document.getElementById('pet-labels-container');
-        const popup = document.getElementById('label-popup');
-
-        function createLabelDot(container, data) {
-            const parentContainer = container.parentElement;
-            data.forEach(item => {
-                const dot = document.createElement('div');
-                dot.className = 'label-dot';
-                dot.style.top = item.top;
-                dot.style.left = item.left;
-                dot.textContent = item.id;
-                
-                dot.addEventListener('mouseenter', e => {
-                    popup.innerHTML = `<strong class="text-cyan-700">${item.name}</strong><p class="text-sm mt-1">${item.description}</p>`;
-                    const parentRect = parentContainer.getBoundingClientRect();
-                    const dotRect = e.target.getBoundingClientRect();
-                    
-                    let top = dotRect.top - parentRect.top + dotRect.height + 8;
-                    let left = dotRect.left - parentRect.top + (dotRect.width / 2) - (popup.offsetWidth / 2);
-
-                    if (left < 0) left = 5;
-                    if (left + popup.offsetWidth > parentRect.width) left = parentRect.width - popup.offsetWidth - 5;
-                    if (top + popup.offsetHeight > parentRect.height) top = dotRect.top - parentRect.top - popup.offsetHeight - 8;
-
-                    popup.style.top = `${top}px`;
-                    popup.style.left = `${left}px`;
-                    popup.classList.add('visible');
-                });
-                
-                dot.addEventListener('mouseleave', () => popup.classList.remove('visible'));
-                container.appendChild(dot);
-            });
-        }
-        
-        function initializeLabeling() {
-            createLabelDot(petLabelsContainer, petLabelData);
-        }
-
-        // --- Initial Load ---
-        window.onload = () => {
-            initializeMatching();
-            initializeQuiz();
-            initializeFillInBlank();
-            initializeLabeling();
-        };
+        displayLessonPage();
     </script>
 </body>
 </html>
