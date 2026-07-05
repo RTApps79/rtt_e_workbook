@@ -1,108 +1,214 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brain Planning - Main Menu</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Inter', sans-serif; }
-        .hero-banner-x { background: linear-gradient(to right, #4338ca, #7e22ce); }
-    </style>
-</head>
-<body class="bg-slate-100 text-slate-800 flex flex-col min-h-screen">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brain Treatment Planning</title>
+<style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; margin: 20px;
+            background-color: #f4f4f4; color: #333; display: flex; flex-direction: column; align-items: center; }
+        .container { background-color: #fff; padding: 25px 35px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 90%; max-width: 900px; margin-bottom: 30px; }
+        h1, h2, h3, h4 { color: #0056b3; }
+        h1 { text-align: center; border-bottom: 2px solid #0056b3; padding-bottom: 15px; margin-bottom: 30px; font-size: 2em; }
+        h2 { border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 30px; margin-bottom: 20px; color: #003d7a; font-size: 1.6em; }
+        h3 { color: #004085; margin-top: 25px; margin-bottom: 15px; font-size: 1.3em; }
+        h4 { color: #17a2b8; margin-top: 20px; margin-bottom: 10px; font-size: 1.1em; font-weight: 600; }
+        p, li { margin-bottom: 12px; font-size: 1.05em; }
+        ul, ol { margin-bottom: 15px; padding-left: 25px; }
+        strong { font-weight: 600; }
+        .highlight { background-color: #e6f7ff; padding: 2px 5px; border-radius: 3px; font-weight: 600; }
+        code { background-color: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; color: #c7254e; }
+        table.data-table { width: 90%; margin: 15px auto; border-collapse: collapse; }
+        table.data-table th, table.data-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        table.data-table th { background-color: #e9f5ff; color: #0056b3; font-weight: 600; }
+        table.data-table tr:nth-child(even) { background-color: #f9f9f9; }
+        .flip-lesson-container { border: 1px solid #b3d7ff; padding: 20px; border-radius: 8px; background-color: #f0f8ff; margin-bottom: 30px; }
+        .lesson-page { display: none; padding: 15px; border: 1px solid #ddeeff; background-color: #fff; border-radius: 5px; min-height: 400px; }
+        .lesson-page.active { display: block; }
+        .lesson-navigation { text-align: center; margin-top: 20px; }
+        .lesson-navigation button, .lesson-page .check-page-answers {
+            background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px;
+            cursor: pointer; font-size: 1em; margin: 5px 10px; transition: background-color 0.2s; }
+        .lesson-navigation button:hover, .lesson-page .check-page-answers:hover { background-color: #0056b3; }
+        .lesson-navigation button:disabled { background-color: #ccc; cursor: not-allowed; }
+        .page-indicator { font-style: italic; color: #555; margin: 10px 0; }
+        .key-principle { background-color: #e7f3ff; padding: 10px; margin-bottom:10px; border-left: 3px solid #007bff; border-radius: 3px; }
+        .interactive-question-block { background: #f9f9f9; padding: 15px; margin: 20px 0; border: 1px solid #e0e0e0; border-radius: 8px; }
+        .interactive-question-block .question-text { font-weight: bold; margin-bottom: 8px; font-size: 1em; color: #555; }
+        .interactive-question-block label { display: block; margin-left: 0; padding: 8px 12px; border-radius: 5px; cursor: pointer; border: 1px solid transparent; margin-bottom: 5px; }
+        .interactive-question-block input[type="radio"] { margin-right: 10px; vertical-align: middle; }
+        .interactive-question-block label:hover { background-color: #f0f8ff; }
+        .feedback-correct { background-color: #e8f8f0 !important; border-left: 4px solid #2ecc71 !important; }
+        .feedback-incorrect { background-color: #fdedec !important; border-left: 4px solid #e74c3c !important; }
+        .feedback-correct label.correct-option, .feedback-incorrect label.correct-option { font-weight: bold; color: #1E8449; }
+        .feedback-incorrect label.selected-incorrect { color: #A93226; }
+        .explanation { font-size: 0.9em; color: #444; margin-top: 5px; padding-left: 20px; }
+        .footer { text-align: center; margin-top: 30px; padding-top: 15px; border-top: 1px solid #ccc; font-size: 0.9em; color: #555; }
 
-    <header class="bg-white shadow-md sticky top-0 z-50">
-        <div class="container mx-auto px-6 py-4 flex flex-col sm:flex-row justify-between items-center">
-            <h1 class="text-2xl font-bold text-violet-800">Brain Planning</h1>
-            <a href="../index.html" class="mt-2 sm:mt-0 text-sm bg-slate-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-slate-700 transition-colors duration-300">
-                &larr; Back to Site-Specific Planning
-            </a>
+        .nav-links-header { background-color: #fff; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 50; }
+</style>
+</head>
+<body>
+    <header class="nav-links-header">
+        <div style="max-width:900px;margin:0 auto;padding:12px 20px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;">
+            <strong style="color:#0056b3;">Brain Treatment Planning</strong>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                <a href="../index.html" style="font-size:0.8rem;background:#0056b3;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Site-Specific Planning Menu</a>
+                <a href="../../../index.html" style="font-size:0.8rem;background:#64748b;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Main Workbook</a>
+            </div>
         </div>
     </header>
+    <div class="container">
+        <h1>Brain Treatment Planning</h1>
+        <div class="flip-lesson-container">
+            <h2>Interactive Lesson</h2>
+            <div id="lesson-page-1" class="lesson-page active">
+                <h3>Page 1: Why CNS Planning Demands Precision</h3>
+                <p>Radiation therapy is a cornerstone of CNS tumor management, but the brain and spinal cord's radiosensitivity makes precise planning and delivery absolutely critical. A multidisciplinary team &mdash; neurosurgeons, neurologists, medical oncologists, radiation oncologists, and neuroradiologists &mdash; typically manages these cases together, often through a dedicated brain tumor board.</p>
+                <p><strong>MRI</strong> (with and without contrast) is the gold standard for defining tumor volumes and monitoring response; CT is used when MRI is contraindicated. Advanced techniques like MR spectroscopy, MR perfusion, and PET can help distinguish recurrent tumor from radiation necrosis.</p>
+            </div>
+            <div id="lesson-page-2" class="lesson-page">
+                <h3>Page 2: Positioning and Immobilization</h3>
+                <p>The common CNS setup: <strong>supine, headfirst</strong>, with a thermoplastic mask, knee bolster, feet banded, and hands clasped or holding a ring. Reproducibility within 2&ndash;3 mm is essential, since small setup errors matter enormously this close to critical structures.</p>
+                <div class="key-principle">
+                    <p><strong>Fiducials</strong> are placed laterally on each side of the mask (just superior to the ear) and midline anteriorly (superior to the orbits) as consistent reference points. Full documentation &mdash; lateral and anterior setup photos, including all immobilization devices and close-ups of fiducials/bolus &mdash; is standard practice.</p>
+                </div>
+                <p>Special considerations: claustrophobic patients may need premedication, an open-face mask, or eyes cut out of the mask, plus extra coaching and updates during treatment. Patients with seizure risk may need a safety strap across the arms and chest.</p>
+            </div>
+            <div id="lesson-page-3" class="lesson-page">
+                <h3>Page 3: Target Volumes</h3>
+                <table class="data-table">
+                    <thead><tr><th>Volume</th><th>Definition</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>GTV</strong></td><td>Contrast-enhancing tumor on MRI/CT, or residual visible tumor post-op</td></tr>
+                        <tr><td><strong>CTV</strong></td><td>GTV expanded by a margin (commonly 1&ndash;2 cm for both low- and high-grade disease) to account for microscopic spread, edited off anatomic boundaries</td></tr>
+                        <tr><td><strong>PTV</strong></td><td>CTV plus a 3&ndash;5 mm margin for daily setup error and image registration uncertainty &mdash; daily image guidance is required to safely use smaller PTV margins</td></tr>
+                    </tbody>
+                </table>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">What allows a smaller PTV margin to be used safely in CNS treatment?</p>
+                    <label><input type="radio" name="lq_page3_1" value="A"> A larger immobilization mask</label>
+                    <label><input type="radio" name="lq_page3_1" value="B"> Daily image guidance</label>
+                    <div class="explanation" style="display:none;">B. Daily image guidance directly verifies setup each day, which is what justifies tightening the PTV margin.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(3)">Check Answer</button>
+            </div>
+            <div id="lesson-page-4" class="lesson-page">
+                <h3>Page 4: Organ-at-Risk Dose Constraints</h3>
+                <p>Strict dose limits protect critical CNS structures:</p>
+                <table class="data-table">
+                    <thead><tr><th>Structure</th><th>Constraint</th></tr></thead>
+                    <tbody>
+                        <tr><td>Optic chiasm / optic nerves</td><td>50 Gy</td></tr>
+                        <tr><td>Brainstem</td><td>50 Gy</td></tr>
+                        <tr><td>Spinal cord</td><td>47 Gy (for 20 cm length)</td></tr>
+                        <tr><td>Uninvolved normal brain</td><td>45 Gy (necrosis/infarction risk)</td></tr>
+                        <tr><td>Lacrimal gland</td><td>26 Gy (dry eye)</td></tr>
+                        <tr><td>Parotid</td><td>32 Gy (xerostomia)</td></tr>
+                    </tbody>
+                </table>
+                <p>Proton therapy and IMRT are often selected specifically to help meet these OAR constraints while still covering the target.</p>
+            </div>
+            <div id="lesson-page-5" class="lesson-page">
+                <h3>Page 5: Techniques</h3>
+                <p><strong>Standard fractionated EBRT</strong> is the most common approach. <strong>Hypofractionated RT</strong> suits select patients (older adults, poorer performance status) to shorten overall treatment time. <strong>Stereotactic Radiosurgery (SRS)</strong> and <strong>Stereotactic Body Radiotherapy (SBRT)</strong> deliver highly focused, high-dose treatment in 1&ndash;5 fractions for small, well-defined lesions &mdash; commonly used for brain metastases.</p>
+            </div>
+            <div id="lesson-page-6" class="lesson-page">
+                <h3>Page 6: Dose and Fractionation by Tumor Type</h3>
+                <p>Different CNS tumor types call for genuinely different dose/fractionation schedules:</p>
+                <table class="data-table">
+                    <thead><tr><th>Tumor Type</th><th>Typical Regimen</th></tr></thead>
+                    <tbody>
+                        <tr><td>Brain stem glioma</td><td>54 Gy in 30 fractions (1.8 Gy/fx)</td></tr>
+                        <tr><td>Glioblastoma (post-op + chemo)</td><td>60 Gy in 30 fractions (2 Gy/fx)</td></tr>
+                        <tr><td>Medulloblastoma</td><td>23.4&ndash;36 Gy craniospinal, then boost to 54&ndash;55.8 Gy to posterior fossa</td></tr>
+                        <tr><td>Grade I meningioma (SRS)</td><td>12&ndash;16 Gy single fraction, or 25&ndash;30 Gy/5 fx near critical structures</td></tr>
+                        <tr><td>Grade II/III meningioma</td><td>54&ndash;60 Gy (Grade II) or 59.4&ndash;70 Gy (Grade III), 1.8&ndash;2.0 Gy/fx</td></tr>
+                        <tr><td>Metastatic spine (palliative)</td><td>8 Gy/1 fx, 20 Gy/5 fx, or 30 Gy/10 fx</td></tr>
+                    </tbody>
+                </table>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">Why does medulloblastoma treatment involve craniospinal radiation rather than a focal brain field alone?</p>
+                    <label><input type="radio" name="lq_page6_1" value="A"> Because medulloblastoma has a high tendency to spread via CSF pathways throughout the brain and spine</label>
+                    <label><input type="radio" name="lq_page6_1" value="B"> Because the tumor is always too large for a focal field</label>
+                    <div class="explanation" style="display:none;">A. Medulloblastoma commonly spreads through the cerebrospinal fluid, which is why treatment covers the entire craniospinal axis before boosting the primary site.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(6)">Check Answer</button>
+            </div>
+            <div id="lesson-page-7" class="lesson-page">
+                <h3>Page 7: Ready for Hands-On Practice</h3>
+                <p>You've covered general CNS treatment principles, positioning/immobilization, target volume definitions, OAR dose constraints, treatment techniques, and dose/fractionation by tumor type.</p>
+                <p>The Treatment Planning Suite has a Brain &mdash; Metastasis dataset preloaded with a PTV and nearby OARs (brainstem, optic nerve) already seeded &mdash; practice contouring, isocenter placement, and beam setup on a real CT stack.</p>
+            </div>
 
-    <section class="hero-banner-x text-white py-14 px-6 text-center">
-        <div class="container mx-auto">
-            <h2 class="text-4xl font-bold mb-4">Brain Treatment Planning</h2>
-            <p class="text-lg mb-4">Intracranial planning mechanics: OARs, tolerance doses, and field arrangement.</p>
+            <div class="lesson-navigation">
+                <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled>Previous Page</button>
+                <span class="page-indicator" id="lessonPageIndicator">Page 1 of 7</span>
+                <button id="nextLessonPage" onclick="changeLessonPage(1)">Next Page</button>
+                <button id="startActivityButton" onclick="window.location.href='../../Treatment_Planning_Suite/index.html?dataset=brain'" style="display:none; background-color: #28a745;">Open Treatment Planning Suite</button>
+            </div>
         </div>
-    </section>
-
-    <div class="bg-indigo-950 text-indigo-100 py-4 px-6">
-      <div class="container mx-auto text-sm">
-        <span class="font-bold uppercase tracking-wide text-indigo-300">ARRT Clinical Competency Cross-Reference</span>
-        <div class="mt-2 flex flex-wrap gap-2">
-<span class="bg-indigo-800 text-indigo-100 text-xs font-mono px-2 py-1 rounded">Simulation Procedure: Brain</span>
-<span class="bg-indigo-800 text-indigo-100 text-xs font-mono px-2 py-1 rounded">Treatment Procedure: Brain — Primary</span>
-<span class="bg-indigo-800 text-indigo-100 text-xs font-mono px-2 py-1 rounded">Treatment Procedure: Brain — Metastatic</span>
-        </div>
-      </div>
+        <div class="footer">Radiation Therapy E-Workbook &mdash; Medical Dosimetry</div>
     </div>
-
-    <main class="container mx-auto px-6 py-12 flex-grow">
-        <div class="max-w-2xl mx-auto text-center mb-10">
-            <span class="inline-block text-xs font-bold uppercase tracking-wide bg-amber-100 text-amber-700 px-3 py-1 rounded-full mb-4">Module under construction</span>
-            <p class="text-slate-600">This module's content is being pulled together from source course material (previously organized as "CNS" — split here per ARRT, which separates Brain from Skeletal/spine). Planned pieces:</p>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div class="bg-white p-6 rounded-xl shadow-lg opacity-60 flex flex-col">
-                <div class="flex justify-between items-start mb-3">
-                    <h3 class="text-xl font-semibold text-slate-500">Brain Lecture</h3>
-                    <span class="text-[10px] font-bold uppercase tracking-wide bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full whitespace-nowrap ml-2">planned</span>
-                </div>
-                <p class="text-slate-500 mb-4 text-sm flex-grow">Core didactic content for intracranial treatment planning.</p>
-                <span class="inline-block bg-slate-200 text-slate-500 font-medium py-2 px-4 rounded-lg cursor-not-allowed text-center">Not yet available</span>
-            </div>
-            <div class="bg-white p-6 rounded-xl shadow-lg opacity-60 flex flex-col">
-                <div class="flex justify-between items-start mb-3">
-                    <h3 class="text-xl font-semibold text-slate-500">Brain Study Guide</h3>
-                    <span class="text-[10px] font-bold uppercase tracking-wide bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full whitespace-nowrap ml-2">planned</span>
-                </div>
-                <p class="text-slate-500 mb-4 text-sm flex-grow">Review guide summarizing key intracranial planning concepts.</p>
-                <span class="inline-block bg-slate-200 text-slate-500 font-medium py-2 px-4 rounded-lg cursor-not-allowed text-center">Not yet available</span>
-            </div>
-            <div class="bg-white p-6 rounded-xl shadow-lg opacity-60 flex flex-col">
-                <div class="flex justify-between items-start mb-3">
-                    <h3 class="text-xl font-semibold text-slate-500">OARs and Tolerance Doses Lab</h3>
-                    <span class="text-[10px] font-bold uppercase tracking-wide bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full whitespace-nowrap ml-2">planned</span>
-                </div>
-                <p class="text-slate-500 mb-4 text-sm flex-grow">Interactive lab identifying organs at risk and their dose tolerances.</p>
-                <span class="inline-block bg-slate-200 text-slate-500 font-medium py-2 px-4 rounded-lg cursor-not-allowed text-center">Not yet available</span>
-            </div>
-            <div class="bg-white p-6 rounded-xl shadow-lg opacity-60 flex flex-col">
-                <div class="flex justify-between items-start mb-3">
-                    <h3 class="text-xl font-semibold text-slate-500">Primary vs. Metastatic Case Comparison</h3>
-                    <span class="text-[10px] font-bold uppercase tracking-wide bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full whitespace-nowrap ml-2">planned</span>
-                </div>
-                <p class="text-slate-500 mb-4 text-sm flex-grow">ARRT distinguishes Primary and Metastatic brain treatment procedures — a comparison exercise.</p>
-                <span class="inline-block bg-slate-200 text-slate-500 font-medium py-2 px-4 rounded-lg cursor-not-allowed text-center">Not yet available</span>
-            </div>
-            <div class="bg-white p-6 rounded-xl shadow-lg opacity-60 flex flex-col">
-                <div class="flex justify-between items-start mb-3">
-                    <h3 class="text-xl font-semibold text-slate-500">Quiz</h3>
-                    <span class="text-[10px] font-bold uppercase tracking-wide bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full whitespace-nowrap ml-2">planned</span>
-                </div>
-                <p class="text-slate-500 mb-4 text-sm flex-grow">Self-check quiz covering brain planning.</p>
-                <span class="inline-block bg-slate-200 text-slate-500 font-medium py-2 px-4 rounded-lg cursor-not-allowed text-center">Not yet available</span>
-            </div>
-
-        </div>
-        <p class="text-sm text-slate-500 mt-10 text-center">Disease-site anatomy &amp; localization: <a href="../../../tumor_sites_localization/CNS/" class="text-violet-600 underline">Tumor Sites Localization &rarr; CNS</a></p>
-
-    </main>
-
-    <footer class="bg-slate-800 text-slate-300 py-8 mt-12 text-center">
-        <div class="container mx-auto px-6">
-            <p>&copy; <span id="currentYear"></span> Radiation Therapy E-Workbook. All Rights Reserved.</p>
-            <p class="text-sm mt-1">Brain Planning Module</p>
-        </div>
-    </footer>
-
     <script>
-        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        let currentLessonPage = 1;
+        const totalLessonPages = 7;
+        const lessonPages = document.querySelectorAll('.lesson-page');
+        const prevLessonButton = document.getElementById('prevLessonPage');
+        const nextLessonButton = document.getElementById('nextLessonPage');
+        const lessonPageIndicator = document.getElementById('lessonPageIndicator');
+        const startActivityButton = document.getElementById('startActivityButton');
+        const lessonCorrectAnswers = {"lq_page3_1": "B", "lq_page6_1": "A"};
+        function displayLessonPage() {
+            lessonPages.forEach((page, index) => page.classList.toggle('active', index === currentLessonPage - 1));
+            prevLessonButton.disabled = currentLessonPage === 1;
+            nextLessonButton.style.display = currentLessonPage === totalLessonPages ? 'none' : 'inline-block';
+            startActivityButton.style.display = currentLessonPage === totalLessonPages ? 'inline-block' : 'none';
+            lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
+        }
+        function changeLessonPage(direction) {
+            currentLessonPage += direction;
+            if (currentLessonPage < 1) currentLessonPage = 1;
+            if (currentLessonPage > totalLessonPages) currentLessonPage = totalLessonPages;
+            displayLessonPage();
+        }
+        function checkPageAnswers(pageNumber) {
+            const questionsOnPage = document.querySelectorAll(`#lesson-page-${pageNumber} .interactive-question-block`);
+            questionsOnPage.forEach(block => {
+                const radio = block.querySelector('input[type="radio"]');
+                if (!radio) return;
+                const questionName = radio.name;
+                if (!lessonCorrectAnswers.hasOwnProperty(questionName)) return;
+                const correctAnswerValue = lessonCorrectAnswers[questionName];
+                const selectedRadio = block.querySelector(`input[name="${questionName}"]:checked`);
+                const explanationDiv = block.querySelector('.explanation');
+                block.classList.remove('feedback-correct', 'feedback-incorrect');
+                block.querySelectorAll('label').forEach(label => label.classList.remove('correct-option', 'selected-incorrect'));
+                if (explanationDiv) explanationDiv.style.display = 'none';
+                if (selectedRadio) {
+                    const userAnswer = selectedRadio.value;
+                    const userSelectedLabel = selectedRadio.parentElement;
+                    if (userAnswer === correctAnswerValue) {
+                        block.classList.add('feedback-correct');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('correct-option');
+                    } else {
+                        block.classList.add('feedback-incorrect');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('selected-incorrect');
+                        const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                        if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                    }
+                } else {
+                    block.classList.add('feedback-incorrect');
+                    const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                    if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                }
+                if (explanationDiv) explanationDiv.style.display = 'block';
+            });
+        }
+        displayLessonPage();
     </script>
-
 </body>
 </html>
