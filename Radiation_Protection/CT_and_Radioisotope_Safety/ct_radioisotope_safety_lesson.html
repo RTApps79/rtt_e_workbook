@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CT and Radioisotope Safety</title>
+<style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; margin: 20px;
+            background-color: #f4f4f4; color: #333; display: flex; flex-direction: column; align-items: center; }
+        .container { background-color: #fff; padding: 25px 35px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 90%; max-width: 900px; margin-bottom: 30px; }
+        h1, h2, h3, h4 { color: #0056b3; }
+        h1 { text-align: center; border-bottom: 2px solid #0056b3; padding-bottom: 15px; margin-bottom: 30px; font-size: 2em; }
+        h2 { border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 30px; margin-bottom: 20px; color: #003d7a; font-size: 1.6em; }
+        h3 { color: #004085; margin-top: 25px; margin-bottom: 15px; font-size: 1.3em; }
+        h4 { color: #17a2b8; margin-top: 20px; margin-bottom: 10px; font-size: 1.1em; font-weight: 600; }
+        p, li { margin-bottom: 12px; font-size: 1.05em; }
+        ul, ol { margin-bottom: 15px; padding-left: 25px; }
+        strong { font-weight: 600; }
+        .highlight { background-color: #e6f7ff; padding: 2px 5px; border-radius: 3px; font-weight: 600; }
+        code { background-color: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; color: #c7254e; }
+        table.data-table { width: 90%; margin: 15px auto; border-collapse: collapse; }
+        table.data-table th, table.data-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        table.data-table th { background-color: #e9f5ff; color: #0056b3; font-weight: 600; }
+        table.data-table tr:nth-child(even) { background-color: #f9f9f9; }
+        .flip-lesson-container { border: 1px solid #b3d7ff; padding: 20px; border-radius: 8px; background-color: #f0f8ff; margin-bottom: 30px; }
+        .lesson-page { display: none; padding: 15px; border: 1px solid #ddeeff; background-color: #fff; border-radius: 5px; min-height: 400px; }
+        .lesson-page.active { display: block; }
+        .lesson-navigation { text-align: center; margin-top: 20px; }
+        .lesson-navigation button, .lesson-page .check-page-answers {
+            background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px;
+            cursor: pointer; font-size: 1em; margin: 5px 10px; transition: background-color 0.2s; }
+        .lesson-navigation button:hover, .lesson-page .check-page-answers:hover { background-color: #0056b3; }
+        .lesson-navigation button:disabled { background-color: #ccc; cursor: not-allowed; }
+        .page-indicator { font-style: italic; color: #555; margin: 10px 0; }
+        .key-principle { background-color: #e7f3ff; padding: 10px; margin-bottom:10px; border-left: 3px solid #007bff; border-radius: 3px; }
+        .interactive-question-block { background: #f9f9f9; padding: 15px; margin: 20px 0; border: 1px solid #e0e0e0; border-radius: 8px; }
+        .interactive-question-block .question-text { font-weight: bold; margin-bottom: 8px; font-size: 1em; color: #555; }
+        .interactive-question-block label { display: block; margin-left: 0; padding: 8px 12px; border-radius: 5px; cursor: pointer; border: 1px solid transparent; margin-bottom: 5px; }
+        .interactive-question-block input[type="radio"] { margin-right: 10px; vertical-align: middle; }
+        .interactive-question-block label:hover { background-color: #f0f8ff; }
+        .feedback-correct { background-color: #e8f8f0 !important; border-left: 4px solid #2ecc71 !important; }
+        .feedback-incorrect { background-color: #fdedec !important; border-left: 4px solid #e74c3c !important; }
+        .feedback-correct label.correct-option, .feedback-incorrect label.correct-option { font-weight: bold; color: #1E8449; }
+        .feedback-incorrect label.selected-incorrect { color: #A93226; }
+        .explanation { font-size: 0.9em; color: #444; margin-top: 5px; padding-left: 20px; }
+        .footer { text-align: center; margin-top: 30px; padding-top: 15px; border-top: 1px solid #ccc; font-size: 0.9em; color: #555; }
+
+        .nav-links-header { background-color: #fff; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 50; }
+</style>
+</head>
+<body>
+    <header class="nav-links-header">
+        <div style="max-width:900px;margin:0 auto;padding:12px 20px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;">
+            <strong style="color:#0056b3;">CT and Radioisotope Safety</strong>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                <a href="../index.html" style="font-size:0.8rem;background:#0056b3;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Radiation Protection Menu</a>
+                <a href="../../index.html" style="font-size:0.8rem;background:#64748b;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Main Workbook</a>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <h1>CT and Radioisotope Safety</h1>
+        <div class="flip-lesson-container">
+            <h2>Interactive Lesson</h2>
+            <div id="lesson-page-1" class="lesson-page active">
+                <h3>Page 1: Two Very Different Modalities, One Safety Lens</h3>
+                <p>CT and PET/nuclear medicine work completely differently &mdash; one uses an external X-ray tube, the other uses radioactive tracers injected into the patient &mdash; but both raise real dose and safety questions RTTs need to understand, especially as fusion imaging with these modalities becomes more common in treatment planning.</p>
+            </div>
+            <div id="lesson-page-2" class="lesson-page">
+                <h3>Page 2: CT Dose Optimization &mdash; Pitch</h3>
+                <p><span class="highlight">Pitch</span> is the relationship between how far the patient couch moves per rotation and the width of the X-ray beam. When pitch is approximately 1, spiral CT dose is comparable to conventional CT.</p>
+                <div class="key-principle">
+                    <p>Increasing pitch (e.g., from 1 to 1.5) means the couch moves farther per rotation relative to the beam width &mdash; covering more anatomy per rotation, which <strong>decreases patient dose</strong> (at some potential cost to image quality/noise if not compensated for elsewhere).</p>
+                </div>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">Increasing CT pitch from 1 to 1.5 generally has what effect on patient dose?</p>
+                    <label><input type="radio" name="lq_page2_1" value="A"> Dose increases</label>
+                    <label><input type="radio" name="lq_page2_1" value="B"> Dose decreases</label>
+                    <div class="explanation" style="display:none;">B. Higher pitch covers more anatomy per rotation, which generally decreases patient dose.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(2)">Check Answer</button>
+            </div>
+            <div id="lesson-page-3" class="lesson-page">
+                <h3>Page 3: Tube Current Modulation and Iterative Reconstruction</h3>
+                <p><strong>Tube current modulation</strong> is an automatic exposure control method that adjusts mA in real time based on patient anatomy as the scan progresses &mdash; reducing dose in thinner body regions without sacrificing image quality where more attenuation exists.</p>
+                <p><strong>Iterative reconstruction</strong> is a repeated data-processing technique that reconstructs CT images with the lowest possible noise &mdash; allowing the raw scan to be acquired at a lower dose while still producing a diagnostically usable image.</p>
+            </div>
+            <div id="lesson-page-4" class="lesson-page">
+                <h3>Page 4: CTDIvol and Interslice Scatter</h3>
+                <p><strong>CTDIvol</strong> (CT Dose Index, volume) is a standardized dose marker representing the average absorbed dose within the scanned volume &mdash; the number you'll see reported directly on the scanner console for every study.</p>
+                <p><strong>Interslice scatter</strong> refers to radiation scattering from the slice actually being imaged into adjacent slices &mdash; a real, if secondary, contributor to total dose in a multi-slice acquisition.</p>
+                <div class="key-principle">
+                    <p>Patient positioning matters more than it might seem: <strong>miscentering a patient by just 2 cm</strong> in the CT gantry can increase their radiation dose by as much as <strong>25%</strong> &mdash; automatic exposure control systems are calibrated assuming correct centering.</p>
+                </div>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">A patient is miscentered by 2 cm in the CT gantry. What's the approximate dose impact?</p>
+                    <label><input type="radio" name="lq_page4_1" value="A"> Negligible, less than 5%</label>
+                    <label><input type="radio" name="lq_page4_1" value="B"> Up to 25% increase</label>
+                    <div class="explanation" style="display:none;">B. Even a small 2 cm miscentering error can increase dose by as much as 25%, since automatic exposure control assumes correct centering.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(4)">Check Answer</button>
+            </div>
+            <div id="lesson-page-5" class="lesson-page">
+                <h3>Page 5: How PET Actually Works</h3>
+                <p>PET (Positron Emission Tomography) examines <span class="highlight">metabolic processes</span> rather than anatomy directly. A radioactive tracer &mdash; most commonly <strong>FDG (fluorodeoxyglucose)</strong>, a radioactive glucose analog &mdash; is injected and taken up preferentially by metabolically active cells, including many cancers.</p>
+                <div class="key-principle">
+                    <p>As the tracer's radioisotope decays, it emits a <strong>positron</strong>, which almost immediately collides with a nearby electron. This collision produces <strong>annihilation radiation</strong>: two 511-keV photons traveling in opposite directions, which the PET scanner detects in coincidence to localize where the decay occurred.</p>
+                </div>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">PET imaging is fundamentally based on detecting:</p>
+                    <label><input type="radio" name="lq_page5_1" value="A"> X-rays transmitted through the patient</label>
+                    <label><input type="radio" name="lq_page5_1" value="B"> Paired 511-keV photons from positron-electron annihilation</label>
+                    <div class="explanation" style="display:none;">B. PET detects the two 511-keV annihilation photons produced when an emitted positron collides with an electron — that's the entire basis of the imaging technique.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(5)">Check Answer</button>
+            </div>
+            <div id="lesson-page-6" class="lesson-page">
+                <h3>Page 6: Radioisotopes in Nuclear Medicine</h3>
+                <p><strong>Radioisotopes</strong> are unstable atoms that spontaneously transform to reach a more stable configuration &mdash; recall from the Radioactivity lesson that isotopes share the same number of protons but differ in neutron count.</p>
+                <p><strong>Technetium-99m</strong> is the most widely used short-lived radioisotope in diagnostic nuclear medicine, valued for its short half-life (minimizing patient dose) and favorable gamma energy for imaging.</p>
+            </div>
+            <div id="lesson-page-7" class="lesson-page">
+                <h3>Page 7: Radiological Emergency Response</h3>
+                <p>A <strong>dirty bomb</strong> (radioactive dispersal device) combines a conventional explosive with radioactive material &mdash; the danger is primarily from the explosion and contamination spread, not necessarily from a high radiation dose.</p>
+                <div class="key-principle">
+                    <p>In a radiological emergency specifically involving <strong>radioactive iodine</strong>, <strong>potassium iodide (KI)</strong> can be administered to saturate the thyroid gland with stable (non-radioactive) iodine, blocking uptake of the radioactive form and reducing thyroid dose and cancer risk.</p>
+                </div>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">What can be administered to block thyroid uptake of radioactive iodine in an emergency?</p>
+                    <label><input type="radio" name="lq_page7_1" value="A"> Potassium iodide</label>
+                    <label><input type="radio" name="lq_page7_1" value="B"> Barium sulfate</label>
+                    <div class="explanation" style="display:none;">A. Potassium iodide saturates the thyroid with stable iodine, blocking uptake of the radioactive form.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(7)">Check Answer</button>
+            </div>
+            <div id="lesson-page-8" class="lesson-page">
+                <h3>Page 8: Wrap-Up</h3>
+                <p>You've covered CT dose optimization (pitch, tube current modulation, iterative reconstruction, CTDIvol, interslice scatter, and miscentering effects), how PET imaging actually works (FDG, positron emission, annihilation radiation), Technetium-99m's role in nuclear medicine, and radiological emergency response basics.</p>
+                <p>The CT &amp; Radioisotope Safety activity lets you practice this material through matching, quiz, fill-in-the-blank, and diagram-labeling exercises. Click below to begin.</p>
+            </div>
+
+            <div class="lesson-navigation">
+                <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled>Previous Page</button>
+                <span class="page-indicator" id="lessonPageIndicator">Page 1 of 8</span>
+                <button id="nextLessonPage" onclick="changeLessonPage(1)">Next Page</button>
+                <button id="startActivityButton" onclick="window.location.href='index.html'" style="display:none; background-color: #28a745;">Start Activity</button>
+            </div>
+        </div>
+        <div class="footer">Radiation Therapy E-Workbook &mdash; Radiation Protection</div>
+    </div>
+    <script>
+        let currentLessonPage = 1;
+        const totalLessonPages = 8;
+        const lessonPages = document.querySelectorAll('.lesson-page');
+        const prevLessonButton = document.getElementById('prevLessonPage');
+        const nextLessonButton = document.getElementById('nextLessonPage');
+        const lessonPageIndicator = document.getElementById('lessonPageIndicator');
+        const startActivityButton = document.getElementById('startActivityButton');
+        const lessonCorrectAnswers = {"lq_page2_1": "B", "lq_page4_1": "B", "lq_page5_1": "B", "lq_page7_1": "A"};
+        function displayLessonPage() {
+            lessonPages.forEach((page, index) => page.classList.toggle('active', index === currentLessonPage - 1));
+            prevLessonButton.disabled = currentLessonPage === 1;
+            nextLessonButton.style.display = currentLessonPage === totalLessonPages ? 'none' : 'inline-block';
+            startActivityButton.style.display = currentLessonPage === totalLessonPages ? 'inline-block' : 'none';
+            lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
+        }
+        function changeLessonPage(direction) {
+            currentLessonPage += direction;
+            if (currentLessonPage < 1) currentLessonPage = 1;
+            if (currentLessonPage > totalLessonPages) currentLessonPage = totalLessonPages;
+            displayLessonPage();
+        }
+        function checkPageAnswers(pageNumber) {
+            const questionsOnPage = document.querySelectorAll(`#lesson-page-${pageNumber} .interactive-question-block`);
+            questionsOnPage.forEach(block => {
+                const radio = block.querySelector('input[type="radio"]');
+                if (!radio) return;
+                const questionName = radio.name;
+                if (!lessonCorrectAnswers.hasOwnProperty(questionName)) return;
+                const correctAnswerValue = lessonCorrectAnswers[questionName];
+                const selectedRadio = block.querySelector(`input[name="${questionName}"]:checked`);
+                const explanationDiv = block.querySelector('.explanation');
+                block.classList.remove('feedback-correct', 'feedback-incorrect');
+                block.querySelectorAll('label').forEach(label => label.classList.remove('correct-option', 'selected-incorrect'));
+                if (explanationDiv) explanationDiv.style.display = 'none';
+                if (selectedRadio) {
+                    const userAnswer = selectedRadio.value;
+                    const userSelectedLabel = selectedRadio.parentElement;
+                    if (userAnswer === correctAnswerValue) {
+                        block.classList.add('feedback-correct');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('correct-option');
+                    } else {
+                        block.classList.add('feedback-incorrect');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('selected-incorrect');
+                        const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                        if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                    }
+                } else {
+                    block.classList.add('feedback-incorrect');
+                    const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                    if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                }
+                if (explanationDiv) explanationDiv.style.display = 'block';
+            });
+        }
+        displayLessonPage();
+    </script>
+</body>
+</html>
