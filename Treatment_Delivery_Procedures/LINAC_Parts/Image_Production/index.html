@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image Production: kV, EPID, and CBCT</title>
+<style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; margin: 20px;
+            background-color: #f4f4f4; color: #333; display: flex; flex-direction: column; align-items: center; }
+        .container { background-color: #fff; padding: 25px 35px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 90%; max-width: 900px; margin-bottom: 30px; }
+        h1, h2, h3, h4 { color: #0056b3; }
+        h1 { text-align: center; border-bottom: 2px solid #0056b3; padding-bottom: 15px; margin-bottom: 30px; font-size: 2em; }
+        h2 { border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 30px; margin-bottom: 20px; color: #003d7a; font-size: 1.6em; }
+        h3 { color: #004085; margin-top: 25px; margin-bottom: 15px; font-size: 1.3em; }
+        h4 { color: #17a2b8; margin-top: 20px; margin-bottom: 10px; font-size: 1.1em; font-weight: 600; }
+        p, li { margin-bottom: 12px; font-size: 1.05em; }
+        ul, ol { margin-bottom: 15px; padding-left: 25px; }
+        strong { font-weight: 600; }
+        .highlight { background-color: #e6f7ff; padding: 2px 5px; border-radius: 3px; font-weight: 600; }
+        code { background-color: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; color: #c7254e; }
+        table.data-table { width: 90%; margin: 15px auto; border-collapse: collapse; }
+        table.data-table th, table.data-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        table.data-table th { background-color: #e9f5ff; color: #0056b3; font-weight: 600; }
+        table.data-table tr:nth-child(even) { background-color: #f9f9f9; }
+        .flip-lesson-container { border: 1px solid #b3d7ff; padding: 20px; border-radius: 8px; background-color: #f0f8ff; margin-bottom: 30px; }
+        .lesson-page { display: none; padding: 15px; border: 1px solid #ddeeff; background-color: #fff; border-radius: 5px; min-height: 400px; }
+        .lesson-page.active { display: block; }
+        .lesson-navigation { text-align: center; margin-top: 20px; }
+        .lesson-navigation button, .lesson-page .check-page-answers {
+            background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px;
+            cursor: pointer; font-size: 1em; margin: 5px 10px; transition: background-color 0.2s; }
+        .lesson-navigation button:hover, .lesson-page .check-page-answers:hover { background-color: #0056b3; }
+        .lesson-navigation button:disabled { background-color: #ccc; cursor: not-allowed; }
+        .page-indicator { font-style: italic; color: #555; margin: 10px 0; }
+        .key-principle { background-color: #e7f3ff; padding: 10px; margin-bottom:10px; border-left: 3px solid #007bff; border-radius: 3px; }
+        .interactive-question-block { background: #f9f9f9; padding: 15px; margin: 20px 0; border: 1px solid #e0e0e0; border-radius: 8px; }
+        .interactive-question-block .question-text { font-weight: bold; margin-bottom: 8px; font-size: 1em; color: #555; }
+        .interactive-question-block label { display: block; margin-left: 0; padding: 8px 12px; border-radius: 5px; cursor: pointer; border: 1px solid transparent; margin-bottom: 5px; }
+        .interactive-question-block input[type="radio"] { margin-right: 10px; vertical-align: middle; }
+        .interactive-question-block label:hover { background-color: #f0f8ff; }
+        .feedback-correct { background-color: #e8f8f0 !important; border-left: 4px solid #2ecc71 !important; }
+        .feedback-incorrect { background-color: #fdedec !important; border-left: 4px solid #e74c3c !important; }
+        .feedback-correct label.correct-option, .feedback-incorrect label.correct-option { font-weight: bold; color: #1E8449; }
+        .feedback-incorrect label.selected-incorrect { color: #A93226; }
+        .explanation { font-size: 0.9em; color: #444; margin-top: 5px; padding-left: 20px; }
+        .footer { text-align: center; margin-top: 30px; padding-top: 15px; border-top: 1px solid #ccc; font-size: 0.9em; color: #555; }
+
+        .nav-links-header { background-color: #fff; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 50; }
+</style>
+</head>
+<body>
+    <header class="nav-links-header">
+        <div style="max-width:900px;margin:0 auto;padding:12px 20px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;">
+            <strong style="color:#0056b3;">Image Production: kV, EPID, and CBCT</strong>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                <a href="../index.html" style="font-size:0.8rem;background:#0056b3;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Back to Tool Menu</a>
+                <a href="../../../Clinical_Practice/Modalities_Equipment_Terminology/index.html" style="font-size:0.8rem;background:#0056b3;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Modalities Menu</a>
+                <a href="../../../index.html" style="font-size:0.8rem;background:#64748b;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Main Workbook</a>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <h1>Image Production: kV, EPID, and CBCT</h1>
+        <div class="flip-lesson-container">
+            <h2>Interactive Lesson</h2>
+            <div id="lesson-page-1" class="lesson-page active">
+                <h3>Page 1: Verifying What You Can't See</h3>
+                <p>Once a patient is set up on the couch, you need a way to confirm the internal anatomy actually lines up with the plan &mdash; skin marks alone don't guarantee the tumor is where you think it is. Modern LINACs carry their own onboard imaging systems specifically for this: the kV imaging device and the Electronic Portal Imaging Device (EPID).</p>
+            </div>
+            <div id="lesson-page-2" class="lesson-page">
+                <h3>Page 2: The Electronic Portal Imaging Device (EPID)</h3>
+                <p>The EPID uses the <span class="highlight">treatment beam itself</span> (megavoltage, MV) to form an image &mdash; it's mounted opposite the treatment head and retracts out of the way when not in use.</p>
+                <div class="key-principle">
+                    <p>EPIDs replaced film-based portal imaging with silicon imaging technology. Images can be reviewed immediately online rather than waiting for film processing, and the panel can be positioned to reduce image-receptor distance for better image quality.</p>
+                </div>
+                <p>Because MV imaging relies on the treatment beam, Compton scattering dominates at these energies &mdash; producing lower subject contrast than kV imaging. EPID is still valuable specifically because it verifies the <em>actual treatment beam's</em> position, not just a separate imaging beam's.</p>
+            </div>
+            <div id="lesson-page-3" class="lesson-page">
+                <h3>Page 3: The kV Imaging Device (OBI)</h3>
+                <p>The kV imaging device &mdash; often called the On-Board Imager (OBI) &mdash; uses a diagnostic-energy X-ray tube and detector, mounted on a retractable arm perpendicular to the treatment beam.</p>
+                <div class="key-principle">
+                    <p>kV imaging provides <strong>better image contrast than MV EPID</strong> imaging, since diagnostic energies favor photoelectric absorption (which is what actually creates contrast between tissue types), rather than Compton scattering.</p>
+                </div>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">Why does kV imaging generally produce better contrast than MV portal imaging?</p>
+                    <label><input type="radio" name="lq_page3_1" value="A"> kV imaging uses a stronger radiation dose</label>
+                    <label><input type="radio" name="lq_page3_1" value="B"> kV energies favor photoelectric absorption, which creates contrast; MV energies are dominated by Compton scattering</label>
+                    <div class="explanation" style="display:none;">B. The physics of the interaction, not the dose, is what drives the contrast difference — photoelectric absorption depends strongly on tissue type, while Compton scattering doesn't.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(3)">Check Answer</button>
+            </div>
+            <div id="lesson-page-4" class="lesson-page">
+                <h3>Page 4: Image-Guided Radiation Therapy (IGRT)</h3>
+                <p>Using onboard imaging to verify and adjust setup before (or during) treatment is called <span class="highlight">Image-Guided Radiation Therapy (IGRT)</span>. The kV/OBI system supports several distinct imaging modes:</p>
+                <ul>
+                    <li><strong>2D kV imaging</strong> &mdash; a single planar image, compared against a DRR (Digitally Reconstructed Radiograph) from the planning CT</li>
+                    <li><strong>Fluoroscopic acquisition</strong> &mdash; real-time imaging, useful for observing motion</li>
+                    <li><strong>Cone-Beam CT (CBCT)</strong> &mdash; a full 3D volumetric image, acquired by rotating the kV source/detector around the patient using a wider beam angle than conventional CT, capturing a larger volume per rotation</li>
+                </ul>
+            </div>
+            <div id="lesson-page-5" class="lesson-page">
+                <h3>Page 5: Other Onboard Localization Devices</h3>
+                <p>Beyond the standard kV/EPID pairing, some departments use additional in-room localization technology: a <strong>CT scanner on rails</strong> that slides into the treatment room for a full diagnostic-quality CT immediately before treatment, or surface-imaging systems tracking the patient's external contour in real time.</p>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">Which of these is NOT a standard onboard imaging device used for target localization in radiation therapy?</p>
+                    <label><input type="radio" name="lq_page5_1" value="A"> EPID</label>
+                    <label><input type="radio" name="lq_page5_1" value="B"> kV Cone-Beam CT</label>
+                    <label><input type="radio" name="lq_page5_1" value="C"> An in-room PET scanner</label>
+                    <div class="explanation" style="display:none;">C. EPID, kV CBCT, and CT-on-rails are all real, standard localization tools. An in-room PET scanner is not a standard onboard localization device in conventional radiation therapy practice.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(5)">Check Answer</button>
+            </div>
+            <div id="lesson-page-6" class="lesson-page">
+                <h3>Page 6: DRRs and Comparing Images</h3>
+                <p>A <span class="highlight">DRR (Digitally Reconstructed Radiograph)</span> is a synthetic 2D image generated by "casting rays" through the planning CT dataset, simulating what an X-ray from a given angle would look like. Daily setup images (kV or portal) are compared against the DRR to verify the patient's position matches the plan.</p>
+                <p>Bony anatomy, fiducial markers, and (increasingly) soft-tissue matching via CBCT are all used depending on the treatment site and what structures are most reliable to match against day to day.</p>
+            </div>
+            <div id="lesson-page-7" class="lesson-page">
+                <h3>Page 7: Wrap-Up</h3>
+                <p>You've covered the EPID (MV, uses the treatment beam itself), the kV imaging device/OBI (better contrast, supports 2D/fluoroscopic/CBCT modes), IGRT as a concept, other in-room localization options, and how DRRs serve as the reference for daily image comparison.</p>
+                <p>This connects directly to what you covered in Imaging and Processing under Principles and Practice I &mdash; this lesson is specifically the radiation therapy machine's own onboard imaging, rather than diagnostic imaging in general.</p>
+            </div>
+
+            <div class="lesson-navigation">
+                <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled>Previous Page</button>
+                <span class="page-indicator" id="lessonPageIndicator">Page 1 of 7</span>
+                <button id="nextLessonPage" onclick="changeLessonPage(1)">Next Page</button>
+                <button id="startActivityButton" onclick="window.location.href='../index.html'" style="display:none; background-color: #28a745;">Back to LINAC Menu</button>
+            </div>
+        </div>
+        <div class="footer">Radiation Therapy E-Workbook &mdash; Treatment Delivery Procedures</div>
+    </div>
+    <script>
+        let currentLessonPage = 1;
+        const totalLessonPages = 7;
+        const lessonPages = document.querySelectorAll('.lesson-page');
+        const prevLessonButton = document.getElementById('prevLessonPage');
+        const nextLessonButton = document.getElementById('nextLessonPage');
+        const lessonPageIndicator = document.getElementById('lessonPageIndicator');
+        const startActivityButton = document.getElementById('startActivityButton');
+        const lessonCorrectAnswers = {"lq_page3_1": "B", "lq_page5_1": "C"};
+        function displayLessonPage() {
+            lessonPages.forEach((page, index) => page.classList.toggle('active', index === currentLessonPage - 1));
+            prevLessonButton.disabled = currentLessonPage === 1;
+            nextLessonButton.style.display = currentLessonPage === totalLessonPages ? 'none' : 'inline-block';
+            startActivityButton.style.display = currentLessonPage === totalLessonPages ? 'inline-block' : 'none';
+            lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
+        }
+        function changeLessonPage(direction) {
+            currentLessonPage += direction;
+            if (currentLessonPage < 1) currentLessonPage = 1;
+            if (currentLessonPage > totalLessonPages) currentLessonPage = totalLessonPages;
+            displayLessonPage();
+        }
+        function checkPageAnswers(pageNumber) {
+            const questionsOnPage = document.querySelectorAll(`#lesson-page-${pageNumber} .interactive-question-block`);
+            questionsOnPage.forEach(block => {
+                const radio = block.querySelector('input[type="radio"]');
+                if (!radio) return;
+                const questionName = radio.name;
+                if (!lessonCorrectAnswers.hasOwnProperty(questionName)) return;
+                const correctAnswerValue = lessonCorrectAnswers[questionName];
+                const selectedRadio = block.querySelector(`input[name="${questionName}"]:checked`);
+                const explanationDiv = block.querySelector('.explanation');
+                block.classList.remove('feedback-correct', 'feedback-incorrect');
+                block.querySelectorAll('label').forEach(label => label.classList.remove('correct-option', 'selected-incorrect'));
+                if (explanationDiv) explanationDiv.style.display = 'none';
+                if (selectedRadio) {
+                    const userAnswer = selectedRadio.value;
+                    const userSelectedLabel = selectedRadio.parentElement;
+                    if (userAnswer === correctAnswerValue) {
+                        block.classList.add('feedback-correct');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('correct-option');
+                    } else {
+                        block.classList.add('feedback-incorrect');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('selected-incorrect');
+                        const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                        if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                    }
+                } else {
+                    block.classList.add('feedback-incorrect');
+                    const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                    if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                }
+                if (explanationDiv) explanationDiv.style.display = 'block';
+            });
+        }
+        displayLessonPage();
+    </script>
+</body>
+</html>
