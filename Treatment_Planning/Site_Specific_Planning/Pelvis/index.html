@@ -1,100 +1,214 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pelvis Planning - Main Menu</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Inter', sans-serif; }
-        .hero-banner-x { background: linear-gradient(to right, #4338ca, #7e22ce); }
-    </style>
-</head>
-<body class="bg-slate-100 text-slate-800 flex flex-col min-h-screen">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pelvis Treatment Planning</title>
+<style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; margin: 20px;
+            background-color: #f4f4f4; color: #333; display: flex; flex-direction: column; align-items: center; }
+        .container { background-color: #fff; padding: 25px 35px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 90%; max-width: 900px; margin-bottom: 30px; }
+        h1, h2, h3, h4 { color: #0056b3; }
+        h1 { text-align: center; border-bottom: 2px solid #0056b3; padding-bottom: 15px; margin-bottom: 30px; font-size: 2em; }
+        h2 { border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 30px; margin-bottom: 20px; color: #003d7a; font-size: 1.6em; }
+        h3 { color: #004085; margin-top: 25px; margin-bottom: 15px; font-size: 1.3em; }
+        h4 { color: #17a2b8; margin-top: 20px; margin-bottom: 10px; font-size: 1.1em; font-weight: 600; }
+        p, li { margin-bottom: 12px; font-size: 1.05em; }
+        ul, ol { margin-bottom: 15px; padding-left: 25px; }
+        strong { font-weight: 600; }
+        .highlight { background-color: #e6f7ff; padding: 2px 5px; border-radius: 3px; font-weight: 600; }
+        code { background-color: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; color: #c7254e; }
+        table.data-table { width: 90%; margin: 15px auto; border-collapse: collapse; }
+        table.data-table th, table.data-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        table.data-table th { background-color: #e9f5ff; color: #0056b3; font-weight: 600; }
+        table.data-table tr:nth-child(even) { background-color: #f9f9f9; }
+        .flip-lesson-container { border: 1px solid #b3d7ff; padding: 20px; border-radius: 8px; background-color: #f0f8ff; margin-bottom: 30px; }
+        .lesson-page { display: none; padding: 15px; border: 1px solid #ddeeff; background-color: #fff; border-radius: 5px; min-height: 400px; }
+        .lesson-page.active { display: block; }
+        .lesson-navigation { text-align: center; margin-top: 20px; }
+        .lesson-navigation button, .lesson-page .check-page-answers {
+            background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px;
+            cursor: pointer; font-size: 1em; margin: 5px 10px; transition: background-color 0.2s; }
+        .lesson-navigation button:hover, .lesson-page .check-page-answers:hover { background-color: #0056b3; }
+        .lesson-navigation button:disabled { background-color: #ccc; cursor: not-allowed; }
+        .page-indicator { font-style: italic; color: #555; margin: 10px 0; }
+        .key-principle { background-color: #e7f3ff; padding: 10px; margin-bottom:10px; border-left: 3px solid #007bff; border-radius: 3px; }
+        .interactive-question-block { background: #f9f9f9; padding: 15px; margin: 20px 0; border: 1px solid #e0e0e0; border-radius: 8px; }
+        .interactive-question-block .question-text { font-weight: bold; margin-bottom: 8px; font-size: 1em; color: #555; }
+        .interactive-question-block label { display: block; margin-left: 0; padding: 8px 12px; border-radius: 5px; cursor: pointer; border: 1px solid transparent; margin-bottom: 5px; }
+        .interactive-question-block input[type="radio"] { margin-right: 10px; vertical-align: middle; }
+        .interactive-question-block label:hover { background-color: #f0f8ff; }
+        .feedback-correct { background-color: #e8f8f0 !important; border-left: 4px solid #2ecc71 !important; }
+        .feedback-incorrect { background-color: #fdedec !important; border-left: 4px solid #e74c3c !important; }
+        .feedback-correct label.correct-option, .feedback-incorrect label.correct-option { font-weight: bold; color: #1E8449; }
+        .feedback-incorrect label.selected-incorrect { color: #A93226; }
+        .explanation { font-size: 0.9em; color: #444; margin-top: 5px; padding-left: 20px; }
+        .footer { text-align: center; margin-top: 30px; padding-top: 15px; border-top: 1px solid #ccc; font-size: 0.9em; color: #555; }
 
-    <header class="bg-white shadow-md sticky top-0 z-50">
-        <div class="container mx-auto px-6 py-4 flex flex-col sm:flex-row justify-between items-center">
-            <h1 class="text-2xl font-bold text-violet-800">Pelvis Planning</h1>
-            <a href="../index.html" class="mt-2 sm:mt-0 text-sm bg-slate-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-slate-700 transition-colors duration-300">
-                &larr; Back to Site-Specific Planning
-            </a>
+        .nav-links-header { background-color: #fff; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 50; }
+</style>
+</head>
+<body>
+    <header class="nav-links-header">
+        <div style="max-width:900px;margin:0 auto;padding:12px 20px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;">
+            <strong style="color:#0056b3;">Pelvis Treatment Planning</strong>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                <a href="../index.html" style="font-size:0.8rem;background:#0056b3;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Site-Specific Planning Menu</a>
+                <a href="../../../index.html" style="font-size:0.8rem;background:#64748b;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Main Workbook</a>
+            </div>
         </div>
     </header>
+    <div class="container">
+        <h1>Pelvis Treatment Planning</h1>
+        <div class="flip-lesson-container">
+            <h2>Interactive Lesson</h2>
+            <div id="lesson-page-1" class="lesson-page active">
+                <h3>Page 1: One Site, Several Disease Types</h3>
+                <p>The pelvis hosts several distinct disease types under one ARRT category: prostate, cervical, uterine, rectal, and anal cancers. The planning mechanics share enough in common &mdash; positioning, OARs, bladder/rectum management &mdash; to group them together, even though the actual target volumes differ by diagnosis.</p>
+            </div>
+            <div id="lesson-page-2" class="lesson-page">
+                <h3>Page 2: Supine vs. Prone Positioning</h3>
+                <table class="data-table">
+                    <thead><tr><th>Position</th><th>Rationale</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>Supine</strong></td><td>Most common; comfortable, highly reproducible, compatible with knee/ankle immobilization devices</td></tr>
+                        <tr><td><strong>Prone (with belly board)</strong></td><td>Used for some rectal/anal treatments &mdash; a belly board opening lets the small bowel fall anteriorly, away from the treatment field</td></tr>
+                    </tbody>
+                </table>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">What is the main reason a belly board is used for some rectal treatments?</p>
+                    <label><input type="radio" name="lq_page2_1" value="A"> It moves the small bowel out of the treatment field</label>
+                    <label><input type="radio" name="lq_page2_1" value="B"> It improves patient comfort only</label>
+                    <div class="explanation" style="display:none;">A. The belly board opening lets small bowel loops fall away from the field anteriorly, directly sparing bowel dose — not just a comfort measure.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(2)">Check Answer</button>
+            </div>
+            <div id="lesson-page-3" class="lesson-page">
+                <h3>Page 3: Bladder and Rectum Protocols</h3>
+                <p>Both bladder and rectal <strong>filling state</strong> directly affect where pelvic organs sit day to day &mdash; this is managed deliberately, not left to chance:</p>
+                <div class="key-principle">
+                    <p>A <strong>full-bladder protocol</strong> (patient drinks a set amount of water before simulation and every treatment) pushes small bowel superiorly, out of the field, and creates a more reproducible target position. Rectal protocols (empty rectum, sometimes with an enema beforehand) similarly aim for day-to-day consistency.</p>
+                </div>
+            </div>
+            <div id="lesson-page-4" class="lesson-page">
+                <h3>Page 4: Target Volumes</h3>
+                <p>Because "Pelvis" spans several diagnoses, the GTV/CTV/PTV definitions look genuinely different depending on the disease:</p>
+                <table class="data-table">
+                    <thead><tr><th>Diagnosis</th><th>CTV typically includes</th></tr></thead>
+                    <tbody>
+                        <tr><td>Prostate</td><td>Prostate &plusmn; seminal vesicles; pelvic nodes if intermediate/high risk</td></tr>
+                        <tr><td>Cervical / Uterine</td><td>Uterus/cervix, parametria, upper vagina, and pelvic &plusmn; para-aortic nodes depending on stage</td></tr>
+                        <tr><td>Rectal / Anal</td><td>Primary tumor/mesorectum plus the draining pelvic (and inguinal, for anal) nodal regions</td></tr>
+                    </tbody>
+                </table>
+                <p>PTV margins in the pelvis are chosen specifically with the bladder/rectum filling protocols from the previous page in mind &mdash; tighter margins are only safe when day-to-day organ filling is well controlled and verified with image guidance.</p>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">Why does the pelvis need larger or smaller PTV margins depending on bladder/rectum protocol adherence?</p>
+                    <label><input type="radio" name="lq_page4_1" value="A"> Because inconsistent organ filling directly increases day-to-day target position uncertainty</label>
+                    <label><input type="radio" name="lq_page4_1" value="B"> Margins in the pelvis are fixed regardless of protocol adherence</label>
+                    <div class="explanation" style="display:none;">A. Bladder and rectal filling directly shift pelvic organ position — the more consistent the filling, the more confidently a tighter margin can be used.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(4)">Check Answer</button>
+            </div>
+            <div id="lesson-page-5" class="lesson-page">
+                <h3>Page 5: Organ-at-Risk Constraints</h3>
+                <table class="data-table">
+                    <thead><tr><th>Structure</th><th>Constraint (conventional prostate example)</th></tr></thead>
+                    <tbody>
+                        <tr><td>Bladder</td><td>V70 &le; 25&ndash;35% (volume receiving 70 Gy)</td></tr>
+                        <tr><td>Rectum</td><td>V70 &le; 20% (volume receiving 70 Gy)</td></tr>
+                        <tr><td>Femoral heads</td><td>V50 &le; 5%</td></tr>
+                        <tr><td>Bowel (gyn/rectal cases)</td><td>V45 &le; 195 cc</td></tr>
+                    </tbody>
+                </table>
+                <p>For a standard prostate case specifically, the two organs at risk you'll hear referenced constantly are the <strong>bladder and rectum</strong> &mdash; both directly adjacent to the prostate on essentially every side.</p>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">What are the two primary organs at risk in a standard prostate treatment?</p>
+                    <label><input type="radio" name="lq_page5_1" value="A"> Bladder and rectum</label>
+                    <label><input type="radio" name="lq_page5_1" value="B"> Liver and kidneys</label>
+                    <div class="explanation" style="display:none;">A. The bladder and rectum sit immediately adjacent to the prostate and are the two OARs most consistently discussed in prostate planning.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(5)">Check Answer</button>
+            </div>
+            <div id="lesson-page-6" class="lesson-page">
+                <h3>Page 6: Techniques</h3>
+                <p><strong>VMAT/IMRT</strong> is standard for definitive pelvic treatment, allowing dose to conform tightly around bladder/rectum. <strong>Image guidance</strong> (daily CBCT, or fiducial-based kV imaging for prostate) is essential given how much bladder/rectal filling can shift the target day to day. <strong>Brachytherapy</strong> plays a major role specifically in cervical and some prostate cases, often combined with external beam.</p>
+            </div>
+            <div id="lesson-page-7" class="lesson-page">
+                <h3>Page 7: Wrap-Up</h3>
+                <p>You've covered supine vs. prone positioning, bladder/rectum filling protocols, diagnosis-specific target volumes, OAR constraints, and technique selection across the pelvic disease types.</p>
+                <p>Cross-reference: this lesson covers the planning mechanics common across prostate, cervical, uterine, rectal, and anal disease &mdash; for disease-specific anatomy and staging, see the corresponding pages under Tumor Sites Localization (Genitourinary, Male/Female Reproductive, and GI Tumors).</p>
+            </div>
 
-    <section class="hero-banner-x text-white py-14 px-6 text-center">
-        <div class="container mx-auto">
-            <h2 class="text-4xl font-bold mb-4">Pelvis Treatment Planning</h2>
-            <p class="text-lg mb-4">Prostate, cervical, uterine, rectal, and anal planning mechanics — supine and prone technique.</p>
+            <div class="lesson-navigation">
+                <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled>Previous Page</button>
+                <span class="page-indicator" id="lessonPageIndicator">Page 1 of 7</span>
+                <button id="nextLessonPage" onclick="changeLessonPage(1)">Next Page</button>
+                <button id="startActivityButton" onclick="window.location.href='../../Treatment_Planning_Suite/index.html?dataset=demo'" style="display:none; background-color: #28a745;">Open Treatment Planning Suite</button>
+            </div>
         </div>
-    </section>
-
-    <div class="bg-indigo-950 text-indigo-100 py-4 px-6">
-      <div class="container mx-auto text-sm">
-        <span class="font-bold uppercase tracking-wide text-indigo-300">ARRT Clinical Competency Cross-Reference</span>
-        <div class="mt-2 flex flex-wrap gap-2">
-<span class="bg-indigo-800 text-indigo-100 text-xs font-mono px-2 py-1 rounded">Simulation Procedure: Pelvis</span>
-<span class="bg-indigo-800 text-indigo-100 text-xs font-mono px-2 py-1 rounded">Treatment: Multi-field Supine</span>
-<span class="bg-indigo-800 text-indigo-100 text-xs font-mono px-2 py-1 rounded">Treatment: Multi-field Prone</span>
-        </div>
-      </div>
+        <div class="footer">Radiation Therapy E-Workbook &mdash; Medical Dosimetry</div>
     </div>
-
-    <main class="container mx-auto px-6 py-12 flex-grow">
-        <div class="max-w-2xl mx-auto text-center mb-10">
-            <span class="inline-block text-xs font-bold uppercase tracking-wide bg-amber-100 text-amber-700 px-3 py-1 rounded-full mb-4">Module under construction</span>
-            <p class="text-slate-600">This module's content is being pulled together from source course material (previously organized separately as "Reproductive" and part of "GI" — consolidated here per ARRT, which groups all of these under Pelvis). Planned pieces:</p>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div class="bg-white p-6 rounded-xl shadow-lg opacity-60 flex flex-col">
-                <div class="flex justify-between items-start mb-3">
-                    <h3 class="text-xl font-semibold text-slate-500">Pelvis Lecture</h3>
-                    <span class="text-[10px] font-bold uppercase tracking-wide bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full whitespace-nowrap ml-2">planned</span>
-                </div>
-                <p class="text-slate-500 mb-4 text-sm flex-grow">Core didactic content for pelvic treatment planning.</p>
-                <span class="inline-block bg-slate-200 text-slate-500 font-medium py-2 px-4 rounded-lg cursor-not-allowed text-center">Not yet available</span>
-            </div>
-            <div class="bg-white p-6 rounded-xl shadow-lg opacity-60 flex flex-col">
-                <div class="flex justify-between items-start mb-3">
-                    <h3 class="text-xl font-semibold text-slate-500">Pelvis Study Guide</h3>
-                    <span class="text-[10px] font-bold uppercase tracking-wide bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full whitespace-nowrap ml-2">planned</span>
-                </div>
-                <p class="text-slate-500 mb-4 text-sm flex-grow">Review guide summarizing key pelvic planning concepts.</p>
-                <span class="inline-block bg-slate-200 text-slate-500 font-medium py-2 px-4 rounded-lg cursor-not-allowed text-center">Not yet available</span>
-            </div>
-            <div class="bg-white p-6 rounded-xl shadow-lg opacity-60 flex flex-col">
-                <div class="flex justify-between items-start mb-3">
-                    <h3 class="text-xl font-semibold text-slate-500">Supine vs. Prone Set-up Comparison</h3>
-                    <span class="text-[10px] font-bold uppercase tracking-wide bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full whitespace-nowrap ml-2">planned</span>
-                </div>
-                <p class="text-slate-500 mb-4 text-sm flex-grow">ARRT distinguishes Multi-field Supine from Multi-field Prone technique for this site.</p>
-                <span class="inline-block bg-slate-200 text-slate-500 font-medium py-2 px-4 rounded-lg cursor-not-allowed text-center">Not yet available</span>
-            </div>
-            <div class="bg-white p-6 rounded-xl shadow-lg opacity-60 flex flex-col">
-                <div class="flex justify-between items-start mb-3">
-                    <h3 class="text-xl font-semibold text-slate-500">Quiz</h3>
-                    <span class="text-[10px] font-bold uppercase tracking-wide bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full whitespace-nowrap ml-2">planned</span>
-                </div>
-                <p class="text-slate-500 mb-4 text-sm flex-grow">Self-check quiz covering pelvic planning.</p>
-                <span class="inline-block bg-slate-200 text-slate-500 font-medium py-2 px-4 rounded-lg cursor-not-allowed text-center">Not yet available</span>
-            </div>
-
-        </div>
-        <p class="text-sm text-slate-500 mt-10 text-center">Disease-site anatomy &amp; localization: <a href="../../../tumor_sites_localization/Genitourinary/" class="text-violet-600 underline">Tumor Sites Localization &rarr; Genitourinary</a> &nbsp;|&nbsp; <a href="../../../tumor_sites_localization/Male_Reproductive/" class="text-violet-600 underline">Male Reproductive</a> &nbsp;|&nbsp; <a href="../../../tumor_sites_localization/Female_Reproductive/" class="text-violet-600 underline">Female Reproductive</a> &nbsp;|&nbsp; <a href="../../../tumor_sites_localization/GI_Tumors/" class="text-violet-600 underline">GI Tumors (rectal/anal)</a></p>
-
-    </main>
-
-    <footer class="bg-slate-800 text-slate-300 py-8 mt-12 text-center">
-        <div class="container mx-auto px-6">
-            <p>&copy; <span id="currentYear"></span> Radiation Therapy E-Workbook. All Rights Reserved.</p>
-            <p class="text-sm mt-1">Pelvis Planning Module</p>
-        </div>
-    </footer>
-
     <script>
-        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        let currentLessonPage = 1;
+        const totalLessonPages = 7;
+        const lessonPages = document.querySelectorAll('.lesson-page');
+        const prevLessonButton = document.getElementById('prevLessonPage');
+        const nextLessonButton = document.getElementById('nextLessonPage');
+        const lessonPageIndicator = document.getElementById('lessonPageIndicator');
+        const startActivityButton = document.getElementById('startActivityButton');
+        const lessonCorrectAnswers = {"lq_page2_1": "A", "lq_page4_1": "A", "lq_page5_1": "A"};
+        function displayLessonPage() {
+            lessonPages.forEach((page, index) => page.classList.toggle('active', index === currentLessonPage - 1));
+            prevLessonButton.disabled = currentLessonPage === 1;
+            nextLessonButton.style.display = currentLessonPage === totalLessonPages ? 'none' : 'inline-block';
+            startActivityButton.style.display = currentLessonPage === totalLessonPages ? 'inline-block' : 'none';
+            lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
+        }
+        function changeLessonPage(direction) {
+            currentLessonPage += direction;
+            if (currentLessonPage < 1) currentLessonPage = 1;
+            if (currentLessonPage > totalLessonPages) currentLessonPage = totalLessonPages;
+            displayLessonPage();
+        }
+        function checkPageAnswers(pageNumber) {
+            const questionsOnPage = document.querySelectorAll(`#lesson-page-${pageNumber} .interactive-question-block`);
+            questionsOnPage.forEach(block => {
+                const radio = block.querySelector('input[type="radio"]');
+                if (!radio) return;
+                const questionName = radio.name;
+                if (!lessonCorrectAnswers.hasOwnProperty(questionName)) return;
+                const correctAnswerValue = lessonCorrectAnswers[questionName];
+                const selectedRadio = block.querySelector(`input[name="${questionName}"]:checked`);
+                const explanationDiv = block.querySelector('.explanation');
+                block.classList.remove('feedback-correct', 'feedback-incorrect');
+                block.querySelectorAll('label').forEach(label => label.classList.remove('correct-option', 'selected-incorrect'));
+                if (explanationDiv) explanationDiv.style.display = 'none';
+                if (selectedRadio) {
+                    const userAnswer = selectedRadio.value;
+                    const userSelectedLabel = selectedRadio.parentElement;
+                    if (userAnswer === correctAnswerValue) {
+                        block.classList.add('feedback-correct');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('correct-option');
+                    } else {
+                        block.classList.add('feedback-incorrect');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('selected-incorrect');
+                        const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                        if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                    }
+                } else {
+                    block.classList.add('feedback-incorrect');
+                    const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                    if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                }
+                if (explanationDiv) explanationDiv.style.display = 'block';
+            });
+        }
+        displayLessonPage();
     </script>
-
 </body>
 </html>
