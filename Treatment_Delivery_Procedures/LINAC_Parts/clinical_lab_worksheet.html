@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Linear Accelerator Lab Worksheet</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    body { font-family: 'Inter', sans-serif; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #e2e8f0; padding: 6px 8px; font-size: 0.85rem; }
+    th { background: #f1f5f9; text-align: left; }
+    .rec-input { border: 1px solid #cbd5e1; border-radius: 4px; padding: 4px 8px; width: 100%; }
+    textarea { width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px; }
+</style>
+</head>
+<body class="bg-slate-100 text-slate-800">
+<header class="bg-white shadow-md sticky top-0 z-50">
+    <div class="container mx-auto px-6 py-3 flex flex-wrap justify-between items-center gap-2">
+        <strong class="text-indigo-700">Linear Accelerator Lab</strong>
+        <a href="index.html" class="text-xs sm:text-sm bg-slate-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-slate-600">&larr; Back to LINAC Menu</a>
+    </div>
+</header>
+
+<main class="container mx-auto px-6 py-8 max-w-4xl">
+    <div class="bg-white p-6 sm:p-8 rounded-xl shadow-lg">
+        <h1 class="text-2xl font-bold text-indigo-700 mb-2">Linear Accelerator Clinical Lab</h1>
+        <div class="bg-amber-50 border border-amber-300 rounded-lg p-3 text-sm mb-6">
+            ⚠️ <strong>All activities require direct supervision</strong> of a qualified instructor or clinical preceptor. Never attempt to operate a LINAC without proper authorization and guidance.
+        </div>
+        <p class="text-sm text-slate-600 mb-6">This lab familiarizes you with the major components of a LINAC, basic operational procedures, and essential safety features, in your assigned clinical area.</p>
+
+        <h2 class="text-lg font-bold text-indigo-700 mb-3">Activity 1 &mdash; Component Identification &amp; Distance Measurement</h2>
+        <p class="text-sm mb-2">Locate each component in your assigned clinical area and check it off:</p>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-4 text-sm">
+            <label><input type="checkbox"> Control Console</label>
+            <label><input type="checkbox"> Hand Pendant</label>
+            <label><input type="checkbox"> Treatment Couch</label>
+            <label><input type="checkbox"> Gantry</label>
+            <label><input type="checkbox"> Drive Stand</label>
+            <label><input type="checkbox"> Modulator Cabinet</label>
+            <label><input type="checkbox"> Main Circuit Breaker</label>
+            <label><input type="checkbox"> Emergency Off Buttons</label>
+            <label><input type="checkbox"> Radiation Warning Signs</label>
+            <label><input type="checkbox"> Room Lasers</label>
+            <label><input type="checkbox"> Gantry Digital Display</label>
+            <label><input type="checkbox"> Motion Enable Bars</label>
+            <label><input type="checkbox"> EPID</label>
+            <label><input type="checkbox"> kV Imager</label>
+        </div>
+        <label class="block text-sm font-medium mb-1">Distance from center of control console to isocenter (meters):</label>
+        <input class="rec-input mb-6" style="max-width:200px;">
+
+        <h2 class="text-lg font-bold text-indigo-700 mb-3">Activity 2 &mdash; Radiation Intensity Calculation (Inverse Square Law)</h2>
+        <p class="text-sm mb-2">Your clinical LINAC has a dose rate of <strong>600 cGy/min at 100 cm SAD</strong>. Use I&#8321;D&#8321;&sup2; = I&#8322;D&#8322;&sup2;.</p>
+        <table class="mb-4">
+            <thead><tr><th>Location</th><th>Distance (cm)</th><th>Calculated Intensity (cGy/min)</th></tr></thead>
+            <tbody>
+                <tr><td>Isocenter (controlled area)</td><td>100</td><td><input class="rec-input" placeholder="Given: 600"></td></tr>
+                <tr><td>Control console</td><td>(from Activity 1, in cm)</td><td><input class="rec-input"></td></tr>
+                <tr><td>1 m outside treatment room door (uncontrolled area)</td><td>(measure/estimate)</td><td><input class="rec-input"></td></tr>
+            </tbody>
+        </table>
+        <label class="block text-sm font-medium mb-1">Show your work for the control console calculation:</label>
+        <textarea rows="3" class="mb-4"></textarea>
+        <label class="block text-sm font-medium mb-1">Show your work for the uncontrolled area calculation, and state your assumptions about door/distance:</label>
+        <textarea rows="3" class="mb-6"></textarea>
+
+        <h2 class="text-lg font-bold text-indigo-700 mb-3">Activity 3 &mdash; Treatment Room Door Observation</h2>
+        <table class="mb-4">
+            <thead><tr><th>Trial</th><th>Door Closing Time (sec)</th></tr></thead>
+            <tbody>
+                <tr><td>1</td><td><input class="rec-input"></td></tr>
+                <tr><td>2</td><td><input class="rec-input"></td></tr>
+                <tr><td>3</td><td><input class="rec-input"></td></tr>
+                <tr><td><strong>Average</strong></td><td><input class="rec-input"></td></tr>
+            </tbody>
+        </table>
+        <label class="block text-sm font-medium mb-1">Door thickness (cm):</label>
+        <input class="rec-input mb-6" style="max-width:200px;">
+
+        <h2 class="text-lg font-bold text-indigo-700 mb-3">Activity 4 &mdash; Monitor Unit (MU) Timing</h2>
+        <p class="text-sm mb-2">Dose rate for this activity: <strong>400 MU/min</strong>. Time each delivery (with instructor supervision, simulated or observed).</p>
+        <table class="mb-6">
+            <thead><tr><th>MU</th><th>Time (min:sec)</th></tr></thead>
+            <tbody>
+                <tr><td>0</td><td><input class="rec-input"></td></tr>
+                <tr><td>1</td><td><input class="rec-input"></td></tr>
+                <tr><td>5</td><td><input class="rec-input"></td></tr>
+                <tr><td>10</td><td><input class="rec-input"></td></tr>
+                <tr><td>25</td><td><input class="rec-input"></td></tr>
+                <tr><td>50</td><td><input class="rec-input"></td></tr>
+                <tr><td>100</td><td><input class="rec-input"></td></tr>
+                <tr><td>200</td><td><input class="rec-input"></td></tr>
+            </tbody>
+        </table>
+
+        <h2 class="text-lg font-bold text-indigo-700 mb-3">Activity 5 &mdash; Beam-On Observation (Clinical Observation)</h2>
+        <p class="text-sm mb-2">During a 2-hour clinical observation period, count beam-on indicator illuminations and time-to-treatment-start for each:</p>
+        <table class="mb-6">
+            <thead><tr><th>Event #</th><th>Time from indicator to MU accumulation start (sec)</th></tr></thead>
+            <tbody>
+                <tr><td>1</td><td><input class="rec-input"></td></tr>
+                <tr><td>2</td><td><input class="rec-input"></td></tr>
+                <tr><td>3</td><td><input class="rec-input"></td></tr>
+                <tr><td>4</td><td><input class="rec-input"></td></tr>
+                <tr><td>5</td><td><input class="rec-input"></td></tr>
+            </tbody>
+        </table>
+
+        <h2 class="text-lg font-bold text-indigo-700 mb-3">Activities 6 &amp; 7 &mdash; Photo and Video Documentation</h2>
+        <p class="text-sm mb-2">Capture and caption photos of: main circuit breaker, all emergency-off buttons, the radiation warning sign, the modulator cabinet door (closed), the gantry angle digital display, all motion enable bars, and the room lasers.</p>
+        <p class="text-sm mb-4">Record short narrated videos of: couch rotation (0&deg;&rarr;90&deg; and 0&deg;&rarr;270&deg;), gantry movement (0/90/180/270&deg;), independent jaw movement (X1/X2/Y1/Y2) via hand pendant, room/field light activation, and EPID/kV imager retraction. Upload per your program's submission platform.</p>
+
+        <h2 class="text-lg font-bold text-indigo-700 mb-3">Activity 8 &mdash; Accessory Identification</h2>
+        <table class="mb-6">
+            <thead><tr><th>Accessory</th><th>Purpose / How It's Used</th></tr></thead>
+            <tbody>
+                <tr><td><input class="rec-input" placeholder="e.g., Wedge"></td><td><input class="rec-input"></td></tr>
+                <tr><td><input class="rec-input"></td><td><input class="rec-input"></td></tr>
+                <tr><td><input class="rec-input"></td><td><input class="rec-input"></td></tr>
+                <tr><td><input class="rec-input"></td><td><input class="rec-input"></td></tr>
+                <tr><td><input class="rec-input"></td><td><input class="rec-input"></td></tr>
+            </tbody>
+        </table>
+
+        <h2 class="text-lg font-bold text-indigo-700 mb-3">Discussion Questions</h2>
+        <div class="space-y-4 mb-6">
+            <div><label class="block text-sm font-medium mb-1">Why is it important to know the location of the emergency off buttons?</label><textarea rows="2"></textarea></div>
+            <div><label class="block text-sm font-medium mb-1">What is the purpose of the inverse square law calculation in this lab? How does distance affect radiation exposure?</label><textarea rows="2"></textarea></div>
+            <div><label class="block text-sm font-medium mb-1">What factors might contribute to the time difference between the beam-on indicator illuminating and actual treatment delivery starting?</label><textarea rows="2"></textarea></div>
+            <div><label class="block text-sm font-medium mb-1">What is the purpose of the motion enable bars?</label><textarea rows="2"></textarea></div>
+            <div><label class="block text-sm font-medium mb-1">Why is accurate MU timing important in radiation therapy?</label><textarea rows="2"></textarea></div>
+            <div><label class="block text-sm font-medium mb-1">Based on your door thickness measurement and your understanding of radiation shielding, what materials do you think are used in the treatment room walls and door?</label><textarea rows="2"></textarea></div>
+            <div><label class="block text-sm font-medium mb-1">Explain how the accessories you identified in Activity 8 modify or shape the radiation beam.</label><textarea rows="2"></textarea></div>
+        </div>
+
+        <h2 class="text-lg font-bold text-indigo-700 mb-3">Conclusion</h2>
+        <label class="block text-sm font-medium mb-1">Summarize your key findings. Do you feel you achieved the learning objectives? Reflect on why this matters for your future role.</label>
+        <textarea rows="5"></textarea>
+
+        <p class="text-xs text-slate-400 border-t pt-4 mt-6">Compile all measurements, calculations, observations, photos, and videos per your program's submission requirements.</p>
+    </div>
+</main>
+
+<footer class="bg-slate-800 text-slate-300 py-6 mt-8 text-center">
+    <p class="text-sm">&copy; <span id="currentYear"></span> Radiation Therapy E-Workbook. All Rights Reserved.</p>
+</footer>
+<script>document.getElementById('currentYear').textContent = new Date().getFullYear();</script>
+</body>
+</html>
