@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab Worksheet: Calculating Dose at Depth</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #f1f5f9;
+        }
+        .worksheet-container {
+            max-width: 850px;
+            margin: 2rem auto;
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 2.5rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        h1 { color: #1e3a8a; }
+        h2 { color: #1e293b; border-bottom-color: #e2e8f0; }
+        h3 { color: #334155; }
+        .formula-box {
+            background-color: #eef2ff;
+            border-left: 5px solid #4f46e5;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+        }
+        .formula {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #e0e7ff;
+            color: #312e81;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.25rem;
+            font-weight: 600;
+        }
+        .calculation-space {
+            width: 100%;
+            border: none;
+            border-bottom: 2px solid #cbd5e1;
+            background-color: #f8fafc;
+            resize: vertical;
+            min-height: 4rem;
+            margin-top: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 1em;
+            padding: 0.5rem;
+            border-radius: 4px 4px 0 0;
+            transition: border-color 0.3s;
+        }
+        .calculation-space:focus {
+            outline: none;
+            border-bottom-color: #4f46e5;
+        }
+        .student-info-input {
+            width: 100%;
+            border: none;
+            border-bottom: 1px solid #94a3b8;
+            padding-bottom: 0.25rem;
+            font-size: 1em;
+            background: transparent;
+        }
+        .student-info-input:focus {
+            outline: none;
+            border-bottom-color: #4f46e5;
+        }
+        .visual-aid {
+            border: 2px dashed #9ca3af;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+        @media print {
+            body { background-color: #fff; }
+            .worksheet-container { box-shadow: none; margin: 0; padding: 10mm; width: 100%; max-width: 100%; }
+            .submission-area { display: none; }
+            textarea, input { border-bottom: 1px solid #999 !important; background-color: #fff !important; }
+        }
+    </style>
+</head>
+<body>
+    <header style="max-width:850px;margin:1rem auto 0;background:#fff;box-shadow:0 1px 3px 0 rgba(0,0,0,0.1);padding:12px 20px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;border-radius:0.5rem;">
+        <strong style="color:#1e3a8a;">Depth Dose Worksheet</strong>
+        <a href="index.html" style="font-size:0.85rem;background:#64748b;color:#fff;font-weight:600;padding:8px 14px;border-radius:6px;text-decoration:none;">&larr; Back to Isodose Distribution</a>
+    </header>
+
+    <div class="worksheet-container">
+        <div id="worksheet-content">
+            <header>
+                <h1 class="text-3xl font-bold text-center pb-4 mb-4">Lab Worksheet: Calculating Dose at Depth</h1>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 mb-8">
+                    <div>
+                        <label for="studentName" class="block text-sm font-bold text-gray-700">Student Name:</label>
+                        <input type="text" id="studentName" class="student-info-input mt-1">
+                    </div>
+                    <div>
+                        <label for="studentDate" class="block text-sm font-bold text-gray-700">Date:</label>
+                        <input type="text" id="studentDate" class="student-info-input mt-1">
+                    </div>
+                </div>
+            </header>
+            
+            <main>
+                <section>
+                    <h2 class="text-2xl font-semibold mt-8 pb-2 border-b">Part 1: Purpose & Key Formula</h2>
+                    <p class="mt-4 text-gray-700">This worksheet accompanies the **Lesson on Calculating Dose at Depth**. Its purpose is to solidify your understanding of the direct proportion relationship used in Percent Depth Dose (PDD) calculations. You will manually calculate the dose at various depths using the primary formula from the lesson.</p>
+                    <div class="formula-box">
+                        <h3 class="text-lg font-semibold mb-2 text-indigo-800">Direct Proportion Formula</h3>
+                        <p class="text-center text-xl my-2"><span class="formula">Dose<sub>depth</sub> / Dose<sub>Dmax</sub> = PDD<sub>depth</sub> / PDD<sub>Dmax</sub></span></p>
+                        <p class="text-sm text-center text-gray-600">(Remember, PDD at Dmax is always 100%)</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2 class="text-2xl font-semibold mt-8 pb-2 border-b">Part 2: Practice Problems</h2>
+                    <p class="mt-4 text-gray-700">For each problem, use the provided data to solve for the unknown value. **Show your setup of the proportion** and the final calculation.</p>
+
+                    <div class="visual-aid">
+                        <p class="font-medium text-gray-600">Refer to this diagram to visualize the relationship for each problem.</p>
+                        <svg viewBox="0 0 300 120" class="w-full mt-2">
+                            <path d="M0,110 C30,10, 40,0, 280,100" stroke="#4f46e5" stroke-width="2" fill="none"/>
+                            <line x1="0" y1="115" x2="300" y2="115" stroke="#334155" stroke-width="1"/>
+                            <line x1="5" y1="0" x2="5" y2="120" stroke="#334155" stroke-width="1"/>
+                            <circle cx="43" cy="5.4" r="3" fill="#1e3a8a"/>
+                            <line x1="43" y1="5.4" x2="43" y2="115" stroke="#1e3a8a" stroke-width="1" stroke-dasharray="2,2"/>
+                            <line x1="5" y1="5.4" x2="43" y2="5.4" stroke="#1e3a8a" stroke-width="1" stroke-dasharray="2,2"/>
+                            <text x="48" y="15" font-size="8" fill="#1e3a8a">Dmax</text>
+                             <circle cx="150" cy="53" r="3" fill="#6d28d9"/>
+                            <line x1="150" y1="53" x2="150" y2="115" stroke="#6d28d9" stroke-width="1" stroke-dasharray="2,2"/>
+                            <line x1="5" y1="53" x2="150" y2="53" stroke="#6d28d9" stroke-width="1" stroke-dasharray="2,2"/>
+                            <text x="155" y="60" font-size="8" fill="#6d28d9">Depth (d)</text>
+                        </svg>
+                    </div>
+
+                    <div class="task-section mt-6">
+                        <h3 class="text-xl font-semibold">Problem 1: Find Dose at Depth</h3>
+                        <p class="text-gray-600 mt-1">A patient is treated with a beam where the dose delivered to Dmax is **200 cGy**. You need to find the dose at 8 cm depth, where the PDD is **72.5%**.</p>
+                        <label class="block font-medium mt-4">Set up the proportion and solve for the Dose at 8 cm.</label>
+                        <textarea class="calculation-space" rows="3" placeholder="Dose at 8cm / 200 cGy = 72.5% / 100% ..."></textarea>
+                    </div>
+
+                    <div class="task-section mt-8">
+                        <h3 class="text-xl font-semibold">Problem 2: Find Dose at Dmax</h3>
+                        <p class="text-gray-600 mt-1">During a quality assurance check, you measure a dose of **120 cGy** at a depth of 12 cm. The PDD table for your beam indicates that the PDD at 12 cm is **60.0%**. What was the dose delivered at Dmax?</p>
+                        <label class="block font-medium mt-4">Set up the proportion and solve for the Dose at Dmax.</label>
+                        <textarea class="calculation-space" rows="3" placeholder="120 cGy / Dose at Dmax = 60.0% / 100% ..."></textarea>
+                    </div>
+
+                     <div class="task-section mt-8">
+                        <h3 class="text-xl font-semibold">Problem 3: Clinical Scenario</h3>
+                        <p class="text-gray-600 mt-1">A physician prescribes **5000 cGy in 25 fractions** to a tumor located at a depth of **9 cm**. The PDD for this depth is **69.0%**. What is the required dose per fraction at Dmax to deliver the prescribed dose to the tumor?</p>
+                        <label class="block font-medium mt-4">First, find the prescribed dose per fraction at the tumor depth. Then, use the proportion to find the necessary dose at Dmax.</label>
+                        <textarea class="calculation-space" rows="4" placeholder="Step 1: Calculate dose/fraction at 9cm...&#10;Step 2: Set up the proportion..."></textarea>
+                    </div>
+                </section>
+
+                <section>
+                    <h2 class="text-2xl font-semibold mt-8 pb-2 border-b">Part 3: Reflection & Critical Thinking</h2>
+                    <div class="task-section mt-6">
+                        <label class="block font-medium">1. In your own words, explain *why* the direct proportion relationship works. What does Percent Depth Dose truly represent?</label>
+                        <textarea class="calculation-space" rows="3" placeholder="Your explanation here..."></textarea>
+
+                        <label class="block font-medium mt-4">2. Using the interactive visualizer from the lesson, if you increase the beam energy (e.g., from 6 MV to 18 MV), what happens to the PDD at a depth of 10 cm? Based on the proportion, would the dose at 10 cm increase or decrease, assuming the dose at Dmax stays the same? Explain why.</label>
+                        <textarea class="calculation-space" rows="3" placeholder="Describe the effect of energy on PDD and the resulting dose..."></textarea>
+                    </div>
+                </section>
+            </main>
+        </div>
+        
+        <footer class="submission-area text-center mt-10 pt-6 border-t-2 border-dashed">
+            <button id="submitBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-lg text-lg focus:outline-none focus:ring-4 focus:ring-indigo-300">
+                Save as PDF
+            </button>
+        </footer>
+    </div>
+
+    <script>
+        document.getElementById('submitBtn').addEventListener('click', function () {
+            const btn = this;
+            btn.textContent = 'Generating PDF...';
+            btn.disabled = true;
+
+            const { jsPDF } = window.jspdf;
+            const worksheetContent = document.getElementById('worksheet-content');
+            const studentName = document.getElementById('studentName').value.trim() || 'Unnamed_Student';
+            const fileName = `Depth_Dose_Lab_${studentName.replace(/\s+/g, '_')}.pdf`;
+
+            // Use html2canvas to render the content onto a canvas
+            html2canvas(worksheetContent, { 
+                scale: 2, 
+                useCORS: true,
+                onclone: (clonedDoc) => {
+                    // Ensure textarea content is visible and sized correctly
+                    clonedDoc.querySelectorAll('textarea').forEach(textarea => {
+                        textarea.style.height = 'auto';
+                        textarea.style.height = (textarea.scrollHeight + 5) + 'px';
+                        textarea.style.overflow = 'hidden';
+                        textarea.style.boxSizing = 'border-box';
+                    });
+                }
+            }).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const margin = 15;
+                const contentWidth = pdfWidth - (margin * 2);
+                const contentHeight = canvas.height * contentWidth / canvas.width;
+                let heightLeft = contentHeight;
+                let position = margin;
+                
+                pdf.addImage(imgData, 'PNG', margin, position, contentWidth, contentHeight);
+                heightLeft -= (pdf.internal.pageSize.getHeight() - margin * 2);
+
+                while (heightLeft > 0) {
+                    position = -heightLeft - margin;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', margin, position, contentWidth, contentHeight);
+                    heightLeft -= (pdf.internal.pageSize.getHeight() - margin * 2);
+                }
+                
+                pdf.save(fileName);
+                btn.textContent = 'Save as PDF';
+                btn.disabled = false;
+            }).catch(err => {
+                console.error("Error generating PDF:", err);
+                alert("Sorry, an error occurred while generating the PDF.");
+                btn.textContent = 'Save as PDF';
+                btn.disabled = false;
+            });
+        });
+    </script>
+
+</body>
+</html>
