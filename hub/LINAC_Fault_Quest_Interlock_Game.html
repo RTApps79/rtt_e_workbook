@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LINAC Fault Quest: Interlock Troubleshooting Game</title>
+<style>
+:root{
+  --bg:#050713;--panel:rgba(8,15,35,.86);--cyan:#00eaff;--pink:#ff3df2;--yellow:#ffe95a;--green:#64ff7a;--red:#ff3864;--orange:#ff9f1c;
+  --muted:#aab7d4;--white:#fff;--dark:#0a1026;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Segoe UI,Arial,sans-serif}
+body{min-height:100vh;background:radial-gradient(circle at 15% 20%,#15316d 0,transparent 30%),radial-gradient(circle at 80% 10%,#64255f 0,transparent 28%),linear-gradient(135deg,#030511,#071126 50%,#10071a);color:var(--white);overflow-x:hidden}
+canvas#stars{position:fixed;inset:0;z-index:-3}
+.bg-grid{position:fixed;inset:0;z-index:-2;background-image:linear-gradient(rgba(0,234,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(0,234,255,.08) 1px,transparent 1px);background-size:48px 48px;mask-image:linear-gradient(to bottom,transparent,black 10%,black 85%,transparent)}
+header{position:sticky;top:0;z-index:20;display:flex;gap:14px;align-items:center;justify-content:space-between;padding:12px 18px;background:rgba(2,5,15,.76);backdrop-filter:blur(10px);border-bottom:1px solid rgba(0,234,255,.35)}
+.brand{display:flex;gap:12px;align-items:center}.logo{width:44px;height:44px;border-radius:14px;background:conic-gradient(var(--cyan),var(--pink),var(--yellow),var(--cyan));box-shadow:0 0 20px var(--cyan);display:grid;place-items:center;color:#05101f;font-weight:900;animation:spin 6s linear infinite}@keyframes spin{to{filter:hue-rotate(360deg)}}
+h1{font-size:clamp(1.2rem,2.5vw,2rem);text-shadow:0 0 12px var(--cyan)}
+.hud{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}.pill{border:1px solid rgba(0,234,255,.55);border-radius:999px;padding:8px 12px;background:rgba(0,0,0,.35);box-shadow:0 0 12px rgba(0,234,255,.15);font-size:.92rem}.pill b{color:var(--yellow)}
+main{padding:24px;max-width:1400px;margin:auto}
+.screen{display:none}.screen.active{display:block}
+.hero{min-height:calc(100vh - 120px);display:grid;grid-template-columns:1.1fr .9fr;gap:28px;align-items:center}
+.title{font-size:clamp(3rem,7vw,6.4rem);line-height:.92;letter-spacing:-3px;text-shadow:0 0 18px var(--cyan),0 0 44px var(--pink);animation:pulse 2.6s ease-in-out infinite}@keyframes pulse{50%{transform:scale(1.02)}}
+.subtitle{font-size:1.2rem;color:var(--muted);margin:20px 0;max-width:850px;line-height:1.55}
+.cta-row{display:flex;gap:14px;flex-wrap:wrap;margin-top:22px}
+button,.btn{border:0;border-radius:16px;padding:13px 18px;font-weight:900;cursor:pointer;background:linear-gradient(135deg,var(--cyan),#69ffcb);color:#061020;transition:.18s;box-shadow:0 0 16px rgba(0,234,255,.25)}
+button:hover,.btn:hover{transform:translateY(-2px) scale(1.02);filter:brightness(1.07)}
+button.ghost{background:transparent;color:var(--white);border:1px solid rgba(255,255,255,.28);box-shadow:none}
+button.danger{background:linear-gradient(135deg,var(--red),#ff8aa0);color:white}
+button.warn{background:linear-gradient(135deg,var(--yellow),#ff9f1c)}
+.card-grid{display:grid;grid-template-columns:repeat(2,minmax(220px,1fr));gap:16px}
+.mode-card{min-height:170px;border:1px solid rgba(0,234,255,.45);border-radius:24px;padding:18px;background:linear-gradient(145deg,rgba(0,234,255,.08),rgba(255,61,242,.08));box-shadow:inset 0 0 30px rgba(0,234,255,.06);cursor:pointer;position:relative;overflow:hidden;transition:.22s}
+.mode-card:before{content:"";position:absolute;inset:-60%;background:conic-gradient(transparent,rgba(0,234,255,.2),transparent,rgba(255,61,242,.18),transparent);animation:swirl 8s linear infinite}.mode-card>*{position:relative}.mode-card:hover{transform:translateY(-7px);box-shadow:0 0 25px rgba(0,234,255,.35)}@keyframes swirl{to{transform:rotate(360deg)}}
+.mode-card h3{font-size:1.25rem;margin-bottom:8px}.mode-card p{color:var(--muted);line-height:1.4}.tag{display:inline-block;margin-top:14px;border-radius:999px;padding:5px 10px;background:rgba(255,233,90,.15);border:1px solid rgba(255,233,90,.4);font-size:.78rem;color:var(--yellow)}
+.panel{border:1px solid rgba(0,234,255,.45);border-radius:26px;background:var(--panel);box-shadow:0 0 30px rgba(0,234,255,.15);padding:22px;position:relative;overflow:hidden}
+.panel-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:12px}.panel-title h2{font-size:1.55rem}.mini{color:var(--muted);font-size:.9rem}
+.game-layout{display:grid;grid-template-columns:1.05fr .95fr;gap:20px}.wide-layout{display:grid;grid-template-columns:1fr;gap:20px}
+.scene{min-height:520px;border:1px solid rgba(255,255,255,.14);border-radius:24px;background:radial-gradient(circle at center,#163066,#060916 65%);position:relative;overflow:hidden}
+.floor{position:absolute;left:-25%;right:-25%;bottom:-105px;height:280px;background:repeating-linear-gradient(90deg,rgba(0,234,255,.25) 0 2px,transparent 2px 75px),repeating-linear-gradient(0deg,rgba(255,61,242,.15) 0 2px,transparent 2px 60px),linear-gradient(#102246,#040610);transform:perspective(700px) rotateX(62deg)}
+.gantry{position:absolute;left:130px;top:72px;width:300px;height:300px;border:42px solid #d9e6f2;border-left-color:transparent;border-bottom-color:#839bb3;border-radius:50%;filter:drop-shadow(0 0 20px rgba(0,234,255,.8));transform-origin:center;animation:gantry 7s ease-in-out infinite alternate}
+@keyframes gantry{from{transform:rotate(-42deg)}to{transform:rotate(45deg)}}
+.head{position:absolute;left:335px;top:178px;width:128px;height:98px;border-radius:20px;background:linear-gradient(#f7fbff,#8299b0);box-shadow:0 0 26px var(--cyan);z-index:4}
+.collimator{position:absolute;left:358px;top:256px;width:86px;height:32px;background:#56697f;border-radius:10px;z-index:5}
+.beam{position:absolute;left:315px;top:280px;width:180px;height:230px;clip-path:polygon(42% 0,58% 0,100% 100%,0 100%);background:linear-gradient(rgba(255,233,90,.9),rgba(255,233,90,.05));filter:blur(1px);opacity:.2;animation:beam 1.6s infinite}
+@keyframes beam{45%,70%{opacity:.86}0%,100%{opacity:.08}}
+.couch{position:absolute;left:248px;bottom:134px;width:350px;height:44px;border-radius:22px;background:linear-gradient(90deg,#e7f4ff,#7289a6);z-index:4;animation:couch 4s ease-in-out infinite alternate}
+@keyframes couch{to{transform:translateX(34px)}}
+.patient{position:absolute;left:365px;bottom:175px;width:130px;height:36px;border-radius:45%;background:#f4c09d;z-index:5;animation:breathe 1.6s ease-in-out infinite}@keyframes breathe{50%{transform:scaleY(1.13)}}
+.laserX,.laserY{position:absolute;background:#ff1744;box-shadow:0 0 18px #ff1744;z-index:6}.laserX{height:2px;width:100%;left:0;top:304px}.laserY{width:2px;height:100%;left:410px;top:0}
+.part-label{position:absolute;border:1px solid rgba(255,255,255,.25);background:rgba(0,0,0,.55);border-radius:10px;padding:6px 9px;font-size:.8rem;z-index:10}.part-label:hover{background:var(--cyan);color:#061020}
+#labelHead{left:470px;top:185px}#labelGantry{left:92px;top:80px}#labelCouch{left:520px;bottom:190px}#labelMLC{right:25px;top:60px}#labelMod{right:28px;bottom:30px}
+.mlc-box{position:absolute;right:25px;top:96px;width:255px;height:180px;border:2px solid var(--cyan);border-radius:18px;padding:14px;background:rgba(0,0,0,.56);z-index:7}.leaf{height:10px;margin:5px 0;border-radius:9px;background:#b8c9d9;animation:leaf 1.7s ease-in-out infinite alternate}.leaf:nth-child(even){animation-delay:.3s}@keyframes leaf{to{width:42%}}
+.modulator{position:absolute;right:35px;bottom:70px;width:150px;height:190px;border-radius:14px;background:linear-gradient(#323d52,#121826);border:1px solid rgba(255,255,255,.2);box-shadow:0 0 16px rgba(255,61,242,.35)}.modulator:before{content:"MODULATOR";position:absolute;top:10px;left:18px;font-size:.8rem;color:var(--muted)}.mod-light{position:absolute;bottom:18px;left:20px;width:16px;height:16px;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green)}
+.data-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:14px 0}.datum{border:1px solid rgba(255,255,255,.16);border-radius:14px;background:rgba(255,255,255,.05);padding:12px}.datum b{color:var(--yellow)}
+.case-text{font-size:1.08rem;line-height:1.5;color:#e9eefc;margin:14px 0}
+.options{display:grid;gap:10px}.option{border:1px solid rgba(255,255,255,.24);border-radius:16px;background:rgba(255,255,255,.05);padding:13px;cursor:pointer;transition:.16s;line-height:1.35}.option:hover{transform:translateX(4px);border-color:var(--cyan);box-shadow:0 0 12px rgba(0,234,255,.18)}.option.selected{background:rgba(255,233,90,.16);border-color:var(--yellow);color:var(--yellow)}
+.feedback{margin-top:14px;border-radius:18px;padding:14px;display:none}.feedback.good{display:block;background:rgba(100,255,122,.13);border:1px solid rgba(100,255,122,.45)}.feedback.bad{display:block;background:rgba(255,56,100,.13);border:1px solid rgba(255,56,100,.45)}.feedback.neutral{display:block;background:rgba(255,233,90,.13);border:1px solid rgba(255,233,90,.45)}
+.progress{height:14px;background:#121a32;border:1px solid rgba(0,234,255,.35);border-radius:999px;overflow:hidden;margin:10px 0}.progress>div{height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--green),var(--yellow));transition:.3s}
+.badge-wall{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.badge{border:1px solid rgba(255,233,90,.5);background:rgba(255,233,90,.12);color:var(--yellow);border-radius:999px;padding:6px 10px;font-size:.82rem}
+.toast{position:fixed;left:50%;bottom:24px;z-index:100;transform:translateX(-50%) translateY(140px);transition:.32s;border:1px solid var(--yellow);box-shadow:0 0 25px rgba(255,233,90,.5);background:linear-gradient(90deg,#121a32,#341940);padding:15px 22px;border-radius:18px;font-weight:900}.toast.show{transform:translateX(-50%) translateY(0)}
+.table{width:100%;border-collapse:collapse;margin-top:12px}.table th,.table td{border-bottom:1px solid rgba(255,255,255,.13);padding:10px;text-align:left}.table th{color:var(--cyan)}
+.drag-area{display:grid;grid-template-columns:1fr 1fr;gap:16px}.bank,.dropzone{border:1px dashed rgba(0,234,255,.45);border-radius:18px;padding:14px;min-height:260px;background:rgba(255,255,255,.04)}.drag-token{padding:10px 12px;margin:8px 0;border-radius:12px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);cursor:grab}
+.dropzone h3{margin-bottom:8px}.dropzone[data-type="minor"]{border-color:#69ffcb}.dropzone[data-type="major"]{border-color:#ff3864}.dropzone[data-type="dosimetry"]{border-color:#ffe95a}
+.small-note{font-size:.85rem;color:var(--muted);line-height:1.4}
+@media(max-width:980px){.hero,.game-layout,.drag-area{grid-template-columns:1fr}.card-grid{grid-template-columns:1fr}.scene{min-height:470px}.hud{display:none}.title{letter-spacing:-1px}}
+</style>
+</head>
+<body>
+<canvas id="stars"></canvas><div class="bg-grid"></div>
+<header>
+  <div class="brand"><div class="logo">RT</div><div><h1>LINAC Fault Quest</h1><div class="mini">Interlocks • Parts • Troubleshooting • Critical Thinking</div></div></div>
+  <div class="hud">
+    <div class="pill">Score <b id="score">0</b></div>
+    <div class="pill">XP <b id="xp">0</b></div>
+    <div class="pill">Level <b id="level">1</b></div>
+    <div class="pill">Streak <b id="streak">0</b></div>
+  </div>
+</header>
+
+<main>
+  <section id="home" class="screen active">
+    <div class="hero">
+      <div>
+        <div class="title">FAULT<br>QUEST</div>
+        <p class="subtitle">
+          A visual, interactive LINAC troubleshooting game for radiation therapy students. Identify accelerator parts, classify interlocks, choose safe corrective actions, and decide when treatment must stop.
+        </p>
+        <div class="progress"><div id="xpbar"></div></div>
+        <div class="badge-wall" id="badges"></div>
+        <div class="cta-row">
+          <button onclick="startMode('scenario')">Start Clinical Scenario Run</button>
+          <button class="ghost" onclick="startMode('parts')">Parts ID Challenge</button>
+          <button class="ghost" onclick="startMode('sort')">Interlock Sort</button>
+          <button class="ghost" onclick="startMode('boss')">Major Fault Boss</button>
+        </div>
+      </div>
+      <div class="card-grid">
+        <div class="mode-card" onclick="startMode('scenario')"><h3>🚨 Fault Response Simulator</h3><p>Read a console event and choose the safest next action.</p><span class="tag">critical thinking</span></div>
+        <div class="mode-card" onclick="startMode('parts')"><h3>🧠 LINAC Anatomy Blitz</h3><p>Identify the treatment head, gantry, couch, MLC, and modulator.</p><span class="tag">visual learners</span></div>
+        <div class="mode-card" onclick="startMode('sort')"><h3>⚙️ Interlock Sort Lab</h3><p>Drag faults into Minor, Major, or Dosimetry categories.</p><span class="tag">classification</span></div>
+        <div class="mode-card" onclick="startMode('boss')"><h3>🔥 Service Call Boss</h3><p>Handle complex recurrent faults and decide when to stop treating.</p><span class="tag">troubleshooting</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="game" class="screen"></section>
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+/* =========================
+   Animated starfield
+========================= */
+const c=document.getElementById('stars'),ctx=c.getContext('2d');let stars=[];
+function size(){c.width=innerWidth;c.height=innerHeight;stars=Array.from({length:180},()=>({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*2+0.4,dx:(Math.random()-.5)*.5,dy:(Math.random()-.5)*.5,h:Math.random()*360}))}
+function draw(){ctx.clearRect(0,0,c.width,c.height);stars.forEach(s=>{ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle=`hsla(${s.h},100%,70%,.75)`;ctx.shadowBlur=12;ctx.shadowColor=`hsl(${s.h},100%,65%)`;ctx.fill();s.x+=s.dx;s.y+=s.dy;s.h+=.2;if(s.x<0)s.x=c.width;if(s.x>c.width)s.x=0;if(s.y<0)s.y=c.height;if(s.y>c.height)s.y=0});requestAnimationFrame(draw)}
+addEventListener('resize',size);size();draw();
+
+/* =========================
+   Sound engine
+========================= */
+let audio;
+function beep(freq=440,dur=.1,type='sine',vol=.06){try{audio=audio||new (window.AudioContext||window.webkitAudioContext)();const o=audio.createOscillator(),g=audio.createGain();o.type=type;o.frequency.value=freq;o.connect(g);g.connect(audio.destination);g.gain.value=vol;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+dur);o.start();o.stop(audio.currentTime+dur)}catch(e){}}
+function ok(){beep(659,.1,'triangle');setTimeout(()=>beep(880,.1,'triangle'),110)}
+function no(){beep(170,.16,'sawtooth');setTimeout(()=>beep(110,.16,'sawtooth'),120)}
+function alertSound(){beep(520,.08,'square');setTimeout(()=>beep(520,.08,'square'),120)}
+function beam(){beep(240,.18,'sawtooth');setTimeout(()=>beep(480,.18,'sine'),150)}
+
+/* =========================
+   Game state
+========================= */
+let state={score:0,xp:0,level:1,streak:0,badges:new Set(),mode:'home',qIndex:0};
+function sync(){document.getElementById('score').textContent=state.score;document.getElementById('xp').textContent=state.xp;state.level=Math.floor(state.xp/100)+1;document.getElementById('level').textContent=state.level;document.getElementById('streak').textContent=state.streak;document.getElementById('xpbar').style.width=(state.xp%100)+'%';document.getElementById('badges').innerHTML=[...state.badges].map(b=>`<span class="badge">${b}</span>`).join('')}
+function award(points,xp=10){state.score+=points;state.xp+=xp;state.streak++;sync();ok();if(state.streak===3)badge('Streak Therapist');if(state.xp>=250&&!state.badges.has('Vault Ready'))badge('Vault Ready')}
+function miss(){state.streak=0;sync();no()}
+function badge(name){state.badges.add('🏆 '+name);sync();toast('Achievement unlocked: '+name)}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function home(){show('home');state.mode='home';sync()}
+
+/* =========================
+   Knowledge bank based on uploaded slides
+========================= */
+const interlocks=[
+ {code:'DOOR',type:'minor',meaning:'Treatment room door is open.',safe:'Close/verify the treatment room door; do not continue if it remains active.'},
+ {code:'ACC',type:'minor',meaning:'Mounted accessory does not match the programmed accessory or is improperly positioned.',safe:'Verify/reinsert accessory or select the correct accessory; reset accessory mount when appropriate.'},
+ {code:'CTRL',type:'major',meaning:'Abnormal operating condition detected by the console control computer.',safe:'Power key to standby/off as required, run diagnostics/self-test, document, notify physicist/service if recurrent.'},
+ {code:'FLOW',type:'major',meaning:'Insufficient water flow or cooling-related condition.',safe:'Do not continue; verify water pressure/cooling, document, remove patient if appropriate, notify physicist/service.'},
+ {code:'PUMP',type:'major',meaning:'Water tank level low or pump/temperature fault.',safe:'Ensure normal temperature/pressure, reset only when within limits, involve qualified support.'},
+ {code:'KFIL',type:'major',meaning:'Klystron filament current at or below half nominal value.',safe:'Power key standby/on cycle per procedure; document and seek service if unresolved.'},
+ {code:'MFIL',type:'major',meaning:'Magnetron filament current below nominal value.',safe:'Power key standby/on cycle per procedure; document and seek service if unresolved.'},
+ {code:'VAC1',type:'major',meaning:'Major vacuum leak/current increase in accelerator waveguide vacuum system.',safe:'Do not continue; if it does not clear, use emergency-off and notify service.'},
+ {code:'DOS2',type:'dosimetry',meaning:'Secondary dosimetry channel exceeded preset dose tolerance.',safe:'Do not use clinically without checking why the machine terminated.'},
+ {code:'DS12',type:'dosimetry',meaning:'MU1 and MU2 readings not within tolerance.',safe:'Stop and investigate dosimetry system discrepancy.'},
+ {code:'EXQ1',type:'dosimetry',meaning:'Radial beam symmetry or dose-per-pulse/dose-rate out of tolerance.',safe:'Stop; investigate beam symmetry/dosimetry condition.'},
+ {code:'EXQ2',type:'dosimetry',meaning:'Transverse beam symmetry or dose-per-pulse/dose-rate out of tolerance.',safe:'Stop; investigate beam symmetry/dosimetry condition.'},
+ {code:'LVPS',type:'dosimetry',meaning:'Low-voltage power supply failed.',safe:'Do not proceed until resolved by qualified personnel.'},
+ {code:'MLC',type:'minor',meaning:'MLC leaves not in planned position or MLC interlock active.',safe:'Verify planned leaf position and clear MLC interlock before treatment.'},
+ {code:'PNDT',type:'minor',meaning:'Pendant not in holder or couch brakes not engaged.',safe:'Return pendant to holder and verify couch brakes.'},
+ {code:'TARG',type:'minor',meaning:'Target not in correct position for selected mode.',safe:'Recycle selection/change mode; investigate air/target drive if unresolved.'},
+ {code:'TIME',type:'minor',meaning:'Displayed beam-on time meets/exceeds set time.',safe:'Check programming/dose rate; if MU channels failed, do not use clinically until checked.'},
+ {code:'VAC2',type:'minor',meaning:'Possible impurity or minor leak in vacuum system.',safe:'May self-clear; if persistent or recurrent, involve qualified service.'},
+ {code:'MOD',type:'minor',meaning:'Negative voltage buildup on modulator PFN; transient but significant.',safe:'Treat as significant; investigate arcing/modulator/pulse cable issues if recurrent.'}
+];
+
+const scenarios=[
+ {title:'Door Interlock During Beam-On',code:'DOOR',phase:'During beam-on',prompt:'The beam terminates, all motions stop, and the active interlock list shows DOOR. What is the safest response?',choices:[
+  ['Press ENTER repeatedly and finish the field regardless.',false,'Never continue if the cause is not corrected.'],
+  ['Verify/close the treatment room door, then continue only if the interlock clears according to procedure.',true,'Correct. Minor interlocks require correction of the cause if they remain active.'],
+  ['Ignore because DOOR is only a minor interlock.',false,'Minor does not mean irrelevant; door status is a safety condition.'],
+  ['Bypass the interlock to avoid delaying treatment.',false,'Bypassing safety interlocks is unsafe.']]},
+ {title:'Accessory Mismatch',code:'ACC',phase:'Before treatment',prompt:'The console shows ACC after an electron cone/insert was mounted. The programmed accessory does not match the mounted accessory. What should you do?',choices:[
+  ['Reinsert/verify the accessory and select the correct programmed accessory before treatment.',true,'Correct. ACC can arise from accessory mismatch or improper positioning.'],
+  ['Treat because the field shape looks close enough.',false,'Accessory mismatch can cause clinically meaningful geometric/dosimetric error.'],
+  ['Increase MU to compensate.',false,'Do not compensate for an accessory mismatch with MU.'],
+  ['Call the patient back tomorrow without documenting.',false,'Documentation and appropriate escalation are required if unresolved.']]},
+ {title:'CTRL Major Interlock',code:'CTRL',phase:'Calibration/check cycle',prompt:'A CTRL interlock appears with the major interlock screen. What action best reflects safe troubleshooting?',choices:[
+  ['Turn the power key to standby/off as required, document the state, run diagnostics/self-test, and escalate if unresolved.',true,'Correct. CTRL is a major interlock requiring diagnostics and documentation.'],
+  ['Press ENTER because all interlocks clear with ENTER.',false,'ENTER applies only to certain minor interlock workflows.'],
+  ['Continue treating because the patient is already positioned.',false,'Major interlocks can indicate conditions that may damage the accelerator.'],
+  ['Delete the fault from the console log.',false,'Interlock events should be documented, not hidden.']]},
+ {title:'DOS2 Beam Termination',code:'DOS2',phase:'Clinical mode',prompt:'DOS2 terminates the beam. What is the safest interpretation?',choices:[
+  ['Secondary dosimetry exceeded tolerance; do not use the Clinac without checking why it terminated.',true,'Correct. DOS2 requires investigation before clinical use.'],
+  ['It means normal treatment complete.',false,'Normal termination is associated with DOS1, not DOS2.'],
+  ['It is only a door problem.',false,'DOS2 is a dosimetry interlock.'],
+  ['Continue immediately after typing a random password.',false,'Dosimetry interlocks require careful investigation.']]},
+ {title:'FLOW Major Interlock',code:'FLOW',phase:'Before treatment',prompt:'FLOW appears and the patient is on the table. What should happen?',choices:[
+  ['Do not continue; record/document, assess cooling/water flow, remove patient if appropriate, and notify physicist/service.',true,'Correct. FLOW is a major interlock related to cooling/water flow.'],
+  ['Open the treatment room door and close it again.',false,'That addresses DOOR, not FLOW.'],
+  ['Override because the beam has not started yet.',false,'Major interlocks should not be overridden clinically.'],
+  ['Increase room temperature.',false,'The relevant issue is water flow/cooling system parameters.']]},
+ {title:'MLC Position Fault',code:'MLC',phase:'Ready state',prompt:'MLC interlock appears before treatment. What is the best action?',choices:[
+  ['Verify MLC leaves match the planned treatment position and clear the MLC fault before treatment.',true,'Correct. MLC position must agree with the plan before beam-on.'],
+  ['Treat with jaws only without physician/physics review.',false,'Changing aperture/modality without review is unsafe.'],
+  ['Ignore because MLC is not dosimetric.',false,'MLC shapes the treatment field and is clinically critical.'],
+  ['Manually push leaves from outside the room.',false,'Do not attempt unsafe mechanical manipulation.']]},
+ {title:'VAC1 Major Vacuum Fault',code:'VAC1',phase:'Startup',prompt:'VAC1 appears and does not clear. Which decision is best?',choices:[
+  ['Do not continue; turn off using emergency-off if it remains high and notify service.',true,'Correct. VAC1 can indicate a major leak and risk damage.'],
+  ['Run patients quickly before the pump stalls.',false,'Unsafe and could damage major components.'],
+  ['Treat only electron fields.',false,'VAC1 is a machine protection issue, not a field-specific workaround.'],
+  ['Assume it is a minor impurity.',false,'VAC2 may be impurity/minor leak; VAC1 is major.']]},
+ {title:'TIME Interlock in Arc Therapy',code:'TIME',phase:'During arc',prompt:'TIME appears during an arc treatment. What should you evaluate?',choices:[
+  ['Check programmed time/dose rate/arc mechanics; if MU channels failed, do not use clinically until thoroughly checked.',true,'Correct. TIME can reflect programming or mechanical/dosimetry issues.'],
+  ['Assume treatment is complete and dismiss.',false,'TIME is not the same as normal treatment complete.'],
+  ['Double the remaining time and continue without review.',false,'Do not alter treatment parameters casually.'],
+  ['Switch to a different patient.',false,'The fault must be addressed and documented.']]}
+];
+
+const parts=[
+ {name:'Treatment head',x:470,y:185,clue:'Houses beam-shaping and monitoring components near the exit of the treatment beam.'},
+ {name:'Gantry',x:92,y:80,clue:'Rotates around the patient to deliver beams from different angles.'},
+ {name:'Treatment couch',x:520,y:360,clue:'Supports and positions the patient using longitudinal, lateral, and vertical motions.'},
+ {name:'Multileaf collimator',x:920,y:100,clue:'Uses many movable leaves to shape the radiation field.'},
+ {name:'Modulator cabinet',x:1030,y:360,clue:'Associated with high-voltage pulse-forming and power systems.'}
+];
+
+/* =========================
+   Rendering helpers
+========================= */
+function linacScene(labels=true){return `<div class="scene">
+ <div class="floor"></div><div class="gantry"></div><div class="head"></div><div class="collimator"></div><div class="beam"></div><div class="couch"></div><div class="patient"></div><div class="laserX"></div><div class="laserY"></div>
+ <div class="mlc-box">${Array.from({length:10},(_,i)=>`<div class="leaf" style="width:${70-(i%4)*8}%"></div>`).join('')}</div><div class="modulator"><div class="mod-light"></div></div>
+ ${labels?`<div class="part-label" id="labelHead">Treatment head</div><div class="part-label" id="labelGantry">Gantry</div><div class="part-label" id="labelCouch">Treatment couch</div><div class="part-label" id="labelMLC">MLC</div><div class="part-label" id="labelMod">Modulator</div>`:''}
+ </div>`}
+function gameShell(title,sub,body){document.getElementById('game').innerHTML=`<div class="panel"><div class="panel-title"><div><h2>${title}</h2><div class="mini">${sub}</div></div><div><button class="ghost" onclick="home()">Hub</button></div></div>${body}</div>`;show('game');sync()}
+
+/* =========================
+   Modes
+========================= */
+function startMode(mode){state.mode=mode;state.qIndex=0;if(mode==='scenario')renderScenario();if(mode==='parts')renderParts();if(mode==='sort')renderSort();if(mode==='boss')renderBoss()}
+
+function renderScenario(){
+ const s=scenarios[state.qIndex%scenarios.length];alertSound();
+ gameShell('🚨 Fault Response Simulator','Choose the safest troubleshooting action.',`
+  <div class="game-layout">
+   ${linacScene(true)}
+   <div>
+    <div class="data-grid">
+      <div class="datum">Console Code<br><b>${s.code}</b></div>
+      <div class="datum">Phase<br><b>${s.phase}</b></div>
+      <div class="datum">Mode<br><b>Clinical decision</b></div>
+      <div class="datum">Goal<br><b>Protect patient + machine</b></div>
+    </div>
+    <h3>${s.title}</h3>
+    <div class="case-text">${s.prompt}</div>
+    <div class="options">${s.choices.map((c,i)=>`<div class="option" onclick="scenarioAnswer(${i})">${c[0]}</div>`).join('')}</div>
+    <div id="feedback" class="feedback"></div>
+    <div class="cta-row"><button class="ghost" onclick="renderScenario()">Skip / New Case</button></div>
+   </div>
+  </div>`);
+ beam();
+}
+function scenarioAnswer(i){
+ const s=scenarios[state.qIndex%scenarios.length];const chosen=s.choices[i];const fb=document.getElementById('feedback');
+ if(chosen[1]){award(120,28);fb.className='feedback good';fb.innerHTML=`<b>Correct clinical decision.</b><br>${chosen[2]}<br><br><b>Teaching point:</b> ${interlocks.find(x=>x.code===s.code)?.safe||''}`;if(state.qIndex===0)badge('First Safe Stop')}
+ else{miss();fb.className='feedback bad';fb.innerHTML=`<b>Unsafe or incomplete.</b><br>${chosen[2]}<br><br><b>Better response:</b> ${s.choices.find(c=>c[1])[0]}`}
+ state.qIndex++;setTimeout(()=>{if(state.mode==='scenario')renderScenario()},3500)
+}
+
+function renderParts(){
+ const target=parts[Math.floor(Math.random()*parts.length)];
+ gameShell('🧠 LINAC Anatomy Blitz','Use the visual clue to identify the accelerator component.',`
+  <div class="game-layout">
+   ${linacScene(true)}
+   <div>
+    <div class="datum">Component clue<br><b>${target.clue}</b></div>
+    <div class="case-text">Which labeled LINAC component matches this clue?</div>
+    <div class="options">${parts.map(p=>`<div class="option" onclick="partsAnswer('${p.name.replace(/'/g,'')}','${target.name.replace(/'/g,'')}')">${p.name}</div>`).join('')}</div>
+    <div id="feedback" class="feedback"></div>
+    <div class="small-note">Visual focus: This section reinforces treatment head, gantry, couch, MLC, and support-system recognition.</div>
+   </div>
+  </div>`);
+}
+function partsAnswer(choice,answer){
+ const fb=document.getElementById('feedback');
+ if(choice===answer){award(80,18);fb.className='feedback good';fb.innerHTML=`<b>Correct:</b> ${answer}.`;if(state.streak>=2)badge('LINAC Label Legend')}
+ else{miss();fb.className='feedback bad';fb.innerHTML=`<b>Not quite.</b> Correct answer: ${answer}.`}
+ setTimeout(()=>{if(state.mode==='parts')renderParts()},2200)
+}
+
+function renderSort(){
+ const sample=[...interlocks].sort(()=>Math.random()-.5).slice(0,12);
+ gameShell('⚙️ Interlock Sort Lab','Drag each code into the correct category: Minor, Major, or Dosimetry.',`
+  <div class="drag-area">
+    <div class="bank"><h3>Fault Code Bank</h3>${sample.map(x=>`<div class="drag-token" draggable="true" data-code="${x.code}" data-type="${x.type}"><b>${x.code}</b> — ${x.meaning}</div>`).join('')}</div>
+    <div>
+      <div class="dropzone" data-type="minor"><h3>Minor Interlocks</h3><div class="small-note">Conditions that can often be corrected, but treatment should not proceed unless cleared.</div></div><br>
+      <div class="dropzone" data-type="major"><h3>Major Interlocks</h3><div class="small-note">Potential machine-protection conditions; document and escalate appropriately.</div></div><br>
+      <div class="dropzone" data-type="dosimetry"><h3>Dosimetry Interlocks</h3><div class="small-note">Beam/dose monitoring concerns requiring careful investigation.</div></div>
+      <div class="cta-row"><button onclick="gradeSort()">Grade Sort</button><button class="ghost" onclick="renderSort()">New Sort Set</button></div>
+      <div id="feedback" class="feedback"></div>
+    </div>
+  </div>`);
+ enableDrag();
+}
+function enableDrag(){
+ document.querySelectorAll('.drag-token').forEach(t=>{t.addEventListener('dragstart',e=>{e.dataTransfer.setData('code',t.dataset.code);e.dataTransfer.setData('type',t.dataset.type)})});
+ document.querySelectorAll('.dropzone').forEach(z=>{z.addEventListener('dragover',e=>e.preventDefault());z.addEventListener('drop',e=>{e.preventDefault();const code=e.dataTransfer.getData('code');const token=[...document.querySelectorAll('.drag-token')].find(x=>x.dataset.code===code);if(token)z.appendChild(token);beep(520,.05,'square')})});
+}
+function gradeSort(){
+ let correct=0,total=0,wrong=[];
+ document.querySelectorAll('.dropzone .drag-token').forEach(t=>{total++;const zone=t.closest('.dropzone').dataset.type;if(zone===t.dataset.type)correct++;else wrong.push(`${t.dataset.code} is ${t.dataset.type}`)});
+ const fb=document.getElementById('feedback');const pts=correct*20;
+ if(correct===12){award(260,55);fb.className='feedback good';fb.innerHTML=`<b>Perfect sort.</b> You correctly classified all ${correct}/12 interlocks.`;badge('Interlock Architect')}
+ else{state.score+=pts;state.xp+=Math.max(5,correct*4);miss();sync();fb.className='feedback neutral';fb.innerHTML=`<b>Score:</b> ${correct}/12 correct.<br>${wrong.slice(0,5).join('<br>')}`;}
+}
+
+function renderBoss(){
+ const cases=[
+  {name:'Recurrent Major + Patient Waiting',codes:['FLOW','PUMP'],prompt:'Two major cooling-related interlocks recur after a reset attempt while the patient is positioned. What is the correct operational decision?',answer:'stop',explain:'Do not continue with recurrent major cooling faults. Document, remove the patient if appropriate, and notify physicist/service.'},
+  {name:'DOS2 After Beam Termination',codes:['DOS2'],prompt:'The secondary dosimetry channel caused beam termination. The schedule is backed up. What should happen?',answer:'stop',explain:'DOS2 requires investigation before the Clinac is used clinically.'},
+  {name:'ACC After Wrong Wedge Mounted',codes:['ACC'],prompt:'The console accessory does not match the hard wedge mounted. What is the correct action?',answer:'correct',explain:'Correct the cause: verify/reinsert the accessory or select the correct one. Continue only after cleared.'},
+  {name:'TDLY After Power-Up',codes:['TDLY'],prompt:'A time delay is active after power-up and is still within expected warm-up time. What is appropriate?',answer:'wait',explain:'TDLY allows component warm-up; the delay length varies with how long the machine was off.'}
+ ];
+ const b=cases[state.qIndex%cases.length];
+ gameShell('🔥 Major Fault Boss','Synthesize severity, patient safety, machine protection, and workflow pressure.',`
+  <div class="game-layout">
+    ${linacScene(true)}
+    <div>
+      <h3>${b.name}</h3>
+      <div class="data-grid">${b.codes.map(code=>{const x=interlocks.find(i=>i.code===code);return `<div class="datum">${code}<br><b>${x?.type||''}</b><br><span class="mini">${x?.meaning||''}</span></div>`}).join('')}</div>
+      <div class="case-text">${b.prompt}</div>
+      <div class="options">
+       <div class="option" onclick="bossAnswer('stop')">Stop treatment, document, remove patient if appropriate, and notify qualified support.</div>
+       <div class="option" onclick="bossAnswer('correct')">Correct the identifiable setup/accessory cause, then proceed only if the interlock clears.</div>
+       <div class="option" onclick="bossAnswer('wait')">Wait through the expected warm-up/time-delay process and reassess.</div>
+       <div class="option" onclick="bossAnswer('ignore')">Ignore the interlock to preserve schedule flow.</div>
+      </div>
+      <div id="feedback" class="feedback"></div>
+    </div>
+  </div>`);
+ alertSound();
+}
+function bossAnswer(choice){
+ const cases=[
+  {answer:'stop',explain:'Do not continue with recurrent major cooling faults. Document, remove the patient if appropriate, and notify physicist/service.'},
+  {answer:'stop',explain:'DOS2 requires investigation before the Clinac is used clinically.'},
+  {answer:'correct',explain:'Correct the cause: verify/reinsert the accessory or select the correct one. Continue only after cleared.'},
+  {answer:'wait',explain:'TDLY allows component warm-up; the delay length varies with how long the machine was off.'}
+ ];
+ const b=cases[state.qIndex%cases.length];const fb=document.getElementById('feedback');
+ if(choice===b.answer){award(160,36);fb.className='feedback good';fb.innerHTML=`<b>Boss hit.</b><br>${b.explain}`;if(state.qIndex>=2)badge('Service Call Sensei')}
+ else{miss();fb.className='feedback bad';fb.innerHTML=`<b>Boss blocked.</b><br>${b.explain}`}
+ state.qIndex++;setTimeout(()=>{if(state.mode==='boss')renderBoss()},3500)
+}
+
+sync();
+</script>
+</body>
+</html>
