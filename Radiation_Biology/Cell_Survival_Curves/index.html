@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cell Survival Curves</title>
+<style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; margin: 20px;
+            background-color: #f4f4f4; color: #333; display: flex; flex-direction: column; align-items: center; }
+        .container { background-color: #fff; padding: 25px 35px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 90%; max-width: 900px; margin-bottom: 30px; }
+        h1, h2, h3, h4 { color: #0056b3; }
+        h1 { text-align: center; border-bottom: 2px solid #0056b3; padding-bottom: 15px; margin-bottom: 30px; font-size: 2em; }
+        h2 { border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 30px; margin-bottom: 20px; color: #003d7a; font-size: 1.6em; }
+        h3 { color: #004085; margin-top: 25px; margin-bottom: 15px; font-size: 1.3em; }
+        h4 { color: #17a2b8; margin-top: 20px; margin-bottom: 10px; font-size: 1.1em; font-weight: 600; }
+        p, li { margin-bottom: 12px; font-size: 1.05em; }
+        ul, ol { margin-bottom: 15px; padding-left: 25px; }
+        strong { font-weight: 600; }
+        .highlight { background-color: #e6f7ff; padding: 2px 5px; border-radius: 3px; font-weight: 600; }
+        code { background-color: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; color: #c7254e; }
+        table.data-table { width: 90%; margin: 15px auto; border-collapse: collapse; }
+        table.data-table th, table.data-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        table.data-table th { background-color: #e9f5ff; color: #0056b3; font-weight: 600; }
+        table.data-table tr:nth-child(even) { background-color: #f9f9f9; }
+        .flip-lesson-container { border: 1px solid #b3d7ff; padding: 20px; border-radius: 8px; background-color: #f0f8ff; margin-bottom: 30px; }
+        .lesson-page { display: none; padding: 15px; border: 1px solid #ddeeff; background-color: #fff; border-radius: 5px; min-height: 400px; }
+        .lesson-page.active { display: block; }
+        .lesson-navigation { text-align: center; margin-top: 20px; }
+        .lesson-navigation button, .lesson-page .check-page-answers {
+            background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px;
+            cursor: pointer; font-size: 1em; margin: 5px 10px; transition: background-color 0.2s; }
+        .lesson-navigation button:hover, .lesson-page .check-page-answers:hover { background-color: #0056b3; }
+        .lesson-navigation button:disabled { background-color: #ccc; cursor: not-allowed; }
+        .page-indicator { font-style: italic; color: #555; margin: 10px 0; }
+        .key-principle { background-color: #e7f3ff; padding: 10px; margin-bottom:10px; border-left: 3px solid #007bff; border-radius: 3px; }
+        .interactive-question-block { background: #f9f9f9; padding: 15px; margin: 20px 0; border: 1px solid #e0e0e0; border-radius: 8px; }
+        .interactive-question-block .question-text { font-weight: bold; margin-bottom: 8px; font-size: 1em; color: #555; }
+        .interactive-question-block label { display: block; margin-left: 0; padding: 8px 12px; border-radius: 5px; cursor: pointer; border: 1px solid transparent; margin-bottom: 5px; }
+        .interactive-question-block input[type="radio"] { margin-right: 10px; vertical-align: middle; }
+        .interactive-question-block label:hover { background-color: #f0f8ff; }
+        .feedback-correct { background-color: #e8f8f0 !important; border-left: 4px solid #2ecc71 !important; }
+        .feedback-incorrect { background-color: #fdedec !important; border-left: 4px solid #e74c3c !important; }
+        .feedback-correct label.correct-option, .feedback-incorrect label.correct-option { font-weight: bold; color: #1E8449; }
+        .feedback-incorrect label.selected-incorrect { color: #A93226; }
+        .explanation { font-size: 0.9em; color: #444; margin-top: 5px; padding-left: 20px; }
+        .footer { text-align: center; margin-top: 30px; padding-top: 15px; border-top: 1px solid #ccc; font-size: 0.9em; color: #555; }
+
+        .nav-links-header { background-color: #fff; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 50; }
+</style>
+</head>
+<body>
+    <header class="nav-links-header">
+        <div style="max-width:900px;margin:0 auto;padding:12px 20px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;">
+            <strong style="color:#0056b3;">Cell Survival Curves</strong>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                <a href="../index.html" style="font-size:0.8rem;background:#0056b3;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Back to Radiation Biology Menu</a>
+                <a href="../../index.html" style="font-size:0.8rem;background:#64748b;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Main Workbook</a>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <h1>Cell Survival Curves</h1>
+        <div class="flip-lesson-container">
+            <h2>Interactive Lesson</h2>
+            <div id="lesson-page-1" class="lesson-page active">
+                <h3>Page 1: Plotting How Cells Die</h3>
+                <p>Since the mid-1950s, when Puck and Marcus first irradiated human cervical carcinoma cells (the famous <strong>HeLa cells</strong>) in a petri dish, radiobiologists have studied cell response using <span class="highlight">survival curves</span> &mdash; a plot of radiation dose (x-axis) against the surviving fraction of cells (y-axis), typically on a semi-log scale.</p>
+                <div class="key-principle">
+                    <p>A shoulder region at low doses (below ~150 cGy) shows that cells must accumulate damage across multiple targets before dying. Above that, the curve becomes a straight line on the semi-log plot &mdash; meaning equal dose increases cause equal <em>fractional</em> decreases in survival, even though the absolute number of cells killed keeps shrinking.</p>
+                </div>
+            </div>
+            <div id="lesson-page-2" class="lesson-page">
+                <h3>Page 2: Why the Curve Has That Shape</h3>
+                <p>This exponential response happens because radiation interacts randomly with critical targets in a cell. If a cell has multiple targets (n &gt; 1) that must each be hit to cause lethal damage, three outcomes are possible after irradiation: some cells are lethally damaged (all targets hit), some are sublethally damaged (only some targets hit), and some are undamaged (no targets hit).</p>
+            </div>
+            <div id="lesson-page-3" class="lesson-page">
+                <h3>Page 3: The Three Survival Curve Parameters</h3>
+                <p>Three parameters describe a survival curve's shape, all illustrated on the multitarget, single-hit model:</p>
+                <table class="data-table">
+                    <thead><tr><th>Parameter</th><th>What it represents</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>n (extrapolation number)</strong></td><td>Where the extrapolated linear portion crosses the y-axis; theoretically represents the number of critical targets that must be inactivated. For mammalian cells exposed to X-rays, n typically ranges from 2 to 10.</td></tr>
+                        <tr><td><strong>D<sub>q</sub> (quasithreshold dose)</strong></td><td>The width of the shoulder region &mdash; the dose below which little cell death is apparent. A higher D<sub>q</sub> suggests the cell population is better at repairing sublethal damage (more radioresistant).</td></tr>
+                        <tr><td><strong>D<sub>0</sub> (D37 dose)</strong></td><td>The dose that reduces the surviving fraction to 37% along the curve's linear portion &mdash; a direct measure of radiosensitivity. Radiosensitive cells have a <em>low</em> D<sub>0</sub>; radioresistant cells have a <em>high</em> D<sub>0</sub>. For mammalian cells, D<sub>0</sub> is typically 100&ndash;220 cGy.</td></tr>
+                    </tbody>
+                </table>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">A cell line has a very low D0 value. What does that indicate?</p>
+                    <label><input type="radio" name="lq_page3_1" value="A"> The cells are highly radioresistant</label>
+                    <label><input type="radio" name="lq_page3_1" value="B"> The cells are highly radiosensitive</label>
+                    <div class="explanation" style="display:none;">B. D0 is inversely related to radiosensitivity — a low D0 means it takes very little dose to reduce survival to 37%, meaning the cells are quite radiosensitive.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(3)">Check Answer</button>
+            </div>
+            <div id="lesson-page-4" class="lesson-page">
+                <h3>Page 4: The Multitarget, Single-Hit Equation</h3>
+                <p>These parameters relate through: <strong>log<sub>e</sub> n = D<sub>q</sub>/D<sub>0</sub></strong>. Surviving fraction can be calculated as <strong>SF = 1 &minus; (1 &minus; e<sup>&minus;D/D0</sup>)<sup>n</sup></strong>, where D is the total dose delivered. This equation accurately models the response of complex cell types &mdash; including most mammalian cells &mdash; where more than one target must be inactivated for lethal damage.</p>
+            </div>
+            <div id="lesson-page-5" class="lesson-page">
+                <h3>Page 5: What Happens to an Irradiated Cell</h3>
+                <p>After irradiation, a cell's fate falls into a small number of categories:</p>
+                <table class="data-table">
+                    <thead><tr><th>Response</th><th>What happens</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>Division delay</strong></td><td>Cells in interphase at the time of irradiation are delayed in reaching G2/mitosis. Dose-dependent: higher dose, longer delay. If dose is below ~1000 cGy, most cell lines recover and proceed through mitosis &mdash; sometimes producing a higher-than-normal number of dividing cells afterward, called <strong>mitotic overshoot</strong>.</td></tr>
+                        <tr><td><strong>Interphase death</strong></td><td>Death before the cell ever reaches mitosis (also called nonmitotic death). Can occur in both dividing and non-dividing cells; mature lymphocytes are a notable exception, sensitive to interphase death at doses as low as 50 cGy.</td></tr>
+                        <tr><td><strong>Reproductive failure</strong></td><td>The most common cellular response &mdash; a decrease in a cell's ability to divide an unlimited number of times after irradiation (also called mitotic death). Tied directly to the extent of chromosome damage caused by the dose.</td></tr>
+                        <tr><td><strong>Apoptosis</strong></td><td>Programmed cell death, unrelated to a failed mitosis attempt. Involves genes like p53 and bcl-2; characterized by nuclear fragmentation, cell lysis, and phagocytosis of the resulting fragments by neighboring cells.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="lesson-page-6" class="lesson-page">
+                <h3>Page 6: Radiosensitivity and the Cell Cycle</h3>
+                <p>A cell's radiosensitivity depends heavily on where it is in the cell cycle at the moment of irradiation:</p>
+                <div class="key-principle">
+                    <p>Cells are <strong>most sensitive</strong> in the <strong>G2 and M phases</strong>, of <strong>intermediate</strong> sensitivity in <strong>G1</strong>, and <strong>most resistant</strong> during <strong>S phase</strong> &mdash; especially late S. The D0 for late-S-phase cells can be as much as 2.5 times higher than for the same cells in G2/M.</p>
+                </div>
+                <p>This matters practically: when irradiating a population of asynchronous cells at low doses, the survivors are disproportionately S-phase cells &mdash; they were the most likely to survive that particular dose.</p>
+            </div>
+            <div id="lesson-page-7" class="lesson-page">
+                <h3>Page 7: Fractionation and Repair</h3>
+                <p>Elkind and Sutton-Gilbert showed in 1960 that splitting a total dose into two fractions (rather than delivering it all at once) increases overall cell survival. When enough time separates the fractions, the survival curve's shoulder essentially <strong>repeats</strong> after the second fraction &mdash; direct evidence that cells repair sublethal damage from the first fraction before the second one arrives.</p>
+                <div class="key-principle">
+                    <p>This repair of sublethal damage after low-LET irradiation typically completes within a few hours. Hypoxia reduces a cell's capacity to repair sublethal damage &mdash; part of why fractionated therapy can favor tumor control over single-dose treatment when tumors contain hypoxic regions.</p>
+                </div>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">Why does the survival curve's shoulder tend to "reappear" after a second fraction, given enough time between fractions?</p>
+                    <label><input type="radio" name="lq_page7_1" value="A"> Because the cells repair sublethal damage from the first fraction before the second arrives</label>
+                    <label><input type="radio" name="lq_page7_1" value="B"> Because the second fraction uses a different dose rate</label>
+                    <div class="explanation" style="display:none;">A. The reappearing shoulder is direct evidence of sublethal damage repair between fractions — cells that survived the first fraction have largely recovered by the time the second fraction arrives.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(7)">Check Answer</button>
+            </div>
+            <div id="lesson-page-8" class="lesson-page">
+                <h3>Page 8: High-LET vs. Low-LET Survival Curves</h3>
+                <p>Survival curves look different depending on the radiation's LET. With high-LET radiation (like neutrons or alpha particles), the shoulder region (D<sub>q</sub>) is <strong>reduced or absent</strong>, and the curve is steeper (lower D<sub>0</sub>) than with low-LET radiation (X-rays, gamma rays) at equivalent doses. This reflects the denser ionization pattern of high-LET radiation &mdash; more double-strand DNA breaks per track, less opportunity for the cell to repair between hits.</p>
+            </div>
+            <div id="lesson-page-9" class="lesson-page">
+                <h3>Page 9: Wrap-Up</h3>
+                <p>You've covered how survival curves are constructed and why they take their characteristic shape, the three parameters (n, D<sub>q</sub>, D<sub>0</sub>) and what each tells you about a cell population, the four cellular responses to radiation, the cell-cycle radiosensitivity pattern, fractionation and sublethal damage repair, and how high-LET radiation changes the curve's shape.</p>
+                <p>This is the direct foundation for RBE and OER, and for the R's of Radiobiology &mdash; both covered in their own lessons.</p>
+            </div>
+
+            <div class="lesson-navigation">
+                <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled>Previous Page</button>
+                <span class="page-indicator" id="lessonPageIndicator">Page 1 of 9</span>
+                <button id="nextLessonPage" onclick="changeLessonPage(1)">Next Page</button>
+                <button id="startActivityButton" onclick="window.location.href='../index.html'" style="display:none; background-color: #28a745;">Back to Menu</button>
+            </div>
+        </div>
+        <div class="footer">Radiation Therapy E-Workbook &mdash; Radiation Biology</div>
+    </div>
+    <script>
+        let currentLessonPage = 1;
+        const totalLessonPages = 9;
+        const lessonPages = document.querySelectorAll('.lesson-page');
+        const prevLessonButton = document.getElementById('prevLessonPage');
+        const nextLessonButton = document.getElementById('nextLessonPage');
+        const lessonPageIndicator = document.getElementById('lessonPageIndicator');
+        const startActivityButton = document.getElementById('startActivityButton');
+        const lessonCorrectAnswers = {"lq_page3_1": "B", "lq_page7_1": "A"};
+        function displayLessonPage() {
+            lessonPages.forEach((page, index) => page.classList.toggle('active', index === currentLessonPage - 1));
+            prevLessonButton.disabled = currentLessonPage === 1;
+            nextLessonButton.style.display = currentLessonPage === totalLessonPages ? 'none' : 'inline-block';
+            startActivityButton.style.display = currentLessonPage === totalLessonPages ? 'inline-block' : 'none';
+            lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
+        }
+        function changeLessonPage(direction) {
+            currentLessonPage += direction;
+            if (currentLessonPage < 1) currentLessonPage = 1;
+            if (currentLessonPage > totalLessonPages) currentLessonPage = totalLessonPages;
+            displayLessonPage();
+        }
+        function checkPageAnswers(pageNumber) {
+            const questionsOnPage = document.querySelectorAll(`#lesson-page-${pageNumber} .interactive-question-block`);
+            questionsOnPage.forEach(block => {
+                const radio = block.querySelector('input[type="radio"]');
+                if (!radio) return;
+                const questionName = radio.name;
+                if (!lessonCorrectAnswers.hasOwnProperty(questionName)) return;
+                const correctAnswerValue = lessonCorrectAnswers[questionName];
+                const selectedRadio = block.querySelector(`input[name="${questionName}"]:checked`);
+                const explanationDiv = block.querySelector('.explanation');
+                block.classList.remove('feedback-correct', 'feedback-incorrect');
+                block.querySelectorAll('label').forEach(label => label.classList.remove('correct-option', 'selected-incorrect'));
+                if (explanationDiv) explanationDiv.style.display = 'none';
+                if (selectedRadio) {
+                    const userAnswer = selectedRadio.value;
+                    const userSelectedLabel = selectedRadio.parentElement;
+                    if (userAnswer === correctAnswerValue) {
+                        block.classList.add('feedback-correct');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('correct-option');
+                    } else {
+                        block.classList.add('feedback-incorrect');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('selected-incorrect');
+                        const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                        if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                    }
+                } else {
+                    block.classList.add('feedback-incorrect');
+                    const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                    if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                }
+                if (explanationDiv) explanationDiv.style.display = 'block';
+            });
+        }
+        displayLessonPage();
+    </script>
+</body>
+</html>
