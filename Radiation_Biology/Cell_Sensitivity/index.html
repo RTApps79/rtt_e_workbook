@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cell Sensitivity</title>
+<style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; margin: 20px;
+            background-color: #f4f4f4; color: #333; display: flex; flex-direction: column; align-items: center; }
+        .container { background-color: #fff; padding: 25px 35px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 90%; max-width: 900px; margin-bottom: 30px; }
+        h1, h2, h3, h4 { color: #0056b3; }
+        h1 { text-align: center; border-bottom: 2px solid #0056b3; padding-bottom: 15px; margin-bottom: 30px; font-size: 2em; }
+        h2 { border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 30px; margin-bottom: 20px; color: #003d7a; font-size: 1.6em; }
+        h3 { color: #004085; margin-top: 25px; margin-bottom: 15px; font-size: 1.3em; }
+        h4 { color: #17a2b8; margin-top: 20px; margin-bottom: 10px; font-size: 1.1em; font-weight: 600; }
+        p, li { margin-bottom: 12px; font-size: 1.05em; }
+        ul, ol { margin-bottom: 15px; padding-left: 25px; }
+        strong { font-weight: 600; }
+        .highlight { background-color: #e6f7ff; padding: 2px 5px; border-radius: 3px; font-weight: 600; }
+        code { background-color: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; color: #c7254e; }
+        table.data-table { width: 90%; margin: 15px auto; border-collapse: collapse; }
+        table.data-table th, table.data-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        table.data-table th { background-color: #e9f5ff; color: #0056b3; font-weight: 600; }
+        table.data-table tr:nth-child(even) { background-color: #f9f9f9; }
+        .flip-lesson-container { border: 1px solid #b3d7ff; padding: 20px; border-radius: 8px; background-color: #f0f8ff; margin-bottom: 30px; }
+        .lesson-page { display: none; padding: 15px; border: 1px solid #ddeeff; background-color: #fff; border-radius: 5px; min-height: 400px; }
+        .lesson-page.active { display: block; }
+        .lesson-navigation { text-align: center; margin-top: 20px; }
+        .lesson-navigation button, .lesson-page .check-page-answers {
+            background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px;
+            cursor: pointer; font-size: 1em; margin: 5px 10px; transition: background-color 0.2s; }
+        .lesson-navigation button:hover, .lesson-page .check-page-answers:hover { background-color: #0056b3; }
+        .lesson-navigation button:disabled { background-color: #ccc; cursor: not-allowed; }
+        .page-indicator { font-style: italic; color: #555; margin: 10px 0; }
+        .key-principle { background-color: #e7f3ff; padding: 10px; margin-bottom:10px; border-left: 3px solid #007bff; border-radius: 3px; }
+        .interactive-question-block { background: #f9f9f9; padding: 15px; margin: 20px 0; border: 1px solid #e0e0e0; border-radius: 8px; }
+        .interactive-question-block .question-text { font-weight: bold; margin-bottom: 8px; font-size: 1em; color: #555; }
+        .interactive-question-block label { display: block; margin-left: 0; padding: 8px 12px; border-radius: 5px; cursor: pointer; border: 1px solid transparent; margin-bottom: 5px; }
+        .interactive-question-block input[type="radio"] { margin-right: 10px; vertical-align: middle; }
+        .interactive-question-block label:hover { background-color: #f0f8ff; }
+        .feedback-correct { background-color: #e8f8f0 !important; border-left: 4px solid #2ecc71 !important; }
+        .feedback-incorrect { background-color: #fdedec !important; border-left: 4px solid #e74c3c !important; }
+        .feedback-correct label.correct-option, .feedback-incorrect label.correct-option { font-weight: bold; color: #1E8449; }
+        .feedback-incorrect label.selected-incorrect { color: #A93226; }
+        .explanation { font-size: 0.9em; color: #444; margin-top: 5px; padding-left: 20px; }
+        .footer { text-align: center; margin-top: 30px; padding-top: 15px; border-top: 1px solid #ccc; font-size: 0.9em; color: #555; }
+
+        .nav-links-header { background-color: #fff; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 50; }
+</style>
+</head>
+<body>
+    <header class="nav-links-header">
+        <div style="max-width:900px;margin:0 auto;padding:12px 20px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;">
+            <strong style="color:#0056b3;">Cell Sensitivity</strong>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                <a href="../index.html" style="font-size:0.8rem;background:#0056b3;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Back to Radiation Biology Menu</a>
+                <a href="../../index.html" style="font-size:0.8rem;background:#64748b;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Main Workbook</a>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <h1>Cell Sensitivity</h1>
+        <div class="flip-lesson-container">
+            <h2>Interactive Lesson</h2>
+            <div id="lesson-page-1" class="lesson-page active">
+                <h3>Page 1: The Law of Bergoni&eacute; and Tribondeau</h3>
+                <p>In 1906, scientists Bergoni&eacute; and Tribondeau performed experiments using rodent testes &mdash; chosen because they contain cells ranging from immature, mitotically active spermatogonia to mature, nondividing spermatozoa (sperm).</p>
+                <div class="key-principle">
+                    <p>Their results led to the <strong>Law of Bergoni&eacute; and Tribondeau</strong>: ionizing radiation is more effective against cells that (1) are actively mitotic, (2) are undifferentiated, and (3) have a long mitotic future.</p>
+                </div>
+            </div>
+            <div id="lesson-page-2" class="lesson-page">
+                <h3>Page 2: Maturity, Differentiation, and Radiosensitivity</h3>
+                <p><strong>Differentiation</strong> refers to a cell's level of functional/structural specialization. Undifferentiated (immature) cells &mdash; whose primary job is to divide and replace lost cells &mdash; are called <strong>stem</strong> or <strong>precursor</strong> cells, and are extremely radiosensitive. A spermatogonium is a classic example.</p>
+                <p>A fully differentiated cell (an <strong>end cell</strong>) has a specialized structure or function, doesn't divide, and is radioresistant. Spermatozoa and circulating erythrocytes are examples.</p>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">According to Bergoni&eacute; and Tribondeau, which cell type would be MOST radiosensitive?</p>
+                    <label><input type="radio" name="lq_page2_1" value="A"> A highly differentiated, nondividing nerve cell</label>
+                    <label><input type="radio" name="lq_page2_1" value="B"> An undifferentiated, actively dividing stem cell</label>
+                    <div class="explanation" style="display:none;">B. Actively mitotic, undifferentiated cells with a long mitotic future ahead are the most radiosensitive by definition of the law.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(2)">Check Answer</button>
+            </div>
+            <div id="lesson-page-3" class="lesson-page">
+                <h3>Page 3: Conditional Sensitivity</h3>
+                <p>In 1925, Ancel and Vitemberger added an important refinement: the environmental conditions of a cell before, during, or after radiation exposure can also change the extent and appearance of radiation damage &mdash; a concept known as <span class="highlight">conditional sensitivity</span>.</p>
+                <p>This means a cell's radiosensitivity isn't a fixed, purely intrinsic property &mdash; it can be modified when the cell is under stress, especially during irradiation itself (which connects directly to the oxygen effect covered in the RBE and OER lesson).</p>
+            </div>
+            <div id="lesson-page-4" class="lesson-page">
+                <h3>Page 4: Three Categories of Factors Affecting Response</h3>
+                <p>Cellular radioresponse and the appearance of a survival curve (its n, D<sub>q</sub>, and D<sub>0</sub> values) can be modified by three groups of external factors:</p>
+                <table class="data-table">
+                    <thead><tr><th>Category</th><th>Examples</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>Physical</strong></td><td>LET, dose rate</td></tr>
+                        <tr><td><strong>Chemical</strong></td><td>Radiosensitizers, radioprotectors</td></tr>
+                        <tr><td><strong>Biological</strong></td><td>Position in the cell cycle, ability to repair sublethal damage</td></tr>
+                    </tbody>
+                </table>
+                <p>A dose-rate effect has been observed for reproductive failure, division delay, chromosome aberrations, and survival time: low dose rates are generally less efficient at producing damage than high dose rates, because cells have more opportunity to repair sublethal damage between hits as the dose rate drops. This dose-rate effect is significant with low-LET radiation but isn't observed with high-LET radiation.</p>
+            </div>
+            <div id="lesson-page-5" class="lesson-page">
+                <h3>Page 5: Wrap-Up</h3>
+                <p>You've covered the Law of Bergoni&eacute; and Tribondeau, how differentiation level relates to radiosensitivity, conditional sensitivity, and the physical/chemical/biological factor categories that modify cellular response.</p>
+                <p>Next: applying these same sensitivity principles to classify actual cell populations in the body &mdash; that's the Cell Differentiation lesson.</p>
+            </div>
+
+            <div class="lesson-navigation">
+                <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled>Previous Page</button>
+                <span class="page-indicator" id="lessonPageIndicator">Page 1 of 5</span>
+                <button id="nextLessonPage" onclick="changeLessonPage(1)">Next Page</button>
+                <button id="startActivityButton" onclick="window.location.href='../index.html'" style="display:none; background-color: #28a745;">Back to Menu</button>
+            </div>
+        </div>
+        <div class="footer">Radiation Therapy E-Workbook &mdash; Radiation Biology</div>
+    </div>
+    <script>
+        let currentLessonPage = 1;
+        const totalLessonPages = 5;
+        const lessonPages = document.querySelectorAll('.lesson-page');
+        const prevLessonButton = document.getElementById('prevLessonPage');
+        const nextLessonButton = document.getElementById('nextLessonPage');
+        const lessonPageIndicator = document.getElementById('lessonPageIndicator');
+        const startActivityButton = document.getElementById('startActivityButton');
+        const lessonCorrectAnswers = {"lq_page2_1": "B"};
+        function displayLessonPage() {
+            lessonPages.forEach((page, index) => page.classList.toggle('active', index === currentLessonPage - 1));
+            prevLessonButton.disabled = currentLessonPage === 1;
+            nextLessonButton.style.display = currentLessonPage === totalLessonPages ? 'none' : 'inline-block';
+            startActivityButton.style.display = currentLessonPage === totalLessonPages ? 'inline-block' : 'none';
+            lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
+        }
+        function changeLessonPage(direction) {
+            currentLessonPage += direction;
+            if (currentLessonPage < 1) currentLessonPage = 1;
+            if (currentLessonPage > totalLessonPages) currentLessonPage = totalLessonPages;
+            displayLessonPage();
+        }
+        function checkPageAnswers(pageNumber) {
+            const questionsOnPage = document.querySelectorAll(`#lesson-page-${pageNumber} .interactive-question-block`);
+            questionsOnPage.forEach(block => {
+                const radio = block.querySelector('input[type="radio"]');
+                if (!radio) return;
+                const questionName = radio.name;
+                if (!lessonCorrectAnswers.hasOwnProperty(questionName)) return;
+                const correctAnswerValue = lessonCorrectAnswers[questionName];
+                const selectedRadio = block.querySelector(`input[name="${questionName}"]:checked`);
+                const explanationDiv = block.querySelector('.explanation');
+                block.classList.remove('feedback-correct', 'feedback-incorrect');
+                block.querySelectorAll('label').forEach(label => label.classList.remove('correct-option', 'selected-incorrect'));
+                if (explanationDiv) explanationDiv.style.display = 'none';
+                if (selectedRadio) {
+                    const userAnswer = selectedRadio.value;
+                    const userSelectedLabel = selectedRadio.parentElement;
+                    if (userAnswer === correctAnswerValue) {
+                        block.classList.add('feedback-correct');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('correct-option');
+                    } else {
+                        block.classList.add('feedback-incorrect');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('selected-incorrect');
+                        const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                        if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                    }
+                } else {
+                    block.classList.add('feedback-incorrect');
+                    const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                    if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                }
+                if (explanationDiv) explanationDiv.style.display = 'block';
+            });
+        }
+        displayLessonPage();
+    </script>
+</body>
+</html>
