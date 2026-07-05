@@ -77,7 +77,7 @@
                         <tr><td>30 Gy in 10 fractions</td><td>Longer course, sometimes preferred for better prognosis patients or complex sites</td></tr>
                     </tbody>
                 </table>
-                <p>Simple parallel-opposed or limited-field techniques are typically sufficient for straightforward palliative cases &mdash; the priority is fast, effective pain relief with minimal patient burden, not maximal conformality.</p>
+                <p>Simple parallel-opposed or limited-field techniques are typically sufficient for straightforward palliative cases &mdash; the priority is fast, effective pain relief with minimal patient burden, not maximal conformality. Target volumes for palliative treatment are correspondingly simple: the involved bone plus a generous margin, without the elaborate contouring detail spine SBRT requires.</p>
             </div>
             <div id="lesson-page-3" class="lesson-page">
                 <h3>Page 3: Spine SBRT</h3>
@@ -95,18 +95,34 @@
                 <button class="check-page-answers" onclick="checkPageAnswers(3)">Check Answer</button>
             </div>
             <div id="lesson-page-4" class="lesson-page">
-                <h3>Page 4: Extremity Treatment</h3>
-                <p>Extremity bone lesions (metastatic or primary sarcoma) follow similar general principles to spine treatment &mdash; positioning for reproducibility, appropriate immobilization (often a custom cast or vacuum bag), and OAR awareness specific to the limb (joints, growth plates in pediatric patients, skin folds). Field arrangement is typically simpler than spine SBRT given the absence of an immediately adjacent critical structure like the cord.</p>
+                <h3>Page 4: Spine SBRT Target Volumes</h3>
+                <p>Because a single vertebra sits so close to the cord, spine SBRT uses standardized, consensus-based contouring rather than a generic margin expansion &mdash; following guidelines from groups like the International Spine Radiosurgery Consortium:</p>
+                <div class="key-principle">
+                    <p>The <strong>GTV</strong> is the radiographically visible tumor within the vertebra. The <strong>CTV</strong> is built following the involved vertebral <em>anatomic compartments</em> (body, pedicle, lamina, spinous process) rather than a simple uniform expansion &mdash; if only the vertebral body is involved, the CTV generally does not extend into the posterior elements, and vice versa. This compartment-based approach is specifically designed to avoid unnecessarily including the epidural space (and therefore the cord) in the target when the tumor hasn't actually spread there.</p>
+                </div>
+                <p>A <strong>PTV</strong> margin is added, but kept extremely tight (often just 1&ndash;2 mm) given the proximity to the cord &mdash; which is exactly why rigid immobilization and daily image guidance are non-negotiable for this technique.</p>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">Why does spine SBRT contour the CTV by anatomic compartment rather than a simple uniform margin?</p>
+                    <label><input type="radio" name="lq_page4_1" value="A"> To avoid unnecessarily extending the target into the epidural space/cord when disease hasn't spread there</label>
+                    <label><input type="radio" name="lq_page4_1" value="B"> Compartment-based contouring is simply faster to draw</label>
+                    <div class="explanation" style="display:none;">A. Compartment-based CTV contouring specifically avoids including uninvolved regions near the cord, which is essential given how tight the cord dose constraint is.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(4)">Check Answer</button>
             </div>
             <div id="lesson-page-5" class="lesson-page">
-                <h3>Page 5: Wrap-Up</h3>
-                <p>You've covered the palliative vs. SBRT distinction, standard palliative fractionation options, the demanding cord-sparing requirements of spine SBRT, and extremity treatment considerations.</p>
+                <h3>Page 5: Extremity Treatment</h3>
+                <p>Extremity bone lesions (metastatic or primary sarcoma) follow similar general principles to spine treatment &mdash; positioning for reproducibility, appropriate immobilization (often a custom cast or vacuum bag), and OAR awareness specific to the limb (joints, growth plates in pediatric patients, skin folds). Field arrangement is typically simpler than spine SBRT given the absence of an immediately adjacent critical structure like the cord, so target volumes usually follow a more conventional uniform-margin approach.</p>
+            </div>
+            <div id="lesson-page-6" class="lesson-page">
+                <h3>Page 6: Wrap-Up</h3>
+                <p>You've covered the palliative vs. SBRT distinction, standard palliative fractionation options, the demanding cord-sparing requirements of spine SBRT, compartment-based spine SBRT target volume contouring, and extremity treatment considerations.</p>
                 <p>Cross-reference: for disease-specific staging and anatomy of bone-involving malignancies, see Sarcoma and Metastatic &amp; Palliative Care under Tumor Sites Localization.</p>
             </div>
 
             <div class="lesson-navigation">
                 <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled>Previous Page</button>
-                <span class="page-indicator" id="lessonPageIndicator">Page 1 of 5</span>
+                <span class="page-indicator" id="lessonPageIndicator">Page 1 of 6</span>
                 <button id="nextLessonPage" onclick="changeLessonPage(1)">Next Page</button>
                 <button id="startActivityButton" onclick="window.location.href='../../Treatment_Planning_Suite/index.html?dataset=demo'" style="display:none; background-color: #28a745;">Open Treatment Planning Suite</button>
             </div>
@@ -115,13 +131,13 @@
     </div>
     <script>
         let currentLessonPage = 1;
-        const totalLessonPages = 5;
+        const totalLessonPages = 6;
         const lessonPages = document.querySelectorAll('.lesson-page');
         const prevLessonButton = document.getElementById('prevLessonPage');
         const nextLessonButton = document.getElementById('nextLessonPage');
         const lessonPageIndicator = document.getElementById('lessonPageIndicator');
         const startActivityButton = document.getElementById('startActivityButton');
-        const lessonCorrectAnswers = {"lq_page3_1": "A"};
+        const lessonCorrectAnswers = {"lq_page3_1": "A", "lq_page4_1": "A"};
         function displayLessonPage() {
             lessonPages.forEach((page, index) => page.classList.toggle('active', index === currentLessonPage - 1));
             prevLessonButton.disabled = currentLessonPage === 1;
