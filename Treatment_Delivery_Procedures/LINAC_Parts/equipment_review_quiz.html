@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Treatment & Simulation Equipment Review Quiz</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    body { font-family: 'Inter', sans-serif; }
+    .q-card { background: white; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px; margin-bottom: 14px; }
+    .q-card label { display: block; padding: 6px 10px; border-radius: 6px; cursor: pointer; margin-bottom: 4px; }
+    .q-card label:hover { background: #f1f5f9; }
+    .feedback { display: none; margin-top: 8px; padding: 8px 10px; border-radius: 6px; font-size: 0.88rem; }
+    .feedback.correct { background: #f0fdf4; border: 1px solid #86efac; color: #14532d; }
+    .feedback.incorrect { background: #fef2f2; border: 1px solid #fca5a5; color: #7f1d1d; }
+    .check-btn { background: #4338ca; color: white; font-size: 0.8rem; font-weight: 600; padding: 6px 14px; border-radius: 6px; }
+    #scoreBanner { display:none; }
+</style>
+</head>
+<body class="bg-slate-100 text-slate-800">
+<header class="bg-white shadow-md sticky top-0 z-50">
+    <div class="container mx-auto px-6 py-3 flex flex-wrap justify-between items-center gap-2">
+        <strong class="text-indigo-700">Treatment &amp; Simulation Equipment Review</strong>
+        <a href="index.html" class="text-xs sm:text-sm bg-slate-500 text-white font-medium py-2 px-3 rounded-lg hover:bg-slate-600">&larr; Back to LINAC Menu</a>
+    </div>
+</header>
+
+<main class="container mx-auto px-6 py-8 max-w-3xl">
+    <div class="bg-white p-6 sm:p-8 rounded-xl shadow-lg">
+        <h1 class="text-2xl font-bold text-indigo-700 mb-2">24-Question Review</h1>
+        <p class="text-sm text-slate-500 mb-6">Adapted from Heath, A. <em>Radiation Therapy Study Guide</em>, Chapter 4: Treatment and Simulation Equipment (Springer, 2016). Covers LINAC components, beam production, and simulation/CT equipment. Answer each question, then check your work.</p>
+
+        <div id="scoreBanner" class="bg-indigo-50 border border-indigo-200 rounded-lg p-3 mb-4 font-semibold text-indigo-800"></div>
+        <div id="quizContainer"></div>
+        <button id="checkAllBtn" class="check-btn mt-2" style="font-size:1rem;padding:10px 20px;">Check All Answers</button>
+    </div>
+</main>
+
+<footer class="bg-slate-800 text-slate-300 py-6 mt-8 text-center">
+    <p class="text-sm">&copy; <span id="currentYear"></span> Radiation Therapy E-Workbook. All Rights Reserved.</p>
+</footer>
+
+<script>
+document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+const questions = [
+    { q: "The Dmax of a 10 MV photon beam is:", opts: ["0.5 cm","1.0 cm","2.0 cm","2.5 cm"], correct: [3], multi:false,
+      explain: "Dmax scales with beam energy — roughly 1.5 cm for 6 MV up to ~3.5 cm for 18 MV. For 10 MV, ~2.5 cm is the standard reference value." },
+    { q: "The source for microwave power in a LINAC with energies greater than 12 MeV is:", opts: ["Magnetron","RF driver","Klystron","Circulating pump"], correct: [2], multi:false,
+      explain: "Higher-energy machines use a klystron (an amplifier requiring a separate low-power microwave source); magnetrons are used for lower-energy machines." },
+    { q: "In a LINAC, what structure transports the microwaves from the stand to the accelerator structure?", opts: ["Klystron","Accelerating waveguide","Bending magnet","Waveguide"], correct: [3], multi:false,
+      explain: "The (transmission) waveguide carries microwave power from the stand to the accelerator structure; the accelerating waveguide is the accelerator structure itself, where acceleration actually happens." },
+    { q: "The cathode of the linear accelerator is the:", opts: ["Magnetron","Electron gun","Tungsten target","Bending magnet"], correct: [1], multi:false,
+      explain: "The electron gun functions as the cathode, releasing electrons via thermionic emission." },
+    { q: "What is NOT true regarding the accelerator structure of a linear accelerator?", opts: ["It is located in the stand of the linear accelerator","They may be mounted vertically","They may be mounted horizontally","Electrons are accelerated in this component"], correct: [0], multi:false,
+      explain: "The accelerator structure's location varies by design — it's not universally located in the stand (many lower-energy machines house it in the gantry itself). The other three statements are all true." },
+    { q: "Targets in a linear accelerator are typically made of:", opts: ["Tungsten","Lead","Copper","Concrete"], correct: [0], multi:false,
+      explain: "Tungsten's high atomic number makes it an efficient bremsstrahlung target material." },
+    { q: "What is the average energy of a 15 MV photon beam?", opts: ["3.75 MV","5 MV","7.5 MV","15 MV"], correct: [1], multi:false,
+      explain: "As a rule of thumb, the average energy of a bremsstrahlung photon spectrum is roughly one-third of the peak (nominal) energy: 15/3 = 5 MV." },
+    { q: "The __________ sets the beam's maximum field size.", opts: ["Target","Bending magnet","Independent jaws","Primary collimator"], correct: [3], multi:false,
+      explain: "The primary collimator is a fixed opening that sets the absolute maximum possible field size; the jaws then define the actual field within that limit." },
+    { q: "Which of the following components are in the beam for X-ray production in a LINAC? (Choose all correct answers)", opts: ["Scattering foil","Target","Flattening filter"], correct: [1,2], multi:true,
+      explain: "Photon production uses the target and flattening filter. The scattering foil is used for electron beams, not photon production." },
+    { q: "What is moved out of the beam's path when treating with electrons? (Choose all correct answers)", opts: ["Target","Scattering foil","Flattening filter"], correct: [0,2], multi:true,
+      explain: "For electron treatments, the target and flattening filter move out of the beam path, while the scattering foil moves in to spread the beam." },
+    { q: "What component of the linear accelerator is responsible for signaling the machine to shut off once the requested dose has been delivered?", opts: ["Pulsed power supply","Ionization chamber","Klystron","Circulator"], correct: [1], multi:false,
+      explain: "The dual ion chambers monitor delivered dose (MU) continuously and signal beam termination once the set value is reached." },
+    { q: "What are the collimator jaws of the linear accelerator?", opts: ["Primary collimators","Secondary collimators","Multileaf collimators","None of the above"], correct: [1], multi:false,
+      explain: "The X and Y jaws are the secondary collimators, distinct from the fixed primary collimator and the MLC." },
+    { q: "What component in the treatment head of the linear accelerator displays the SSD on the patient's skin?", opts: ["Field-defining light","Optical distance indicator","Electron applicator","Mechanical distance indicator"], correct: [1], multi:false,
+      explain: "The optical distance indicator (ODI) projects a ruler-like scale onto the patient's skin surface to display SSD." },
+    { q: "The LINAC is pressurized with ______ to decrease the chance of electrical breakdown.", opts: ["Oil","SF6","Radiofrequency","Microwaves"], correct: [1], multi:false,
+      explain: "Sulfur hexafluoride (SF6) gas insulates the waveguide/RF system against arcing." },
+    { q: "What auxiliary system in the linear accelerator allows for changing the dose rate at the treatment console?", opts: ["Cooling system","Vacuum system","Automatic frequency control","Pulsed power supply"], correct: [3], multi:false,
+      explain: "The pulsed power supply (modulator) governs pulse repetition rate, which controls dose rate. Automatic frequency control instead keeps the RF source locked to the waveguide's resonant frequency." },
+    { q: "Treatment couches are typically constructed of:", opts: ["Carbon fiber","Lucite","Lead","Styrofoam"], correct: [0], multi:false,
+      explain: "Carbon fiber is strong, rigid, and minimizes beam attenuation — standard for modern treatment couches." },
+    { q: "Which of the following is NOT an example of an on-board imaging device used for target localization?", opts: ["EPIDs","kV Cone-Beam CT","CT scanner on rails","In-room PET scanner"], correct: [3], multi:false,
+      explain: "EPID, kV CBCT, and CT-on-rails are all real, standard localization tools. An in-room PET scanner is not standard onboard localization equipment in conventional RT." },
+    { q: "The X-ray tube of a conventional simulator is located in the:", opts: ["Stand","Gantry","Image intensifier","Modulator cabinet"], correct: [1], multi:false,
+      explain: "On a conventional (non-CT) simulator, the X-ray tube is mounted on the gantry arm, opposite the image intensifier." },
+    { q: "__________ depict the field size in a conventional simulator.", opts: ["Primary collimator","Blades","Wires","Shutters"], correct: [2], multi:false,
+      explain: "Conventional simulators use field-defining wires (rather than an actual treatment light field) to represent the simulated field edges." },
+    { q: "What part of the CT simulator is often referred to as the \\u201cbore\\u201d?", opts: ["X-ray tube","Gantry","Fan beam detectors","X-ray tube"], correct: [1], multi:false,
+      explain: "The circular opening in the CT gantry that the patient passes through is called the bore." },
+    { q: "The Hounsfield unit of air is:", opts: ["+1000","-1000","0","-100"], correct: [1], multi:false,
+      explain: "By definition, water = 0 HU and air = -1000 HU on the Hounsfield scale; dense bone approaches +1000 HU." },
+    { q: "DRR stands for:", opts: ["Digitally reconstructed radiograph","Digitally represented radiograph","Diagnostic radiograph reconstruction","Dose ratio reconstruction"], correct: [0], multi:false,
+      explain: "DRR = Digitally Reconstructed Radiograph, a synthetic image generated from the planning CT dataset." },
+    { q: "Voxels represent the __________ of a CT image.", opts: ["Brightness","Contrast","Slice thickness","Number of pixels"], correct: [2], multi:false,
+      explain: "A voxel is a 3D volume element — its third dimension (beyond the 2D pixel's width and height) is the slice thickness." },
+    { q: "What advanced treatment delivery equipment is a LINAC mounted on a robotic arm?", opts: ["Tomotherapy","Cyberknife","Gamma knife","Proton beam therapy"], correct: [1], multi:false,
+      explain: "CyberKnife mounts a compact LINAC on a robotic arm for highly flexible, non-isocentric beam delivery. Tomotherapy uses a rotating ring, and Gamma Knife uses Cobalt-60 sources, not a LINAC." },
+];
+
+const container = document.getElementById('quizContainer');
+questions.forEach((item, idx) => {
+    const div = document.createElement('div');
+    div.className = 'q-card';
+    const inputType = item.multi ? 'checkbox' : 'radio';
+    const optsHtml = item.opts.map((opt, oi) =>
+        `<label><input type="${inputType}" name="q${idx}" value="${oi}"> ${String.fromCharCode(65+oi)}. ${opt}</label>`
+    ).join('');
+    div.innerHTML = `<p class="font-medium mb-2">${idx+1}. ${item.q}</p>${optsHtml}<div class="feedback" id="fb${idx}"></div>`;
+    container.appendChild(div);
+});
+
+document.getElementById('checkAllBtn').addEventListener('click', () => {
+    let score = 0;
+    questions.forEach((item, idx) => {
+        const inputs = document.querySelectorAll(`input[name="q${idx}"]:checked`);
+        const selected = Array.from(inputs).map(i => parseInt(i.value)).sort();
+        const correct = [...item.correct].sort();
+        const isCorrect = JSON.stringify(selected) === JSON.stringify(correct);
+        if (isCorrect) score++;
+        const fb = document.getElementById(`fb${idx}`);
+        fb.style.display = 'block';
+        fb.className = 'feedback ' + (isCorrect ? 'correct' : 'incorrect');
+        const correctLetters = correct.map(c => String.fromCharCode(65+c)).join(', ');
+        fb.innerHTML = (isCorrect ? '✅ Correct. ' : `❌ Correct answer: ${correctLetters}. `) + item.explain;
+    });
+    const banner = document.getElementById('scoreBanner');
+    banner.style.display = 'block';
+    banner.textContent = `Score: ${score} / ${questions.length}`;
+    banner.scrollIntoView({behavior:'smooth'});
+});
+</script>
+</body>
+</html>
