@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pelvis Treatment Planning</title>
+<title>Abdomen Treatment Planning</title>
 <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; margin: 20px;
             background-color: #f4f4f4; color: #333; display: flex; flex-direction: column; align-items: center; }
@@ -52,7 +52,7 @@
 <body>
     <header class="nav-links-header">
         <div style="max-width:900px;margin:0 auto;padding:12px 20px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;">
-            <strong style="color:#0056b3;">Pelvis Treatment Planning</strong>
+            <strong style="color:#0056b3;">Abdomen Treatment Planning</strong>
             <div style="display:flex;flex-wrap:wrap;gap:8px;">
                 <a href="../index.html" style="font-size:0.8rem;background:#0056b3;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Site-Specific Planning Menu</a>
                 <a href="../../../index.html" style="font-size:0.8rem;background:#64748b;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Main Workbook</a>
@@ -60,67 +60,71 @@
         </div>
     </header>
     <div class="container">
-        <h1>Pelvis Treatment Planning</h1>
+        <h1>Abdomen Treatment Planning</h1>
         <div class="flip-lesson-container">
             <h2>Interactive Lesson</h2>
             <div id="lesson-page-1" class="lesson-page active">
-                <h3>Page 1: One Site, Several Disease Types</h3>
-                <p>The pelvis hosts several distinct disease types under one ARRT category: prostate, cervical, uterine, rectal, and anal cancers. The planning mechanics share enough in common &mdash; positioning, OARs, bladder/rectum management &mdash; to group them together, even though the actual target volumes differ by diagnosis.</p>
+                <h3>Page 1: The Central Challenge — Motion</h3>
+                <p>Abdominal organs (liver, pancreas, stomach) move substantially with every breath &mdash; the liver alone can move 1&ndash;2 cm or more with normal respiration. Managing this motion is the defining planning challenge for this site, more than for almost any other.</p>
             </div>
             <div id="lesson-page-2" class="lesson-page">
-                <h3>Page 2: Supine vs. Prone Positioning</h3>
-                <table class="data-table">
-                    <thead><tr><th>Position</th><th>Rationale</th></tr></thead>
-                    <tbody>
-                        <tr><td><strong>Supine</strong></td><td>Most common; comfortable, highly reproducible, compatible with knee/ankle immobilization devices</td></tr>
-                        <tr><td><strong>Prone (with belly board)</strong></td><td>Used for some rectal/anal treatments &mdash; a belly board opening lets the small bowel fall anteriorly, away from the treatment field</td></tr>
-                    </tbody>
-                </table>
+                <h3>Page 2: Positioning and Motion Management</h3>
+                <p>Common setup: <strong>supine, arms up</strong> (out of the beam path), with a knee/ankle support for comfort and reproducibility. <strong>IV contrast</strong> is frequently used at simulation to help define liver, pancreatic, and vascular anatomy.</p>
+                <div class="key-principle">
+                    <p><strong>4D-CT</strong> captures the tumor's full motion envelope across the breathing cycle, letting you contour an <strong>ITV (Internal Target Volume)</strong> that accounts for that motion directly. Alternative approaches include <strong>breath-hold</strong> techniques and <strong>respiratory gating</strong> (treating only during a specific part of the breathing cycle).</p>
+                </div>
                 <h4>Quick Check!</h4>
                 <div class="interactive-question-block">
-                    <p class="question-text">What is the main reason a belly board is used for some rectal treatments?</p>
-                    <label><input type="radio" name="lq_page2_1" value="A"> It moves the small bowel out of the treatment field</label>
-                    <label><input type="radio" name="lq_page2_1" value="B"> It improves patient comfort only</label>
-                    <div class="explanation" style="display:none;">A. The belly board opening lets small bowel loops fall away from the field anteriorly, directly sparing bowel dose — not just a comfort measure.</div>
+                    <p class="question-text">Why is 4D-CT particularly important for abdominal treatment planning?</p>
+                    <label><input type="radio" name="lq_page2_1" value="A"> It captures the target's motion across the breathing cycle, informing the ITV</label>
+                    <label><input type="radio" name="lq_page2_1" value="B"> It provides better bone detail than conventional CT</label>
+                    <div class="explanation" style="display:none;">A. 4D-CT's whole purpose here is capturing respiratory-driven target motion so the ITV can be built to actually cover where the tumor moves, not just where it sits on one snapshot.</div>
                 </div>
                 <button class="check-page-answers" onclick="checkPageAnswers(2)">Check Answer</button>
             </div>
             <div id="lesson-page-3" class="lesson-page">
-                <h3>Page 3: Bladder and Rectum Protocols</h3>
-                <p>Both bladder and rectal <strong>filling state</strong> directly affect where pelvic organs sit day to day &mdash; this is managed deliberately, not left to chance:</p>
-                <div class="key-principle">
-                    <p>A <strong>full-bladder protocol</strong> (patient drinks a set amount of water before simulation and every treatment) pushes small bowel superiorly, out of the field, and creates a more reproducible target position. Rectal protocols (empty rectum, sometimes with an enema beforehand) similarly aim for day-to-day consistency.</p>
+                <h3>Page 3: Target Volumes</h3>
+                <p>Abdominal target volumes follow the standard GTV/CTV/PTV hierarchy, with two site-specific wrinkles:</p>
+                <table class="data-table">
+                    <thead><tr><th>Volume</th><th>Abdomen-specific consideration</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>GTV</strong></td><td>Defined on contrast-enhanced CT (or fused MRI/PET) given how much clearer IV contrast makes liver/pancreatic lesions and adjacent vasculature</td></tr>
+                        <tr><td><strong>CTV</strong></td><td>GTV plus a margin for microscopic spread, often edited off natural anatomic barriers (e.g., not extending CTV into bone or outside the peritoneal cavity where disease can't physically spread)</td></tr>
+                        <tr><td><strong>ITV</strong></td><td>CTV expanded specifically to cover respiratory motion, built directly from the 4D-CT motion envelope covered on the previous page</td></tr>
+                        <tr><td><strong>PTV</strong></td><td>ITV plus a smaller setup-margin expansion &mdash; note that in a moving-target site like this, ITV sits <em>between</em> CTV and PTV in the expansion sequence, unlike a static site where PTV is simply CTV plus one margin</td></tr>
+                    </tbody>
+                </table>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">In abdominal planning, where does the ITV fit in the volume expansion sequence?</p>
+                    <label><input type="radio" name="lq_page3_1" value="A"> Between CTV and PTV, accounting for motion before the setup margin is added</label>
+                    <label><input type="radio" name="lq_page3_1" value="B"> It replaces the PTV entirely</label>
+                    <div class="explanation" style="display:none;">A. ITV sits between CTV and PTV — motion is accounted for first (CTV to ITV), then setup uncertainty is added on top (ITV to PTV).</div>
                 </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(3)">Check Answer</button>
             </div>
             <div id="lesson-page-4" class="lesson-page">
                 <h3>Page 4: Organ-at-Risk Constraints</h3>
                 <table class="data-table">
-                    <thead><tr><th>Structure</th><th>Constraint (conventional prostate example)</th></tr></thead>
+                    <thead><tr><th>Structure</th><th>Constraint (typical conventional fractionation)</th></tr></thead>
                     <tbody>
-                        <tr><td>Bladder</td><td>V70 &le; 25&ndash;35% (volume receiving 70 Gy)</td></tr>
-                        <tr><td>Rectum</td><td>V70 &le; 20% (volume receiving 70 Gy)</td></tr>
-                        <tr><td>Femoral heads</td><td>V50 &le; 5%</td></tr>
-                        <tr><td>Bowel (gyn/rectal cases)</td><td>V45 &le; 195 cc</td></tr>
+                        <tr><td>Liver (whole organ)</td><td>Mean dose &le; 28&ndash;30 Gy (uninvolved liver)</td></tr>
+                        <tr><td>Kidneys (bilateral)</td><td>Mean dose &le; 18 Gy</td></tr>
+                        <tr><td>Spinal cord</td><td>&le; 45&ndash;50 Gy</td></tr>
+                        <tr><td>Small bowel</td><td>V45 &le; 195 cc (volume receiving 45 Gy)</td></tr>
+                        <tr><td>Stomach</td><td>&le; 45 Gy to a limited volume</td></tr>
                     </tbody>
                 </table>
-                <p>For a standard prostate case specifically, the two organs at risk you'll hear referenced constantly are the <strong>bladder and rectum</strong> &mdash; both directly adjacent to the prostate on essentially every side.</p>
-                <h4>Quick Check!</h4>
-                <div class="interactive-question-block">
-                    <p class="question-text">What are the two primary organs at risk in a standard prostate treatment?</p>
-                    <label><input type="radio" name="lq_page4_1" value="A"> Bladder and rectum</label>
-                    <label><input type="radio" name="lq_page4_1" value="B"> Liver and kidneys</label>
-                    <div class="explanation" style="display:none;">A. The bladder and rectum sit immediately adjacent to the prostate and are the two OARs most consistently discussed in prostate planning.</div>
-                </div>
-                <button class="check-page-answers" onclick="checkPageAnswers(4)">Check Answer</button>
+                <p>SBRT for liver lesions uses far tighter, ablative constraints given the much higher dose per fraction &mdash; a genuinely different planning problem than conventional fractionation.</p>
             </div>
             <div id="lesson-page-5" class="lesson-page">
-                <h3>Page 5: Techniques</h3>
-                <p><strong>VMAT/IMRT</strong> is standard for definitive pelvic treatment, allowing dose to conform tightly around bladder/rectum. <strong>Image guidance</strong> (daily CBCT, or fiducial-based kV imaging for prostate) is essential given how much bladder/rectal filling can shift the target day to day. <strong>Brachytherapy</strong> plays a major role specifically in cervical and some prostate cases, often combined with external beam.</p>
+                <h3>Page 5: Techniques and Typical Dose</h3>
+                <p><strong>IMRT/VMAT</strong> is standard for conventional abdominal treatment (commonly 45&ndash;54 Gy in 25&ndash;30 fractions for pancreatic/gastric disease), allowing dose to be shaped around the many nearby OARs. <strong>SBRT</strong> is increasingly used for small, well-defined liver or pancreatic lesions (commonly 30&ndash;50 Gy in 3&ndash;5 fractions) in a limited number of high-dose fractions, but demands excellent motion management (gating or breath-hold) and image guidance given the ablative dose per fraction.</p>
             </div>
             <div id="lesson-page-6" class="lesson-page">
                 <h3>Page 6: Wrap-Up</h3>
-                <p>You've covered supine vs. prone positioning, bladder/rectum filling protocols, OAR constraints, and technique selection across the pelvic disease types.</p>
-                <p>Cross-reference: this lesson covers the planning mechanics common across prostate, cervical, uterine, rectal, and anal disease &mdash; for disease-specific anatomy and staging, see the corresponding pages under Tumor Sites Localization (Genitourinary, Male/Female Reproductive, and GI Tumors).</p>
+                <p>You've covered why motion management dominates abdominal planning, positioning and 4D-CT/ITV concepts, the abdomen-specific target volume sequence, key OAR constraints, and the IMRT/VMAT vs. SBRT technique choice with typical dose ranges.</p>
+                <p>Cross-reference: for GI sites at the pelvic end of the spectrum (rectal, anal), see the Pelvis lesson instead &mdash; ARRT groups those there, not here.</p>
             </div>
 
             <div class="lesson-navigation">
@@ -140,7 +144,7 @@
         const nextLessonButton = document.getElementById('nextLessonPage');
         const lessonPageIndicator = document.getElementById('lessonPageIndicator');
         const startActivityButton = document.getElementById('startActivityButton');
-        const lessonCorrectAnswers = {"lq_page2_1": "A", "lq_page4_1": "A"};
+        const lessonCorrectAnswers = {"lq_page2_1": "A", "lq_page3_1": "A"};
         function displayLessonPage() {
             lessonPages.forEach((page, index) => page.classList.toggle('active', index === currentLessonPage - 1));
             prevLessonButton.disabled = currentLessonPage === 1;
