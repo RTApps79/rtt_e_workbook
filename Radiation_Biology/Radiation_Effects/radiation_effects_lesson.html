@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Radiation Effects: Total Body Response and Late Effects</title>
+<style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; margin: 20px;
+            background-color: #f4f4f4; color: #333; display: flex; flex-direction: column; align-items: center; }
+        .container { background-color: #fff; padding: 25px 35px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 90%; max-width: 900px; margin-bottom: 30px; }
+        h1, h2, h3, h4 { color: #0056b3; }
+        h1 { text-align: center; border-bottom: 2px solid #0056b3; padding-bottom: 15px; margin-bottom: 30px; font-size: 2em; }
+        h2 { border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 30px; margin-bottom: 20px; color: #003d7a; font-size: 1.6em; }
+        h3 { color: #004085; margin-top: 25px; margin-bottom: 15px; font-size: 1.3em; }
+        h4 { color: #17a2b8; margin-top: 20px; margin-bottom: 10px; font-size: 1.1em; font-weight: 600; }
+        p, li { margin-bottom: 12px; font-size: 1.05em; }
+        ul, ol { margin-bottom: 15px; padding-left: 25px; }
+        strong { font-weight: 600; }
+        .highlight { background-color: #e6f7ff; padding: 2px 5px; border-radius: 3px; font-weight: 600; }
+        code { background-color: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; color: #c7254e; }
+        table.data-table { width: 90%; margin: 15px auto; border-collapse: collapse; }
+        table.data-table th, table.data-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        table.data-table th { background-color: #e9f5ff; color: #0056b3; font-weight: 600; }
+        table.data-table tr:nth-child(even) { background-color: #f9f9f9; }
+        .flip-lesson-container { border: 1px solid #b3d7ff; padding: 20px; border-radius: 8px; background-color: #f0f8ff; margin-bottom: 30px; }
+        .lesson-page { display: none; padding: 15px; border: 1px solid #ddeeff; background-color: #fff; border-radius: 5px; min-height: 400px; }
+        .lesson-page.active { display: block; }
+        .lesson-navigation { text-align: center; margin-top: 20px; }
+        .lesson-navigation button, .lesson-page .check-page-answers {
+            background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px;
+            cursor: pointer; font-size: 1em; margin: 5px 10px; transition: background-color 0.2s; }
+        .lesson-navigation button:hover, .lesson-page .check-page-answers:hover { background-color: #0056b3; }
+        .lesson-navigation button:disabled { background-color: #ccc; cursor: not-allowed; }
+        .page-indicator { font-style: italic; color: #555; margin: 10px 0; }
+        .key-principle { background-color: #e7f3ff; padding: 10px; margin-bottom:10px; border-left: 3px solid #007bff; border-radius: 3px; }
+        .interactive-question-block { background: #f9f9f9; padding: 15px; margin: 20px 0; border: 1px solid #e0e0e0; border-radius: 8px; }
+        .interactive-question-block .question-text { font-weight: bold; margin-bottom: 8px; font-size: 1em; color: #555; }
+        .interactive-question-block label { display: block; margin-left: 0; padding: 8px 12px; border-radius: 5px; cursor: pointer; border: 1px solid transparent; margin-bottom: 5px; }
+        .interactive-question-block input[type="radio"] { margin-right: 10px; vertical-align: middle; }
+        .interactive-question-block label:hover { background-color: #f0f8ff; }
+        .feedback-correct { background-color: #e8f8f0 !important; border-left: 4px solid #2ecc71 !important; }
+        .feedback-incorrect { background-color: #fdedec !important; border-left: 4px solid #e74c3c !important; }
+        .feedback-correct label.correct-option, .feedback-incorrect label.correct-option { font-weight: bold; color: #1E8449; }
+        .feedback-incorrect label.selected-incorrect { color: #A93226; }
+        .explanation { font-size: 0.9em; color: #444; margin-top: 5px; padding-left: 20px; }
+        .footer { text-align: center; margin-top: 30px; padding-top: 15px; border-top: 1px solid #ccc; font-size: 0.9em; color: #555; }
+
+        .nav-links-header { background-color: #fff; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 50; }
+</style>
+</head>
+<body>
+    <header class="nav-links-header">
+        <div style="max-width:900px;margin:0 auto;padding:12px 20px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;">
+            <strong style="color:#0056b3;">Radiation Effects: Total Body Response &amp; Late Effects</strong>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                <a href="index.html" style="font-size:0.8rem;background:#0056b3;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Back to Activity</a>
+                <a href="../index.html" style="font-size:0.8rem;background:#0056b3;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Radiation Biology Menu</a>
+                <a href="../../index.html" style="font-size:0.8rem;background:#64748b;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Main Workbook</a>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <h1>Radiation Effects: Total Body Response &amp; Late Effects</h1>
+        <div class="flip-lesson-container">
+            <h2>Interactive Lesson</h2>
+            <div id="lesson-page-1" class="lesson-page active">
+                <h3>Page 1: Two Timeframes of Radiation Response</h3>
+                <p>Radiation effects are generally grouped into two timeframes: <strong>early (acute)</strong> changes appearing within about 6 months of exposure, and <strong>late (chronic)</strong> changes appearing more than 6 months later &mdash; often as a consequence of irreversible early changes that progress over time. This lesson covers acute whole-body response first, then late/stochastic effects.</p>
+            </div>
+            <div id="lesson-page-2" class="lesson-page">
+                <h3>Page 2: Requirements for Acute Radiation Syndrome</h3>
+                <p><span class="highlight">Acute Radiation Syndrome (ARS)</span> requires three specific exposure conditions to be met: (1) the exposure must be <strong>acute</strong> (delivered within minutes), (2) it must involve <strong>total-body or near-total-body</strong> exposure, and (3) it must come from an <strong>external, penetrating source</strong> &mdash; not ingested, inhaled, or implanted radioactive material.</p>
+                <p>Human data on ARS comes from a genuinely limited set of sources: industrial and laboratory accidents, nuclear weapons testing fallout, therapeutic medical exposures, Hiroshima and Nagasaki, and the Chernobyl reactor accident.</p>
+            </div>
+            <div id="lesson-page-3" class="lesson-page">
+                <h3>Page 3: The Three Phases of Every Syndrome</h3>
+                <p>Each of the three classic ARS syndromes moves through the same three phases, though timing and severity differ by syndrome and dose:</p>
+                <ol>
+                    <li><strong>Prodromal phase</strong> &mdash; symptoms (gastrointestinal, neurologic, or both) appear, correlating with dose</li>
+                    <li><strong>Latent phase</strong> &mdash; the person appears symptom-free, even though damage is actively progressing internally</li>
+                    <li><strong>Manifest illness phase</strong> &mdash; the effects of exposure become clinically evident, correlating with dose</li>
+                </ol>
+            </div>
+            <div id="lesson-page-4" class="lesson-page">
+                <h3>Page 4: Hematopoietic Syndrome</h3>
+                <p>Induced by total-body doses of <strong>100&ndash;1000 cGy</strong>. The human LD<sub>50/60</sub> (dose lethal to 50% of exposed people within 60 days) is estimated between 350&ndash;450 cGy, varying with age, health, and sex &mdash; females tend to be somewhat more resistant, and the very young and very old somewhat more sensitive.</p>
+                <div class="key-principle">
+                    <p>Prodromal symptoms (nausea, vomiting) appear within hours. The latent phase lasts days to about 3 weeks &mdash; the person feels fine, but bone marrow stem cells are actively dying. The manifest illness phase (3&ndash;5 weeks post-exposure) brings <strong>pancytopenia</strong> (depression of all blood cell counts): anemia (fewer red cells), hemorrhage (fewer platelets), and serious infection (fewer white cells). Death, if it occurs, is primarily from infection and hemorrhage.</p>
+                </div>
+            </div>
+            <div id="lesson-page-5" class="lesson-page">
+                <h3>Page 5: GI and CNS Syndromes</h3>
+                <p><strong>Gastrointestinal (GI) syndrome</strong>: induced by doses of roughly 1000&ndash;10,000 cGy (as low as 600 cGy in some cases). Above 1000 cGy, severe depopulation of intestinal crypt cells causes partial or complete denudation of the villi lining the small intestine &mdash; leading to decreased absorption, fluid leakage into the lumen (dehydration), and bacterial invasion into the bloodstream. Mean survival time is 3&ndash;10 days.</p>
+                <p><strong>Cerebrovascular (CNS) syndrome</strong>: occurs at doses greater than 100 Gy (some sources note overlap with GI syndrome symptoms starting around 5000 cGy). Onset is within a few hours; death typically occurs within 24&ndash;72 hours. No known treatment exists once the syndrome develops &mdash; supportive/comfort care is the only option.</p>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">Which acute radiation syndrome has the shortest survival time and occurs at the highest total-body doses?</p>
+                    <label><input type="radio" name="lq_page5_1" value="A"> Hematopoietic syndrome</label>
+                    <label><input type="radio" name="lq_page5_1" value="B"> Cerebrovascular (CNS) syndrome</label>
+                    <div class="explanation" style="display:none;">B. CNS syndrome occurs at the highest doses (>100 Gy) and has by far the shortest survival time — hours to a few days.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(5)">Check Answer</button>
+            </div>
+            <div id="lesson-page-6" class="lesson-page">
+                <h3>Page 6: Deterministic vs. Stochastic — A Quick Recap</h3>
+                <p>Everything covered so far (hematopoietic, GI, CNS syndromes) is <strong>deterministic</strong>: produced by high doses, with severity increasing above a threshold. From here, this lesson shifts to <strong>stochastic</strong> effects &mdash; low-dose, long-term (chronic) exposure, where increasing dose increases <em>probability</em> of an effect, not its severity, and no threshold is assumed.</p>
+            </div>
+            <div id="lesson-page-7" class="lesson-page">
+                <h3>Page 7: Radiation-Induced Malignancy</h3>
+                <p>Much of what's known about radiation-induced cancer in humans comes from a few major population studies: Hiroshima/Nagasaki atomic bomb survivors, American radiologists (early 20th century), ankylosing spondylitis patients treated with therapeutic radiation, and radium watch-dial painters.</p>
+                <div class="key-principle">
+                    <p><strong>Radiation-induced leukemia</strong> follows a linear, nonthreshold dose-response relationship, with a latent period of 4&ndash;7 years and an at-risk period of about 20 years. Bomb survivor data showed leukemia incidence up to 100 times that of the nonirradiated population at high doses.</p>
+                </div>
+                <p>Other cancers with well-documented radiation associations include <strong>thyroid cancer</strong> (from childhood thymic irradiation and fallout exposure, ~20-year latent period), <strong>bone cancer</strong> (radium watch-dial painters, who ingested radium via paintbrush-tipping habits), <strong>skin cancer</strong> (a threshold effect, unlike most other radiation-induced cancers), and <strong>breast cancer</strong> (from repeated fluoroscopic exams during tuberculosis treatment, and among bomb survivors).</p>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">Unlike most radiation-induced cancers, which one follows a threshold dose-response relationship?</p>
+                    <label><input type="radio" name="lq_page7_1" value="A"> Leukemia</label>
+                    <label><input type="radio" name="lq_page7_1" value="B"> Skin cancer</label>
+                    <div class="explanation" style="display:none;">B. Radiation-induced skin cancer is specifically noted as following a threshold relationship, unlike leukemia and most other radiation-induced malignancies.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(7)">Check Answer</button>
+            </div>
+            <div id="lesson-page-8" class="lesson-page">
+                <h3>Page 8: Risk Estimates — Relative, Excess, and Absolute Risk</h3>
+                <p>Because it's nearly impossible to link any single cancer case to a specific prior radiation exposure, radiobiologists use population-level risk estimates instead:</p>
+                <table class="data-table">
+                    <thead><tr><th>Type</th><th>Formula</th><th>Meaning</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>Relative risk</strong></td><td>Observed cases &divide; Expected cases</td><td>A ratio of 1.0 = no added risk; 1.5 = a 50% higher rate than the unirradiated population</td></tr>
+                        <tr><td><strong>Excess risk</strong></td><td>Observed cases &minus; Expected cases</td><td>The actual number of "extra" cases attributable to radiation</td></tr>
+                        <tr><td><strong>Absolute risk</strong></td><td>Slope of the dose-response line</td><td>Cases per population per unit dose; requires at least two known dose levels</td></tr>
+                    </tbody>
+                </table>
+                <p><strong>Worked example (relative risk):</strong> 227 leukemia cases observed per 100,000 irradiated persons; normal incidence is 150/100,000. Relative risk = 227/150 = <strong>1.51</strong>.</p>
+            </div>
+            <div id="lesson-page-9" class="lesson-page">
+                <h3>Page 9: Radiation and Pregnancy</h3>
+                <p>The developing embryo/fetus is considered separately because radiosensitivity changes dramatically across gestation. The <strong>first trimester is the most radiosensitive period overall</strong>, though the specific type of effect varies by exact timing:</p>
+                <table class="data-table">
+                    <thead><tr><th>Timing</th><th>Possible effect</th></tr></thead>
+                    <tbody>
+                        <tr><td>First 2 weeks</td><td>Spontaneous abortion (all-or-none response — either the pregnancy is lost, or it continues with no observed ill effect)</td></tr>
+                        <tr><td>2nd&ndash;12th weeks (organogenesis)</td><td>Congenital abnormalities, especially CNS; neonatal death if severe enough</td></tr>
+                        <tr><td>2nd trimester onward</td><td>Developmental delays (reduced behavioral/cognitive performance)</td></tr>
+                    </tbody>
+                </table>
+                <p>Human data (including atomic bomb survivor offspring) show measurable IQ/scholastic performance differences and a small increase in microcephaly, particularly following doses in excess of 100 mGy during organogenesis.</p>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">Exposure during which period of pregnancy carries the greatest overall radiosensitivity concern?</p>
+                    <label><input type="radio" name="lq_page9_1" value="A"> First trimester</label>
+                    <label><input type="radio" name="lq_page9_1" value="B"> Third trimester</label>
+                    <div class="explanation" style="display:none;">A. All observations point to the first trimester — particularly the period of organogenesis — as the most radiosensitive window of pregnancy.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(9)">Check Answer</button>
+            </div>
+            <div id="lesson-page-10" class="lesson-page">
+                <h3>Page 10: Genetic Effects</h3>
+                <p>Genetic effects are radiobiology's weakest area of human evidence &mdash; essentially all data comes from large-scale animal studies (H.J. Muller's Nobel Prize-winning fruit fly work in 1927; Russell's multi-generation mouse colony studies beginning in 1946). <strong>No radiation-induced genetic effects have been observed in atomic bomb survivor descendants</strong>, now studied into the third generation.</p>
+                <div class="key-principle">
+                    <p>Key conclusions from the animal data: radiation-induced mutations are usually harmful, any dose to a germ cell carries some genetic risk, the dose-response relationship is linear and nonthreshold, women are less sensitive than men to genetic effects for most of their reproductive life, and most radiation-induced mutations are recessive (requiring the mutant gene in both parents to be expressed).</p>
+                </div>
+                <p>The <strong>doubling dose</strong> &mdash; the dose that would double the spontaneous mutation rate &mdash; is estimated at roughly 0.5&ndash;2.5 Gy in humans.</p>
+            </div>
+            <div id="lesson-page-11" class="lesson-page">
+                <h3>Page 11: Wrap-Up</h3>
+                <p>You've covered the three acute radiation syndromes (hematopoietic, GI, CNS) and their phases, radiation-induced malignancy and the major population studies behind what we know, the three types of risk estimates, radiation effects across pregnancy, and genetic effects.</p>
+                <p>The Radiation Effects activity lets you practice applying these concepts. Click below to begin.</p>
+            </div>
+
+            <div class="lesson-navigation">
+                <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled>Previous Page</button>
+                <span class="page-indicator" id="lessonPageIndicator">Page 1 of 11</span>
+                <button id="nextLessonPage" onclick="changeLessonPage(1)">Next Page</button>
+                <button id="startActivityButton" onclick="window.location.href='index.html'" style="display:none; background-color: #28a745;">Start Activity</button>
+            </div>
+        </div>
+        <div class="footer">Radiation Therapy E-Workbook &mdash; Radiation Biology</div>
+    </div>
+    <script>
+        let currentLessonPage = 1;
+        const totalLessonPages = 11;
+        const lessonPages = document.querySelectorAll('.lesson-page');
+        const prevLessonButton = document.getElementById('prevLessonPage');
+        const nextLessonButton = document.getElementById('nextLessonPage');
+        const lessonPageIndicator = document.getElementById('lessonPageIndicator');
+        const startActivityButton = document.getElementById('startActivityButton');
+        const lessonCorrectAnswers = {"lq_page5_1": "B", "lq_page7_1": "B", "lq_page9_1": "A"};
+        function displayLessonPage() {
+            lessonPages.forEach((page, index) => page.classList.toggle('active', index === currentLessonPage - 1));
+            prevLessonButton.disabled = currentLessonPage === 1;
+            nextLessonButton.style.display = currentLessonPage === totalLessonPages ? 'none' : 'inline-block';
+            startActivityButton.style.display = currentLessonPage === totalLessonPages ? 'inline-block' : 'none';
+            lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
+        }
+        function changeLessonPage(direction) {
+            currentLessonPage += direction;
+            if (currentLessonPage < 1) currentLessonPage = 1;
+            if (currentLessonPage > totalLessonPages) currentLessonPage = totalLessonPages;
+            displayLessonPage();
+        }
+        function checkPageAnswers(pageNumber) {
+            const questionsOnPage = document.querySelectorAll(`#lesson-page-${pageNumber} .interactive-question-block`);
+            questionsOnPage.forEach(block => {
+                const radio = block.querySelector('input[type="radio"]');
+                if (!radio) return;
+                const questionName = radio.name;
+                if (!lessonCorrectAnswers.hasOwnProperty(questionName)) return;
+                const correctAnswerValue = lessonCorrectAnswers[questionName];
+                const selectedRadio = block.querySelector(`input[name="${questionName}"]:checked`);
+                const explanationDiv = block.querySelector('.explanation');
+                block.classList.remove('feedback-correct', 'feedback-incorrect');
+                block.querySelectorAll('label').forEach(label => label.classList.remove('correct-option', 'selected-incorrect'));
+                if (explanationDiv) explanationDiv.style.display = 'none';
+                if (selectedRadio) {
+                    const userAnswer = selectedRadio.value;
+                    const userSelectedLabel = selectedRadio.parentElement;
+                    if (userAnswer === correctAnswerValue) {
+                        block.classList.add('feedback-correct');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('correct-option');
+                    } else {
+                        block.classList.add('feedback-incorrect');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('selected-incorrect');
+                        const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                        if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                    }
+                } else {
+                    block.classList.add('feedback-incorrect');
+                    const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                    if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                }
+                if (explanationDiv) explanationDiv.style.display = 'block';
+            });
+        }
+        displayLessonPage();
+    </script>
+</body>
+</html>
