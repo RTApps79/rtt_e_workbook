@@ -3,13 +3,13 @@ name: Validate image library
 on:
   push:
     paths:
-      - "patient_library/image_sets/**"
-      - "tools/image_library/**"
+      - "apps/patient_library/image_sets/**"
+      - "apps/patient_library/rtapps_image_library/tools/image_library/**"
       - ".github/workflows/validate-image-library.yml"
   pull_request:
     paths:
-      - "patient_library/image_sets/**"
-      - "tools/image_library/**"
+      - "apps/patient_library/image_sets/**"
+      - "apps/patient_library/rtapps_image_library/tools/image_library/**"
 
 permissions:
   contents: read
@@ -27,4 +27,5 @@ jobs:
           python-version: "3.12"
 
       - name: Validate manifests and files
-        run: python tools/image_library/validate_image_library.py --repo-root .
+        run: python apps/patient_library/rtapps_image_library/tools/image_library/validate_image_library.py --repo-root .
+
