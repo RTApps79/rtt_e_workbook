@@ -761,17 +761,20 @@ function buildPatient() {
 
         const localBox = new THREE.Box3().setFromObject(model);
         const localBoxForOrgans = localBox.clone();
-        // Fixed scale of 10, matching the proven-correct value already
-        // used for this same model in apps/ct_4d/index.html. (A formula
-        // based on the model's own natural bounding-box height produced
-        // a wildly oversized result -- the model's file-native units
-        // don't translate the way that assumed.)
-        const scaleFactor = 10;
+        const naturalSize = localBox.getSize(new THREE.Vector3());
+        console.log('[BODY SCALE DEBUG] natural (pre-scale) model size:', naturalSize);
+        console.log('[BODY SCALE DEBUG] couchWidth:', couchWidth, 'couchLength:', couchLength, 'isocenterYTarget:', isocenterYTarget);
+
+        // TEMP: scale of 1 (no scaling) so we can see the model's true
+        // natural size on screen and measure it against the couch.
+        const scaleFactor = 1;
         model.scale.setScalar(scaleFactor);
 
         // Center the scaled model at patientModel's local origin -- this
         // matches roughly where the old torso cylinder was centered.
         const scaledBox = new THREE.Box3().setFromObject(model);
+        const scaledSize = scaledBox.getSize(new THREE.Vector3());
+        console.log('[BODY SCALE DEBUG] scaled model size (at scaleFactor=' + scaleFactor + '):', scaledSize);
         const center = scaledBox.getCenter(new THREE.Vector3());
         model.position.set(-center.x, -center.y, -center.z);
 
