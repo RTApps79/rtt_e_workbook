@@ -754,10 +754,6 @@ function buildPatient() {
     // cylinders/spheres. Loaded async -- tumor/tattoo markers above are
     // already in place by the time newCase() runs, so this swap is purely
     // cosmetic and doesn't block the alignment exercise.
-    // PATIENT_TARGET_HEIGHT approximates the old primitive rig's total
-    // span (head top to foot bottom: 0.715 - (-1.275) = 1.99) so the real
-    // body fills roughly the same space on the couch.
-    const PATIENT_TARGET_HEIGHT = 1.99;
     const loader = new GLTFLoader();
     loader.load('../assets/3d-models/Human_Body_Transparent.glb', (gltf) => {
         const model = gltf.scene || gltf.scenes[0];
@@ -765,8 +761,12 @@ function buildPatient() {
 
         const localBox = new THREE.Box3().setFromObject(model);
         const localBoxForOrgans = localBox.clone();
-        const size = localBox.getSize(new THREE.Vector3());
-        const scaleFactor = PATIENT_TARGET_HEIGHT / (size.y || 1);
+        // Fixed scale of 10, matching the proven-correct value already
+        // used for this same model in apps/ct_4d/index.html. (A formula
+        // based on the model's own natural bounding-box height produced
+        // a wildly oversized result -- the model's file-native units
+        // don't translate the way that assumed.)
+        const scaleFactor = 10;
         model.scale.setScalar(scaleFactor);
 
         // Center the scaled model at patientModel's local origin -- this
