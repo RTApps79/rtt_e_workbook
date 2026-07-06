@@ -1,215 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Thorax Treatment Planning</title>
-<style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; margin: 20px;
-            background-color: #f4f4f4; color: #333; display: flex; flex-direction: column; align-items: center; }
-        .container { background-color: #fff; padding: 25px 35px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            width: 90%; max-width: 900px; margin-bottom: 30px; }
-        h1, h2, h3, h4 { color: #0056b3; }
-        h1 { text-align: center; border-bottom: 2px solid #0056b3; padding-bottom: 15px; margin-bottom: 30px; font-size: 2em; }
-        h2 { border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 30px; margin-bottom: 20px; color: #003d7a; font-size: 1.6em; }
-        h3 { color: #004085; margin-top: 25px; margin-bottom: 15px; font-size: 1.3em; }
-        h4 { color: #17a2b8; margin-top: 20px; margin-bottom: 10px; font-size: 1.1em; font-weight: 600; }
-        p, li { margin-bottom: 12px; font-size: 1.05em; }
-        ul, ol { margin-bottom: 15px; padding-left: 25px; }
-        strong { font-weight: 600; }
-        .highlight { background-color: #e6f7ff; padding: 2px 5px; border-radius: 3px; font-weight: 600; }
-        code { background-color: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; color: #c7254e; }
-        table.data-table { width: 90%; margin: 15px auto; border-collapse: collapse; }
-        table.data-table th, table.data-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-        table.data-table th { background-color: #e9f5ff; color: #0056b3; font-weight: 600; }
-        table.data-table tr:nth-child(even) { background-color: #f9f9f9; }
-        .flip-lesson-container { border: 1px solid #b3d7ff; padding: 20px; border-radius: 8px; background-color: #f0f8ff; margin-bottom: 30px; }
-        .lesson-page { display: none; padding: 15px; border: 1px solid #ddeeff; background-color: #fff; border-radius: 5px; min-height: 400px; }
-        .lesson-page.active { display: block; }
-        .lesson-navigation { text-align: center; margin-top: 20px; }
-        .lesson-navigation button, .lesson-page .check-page-answers {
-            background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px;
-            cursor: pointer; font-size: 1em; margin: 5px 10px; transition: background-color 0.2s; }
-        .lesson-navigation button:hover, .lesson-page .check-page-answers:hover { background-color: #0056b3; }
-        .lesson-navigation button:disabled { background-color: #ccc; cursor: not-allowed; }
-        .page-indicator { font-style: italic; color: #555; margin: 10px 0; }
-        .key-principle { background-color: #e7f3ff; padding: 10px; margin-bottom:10px; border-left: 3px solid #007bff; border-radius: 3px; }
-        .interactive-question-block { background: #f9f9f9; padding: 15px; margin: 20px 0; border: 1px solid #e0e0e0; border-radius: 8px; }
-        .interactive-question-block .question-text { font-weight: bold; margin-bottom: 8px; font-size: 1em; color: #555; }
-        .interactive-question-block label { display: block; margin-left: 0; padding: 8px 12px; border-radius: 5px; cursor: pointer; border: 1px solid transparent; margin-bottom: 5px; }
-        .interactive-question-block input[type="radio"] { margin-right: 10px; vertical-align: middle; }
-        .interactive-question-block label:hover { background-color: #f0f8ff; }
-        .feedback-correct { background-color: #e8f8f0 !important; border-left: 4px solid #2ecc71 !important; }
-        .feedback-incorrect { background-color: #fdedec !important; border-left: 4px solid #e74c3c !important; }
-        .feedback-correct label.correct-option, .feedback-incorrect label.correct-option { font-weight: bold; color: #1E8449; }
-        .feedback-incorrect label.selected-incorrect { color: #A93226; }
-        .explanation { font-size: 0.9em; color: #444; margin-top: 5px; padding-left: 20px; }
-        .footer { text-align: center; margin-top: 30px; padding-top: 15px; border-top: 1px solid #ccc; font-size: 0.9em; color: #555; }
-
-        .nav-links-header { background-color: #fff; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 50; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site-Specific Planning - Main Menu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .hero-banner-x { background: linear-gradient(to right, #4338ca, #7e22ce); }
+    </style>
 </head>
-<body>
-    <header class="nav-links-header">
-        <div style="max-width:900px;margin:0 auto;padding:12px 20px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;">
-            <strong style="color:#0056b3;">Thorax Treatment Planning</strong>
-            <div style="display:flex;flex-wrap:wrap;gap:8px;">
-                <a href="../index.html" style="font-size:0.8rem;background:#0056b3;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Site-Specific Planning Menu</a>
-                <a href="../../../index.html" style="font-size:0.8rem;background:#64748b;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Main Workbook</a>
-            </div>
+<body class="bg-slate-100 text-slate-800 flex flex-col min-h-screen">
+
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4 flex flex-col sm:flex-row justify-between items-center">
+            <h1 class="text-2xl font-bold text-violet-800">Site-Specific Planning</h1>
+            <a href="../index.html" class="mt-2 sm:mt-0 text-sm bg-slate-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-slate-700 transition-colors duration-300">
+                &larr; Back to Treatment Planning
+            </a>
         </div>
     </header>
-    <div class="container">
-        <h1>Thorax Treatment Planning</h1>
-        <div class="flip-lesson-container">
-            <h2>Interactive Lesson</h2>
-            <div id="lesson-page-1" class="lesson-page active">
-                <h3>Page 1: Respiratory Motion Defines This Site</h3>
-                <p>Lung tumors can move a full 1&ndash;3 cm (sometimes more) with normal breathing, especially in the lower lobes. Nearly every planning decision for thoracic treatment traces back to managing this motion accurately.</p>
+
+    <section class="hero-banner-x text-white py-14 px-6 text-center">
+        <div class="container mx-auto">
+            <h2 class="text-4xl font-bold mb-4">Site-Specific Treatment Planning</h2>
+            <p class="text-lg mb-4">Organized around ARRT's actual Simulation and Radiation Treatment Procedure categories — not a generic disease-site list — so this page doubles as a competency cross-reference.</p>
+        </div>
+    </section>
+
+    <div class="bg-indigo-950 text-indigo-100 py-4 px-6">
+      <div class="container mx-auto text-sm">
+        <span class="font-bold uppercase tracking-wide text-indigo-300">ARRT Clinical Competency Cross-Reference</span>
+        <div class="mt-2 flex flex-wrap gap-2">
+<span class="bg-indigo-800 text-indigo-100 text-xs font-mono px-2 py-1 rounded">6 Simulation Procedures</span>
+<span class="bg-indigo-800 text-indigo-100 text-xs font-mono px-2 py-1 rounded">16 Radiation Treatment Procedures</span>
+<span class="bg-indigo-800 text-indigo-100 text-xs font-mono px-2 py-1 rounded">ARRT 2022 requirements, effective through Jan 31 2027</span>
+        </div>
+      </div>
+    </div>
+
+    <main class="container mx-auto px-6 py-12 flex-grow">
+        <div class="max-w-2xl mx-auto text-center mb-10">
+            <span class="inline-block text-xs font-bold uppercase tracking-wide bg-amber-100 text-amber-700 px-3 py-1 rounded-full mb-4">Module under construction</span>
+            <p class="text-slate-600">Every site below maps directly to an ARRT Clinical Competency Requirement. Sites with several named sub-techniques (Breast, Skeletal, Brain, Pelvis) list them individually.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col">
+                <h3 class="text-xl font-semibold mb-2 text-violet-700">Brain</h3>
+                <p class="text-[11px] font-mono text-indigo-500 mb-2">Simulation: Brain &middot; Treatment: Primary / Metastatic</p>
+                <p class="text-slate-600 mb-4 text-sm flex-grow">Positioning/immobilization, GTV/CTV/PTV definitions, OAR dose constraints, and dose/fractionation by tumor type — with a Treatment Planning Suite brain case.</p>
+                <a href="Brain/" class="mt-auto inline-block bg-violet-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-violet-700 transition-colors duration-300 text-center">
+                    Open Brain
+                </a>
             </div>
-            <div id="lesson-page-2" class="lesson-page">
-                <h3>Page 2: 4D-CT and the ITV</h3>
-                <div class="key-principle">
-                    <p><strong>4D-CT simulation</strong> acquires CT data correlated with the breathing cycle, producing a set of images at different respiratory phases. The tumor position across all phases is combined into an <strong>Internal Target Volume (ITV)</strong> &mdash; the CTV expanded to cover its own physiologic motion, <em>before</em> the setup-margin PTV expansion is added on top.</p>
-                </div>
-                <h4>Quick Check!</h4>
-                <div class="interactive-question-block">
-                    <p class="question-text">What does the ITV specifically account for, that the CTV alone does not?</p>
-                    <label><input type="radio" name="lq_page2_1" value="A"> Daily setup error</label>
-                    <label><input type="radio" name="lq_page2_1" value="B"> The target's own physiologic motion (e.g., breathing)</label>
-                    <div class="explanation" style="display:none;">B. ITV specifically captures internal physiologic motion; setup error is accounted for separately in the PTV margin added on top of the ITV.</div>
-                </div>
-                <button class="check-page-answers" onclick="checkPageAnswers(2)">Check Answer</button>
+            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col">
+                <h3 class="text-xl font-semibold mb-2 text-violet-700">Head &amp; Neck</h3>
+                <p class="text-[11px] font-mono text-indigo-500 mb-2">Simulation: Head and Neck &middot; Treatment: Multi-field</p>
+                <p class="text-slate-600 mb-4 text-sm flex-grow">The vertebral-level anatomy roadmap from nasopharynx to esophagus — with a Treatment Planning Suite larynx case for hands-on localization.</p>
+                <a href="Head_and_Neck/" class="mt-auto inline-block bg-violet-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-violet-700 transition-colors duration-300 text-center">
+                    Open Head & Neck
+                </a>
             </div>
-            <div id="lesson-page-3" class="lesson-page">
-                <h3>Page 3: Motion Management Options</h3>
-                <table class="data-table">
-                    <thead><tr><th>Approach</th><th>How it works</th></tr></thead>
-                    <tbody>
-                        <tr><td><strong>ITV-based planning</strong></td><td>Treat the full motion envelope; simplest, but larger field, more normal lung dose</td></tr>
-                        <tr><td><strong>Respiratory gating</strong></td><td>Beam is only on during a specific part of the breathing cycle (commonly end-exhale)</td></tr>
-                        <tr><td><strong>Breath-hold (DIBH)</strong></td><td>Patient holds a reproducible breath; also pulls the heart away from the chest wall, similar to breast DIBH</td></tr>
-                        <tr><td><strong>Abdominal compression</strong></td><td>A compression plate physically restricts diaphragm excursion, reducing motion amplitude</td></tr>
-                    </tbody>
-                </table>
+            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col">
+                <h3 class="text-xl font-semibold mb-2 text-violet-700">Thorax</h3>
+                <p class="text-[11px] font-mono text-indigo-500 mb-2">Simulation: Thorax &middot; Treatment: Multi-field / IMRT &amp; VMAT</p>
+                <p class="text-slate-600 mb-4 text-sm flex-grow">4D-CT and the ITV, motion management (gating/DIBH/compression), Lung V20 and other OAR constraints, and conventional vs. SBRT technique.</p>
+                <a href="Thorax/" class="mt-auto inline-block bg-violet-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-violet-700 transition-colors duration-300 text-center">
+                    Open Thorax
+                </a>
             </div>
-            <div id="lesson-page-4" class="lesson-page">
-                <h3>Page 4: Target Volumes</h3>
-                <p>Thoracic target volumes follow the same motion-aware sequence as the abdomen, plus a nodal consideration specific to lung disease:</p>
-                <table class="data-table">
-                    <thead><tr><th>Volume</th><th>Thorax-specific consideration</th></tr></thead>
-                    <tbody>
-                        <tr><td><strong>GTV</strong></td><td>Primary tumor, contoured on lung windows; PET/CT fusion is commonly used to help distinguish tumor from atelectasis (collapsed lung)</td></tr>
-                        <tr><td><strong>CTV</strong></td><td>GTV plus a margin for microscopic spread; for locally advanced disease, involved mediastinal/hilar nodal stations are included as a separate nodal CTV</td></tr>
-                        <tr><td><strong>ITV</strong></td><td>CTV expanded to cover the full respiratory motion envelope captured on 4D-CT &mdash; often the single largest expansion in the whole sequence for a lower-lobe tumor</td></tr>
-                        <tr><td><strong>PTV</strong></td><td>ITV plus setup margin; for early-stage SBRT, margins are kept as tight as the motion-management technique allows, since the dose per fraction is ablative</td></tr>
-                    </tbody>
-                </table>
-                <h4>Quick Check!</h4>
-                <div class="interactive-question-block">
-                    <p class="question-text">Why might a lower-lobe lung tumor need a larger ITV expansion than an upper-lobe tumor?</p>
-                    <label><input type="radio" name="lq_page4_1" value="A"> Lower-lobe tumors typically move more with respiration, closer to the diaphragm</label>
-                    <label><input type="radio" name="lq_page4_1" value="B"> ITV size doesn't vary by tumor location</label>
-                    <div class="explanation" style="display:none;">A. Tumors closer to the diaphragm generally experience greater respiratory excursion, which directly increases how much the ITV needs to expand to cover that motion.</div>
-                </div>
-                <button class="check-page-answers" onclick="checkPageAnswers(4)">Check Answer</button>
+            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col">
+                <h3 class="text-xl font-semibold mb-2 text-violet-700">Breast</h3>
+                <p class="text-[11px] font-mono text-indigo-500 mb-2">Simulation: Breast &middot; Treatment: 4 sub-techniques</p>
+                <p class="text-slate-600 mb-4 text-sm flex-grow">Conventional/hypofractionation/APBI schedules, VMAT vs. 3D-CRT, DIBH for left-sided cases, and OAR constraints — with a Treatment Planning Suite left-sided breast case.</p>
+                <a href="Breast/" class="mt-auto inline-block bg-violet-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-violet-700 transition-colors duration-300 text-center">
+                    Open Breast
+                </a>
             </div>
-            <div id="lesson-page-5" class="lesson-page">
-                <h3>Page 5: Organ-at-Risk Constraints</h3>
-                <table class="data-table">
-                    <thead><tr><th>Structure</th><th>Constraint (conventional fractionation)</th></tr></thead>
-                    <tbody>
-                        <tr><td>Total lung (both, minus GTV)</td><td>V20 &le; 30&ndash;35%, mean lung dose &le; 20 Gy</td></tr>
-                        <tr><td>Esophagus</td><td>Mean dose &le; 34 Gy</td></tr>
-                        <tr><td>Heart</td><td>Mean dose &le; 26 Gy; V30 &le; 45%</td></tr>
-                        <tr><td>Spinal cord</td><td>&le; 45&ndash;50 Gy</td></tr>
-                        <tr><td>Brachial plexus</td><td>&le; 60 Gy (relevant for apical/superior sulcus tumors)</td></tr>
-                    </tbody>
-                </table>
-                <p><strong>Lung V20</strong> &mdash; the percentage of total lung volume receiving 20 Gy or more &mdash; is one of the single most-quoted constraints in thoracic planning, since it correlates directly with pneumonitis risk.</p>
-                <h4>Quick Check!</h4>
-                <div class="interactive-question-block">
-                    <p class="question-text">What does "Lung V20" specifically describe?</p>
-                    <label><input type="radio" name="lq_page5_1" value="A"> The percentage of lung volume receiving at least 20 Gy</label>
-                    <label><input type="radio" name="lq_page5_1" value="B"> The number of lung fields used in the plan</label>
-                    <div class="explanation" style="display:none;">A. V20 is a dose-volume metric — the fraction of total lung volume receiving 20 Gy or more, a key predictor of pneumonitis risk.</div>
-                </div>
-                <button class="check-page-answers" onclick="checkPageAnswers(5)">Check Answer</button>
+            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col">
+                <h3 class="text-xl font-semibold mb-2 text-violet-700">Abdomen</h3>
+                <p class="text-[11px] font-mono text-indigo-500 mb-2">Treatment: Multi-field</p>
+                <p class="text-slate-600 mb-4 text-sm flex-grow">Respiratory motion management (4D-CT, ITV), OAR constraints (liver, kidney, bowel), and IMRT/VMAT vs. SBRT.</p>
+                <a href="Abdomen/" class="mt-auto inline-block bg-violet-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-violet-700 transition-colors duration-300 text-center">
+                    Open Abdomen
+                </a>
             </div>
-            <div id="lesson-page-6" class="lesson-page">
-                <h3>Page 6: Techniques — Conventional vs. SBRT</h3>
-                <p><strong>Conventionally fractionated IMRT/VMAT</strong> (commonly 60&ndash;66 Gy in 30&ndash;33 fractions) is standard for locally advanced disease. <strong>SBRT</strong> (commonly 48&ndash;54 Gy in 3&ndash;5 fractions) has become the standard of care for medically inoperable, early-stage (small, peripheral) lung tumors &mdash; delivering ablative dose in far fewer fractions, which demands excellent immobilization, motion management, and image guidance given how little margin for error exists at that dose per fraction.</p>
+            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col">
+                <h3 class="text-xl font-semibold mb-2 text-violet-700">Pelvis</h3>
+                <p class="text-[11px] font-mono text-indigo-500 mb-2">Simulation: Pelvis &middot; Treatment: Supine / Prone</p>
+                <p class="text-slate-600 mb-4 text-sm flex-grow">Supine vs. prone positioning, bladder/rectum protocols, OAR constraints, and VMAT/brachytherapy — spans prostate, cervical, uterine, rectal, and anal disease.</p>
+                <a href="Pelvis/" class="mt-auto inline-block bg-violet-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-violet-700 transition-colors duration-300 text-center">
+                    Open Pelvis
+                </a>
             </div>
-            <div id="lesson-page-7" class="lesson-page">
-                <h3>Page 7: Wrap-Up</h3>
-                <p>You've covered why respiratory motion dominates thoracic planning, 4D-CT and the ITV concept, the four motion-management approaches, thorax-specific target volume considerations, key OAR constraints (especially Lung V20), and conventional vs. SBRT technique selection with typical dose ranges.</p>
+            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col">
+                <h3 class="text-xl font-semibold mb-2 text-violet-700">Skeletal</h3>
+                <p class="text-[11px] font-mono text-indigo-500 mb-2">Simulation: Skeletal &middot; Treatment: Spine / Extremity</p>
+                <p class="text-slate-600 mb-4 text-sm flex-grow">Palliative fractionation options, the demanding cord-sparing constraints of spine SBRT, and extremity treatment considerations.</p>
+                <a href="Skeletal/" class="mt-auto inline-block bg-violet-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-violet-700 transition-colors duration-300 text-center">
+                    Open Skeletal
+                </a>
             </div>
 
-            <div class="lesson-navigation">
-                <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled>Previous Page</button>
-                <span class="page-indicator" id="lessonPageIndicator">Page 1 of 7</span>
-                <button id="nextLessonPage" onclick="changeLessonPage(1)">Next Page</button>
-                <button id="startActivityButton" onclick="window.location.href='../../Treatment_Planning_Suite/index.html?dataset=demo'" style="display:none; background-color: #28a745;">Open Treatment Planning Suite</button>
-            </div>
         </div>
-        <div class="footer">Radiation Therapy E-Workbook &mdash; Medical Dosimetry</div>
-    </div>
+
+    </main>
+
+    <footer class="bg-slate-800 text-slate-300 py-8 mt-12 text-center">
+        <div class="container mx-auto px-6">
+            <p>&copy; <span id="currentYear"></span> Radiation Therapy E-Workbook. All Rights Reserved.</p>
+            <p class="text-sm mt-1">Site-Specific Planning Module</p>
+        </div>
+    </footer>
+
     <script>
-        let currentLessonPage = 1;
-        const totalLessonPages = 7;
-        const lessonPages = document.querySelectorAll('.lesson-page');
-        const prevLessonButton = document.getElementById('prevLessonPage');
-        const nextLessonButton = document.getElementById('nextLessonPage');
-        const lessonPageIndicator = document.getElementById('lessonPageIndicator');
-        const startActivityButton = document.getElementById('startActivityButton');
-        const lessonCorrectAnswers = {"lq_page2_1": "B", "lq_page4_1": "A", "lq_page5_1": "A"};
-        function displayLessonPage() {
-            lessonPages.forEach((page, index) => page.classList.toggle('active', index === currentLessonPage - 1));
-            prevLessonButton.disabled = currentLessonPage === 1;
-            nextLessonButton.style.display = currentLessonPage === totalLessonPages ? 'none' : 'inline-block';
-            startActivityButton.style.display = currentLessonPage === totalLessonPages ? 'inline-block' : 'none';
-            lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
-        }
-        function changeLessonPage(direction) {
-            currentLessonPage += direction;
-            if (currentLessonPage < 1) currentLessonPage = 1;
-            if (currentLessonPage > totalLessonPages) currentLessonPage = totalLessonPages;
-            displayLessonPage();
-        }
-        function checkPageAnswers(pageNumber) {
-            const questionsOnPage = document.querySelectorAll(`#lesson-page-${pageNumber} .interactive-question-block`);
-            questionsOnPage.forEach(block => {
-                const radio = block.querySelector('input[type="radio"]');
-                if (!radio) return;
-                const questionName = radio.name;
-                if (!lessonCorrectAnswers.hasOwnProperty(questionName)) return;
-                const correctAnswerValue = lessonCorrectAnswers[questionName];
-                const selectedRadio = block.querySelector(`input[name="${questionName}"]:checked`);
-                const explanationDiv = block.querySelector('.explanation');
-                block.classList.remove('feedback-correct', 'feedback-incorrect');
-                block.querySelectorAll('label').forEach(label => label.classList.remove('correct-option', 'selected-incorrect'));
-                if (explanationDiv) explanationDiv.style.display = 'none';
-                if (selectedRadio) {
-                    const userAnswer = selectedRadio.value;
-                    const userSelectedLabel = selectedRadio.parentElement;
-                    if (userAnswer === correctAnswerValue) {
-                        block.classList.add('feedback-correct');
-                        if (userSelectedLabel) userSelectedLabel.classList.add('correct-option');
-                    } else {
-                        block.classList.add('feedback-incorrect');
-                        if (userSelectedLabel) userSelectedLabel.classList.add('selected-incorrect');
-                        const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
-                        if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
-                    }
-                } else {
-                    block.classList.add('feedback-incorrect');
-                    const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
-                    if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
-                }
-                if (explanationDiv) explanationDiv.style.display = 'block';
-            });
-        }
-        displayLessonPage();
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
     </script>
+
 </body>
 </html>
