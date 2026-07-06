@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """Validate RTApps image-set catalog, manifests, files, hashes, and GitHub limits."""
 
 from __future__ import annotations
@@ -36,7 +36,7 @@ def main() -> int:
     args = parser.parse_args()
 
     repo_root = Path(args.repo_root).resolve()
-    library_root = repo_root / "patient_library" / "image_sets"
+    library_root = repo_root / "apps" / "patient_library" / "image_sets"
     catalog_path = library_root / "catalog.json"
     errors: list[str] = []
     warnings: list[str] = []
@@ -132,3 +132,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
