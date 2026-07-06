@@ -86,7 +86,7 @@ padding: 6px 12px; font-size: 13px; box-shadow: 0 4px 10px rgba(0,0,0,0.12); z-i
 </style>
 
 <script type="importmap">
-{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js", "three/examples/jsm/controls/OrbitControls.js": "https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/controls/OrbitControls.js" } }
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js", "three/examples/jsm/controls/OrbitControls.js": "https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/controls/OrbitControls.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/" } }
 </script>
 </head>
 <body>
@@ -261,6 +261,8 @@ padding: 6px 12px; font-size: 13px; box-shadow: 0 4px 10px rgba(0,0,0,0.12); z-i
 <script type="module">
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { addOrganTumors, buildTumorTogglePanel } from '../assets/3d-models/organ-tumor-overlay.js';
 
 // ===== Core Scene =====
 let camera, scene, renderer, controls;
@@ -729,7 +731,71 @@ gantryRotatingAssembly.add(wgRotatingHoriz);
 }
 
 function buildCouch() { couchGroup = new THREE.Group(); window.couchGroup = couchGroup; initialCouchY = (couchBaseHeight/2) + groundY; couchGroup.position.set(0, initialCouchY, gantryPlaneZTarget + couchSeparationOffset); scene.add(couchGroup); enableShadows(couchGroup); couchSupportBase = new THREE.Mesh(new THREE.BoxGeometry(couchWidth * 0.8, couchBaseHeight, couchLength * 0.5), lightBeigeMat); couchSupportBase.position.y = 0; couchGroup.add(couchSupportBase); couchTopGroup = new THREE.Group(); window.couchTopGroup = couchTopGroup; couchTopGroup.position.y = (couchBaseHeight/2) + (couchPlatformHeight/2); couchTopGroup.position.z = 0; couchGroup.add(couchTopGroup); couchPlatform = new THREE.Mesh(new THREE.BoxGeometry(couchWidth, couchPlatformHeight, couchLength), mediumGrayMat); couchTopGroup.add(couchPlatform); couchAccordion = new THREE.Group(); couchAccordion.position.set(couchGroup.position.x, groundY, couchGroup.position.z); scene.add(couchAccordion); enableShadows(couchAccordion); couchAccordionVisual = new THREE.Mesh(new THREE.BoxGeometry(couchWidth * 0.7, accordionGeometricHeight, couchLength * 0.4), darkGrayMatMaterial); couchAccordionVisual.position.y = accordionGeometricHeight/2; couchAccordion.add(couchAccordionVisual); updateAccordion(); }
-function buildPatient() { patientModel = new THREE.Group(); couchTopGroup.add(patientModel); const torso = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.26, 0.75, 20), patientMat); torso.castShadow = true; patientModel.add(torso); const neck  = new THREE.Mesh(new THREE.CylinderGeometry(0.10, 0.10, 0.12, 16), patientMat); neck.position.set(0, 0.75/2 + 0.08, 0); patientModel.add(neck); const headS = new THREE.Mesh(new THREE.SphereGeometry(0.14, 20, 20), patientMat); headS.position.set(0, neck.position.y + 0.12, 0); headS.scale.set(0.8, 1, 1); patientModel.add(headS); const armGeo = new THREE.CylinderGeometry(0.07, 0.06, 0.70, 12); const leftArm = new THREE.Mesh(armGeo, patientMat); leftArm.position.set(-0.32, 0.0, 0); patientModel.add(leftArm); const rightArm= new THREE.Mesh(armGeo, patientMat); rightArm.position.set( 0.32, 0.0, 0); patientModel.add(rightArm); const legGeo = new THREE.CylinderGeometry(0.12, 0.09, 0.85, 12); const leftLeg = new THREE.Mesh(legGeo, patientMat); leftLeg.position.set(-0.12, -0.85, 0); patientModel.add(leftLeg); const rightLeg= new THREE.Mesh(legGeo, patientMat); rightLeg.position.set( 0.12, -0.85, 0); patientModel.add(rightLeg); tumor = new THREE.Mesh(new THREE.SphereGeometry(0.05, 24, 24), tumorMat); tumor.renderOrder = 2; patientModel.add(tumor); const tatGeo = new THREE.SphereGeometry(0.012, 12, 12); tattooAnterior = new THREE.Mesh(tatGeo, tattooMat); tattooLeft = new THREE.Mesh(tatGeo, tattooMat); tattooRight = new THREE.Mesh(tatGeo, tattooMat); [tattooAnterior, tattooLeft, tattooRight].forEach(t => { t.renderOrder = 3; patientModel.add(t); }); patientModel.rotation.x = -Math.PI/2; const patientOnCouchY = (couchPlatformHeight / 2) + 0.28 + 0.01; patientModel.position.set(0, patientOnCouchY, -0.3); }
+function buildPatient() {
+    patientModel = new THREE.Group();
+    couchTopGroup.add(patientModel);
+
+    // Alignment-exercise markers (unchanged from the original primitive
+    // rig): these drive newCase()/checkAlignment()/centerCouch() and must
+    // keep these exact names, parenting, and initial transform.
+    tumor = new THREE.Mesh(new THREE.SphereGeometry(0.05, 24, 24), tumorMat);
+    tumor.renderOrder = 2;
+    patientModel.add(tumor);
+    const tatGeo = new THREE.SphereGeometry(0.012, 12, 12);
+    tattooAnterior = new THREE.Mesh(tatGeo, tattooMat);
+    tattooLeft = new THREE.Mesh(tatGeo, tattooMat);
+    tattooRight = new THREE.Mesh(tatGeo, tattooMat);
+    [tattooAnterior, tattooLeft, tattooRight].forEach(t => { t.renderOrder = 3; patientModel.add(t); });
+    patientModel.rotation.x = -Math.PI / 2;
+    const patientOnCouchY = (couchPlatformHeight / 2) + 0.28 + 0.01;
+    patientModel.position.set(0, patientOnCouchY, -0.3);
+
+    // Visible body: the real GLB model, replacing the old primitive
+    // cylinders/spheres. Loaded async -- tumor/tattoo markers above are
+    // already in place by the time newCase() runs, so this swap is purely
+    // cosmetic and doesn't block the alignment exercise.
+    // PATIENT_TARGET_HEIGHT approximates the old primitive rig's total
+    // span (head top to foot bottom: 0.715 - (-1.275) = 1.99) so the real
+    // body fills roughly the same space on the couch.
+    const PATIENT_TARGET_HEIGHT = 1.99;
+    const loader = new GLTFLoader();
+    loader.load('../assets/3d-models/Human_Body_Transparent.glb', (gltf) => {
+        const model = gltf.scene || gltf.scenes[0];
+        model.traverse((node) => { if (node.isMesh) { node.castShadow = node.receiveShadow = true; } });
+
+        const localBox = new THREE.Box3().setFromObject(model);
+        const localBoxForOrgans = localBox.clone();
+        const size = localBox.getSize(new THREE.Vector3());
+        const scaleFactor = PATIENT_TARGET_HEIGHT / (size.y || 1);
+        model.scale.setScalar(scaleFactor);
+
+        // Center the scaled model at patientModel's local origin -- this
+        // matches roughly where the old torso cylinder was centered.
+        const scaledBox = new THREE.Box3().setFromObject(model);
+        const center = scaledBox.getCenter(new THREE.Vector3());
+        model.position.set(-center.x, -center.y, -center.z);
+
+        // No extra rotation here: patientModel already carries the -90deg
+        // rotation that lays everything supine on the couch.
+        patientModel.add(model);
+
+        const organTumorResult = addOrganTumors(model, THREE, { localBox: localBoxForOrgans });
+        buildTumorTogglePanel(organTumorResult.tumors, undefined, { title: 'Tumor Masses' });
+    }, undefined, (err) => {
+        console.error('Failed to load GLB patient body in 3D_LINAC, using fallback cylinder:', err);
+        const fallbackGeo = new THREE.CylinderGeometry(0.28, 0.26, 0.75, 20);
+        const fallbackMesh = new THREE.Mesh(fallbackGeo, patientMat);
+        fallbackMesh.castShadow = true;
+        patientModel.add(fallbackMesh);
+
+        const fallbackLocalBox = new THREE.Box3(
+            new THREE.Vector3(-0.28, -0.375, -0.28),
+            new THREE.Vector3(0.28, 0.375, 0.28)
+        );
+        const organTumorResultFallback = addOrganTumors(fallbackMesh, THREE, { localBox: fallbackLocalBox });
+        buildTumorTogglePanel(organTumorResultFallback.tumors, undefined, { title: 'Tumor Masses' });
+    });
+}
 function buildLasers() { const laserMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, depthTest: false, transparent: true, opacity: 0.95 }); const laserLen = 30, laserRadius = 0.01; const geo = new THREE.CylinderGeometry(laserRadius, laserRadius, laserLen, 8); laserX = new THREE.Mesh(geo, laserMaterial); laserX.rotation.z = Math.PI/2; scene.add(laserX); laserY = new THREE.Mesh(geo, laserMaterial); scene.add(laserY); laserZ = new THREE.Mesh(geo, laserMaterial); laserZ.rotation.x = Math.PI/2; scene.add(laserZ); [laserX, laserY, laserZ].forEach(l => { l.renderOrder = 10; }); }
 function hookLabels() { const ids = ['drivestand','connectingArm','acceleratorHousing','verticalArmL','head','couchBase','couchTop','couchAccordion','detectorPanel','sideDetectorPanel','kvTube','electronCone','axisX','axisY','axisZ','electronGun','waveguide','target','klystron','klystronWaveguide']; ids.forEach(id => labels[id] = document.getElementById('label-'+id)); const xAxisLabelObj = new THREE.Object3D(); xAxisLabelObj.position.set(3.2,0,0); scene.add(xAxisLabelObj); const yAxisLabelObj = new THREE.Object3D(); yAxisLabelObj.position.set(0,3.2,0); scene.add(yAxisLabelObj); const zAxisLabelObj = new THREE.Object3D(); zAxisLabelObj.position.set(0,0,3.2); scene.add(zAxisLabelObj); labeledObjects.push({ object: drivestand, label: labels.drivestand, name: 'Drivestand' }); labeledObjects.push({ object: connectingArm, label: labels.connectingArm, name: 'Connecting Arm' }); labeledObjects.push({ object: acceleratorHousing, label: labels.acceleratorHousing, name: 'Accelerator Housing' }); labeledObjects.push({ object: verticalArmL, label: labels.verticalArmL, name: 'Vertical Arm' }); labeledObjects.push({ object: head, label: labels.head, name: 'Head' }); labeledObjects.push({ object: couchSupportBase, label: labels.couchBase, name: 'Couch Base' }); labeledObjects.push({ object: couchPlatform, label: labels.couchTop, name: 'Couch Top' }); labeledObjects.push({ object: couchAccordionVisual, label: labels.couchAccordion, name: 'Accordion' }); labeledObjects.push({ object: detectorPanel, label: labels.detectorPanel, name: 'MV Detector Panel' }); labeledObjects.push({ object: sideDetectorPanel, label: labels.sideDetectorPanel, name: 'kV Detector Panel' }); labeledObjects.push({ object: kvTubeHousing, label: labels.kvTube, name: 'kV X-Ray Tube' }); labeledObjects.push({ object: electronCone, label: labels.electronCone, name: 'Electron Cone' }); labeledObjects.push({ object: xAxisLabelObj, label: labels.axisX, name: 'X-Axis' }); labeledObjects.push({ object: yAxisLabelObj, label: labels.axisY, name: 'Y-Axis' }); labeledObjects.push({ object: zAxisLabelObj, label: labels.axisZ, name: 'Z-Axis' }); labeledObjects.push({ object: electronGun, label: labels.electronGun, name: 'Electron Gun' }); labeledObjects.push({ object: waveguide, label: labels.waveguide, name: 'Waveguide (Acc.)' }); labeledObjects.push({ object: target, label: labels.target, name: 'Target' }); labeledObjects.push({ object: klystron, label: labels.klystron, name: 'Klystron' }); labeledObjects.push({ object: wgStaticHoriz, label: labels.klystronWaveguide, name: 'Waveguide (Klystron)' }); updateAllLabelVisibility(); }
 function newCase() { tumorLocalOffset.set((Math.random()-0.5)*0.12, (Math.random()-0.2)*0.40, (Math.random()-0.5)*0.12); tumor.position.copy(tumorLocalOffset); const torsoParams = { height: 0.75, radiusTop: 0.28, radiusBottom: 0.26 }; const y_norm = (tumorLocalOffset.y + torsoParams.height/2) / torsoParams.height; const radiusAtY = torsoParams.radiusBottom + (torsoParams.radiusTop - torsoParams.radiusBottom) * y_norm; tattooAnterior.position.set(tumorLocalOffset.x, tumorLocalOffset.y, radiusAtY); tattooLeft.position.set(-radiusAtY, tumorLocalOffset.y, tumorLocalOffset.z); tattooRight.position.set(radiusAtY, tumorLocalOffset.y, tumorLocalOffset.z); couchTopGroup.position.x = (Math.random()-0.5) * 0.20; couchTopGroup.position.z = (Math.random()-0.5) * 0.30; couchGroup.position.y    = (couchBaseHeight/2) + groundY + 0.20 + Math.random()*0.20; constrainCouch(); updateReadouts(); alignmentMessageElement.style.color = '#333'; alignmentMessageElement.textContent = 'Use couch/nudge controls to bring tattoos to laser lines.'; LearningModule.checkAlignmentSuccess(); }
