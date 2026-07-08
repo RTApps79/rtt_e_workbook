@@ -3,146 +3,129 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cross-sectional Anatomy Module</title>
-  
-
+  <title>Sectional Anatomy - Module Menu</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      line-height: 1.6;
-      margin: 20px;
-      background-color: #f4f4f4;
-      color: #333;
-    }
-    .container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      max-width: 1200px;
-      margin: auto;
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    .anatomy-content {
-      flex: 2;
-      min-width: 300px;
-    }
-    .dicom-viewer-container {
-      flex: 3;
-      min-width: 400px;
-      background-color: #000;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border-radius: 4px;
-      overflow: hidden;
-      position: relative;
-    }
-    #dwv {
-      width: 100%;
-      height: 100%;
-      min-height: 500px;
-    }
-    .toolbar {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      z-index: 10;
-      background-color: rgba(255,255,255,0.8);
-      padding: 5px;
-      border-radius: 5px;
-      display: flex;
-      gap: 5px;
-    }
-    .toolbar button {
-      padding: 8px 12px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    .toolbar button:hover {
-      background-color: #0056b3;
-    }
-    #status {
-      position: absolute;
-      bottom: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      background-color: rgba(255, 255, 255, 0.8);
-      padding: 5px 10px;
-      border-radius: 4px;
-      font-weight: bold;
-    }
+    body { font-family: 'Inter', sans-serif; }
+    .hero-banner-sa { background: linear-gradient(to right, #0056b3, #17a2b8); }
   </style>
 </head>
-<body>
-  <div class="container">
-    <div class="anatomy-content">
-      <h1>Cross-sectional Anatomy: Abdomen (Axial View)</h1>
-      <p>
-        This module explores the axial cross-sections of the abdomen, focusing on key anatomical structures visible in medical imaging. Use the DICOM viewer on the right to navigate through the slices and identify the labeled structures.
-      </p>
-      <h3>Key Structures to Identify:</h3>
-      <ul>
-        <li><strong>Liver:</strong> Largest organ in the abdomen, typically on the right side.</li>
-        <li><strong>Spleen:</strong> Located in the upper left abdomen, posterior to the stomach.</li>
-        <li><strong>Kidneys:</strong> Paired organs, retroperitoneal, usually visible on either side of the spine.</li>
-        <li><strong>Aorta:</strong> Large artery running anterior to the spine.</li>
-        <li><strong>IVC (Inferior Vena Cava):</strong> Large vein, typically to the right of the aorta.</li>
-        <li><strong>Vertebral Body:</strong> The bony part of the spine.</li>
-      </ul>
-    </div>
+<body class="bg-slate-100 text-slate-800 flex flex-col min-h-screen">
 
-    <div class="dicom-viewer-container">
-      <div id="dwv"></div>
-      <div class="toolbar">
-        <button onclick="app.setTool('Scroll');">Scroll</button>
-        <button onclick="app.setTool('ZoomAndPan');">Zoom</button>
-        <button onclick="app.setTool('WindowLevel');">Window/Level</button>
+  <header class="bg-white shadow-md sticky top-0 z-50">
+    <div class="container mx-auto px-6 py-4 flex flex-col sm:flex-row justify-between items-center">
+      <h1 class="text-2xl font-bold text-blue-800">Sectional Anatomy</h1>
+      <a href="../index.html" class="mt-2 sm:mt-0 text-sm bg-slate-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-slate-700 transition-colors duration-300">
+        &larr; Main Workbook
+      </a>
+    </div>
+  </header>
+
+  <section class="hero-banner-sa text-white py-14 px-6 text-center">
+    <div class="container mx-auto">
+      <h2 class="text-4xl font-bold mb-4">Cross-Sectional Anatomy for Imaging &amp; Verification</h2>
+      <p class="text-lg max-w-3xl mx-auto">Identify anatomy on axial, coronal, and sagittal imaging and connect it to daily anatomic verification. The region lessons below mirror the Site-Specific Planning topics, focused on landmark identification, vertebral-level references, and image-guided matching.</p>
+    </div>
+  </section>
+
+  <main class="container mx-auto px-6 py-12 flex-grow">
+
+    <!-- Foundations -->
+    <div class="max-w-3xl mx-auto mb-12">
+      <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 border-blue-600 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <span class="inline-block text-[10px] font-bold uppercase tracking-wide bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full mb-2">Start here</span>
+          <h3 class="text-xl font-semibold text-blue-800">Foundations</h3>
+          <p class="text-slate-600 text-sm mt-1">Imaging planes and couch axes, the Hounsfield scale, window width/level, and how sectional anatomy drives contouring and daily verification.</p>
+        </div>
+        <a href="Foundations/index.html" class="whitespace-nowrap inline-block bg-blue-600 text-white font-medium py-2 px-5 rounded-lg hover:bg-blue-700 transition-colors duration-300 text-center">Open Foundations</a>
       </div>
-      <p id="status">Initializing...</p>
     </div>
-  </div>
 
-  <script src="https://unpkg.com/dwv@0.34.2/dist/dwv.min.js"></script>
-  <script>
-  // Init the DWV app
-  var app = new dwv.App();
+    <!-- Region lessons -->
+    <h3 class="text-2xl font-bold text-slate-700 text-center mb-2">Region Lessons</h3>
+    <p class="text-center text-slate-500 mb-8">Each mirrors a Site-Specific Planning topic, focused on imaging and anatomic verification.</p>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
 
-  app.init({
-    containerDivId: "dwv",
-    tools: {
-      Scroll: {},
-      ZoomAndPan: {},
-      WindowLevel: {}
-    },
-    fitToWindow: true
-  });
+      <div class="bg-white p-6 rounded-xl shadow-lg flex flex-col">
+        <h3 class="text-xl font-semibold mb-2 text-cyan-700">Brain</h3>
+        <p class="text-slate-600 mb-4 text-sm flex-grow">Cerebrum, ventricles, posterior fossa, skull-base landmarks; CT/MRI fusion and rigid-skull bony matching.</p>
+        <a href="Brain/index.html" class="mt-auto inline-block bg-cyan-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-cyan-700 transition-colors duration-300 text-center">Open Brain</a>
+      </div>
 
-  const dicomZipUrl = "../mediastinal_lymph_node_seg/case_0002.zip";
+      <div class="bg-white p-6 rounded-xl shadow-lg flex flex-col">
+        <h3 class="text-xl font-semibold mb-2 text-cyan-700">Head &amp; Neck</h3>
+        <p class="text-slate-600 mb-4 text-sm flex-grow">Pharyngeal tiers, larynx, carotid/jugular vessels, nodal levels; deformation and adaptive re-planning.</p>
+        <a href="Head_and_Neck/index.html" class="mt-auto inline-block bg-cyan-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-cyan-700 transition-colors duration-300 text-center">Open Head &amp; Neck</a>
+      </div>
 
-  // Add console debug logs
-  app.addEventListener("ready", function () {
-    console.log("DWV is ready.");
-    document.getElementById("status").textContent = "Loading DICOM ZIP...";
-    console.log("Loading from:", dicomZipUrl);
-    app.loadURLs([dicomZipUrl]);
-  });
+      <div class="bg-white p-6 rounded-xl shadow-lg flex flex-col">
+        <h3 class="text-xl font-semibold mb-2 text-cyan-700">Thorax</h3>
+        <p class="text-slate-600 mb-4 text-sm flex-grow">Dual-window reading, carina and great vessels; target-based verification in a moving chest.</p>
+        <a href="Thorax/index.html" class="mt-auto inline-block bg-cyan-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-cyan-700 transition-colors duration-300 text-center">Open Thorax</a>
+      </div>
 
-  app.addEventListener("load", function () {
-    console.log("DICOM data loaded successfully.");
-    document.getElementById("status").textContent = "DICOM images loaded.";
-  });
+      <div class="bg-white p-6 rounded-xl shadow-lg flex flex-col">
+        <h3 class="text-xl font-semibold mb-2 text-cyan-700">Breast &amp; Chest Wall</h3>
+        <p class="text-slate-600 mb-4 text-sm flex-grow">Pectoral muscles, ribs, internal mammary vessels, nodal levels; SGRT and DIBH verification.</p>
+        <a href="Breast/index.html" class="mt-auto inline-block bg-cyan-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-cyan-700 transition-colors duration-300 text-center">Open Breast</a>
+      </div>
 
-  app.addEventListener("error", function (event) {
-    console.error("DWV Error: ", event.error);
-    document.getElementById("status").textContent = "Error loading DICOM files.";
-    alert("Error loading DICOM files: " + event.error);
-  });
-</script>
+      <div class="bg-white p-6 rounded-xl shadow-lg flex flex-col">
+        <h3 class="text-xl font-semibold mb-2 text-cyan-700">Abdomen</h3>
+        <p class="text-slate-600 mb-4 text-sm flex-grow">Peritoneal vs. retroperitoneal organs, aorta/IVC orientation; motion, filling, and fiducials.</p>
+        <a href="Abdomen/index.html" class="mt-auto inline-block bg-cyan-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-cyan-700 transition-colors duration-300 text-center">Open Abdomen</a>
+      </div>
+
+      <div class="bg-white p-6 rounded-xl shadow-lg flex flex-col">
+        <h3 class="text-xl font-semibold mb-2 text-cyan-700">Pelvis</h3>
+        <p class="text-slate-600 mb-4 text-sm flex-grow">Os coxae, prostate zones, bladder/rectum; choosing bony vs. soft-tissue (fiducial) matching.</p>
+        <a href="Pelvis/index.html" class="mt-auto inline-block bg-cyan-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-cyan-700 transition-colors duration-300 text-center">Open Pelvis</a>
+      </div>
+
+      <div class="bg-white p-6 rounded-xl shadow-lg flex flex-col lg:col-start-2">
+        <h3 class="text-xl font-semibold mb-2 text-cyan-700">Skeletal &amp; Spine</h3>
+        <p class="text-slate-600 mb-4 text-sm flex-grow">Vertebral parts, C1/C2, meninges and cord; bone-as-target matching and spine SBRT with 6DoF.</p>
+        <a href="Skeletal/index.html" class="mt-auto inline-block bg-cyan-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-cyan-700 transition-colors duration-300 text-center">Open Skeletal</a>
+      </div>
+
+    </div>
+
+    <!-- Interactive tools -->
+    <h3 class="text-2xl font-bold text-slate-700 text-center mt-16 mb-8">Interactive Tools</h3>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <a href="CT_Borders_Game/index.html" class="block bg-white p-5 rounded-xl shadow hover:shadow-lg transition-shadow">
+        <h4 class="font-semibold text-blue-700 mb-1">CT Borders Game</h4>
+        <p class="text-slate-500 text-sm">Practice identifying anatomic borders on CT slices.</p>
+      </a>
+      <a href="3D_model_lymphatics/head_and_neck/index.html" class="block bg-white p-5 rounded-xl shadow hover:shadow-lg transition-shadow">
+        <h4 class="font-semibold text-blue-700 mb-1">3D Lymphatics: Head &amp; Neck</h4>
+        <p class="text-slate-500 text-sm">Explore cervical nodal levels in 3D.</p>
+      </a>
+      <a href="3D_model_lymphatics/pelvis/index.html" class="block bg-white p-5 rounded-xl shadow hover:shadow-lg transition-shadow">
+        <h4 class="font-semibold text-blue-700 mb-1">3D Lymphatics: Pelvis</h4>
+        <p class="text-slate-500 text-sm">Explore pelvic nodal chains in 3D.</p>
+      </a>
+      <a href="3D_model_lymphatics/full_body/index.html" class="block bg-white p-5 rounded-xl shadow hover:shadow-lg transition-shadow">
+        <h4 class="font-semibold text-blue-700 mb-1">3D Lymphatics: Full Body</h4>
+        <p class="text-slate-500 text-sm">Whole-body lymphatic overview.</p>
+      </a>
+      <a href="dicom_viewer_demo/index.html" class="block bg-white p-5 rounded-xl shadow hover:shadow-lg transition-shadow">
+        <h4 class="font-semibold text-blue-700 mb-1">DICOM Viewer Demo</h4>
+        <p class="text-slate-500 text-sm">Scroll, zoom, and window a DICOM series.</p>
+      </a>
+    </div>
+
+  </main>
+
+  <footer class="bg-slate-800 text-slate-300 py-8 mt-12 text-center">
+    <div class="container mx-auto px-6">
+      <p>&copy; <span id="currentYear"></span> Radiation Therapy E-Workbook. All Rights Reserved.</p>
+      <p class="text-sm mt-1">Sectional Anatomy Module</p>
+    </div>
+  </footer>
+
+  <script>document.getElementById('currentYear').textContent = new Date().getFullYear();</script>
 </body>
 </html>
