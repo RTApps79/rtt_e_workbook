@@ -1,1 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sectional Anatomy: Head &amp; Neck</title>
+<style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; margin: 20px; background-color: #f4f4f4; color: #333; display: flex; flex-direction: column; align-items: center; }
+        .container { background-color: #fff; padding: 25px 35px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 90%; max-width: 900px; margin-bottom: 30px; }
+        h1, h2, h3, h4 { color: #0056b3; }
+        h1 { text-align: center; border-bottom: 2px solid #0056b3; padding-bottom: 15px; margin-bottom: 30px; font-size: 2em; }
+        h2 { border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 30px; margin-bottom: 20px; color: #003d7a; font-size: 1.6em; }
+        h3 { color: #004085; margin-top: 25px; margin-bottom: 15px; font-size: 1.3em; }
+        h4 { color: #17a2b8; margin-top: 20px; margin-bottom: 10px; font-size: 1.1em; font-weight: 600; }
+        p, li { margin-bottom: 12px; font-size: 1.05em; }
+        ul, ol { margin-bottom: 15px; padding-left: 25px; }
+        strong { font-weight: 600; }
+        .highlight { background-color: #e6f7ff; padding: 2px 5px; border-radius: 3px; font-weight: 600; }
+        code { background-color: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; color: #c7254e; }
+        table.data-table { width: 90%; margin: 15px auto; border-collapse: collapse; }
+        table.data-table th, table.data-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        table.data-table th { background-color: #e9f5ff; color: #0056b3; font-weight: 600; }
+        table.data-table tr:nth-child(even) { background-color: #f9f9f9; }
+        .flip-lesson-container { border: 1px solid #b3d7ff; padding: 20px; border-radius: 8px; background-color: #f0f8ff; margin-bottom: 30px; }
+        .lesson-page { display: none; padding: 15px; border: 1px solid #ddeeff; background-color: #fff; border-radius: 5px; min-height: 400px; }
+        .lesson-page.active { display: block; }
+        .lesson-navigation { text-align: center; margin-top: 20px; }
+        .lesson-navigation button, .lesson-page .check-page-answers { background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 1em; margin: 5px 10px; transition: background-color 0.2s; }
+        .lesson-navigation button:hover, .lesson-page .check-page-answers:hover { background-color: #0056b3; }
+        .lesson-navigation button:disabled { background-color: #ccc; cursor: not-allowed; }
+        .page-indicator { font-style: italic; color: #555; margin: 10px 0; }
+        .key-principle { background-color: #e7f3ff; padding: 10px; margin-bottom:10px; border-left: 3px solid #007bff; border-radius: 3px; }
+        .interactive-question-block { background: #f9f9f9; padding: 15px; margin: 20px 0; border: 1px solid #e0e0e0; border-radius: 8px; }
+        .interactive-question-block .question-text { font-weight: bold; margin-bottom: 8px; font-size: 1em; color: #555; }
+        .interactive-question-block label { display: block; margin-left: 0; padding: 8px 12px; border-radius: 5px; cursor: pointer; border: 1px solid transparent; margin-bottom: 5px; }
+        .interactive-question-block input[type="radio"] { margin-right: 10px; vertical-align: middle; }
+        .interactive-question-block label:hover { background-color: #f0f8ff; }
+        .feedback-correct { background-color: #e8f8f0 !important; border-left: 4px solid #2ecc71 !important; }
+        .feedback-incorrect { background-color: #fdedec !important; border-left: 4px solid #e74c3c !important; }
+        .feedback-correct label.correct-option, .feedback-incorrect label.correct-option { font-weight: bold; color: #1E8449; }
+        .feedback-incorrect label.selected-incorrect { color: #A93226; }
+        .explanation { font-size: 0.9em; color: #444; margin-top: 5px; padding-left: 20px; }
+        .footer { text-align: center; margin-top: 30px; padding-top: 15px; border-top: 1px solid #ccc; font-size: 0.85em; color: #555; }
+        .nav-links-header { background-color: #fff; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 50; }
+        .fig { margin: 18px auto; max-width: 430px; text-align: center; }
+        .fig img { width: 100%; border: 1px solid #ccc; border-radius: 6px; background: #000; display:block; }
+        .fig figcaption { font-size: 0.9em; color: #555; margin-top: 6px; text-align: left; }
+        .fig-row { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; align-items: flex-start; }
+        .fig-row .fig { max-width: 300px; margin: 8px 0; }
+        model-viewer { width: 100%; height: 420px; background: #111; border-radius: 8px; }
+        .model-credit { font-size: 0.8em; color: #888; margin-top: 6px; }
+</style>
+</head>
+<body>
+    <header class="nav-links-header">
+        <div style="max-width:900px;margin:0 auto;padding:12px 20px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;">
+            <strong style="color:#0056b3;">Sectional Anatomy: Head &amp; Neck</strong>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                <a href="../index.html" style="font-size:0.8rem;background:#0056b3;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Sectional Anatomy Menu</a>
+                <a href="../../index.html" style="font-size:0.8rem;background:#64748b;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Main Workbook</a>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <h1>Sectional Anatomy: Head &amp; Neck</h1>
+        <div class="flip-lesson-container">
+            <h2>Interactive Lesson</h2>
+            <div id="lesson-page-1" class="lesson-page active">
+                <h3>Page 1: Imaging the Neck &mdash; Approach and Windows</h3>
 
+                <p>The neck packs vessels, airway, glands, cartilage, and nodes into a small volume, so planning uses <strong>thin-slice contrast-enhanced CT</strong>, often fused with MRI/PET. Read on a soft-tissue window, the anatomy changes dramatically over just a few centimeters &mdash; which is why we work level by level.</p>
+                <figure class="fig"><img src="img/hn_nasopharynx.png" alt="Axial CT at the nasopharynx">
+                    <figcaption>Superior neck, near the <strong>nasopharynx</strong>. Identify the air-filled nasopharynx centrally, the <strong>parotid</strong> and masticator regions laterally, and the <strong>mandible</strong> anterolaterally.</figcaption></figure>
+                <div class="key-principle"><p>Vertebral levels give fast craniocaudal orientation here: hard palate ~C1, <strong>hyoid ~C3</strong>, <strong>thyroid cartilage ~C4&ndash;C5</strong>, <strong>cricoid ~C6</strong>.</p></div>
+
+            </div>
+            <div id="lesson-page-2" class="lesson-page">
+                <h3>Page 2: The Pharynx &mdash; Three Tiers</h3>
+
+                <p>The pharynx divides into three tiers that map directly onto disease-site definitions:</p>
+                <table class="data-table"><thead><tr><th>Region</th><th>Extent</th></tr></thead><tbody>
+                <tr><td><strong>Nasopharynx</strong></td><td>Skull base to soft palate</td></tr>
+                <tr><td><strong>Oropharynx</strong></td><td>Soft palate to hyoid (tonsils, base of tongue)</td></tr>
+                <tr><td><strong>Hypopharynx</strong></td><td>Hyoid to cricoid; includes the pyriform sinuses</td></tr>
+                </tbody></table>
+                <figure class="fig"><img src="img/hn_oropharynx.png" alt="Axial CT at the oropharynx">
+                    <figcaption><strong>Oropharyngeal</strong> level. Identify the <strong>tongue base</strong> centrally, the <strong>rami of the mandible</strong>, and the <strong>parapharyngeal</strong> fat planes whose loss can signal tumor spread.</figcaption></figure>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">The pyriform sinuses are found in which pharyngeal subdivision?</p>
+                    <label><input type="radio" name="hn_p2_1" value="A"> Nasopharynx</label>
+                    <label><input type="radio" name="hn_p2_1" value="B"> Oropharynx</label>
+                    <label><input type="radio" name="hn_p2_1" value="C"> Hypopharynx</label>
+                    <div class="explanation" style="display:none;">C. The pyriform sinuses are recesses of the hypopharynx, lateral to the laryngeal inlet between the hyoid and cricoid.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(2)">Check Answer</button>
+            </div>
+            <div id="lesson-page-3" class="lesson-page">
+                <h3>Page 3: The Larynx</h3>
+
+                <p>The laryngeal skeleton is a stack of cartilages best appreciated in sequence: the <strong>epiglottis</strong>, the <strong>hyoid bone</strong>, the <strong>thyroid cartilage</strong>, and the <strong>cricoid cartilage</strong> &mdash; the only complete cartilage ring, marking the larynx&rarr;trachea and pharynx&rarr;esophagus transition.</p>
+                <figure class="fig"><img src="img/hn_larynx.png" alt="Axial CT at the larynx">
+                    <figcaption><strong>Laryngeal</strong> level. Identify the airway centrally, the <strong>thyroid cartilage</strong> forming the anterior shield, and the <strong>carotid spaces</strong> posterolaterally.</figcaption></figure>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">Which laryngeal cartilage is the only complete ring and marks the pharynx-to-esophagus transition (~C6)?</p>
+                    <label><input type="radio" name="hn_p3_1" value="A"> Thyroid cartilage</label>
+                    <label><input type="radio" name="hn_p3_1" value="B"> Cricoid cartilage</label>
+                    <label><input type="radio" name="hn_p3_1" value="C"> Epiglottis</label>
+                    <div class="explanation" style="display:none;">B. The cricoid is the only complete cartilage ring; at ~C6 it marks the transition of larynx to trachea and pharynx to esophagus.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(3)">Check Answer</button>
+            </div>
+            <div id="lesson-page-4" class="lesson-page">
+                <h3>Page 4: Vessels, Glands, and Nodal Levels</h3>
+
+                <p>The carotid sheath is the constant reference on every axial neck slice.</p>
+                <figure class="fig"><img src="img/hn_thyroid_vessels.png" alt="Axial CT at the thyroid gland and great vessels">
+                    <figcaption>Lower neck. Identify the <strong>thyroid gland</strong> straddling the trachea, the paired <strong>common carotid arteries</strong> and <strong>internal jugular veins</strong> in the carotid spaces, and the <strong>esophagus</strong> behind the trachea.</figcaption></figure>
+                <div class="key-principle"><p><strong>Cervical node levels I&ndash;VII</strong> are the backbone of head-and-neck target definition &mdash; elective nodal volumes are drawn by level. Recognizing the boundaries between levels on axial CT is essential; explore them in the 3D lymphatics tool linked at the end.</p></div>
+
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">Which paired structures lie in the carotid space immediately lateral to the airway?</p>
+                    <label><input type="radio" name="hn_p4_1" value="A"> Common carotid artery and internal jugular vein</label>
+                    <label><input type="radio" name="hn_p4_1" value="B"> Aorta and inferior vena cava</label>
+                    <div class="explanation" style="display:none;">A. The carotid sheath (common carotid artery, internal jugular vein, vagus nerve) flanks the airway. Aorta and IVC are thoracic/abdominal.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(4)">Check Answer</button>
+            </div>
+            <div id="lesson-page-5" class="lesson-page">
+                <h3>Page 5: Anatomic Verification for Head &amp; Neck</h3>
+
+                <p>The neck is <strong>semi-rigid and deformable</strong>: the cervical spine flexes and extends, and the mandible and shoulders move independently, so verification blends bony and soft-tissue judgment.</p>
+                <ul>
+                    <li>Immobilization with a <strong>5-point thermoplastic mask</strong> including the shoulders.</li>
+                    <li>Daily CBCT matched to the cervical vertebrae, watching <strong>neck flexion/extension</strong> and shoulder position a single rigid match can miss.</li>
+                    <li><strong>Weight loss and tumor shrinkage</strong> change the external contour and internal anatomy over a course, frequently triggering <strong>adaptive re-planning</strong>.</li>
+                </ul>
+
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">Why does head-and-neck verification often need more than a single rigid bony match?</p>
+                    <label><input type="radio" name="hn_p5_1" value="A"> The neck deforms (flexion/extension) and changes with weight loss and tumor shrinkage over a course</label>
+                    <label><input type="radio" name="hn_p5_1" value="B"> The cervical vertebrae are invisible on CBCT</label>
+                    <div class="explanation" style="display:none;">A. Deformation and anatomic change over treatment mean rigid alignment alone can miss real change &mdash; a common trigger for adaptive re-planning.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(5)">Check Answer</button>
+            </div>
+            <div id="lesson-page-6" class="lesson-page">
+                <h3>Page 6: Wrap-Up</h3>
+
+                <p>You've read the neck from nasopharynx to thyroid on real CT &mdash; the three pharyngeal tiers, the laryngeal cartilages, the carotid/jugular vessels and thyroid &mdash; connected it to cervical nodal levels, and seen why deformation makes H&amp;N a bony <em>and</em> soft-tissue verification problem.</p>
+                <p>Cross-reference: <a href="../../Treatment_Planning/Site_Specific_Planning/Head_and_Neck/index.html">Head &amp; Neck Treatment Planning</a> and the <a href="../3D_model_lymphatics/head_and_neck/index.html">3D Head &amp; Neck Lymphatics model</a>.</p>
+
+            </div>
+
+            <div class="lesson-navigation">
+                <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled>Previous Page</button>
+                <span class="page-indicator" id="lessonPageIndicator">Page 1 of 6</span>
+                <button id="nextLessonPage" onclick="changeLessonPage(1)">Next Page</button>
+                <button id="startActivityButton" onclick="window.location.href='../../Treatment_Planning/Site_Specific_Planning/Head_and_Neck/index.html'" style="display:none; background-color: #28a745;">Go to Head &amp; Neck Planning →</button>
+            </div>
+        </div>
+        <div class="footer">
+            <p>Radiation Therapy E-Workbook &mdash; Sectional Anatomy</p>
+            <p style="font-size:0.9em;color:#888;">Imaging: de-identified educational head-and-neck planning CT.</p>
+        </div>
+    </div>
+    <script>
+        let currentLessonPage = 1;
+        const totalLessonPages = 6;
+        const lessonPages = document.querySelectorAll('.lesson-page');
+        const prevLessonButton = document.getElementById('prevLessonPage');
+        const nextLessonButton = document.getElementById('nextLessonPage');
+        const lessonPageIndicator = document.getElementById('lessonPageIndicator');
+        const startActivityButton = document.getElementById('startActivityButton');
+        const lessonCorrectAnswers = {"hn_p2_1": "C", "hn_p3_1": "B", "hn_p4_1": "A", "hn_p5_1": "A"};
+        function displayLessonPage() {
+            lessonPages.forEach((page, index) => page.classList.toggle('active', index === currentLessonPage - 1));
+            prevLessonButton.disabled = currentLessonPage === 1;
+            nextLessonButton.style.display = currentLessonPage === totalLessonPages ? 'none' : 'inline-block';
+            startActivityButton.style.display = currentLessonPage === totalLessonPages ? 'inline-block' : 'none';
+            lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
+        }
+        function changeLessonPage(direction) {
+            currentLessonPage += direction;
+            if (currentLessonPage < 1) currentLessonPage = 1;
+            if (currentLessonPage > totalLessonPages) currentLessonPage = totalLessonPages;
+            displayLessonPage();
+        }
+        function checkPageAnswers(pageNumber) {
+            const questionsOnPage = document.querySelectorAll(`#lesson-page-${pageNumber} .interactive-question-block`);
+            questionsOnPage.forEach(block => {
+                const radio = block.querySelector('input[type="radio"]');
+                if (!radio) return;
+                const questionName = radio.name;
+                if (!lessonCorrectAnswers.hasOwnProperty(questionName)) return;
+                const correctAnswerValue = lessonCorrectAnswers[questionName];
+                const selectedRadio = block.querySelector(`input[name="${questionName}"]:checked`);
+                const explanationDiv = block.querySelector('.explanation');
+                block.classList.remove('feedback-correct', 'feedback-incorrect');
+                block.querySelectorAll('label').forEach(label => label.classList.remove('correct-option', 'selected-incorrect'));
+                if (explanationDiv) explanationDiv.style.display = 'none';
+                if (selectedRadio) {
+                    const userAnswer = selectedRadio.value;
+                    const userSelectedLabel = selectedRadio.parentElement;
+                    if (userAnswer === correctAnswerValue) {
+                        block.classList.add('feedback-correct');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('correct-option');
+                    } else {
+                        block.classList.add('feedback-incorrect');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('selected-incorrect');
+                        const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                        if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                    }
+                } else {
+                    block.classList.add('feedback-incorrect');
+                    const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                    if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                }
+                if (explanationDiv) explanationDiv.style.display = 'block';
+            });
+        }
+        displayLessonPage();
+</script>
+</body>
+</html>
