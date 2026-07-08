@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sectional Anatomy: Brain</title>
+<style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; margin: 20px; background-color: #f4f4f4; color: #333; display: flex; flex-direction: column; align-items: center; }
+        .container { background-color: #fff; padding: 25px 35px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 90%; max-width: 900px; margin-bottom: 30px; }
+        h1, h2, h3, h4 { color: #0056b3; }
+        h1 { text-align: center; border-bottom: 2px solid #0056b3; padding-bottom: 15px; margin-bottom: 30px; font-size: 2em; }
+        h2 { border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 30px; margin-bottom: 20px; color: #003d7a; font-size: 1.6em; }
+        h3 { color: #004085; margin-top: 25px; margin-bottom: 15px; font-size: 1.3em; }
+        h4 { color: #17a2b8; margin-top: 20px; margin-bottom: 10px; font-size: 1.1em; font-weight: 600; }
+        p, li { margin-bottom: 12px; font-size: 1.05em; }
+        ul, ol { margin-bottom: 15px; padding-left: 25px; }
+        strong { font-weight: 600; }
+        .highlight { background-color: #e6f7ff; padding: 2px 5px; border-radius: 3px; font-weight: 600; }
+        code { background-color: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; color: #c7254e; }
+        table.data-table { width: 90%; margin: 15px auto; border-collapse: collapse; }
+        table.data-table th, table.data-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        table.data-table th { background-color: #e9f5ff; color: #0056b3; font-weight: 600; }
+        table.data-table tr:nth-child(even) { background-color: #f9f9f9; }
+        .flip-lesson-container { border: 1px solid #b3d7ff; padding: 20px; border-radius: 8px; background-color: #f0f8ff; margin-bottom: 30px; }
+        .lesson-page { display: none; padding: 15px; border: 1px solid #ddeeff; background-color: #fff; border-radius: 5px; min-height: 400px; }
+        .lesson-page.active { display: block; }
+        .lesson-navigation { text-align: center; margin-top: 20px; }
+        .lesson-navigation button, .lesson-page .check-page-answers { background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 1em; margin: 5px 10px; transition: background-color 0.2s; }
+        .lesson-navigation button:hover, .lesson-page .check-page-answers:hover { background-color: #0056b3; }
+        .lesson-navigation button:disabled { background-color: #ccc; cursor: not-allowed; }
+        .page-indicator { font-style: italic; color: #555; margin: 10px 0; }
+        .key-principle { background-color: #e7f3ff; padding: 10px; margin-bottom:10px; border-left: 3px solid #007bff; border-radius: 3px; }
+        .interactive-question-block { background: #f9f9f9; padding: 15px; margin: 20px 0; border: 1px solid #e0e0e0; border-radius: 8px; }
+        .interactive-question-block .question-text { font-weight: bold; margin-bottom: 8px; font-size: 1em; color: #555; }
+        .interactive-question-block label { display: block; margin-left: 0; padding: 8px 12px; border-radius: 5px; cursor: pointer; border: 1px solid transparent; margin-bottom: 5px; }
+        .interactive-question-block input[type="radio"] { margin-right: 10px; vertical-align: middle; }
+        .interactive-question-block label:hover { background-color: #f0f8ff; }
+        .feedback-correct { background-color: #e8f8f0 !important; border-left: 4px solid #2ecc71 !important; }
+        .feedback-incorrect { background-color: #fdedec !important; border-left: 4px solid #e74c3c !important; }
+        .feedback-correct label.correct-option, .feedback-incorrect label.correct-option { font-weight: bold; color: #1E8449; }
+        .feedback-incorrect label.selected-incorrect { color: #A93226; }
+        .explanation { font-size: 0.9em; color: #444; margin-top: 5px; padding-left: 20px; }
+        .footer { text-align: center; margin-top: 30px; padding-top: 15px; border-top: 1px solid #ccc; font-size: 0.85em; color: #555; }
+        .nav-links-header { background-color: #fff; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 50; }
+        .fig { margin: 18px auto; max-width: 430px; text-align: center; }
+        .fig img { width: 100%; border: 1px solid #ccc; border-radius: 6px; background: #000; display:block; }
+        .fig figcaption { font-size: 0.9em; color: #555; margin-top: 6px; text-align: left; }
+        .fig-row { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; align-items: flex-start; }
+        .fig-row .fig { max-width: 300px; margin: 8px 0; }
+        .tag { display:inline-block; font-size:0.75em; font-weight:600; padding:2px 8px; border-radius:10px; margin-right:6px; }
+        .tag-core { background:#fdecea; color:#c0392b; } .tag-edema { background:#eaf2fd; color:#2b6cb0; }
+</style>
+</head>
+<body>
+    <header class="nav-links-header">
+        <div style="max-width:900px;margin:0 auto;padding:12px 20px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;">
+            <strong style="color:#0056b3;">Sectional Anatomy: Brain</strong>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                <a href="../index.html" style="font-size:0.8rem;background:#0056b3;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Sectional Anatomy Menu</a>
+                <a href="../../index.html" style="font-size:0.8rem;background:#64748b;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Main Workbook</a>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <h1>Sectional Anatomy: Brain</h1>
+        <div class="flip-lesson-container">
+            <h2>Interactive Lesson</h2>
+
+            <div id="lesson-page-1" class="lesson-page active">
+                <h3>Page 1: Imaging the Brain &mdash; Modalities and Windows</h3>
+                <p>Cranial radiation therapy is planned on a <strong>CT simulation scan fused with MRI</strong>. CT supplies the electron density for dose calculation and the rigid bony reference for setup; MRI supplies the soft-tissue contrast needed to define the target and organs at risk. The same CT is read on different <strong>windows</strong> depending on the tissue of interest.</p>
+                <div class="fig-row">
+                    <figure class="fig"><img src="img/ct_midventricular.png" alt="Axial CT of the brain, brain window">
+                        <figcaption><strong>Brain window</strong> (WL&nbsp;~40, WW&nbsp;~80): maximizes gray&ndash;white contrast, ventricles, and parenchymal detail.</figcaption></figure>
+                    <figure class="fig"><img src="img/ct_bone_skullbase.png" alt="Axial CT of the skull base, bone window">
+                        <figcaption><strong>Bone window</strong> (wide WW): the same scan re-windowed shows cortex, sinus walls, and skull-base foramina instead.</figcaption></figure>
+                </div>
+                <div class="key-principle"><p>The rigid cranium makes the brain one of the most reproducible sites to set up: a <strong>bony match</strong> on the skull is an excellent surrogate for intracranial target position &mdash; a theme we return to on the verification page.</p></div>
+            </div>
+
+            <div id="lesson-page-2" class="lesson-page">
+                <h3>Page 2: Axial Level 1 &mdash; Posterior Fossa</h3>
+                <p>Working from inferior to superior, the lowest intracranial level shown here is the <strong>posterior fossa</strong>. Orient yourself first: anterior is at the top, and by radiologic convention the patient's <em>right</em> is on the <em>left</em> of the image.</p>
+                <figure class="fig"><img src="img/ct_posterior_fossa.png" alt="Axial CT at the posterior fossa">
+                    <figcaption>Posterior-fossa level. Identify: the <strong>cerebellum</strong> (posteriorly, filling the fossa), the <strong>brainstem</strong> (midline, anterior to the cerebellum), the <strong>fourth ventricle</strong> (CSF between them), and the surrounding <strong>temporal lobes</strong> anterolaterally.</figcaption></figure>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">At the posterior-fossa level, which CSF-filled structure sits in the midline <em>between</em> the brainstem and the cerebellum?</p>
+                    <label><input type="radio" name="b_p2_1" value="A"> Fourth ventricle</label>
+                    <label><input type="radio" name="b_p2_1" value="B"> Lateral ventricle</label>
+                    <label><input type="radio" name="b_p2_1" value="C"> Cavum septum pellucidum</label>
+                    <div class="explanation" style="display:none;">A. The fourth ventricle lies between the pons/brainstem anteriorly and the cerebellum posteriorly. The lateral ventricles sit far more superiorly, at the levels shown on the next pages.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(2)">Check Answer</button>
+            </div>
+
+            <div id="lesson-page-3" class="lesson-page">
+                <h3>Page 3: Axial Level 2 &mdash; Mid-Ventricular</h3>
+                <p>Higher up, the <strong>lateral ventricles</strong> and deep gray matter come into view &mdash; the workhorse level for orientation.</p>
+                <figure class="fig"><img src="img/ct_midventricular.png" alt="Axial CT at the mid-ventricular level">
+                    <figcaption>Mid-ventricular level. Identify: the <strong>frontal horns</strong> of the lateral ventricles anteriorly, the <strong>third ventricle</strong> in the midline, the <strong>thalami</strong> flanking it, the <strong>basal ganglia</strong> laterally, and the <strong>falx cerebri</strong> running straight down the midline anteriorly and posteriorly.</figcaption></figure>
+                <div class="key-principle"><p>The <strong>falx cerebri</strong> should sit dead-center. Because it is a straight midline reference, a falx that appears tilted or off-center on a verification image is a fast flag for patient <strong>rotation</strong>.</p></div>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">Why is the falx cerebri a useful quick check for rotation on an axial image?</p>
+                    <label><input type="radio" name="b_p3_1" value="A"> It is a straight midline dural structure, so any tilt signals patient rotation</label>
+                    <label><input type="radio" name="b_p3_1" value="B"> It is the densest bone in the skull and never moves</label>
+                    <div class="explanation" style="display:none;">A. The falx is a midline dural fold that should run straight front-to-back. A tilt or lateral shift indicates rotation &mdash; it is soft tissue, not bone.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(3)">Check Answer</button>
+            </div>
+
+            <div id="lesson-page-4" class="lesson-page">
+                <h3>Page 4: Axial Level 3 &mdash; Upper Ventricular / Convexity</h3>
+                <p>Near the vertex, the <strong>bodies of the lateral ventricles</strong> narrow and the white matter of the <strong>centrum semiovale</strong> dominates before the ventricles disappear entirely at the highest slices.</p>
+                <figure class="fig"><img src="img/ct_upper_ventricular.png" alt="Axial CT at the upper ventricular level">
+                    <figcaption>Upper level. Identify: the <strong>bodies of the lateral ventricles</strong>, the <strong>centrum semiovale</strong> (deep white matter), the cortical <strong>gyri and sulci</strong>, and the <strong>falx</strong> continuing in the midline. This is a common level for superficial (convexity) metastases.</figcaption></figure>
+                <p>Reading a stack top-to-bottom in this way &mdash; convexity &rarr; ventricles &rarr; posterior fossa &rarr; skull base &mdash; is exactly how you confirm a target's craniocaudal position and check that no critical structure has been missed on a contour.</p>
+            </div>
+
+            <div id="lesson-page-5" class="lesson-page">
+                <h3>Page 5: Skull Base, Sinuses, and Critical Structures</h3>
+                <p>Re-windowing to <strong>bone</strong> at the skull base reveals the bony and air-filled anatomy that a soft-tissue window hides.</p>
+                <figure class="fig"><img src="img/ct_bone_skullbase.png" alt="Axial CT of the skull base in bone window">
+                    <figcaption>Skull-base bone window. Identify the <strong>paranasal sinuses</strong> (ethmoid air cells medially, sphenoid sinus centrally), the <strong>orbits</strong> anterolaterally, the dense <strong>petrous temporal bones</strong>, and the <strong>sella turcica</strong> housing the pituitary.</figcaption></figure>
+                <div class="key-principle"><p>Dose-limiting OARs to recognize at these levels: the <strong>lenses</strong> (cataract risk), <strong>optic nerves and chiasm</strong>, <strong>brainstem</strong>, <strong>cochleae</strong>, and <strong>pituitary/hypothalamus</strong>. Each must be identified on the planning slices before it can be avoided.</p></div>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">Which window would you use to best evaluate the walls of the sphenoid sinus and skull-base foramina?</p>
+                    <label><input type="radio" name="b_p5_1" value="A"> Bone window (wide window width)</label>
+                    <label><input type="radio" name="b_p5_1" value="B"> Brain window (narrow window width)</label>
+                    <div class="explanation" style="display:none;">A. A wide-width bone window spreads contrast across the high-HU range where cortical bone lives, resolving thin bony walls and foramina that a narrow brain window renders as uniform white.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(5)">Check Answer</button>
+            </div>
+
+            <div id="lesson-page-6" class="lesson-page">
+                <h3>Page 6: MRI for Target Definition &mdash; Enhancing Core vs. Edema</h3>
+                <p>This is where MRI earns its place. The two sequences below come from an educational brain-metastasis case, each shown clean and again with its expert segmentation overlaid &mdash; the distinction between them drives how the target is drawn.</p>
+                <div class="fig-row">
+                    <figure class="fig"><img src="img/mr_t1ce_seg.png" alt="Contrast-enhanced T1 MRI with enhancing core segmented">
+                        <figcaption><span class="tag tag-core">core</span><strong>Contrast-enhanced T1 (T1CE).</strong> The red overlay marks the <strong>enhancing tumor</strong> &mdash; where contrast crosses a broken blood&ndash;brain barrier. This typically defines the gross tumor volume (GTV).</figcaption></figure>
+                    <figure class="fig"><img src="img/mr_flair_seg.png" alt="FLAIR MRI with surrounding edema segmented">
+                        <figcaption><span class="tag tag-edema">edema</span><strong>FLAIR.</strong> The blue overlay marks the <strong>surrounding edema / whole-tumor region</strong> &mdash; FLAIR suppresses CSF so peritumoral edema stands out brightly.</figcaption></figure>
+                </div>
+                <div class="key-principle"><p>The clinical consequence: T1CE enhancement usually defines the <strong>GTV</strong>, while FLAIR shows edema that may or may not be included depending on intent (brain-met SRS often treats the enhancing lesion plus a tight margin, not the whole edema). Reading the <em>right sequence for the right structure</em> is the core skill.</p></div>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">On which MRI sequence does an enhancing brain metastasis (broken blood&ndash;brain barrier) appear brightest, typically defining the GTV?</p>
+                    <label><input type="radio" name="b_p6_1" value="A"> Contrast-enhanced T1 (T1CE)</label>
+                    <label><input type="radio" name="b_p6_1" value="B"> FLAIR</label>
+                    <div class="explanation" style="display:none;">A. Contrast enhancement on T1CE marks where gadolinium leaks through a disrupted blood&ndash;brain barrier &mdash; the enhancing lesion that usually defines the GTV. FLAIR highlights surrounding edema, not the enhancing core.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(6)">Check Answer</button>
+            </div>
+
+            <div id="lesson-page-7" class="lesson-page">
+                <h3>Page 7: Anatomic Verification for Cranial Treatment</h3>
+                <p>Because the skull is rigid, cranial setup is verified primarily by <strong>bony matching</strong> against the reference DRR or planning CT:</p>
+                <ul>
+                    <li><strong>Frameless SRS/SRT</strong> uses a thermoplastic mask plus daily volumetric (CBCT) or stereoscopic kV imaging matched to the skull.</li>
+                    <li><strong>6 degrees-of-freedom (6DoF)</strong> couch correction removes the small pitch/roll/yaw rotations a mask alone can't, which matters because intracranial OARs sit millimeters from targets.</li>
+                    <li>Reliable matching landmarks: the <strong>sella</strong>, <strong>orbital rims</strong>, <strong>petrous ridges</strong>, and overall cranial contour &mdash; all visible on the bone-window anatomy from Page 5.</li>
+                </ul>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">Why is 6DoF couch correction especially valuable for cranial SRS?</p>
+                    <label><input type="radio" name="b_p7_1" value="A"> It corrects small rotations (pitch/roll/yaw) so a tight, high-dose target stays off nearby critical structures</label>
+                    <label><input type="radio" name="b_p7_1" value="B"> It lets the beam pass through bone without attenuation</label>
+                    <div class="explanation" style="display:none;">A. SRS delivers a high dose to a small target surrounded by critical structures, so even small uncorrected rotations can cause a geographic miss or OAR overdose; 6DoF removes rotational error a translation-only couch cannot.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(7)">Check Answer</button>
+            </div>
+
+            <div id="lesson-page-8" class="lesson-page">
+                <h3>Page 8: Wrap-Up</h3>
+                <p>You've read the brain top-to-bottom on real planning imagery &mdash; convexity, mid-ventricular, and posterior-fossa levels on brain window; the skull base on bone window; and the enhancing-core-versus-edema distinction on T1CE and FLAIR MRI &mdash; then tied it to rigid-skull bony verification with 6DoF.</p>
+                <p>Cross-reference: apply this to <a href="../../Treatment_Planning/Site_Specific_Planning/Brain/index.html">Brain Treatment Planning</a>, or practice border identification in the <a href="../CT_Borders_Game/index.html">CT Borders Game</a>.</p>
+            </div>
+
+            <div class="lesson-navigation">
+                <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled>Previous Page</button>
+                <span class="page-indicator" id="lessonPageIndicator">Page 1 of 8</span>
+                <button id="nextLessonPage" onclick="changeLessonPage(1)">Next Page</button>
+                <button id="startActivityButton" onclick="window.location.href='../../Treatment_Planning/Site_Specific_Planning/Brain/index.html'" style="display:none; background-color: #28a745;">Go to Brain Planning &rarr;</button>
+            </div>
+        </div>
+        <div class="footer">
+            <p>Radiation Therapy E-Workbook &mdash; Sectional Anatomy</p>
+            <p style="font-size:0.9em;color:#888;">Imaging: de-identified educational planning CT (craniopharyngioma case) and an educational-use brain-metastasis MRI case with FLAIR, contrast-enhanced T1, and expert tumor segmentations.</p>
+        </div>
+    </div>
+    <script>
+        let currentLessonPage = 1;
+        const totalLessonPages = 8;
+        const lessonPages = document.querySelectorAll('.lesson-page');
+        const prevLessonButton = document.getElementById('prevLessonPage');
+        const nextLessonButton = document.getElementById('nextLessonPage');
+        const lessonPageIndicator = document.getElementById('lessonPageIndicator');
+        const startActivityButton = document.getElementById('startActivityButton');
+        const lessonCorrectAnswers = {"b_p2_1": "A", "b_p3_1": "A", "b_p5_1": "A", "b_p6_1": "A", "b_p7_1": "A"};
+        function displayLessonPage() {
+            lessonPages.forEach((page, index) => page.classList.toggle('active', index === currentLessonPage - 1));
+            prevLessonButton.disabled = currentLessonPage === 1;
+            nextLessonButton.style.display = currentLessonPage === totalLessonPages ? 'none' : 'inline-block';
+            startActivityButton.style.display = currentLessonPage === totalLessonPages ? 'inline-block' : 'none';
+            lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
+        }
+        function changeLessonPage(direction) {
+            currentLessonPage += direction;
+            if (currentLessonPage < 1) currentLessonPage = 1;
+            if (currentLessonPage > totalLessonPages) currentLessonPage = totalLessonPages;
+            displayLessonPage();
+        }
+        function checkPageAnswers(pageNumber) {
+            const questionsOnPage = document.querySelectorAll(`#lesson-page-${pageNumber} .interactive-question-block`);
+            questionsOnPage.forEach(block => {
+                const radio = block.querySelector('input[type="radio"]');
+                if (!radio) return;
+                const questionName = radio.name;
+                if (!lessonCorrectAnswers.hasOwnProperty(questionName)) return;
+                const correctAnswerValue = lessonCorrectAnswers[questionName];
+                const selectedRadio = block.querySelector(`input[name="${questionName}"]:checked`);
+                const explanationDiv = block.querySelector('.explanation');
+                block.classList.remove('feedback-correct', 'feedback-incorrect');
+                block.querySelectorAll('label').forEach(label => label.classList.remove('correct-option', 'selected-incorrect'));
+                if (explanationDiv) explanationDiv.style.display = 'none';
+                if (selectedRadio) {
+                    const userAnswer = selectedRadio.value;
+                    const userSelectedLabel = selectedRadio.parentElement;
+                    if (userAnswer === correctAnswerValue) {
+                        block.classList.add('feedback-correct');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('correct-option');
+                    } else {
+                        block.classList.add('feedback-incorrect');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('selected-incorrect');
+                        const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                        if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                    }
+                } else {
+                    block.classList.add('feedback-incorrect');
+                    const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                    if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                }
+                if (explanationDiv) explanationDiv.style.display = 'block';
+            });
+        }
+        displayLessonPage();
+    </script>
+</body>
+</html>
