@@ -1,1 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sectional Anatomy: Abdomen</title>
+<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+<style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; margin: 20px; background-color: #f4f4f4; color: #333; display: flex; flex-direction: column; align-items: center; }
+        .container { background-color: #fff; padding: 25px 35px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 90%; max-width: 900px; margin-bottom: 30px; }
+        h1, h2, h3, h4 { color: #0056b3; }
+        h1 { text-align: center; border-bottom: 2px solid #0056b3; padding-bottom: 15px; margin-bottom: 30px; font-size: 2em; }
+        h2 { border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 30px; margin-bottom: 20px; color: #003d7a; font-size: 1.6em; }
+        h3 { color: #004085; margin-top: 25px; margin-bottom: 15px; font-size: 1.3em; }
+        h4 { color: #17a2b8; margin-top: 20px; margin-bottom: 10px; font-size: 1.1em; font-weight: 600; }
+        p, li { margin-bottom: 12px; font-size: 1.05em; }
+        ul, ol { margin-bottom: 15px; padding-left: 25px; }
+        strong { font-weight: 600; }
+        .highlight { background-color: #e6f7ff; padding: 2px 5px; border-radius: 3px; font-weight: 600; }
+        code { background-color: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; color: #c7254e; }
+        table.data-table { width: 90%; margin: 15px auto; border-collapse: collapse; }
+        table.data-table th, table.data-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        table.data-table th { background-color: #e9f5ff; color: #0056b3; font-weight: 600; }
+        table.data-table tr:nth-child(even) { background-color: #f9f9f9; }
+        .flip-lesson-container { border: 1px solid #b3d7ff; padding: 20px; border-radius: 8px; background-color: #f0f8ff; margin-bottom: 30px; }
+        .lesson-page { display: none; padding: 15px; border: 1px solid #ddeeff; background-color: #fff; border-radius: 5px; min-height: 400px; }
+        .lesson-page.active { display: block; }
+        .lesson-navigation { text-align: center; margin-top: 20px; }
+        .lesson-navigation button, .lesson-page .check-page-answers { background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 1em; margin: 5px 10px; transition: background-color 0.2s; }
+        .lesson-navigation button:hover, .lesson-page .check-page-answers:hover { background-color: #0056b3; }
+        .lesson-navigation button:disabled { background-color: #ccc; cursor: not-allowed; }
+        .page-indicator { font-style: italic; color: #555; margin: 10px 0; }
+        .key-principle { background-color: #e7f3ff; padding: 10px; margin-bottom:10px; border-left: 3px solid #007bff; border-radius: 3px; }
+        .interactive-question-block { background: #f9f9f9; padding: 15px; margin: 20px 0; border: 1px solid #e0e0e0; border-radius: 8px; }
+        .interactive-question-block .question-text { font-weight: bold; margin-bottom: 8px; font-size: 1em; color: #555; }
+        .interactive-question-block label { display: block; margin-left: 0; padding: 8px 12px; border-radius: 5px; cursor: pointer; border: 1px solid transparent; margin-bottom: 5px; }
+        .interactive-question-block input[type="radio"] { margin-right: 10px; vertical-align: middle; }
+        .interactive-question-block label:hover { background-color: #f0f8ff; }
+        .feedback-correct { background-color: #e8f8f0 !important; border-left: 4px solid #2ecc71 !important; }
+        .feedback-incorrect { background-color: #fdedec !important; border-left: 4px solid #e74c3c !important; }
+        .feedback-correct label.correct-option, .feedback-incorrect label.correct-option { font-weight: bold; color: #1E8449; }
+        .feedback-incorrect label.selected-incorrect { color: #A93226; }
+        .explanation { font-size: 0.9em; color: #444; margin-top: 5px; padding-left: 20px; }
+        .footer { text-align: center; margin-top: 30px; padding-top: 15px; border-top: 1px solid #ccc; font-size: 0.85em; color: #555; }
+        .nav-links-header { background-color: #fff; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 50; }
+        .fig { margin: 18px auto; max-width: 430px; text-align: center; }
+        .fig img { width: 100%; border: 1px solid #ccc; border-radius: 6px; background: #000; display:block; }
+        .fig figcaption { font-size: 0.9em; color: #555; margin-top: 6px; text-align: left; }
+        .fig-row { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; align-items: flex-start; }
+        .fig-row .fig { max-width: 300px; margin: 8px 0; }
+        model-viewer { width: 100%; height: 420px; background: #111; border-radius: 8px; }
+        .model-credit { font-size: 0.8em; color: #888; margin-top: 6px; }
+</style>
+</head>
+<body>
+    <header class="nav-links-header">
+        <div style="max-width:900px;margin:0 auto;padding:12px 20px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;">
+            <strong style="color:#0056b3;">Sectional Anatomy: Abdomen</strong>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                <a href="../index.html" style="font-size:0.8rem;background:#0056b3;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Sectional Anatomy Menu</a>
+                <a href="../../index.html" style="font-size:0.8rem;background:#64748b;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Main Workbook</a>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <h1>Sectional Anatomy: Abdomen</h1>
+        <div class="flip-lesson-container">
+            <h2>Interactive Lesson</h2>
+            <div id="lesson-page-1" class="lesson-page active">
+                <h3>Page 1: The Abdomen &mdash; Boundaries and Levels</h3>
+
+                <p><strong>IV and oral contrast</strong> sharpen organ and vessel borders on abdominal CT. Vertebral levels orient you: diaphragm ~T8&ndash;T10, GE junction ~T10&ndash;T11, pancreatic head ~L1&ndash;L2, kidneys ~T12&ndash;L3, and the adult cord ending at the <strong>conus medullaris ~L1&ndash;L2</strong>.</p>
+                <div class="key-principle"><p>A quick orientation rule that holds on every axial slice: the <strong>aorta</strong> sits anterior/left of the spine, with the <strong>inferior vena cava immediately to its right</strong>.</p></div>
+
+            </div>
+            <div id="lesson-page-2" class="lesson-page">
+                <h3>Page 2: Abdominal Organs in 3D</h3>
+
+                <p>Rotate this abdominal model to place the major organs relative to one another before reading them on cross-section.</p>
+                <model-viewer src="../models/abdomen_anatomy/scene.glb" camera-controls auto-rotate touch-action="pan-y" shadow-intensity="1" ar></model-viewer>
+                <p class="fig figcaption" style="text-align:left;font-size:0.9em;color:#555;">Interactive abdominal anatomy. Locate the liver (right upper quadrant), spleen (left upper quadrant), stomach, pancreas draped across the midline, kidneys posteriorly, and the great vessels.</p>
+                <p class="model-credit">3D model: &quot;Abdomen Anatomy&quot; by CaitlynnH (sketchfab.com/CaitlynnH), CC-BY-4.0.</p>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">In which quadrant is the spleen located?</p>
+                    <label><input type="radio" name="a_p2_1" value="A"> Right upper quadrant</label>
+                    <label><input type="radio" name="a_p2_1" value="B"> Left upper quadrant</label>
+                    <label><input type="radio" name="a_p2_1" value="C"> Right lower quadrant</label>
+                    <div class="explanation" style="display:none;">B. The spleen sits in the left upper quadrant, posterolateral to the stomach; the liver occupies the right upper quadrant.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(2)">Check Answer</button>
+            </div>
+            <div id="lesson-page-3" class="lesson-page">
+                <h3>Page 3: Peritoneal vs. Retroperitoneal</h3>
+
+                <p>A core abdominal distinction is which organs sit <strong>within</strong> the peritoneal cavity versus <strong>behind</strong> it &mdash; it explains motion, spread patterns, and approach.</p>
+                <table class="data-table"><thead><tr><th>Retroperitoneal</th><th>Peritoneal</th></tr></thead><tbody>
+                <tr><td>Kidneys &amp; adrenals, ureters</td><td>Liver, spleen, stomach</td></tr>
+                <tr><td>Pancreas (mostly), duodenum (2nd&ndash;4th parts)</td><td>Gallbladder</td></tr>
+                <tr><td>Aorta &amp; IVC; ascending/descending colon</td><td>Transverse colon, jejunum/ileum</td></tr>
+                </tbody></table>
+
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">Which of these is a retroperitoneal organ?</p>
+                    <label><input type="radio" name="a_p3_1" value="A"> Kidney</label>
+                    <label><input type="radio" name="a_p3_1" value="B"> Spleen</label>
+                    <label><input type="radio" name="a_p3_1" value="C"> Gallbladder</label>
+                    <div class="explanation" style="display:none;">A. The kidneys (with adrenals, pancreas, duodenum, aorta, and IVC) are retroperitoneal; the spleen and gallbladder are intraperitoneal.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(3)">Check Answer</button>
+            </div>
+            <div id="lesson-page-4" class="lesson-page">
+                <h3>Page 4: Nodal Anatomy and the Great Vessels</h3>
+
+                <p>Abdominal nodal chains follow the <strong>aorta and IVC</strong> (para-aortic / paracaval) and the major branch vessels &mdash; the same landmarks that orient organ contouring. Review the shared thoracoabdominal nodal model:</p>
+                <div class="key-principle"><p>Para-aortic and paracaval nodal stations track the great vessels anterior to the spine. Explore nodal anatomy in the workbook's <a href="../3D_model_lymphatics/full_body/index.html">3D lymphatics model</a>.</p></div>
+
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">Abdominal para-aortic nodes are described relative to which structure?</p>
+                    <label><input type="radio" name="a_p4_1" value="A"> The aorta</label>
+                    <label><input type="radio" name="a_p4_1" value="B"> The gallbladder</label>
+                    <label><input type="radio" name="a_p4_1" value="C"> The spleen</label>
+                    <div class="explanation" style="display:none;">A. Para-aortic (and paracaval) nodal stations follow the aorta and IVC anterior to the spine &mdash; the reason those vessels are such important orientation landmarks.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(4)">Check Answer</button>
+            </div>
+            <div id="lesson-page-5" class="lesson-page">
+                <h3>Page 5: Anatomic Verification in the Abdomen</h3>
+
+                <p>Abdominal targets combine <strong>respiratory motion</strong> with <strong>variable bowel/stomach filling</strong>, so verification is organ- and target-focused.</p>
+                <ul>
+                    <li><strong>CBCT soft-tissue matching</strong> to the organ (liver dome, kidney) rather than bone alone.</li>
+                    <li>Motion management: <strong>4D-CT/ITV, breath-hold, gating, or abdominal compression</strong>.</li>
+                    <li><strong>Fiducial markers</strong> (liver, pancreas) provide a visible surrogate on daily imaging.</li>
+                </ul>
+
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">Why are fiducial markers often used for liver or pancreas verification?</p>
+                    <label><input type="radio" name="a_p5_1" value="A"> The soft-tissue target may be hard to see and moves relative to bone, so a radio-opaque marker gives a reliable surrogate</label>
+                    <label><input type="radio" name="a_p5_1" value="B"> They increase electron density for dose calculation</label>
+                    <div class="explanation" style="display:none;">A. Low soft-tissue contrast plus respiratory/filling motion makes some abdominal targets hard to localize; fiducials give a clear, trackable surrogate.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(5)">Check Answer</button>
+            </div>
+            <div id="lesson-page-6" class="lesson-page">
+                <h3>Page 6: Wrap-Up</h3>
+
+                <p>You've placed the abdominal organs in 3D, applied the peritoneal/retroperitoneal distinction and the aorta/IVC orientation rule, related nodal stations to the great vessels, and seen why motion, filling, and fiducials shape abdominal verification.</p>
+                <p>Cross-reference: <a href="../../Treatment_Planning/Site_Specific_Planning/Abdomen/index.html">Abdomen Treatment Planning</a>.</p>
+
+            </div>
+
+            <div class="lesson-navigation">
+                <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled>Previous Page</button>
+                <span class="page-indicator" id="lessonPageIndicator">Page 1 of 6</span>
+                <button id="nextLessonPage" onclick="changeLessonPage(1)">Next Page</button>
+                <button id="startActivityButton" onclick="window.location.href='../../Treatment_Planning/Site_Specific_Planning/Abdomen/index.html'" style="display:none; background-color: #28a745;">Go to Abdomen Planning →</button>
+            </div>
+        </div>
+        <div class="footer">
+            <p>Radiation Therapy E-Workbook &mdash; Sectional Anatomy</p>
+            <p style="font-size:0.9em;color:#888;">3D model: &quot;Abdomen Anatomy&quot; by CaitlynnH (sketchfab.com/CaitlynnH), CC-BY-4.0.</p>
+        </div>
+    </div>
+    <script>
+        let currentLessonPage = 1;
+        const totalLessonPages = 6;
+        const lessonPages = document.querySelectorAll('.lesson-page');
+        const prevLessonButton = document.getElementById('prevLessonPage');
+        const nextLessonButton = document.getElementById('nextLessonPage');
+        const lessonPageIndicator = document.getElementById('lessonPageIndicator');
+        const startActivityButton = document.getElementById('startActivityButton');
+        const lessonCorrectAnswers = {"a_p2_1": "B", "a_p3_1": "A", "a_p4_1": "A", "a_p5_1": "A"};
+        function displayLessonPage() {
+            lessonPages.forEach((page, index) => page.classList.toggle('active', index === currentLessonPage - 1));
+            prevLessonButton.disabled = currentLessonPage === 1;
+            nextLessonButton.style.display = currentLessonPage === totalLessonPages ? 'none' : 'inline-block';
+            startActivityButton.style.display = currentLessonPage === totalLessonPages ? 'inline-block' : 'none';
+            lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
+        }
+        function changeLessonPage(direction) {
+            currentLessonPage += direction;
+            if (currentLessonPage < 1) currentLessonPage = 1;
+            if (currentLessonPage > totalLessonPages) currentLessonPage = totalLessonPages;
+            displayLessonPage();
+        }
+        function checkPageAnswers(pageNumber) {
+            const questionsOnPage = document.querySelectorAll(`#lesson-page-${pageNumber} .interactive-question-block`);
+            questionsOnPage.forEach(block => {
+                const radio = block.querySelector('input[type="radio"]');
+                if (!radio) return;
+                const questionName = radio.name;
+                if (!lessonCorrectAnswers.hasOwnProperty(questionName)) return;
+                const correctAnswerValue = lessonCorrectAnswers[questionName];
+                const selectedRadio = block.querySelector(`input[name="${questionName}"]:checked`);
+                const explanationDiv = block.querySelector('.explanation');
+                block.classList.remove('feedback-correct', 'feedback-incorrect');
+                block.querySelectorAll('label').forEach(label => label.classList.remove('correct-option', 'selected-incorrect'));
+                if (explanationDiv) explanationDiv.style.display = 'none';
+                if (selectedRadio) {
+                    const userAnswer = selectedRadio.value;
+                    const userSelectedLabel = selectedRadio.parentElement;
+                    if (userAnswer === correctAnswerValue) {
+                        block.classList.add('feedback-correct');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('correct-option');
+                    } else {
+                        block.classList.add('feedback-incorrect');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('selected-incorrect');
+                        const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                        if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                    }
+                } else {
+                    block.classList.add('feedback-incorrect');
+                    const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                    if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                }
+                if (explanationDiv) explanationDiv.style.display = 'block';
+            });
+        }
+        displayLessonPage();
+</script>
+</body>
+</html>
 
