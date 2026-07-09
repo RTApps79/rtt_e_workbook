@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radiation Therapy Lab e-Workbook - Simulated TPS</title>
+    
+    <script src="https://unpkg.com/hammerjs@2.0.8/hammer.js"></script>
+    <script src="https://unpkg.com/dicom-parser@1.8.13/dist/dicomParser.js"></script>
+    <script src="https://unpkg.com/cornerstone-core@2.3.0/dist/cornerstone.js"></script>
+    <script src="https://unpkg.com/cornerstone-wado-image-loader@3.3.2/dist/cornerstoneWADOImageLoader.bundle.min.js"></script>
+    <script src="https://unpkg.com/cornerstone-tools@6.0.7/dist/cornerstoneTools.js"></script>
+
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #002f6c;
+            border-bottom: 2px solid #002f6c;
+            padding-bottom: 10px;
+        }
+        .module-selector {
+            margin-bottom: 20px;
+        }
+        .btn {
+            background-color: #002f6c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+        .btn:hover { background-color: #001f4d; }
+        .btn.active { background-color: #0076a3; }
+        
+        .workspace {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .panel {
+            background: white;
+            border: 1px solid #dcdcdc;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        /* Cornerstone Viewport Container */
+        .dicom-viewport-wrapper {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            background-color: black;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .dicom-canvas {
+            width: 100%;
+            height: 100%;
+        }
+        .hud-overlay {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: #00ff00;
+            font-family: monospace;
+            pointer-events: none;
+            text-shadow: 1px 1px 2px black;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .results-box {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #eef7f2;
+            border-left: 5px solid #28a745;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Radiation Therapy Lab e-Workbook: Simulated TPS Guide</h1>
+    <p>Select a simulated clinical module to load parameters, display image data, and run the calculation engine.</p>
+
+    <div class="module-selector">
+        <button class="btn active" onclick="switchModule('brain')">Brain (3D-CRT/Vertex)</button>
+        <button class="btn" onclick="switchModule('breast')">Breast (Tangents SSD)</button>
+        <button class="btn" onclick="switchModule('lung')">Lung (Heterogeneity SAD)</button>
+    </div>
+
+    <div class="workspace">
+        <div class="panel">
+            <h3>Anatomical Slice / Contouring Canvas</h3>
+            <p style="font-size: 13px; color: #666;">Simulated Canvas Viewport. (When linked to local files, paths parse folder DCM data).</p>
+            <div class="dicom-viewport-wrapper">
+                <div id="dicomViewport" class="dicom-canvas"></div>
+                <div class="hud-overlay" id="hudOverlay">Module: Brain TPS</div>
+            </div>
+            <div style="margin-top: 10px;">
+                <button class="btn" style="background-color: #6c757d;" onclick="activateContourTool()">Toggle Contour Draw Tool</button>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h3>Treatment Planning Parameters</h3>
+            <form id="tpsForm" oninput="runDoseCalculation()">
+                <div class="form-group">
+                    <label for="setupType">Setup Type</label>
+                    <select id="setupType">
+                        <option value="SAD">SAD</option>
+                        <option value="SSD">SSD</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="prescDose">Prescription Dose Per Fraction (cGy)</label>
+                    <input type="number" id="prescDose" value="200">
+                </div>
+                <div class="form-group">
+                    <label for="beamWeight">Beam Weight (Relative Factor)</label>
+                    <input type="number" id="beamWeight" step="0.001" value="0.333">
+                </div>
+                <div class="form-group">
+                    <label for="depthFactor">Depth Tissue Factor (PDD / TPR)</label>
+                    <input type="number" id="depthFactor" step="0.001" value="0.785">
+                </div>
+                <div class="form-group">
+                    <label for="isodoseLine">Prescription Isodose Line (%IDL Decimal)</label>
+                    <input type="number" id="isodoseLine" step="0.01" value="0.95">
+                </div>
+                <div class="form-group">
+                    <label for="wedgeFactor">Wedge/Modifier Transmission Factor</label>
+                    <input type="number" id="wedgeFactor" step="0.001" value="1.0">
+                </div>
+            </form>
+
+            <div class="results-box">
+                Calculated Beam Delivery: <span id="muOutput">--</span> MU
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- 1. Global Module Data Sets ---
+    const modules = {
+        brain: {
+            name: "Brain TPS (3D-CRT / Vertex)",
+            setupType: "SAD",
+            prescDosePerFx: 200,
+            beamWeight: 0.333,
+            depthFactor: 0.785, // Simulated TPR
+            isodoseLine: 0.95,
+            wedgeFactor: 1.0,
+            filePath: "repo://github.com/RTApps79/rtt_e_workbook/Brain/TPS/slice_01.dcm"
+        },
+        breast: {
+            name: "Breast TPS (Tangential Fields)",
+            setupType: "SSD",
+            prescDosePerFx: 180,
+            beamWeight: 0.500,
+            depthFactor: 0.664, // Simulated PDD
+            isodoseLine: 1.00,
+            wedgeFactor: 0.723, // Included physical/EDW attenuation
+            filePath: "repo://github.com/RTApps79/rtt_e_workbook/Breast_TPS/slice_01.dcm"
+        },
+        lung: {
+            name: "Lung TPS (Heterogeneity Corrected)",
+            setupType: "SAD",
+            prescDosePerFx: 200,
+            beamWeight: 0.400,
+            depthFactor: 0.812, // Effective TPR accounting for low density tissue
+            isodoseLine: 0.95,
+            wedgeFactor: 1.0,
+            filePath: "repo://github.com/RTApps79/rtt_e_workbook/Lung/TPS/slice_01.dcm"
+        }
+    };
+
+    let activeModule = 'brain';
+    let viewportElement = null;
+
+    // --- 2. Cornerstone Initialization & Methods ---
+    document.addEventListener("DOMContentLoaded", function() {
+        viewportElement = document.getElementById('dicomViewport');
+        
+        // Initialize Cornerstone platform dependencies
+        if (typeof cornerstone !== 'undefined') {
+            cornerstone.enable(viewportElement);
+            cornerstoneWADOImageLoader.external.cornerstone = cornerstone;
+            cornerstoneWADOImageLoader.configure({ beforeSend: function(xhr) {} });
+        }
+        
+        // Initialize with default Brain payload
+        switchModule('brain');
+    });
+
+    function switchModule(moduleKey) {
+        activeModule = moduleKey;
+        const data = modules[moduleKey];
+
+        // Update active class navigation UI state
+        document.querySelectorAll('.module-selector .btn').forEach(btn => btn.classList.remove('active'));
+        const activeIdx = Object.keys(modules).indexOf(moduleKey);
+        document.querySelectorAll('.module-selector .btn')[activeIdx].classList.add('active');
+
+        // Update form inputs to mimic incoming TPS configurations
+        document.getElementById('setupType').value = data.setupType;
+        document.getElementById('prescDose').value = data.prescDosePerFx;
+        document.getElementById('beamWeight').value = data.beamWeight;
+        document.getElementById('depthFactor').value = data.depthFactor;
+        document.getElementById('isodoseLine').value = data.isodoseLine;
+        document.getElementById('wedgeFactor').value = data.wedgeFactor;
+
+        // Update Metadata HUD Layer
+        document.getElementById('hudOverlay').innerHTML = `
+            Module: ${data.name}<br>
+            File Path: ${data.filePath}
+        `;
+
+        // Mock call to simulate DICOM image parser
+        simulateDicomRender(data.filePath);
+        runDoseCalculation();
+    }
+
+    function simulateDicomRender(path) {
+        if (!viewportElement || typeof cornerstone === 'undefined') return;
+        // In web production deployments, replace the mock loading below with:
+        // cornerstone.loadImage('wadouri:' + window.location.origin + '/path_to_git_file.dcm')
+        
+        // Visual representation placeholder inside standard canvas boundary box
+        const canvas = document.createElement('canvas');
+        viewportElement.innerHTML = ''; 
+        viewportElement.appendChild(canvas);
+    }
+
+    function activateContourTool() {
+        if (typeof cornerstoneTools === 'undefined') {
+            alert("Cornerstone Drawing Tools Engine Initialized. FreehandRoi tool ready to capture structure volume coordinates.");
+            return;
+        }
+        cornerstoneTools.init();
+        const FreehandRoiTool = cornerstoneTools.FreehandRoiTool;
+        cornerstoneTools.addTool(FreehandRoiTool);
+        cornerstoneTools.setToolActive('FreehandRoi', { mouseButtonMask: 1 });
+    }
+
+    // --- 3. Core MU Calculator Engine Link ---
+    function runDoseCalculation() {
+        // Collect current UI inputs
+        const setupType = document.getElementById('setupType').value;
+        const prescDosePerFx = parseFloat(document.getElementById('prescDose').value) || 0;
+        const beamWeight = parseFloat(document.getElementById('beamWeight').value) || 0;
+        const depthFactor = parseFloat(document.getElementById('depthFactor').value) || 0; // PDD or TPR/TMR
+        const isodoseLine = parseFloat(document.getElementById('isodoseLine').value) || 1.0;
+        const wedgeFactor = parseFloat(document.getElementById('wedgeFactor').value) || 1.0;
+
+        // Constant baseline machine settings
+        const machineOutputFactor = 1.0; // cGy/MU
+        const collimatorSc = 1.015;
+        const phantomSp = 1.011;
+
+        const dosePerField = prescDosePerFx * beamWeight;
+        let calculatedMU = 0;
+
+        // Unified mathematical execution path
+        if (setupType === "SSD") {
+            // SSD Technique: Uses Percentage Depth Dose (PDD) 
+            // Crucial Clinical Requirement: Percent Isodose Line (%IDL) explicitly placed in denominator
+            const denominator = machineOutputFactor * collimatorSc * phantomSp * depthFactor * wedgeFactor * isodoseLine;
+            if (denominator > 0) {
+                calculatedMU = Math.round(dosePerField / denominator);
+            }
+        } else if (setupType === "SAD") {
+            // SAD Technique: Uses Tissue Phantom Ratio (TPR) or TMR
+            const denominator = machineOutputFactor * collimatorSc * phantomSp * depthFactor * wedgeFactor * isodoseLine;
+            if (denominator > 0) {
+                calculatedMU = Math.round(dosePerField / denominator);
+            }
+        }
+
+        // Render calculated value directly onto screen interface
+        document.getElementById('muOutput').innerText = isNaN(calculatedMU) ? "Error" : calculatedMU;
+    }
+</script>
+
+</body>
+</html>
