@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beam &amp; Dose Simulator</title>
+<style>
+    :root { --blue:#0056b3; --panel:#0f1622; --ink:#e8eef7; }
+    * { box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin:0; background:#f4f4f4; color:#222; }
+    header.nav { background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.1); position:sticky; top:0; z-index:50; }
+    header.nav .inner { max-width:1200px; margin:0 auto; padding:12px 20px; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:8px; }
+    header.nav strong { color:var(--blue); }
+    header.nav a { font-size:.8rem; color:#fff; font-weight:500; padding:8px 12px; border-radius:6px; text-decoration:none; }
+    .wrap { max-width:1200px; margin:0 auto; padding:20px; }
+    h1 { color:var(--blue); text-align:center; }
+    .lead { max-width:820px; margin:0 auto 18px; color:#333; text-align:center; }
+    .app { display:grid; grid-template-columns: minmax(0,1fr) 360px; gap:18px; align-items:start; }
+    @media (max-width: 900px){ .app{ grid-template-columns:1fr; } }
+    .stage { background:var(--panel); border-radius:10px; padding:12px; }
+    .canvas-holder { position:relative; width:100%; aspect-ratio:1/1; }
+    canvas#ct, canvas#overlay { position:absolute; inset:0; width:100%; height:100%; border-radius:6px; cursor:crosshair; touch-action:none; }
+    .hint { color:#9fb2cc; font-size:.8rem; margin-top:8px; text-align:center; }
+    .panel { background:#fff; border:1px solid #e2e8f0; border-radius:10px; padding:16px; }
+    .panel h3 { color:var(--blue); margin:0 0 10px; font-size:1.05rem; }
+    .ctrl { margin-bottom:14px; }
+    .ctrl label { display:block; font-size:.82rem; font-weight:600; color:#334; margin-bottom:4px; }
+    .ctrl .val { float:right; font-weight:400; color:#0056b3; }
+    input[type=range]{ width:100%; }
+    select { width:100%; padding:7px; border:1px solid #cbd5e1; border-radius:6px; font-size:.9rem; }
+    .row { display:flex; gap:10px; }
+    .row .ctrl { flex:1; }
+    .pill { display:inline-block; padding:2px 8px; border-radius:10px; font-size:.72rem; font-weight:600; }
+    .readout { background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px; font-size:.85rem; }
+    .readout div { display:flex; justify-content:space-between; padding:2px 0; }
+    .readout b { color:#0056b3; }
+    canvas#pdd { width:100%; height:220px; background:#0f1622; border-radius:8px; display:block; }
+    .toggles label { display:inline-flex; align-items:center; gap:6px; font-size:.82rem; margin-right:12px; cursor:pointer; }
+    .legend { display:flex; gap:12px; flex-wrap:wrap; font-size:.75rem; color:#445; margin-top:8px; }
+    .legend span { display:inline-flex; align-items:center; gap:5px; }
+    .sw { width:14px; height:10px; border-radius:2px; display:inline-block; }
+    details { margin-top:18px; background:#fff; border:1px solid #e2e8f0; border-radius:10px; padding:14px 18px; }
+    details summary { font-weight:600; color:var(--blue); cursor:pointer; }
+    details p, details li { font-size:.95rem; }
+    .note { font-size:.78rem; color:#667; }
+    .footer { text-align:center; margin:26px 0 10px; font-size:.85rem; color:#667; }
+</style>
+</head>
+<body>
+<header class="nav">
+  <div class="inner">
+    <strong>Beam &amp; Dose Simulator</strong>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;">
+      <a href="../index.html" style="background:#0056b3;">&larr; Medical Dosimetry Menu</a>
+      <a href="../../Sectional_Anatomy/index.html" style="background:#17a2b8;">Sectional Anatomy</a>
+      <a href="../../index.html" style="background:#64748b;">&larr; Main Workbook</a>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <h1>Beam &amp; Dose Simulator</h1>
+  <p class="lead">Aim a treatment beam through a <strong>real CT slice</strong> and watch how dose builds up beneath the skin to a maximum (<strong>d<sub>max</sub></strong>), then attenuates as it travels through tissue and exits the far side. Because the beam is traced through actual Hounsfield data, it penetrates <em>further</em> through low-density lung and attenuates <em>faster</em> through bone &mdash; the bridge between the anatomy you identify and the dose you deliver.</p>
+
+  <div class="app">
+    <div>
+      <div class="stage">
+        <div class="canvas-holder">
+          <canvas id="ct" width="512" height="512"></canvas>
+          <canvas id="overlay" width="512" height="512"></canvas>
+        </div>
+        <div class="hint">Click on the image to place the beam's target (isocenter). Drag the gantry angle to rotate the beam around it.</div>
+      </div>
+      <div class="panel" style="margin-top:16px;">
+        <h3>Depth-Dose Curve (central axis)</h3>
+        <canvas id="pdd" width="700" height="220"></canvas>
+        <div class="legend">
+          <span><span class="sw" style="background:#e74c3c;"></span>% dose</span>
+          <span><span class="sw" style="background:#111;border:1px solid #999;"></span>d<sub>max</sub></span>
+          <span><span class="sw" style="background:rgba(0,200,255,.5);"></span>lung / air</span>
+          <span><span class="sw" style="background:rgba(180,180,180,.5);"></span>soft tissue</span>
+          <span><span class="sw" style="background:rgba(255,255,255,.85);border:1px solid #999;"></span>bone</span>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="panel">
+        <h3>Beam Controls</h3>
+        <div class="ctrl">
+          <label>CT slice</label>
+          <select id="sliceSel"></select>
+          <div class="note" id="sliceDesc" style="margin-top:6px;"></div>
+        </div>
+        <div class="ctrl">
+          <label>Beam energy <span class="val" id="energyVal"></span></label>
+          <select id="energySel"></select>
+        </div>
+        <div class="ctrl">
+          <label>Gantry angle <span class="val" id="gantryVal">0&deg;</span></label>
+          <input type="range" id="gantry" min="0" max="359" value="0">
+        </div>
+        <div class="ctrl">
+          <label>Field width <span class="val" id="fieldVal">8.0 cm</span></label>
+          <input type="range" id="field" min="10" max="200" value="80">
+        </div>
+        <div class="row">
+          <div class="ctrl">
+            <label>Window level <span class="val" id="wlVal"></span></label>
+            <input type="range" id="wl" min="-600" max="1000" value="40">
+          </div>
+          <div class="ctrl">
+            <label>Window width <span class="val" id="wwVal"></span></label>
+            <input type="range" id="ww" min="80" max="2500" value="400">
+          </div>
+        </div>
+        <div class="ctrl toggles">
+          <label><input type="checkbox" id="tShowDose" checked> Dose wash</label>
+          <label><input type="checkbox" id="tShowTissue" checked> Tissue bands on curve</label>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:16px;">
+        <h3>Readout</h3>
+        <div class="readout" id="readout">
+          <div><span>Beam energy</span> <b id="rEnergy">&ndash;</b></div>
+          <div><span>d<sub>max</sub> (in water)</span> <b id="rDmax">&ndash;</b></div>
+          <div><span>Physical depth of d<sub>max</sub></span> <b id="rDmaxPhys">&ndash;</b></div>
+          <div><span>Surface (skin) dose</span> <b id="rSkin">&ndash;</b></div>
+          <div><span>Dose at exit</span> <b id="rExit">&ndash;</b></div>
+          <div><span>Path through bone</span> <b id="rBone">&ndash;</b></div>
+          <div><span>Path through lung/air</span> <b id="rLung">&ndash;</b></div>
+        </div>
+        <p class="note" style="margin-top:10px;">Values are from an <strong>illustrative</strong> percentage-depth-dose model (build-up + exponential attenuation through water-equivalent tissue). It reproduces the correct <em>behavior</em> for teaching, not a clinical dose calculation.</p>
+      </div>
+    </div>
+  </div>
+
+  <details open>
+    <summary>What am I looking at? (the physics)</summary>
+    <p><strong>Build-up region.</strong> A megavoltage photon beam does not deposit its maximum dose at the skin. Photons first set electrons in motion, and those electrons travel a short distance before depositing energy. Dose therefore <em>builds up</em> from a relatively low <strong>surface (skin) dose</strong> to a peak at <strong>d<sub>max</sub></strong>. Higher energy &rarr; deeper d<sub>max</sub> and lower skin dose (this is the <em>skin-sparing</em> effect).</p>
+    <p><strong>Attenuation.</strong> Beyond d<sub>max</sub>, dose falls off roughly exponentially as the beam is attenuated by tissue, until it <strong>exits</strong> the far side. Higher energy beams are more penetrating (they fall off more slowly).</p>
+    <p><strong>Why tissue matters &mdash; the sectional-anatomy bridge.</strong> Attenuation depends on <em>electron density</em>, not distance alone. The simulator converts each pixel's Hounsfield value to relative electron density, so the beam accumulates &quot;water-equivalent depth&quot; as it travels. Through <span class="pill" style="background:#d6f3ff;color:#036;">lung</span> the beam accrues depth slowly and stays hotter deeper; through <span class="pill" style="background:#eee;color:#333;">bone</span> it attenuates faster. Rotate the gantry so the beam passes through a lung versus through the vertebral body and watch the curve change.</p>
+    <p class="note">Model parameters are typical teaching values; d<sub>max</sub> and penetration vary with field size, SSD, and machine calibration in reality.</p>
+  </details>
+
+  <div class="footer">
+    Radiation Therapy E-Workbook &mdash; Medical Dosimetry &nbsp;|&nbsp; Imaging: de-identified educational planning CT (thorax, pelvis, brain).
+  </div>
+</div>
+
+<script>
+// ---------- energy model (illustrative PDD parameters) ----------
+const ENERGIES = [
+  { id:"co60", label:"Cobalt-60 (1.25 MV avg)", dmax:0.5, mu:0.063, skin:35 },
+  { id:"6mv",  label:"6 MV photons",  dmax:1.5, mu:0.047, skin:16 },
+  { id:"10mv", label:"10 MV photons", dmax:2.5, mu:0.040, skin:12 },
+  { id:"15mv", label:"15 MV photons", dmax:3.0, mu:0.035, skin:10 },
+  { id:"18mv", label:"18 MV photons", dmax:3.3, mu:0.033, skin:9  },
+];
+
+// ---------- state ----------
+let manifest=[], slice=null, HU=null, ROWS=512, COLS=512, mmpp=1.0;
+let iso={x:256,y:256}, gantry=0, fieldW=80, energy=ENERGIES[1];
+let wl=40, ww=400, showDose=true, showTissue=true;
+let dragging=false;
+
+const ctCan=document.getElementById('ct'), ctx=ctCan.getContext('2d');
+const ov=document.getElementById('overlay'), octx=ov.getContext('2d');
+const pdd=document.getElementById('pdd'), pctx=pdd.getContext('2d');
+
+// ---------- HU <-> electron density ----------
+function huToRED(hu){
+  if(hu <= -1000) return 0.0011;      // air
+  if(hu < 0) return (hu+1000)/1000;   // air->water ramp (lung sits here)
+  return 1 + hu*0.00055;              // soft tissue -> bone
+}
+function tissueClass(hu){ return hu < -300 ? 'air' : (hu < 200 ? 'soft' : 'bone'); }
+
+// ---------- load a slice (decode HU from R/G channels) ----------
+function loadSlice(meta){
+  return new Promise((res)=>{
+    const img=new Image();
+    img.onload=()=>{
+      ROWS=meta.rows; COLS=meta.cols; mmpp=meta.mm_per_px;
+      const off=document.createElement('canvas'); off.width=COLS; off.height=ROWS;
+      const octx2=off.getContext('2d'); octx2.drawImage(img,0,0,COLS,ROWS);
+      const d=octx2.getImageData(0,0,COLS,ROWS).data;
+      HU=new Int16Array(COLS*ROWS);
+      for(let i=0,p=0;i<HU.length;i++,p+=4){ HU[i]=((d[p]<<8)|d[p+1])-1024; }
+      slice=meta; iso={x:Math.floor(COLS/2),y:Math.floor(ROWS/2)};
+      res();
+    };
+    img.src="data/"+meta.file;
+  });
+}
+
+// ---------- draw CT with window/level ----------
+function drawCT(){
+  const out=ctx.createImageData(COLS,ROWS), o=out.data;
+  const lo=wl-ww/2, hi=wl+ww/2, span=hi-lo;
+  for(let i=0,p=0;i<HU.length;i++,p+=4){
+    let v=(HU[i]-lo)/span; v=v<0?0:v>1?1:v; const g=(v*255)|0;
+    o[p]=o[p+1]=o[p+2]=g; o[p+3]=255;
+  }
+  ctCan.width=COLS; ctCan.height=ROWS; ctx.putImageData(out,0,0);
+}
+
+// ---------- dose color map ----------
+function doseRGBA(pct){
+  // 0..100 -> blue->cyan->green->yellow->red, alpha grows with dose
+  const p=Math.max(0,Math.min(100,pct))/100;
+  let r,g,b;
+  if(p<0.25){ const t=p/0.25; r=0; g=(t*180)|0; b=255; }
+  else if(p<0.5){ const t=(p-0.25)/0.25; r=0; g=(180+t*75)|0; b=(255-t*255)|0; }
+  else if(p<0.75){ const t=(p-0.5)/0.25; r=(t*255)|0; g=255; b=0; }
+  else { const t=(p-0.75)/0.25; r=255; g=(255-t*215)|0; b=0; }
+  const a=Math.min(210, 40+p*190);
+  return [r,g,b,a];
+}
+
+// ---------- trace one ray, return samples along central axis ----------
+function marchRay(sx,sy,dx,dy){
+  // returns list of {gi (geom cm from entry), we (water-eq cm), hu, px,py, inPat}
+  const stepPx=0.75, stepMM=stepPx*mmpp, stepCM=stepMM/10;
+  let x=sx, y=sy, we=0, entered=false, samples=[], geom=0;
+  const maxSteps=Math.ceil(Math.hypot(COLS,ROWS)/stepPx)+4;
+  for(let s=0;s<maxSteps;s++){
+    const ix=Math.round(x), iy=Math.round(y);
+    if(ix>=0&&ix<COLS&&iy>=0&&iy<ROWS){
+      const hu=HU[iy*COLS+ix];
+      const inPat = hu>-300;
+      if(inPat&&!entered) entered=true;
+      if(entered){
+        we += huToRED(hu)*stepCM;
+        geom += stepCM;
+        samples.push({geom, we, hu, px:ix, py:iy, inPat});
+      }
+    } else if(entered){ break; }
+    x+=dx*stepPx; y+=dy*stepPx;
+  }
+  return samples;
+}
+
+function pdDose(we){
+  const {dmax,mu,skin}=energy;
+  if(we<=0) return 0;
+  if(we<=dmax){ return skin + (100-skin)*(1-Math.cos(Math.PI/2*we/dmax)); }
+  return 100*Math.exp(-mu*(we-dmax));
+}
+
+// ---------- compute + render beam ----------
+function renderBeam(){
+  octx.clearRect(0,0,COLS,ROWS);
+  const th=gantry*Math.PI/180;
+  const dx=Math.sin(th), dy=Math.cos(th);      // beam travel direction
+  const px=Math.cos(th), py=-Math.sin(th);     // lateral (perp) unit
+  const halfW=(fieldW/2);                        // in px
+  const L=Math.hypot(COLS,ROWS);                 // start distance on source side
+
+  // dose wash: sweep parallel rays across the field
+  let doseImg=null,dd=null;
+  if(showDose){ doseImg=octx.createImageData(COLS,ROWS); dd=doseImg.data; }
+
+  for(let s=-halfW; s<=halfW; s+=1){
+    const ox=iso.x+px*s, oy=iso.y+py*s;
+    const sx=ox-dx*L, sy=oy-dy*L;
+    const samples=marchRay(sx,sy,dx,dy);
+    // lateral field falloff (soft penumbra near edges)
+    const edge=1-Math.max(0,(Math.abs(s)-(halfW-3))/3)*0.6;
+    if(showDose && doseImg){
+      for(const smp of samples){
+        if(!smp.inPat) continue;
+        const dose=pdDose(smp.we)*edge;
+        const [r,g,b,a]=doseRGBA(dose);
+        const idx=(smp.py*COLS+smp.px)*4;
+        // keep the brightest contribution per pixel
+        if(a>dd[idx+3]){ dd[idx]=r; dd[idx+1]=g; dd[idx+2]=b; dd[idx+3]=a; }
+      }
+    }
+  }
+  if(showDose && doseImg){ octx.putImageData(doseImg,0,0); }
+
+  // central axis + markers (drawn in CSS px scale)
+  const scale=ov.clientWidth/COLS;
+  octx.save();
+  octx.scale(1,1); // overlay canvas is 512; CSS scales it. draw in canvas coords.
+  // central-axis samples
+  const cax=marchRay(iso.x-dx*L, iso.y-dy*L, dx,dy);
+  // beam central line
+  octx.strokeStyle='rgba(255,255,255,.55)'; octx.lineWidth=1.2; octx.setLineDash([5,4]);
+  octx.beginPath(); octx.moveTo(iso.x-dx*L, iso.y-dy*L); octx.lineTo(iso.x+dx*L, iso.y+dy*L); octx.stroke();
+  // field edges
+  octx.setLineDash([3,4]); octx.strokeStyle='rgba(255,255,0,.5)';
+  for(const s of [-halfW,halfW]){
+    const ox=iso.x+px*s, oy=iso.y+py*s;
+    octx.beginPath(); octx.moveTo(ox-dx*L, oy-dy*L); octx.lineTo(ox+dx*L, oy+dy*L); octx.stroke();
+  }
+  octx.setLineDash([]);
+  // isocenter
+  octx.strokeStyle='#00e5ff'; octx.lineWidth=1.5;
+  octx.beginPath(); octx.arc(iso.x,iso.y,5,0,7); octx.stroke();
+  octx.beginPath(); octx.moveTo(iso.x-8,iso.y); octx.lineTo(iso.x+8,iso.y);
+  octx.moveTo(iso.x,iso.y-8); octx.lineTo(iso.x,iso.y+8); octx.stroke();
+  // dmax marker on central axis
+  if(cax.length){
+    let dm=cax[0], best=-1;
+    for(const smp of cax){ const dz=pdDose(smp.we); if(dz>best){best=dz; dm=smp;} }
+    octx.fillStyle='#fff'; octx.strokeStyle='#111'; octx.lineWidth=2;
+    octx.beginPath(); octx.arc(dm.px,dm.py,5,0,7); octx.fill(); octx.stroke();
+  }
+  octx.restore();
+
+  drawPDD(cax);
+  updateReadout(cax);
+}
+
+// ---------- depth-dose plot ----------
+function drawPDD(cax){
+  const W=pdd.width, H=pdd.height, padL=42, padB=26, padT=12, padR=10;
+  pctx.clearRect(0,0,W,H); pctx.fillStyle='#0f1622'; pctx.fillRect(0,0,W,H);
+  if(!cax.length){ return; }
+  const maxDepth=Math.max(4, cax[cax.length-1].geom);
+  const gx=d=> padL + (d/maxDepth)*(W-padL-padR);
+  const gy=v=> padT + (1-v/105)*(H-padT-padB);
+  // tissue bands
+  if(showTissue){
+    for(let i=0;i<cax.length-1;i++){
+      const t=tissueClass(cax[i].hu);
+      let col = t==='air'?'rgba(0,200,255,.28)': t==='bone'?'rgba(255,255,255,.30)':'rgba(150,150,150,.16)';
+      pctx.fillStyle=col;
+      pctx.fillRect(gx(cax[i].geom), padT, Math.max(1,gx(cax[i+1].geom)-gx(cax[i].geom)), H-padT-padB);
+    }
+  }
+  // axes
+  pctx.strokeStyle='#33405a'; pctx.lineWidth=1; pctx.beginPath();
+  pctx.moveTo(padL,padT); pctx.lineTo(padL,H-padB); pctx.lineTo(W-padR,H-padB); pctx.stroke();
+  pctx.fillStyle='#9fb2cc'; pctx.font='11px Segoe UI';
+  for(let v=0;v<=100;v+=25){ pctx.fillText(v+'%', 6, gy(v)+4); pctx.strokeStyle='#1c2740'; pctx.beginPath(); pctx.moveTo(padL,gy(v)); pctx.lineTo(W-padR,gy(v)); pctx.stroke(); }
+  for(let d=0; d<=maxDepth; d+=Math.ceil(maxDepth/8)){ pctx.fillText(d+'cm', gx(d)-8, H-8); }
+  // curve
+  pctx.strokeStyle='#e74c3c'; pctx.lineWidth=2; pctx.beginPath();
+  let started=false, dmDepth=0, best=-1;
+  for(const smp of cax){ const v=pdDose(smp.we); const X=gx(smp.geom), Y=gy(v);
+    if(!started){pctx.moveTo(X,Y); started=true;} else pctx.lineTo(X,Y);
+    if(v>best){best=v; dmDepth=smp.geom;} }
+  pctx.stroke();
+  // dmax marker
+  pctx.strokeStyle='#fff'; pctx.setLineDash([3,3]); pctx.beginPath(); pctx.moveTo(gx(dmDepth),padT); pctx.lineTo(gx(dmDepth),H-padB); pctx.stroke(); pctx.setLineDash([]);
+  pctx.fillStyle='#fff'; pctx.fillText('d_max', gx(dmDepth)+3, padT+12);
+  pctx.fillStyle='#9fb2cc'; pctx.fillText('Physical depth from skin  \u2192', W/2-60, H-2);
+}
+
+// ---------- readout ----------
+function updateReadout(cax){
+  document.getElementById('rEnergy').textContent=energy.label;
+  document.getElementById('rDmax').textContent=energy.dmax.toFixed(1)+' cm (water)';
+  document.getElementById('rSkin').textContent=energy.skin+'%';
+  if(!cax.length){ return; }
+  // physical depth where water-eq depth reaches dmax
+  let dmaxPhys=null;
+  for(const smp of cax){ if(smp.we>=energy.dmax){ dmaxPhys=smp.geom; break; } }
+  document.getElementById('rDmaxPhys').textContent = dmaxPhys!==null ? dmaxPhys.toFixed(1)+' cm' : '> exit';
+  const exit=cax[cax.length-1];
+  document.getElementById('rExit').textContent = pdDose(exit.we).toFixed(0)+'%';
+  const stepCM=(0.75*mmpp/10);
+  let bone=0,lung=0;
+  for(const smp of cax){ const t=tissueClass(smp.hu); if(t==='bone')bone+=stepCM; else if(t==='air')lung+=stepCM; }
+  document.getElementById('rBone').textContent=bone.toFixed(1)+' cm';
+  document.getElementById('rLung').textContent=lung.toFixed(1)+' cm';
+}
+
+// ---------- full redraw ----------
+function redraw(){ if(!HU) return; drawCT(); renderBeam(); }
+
+// ---------- events ----------
+function canvasPos(e){
+  const r=ov.getBoundingClientRect();
+  const cx=(e.touches?e.touches[0].clientX:e.clientX)-r.left;
+  const cy=(e.touches?e.touches[0].clientY:e.clientY)-r.top;
+  return { x: Math.round(cx/r.width*COLS), y: Math.round(cy/r.height*ROWS) };
+}
+function setIso(e){ const p=canvasPos(e); iso.x=Math.max(0,Math.min(COLS-1,p.x)); iso.y=Math.max(0,Math.min(ROWS-1,p.y)); renderBeam(); }
+ov.addEventListener('mousedown',e=>{dragging=true; setIso(e);});
+ov.addEventListener('mousemove',e=>{ if(dragging) setIso(e); });
+window.addEventListener('mouseup',()=>dragging=false);
+ov.addEventListener('touchstart',e=>{e.preventDefault(); setIso(e);},{passive:false});
+ov.addEventListener('touchmove',e=>{e.preventDefault(); setIso(e);},{passive:false});
+
+function bindRange(id,fn){ const el=document.getElementById(id); el.addEventListener('input',()=>{fn(el.value); renderBeamOrRedraw(id);}); }
+function renderBeamOrRedraw(id){ if(id==='wl'||id==='ww') redraw(); else renderBeam(); }
+
+document.getElementById('gantry').addEventListener('input',e=>{ gantry=+e.target.value; document.getElementById('gantryVal').innerHTML=gantry+'&deg;'; renderBeam(); });
+document.getElementById('field').addEventListener('input',e=>{ fieldW=+e.target.value; document.getElementById('fieldVal').textContent=(fieldW*mmpp/10).toFixed(1)+' cm'; renderBeam(); });
+document.getElementById('wl').addEventListener('input',e=>{ wl=+e.target.value; document.getElementById('wlVal').textContent=wl; redraw(); });
+document.getElementById('ww').addEventListener('input',e=>{ ww=+e.target.value; document.getElementById('wwVal').textContent=ww; redraw(); });
+document.getElementById('tShowDose').addEventListener('change',e=>{ showDose=e.target.checked; renderBeam(); });
+document.getElementById('tShowTissue').addEventListener('change',e=>{ showTissue=e.target.checked; renderBeam(); });
+document.getElementById('energySel').addEventListener('change',e=>{ energy=ENERGIES.find(x=>x.id===e.target.value); document.getElementById('energyVal').textContent=energy.label.split('(')[0].trim(); renderBeam(); });
+document.getElementById('sliceSel').addEventListener('change',async e=>{ await loadSlice(manifest.find(m=>m.id===e.target.value)); wl=slice.default_wl; ww=slice.default_ww; document.getElementById('wl').value=wl; document.getElementById('ww').value=ww; document.getElementById('wlVal').textContent=wl; document.getElementById('wwVal').textContent=ww; document.getElementById('sliceDesc').textContent=slice.desc; document.getElementById('fieldVal').textContent=(fieldW*mmpp/10).toFixed(1)+' cm'; redraw(); });
+
+// ---------- init ----------
+async function init(){
+  manifest=await fetch('data/manifest.json').then(r=>r.json());
+  const ss=document.getElementById('sliceSel');
+  manifest.forEach(m=>{ const o=document.createElement('option'); o.value=m.id; o.textContent=m.id.charAt(0).toUpperCase()+m.id.slice(1); ss.appendChild(o); });
+  const es=document.getElementById('energySel');
+  ENERGIES.forEach(en=>{ const o=document.createElement('option'); o.value=en.id; o.textContent=en.label; es.appendChild(o); });
+  es.value=energy.id; document.getElementById('energyVal').textContent=energy.label.split('(')[0].trim();
+  document.getElementById('wlVal').textContent=wl; document.getElementById('wwVal').textContent=ww;
+  await loadSlice(manifest[0]);
+  wl=slice.default_wl; ww=slice.default_ww;
+  document.getElementById('wl').value=wl; document.getElementById('ww').value=ww;
+  document.getElementById('wlVal').textContent=wl; document.getElementById('wwVal').textContent=ww;
+  document.getElementById('sliceDesc').textContent=slice.desc;
+  document.getElementById('fieldVal').textContent=(fieldW*mmpp/10).toFixed(1)+' cm';
+  redraw();
+}
+init();
+</script>
+</body>
+</html>
