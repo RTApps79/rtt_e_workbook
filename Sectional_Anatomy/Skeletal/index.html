@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sectional Anatomy: Skeletal &amp; Spine</title>
+<style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; margin: 20px; background-color: #f4f4f4; color: #333; display: flex; flex-direction: column; align-items: center; }
+        .container { background-color: #fff; padding: 25px 35px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 90%; max-width: 900px; margin-bottom: 30px; }
+        h1, h2, h3, h4 { color: #0056b3; }
+        h1 { text-align: center; border-bottom: 2px solid #0056b3; padding-bottom: 15px; margin-bottom: 30px; font-size: 2em; }
+        h2 { border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 30px; margin-bottom: 20px; color: #003d7a; font-size: 1.6em; }
+        h3 { color: #004085; margin-top: 25px; margin-bottom: 15px; font-size: 1.3em; }
+        h4 { color: #17a2b8; margin-top: 20px; margin-bottom: 10px; font-size: 1.1em; font-weight: 600; }
+        p, li { margin-bottom: 12px; font-size: 1.05em; }
+        ul, ol { margin-bottom: 15px; padding-left: 25px; }
+        strong { font-weight: 600; }
+        .highlight { background-color: #e6f7ff; padding: 2px 5px; border-radius: 3px; font-weight: 600; }
+        code { background-color: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; color: #c7254e; }
+        table.data-table { width: 90%; margin: 15px auto; border-collapse: collapse; }
+        table.data-table th, table.data-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        table.data-table th { background-color: #e9f5ff; color: #0056b3; font-weight: 600; }
+        table.data-table tr:nth-child(even) { background-color: #f9f9f9; }
+        .flip-lesson-container { border: 1px solid #b3d7ff; padding: 20px; border-radius: 8px; background-color: #f0f8ff; margin-bottom: 30px; }
+        .lesson-page { display: none; padding: 15px; border: 1px solid #ddeeff; background-color: #fff; border-radius: 5px; min-height: 400px; }
+        .lesson-page.active { display: block; }
+        .lesson-navigation { text-align: center; margin-top: 20px; }
+        .lesson-navigation button, .lesson-page .check-page-answers { background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 1em; margin: 5px 10px; transition: background-color 0.2s; }
+        .lesson-navigation button:hover, .lesson-page .check-page-answers:hover { background-color: #0056b3; }
+        .lesson-navigation button:disabled { background-color: #ccc; cursor: not-allowed; }
+        .page-indicator { font-style: italic; color: #555; margin: 10px 0; }
+        .key-principle { background-color: #e7f3ff; padding: 10px; margin-bottom:10px; border-left: 3px solid #007bff; border-radius: 3px; }
+        .interactive-question-block { background: #f9f9f9; padding: 15px; margin: 20px 0; border: 1px solid #e0e0e0; border-radius: 8px; }
+        .interactive-question-block .question-text { font-weight: bold; margin-bottom: 8px; font-size: 1em; color: #555; }
+        .interactive-question-block label { display: block; margin-left: 0; padding: 8px 12px; border-radius: 5px; cursor: pointer; border: 1px solid transparent; margin-bottom: 5px; }
+        .interactive-question-block input[type="radio"] { margin-right: 10px; vertical-align: middle; }
+        .interactive-question-block label:hover { background-color: #f0f8ff; }
+        .feedback-correct { background-color: #e8f8f0 !important; border-left: 4px solid #2ecc71 !important; }
+        .feedback-incorrect { background-color: #fdedec !important; border-left: 4px solid #e74c3c !important; }
+        .feedback-correct label.correct-option, .feedback-incorrect label.correct-option { font-weight: bold; color: #1E8449; }
+        .feedback-incorrect label.selected-incorrect { color: #A93226; }
+        .explanation { font-size: 0.9em; color: #444; margin-top: 5px; padding-left: 20px; }
+        .footer { text-align: center; margin-top: 30px; padding-top: 15px; border-top: 1px solid #ccc; font-size: 0.85em; color: #555; }
+        .nav-links-header { background-color: #fff; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 50; }
+        .fig { margin: 18px auto; max-width: 430px; text-align: center; }
+        .fig img { width: 100%; border: 1px solid #ccc; border-radius: 6px; background: #000; display:block; }
+        .fig figcaption { font-size: 0.9em; color: #555; margin-top: 6px; text-align: left; }
+        .fig-row { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; align-items: flex-start; }
+        .fig-row .fig { max-width: 300px; margin: 8px 0; }
+        model-viewer { width: 100%; height: 420px; background: #111; border-radius: 8px; }
+        .model-credit { font-size: 0.8em; color: #888; margin-top: 6px; }
+</style>
+</head>
+<body>
+    <header class="nav-links-header">
+        <div style="max-width:900px;margin:0 auto;padding:12px 20px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;">
+            <strong style="color:#0056b3;">Sectional Anatomy: Skeletal &amp; Spine</strong>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                <a href="../index.html" style="font-size:0.8rem;background:#0056b3;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Sectional Anatomy Menu</a>
+                <a href="../../index.html" style="font-size:0.8rem;background:#64748b;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;">&larr; Main Workbook</a>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <h1>Sectional Anatomy: Skeletal &amp; Spine</h1>
+        <div class="flip-lesson-container">
+            <h2>Interactive Lesson</h2>
+            <div id="lesson-page-1" class="lesson-page active">
+                <h3>Page 1: Imaging the Spine and Skeleton</h3>
+
+                <p>Skeletal treatment &mdash; bone metastases, spine SBRT, palliative bone fields &mdash; relies on <strong>bone-window CT</strong> (often with MRI for cord and marrow). The column is read segment by segment: 7 cervical, 12 thoracic, 5 lumbar, then sacrum and coccyx.</p>
+                <figure class="fig"><img src="img/spine_sagittal.png" alt="Sagittal CT reconstruction of the spine">
+                    <figcaption>Sagittal reconstruction (bone window) from the SBRT spine CT. Multiple <strong>vertebral bodies</strong> stack anteriorly, separated by <strong>intervertebral discs</strong>, with the <strong>spinal canal</strong> running posteriorly &mdash; the view used to confirm the treated level.</figcaption></figure>
+                <div class="key-principle"><p>Counting vertebrae from a fixed landmark (the C2 dens superiorly or the sacrum inferiorly) on the sagittal view is how the <strong>correct level</strong> is confirmed &mdash; a wrong-level error is among the most serious in spine treatment.</p></div>
+
+            </div>
+            <div id="lesson-page-2" class="lesson-page">
+                <h3>Page 2: Parts of a Vertebra</h3>
+
+                <p>Every typical vertebra shares the same parts &mdash; naming them precisely is essential for spine contouring.</p>
+                <div class="fig-row">
+                <figure class="fig"><img src="img/spine_axial_bone.png" alt="Axial CT of a vertebra, bone window">
+                    <figcaption><strong>Bone window</strong>: the <strong>vertebral body</strong> anteriorly, the <strong>pedicles</strong> and <strong>laminae</strong> forming the arch, <strong>transverse</strong> and <strong>spinous processes</strong>, enclosing the <strong>vertebral (spinal) canal</strong>.</figcaption></figure>
+                <figure class="fig"><img src="img/spine_axial_soft.png" alt="Axial CT of a vertebra, soft-tissue window">
+                    <figcaption><strong>Soft-tissue window</strong>, same level: the <strong>spinal cord</strong> within the canal and paraspinal muscles become visible.</figcaption></figure>
+                </div>
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">Which part of a vertebra connects the body to the lamina and is used to define compartment-based spine CTVs?</p>
+                    <label><input type="radio" name="s_p2_1" value="A"> Spinous process</label>
+                    <label><input type="radio" name="s_p2_1" value="B"> Pedicle</label>
+                    <label><input type="radio" name="s_p2_1" value="C"> Odontoid process</label>
+                    <div class="explanation" style="display:none;">B. The pedicles bridge the body and the posterior arch. Consensus spine-SBRT contouring defines target compartments partly by pedicle/posterior-element involvement.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(2)">Check Answer</button>
+            </div>
+            <div id="lesson-page-3" class="lesson-page">
+                <h3>Page 3: C1, C2, and the Craniovertebral Junction</h3>
+
+                <p>The first two cervical vertebrae are atypical: <strong>C1 (atlas)</strong> is a ring with no body; <strong>C2 (axis)</strong> carries the <strong>odontoid process (dens)</strong> projecting upward, around which the atlas rotates. This junction is a common landmark for level-counting and for high-cervical targets.</p>
+                <div class="key-principle"><p>Because the atlas has no body and the axis has the dens, the craniovertebral junction looks unlike any other level on axial imaging &mdash; a reliable anchor when numbering vertebrae downward.</p></div>
+
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">The odontoid process (dens) is a feature of which vertebra?</p>
+                    <label><input type="radio" name="s_p3_1" value="A"> C1 (atlas)</label>
+                    <label><input type="radio" name="s_p3_1" value="B"> C2 (axis)</label>
+                    <label><input type="radio" name="s_p3_1" value="C"> T1</label>
+                    <div class="explanation" style="display:none;">B. The dens projects up from C2 (the axis); the C1 atlas is a ring without a body that rotates around it.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(3)">Check Answer</button>
+            </div>
+            <div id="lesson-page-4" class="lesson-page">
+                <h3>Page 4: The Spinal Cord and Meninges</h3>
+
+                <p>Within the canal, the cord is wrapped in three <strong>meninges</strong> (superficial to deep): <strong>dura mater</strong>, <strong>arachnoid mater</strong>, and <strong>pia mater</strong>, with CSF in the subarachnoid space. In adults the cord tapers at the <strong>conus medullaris (~L1&ndash;L2)</strong>; below it the <strong>cauda equina</strong> nerve roots descend.</p>
+                <figure class="fig"><img src="img/spine_axial_soft.png" alt="Axial CT showing the spinal cord in the canal">
+                    <figcaption>The <strong>spinal cord</strong> sits centrally within the canal, surrounded by CSF and the meninges &mdash; the dose-limiting structure for essentially all spine treatment.</figcaption></figure>
+                <div class="key-principle"><p>Precisely identifying the cord (and, for SBRT, a tight <strong>cord + setup margin</strong>) on each slice is what allows an ablative dose to a vertebral target while respecting cord tolerance.</p></div>
+
+            </div>
+            <div id="lesson-page-5" class="lesson-page">
+                <h3>Page 5: Anatomic Verification for Bone and Spine Targets</h3>
+
+                <p>Skeletal targets are the site where a <strong>bony match is the target match</strong> &mdash; the tumor is in or on the bone.</p>
+                <ul>
+                    <li>Palliative bone fields: straightforward <strong>kV bony matching</strong> to the treated vertebrae or bony landmark.</li>
+                    <li><strong>Spine SBRT</strong>: near-rigid immobilization, <strong>CBCT matched to the vertebral body</strong>, and <strong>6DoF couch correction</strong> to remove rotations, because the cord sits millimeters from an ablative dose.</li>
+                    <li>Always verify the <strong>correct level</strong> by counting from a fixed landmark.</li>
+                </ul>
+
+                <h4>Quick Check!</h4>
+                <div class="interactive-question-block">
+                    <p class="question-text">Why is 6DoF couch correction particularly important for spine SBRT?</p>
+                    <label><input type="radio" name="s_p5_1" value="A"> It corrects small rotations so the ablative dose stays off the spinal cord millimeters away</label>
+                    <label><input type="radio" name="s_p5_1" value="B"> It lets the couch rotate the patient 90 degrees for lateral fields</label>
+                    <div class="explanation" style="display:none;">A. Ablative dose sits immediately adjacent to the cord, so even small uncorrected rotations risk a cord overdose; 6DoF removes pitch/roll/yaw a translation-only couch cannot.</div>
+                </div>
+                <button class="check-page-answers" onclick="checkPageAnswers(5)">Check Answer</button>
+            </div>
+            <div id="lesson-page-6" class="lesson-page">
+                <h3>Page 6: Wrap-Up</h3>
+
+                <p>You've read the spine on a sagittal reconstruction and axial bone/soft-tissue windows &mdash; the parts of a vertebra, the atypical C1/C2, the cord and meninges &mdash; and seen why skeletal targets make bony matching the target match, with spine SBRT demanding 6DoF precision and correct-level verification.</p>
+                <p>Cross-reference: <a href="../../Treatment_Planning/Site_Specific_Planning/Skeletal/index.html">Skeletal Treatment Planning</a>.</p>
+
+            </div>
+
+            <div class="lesson-navigation">
+                <button id="prevLessonPage" onclick="changeLessonPage(-1)" disabled>Previous Page</button>
+                <span class="page-indicator" id="lessonPageIndicator">Page 1 of 6</span>
+                <button id="nextLessonPage" onclick="changeLessonPage(1)">Next Page</button>
+                <button id="startActivityButton" onclick="window.location.href='../../Treatment_Planning/Site_Specific_Planning/Skeletal/index.html'" style="display:none; background-color: #28a745;">Go to Skeletal Planning →</button>
+            </div>
+        </div>
+        <div class="footer">
+            <p>Radiation Therapy E-Workbook &mdash; Sectional Anatomy</p>
+            <p style="font-size:0.9em;color:#888;">Imaging: de-identified educational spine SBRT planning CT.</p>
+        </div>
+    </div>
+    <script>
+        let currentLessonPage = 1;
+        const totalLessonPages = 6;
+        const lessonPages = document.querySelectorAll('.lesson-page');
+        const prevLessonButton = document.getElementById('prevLessonPage');
+        const nextLessonButton = document.getElementById('nextLessonPage');
+        const lessonPageIndicator = document.getElementById('lessonPageIndicator');
+        const startActivityButton = document.getElementById('startActivityButton');
+        const lessonCorrectAnswers = {"s_p2_1": "B", "s_p3_1": "B", "s_p5_1": "A"};
+        function displayLessonPage() {
+            lessonPages.forEach((page, index) => page.classList.toggle('active', index === currentLessonPage - 1));
+            prevLessonButton.disabled = currentLessonPage === 1;
+            nextLessonButton.style.display = currentLessonPage === totalLessonPages ? 'none' : 'inline-block';
+            startActivityButton.style.display = currentLessonPage === totalLessonPages ? 'inline-block' : 'none';
+            lessonPageIndicator.textContent = `Page ${currentLessonPage} of ${totalLessonPages}`;
+        }
+        function changeLessonPage(direction) {
+            currentLessonPage += direction;
+            if (currentLessonPage < 1) currentLessonPage = 1;
+            if (currentLessonPage > totalLessonPages) currentLessonPage = totalLessonPages;
+            displayLessonPage();
+        }
+        function checkPageAnswers(pageNumber) {
+            const questionsOnPage = document.querySelectorAll(`#lesson-page-${pageNumber} .interactive-question-block`);
+            questionsOnPage.forEach(block => {
+                const radio = block.querySelector('input[type="radio"]');
+                if (!radio) return;
+                const questionName = radio.name;
+                if (!lessonCorrectAnswers.hasOwnProperty(questionName)) return;
+                const correctAnswerValue = lessonCorrectAnswers[questionName];
+                const selectedRadio = block.querySelector(`input[name="${questionName}"]:checked`);
+                const explanationDiv = block.querySelector('.explanation');
+                block.classList.remove('feedback-correct', 'feedback-incorrect');
+                block.querySelectorAll('label').forEach(label => label.classList.remove('correct-option', 'selected-incorrect'));
+                if (explanationDiv) explanationDiv.style.display = 'none';
+                if (selectedRadio) {
+                    const userAnswer = selectedRadio.value;
+                    const userSelectedLabel = selectedRadio.parentElement;
+                    if (userAnswer === correctAnswerValue) {
+                        block.classList.add('feedback-correct');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('correct-option');
+                    } else {
+                        block.classList.add('feedback-incorrect');
+                        if (userSelectedLabel) userSelectedLabel.classList.add('selected-incorrect');
+                        const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                        if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                    }
+                } else {
+                    block.classList.add('feedback-incorrect');
+                    const correctRadio = block.querySelector(`input[name="${questionName}"][value="${correctAnswerValue}"]`);
+                    if (correctRadio && correctRadio.parentElement) correctRadio.parentElement.classList.add('correct-option');
+                }
+                if (explanationDiv) explanationDiv.style.display = 'block';
+            });
+        }
+        displayLessonPage();
+</script>
+</body>
+</html>
