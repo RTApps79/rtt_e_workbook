@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Field Gap Calculation</title>
+<style>
+  :root{ --blue:#0056b3; --violet:#7c3aed; --panel:#0f1622; --ink:#e8eef7; }
+  *{box-sizing:border-box;}
+  body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;margin:0;background:#f4f4f4;color:#222;}
+  header.nav{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.1);position:sticky;top:0;z-index:50;}
+  header.nav .inner{max-width:1150px;margin:0 auto;padding:12px 20px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;}
+  header.nav strong{color:var(--blue);}
+  header.nav a{font-size:.8rem;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;}
+  .wrap{max-width:1150px;margin:0 auto;padding:18px;}
+  h1{color:var(--blue);text-align:center;margin:.2em 0;}
+  .lead{max-width:860px;margin:0 auto 16px;text-align:center;color:#333;}
+  .app{display:grid;grid-template-columns:minmax(0,1fr) 350px;gap:18px;align-items:start;}
+  @media(max-width:920px){.app{grid-template-columns:1fr;}}
+  .stage{background:var(--panel);border-radius:10px;padding:14px;}
+  svg{width:100%;height:auto;display:block;}
+  .panel{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:16px;margin-bottom:14px;}
+  .panel h3{color:var(--blue);margin:0 0 10px;font-size:1.05rem;}
+  label.cl{display:block;font-size:.82rem;font-weight:600;color:#334;margin:10px 0 4px;}
+  label.cl .val{float:right;font-weight:400;color:var(--blue);}
+  input[type=range]{width:100%;}
+  .formula{background:#f0f6ff;border:1px solid #cfe0ff;border-radius:8px;padding:12px;text-align:center;font-size:.98rem;color:#123;}
+  .formula .big{font-size:1.08rem;font-weight:700;color:var(--blue);margin-top:6px;}
+  .readout{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px;font-size:.9rem;}
+  .readout div{display:flex;justify-content:space-between;padding:3px 0;} .readout b{color:var(--blue);}
+  .status{padding:8px 10px;border-radius:8px;font-weight:600;text-align:center;margin-top:10px;}
+  .rc{background:#fffdf5;border:1px solid #f0e2b8;border-radius:10px;padding:16px;margin-bottom:14px;}
+  .rc h3{color:#b45309;margin:0 0 6px;font-size:1.05rem;}
+  .rc .scenario{background:#fff;border:1px solid #eee;border-radius:8px;padding:10px;font-size:.92rem;}
+  .rc .formula2{text-align:center;margin:10px 0;font-size:1rem;color:#123;font-weight:600;}
+  .rc-instr{font-size:.85rem;color:#66571f;margin:8px 0 4px;}
+  table.rc-table{width:100%;border-collapse:collapse;}
+  table.rc-table td{padding:5px 6px;border-top:1px solid #f0e2b8;vertical-align:middle;}
+  table.rc-table .sym{font-weight:700;color:#7c3aed;width:170px;font-size:.95rem;}
+  table.rc-table select{width:100%;padding:6px;border:1px solid #cbd5e1;border-radius:6px;font-size:.85rem;}
+  table.rc-table .mark{width:22px;text-align:center;font-weight:700;}
+  .rc-check{margin-top:10px;padding:8px 14px;border:none;border-radius:6px;background:#b45309;color:#fff;cursor:pointer;font-weight:600;}
+  .rc-fb{margin-top:8px;font-weight:600;font-size:.9rem;}
+  .locked{opacity:.45;pointer-events:none;filter:grayscale(.3);}
+  .unlock-note{font-size:.8rem;color:#b45309;margin-bottom:8px;}
+  .ex{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:14px;font-size:.92rem;}
+  .ex code{background:#eef2f7;padding:1px 5px;border-radius:4px;}
+  details{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:12px 18px;margin-top:14px;}
+  summary{font-weight:600;color:var(--blue);cursor:pointer;} .note{font-size:.8rem;color:#667;}
+  .footer{text-align:center;margin:22px 0 8px;font-size:.85rem;color:#667;}
+</style>
+</head>
+<body>
+<header class="nav">
+  <div class="inner">
+    <strong>Field Gap Calculation</strong>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;">
+      <a href="../index.html" style="background:#0056b3;">&larr; Medical Dosimetry Menu</a>
+      <a href="../PDD_Explorer/index.html" style="background:#7c3aed;">PDD Explorer</a>
+      <a href="../Beam_Dose_Simulator/index.html" style="background:#7c3aed;">Beam &amp; Dose Simulator</a>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <h1>Field Gap Calculation</h1>
+  <p class="lead">Two adjacent fields (for example, when a target is longer than the maximum field) each diverge from their own source. If their edges are placed edge-to-edge on the skin, they <strong>spread apart</strong> with depth &mdash; leaving a cold gap &mdash; or, if too close, they <strong>overlap</strong> into a hot spot. A calculated skin gap makes the diverging edges meet exactly at the chosen depth.</p>
+
+  <div class="rc" id="rc">
+    <h3>Step 1 &mdash; Read the problem and identify the variables</h3>
+    <p class="unlock-note">Map each variable to the correct value. The calculator unlocks once your reading is correct.</p>
+  </div>
+
+  <div class="app" id="calcApp">
+    <div>
+      <div class="stage">
+        <svg id="viz" viewBox="0 0 700 400" aria-label="Two adjacent fields meeting at depth"></svg>
+        <div id="statusMsg" class="status"></div>
+      </div>
+    </div>
+    <div>
+      <div class="panel">
+        <h3>Fields &amp; Setup</h3>
+        <label class="cl">Field 1 length L&#8321; <span class="val" id="l1Val">20 cm</span></label>
+        <input type="range" id="l1" min="6" max="40" value="20">
+        <label class="cl">Field 2 length L&#8322; <span class="val" id="l2Val">20 cm</span></label>
+        <input type="range" id="l2" min="6" max="40" value="20">
+        <label class="cl">Match depth d <span class="val" id="dVal">8 cm</span></label>
+        <input type="range" id="depth" min="1" max="20" value="8">
+        <label class="cl">SSD <span class="val" id="ssdVal">100 cm</span></label>
+        <input type="range" id="ssd" min="80" max="120" value="100">
+        <label class="cl">Actual skin gap set <span class="val" id="gapVal">0.0 cm</span></label>
+        <input type="range" id="gap" min="0" max="60" value="0">
+        <button id="autoBtn" style="margin-top:10px;width:100%;padding:8px;border:none;border-radius:6px;background:#0056b3;color:#fff;cursor:pointer;">Set the calculated gap</button>
+      </div>
+      <div class="panel">
+        <h3>The Math</h3>
+        <div class="formula">
+          <div>Gap = &frac12;L&#8321;&middot;(d/SSD) + &frac12;L&#8322;&middot;(d/SSD)</div>
+          <div class="big" id="mathLine"></div>
+        </div>
+        <div class="readout" style="margin-top:12px;">
+          <div><span>Calculated gap to match at d</span><b id="rGap"></b></div>
+          <div><span>Your gap</span><b id="rSet"></b></div>
+          <div><span>At depth d the fields</span><b id="rState"></b></div>
+        </div>
+      </div>
+      <div class="ex">
+        <strong>Worked example</strong>
+        <p id="worked"></p>
+      </div>
+    </div>
+  </div>
+
+  <details open>
+    <summary>Why the gap exists &mdash; and the danger of getting it wrong</summary>
+    <p>Each field's edge is defined by a ray diverging from its source, so a field of length L projects half-widths that fan outward by <code>&frac12;L &times; d/SSD</code> at depth d. Two fields set edge-to-edge on the skin therefore <em>separate</em> underneath, under-dosing the junction. Adding the calculated skin gap lets both diverging edges arrive at the same point at depth d. Set the gap too small and the fields overlap into a <strong>hot spot</strong>; too large and a <strong>cold spot</strong> under-doses the target. In practice junctions are often feathered/moved during treatment to spread any residual dose error. This is the same beam divergence behind <a href="../Magnification/index.html">magnification</a> and field enlargement at <a href="../Extended_SSD/index.html">extended distance</a>.</p>
+  </details>
+
+  <div class="footer">Radiation Therapy E-Workbook &mdash; Medical Dosimetry</div>
+</div>
+
+<script>
+function readingCheck(mount, cfg, onPass){
+  const opts = cfg.quantities.map((q,i)=>`<option value="${i}">${q.label}</option>`).join('')
+    + `<option value="unknown">the unknown &mdash; solve for this</option><option value="na">not given</option>`;
+  let html=`<p class="scenario">${cfg.scenario}</p><div class="formula2">${cfg.formula}</div><p class="rc-instr">Match each variable to the correct quantity:</p><table class="rc-table">`;
+  cfg.variables.forEach((v,i)=>{ html+=`<tr><td class="sym">${v.sym}</td><td><select data-i="${i}"><option value="">&mdash; choose &mdash;</option>${opts}</select></td><td class="mark" data-m="${i}"></td></tr>`; });
+  html+=`</table><button class="rc-check">Check my reading</button><div class="rc-fb"></div>`;
+  mount.innerHTML=mount.innerHTML+html;
+  mount.querySelector('.rc-check').addEventListener('click',()=>{ let all=true,got=0;
+    cfg.variables.forEach((v,i)=>{ const sel=mount.querySelector(`select[data-i="${i}"]`),mk=mount.querySelector(`[data-m="${i}"]`);
+      const val=sel.value===''?null:((sel.value==='unknown'||sel.value==='na')?sel.value:parseInt(sel.value));
+      const ok=String(val)===String(v.answer); mk.textContent=sel.value===''?'':(ok?'\u2713':'\u2717'); mk.style.color=ok?'#15803d':'#b91c1c'; if(ok)got++;else all=false; });
+    const fb=mount.querySelector('.rc-fb'); fb.style.color=all?'#15803d':'#b45309';
+    fb.textContent=all?'All correct \u2014 the calculator is unlocked below.':`${got}/${cfg.variables.length} correct. Re-read and fix the \u2717 rows.`;
+    if(all&&onPass)onPass(); });
+}
+readingCheck(document.getElementById('rc'),{
+  scenario:"Two adjacent fields, each <b>20 cm</b> long, treat a spine longer than one field. They are set at <b>100 cm SSD</b> and must join at a depth of <b>8 cm</b>. Find the skin gap.",
+  formula:"Gap = &frac12;L&#8321;&middot;(d/SSD) + &frac12;L&#8322;&middot;(d/SSD)",
+  quantities:[{label:"20 cm (L\u2081)"},{label:"20 cm (L\u2082)"},{label:"8 cm"},{label:"100 cm"}],
+  variables:[
+    {sym:"L\u2081 (field 1 length)", answer:0},{sym:"L\u2082 (field 2 length)", answer:1},
+    {sym:"d (match depth)", answer:2},{sym:"SSD", answer:3},{sym:"Gap (result)", answer:"unknown"}
+  ]
+},()=>{document.getElementById('calcApp').classList.remove('locked');});
+document.getElementById('calcApp').classList.add('locked');
+
+const SVGNS="http://www.w3.org/2000/svg";
+function el(t,a){const e=document.createElementNS(SVGNS,t);for(const k in a)e.setAttribute(k,a[k]);return e;}
+let L1=20,L2=20,depth=8,ssd=100,gap=0;
+const $=id=>document.getElementById(id);
+
+function calcGap(){ return 0.5*L1*(depth/ssd)+0.5*L2*(depth/ssd); }
+
+function draw(){
+  const cg=calcGap();
+  const S=$('viz'); S.innerHTML='';
+  const W=700,H=400, skinY=70, cmPx=6.0, cx=350, maxDepthPx=280;
+  const src1x=cx-140, src2x=cx+140, srcY=14;
+  // skin line
+  S.appendChild(el('line',{x1:30,y1:skinY,x2:W-30,y2:skinY,stroke:'#e2e8f0','stroke-width':2}));
+  S.appendChild(el('text',{x:34,y:skinY-6,fill:'#9fb2cc','font-size':11})).textContent='skin surface';
+  // field centers on skin: fields set with 'gap' between inner edges
+  // inner edge of field1 (right edge) at cx - gap/2*cmPx ; field2 inner (left) at cx + gap/2*cmPx
+  const gapPx=gap*cmPx;
+  const f1inner=cx-gapPx/2, f1outer=f1inner-L1*cmPx;
+  const f2inner=cx+gapPx/2, f2outer=f2inner+L2*cmPx;
+  // sources above each field center
+  const f1cx=(f1inner+f1outer)/2, f2cx=(f2inner+f2outer)/2;
+  // divergence: an edge at surface x_s came from source; at depth y, x = source + (x_s-source)*(dist/(SSD))
+  // approximate SSD in px: use srcY->skinY as SSD reference
+  const ssdPx=skinY-srcY;
+  function edgeAtDepth(srcx, xs, dCm){ const distPx=(skinY-srcY)+ (dCm*cmPx); return srcx + (xs-srcx)*(distPx/ssdPx); }
+  // draw field 1 (cyan) as region between its two diverging edges down to bottom
+  function field(srcx, xin, xout, color){
+    const yb=skinY+maxDepthPx;
+    const dCmBottom=maxDepthPx/cmPx;
+    const inB=edgeAtDepth(srcx,xin,dCmBottom), outB=edgeAtDepth(srcx,xout,dCmBottom);
+    S.appendChild(el('path',{d:`M${xout},${skinY} L${xin},${skinY} L${inB},${yb} L${outB},${yb} Z`,fill:color,stroke:'none'}));
+    // source + edge rays
+    S.appendChild(el('circle',{cx:srcx,cy:srcY,r:5,fill:'#fbbf24'}));
+    S.appendChild(el('line',{x1:srcx,y1:srcY,x2:inB,y2:yb,stroke:'rgba(255,255,255,.25)'}));
+    S.appendChild(el('line',{x1:srcx,y1:srcY,x2:outB,y2:yb,stroke:'rgba(255,255,255,.25)'}));
+  }
+  field(f1cx,f1inner,f1outer,'rgba(56,189,248,.22)');
+  field(f2cx,f2inner,f2outer,'rgba(244,114,182,.22)');
+  // depth line for match depth
+  const my=skinY+depth*cmPx;
+  S.appendChild(el('line',{x1:30,y1:my,x2:W-30,y2:my,stroke:'#22c55e','stroke-dasharray':'5 4','stroke-width':1.5}));
+  S.appendChild(el('text',{x:34,y:my-5,fill:'#22c55e','font-size':11})).textContent='match depth d = '+depth+' cm';
+  // where the inner edges are at match depth
+  const e1=edgeAtDepth(f1cx,f1inner,depth), e2=edgeAtDepth(f2cx,f2inner,depth);
+  // marker of junction
+  S.appendChild(el('circle',{cx:e1,cy:my,r:4,fill:'#38bdf8'}));
+  S.appendChild(el('circle',{cx:e2,cy:my,r:4,fill:'#f472b6'}));
+  const sep=(e2-e1)/cmPx; // cm at depth (positive=gap, negative=overlap)
+  let state, col;
+  if(Math.abs(sep)<0.15){ state='meet (matched)'; col='#22c55e'; }
+  else if(sep>0){ state='gap / cold ('+sep.toFixed(1)+' cm)'; col='#38bdf8';
+    S.appendChild(el('rect',{x:e1,y:my-4,width:e2-e1,height:8,fill:'rgba(56,189,248,.5)'})); }
+  else { state='overlap / hot ('+(-sep).toFixed(1)+' cm)'; col='#ef4444';
+    S.appendChild(el('rect',{x:e2,y:my-4,width:e1-e2,height:8,fill:'rgba(239,68,68,.6)'})); }
+  // readouts
+  $('l1Val').textContent=L1+' cm'; $('l2Val').textContent=L2+' cm'; $('dVal').textContent=depth+' cm'; $('ssdVal').textContent=ssd+' cm'; $('gapVal').textContent=gap.toFixed(1)+' cm';
+  $('mathLine').textContent=`\u00bd\u00b7${L1}\u00b7(${depth}/${ssd}) + \u00bd\u00b7${L2}\u00b7(${depth}/${ssd}) = ${cg.toFixed(2)} cm`;
+  $('rGap').textContent=cg.toFixed(2)+' cm';
+  $('rSet').textContent=gap.toFixed(1)+' cm';
+  $('rState').textContent=state;
+  const sm=$('statusMsg'); sm.textContent = 'At depth d, the field edges '+state; sm.style.background=col+'22'; sm.style.color=col;
+  $('worked').innerHTML=`Two <code>${L1} cm</code> and <code>${L2} cm</code> fields matching at <code>${depth} cm</code>, <code>SSD ${ssd}</code>: Gap = \u00bd\u00d7${L1}\u00d7(${depth}/${ssd}) + \u00bd\u00d7${L2}\u00d7(${depth}/${ssd}) = <code>${cg.toFixed(2)} cm</code>.`;
+}
+$('l1').addEventListener('input',e=>{L1=+e.target.value; draw();});
+$('l2').addEventListener('input',e=>{L2=+e.target.value; draw();});
+$('depth').addEventListener('input',e=>{depth=+e.target.value; draw();});
+$('ssd').addEventListener('input',e=>{ssd=+e.target.value; draw();});
+$('gap').addEventListener('input',e=>{gap=(+e.target.value)/10; draw();});
+$('autoBtn').addEventListener('click',()=>{ gap=calcGap(); $('gap').value=Math.round(gap*10); draw(); });
+draw();
+</script>
+</body>
+</html>
