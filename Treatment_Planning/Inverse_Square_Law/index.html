@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inverse Square Law</title>
+<style>
+  :root{ --blue:#0056b3; --violet:#7c3aed; --panel:#0f1622; --ink:#e8eef7; }
+  *{box-sizing:border-box;}
+  body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;margin:0;background:#f4f4f4;color:#222;}
+  header.nav{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.1);position:sticky;top:0;z-index:50;}
+  header.nav .inner{max-width:1150px;margin:0 auto;padding:12px 20px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;}
+  header.nav strong{color:var(--blue);}
+  header.nav a{font-size:.8rem;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;}
+  .wrap{max-width:1150px;margin:0 auto;padding:18px;}
+  h1{color:var(--blue);text-align:center;margin:.2em 0;}
+  .lead{max-width:820px;margin:0 auto 16px;text-align:center;color:#333;}
+  .app{display:grid;grid-template-columns:minmax(0,1fr) 350px;gap:18px;align-items:start;}
+  @media(max-width:920px){.app{grid-template-columns:1fr;}}
+  .stage{background:var(--panel);border-radius:10px;padding:14px;}
+  svg{width:100%;height:auto;display:block;}
+  .faces{display:flex;gap:16px;justify-content:center;align-items:flex-end;margin-top:14px;}
+  .face{text-align:center;}
+  .face .lab{color:#9fb2cc;font-size:.75rem;margin-bottom:4px;}
+  .panel{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:16px;margin-bottom:14px;}
+  .panel h3{color:var(--blue);margin:0 0 10px;font-size:1.05rem;}
+  label.cl{display:block;font-size:.82rem;font-weight:600;color:#334;margin:10px 0 4px;}
+  label.cl .val{float:right;font-weight:400;color:var(--blue);}
+  input[type=range]{width:100%;}
+  .formula{background:#f0f6ff;border:1px solid #cfe0ff;border-radius:8px;padding:12px;text-align:center;font-size:1.1rem;color:#123;}
+  .formula .big{font-size:1.25rem;font-weight:700;color:var(--blue);}
+  .readout{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px;font-size:.9rem;}
+  .readout div{display:flex;justify-content:space-between;padding:3px 0;}
+  .readout b{color:var(--blue);}
+  .bar{height:16px;background:#e2e8f0;border-radius:8px;overflow:hidden;margin-top:4px;}
+  .bar i{display:block;height:100%;background:linear-gradient(90deg,#22c55e,#eab308,#ef4444);}
+  .ex{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:14px;font-size:.92rem;}
+  .ex code{background:#eef2f7;padding:1px 5px;border-radius:4px;}
+  .practice input{width:80px;padding:6px;border:1px solid #cbd5e1;border-radius:6px;}
+  .practice button{padding:6px 12px;border:none;border-radius:6px;background:var(--blue);color:#fff;cursor:pointer;}
+  .practice .fb{margin-top:8px;font-weight:600;}
+  details{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:12px 18px;margin-top:14px;}
+  summary{font-weight:600;color:var(--blue);cursor:pointer;}
+  .note{font-size:.8rem;color:#667;}
+  .footer{text-align:center;margin:22px 0 8px;font-size:.85rem;color:#667;}
+</style>
+</head>
+<body>
+<header class="nav">
+  <div class="inner">
+    <strong>Inverse Square Law</strong>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;">
+      <a href="../index.html" style="background:#0056b3;">&larr; Medical Dosimetry Menu</a>
+      <a href="../Beam_Dose_Simulator/index.html" style="background:#7c3aed;">Beam &amp; Dose Simulator</a>
+      <a href="../../index.html" style="background:#64748b;">&larr; Main Workbook</a>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <h1>Inverse Square Law</h1>
+  <p class="lead">Photons stream out from a small source and spread over an ever-larger area. Double the distance and the same photons cover <strong>four times</strong> the area &mdash; so the intensity drops to <strong>one quarter</strong>. Drag the detector and watch the geometry, the beam, and the math move together.</p>
+
+  <div class="app">
+    <div>
+      <div class="stage">
+        <svg id="cone" viewBox="0 0 700 380" aria-label="Diverging beam from a point source"></svg>
+        <div class="faces">
+          <div class="face">
+            <div class="lab">Reference plane &mdash; <span id="fLab1"></span></div>
+            <svg id="face1" viewBox="0 0 200 200" width="180" height="180"></svg>
+            <div class="lab" id="dens1"></div>
+          </div>
+          <div class="face">
+            <div class="lab">Detector plane &mdash; <span id="fLab2"></span></div>
+            <svg id="face2" viewBox="0 0 200 200" width="180" height="180"></svg>
+            <div class="lab" id="dens2"></div>
+          </div>
+        </div>
+        <div class="lead" style="color:#9fb2cc;font-size:.8rem;margin:12px auto 0;">Both screens hold the <em>same</em> number of photons. Watch them thin out as the field grows.</div>
+      </div>
+
+      <div class="panel" style="margin-top:16px;">
+        <h3>Intensity vs. Distance</h3>
+        <svg id="plot" viewBox="0 0 700 240"></svg>
+      </div>
+    </div>
+
+    <div>
+      <div class="panel">
+        <h3>Controls</h3>
+        <label class="cl">Reference distance d&#8321; <span class="val" id="d1Val">100 cm</span></label>
+        <input type="range" id="d1" min="50" max="150" value="100">
+        <label class="cl">Detector distance d&#8322; <span class="val" id="d2Val">200 cm</span></label>
+        <input type="range" id="d2" min="25" max="300" value="200">
+        <p class="note" style="margin-top:8px;">Reference intensity I&#8321; is fixed at 100% at d&#8321;.</p>
+      </div>
+
+      <div class="panel">
+        <h3>The Math</h3>
+        <div class="formula">
+          <div>I&#8322; = I&#8321; &times; (d&#8321; / d&#8322;)&sup2;</div>
+          <div class="big" id="mathLine"></div>
+        </div>
+        <div class="readout" style="margin-top:12px;">
+          <div><span>Distance ratio d&#8322;/d&#8321;</span><b id="rRatio"></b></div>
+          <div><span>Area grows by</span><b id="rArea"></b></div>
+          <div><span>Relative intensity I&#8322;</span><b id="rInt"></b></div>
+        </div>
+        <div class="bar"><i id="intBar"></i></div>
+      </div>
+
+      <div class="ex">
+        <strong>Worked example</strong>
+        <p id="worked"></p>
+        <div class="practice" style="margin-top:10px;">
+          <strong>Your turn</strong>
+          <p id="pq" style="margin:6px 0;"></p>
+          I&#8322; = <input type="number" id="pAns" step="0.1"> cGy/min
+          <button id="pCheck">Check</button>
+          <button id="pNew" style="background:#64748b;">New</button>
+          <div class="fb" id="pFb"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <details open>
+    <summary>Why this matters in the clinic</summary>
+    <p>The inverse square law governs any point-like radiation source: it is why an <strong>extended-SSD</strong> treatment delivers less dose per monitor unit than at standard distance (and needs an inverse-square correction), why <strong>brachytherapy</strong> dose falls off so sharply around a seed, and part of why <strong>PDD increases with SSD</strong>. In the <a href="../Beam_Dose_Simulator/index.html">Beam &amp; Dose Simulator</a>, the exponential attenuation you see is layered on top of this geometric falloff. Note the law assumes a <em>point</em> source in a non-attenuating medium &mdash; in tissue, attenuation and scatter modify the pure 1/d&sup2; behavior.</p>
+  </details>
+
+  <div class="footer">Radiation Therapy E-Workbook &mdash; Medical Dosimetry</div>
+</div>
+
+<script>
+const SVGNS="http://www.w3.org/2000/svg";
+function el(tag,attrs){ const e=document.createElementNS(SVGNS,tag); for(const k in attrs) e.setAttribute(k,attrs[k]); return e; }
+// fixed photon field (fractional positions) so screens scale consistently
+const N=90, PH=[]; let seed=12345;
+function rnd(){ seed=(seed*1103515245+12345)&0x7fffffff; return seed/0x7fffffff; }
+for(let i=0;i<N;i++) PH.push([rnd(),rnd()]);
+
+let d1=100, d2=200; const I1=100;
+const $=id=>document.getElementById(id);
+
+function draw(){
+  const I2=I1*Math.pow(d1/d2,2);
+  const ratio=d2/d1, area=ratio*ratio;
+  // ---- cone side-view ----
+  const S=$('cone'); S.innerHTML='';
+  const srcX=55, srcY=190, maxD=300, x0=90, x1=670;
+  const xOf=d=> x0 + (d/maxD)*(x1-x0);
+  const halfAt=d=> 8 + (d/maxD)*150;   // linear divergence
+  // cone fill
+  const topEnd=srcY-halfAt(maxD), botEnd=srcY+halfAt(maxD);
+  S.appendChild(el('path',{d:`M${srcX},${srcY} L${x1},${topEnd} L${x1},${botEnd} Z`,fill:'rgba(124,58,237,.10)',stroke:'none'}));
+  // photon rays (thin out visually is inherent; draw faint guide lines)
+  for(let k=-3;k<=3;k++){ const yEnd=srcY + (k/3)*halfAt(maxD); S.appendChild(el('line',{x1:srcX,y1:srcY,x2:x1,y2:yEnd,stroke:'rgba(124,58,237,.18)','stroke-width':1})); }
+  // source
+  S.appendChild(el('circle',{cx:srcX,cy:srcY,r:7,fill:'#fbbf24'}));
+  S.appendChild(el('text',{x:srcX,y:srcY-16,fill:'#fbbf24','font-size':12,'text-anchor':'middle'}));
+  const st=el('text',{x:srcX,y:srcY+30,fill:'#fbbf24','font-size':11,'text-anchor':'middle'}); st.textContent='source'; S.appendChild(st);
+  // reference plane d1
+  function plane(d,color,label){
+    const x=xOf(d), h=halfAt(d);
+    S.appendChild(el('line',{x1:x,y1:srcY-h,x2:x,y2:srcY+h,stroke:color,'stroke-width':3}));
+    const t=el('text',{x:x,y:srcY+h+18,fill:color,'font-size':12,'text-anchor':'middle'}); t.textContent=label+' = '+Math.round(d)+' cm'; S.appendChild(t);
+    // photon dots spread across plane height
+    for(let i=0;i<N;i++){ const yy=srcY - h + PH[i][1]*2*h; S.appendChild(el('circle',{cx:x,cy:yy,r:1.6,fill:color,opacity:.8})); }
+  }
+  plane(d1,'#38bdf8','d\u2081');
+  plane(d2,'#f472b6','d\u2082');
+  // ---- face-on screens (constant px/cm) ----
+  const baseCm=10, pxPerCm=7.0;
+  function face(svg, d, color){
+    svg.innerHTML='';
+    const cm=baseCm*(d/d1); const side=Math.min(196, cm*pxPerCm); const off=(200-side)/2;
+    svg.appendChild(el('rect',{x:off,y:off,width:side,height:side,fill:'rgba(255,255,255,.04)',stroke:color,'stroke-width':2,rx:4}));
+    // grid (1 cell per ~2.5cm)
+    const cells=Math.max(2,Math.round(cm/2.5));
+    for(let g=1;g<cells;g++){ const p=off+side*g/cells;
+      svg.appendChild(el('line',{x1:p,y1:off,x2:p,y2:off+side,stroke:color,'stroke-width':.5,opacity:.3}));
+      svg.appendChild(el('line',{x1:off,y1:p,x2:off+side,y2:p,stroke:color,'stroke-width':.5,opacity:.3})); }
+    for(let i=0;i<N;i++){ svg.appendChild(el('circle',{cx:off+PH[i][0]*side,cy:off+PH[i][1]*side,r:2,fill:color})); }
+    return cm;
+  }
+  const cm1=face($('face1'),d1,'#38bdf8'); const cm2=face($('face2'),d2,'#f472b6');
+  $('fLab1').textContent=Math.round(d1)+' cm'; $('fLab2').textContent=Math.round(d2)+' cm';
+  const dens1=N/(cm1*cm1), dens2=N/(cm2*cm2);
+  $('dens1').textContent=dens1.toFixed(2)+' photons/cm\u00b2';
+  $('dens2').textContent=dens2.toFixed(2)+' photons/cm\u00b2 ('+(dens2/dens1*100).toFixed(0)+'% of ref)';
+
+  // ---- plot 1/d^2 ----
+  const P=$('plot'); P.innerHTML=''; const W=700,H=240,pl=46,pb=28,pt=10,pr=12;
+  const gx=d=>pl+(d/maxD)*(W-pl-pr), gy=v=>pt+(1-v/110)*(H-pt-pb);
+  P.appendChild(el('line',{x1:pl,y1:pt,x2:pl,y2:H-pb,stroke:'#33405a'}));
+  P.appendChild(el('line',{x1:pl,y1:H-pb,x2:W-pr,y2:H-pb,stroke:'#33405a'}));
+  for(let v=0;v<=100;v+=25){ P.appendChild(el('line',{x1:pl,y1:gy(v),x2:W-pr,y2:gy(v),stroke:'#1c2740'})); const t=el('text',{x:8,y:gy(v)+4,fill:'#9fb2cc','font-size':11}); t.textContent=v+'%'; P.appendChild(t); }
+  for(let d=50;d<=maxD;d+=50){ const t=el('text',{x:gx(d)-10,y:H-8,fill:'#9fb2cc','font-size':11}); t.textContent=d; P.appendChild(t); }
+  let path='M';
+  for(let d=15;d<=maxD;d+=3){ const v=I1*Math.pow(d1/d,2); path+=`${gx(d)},${Math.max(pt,gy(Math.min(110,v)))} `; if(d===15)path+='L'; }
+  P.appendChild(el('path',{d:path,fill:'none',stroke:'#e74c3c','stroke-width':2}));
+  // markers
+  [['#38bdf8',d1,I1],['#f472b6',d2,I2]].forEach(([c,d,v])=>{ P.appendChild(el('line',{x1:gx(d),y1:pt,x2:gx(d),y2:H-pb,stroke:c,'stroke-dasharray':'3 3',opacity:.7})); P.appendChild(el('circle',{cx:gx(d),cy:gy(Math.min(110,v)),r:4,fill:c})); });
+
+  // ---- readouts ----
+  $('d1Val').textContent=Math.round(d1)+' cm'; $('d2Val').textContent=Math.round(d2)+' cm';
+  $('mathLine').textContent=`${I1} \u00d7 (${Math.round(d1)}/${Math.round(d2)})\u00b2 = ${I2.toFixed(1)}%`;
+  $('rRatio').textContent=ratio.toFixed(2)+'\u00d7'; $('rArea').textContent=area.toFixed(2)+'\u00d7';
+  $('rInt').textContent=I2.toFixed(1)+'%'; $('intBar').style.width=Math.min(100,I2)+'%';
+  $('worked').innerHTML=`A beam reads <code>100 cGy/min</code> at <code>${Math.round(d1)} cm</code>. At <code>${Math.round(d2)} cm</code>: I\u2082 = 100 \u00d7 (${Math.round(d1)}/${Math.round(d2)})\u00b2 = <code>${(100*Math.pow(d1/d2,2)).toFixed(1)} cGy/min</code>.`;
+}
+
+// practice
+let pq={};
+function newQ(){ const a=[80,90,100,110,120][Math.floor(Math.random()*5)];
+  const da=[80,100,100,120][Math.floor(Math.random()*4)];
+  const db=[60,75,140,150,160,180,200][Math.floor(Math.random()*7)];
+  pq={I1:a,d1:da,d2:db,ans:a*Math.pow(da/db,2)};
+  $('pq').innerHTML=`A field is <code>${a} cGy/min</code> at <code>${da} cm</code>. What is the intensity at <code>${db} cm</code>?`;
+  $('pAns').value=''; $('pFb').textContent='';
+}
+$('pCheck').addEventListener('click',()=>{ const v=parseFloat($('pAns').value); if(isNaN(v)){$('pFb').textContent='Enter a number.';$('pFb').style.color='#b45309';return;}
+  const ok=Math.abs(v-pq.ans)<=pq.ans*0.02+0.5;
+  $('pFb').style.color=ok?'#15803d':'#b91c1c';
+  $('pFb').innerHTML= ok? `Correct! ${pq.ans.toFixed(1)} cGy/min.` : `Not quite \u2014 ${pq.I1} \u00d7 (${pq.d1}/${pq.d2})\u00b2 = ${pq.ans.toFixed(1)} cGy/min.`;
+});
+$('pNew').addEventListener('click',newQ);
+
+$('d1').addEventListener('input',e=>{ d1=+e.target.value; if(d2<d1*0.3)d2=d1; draw(); });
+$('d2').addEventListener('input',e=>{ d2=+e.target.value; draw(); });
+draw(); newQ();
+</script>
+</body>
+</html>
