@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Extended Distance (SSD) Correction</title>
+<title>Magnification</title>
 <style>
   :root{ --blue:#0056b3; --violet:#7c3aed; --panel:#0f1622; --ink:#e8eef7; }
   *{box-sizing:border-box;}
@@ -29,9 +29,6 @@
   .readout{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px;font-size:.9rem;}
   .readout div{display:flex;justify-content:space-between;padding:3px 0;}
   .readout b{color:var(--blue);}
-  .bar{height:16px;background:#e2e8f0;border-radius:8px;overflow:hidden;margin-top:4px;}
-  .bar i{display:block;height:100%;background:linear-gradient(90deg,#ef4444,#eab308,#22c55e);}
-  /* reading check */
   .rc{background:#fffdf5;border:1px solid #f0e2b8;border-radius:10px;padding:16px;margin-bottom:14px;}
   .rc h3{color:#b45309;margin:0 0 6px;font-size:1.05rem;}
   .rc .scenario{background:#fff;border:1px solid #eee;border-radius:8px;padding:10px;font-size:.92rem;}
@@ -39,7 +36,7 @@
   .rc-instr{font-size:.85rem;color:#66571f;margin:8px 0 4px;}
   table.rc-table{width:100%;border-collapse:collapse;}
   table.rc-table td{padding:5px 6px;border-top:1px solid #f0e2b8;vertical-align:middle;}
-  table.rc-table .sym{font-weight:700;color:#7c3aed;width:120px;font-size:.95rem;}
+  table.rc-table .sym{font-weight:700;color:#7c3aed;width:150px;font-size:.95rem;}
   table.rc-table select{width:100%;padding:6px;border:1px solid #cbd5e1;border-radius:6px;font-size:.85rem;}
   table.rc-table .mark{width:22px;text-align:center;font-weight:700;}
   .rc-check{margin-top:10px;padding:8px 14px;border:none;border-radius:6px;background:#b45309;color:#fff;cursor:pointer;font-weight:600;}
@@ -48,6 +45,9 @@
   .unlock-note{font-size:.8rem;color:#b45309;margin-bottom:8px;}
   .ex{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:14px;font-size:.92rem;}
   .ex code{background:#eef2f7;padding:1px 5px;border-radius:4px;}
+  .practice input{width:80px;padding:6px;border:1px solid #cbd5e1;border-radius:6px;}
+  .practice button{padding:6px 12px;border:none;border-radius:6px;background:var(--blue);color:#fff;cursor:pointer;}
+  .practice .fb{margin-top:8px;font-weight:600;}
   details{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:12px 18px;margin-top:14px;}
   summary{font-weight:600;color:var(--blue);cursor:pointer;}
   .note{font-size:.8rem;color:#667;}
@@ -57,74 +57,78 @@
 <body>
 <header class="nav">
   <div class="inner">
-    <strong>Extended Distance (SSD) Correction</strong>
+    <strong>Magnification</strong>
     <div style="display:flex;flex-wrap:wrap;gap:8px;">
       <a href="../index.html" style="background:#0056b3;">&larr; Medical Dosimetry Menu</a>
-      <a href="../Inverse_Square_Law/index.html" style="background:#7c3aed;">Inverse Square Law</a>
-      <a href="../Beam_Dose_Simulator/index.html" style="background:#7c3aed;">Beam &amp; Dose Simulator</a>
+      <a href="../Extended_SSD/index.html" style="background:#7c3aed;">Extended SSD</a>
+      <a href="../../Sectional_Anatomy/dicom_viewer_demo/index.html" style="background:#17a2b8;">DICOM Viewer</a>
     </div>
   </div>
 </header>
 
 <div class="wrap">
-  <h1>Extended Distance (SSD) Correction</h1>
-  <p class="lead">Some treatments &mdash; total body irradiation, large fields &mdash; are delivered at an <strong>extended SSD</strong>, far beyond the distance where the machine was calibrated. Because output follows the inverse square law, you must correct for it. This is inverse square applied to the treatment machine.</p>
+  <h1>Magnification</h1>
+  <p class="lead">A diverging X-ray beam casts an <strong>enlarged shadow</strong> of anything it passes through &mdash; the closer an object is to the source, the bigger its image. This geometry sets how anatomy appears on a simulator radiograph, DRR, or port film, and it is the same divergence behind the inverse square law.</p>
 
-  <!-- Reading comprehension gate -->
   <div class="rc" id="rc">
     <h3>Step 1 &mdash; Read the problem and identify the variables</h3>
-    <p class="unlock-note">Before calculating, map each variable in the formula to the correct value from the scenario. The calculator below unlocks once your reading is correct.</p>
+    <p class="unlock-note">Map each variable in the formula to the correct value from the scenario. The calculator below unlocks once your reading is correct.</p>
   </div>
 
   <div class="app" id="calcApp">
     <div>
       <div class="stage">
-        <svg id="viz" viewBox="0 0 700 400" aria-label="Beam at standard vs extended SSD"></svg>
-        <div class="lead" style="color:#9fb2cc;font-size:.8rem;margin-top:10px;">At extended SSD the field is larger but the output per MU is lower &mdash; the same photons cover more area.</div>
+        <svg id="viz" viewBox="0 0 700 400" aria-label="Magnification geometry"></svg>
+        <div class="lead" style="color:#9fb2cc;font-size:.8rem;margin-top:10px;">Move the object toward the source and its shadow on the image plane grows.</div>
       </div>
     </div>
     <div>
       <div class="panel">
-        <h3>Setup</h3>
-        <label class="cl">Calibration SSD (SSD&#8320;) <span class="val" id="ssd0Val">100 cm</span></label>
-        <input type="range" id="ssd0" min="80" max="120" value="100">
-        <label class="cl">Calibration depth d (d<sub>max</sub>) <span class="val" id="dVal">1.5 cm</span></label>
-        <input type="range" id="dep" min="5" max="30" value="15">
-        <label class="cl">Extended SSD (SSD<sub>e</sub>) <span class="val" id="ssdeVal">300 cm</span></label>
-        <input type="range" id="ssde" min="120" max="450" value="300">
+        <h3>Geometry</h3>
+        <label class="cl">Source&ndash;Image Distance (SID) <span class="val" id="sidVal">100 cm</span></label>
+        <input type="range" id="sid" min="80" max="180" value="100">
+        <label class="cl">Source&ndash;Object Distance (SOD) <span class="val" id="sodVal">60 cm</span></label>
+        <input type="range" id="sod" min="20" max="170" value="60">
+        <label class="cl">Object size <span class="val" id="objVal">3.0 cm</span></label>
+        <input type="range" id="obj" min="5" max="80" value="30">
       </div>
       <div class="panel">
         <h3>The Math</h3>
         <div class="formula">
-          <div>ISF = [ (SSD&#8320; + d) / (SSD<sub>e</sub> + d) ]&sup2;</div>
+          <div>M = SID / SOD &nbsp;&bull;&nbsp; Image = Object &times; M</div>
           <div class="big" id="mathLine"></div>
         </div>
         <div class="readout" style="margin-top:12px;">
-          <div><span>Inverse-square factor</span><b id="rISF"></b></div>
-          <div><span>Output at extended SSD</span><b id="rOut"></b></div>
-          <div><span>MU multiplier (same dose)</span><b id="rMU"></b></div>
-          <div><span>Field-size enlargement</span><b id="rField"></b></div>
+          <div><span>Magnification M</span><b id="rM"></b></div>
+          <div><span>Image size</span><b id="rImg"></b></div>
+          <div><span>Enlargement</span><b id="rPct"></b></div>
         </div>
-        <div class="bar"><i id="outBar"></i></div>
-        <p class="note" style="margin-top:8px;">Output uses the source-to-point distance (SSD + d). Field size grows linearly with distance (&times; SSD<sub>e</sub>/SSD&#8320;).</p>
+        <p class="note" style="margin-top:8px;">SOD cannot exceed SID (the object sits between source and image). Object-to-image distance (OID) = SID &minus; SOD; more OID means more magnification.</p>
       </div>
       <div class="ex">
         <strong>Worked example</strong>
         <p id="worked"></p>
+        <div class="practice" style="margin-top:10px;">
+          <strong>Your turn</strong>
+          <p id="pq" style="margin:6px 0;"></p>
+          Image = <input type="number" id="pAns" step="0.1"> cm
+          <button id="pCheck">Check</button>
+          <button id="pNew" style="background:#64748b;">New</button>
+          <div class="fb" id="pFb"></div>
+        </div>
       </div>
     </div>
   </div>
 
   <details open>
     <summary>Why this matters in the clinic</summary>
-    <p>Linacs are calibrated at a standard SSD (typically 100 cm). When a treatment requires a much larger field than the machine can produce at that distance &mdash; classically <strong>total body irradiation (TBI)</strong> &mdash; the patient is moved far from the source so the diverging beam covers the whole body. At that extended distance the output per monitor unit drops by the inverse-square factor, so the monitor units (or time) must be increased to deliver the prescribed dose. The field also enlarges in direct proportion to distance, which is exactly the geometry behind <a href="../Inverse_Square_Law/index.html">the inverse square law</a> and, on the imaging side, magnification.</p>
+    <p>On a simulator film or DRR, structures nearer the X-ray source are magnified more than structures near the detector, so a measured size on the image is larger than the true anatomic size. Understanding magnification lets you back-calculate true dimensions and interpret field sizes correctly. The same divergence that magnifies an image is what enlarges a treatment field at <a href="../Extended_SSD/index.html">extended SSD</a> and what spreads photons in the <a href="../Inverse_Square_Law/index.html">inverse square law</a> &mdash; three views of one geometry.</p>
   </details>
 
   <div class="footer">Radiation Therapy E-Workbook &mdash; Medical Dosimetry</div>
 </div>
 
 <script>
-/* ---------- reusable reading-comprehension component ---------- */
 function readingCheck(mount, cfg, onPass){
   const opts = cfg.quantities.map((q,i)=>`<option value="${i}">${q.label}</option>`).join('')
     + `<option value="unknown">the unknown &mdash; solve for this</option>`
@@ -133,7 +137,7 @@ function readingCheck(mount, cfg, onPass){
     + `<p class="rc-instr">Match each variable to the correct quantity:</p><table class="rc-table">`;
   cfg.variables.forEach((v,i)=>{ html+=`<tr><td class="sym">${v.sym}</td><td><select data-i="${i}"><option value="">&mdash; choose &mdash;</option>${opts}</select></td><td class="mark" data-m="${i}"></td></tr>`; });
   html+=`</table><button class="rc-check">Check my reading</button><div class="rc-fb"></div>`;
-  const head=mount.innerHTML; mount.innerHTML=head+html;
+  mount.innerHTML=mount.innerHTML+html;
   mount.querySelector('.rc-check').addEventListener('click',()=>{
     let all=true, got=0;
     cfg.variables.forEach((v,i)=>{
@@ -145,68 +149,77 @@ function readingCheck(mount, cfg, onPass){
     });
     const fb=mount.querySelector('.rc-fb');
     fb.style.color = all?'#15803d':'#b45309';
-    fb.textContent = all ? 'All correct \u2014 you\u2019ve identified every variable. The calculator is unlocked below.' : `${got}/${cfg.variables.length} correct. Re-read the scenario and fix the \u2717 rows.`;
+    fb.textContent = all ? 'All correct \u2014 the calculator is unlocked below.' : `${got}/${cfg.variables.length} correct. Re-read and fix the \u2717 rows.`;
     if(all && onPass) onPass();
   });
 }
 
-/* ---------- reading-check config for this tool ---------- */
 readingCheck(document.getElementById('rc'), {
-  scenario:"A linac is calibrated to deliver <b>1 cGy/MU</b> at <b>100 cm SSD</b> at a depth of d<sub>max</sub> = <b>1.5 cm</b>. For a total body irradiation treatment, the patient is positioned at an <b>extended SSD of 380 cm</b>. You need the inverse-square factor that corrects the output.",
-  formula:"ISF = [ (SSD&#8320; + d) / (SSD<sub>e</sub> + d) ]&sup2;",
-  quantities:[{label:"100 cm"},{label:"1.5 cm"},{label:"380 cm"},{label:"1 cGy/MU"}],
+  scenario:"During simulation, a <b>3 cm</b> lymph node lies <b>60 cm</b> from the X-ray source. The imaging panel is <b>100 cm</b> from the source. You want the size of the node\u2019s shadow on the image.",
+  formula:"M = SID / SOD &nbsp;&bull;&nbsp; Image = Object &times; M",
+  quantities:[{label:"3 cm"},{label:"60 cm"},{label:"100 cm"}],
   variables:[
-    {sym:"SSD\u2080 (calibration SSD)", answer:0},
-    {sym:"d (calibration depth)", answer:1},
-    {sym:"SSD\u2091 (extended SSD)", answer:2},
-    {sym:"ISF (result)", answer:"unknown"}
+    {sym:"Object size", answer:0},
+    {sym:"SOD (source\u2013object)", answer:1},
+    {sym:"SID (source\u2013image)", answer:2},
+    {sym:"Image size (result)", answer:"unknown"}
   ]
 }, ()=>{ document.getElementById('calcApp').classList.remove('locked'); });
-
-/* start locked until reading check passes */
 document.getElementById('calcApp').classList.add('locked');
 
-/* ---------- calculator ---------- */
 const SVGNS="http://www.w3.org/2000/svg";
 function el(t,a){const e=document.createElementNS(SVGNS,t);for(const k in a)e.setAttribute(k,a[k]);return e;}
-let ssd0=100, d=1.5, ssde=300;
+let sid=100, sod=60, obj=3.0;
 const $=id=>document.getElementById(id);
 
 function draw(){
-  const isf=Math.pow((ssd0+d)/(ssde+d),2), outPct=isf*100, mu=1/isf, fieldF=ssde/ssd0;
-  // viz: source at top, beam fans down; standard + extended surfaces
+  if(sod>sid) sod=sid;
+  const M=sid/sod, img=obj*M;
   const S=$('viz'); S.innerHTML='';
-  const sx=350, sy=26, maxD=460, y0=60, y1=380;
+  const sx=350, sy=24, maxD=180, y0=50, y1=372;
   const yOf=dd=> y0 + (dd/maxD)*(y1-y0);
-  const halfAt=dd=> 10 + (dd/maxD)*300;
-  S.appendChild(el('path',{d:`M${sx},${sy} L${sx-halfAt(maxD)},${yOf(maxD)} L${sx+halfAt(maxD)},${yOf(maxD)} Z`,fill:'rgba(124,58,237,.10)'}));
-  for(let k=-3;k<=3;k++){ S.appendChild(el('line',{x1:sx,y1:sy,x2:sx+(k/3)*halfAt(maxD),y2:yOf(maxD),stroke:'rgba(124,58,237,.16)','stroke-width':1})); }
+  const cmToPx=3.0;
+  const oy=yOf(sod), iy=yOf(sid);
+  const objHalf=obj*cmToPx/2, imgHalf=img*cmToPx/2;
+  // rays from source through object edges to image plane
+  S.appendChild(el('line',{x1:sx,y1:sy,x2:sx-imgHalf,y2:iy,stroke:'rgba(124,58,237,.5)','stroke-width':1.5}));
+  S.appendChild(el('line',{x1:sx,y1:sy,x2:sx+imgHalf,y2:iy,stroke:'rgba(124,58,237,.5)','stroke-width':1.5}));
+  S.appendChild(el('path',{d:`M${sx},${sy} L${sx-imgHalf},${iy} L${sx+imgHalf},${iy} Z`,fill:'rgba(124,58,237,.08)'}));
+  // source
   S.appendChild(el('circle',{cx:sx,cy:sy,r:7,fill:'#fbbf24'}));
-  const src=el('text',{x:sx,y:sy-10,fill:'#fbbf24','font-size':11,'text-anchor':'middle'}); src.textContent='source'; S.appendChild(src);
-  function surface(dd,color,label){
-    const y=yOf(dd), h=halfAt(dd);
-    S.appendChild(el('line',{x1:sx-h,y1:y,x2:sx+h,y2:y,stroke:color,'stroke-width':3}));
-    // field-width caps
-    S.appendChild(el('line',{x1:sx-h,y1:y-6,x2:sx-h,y2:y+6,stroke:color,'stroke-width':2}));
-    S.appendChild(el('line',{x1:sx+h,y1:y-6,x2:sx+h,y2:y+6,stroke:color,'stroke-width':2}));
-    const t=el('text',{x:sx+h+6,y:y+4,fill:color,'font-size':11}); t.textContent=label; S.appendChild(t);
-  }
-  surface(ssd0,'#38bdf8','SSD\u2080 '+Math.round(ssd0)+' cm');
-  surface(ssde,'#f472b6','SSD\u2091 '+Math.round(ssde)+' cm');
-  // output indicator dots density on each surface
-  $('ssd0Val').textContent=Math.round(ssd0)+' cm'; $('dVal').textContent=d.toFixed(1)+' cm'; $('ssdeVal').textContent=Math.round(ssde)+' cm';
-  $('mathLine').textContent=`[(${Math.round(ssd0)}+${d.toFixed(1)})/(${Math.round(ssde)}+${d.toFixed(1)})]\u00b2 = ${isf.toFixed(3)}`;
-  $('rISF').textContent=isf.toFixed(3);
-  $('rOut').textContent=outPct.toFixed(1)+'% of calibrated';
-  $('rMU').textContent='\u00d7 '+mu.toFixed(3)+' MU';
-  $('rField').textContent='\u00d7 '+fieldF.toFixed(2);
-  $('outBar').style.width=Math.min(100,outPct)+'%';
-  $('worked').innerHTML=`Calibrated <code>1 cGy/MU</code> at <code>${Math.round(ssd0)} cm</code>. At <code>${Math.round(ssde)} cm</code> the output is 1 &times; ${isf.toFixed(3)} = <code>${isf.toFixed(3)} cGy/MU</code>, so delivering the same dose needs <code>\u00d7${mu.toFixed(3)}</code> the monitor units.`;
+  const st=el('text',{x:sx,y:sy-9,fill:'#fbbf24','font-size':11,'text-anchor':'middle'}); st.textContent='source'; S.appendChild(st);
+  // object
+  S.appendChild(el('line',{x1:sx-objHalf,y1:oy,x2:sx+objHalf,y2:oy,stroke:'#38bdf8','stroke-width':5}));
+  const ot=el('text',{x:sx+objHalf+8,y:oy+4,fill:'#38bdf8','font-size':11}); ot.textContent='object '+obj.toFixed(1)+' cm (SOD '+Math.round(sod)+')'; S.appendChild(ot);
+  // image plane
+  S.appendChild(el('line',{x1:60,y1:iy,x2:640,y2:iy,stroke:'#334155','stroke-width':1,'stroke-dasharray':'4 4'}));
+  S.appendChild(el('line',{x1:sx-imgHalf,y1:iy,x2:sx+imgHalf,y2:iy,stroke:'#f472b6','stroke-width':6}));
+  const it=el('text',{x:sx+imgHalf+8,y:iy+4,fill:'#f472b6','font-size':11}); it.textContent='image '+img.toFixed(1)+' cm (SID '+Math.round(sid)+')'; S.appendChild(it);
+  // labels/vals
+  $('sidVal').textContent=Math.round(sid)+' cm'; $('sodVal').textContent=Math.round(sod)+' cm'; $('objVal').textContent=obj.toFixed(1)+' cm';
+  $('mathLine').textContent=`M = ${Math.round(sid)}/${Math.round(sod)} = ${M.toFixed(2)}  \u2192  ${obj.toFixed(1)} \u00d7 ${M.toFixed(2)} = ${img.toFixed(2)} cm`;
+  $('rM').textContent=M.toFixed(3);
+  $('rImg').textContent=img.toFixed(2)+' cm';
+  $('rPct').textContent='+'+((M-1)*100).toFixed(0)+'%';
+  $('worked').innerHTML=`A <code>${obj.toFixed(1)} cm</code> object at <code>SOD ${Math.round(sod)} cm</code> imaged at <code>SID ${Math.round(sid)} cm</code>: M = ${Math.round(sid)}/${Math.round(sod)} = <code>${M.toFixed(2)}</code>, so image = ${obj.toFixed(1)} \u00d7 ${M.toFixed(2)} = <code>${img.toFixed(2)} cm</code>.`;
 }
-$('ssd0').addEventListener('input',e=>{ssd0=+e.target.value; if(ssde<ssd0)ssde=ssd0; draw();});
-$('dep').addEventListener('input',e=>{d=(+e.target.value)/10; draw();});
-$('ssde').addEventListener('input',e=>{ssde=+e.target.value; draw();});
-draw();
+let pq={};
+function newQ(){ const o=[2,2.5,3,4,5][Math.floor(Math.random()*5)];
+  const sd=[50,60,70,80][Math.floor(Math.random()*4)];
+  const si=[100,120,150,180][Math.floor(Math.random()*4)];
+  pq={obj:o,sod:sd,sid:si,ans:o*si/sd};
+  $('pq').innerHTML=`A <code>${o} cm</code> object is <code>${sd} cm</code> from the source; the image plane is <code>${si} cm</code> from the source. What is the image size?`;
+  $('pAns').value=''; $('pFb').textContent='';
+}
+$('pCheck').addEventListener('click',()=>{ const v=parseFloat($('pAns').value); if(isNaN(v)){$('pFb').textContent='Enter a number.';$('pFb').style.color='#b45309';return;}
+  const ok=Math.abs(v-pq.ans)<=pq.ans*0.02+0.1; $('pFb').style.color=ok?'#15803d':'#b91c1c';
+  $('pFb').innerHTML= ok? `Correct! ${pq.ans.toFixed(2)} cm.` : `Not quite \u2014 M = ${pq.sid}/${pq.sod}, image = ${pq.obj} \u00d7 ${(pq.sid/pq.sod).toFixed(2)} = ${pq.ans.toFixed(2)} cm.`;
+});
+$('pNew').addEventListener('click',newQ);
+$('sid').addEventListener('input',e=>{sid=+e.target.value; if(sod>sid){sod=sid;$('sod').value=sod;} draw();});
+$('sod').addEventListener('input',e=>{sod=+e.target.value; if(sod>sid){sod=sid;} draw();});
+$('obj').addEventListener('input',e=>{obj=(+e.target.value)/10; draw();});
+draw(); newQ();
 </script>
 </body>
 </html>
