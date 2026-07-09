@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Extended Distance (SSD) Correction</title>
+<style>
+  :root{ --blue:#0056b3; --violet:#7c3aed; --panel:#0f1622; --ink:#e8eef7; }
+  *{box-sizing:border-box;}
+  body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;margin:0;background:#f4f4f4;color:#222;}
+  header.nav{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.1);position:sticky;top:0;z-index:50;}
+  header.nav .inner{max-width:1150px;margin:0 auto;padding:12px 20px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;}
+  header.nav strong{color:var(--blue);}
+  header.nav a{font-size:.8rem;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;}
+  .wrap{max-width:1150px;margin:0 auto;padding:18px;}
+  h1{color:var(--blue);text-align:center;margin:.2em 0;}
+  .lead{max-width:840px;margin:0 auto 16px;text-align:center;color:#333;}
+  .app{display:grid;grid-template-columns:minmax(0,1fr) 350px;gap:18px;align-items:start;}
+  @media(max-width:920px){.app{grid-template-columns:1fr;}}
+  .stage{background:var(--panel);border-radius:10px;padding:14px;}
+  svg{width:100%;height:auto;display:block;}
+  .panel{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:16px;margin-bottom:14px;}
+  .panel h3{color:var(--blue);margin:0 0 10px;font-size:1.05rem;}
+  label.cl{display:block;font-size:.82rem;font-weight:600;color:#334;margin:10px 0 4px;}
+  label.cl .val{float:right;font-weight:400;color:var(--blue);}
+  input[type=range]{width:100%;}
+  .formula{background:#f0f6ff;border:1px solid #cfe0ff;border-radius:8px;padding:12px;text-align:center;font-size:1.02rem;color:#123;}
+  .formula .big{font-size:1.15rem;font-weight:700;color:var(--blue);margin-top:6px;}
+  .readout{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px;font-size:.9rem;}
+  .readout div{display:flex;justify-content:space-between;padding:3px 0;}
+  .readout b{color:var(--blue);}
+  .bar{height:16px;background:#e2e8f0;border-radius:8px;overflow:hidden;margin-top:4px;}
+  .bar i{display:block;height:100%;background:linear-gradient(90deg,#ef4444,#eab308,#22c55e);}
+  /* reading check */
+  .rc{background:#fffdf5;border:1px solid #f0e2b8;border-radius:10px;padding:16px;margin-bottom:14px;}
+  .rc h3{color:#b45309;margin:0 0 6px;font-size:1.05rem;}
+  .rc .scenario{background:#fff;border:1px solid #eee;border-radius:8px;padding:10px;font-size:.92rem;}
+  .rc .formula2{text-align:center;margin:10px 0;font-size:1rem;color:#123;font-weight:600;}
+  .rc-instr{font-size:.85rem;color:#66571f;margin:8px 0 4px;}
+  table.rc-table{width:100%;border-collapse:collapse;}
+  table.rc-table td{padding:5px 6px;border-top:1px solid #f0e2b8;vertical-align:middle;}
+  table.rc-table .sym{font-weight:700;color:#7c3aed;width:120px;font-size:.95rem;}
+  table.rc-table select{width:100%;padding:6px;border:1px solid #cbd5e1;border-radius:6px;font-size:.85rem;}
+  table.rc-table .mark{width:22px;text-align:center;font-weight:700;}
+  .rc-check{margin-top:10px;padding:8px 14px;border:none;border-radius:6px;background:#b45309;color:#fff;cursor:pointer;font-weight:600;}
+  .rc-fb{margin-top:8px;font-weight:600;font-size:.9rem;}
+  .locked{opacity:.45;pointer-events:none;filter:grayscale(.3);}
+  .unlock-note{font-size:.8rem;color:#b45309;margin-bottom:8px;}
+  .ex{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:14px;font-size:.92rem;}
+  .ex code{background:#eef2f7;padding:1px 5px;border-radius:4px;}
+  details{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:12px 18px;margin-top:14px;}
+  summary{font-weight:600;color:var(--blue);cursor:pointer;}
+  .note{font-size:.8rem;color:#667;}
+  .footer{text-align:center;margin:22px 0 8px;font-size:.85rem;color:#667;}
+</style>
+</head>
+<body>
+<header class="nav">
+  <div class="inner">
+    <strong>Extended Distance (SSD) Correction</strong>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;">
+      <a href="../index.html" style="background:#0056b3;">&larr; Medical Dosimetry Menu</a>
+      <a href="../Inverse_Square_Law/index.html" style="background:#7c3aed;">Inverse Square Law</a>
+      <a href="../Beam_Dose_Simulator/index.html" style="background:#7c3aed;">Beam &amp; Dose Simulator</a>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <h1>Extended Distance (SSD) Correction</h1>
+  <p class="lead">Some treatments &mdash; total body irradiation, large fields &mdash; are delivered at an <strong>extended SSD</strong>, far beyond the distance where the machine was calibrated. Because output follows the inverse square law, you must correct for it. This is inverse square applied to the treatment machine.</p>
+
+  <!-- Reading comprehension gate -->
+  <div class="rc" id="rc">
+    <h3>Step 1 &mdash; Read the problem and identify the variables</h3>
+    <p class="unlock-note">Before calculating, map each variable in the formula to the correct value from the scenario. The calculator below unlocks once your reading is correct.</p>
+  </div>
+
+  <div class="app" id="calcApp">
+    <div>
+      <div class="stage">
+        <svg id="viz" viewBox="0 0 700 400" aria-label="Beam at standard vs extended SSD"></svg>
+        <div class="lead" style="color:#9fb2cc;font-size:.8rem;margin-top:10px;">At extended SSD the field is larger but the output per MU is lower &mdash; the same photons cover more area.</div>
+      </div>
+    </div>
+    <div>
+      <div class="panel">
+        <h3>Setup</h3>
+        <label class="cl">Calibration SSD (SSD&#8320;) <span class="val" id="ssd0Val">100 cm</span></label>
+        <input type="range" id="ssd0" min="80" max="120" value="100">
+        <label class="cl">Calibration depth d (d<sub>max</sub>) <span class="val" id="dVal">1.5 cm</span></label>
+        <input type="range" id="dep" min="5" max="30" value="15">
+        <label class="cl">Extended SSD (SSD<sub>e</sub>) <span class="val" id="ssdeVal">300 cm</span></label>
+        <input type="range" id="ssde" min="120" max="450" value="300">
+      </div>
+      <div class="panel">
+        <h3>The Math</h3>
+        <div class="formula">
+          <div>ISF = [ (SSD&#8320; + d) / (SSD<sub>e</sub> + d) ]&sup2;</div>
+          <div class="big" id="mathLine"></div>
+        </div>
+        <div class="readout" style="margin-top:12px;">
+          <div><span>Inverse-square factor</span><b id="rISF"></b></div>
+          <div><span>Output at extended SSD</span><b id="rOut"></b></div>
+          <div><span>MU multiplier (same dose)</span><b id="rMU"></b></div>
+          <div><span>Field-size enlargement</span><b id="rField"></b></div>
+        </div>
+        <div class="bar"><i id="outBar"></i></div>
+        <p class="note" style="margin-top:8px;">Output uses the source-to-point distance (SSD + d). Field size grows linearly with distance (&times; SSD<sub>e</sub>/SSD&#8320;).</p>
+      </div>
+      <div class="ex">
+        <strong>Worked example</strong>
+        <p id="worked"></p>
+      </div>
+    </div>
+  </div>
+
+  <details open>
+    <summary>Why this matters in the clinic</summary>
+    <p>Linacs are calibrated at a standard SSD (typically 100 cm). When a treatment requires a much larger field than the machine can produce at that distance &mdash; classically <strong>total body irradiation (TBI)</strong> &mdash; the patient is moved far from the source so the diverging beam covers the whole body. At that extended distance the output per monitor unit drops by the inverse-square factor, so the monitor units (or time) must be increased to deliver the prescribed dose. The field also enlarges in direct proportion to distance, which is exactly the geometry behind <a href="../Inverse_Square_Law/index.html">the inverse square law</a> and, on the imaging side, magnification.</p>
+  </details>
+
+  <div class="footer">Radiation Therapy E-Workbook &mdash; Medical Dosimetry</div>
+</div>
+
+<script>
+/* ---------- reusable reading-comprehension component ---------- */
+function readingCheck(mount, cfg, onPass){
+  const opts = cfg.quantities.map((q,i)=>`<option value="${i}">${q.label}</option>`).join('')
+    + `<option value="unknown">the unknown &mdash; solve for this</option>`
+    + `<option value="na">not given in the problem</option>`;
+  let html = `<p class="scenario">${cfg.scenario}</p><div class="formula2">${cfg.formula}</div>`
+    + `<p class="rc-instr">Match each variable to the correct quantity:</p><table class="rc-table">`;
+  cfg.variables.forEach((v,i)=>{ html+=`<tr><td class="sym">${v.sym}</td><td><select data-i="${i}"><option value="">&mdash; choose &mdash;</option>${opts}</select></td><td class="mark" data-m="${i}"></td></tr>`; });
+  html+=`</table><button class="rc-check">Check my reading</button><div class="rc-fb"></div>`;
+  const head=mount.innerHTML; mount.innerHTML=head+html;
+  mount.querySelector('.rc-check').addEventListener('click',()=>{
+    let all=true, got=0;
+    cfg.variables.forEach((v,i)=>{
+      const sel=mount.querySelector(`select[data-i="${i}"]`), mark=mount.querySelector(`[data-m="${i}"]`);
+      const val = sel.value==='' ? null : ((sel.value==='unknown'||sel.value==='na') ? sel.value : parseInt(sel.value));
+      const ok = String(val)===String(v.answer);
+      mark.textContent = sel.value===''?'' : (ok?'\u2713':'\u2717'); mark.style.color = ok?'#15803d':'#b91c1c';
+      if(ok) got++; else all=false;
+    });
+    const fb=mount.querySelector('.rc-fb');
+    fb.style.color = all?'#15803d':'#b45309';
+    fb.textContent = all ? 'All correct \u2014 you\u2019ve identified every variable. The calculator is unlocked below.' : `${got}/${cfg.variables.length} correct. Re-read the scenario and fix the \u2717 rows.`;
+    if(all && onPass) onPass();
+  });
+}
+
+/* ---------- reading-check config for this tool ---------- */
+readingCheck(document.getElementById('rc'), {
+  scenario:"A linac is calibrated to deliver <b>1 cGy/MU</b> at <b>100 cm SSD</b> at a depth of d<sub>max</sub> = <b>1.5 cm</b>. For a total body irradiation treatment, the patient is positioned at an <b>extended SSD of 380 cm</b>. You need the inverse-square factor that corrects the output.",
+  formula:"ISF = [ (SSD&#8320; + d) / (SSD<sub>e</sub> + d) ]&sup2;",
+  quantities:[{label:"100 cm"},{label:"1.5 cm"},{label:"380 cm"},{label:"1 cGy/MU"}],
+  variables:[
+    {sym:"SSD\u2080 (calibration SSD)", answer:0},
+    {sym:"d (calibration depth)", answer:1},
+    {sym:"SSD\u2091 (extended SSD)", answer:2},
+    {sym:"ISF (result)", answer:"unknown"}
+  ]
+}, ()=>{ document.getElementById('calcApp').classList.remove('locked'); });
+
+/* start locked until reading check passes */
+document.getElementById('calcApp').classList.add('locked');
+
+/* ---------- calculator ---------- */
+const SVGNS="http://www.w3.org/2000/svg";
+function el(t,a){const e=document.createElementNS(SVGNS,t);for(const k in a)e.setAttribute(k,a[k]);return e;}
+let ssd0=100, d=1.5, ssde=300;
+const $=id=>document.getElementById(id);
+
+function draw(){
+  const isf=Math.pow((ssd0+d)/(ssde+d),2), outPct=isf*100, mu=1/isf, fieldF=ssde/ssd0;
+  // viz: source at top, beam fans down; standard + extended surfaces
+  const S=$('viz'); S.innerHTML='';
+  const sx=350, sy=26, maxD=460, y0=60, y1=380;
+  const yOf=dd=> y0 + (dd/maxD)*(y1-y0);
+  const halfAt=dd=> 10 + (dd/maxD)*300;
+  S.appendChild(el('path',{d:`M${sx},${sy} L${sx-halfAt(maxD)},${yOf(maxD)} L${sx+halfAt(maxD)},${yOf(maxD)} Z`,fill:'rgba(124,58,237,.10)'}));
+  for(let k=-3;k<=3;k++){ S.appendChild(el('line',{x1:sx,y1:sy,x2:sx+(k/3)*halfAt(maxD),y2:yOf(maxD),stroke:'rgba(124,58,237,.16)','stroke-width':1})); }
+  S.appendChild(el('circle',{cx:sx,cy:sy,r:7,fill:'#fbbf24'}));
+  const src=el('text',{x:sx,y:sy-10,fill:'#fbbf24','font-size':11,'text-anchor':'middle'}); src.textContent='source'; S.appendChild(src);
+  function surface(dd,color,label){
+    const y=yOf(dd), h=halfAt(dd);
+    S.appendChild(el('line',{x1:sx-h,y1:y,x2:sx+h,y2:y,stroke:color,'stroke-width':3}));
+    // field-width caps
+    S.appendChild(el('line',{x1:sx-h,y1:y-6,x2:sx-h,y2:y+6,stroke:color,'stroke-width':2}));
+    S.appendChild(el('line',{x1:sx+h,y1:y-6,x2:sx+h,y2:y+6,stroke:color,'stroke-width':2}));
+    const t=el('text',{x:sx+h+6,y:y+4,fill:color,'font-size':11}); t.textContent=label; S.appendChild(t);
+  }
+  surface(ssd0,'#38bdf8','SSD\u2080 '+Math.round(ssd0)+' cm');
+  surface(ssde,'#f472b6','SSD\u2091 '+Math.round(ssde)+' cm');
+  // output indicator dots density on each surface
+  $('ssd0Val').textContent=Math.round(ssd0)+' cm'; $('dVal').textContent=d.toFixed(1)+' cm'; $('ssdeVal').textContent=Math.round(ssde)+' cm';
+  $('mathLine').textContent=`[(${Math.round(ssd0)}+${d.toFixed(1)})/(${Math.round(ssde)}+${d.toFixed(1)})]\u00b2 = ${isf.toFixed(3)}`;
+  $('rISF').textContent=isf.toFixed(3);
+  $('rOut').textContent=outPct.toFixed(1)+'% of calibrated';
+  $('rMU').textContent='\u00d7 '+mu.toFixed(3)+' MU';
+  $('rField').textContent='\u00d7 '+fieldF.toFixed(2);
+  $('outBar').style.width=Math.min(100,outPct)+'%';
+  $('worked').innerHTML=`Calibrated <code>1 cGy/MU</code> at <code>${Math.round(ssd0)} cm</code>. At <code>${Math.round(ssde)} cm</code> the output is 1 &times; ${isf.toFixed(3)} = <code>${isf.toFixed(3)} cGy/MU</code>, so delivering the same dose needs <code>\u00d7${mu.toFixed(3)}</code> the monitor units.`;
+}
+$('ssd0').addEventListener('input',e=>{ssd0=+e.target.value; if(ssde<ssd0)ssde=ssd0; draw();});
+$('dep').addEventListener('input',e=>{d=(+e.target.value)/10; draw();});
+$('ssde').addEventListener('input',e=>{ssde=+e.target.value; draw();});
+draw();
+</script>
+</body>
+</html>
