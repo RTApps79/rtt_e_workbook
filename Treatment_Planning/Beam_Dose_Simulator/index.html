@@ -34,7 +34,7 @@
     .readout { background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px; font-size:.85rem; }
     .readout div { display:flex; justify-content:space-between; padding:2px 0; }
     .readout b { color:#0056b3; }
-    canvas#pdd { width:100%; height:220px; background:#0f1622; border-radius:8px; display:block; }
+    canvas#pdd { width:100%; height:300px; background:#0f1622; border-radius:8px; display:block; }
     .toggles label { display:inline-flex; align-items:center; gap:6px; font-size:.82rem; margin-right:12px; cursor:pointer; }
     .legend { display:flex; gap:12px; flex-wrap:wrap; font-size:.75rem; color:#445; margin-top:8px; }
     .legend span { display:inline-flex; align-items:center; gap:5px; }
@@ -52,6 +52,7 @@
     <strong>Beam &amp; Dose Simulator</strong>
     <div style="display:flex;flex-wrap:wrap;gap:8px;">
       <a href="../index.html" style="background:#0056b3;">&larr; Medical Dosimetry Menu</a>
+      <a href="../Inverse_Square_Law/index.html" style="background:#7c3aed;">Inverse Square Law</a>
       <a href="../../Sectional_Anatomy/index.html" style="background:#17a2b8;">Sectional Anatomy</a>
       <a href="../../index.html" style="background:#64748b;">&larr; Main Workbook</a>
     </div>
@@ -73,7 +74,7 @@
       </div>
       <div class="panel" style="margin-top:16px;">
         <h3>Depth-Dose Curve (central axis)</h3>
-        <canvas id="pdd" width="700" height="220"></canvas>
+        <canvas id="pdd" width="700" height="300"></canvas>
         <div class="legend">
           <span><span class="sw" style="background:#e74c3c;"></span>% dose</span>
           <span><span class="sw" style="background:#111;border:1px solid #999;"></span>d<sub>max</sub></span>
@@ -317,38 +318,47 @@ function renderBeam(){
 
 // ---------- depth-dose plot ----------
 function drawPDD(cax){
-  const W=pdd.width, H=pdd.height, padL=42, padB=26, padT=12, padR=10;
+  const W=pdd.width, H=pdd.height, padL=46, padB=26, padT=22, padR=12;
   pctx.clearRect(0,0,W,H); pctx.fillStyle='#0f1622'; pctx.fillRect(0,0,W,H);
   if(!cax.length){ return; }
   const maxDepth=Math.max(4, cax[cax.length-1].geom);
-  const gx=d=> padL + (d/maxDepth)*(W-padL-padR);
-  const gy=v=> padT + (1-v/105)*(H-padT-padB);
-  // tissue bands
+  const gx=v=> padL + (v/105)*(W-padL-padR);          // PDD % on horizontal axis
+  const gy=d=> padT + (d/maxDepth)*(H-padT-padB);     // depth vertical, surface(0) at top
+  // tissue bands (horizontal layers along depth)
   if(showTissue){
     for(let i=0;i<cax.length-1;i++){
       const t=tissueClass(cax[i].hu);
       let col = t==='air'?'rgba(0,200,255,.28)': t==='bone'?'rgba(255,255,255,.30)':'rgba(150,150,150,.16)';
       pctx.fillStyle=col;
-      pctx.fillRect(gx(cax[i].geom), padT, Math.max(1,gx(cax[i+1].geom)-gx(cax[i].geom)), H-padT-padB);
+      pctx.fillRect(padL, gy(cax[i].geom), W-padL-padR, Math.max(1,gy(cax[i+1].geom)-gy(cax[i].geom)));
     }
   }
+  pctx.font='11px Segoe UI';
+  // vertical grid lines = PDD %
+  for(let v=0;v<=100;v+=25){ pctx.strokeStyle='#1c2740'; pctx.beginPath(); pctx.moveTo(gx(v),padT); pctx.lineTo(gx(v),H-padB); pctx.stroke(); pctx.fillStyle='#9fb2cc'; pctx.fillText(v+'%', gx(v)-9, H-9); }
+  // horizontal grid lines = depth
+  const step=Math.max(2,Math.ceil(maxDepth/6));
+  for(let d=0; d<=maxDepth; d+=step){ pctx.strokeStyle='#16233a'; pctx.beginPath(); pctx.moveTo(padL,gy(d)); pctx.lineTo(W-padR,gy(d)); pctx.stroke(); pctx.fillStyle='#9fb2cc'; pctx.fillText(d+'cm', 6, gy(d)+4); }
   // axes
-  pctx.strokeStyle='#33405a'; pctx.lineWidth=1; pctx.beginPath();
-  pctx.moveTo(padL,padT); pctx.lineTo(padL,H-padB); pctx.lineTo(W-padR,H-padB); pctx.stroke();
-  pctx.fillStyle='#9fb2cc'; pctx.font='11px Segoe UI';
-  for(let v=0;v<=100;v+=25){ pctx.fillText(v+'%', 6, gy(v)+4); pctx.strokeStyle='#1c2740'; pctx.beginPath(); pctx.moveTo(padL,gy(v)); pctx.lineTo(W-padR,gy(v)); pctx.stroke(); }
-  for(let d=0; d<=maxDepth; d+=Math.ceil(maxDepth/8)){ pctx.fillText(d+'cm', gx(d)-8, H-8); }
-  // curve
+  pctx.strokeStyle='#33405a'; pctx.beginPath(); pctx.moveTo(padL,padT); pctx.lineTo(padL,H-padB); pctx.moveTo(padL,H-padB); pctx.lineTo(W-padR,H-padB); pctx.stroke();
+  // skin surface (top) + beam-entry arrow
+  pctx.strokeStyle='#e2e8f0'; pctx.lineWidth=2; pctx.beginPath(); pctx.moveTo(padL,padT); pctx.lineTo(W-padR,padT); pctx.stroke(); pctx.lineWidth=1;
+  pctx.fillStyle='#e2e8f0'; pctx.fillText('skin surface', padL+3, padT-7);
+  pctx.strokeStyle='#fbbf24'; pctx.beginPath(); pctx.moveTo(W-padR-30,4); pctx.lineTo(W-padR-30,padT-2); pctx.stroke();
+  pctx.fillStyle='#fbbf24'; pctx.beginPath(); pctx.moveTo(W-padR-34,padT-8); pctx.lineTo(W-padR-30,padT-1); pctx.lineTo(W-padR-26,padT-8); pctx.fill();
+  pctx.fillText('beam', W-padR-64, padT-7);
+  // curve (dose horizontal, depth vertical)
   pctx.strokeStyle='#e74c3c'; pctx.lineWidth=2; pctx.beginPath();
   let started=false, dmDepth=0, best=-1;
-  for(const smp of cax){ const v=pdDose(smp.we); const X=gx(smp.geom), Y=gy(v);
+  for(const smp of cax){ const v=pdDose(smp.we); const X=gx(v), Y=gy(smp.geom);
     if(!started){pctx.moveTo(X,Y); started=true;} else pctx.lineTo(X,Y);
     if(v>best){best=v; dmDepth=smp.geom;} }
   pctx.stroke();
-  // dmax marker
-  pctx.strokeStyle='#fff'; pctx.setLineDash([3,3]); pctx.beginPath(); pctx.moveTo(gx(dmDepth),padT); pctx.lineTo(gx(dmDepth),H-padB); pctx.stroke(); pctx.setLineDash([]);
-  pctx.fillStyle='#fff'; pctx.fillText('d_max', gx(dmDepth)+3, padT+12);
-  pctx.fillStyle='#9fb2cc'; pctx.fillText('Physical depth from skin  \u2192', W/2-60, H-2);
+  // dmax marker (horizontal dashed line)
+  pctx.strokeStyle='#fff'; pctx.setLineDash([3,3]); pctx.beginPath(); pctx.moveTo(padL,gy(dmDepth)); pctx.lineTo(W-padR,gy(dmDepth)); pctx.stroke(); pctx.setLineDash([]);
+  pctx.fillStyle='#fff'; pctx.fillText('d_max', W-padR-42, gy(dmDepth)-4);
+  // axis title
+  pctx.fillStyle='#9fb2cc'; pctx.fillText('PDD (%) \u2192   \u2193 depth into patient', padL+70, H-9);
 }
 
 // ---------- readout ----------
