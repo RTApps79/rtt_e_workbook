@@ -1,148 +1,304 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cross-sectional Anatomy Module</title>
-  
-
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      line-height: 1.6;
-      margin: 20px;
-      background-color: #f4f4f4;
-      color: #333;
-    }
-    .container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      max-width: 1200px;
-      margin: auto;
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    .anatomy-content {
-      flex: 2;
-      min-width: 300px;
-    }
-    .dicom-viewer-container {
-      flex: 3;
-      min-width: 400px;
-      background-color: #000;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border-radius: 4px;
-      overflow: hidden;
-      position: relative;
-    }
-    #dwv {
-      width: 100%;
-      height: 100%;
-      min-height: 500px;
-    }
-    .toolbar {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      z-index: 10;
-      background-color: rgba(255,255,255,0.8);
-      padding: 5px;
-      border-radius: 5px;
-      display: flex;
-      gap: 5px;
-    }
-    .toolbar button {
-      padding: 8px 12px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    .toolbar button:hover {
-      background-color: #0056b3;
-    }
-    #status {
-      position: absolute;
-      bottom: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      background-color: rgba(255, 255, 255, 0.8);
-      padding: 5px 10px;
-      border-radius: 4px;
-      font-weight: bold;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multiplanar DICOM Viewer</title>
+<style>
+    :root { --blue:#0056b3; --panel:#0f1622; --line:#1c2740; --ink:#e8eef7; }
+    * { box-sizing:border-box; }
+    body { font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif; margin:0; background:#f4f4f4; color:#222; }
+    header.nav { background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.1); position:sticky; top:0; z-index:50; }
+    header.nav .inner { max-width:1250px; margin:0 auto; padding:12px 20px; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:8px; }
+    header.nav strong { color:var(--blue); }
+    header.nav a { font-size:.8rem; color:#fff; font-weight:500; padding:8px 12px; border-radius:6px; text-decoration:none; }
+    .wrap { max-width:1250px; margin:0 auto; padding:18px; }
+    h1 { color:var(--blue); text-align:center; margin:.2em 0; }
+    .lead { max-width:820px; margin:0 auto 16px; text-align:center; color:#333; }
+    .app { display:grid; grid-template-columns: 300px minmax(0,1fr); gap:16px; align-items:start; }
+    @media (max-width:920px){ .app{ grid-template-columns:1fr; } }
+    .panel { background:#fff; border:1px solid #e2e8f0; border-radius:10px; padding:14px; margin-bottom:14px; }
+    .panel h3 { color:var(--blue); margin:0 0 10px; font-size:1.02rem; }
+    select, button.preset { width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px; font-size:.9rem; background:#fff; }
+    label.cl { display:block; font-size:.8rem; font-weight:600; color:#334; margin:12px 0 4px; }
+    label.cl .val { float:right; font-weight:400; color:var(--blue); }
+    input[type=range]{ width:100%; }
+    .presets { display:flex; gap:6px; margin-top:6px; }
+    .presets button { flex:1; padding:6px 4px; font-size:.75rem; border:1px solid #cbd5e1; border-radius:6px; background:#f8fafc; cursor:pointer; }
+    .presets button.active { background:var(--blue); color:#fff; border-color:var(--blue); }
+    .grid { display:grid; grid-template-columns:1fr 1fr; grid-template-rows:auto auto; gap:12px; }
+    @media (max-width:560px){ .grid{ grid-template-columns:1fr; } }
+    .pane { background:var(--panel); border-radius:10px; padding:8px; }
+    .pane .cap { color:#9fb2cc; font-size:.78rem; display:flex; justify-content:space-between; margin-bottom:6px; }
+    .pane .cap b { color:#fff; text-transform:uppercase; letter-spacing:.5px; }
+    .cholder { position:relative; width:100%; aspect-ratio:1/1; }
+    .cholder canvas { position:absolute; inset:0; width:100%; height:100%; image-rendering:pixelated; border-radius:4px; cursor:crosshair; touch-action:none; }
+    .info { background:var(--panel); border-radius:10px; padding:12px; color:var(--ink); }
+    .info h4 { margin:0 0 8px; color:#7fd4ff; font-size:.9rem; }
+    .hu { font-size:1.4rem; font-weight:700; color:#fff; }
+    .hu small { font-size:.8rem; color:#9fb2cc; font-weight:400; }
+    .tissue { font-size:.82rem; color:#cfe;}
+    .meta { list-style:none; padding:0; margin:8px 0 0; font-size:.8rem; }
+    .meta li { padding:6px 0; border-top:1px solid var(--line); }
+    .meta .k { color:#9fb2cc; } .meta .v { color:#fff; font-weight:600; }
+    .meta .edu { color:#8fb0d8; font-size:.75rem; margin-top:2px; }
+    details { background:#fff; border:1px solid #e2e8f0; border-radius:10px; padding:12px 18px; margin-top:14px; }
+    summary { font-weight:600; color:var(--blue); cursor:pointer; }
+    .note { font-size:.78rem; color:#667; }
+    .footer { text-align:center; margin:22px 0 8px; font-size:.85rem; color:#667; }
+</style>
 </head>
 <body>
-  <div class="container">
-    <div class="anatomy-content">
-      <h1>Cross-sectional Anatomy: Abdomen (Axial View)</h1>
-      <p>
-        This module explores the axial cross-sections of the abdomen, focusing on key anatomical structures visible in medical imaging. Use the DICOM viewer on the right to navigate through the slices and identify the labeled structures.
-      </p>
-      <h3>Key Structures to Identify:</h3>
-      <ul>
-        <li><strong>Liver:</strong> Largest organ in the abdomen, typically on the right side.</li>
-        <li><strong>Spleen:</strong> Located in the upper left abdomen, posterior to the stomach.</li>
-        <li><strong>Kidneys:</strong> Paired organs, retroperitoneal, usually visible on either side of the spine.</li>
-        <li><strong>Aorta:</strong> Large artery running anterior to the spine.</li>
-        <li><strong>IVC (Inferior Vena Cava):</strong> Large vein, typically to the right of the aorta.</li>
-        <li><strong>Vertebral Body:</strong> The bony part of the spine.</li>
-      </ul>
+<header class="nav">
+  <div class="inner">
+    <strong>Multiplanar DICOM Viewer</strong>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;">
+      <a href="../index.html" style="background:#0056b3;">&larr; Sectional Anatomy Menu</a>
+      <a href="../../Treatment_Planning/Beam_Dose_Simulator/index.html" style="background:#7c3aed;">Beam &amp; Dose Simulator</a>
+      <a href="../../index.html" style="background:#64748b;">&larr; Main Workbook</a>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <h1>Multiplanar DICOM Viewer</h1>
+  <p class="lead">Select a CT dataset and scroll through it in three planes at once. Click any pane to move the linked crosshair; the other two planes follow. Hover to read the Hounsfield value under the cursor, and use the panel to connect acquisition settings to what you see.</p>
+
+  <div class="app">
+    <div>
+      <div class="panel">
+        <h3>Dataset</h3>
+        <select id="dsSel"></select>
+        <div class="note" id="dsRegion" style="margin-top:6px;"></div>
+        <label class="cl">Window level <span class="val" id="wlVal"></span></label>
+        <input type="range" id="wl" min="-800" max="1200" value="40">
+        <label class="cl">Window width <span class="val" id="wwVal"></span></label>
+        <input type="range" id="ww" min="1" max="3000" value="400">
+        <div class="presets" id="presets">
+          <button data-wl="40" data-ww="400">Soft</button>
+          <button data-wl="-600" data-ww="1500">Lung</button>
+          <button data-wl="500" data-ww="2000">Bone</button>
+          <button data-wl="40" data-ww="80">Brain</button>
+        </div>
+      </div>
+
+      <div class="info panel" style="background:var(--panel);">
+        <h4>HU Probe</h4>
+        <div class="hu"><span id="huVal">&ndash;</span> <small>HU</small></div>
+        <div class="tissue" id="tissue">move over the image&hellip;</div>
+        <h4 style="margin-top:14px;">Acquisition &amp; Geometry</h4>
+        <ul class="meta" id="metaList"></ul>
+      </div>
     </div>
 
-    <div class="dicom-viewer-container">
-      <div id="dwv"></div>
-      <div class="toolbar">
-        <button onclick="app.setTool('Scroll');">Scroll</button>
-        <button onclick="app.setTool('ZoomAndPan');">Zoom</button>
-        <button onclick="app.setTool('WindowLevel');">Window/Level</button>
+    <div>
+      <div class="grid">
+        <div class="pane">
+          <div class="cap"><b>Axial</b><span id="axIdx"></span></div>
+          <div class="cholder"><canvas id="axCan"></canvas><canvas id="axCross"></canvas></div>
+        </div>
+        <div class="pane">
+          <div class="cap"><b>Coronal</b><span id="coIdx"></span></div>
+          <div class="cholder"><canvas id="coCan"></canvas><canvas id="coCross"></canvas></div>
+        </div>
+        <div class="pane">
+          <div class="cap"><b>Sagittal</b><span id="saIdx"></span></div>
+          <div class="cholder"><canvas id="saCan"></canvas><canvas id="saCross"></canvas></div>
+        </div>
+        <div class="info">
+          <h4>How to use</h4>
+          <p style="font-size:.82rem;color:#cfe;">&bull; <b>Click / drag</b> any pane to move the crosshair.<br>&bull; <b>Scroll wheel</b> over a pane to page through its slices.<br>&bull; Orientation letters: <b>A</b>nterior, <b>P</b>osterior, <b>L</b>eft, <b>R</b>ight, <b>S</b>uperior, <b>I</b>nferior (assumes Head-First Supine).</p>
+          <p class="note" style="color:#8fb0d8;">Volumes are downsampled for the web; full-resolution planning scans have finer detail. Orientation follows the standard radiologic convention (patient's right on the viewer's left).</p>
+        </div>
       </div>
-      <p id="status">Initializing...</p>
     </div>
   </div>
 
-  <script src="https://unpkg.com/dwv@0.34.2/dist/dwv.min.js"></script>
-  <script>
-  // Init the DWV app
-  var app = new dwv.App();
+  <details open>
+    <summary>Reading a CT: Hounsfield Units and windowing</summary>
+    <p style="font-size:.95rem;">Every pixel is a <strong>Hounsfield Unit (HU)</strong>, calibrated so water = 0 and air = &minus;1000. Fat is around &minus;100 to &minus;50, muscle and soft tissue +20 to +80, and cortical bone +400 and up. The <strong>window level</strong> sets the brightness (the center HU) and the <strong>window width</strong> sets the contrast (the HU range spread from black to white). Try the presets and watch the same slice reveal lung detail, then soft tissue, then bone. This is the same HU data a treatment planning system converts to electron density for dose calculation.</p>
+  </details>
 
-  app.init({
-    containerDivId: "dwv",
-    tools: {
-      Scroll: {},
-      ZoomAndPan: {},
-      WindowLevel: {}
-    },
-    fitToWindow: true
+  <div class="footer">Radiation Therapy E-Workbook &mdash; Sectional Anatomy &nbsp;|&nbsp; Imaging: de-identified educational planning CT datasets.</div>
+</div>
+
+<script>
+const EDU = {
+  Modality:"Imaging type. CT (Computed Tomography) is X-ray based and yields Hounsfield Units used for dose calculation.",
+  KVP:"Tube voltage (kV). Higher kVp gives a more penetrating beam and less soft-tissue contrast. Planning CT is typically 120 kVp.",
+  TubeCurrent_mA:"Tube current (mA). With exposure time this sets mAs, which controls image noise \u2014 more mAs means less noise but more dose.",
+  SliceThickness_mm:"Thinner slices give better through-plane resolution for contouring and multiplanar views, at the cost of more images and noise.",
+  Kernel:"Reconstruction filter. Sharp kernels enhance bone and edges; smooth kernels reduce noise for soft tissue.",
+  PatientPosition:"Setup orientation. HFS = Head-First Supine, the most common RT position; it defines the A/P/L/R image orientation.",
+  RescaleType:"Pixel intensity units. HU means values are calibrated Hounsfield Units (water 0, air \u22121000).",
+  Manufacturer:"Scanner vendor \u2014 affects HU calibration and kernel naming conventions.",
+  Model:"Scanner model used to acquire this study."
+};
+const METAORDER=["Modality","Manufacturer","Model","KVP","TubeCurrent_mA","SliceThickness_mm","Kernel","PatientPosition","RescaleType"];
+
+let manifest=[], ds=null, vol=null, NX=0,NY=0,NZ=0, mmpx=1, mmsl=1;
+let cx=0,cy=0,cz=0, wl=40, ww=400;
+
+const $=id=>document.getElementById(id);
+const panes={
+  ax:{can:$('axCan'),cross:$('axCross'),idx:$('axIdx')},
+  co:{can:$('coCan'),cross:$('coCross'),idx:$('coIdx')},
+  sa:{can:$('saCan'),cross:$('saCross'),idx:$('saIdx')},
+};
+
+function huToTissue(hu){
+  if(hu<=-900) return "Air / gas";
+  if(hu<-500) return "Lung parenchyma";
+  if(hu<-100) return "Fat";
+  if(hu<20) return "Fat / fluid";
+  if(hu<80) return "Soft tissue / muscle";
+  if(hu<300) return "Dense soft tissue / contrast";
+  return "Bone";
+}
+
+function loadVolume(meta){
+  return new Promise(res=>{
+    const img=new Image();
+    img.onload=()=>{
+      const {w,h,slices,grid_cols}=meta;
+      NX=w; NY=h; NZ=slices; mmpx=meta.mm_px; mmsl=meta.mm_slice;
+      const off=document.createElement('canvas'); off.width=img.width; off.height=img.height;
+      const octx=off.getContext('2d'); octx.drawImage(img,0,0);
+      const d=octx.getImageData(0,0,img.width,img.height).data;
+      vol=new Int16Array(NX*NY*NZ);
+      for(let k=0;k<NZ;k++){
+        const gr=Math.floor(k/grid_cols), gc=k%grid_cols;
+        const ox=gc*w, oy=gr*h;
+        for(let y=0;y<h;y++){
+          const srow=((oy+y)*img.width+ox)*4;
+          const drow=(k*NY+y)*NX;
+          for(let x=0;x<w;x++){
+            const p=srow+x*4;
+            vol[drow+x]=((d[p]<<8)|d[p+1])-1024;
+          }
+        }
+      }
+      ds=meta; cx=(NX/2)|0; cy=(NY/2)|0; cz=(NZ/2)|0;
+      // set each pane to its true physical aspect ratio (avoids stretching coronal/sagittal)
+      panes.ax.can.parentElement.style.aspectRatio = (NX*mmpx)/(NY*mmpx);
+      panes.co.can.parentElement.style.aspectRatio = (NX*mmpx)/(NZ*mmsl);
+      panes.sa.can.parentElement.style.aspectRatio = (NY*mmpx)/(NZ*mmsl);
+      res();
+    };
+    img.src="data/"+meta.file;
   });
+}
 
-  const dicomZipUrl = "../../mediastinal_lymph_node_seg/case_0002.zip";
+function win(hu){ const lo=wl-ww/2; let v=(hu-lo)/ww; v=v<0?0:v>1?1:v; return (v*255)|0; }
 
-  // Add console debug logs
-  app.addEventListener("ready", function () {
-    console.log("DWV is ready.");
-    document.getElementById("status").textContent = "Loading DICOM ZIP...";
-    console.log("Loading from:", dicomZipUrl);
-    app.loadURLs([dicomZipUrl]);
-  });
+function axialImg(z){ const im=new ImageData(NX,NY),o=im.data; const base=z*NY*NX;
+  for(let i=0,p=0;i<NX*NY;i++,p+=4){ const g=win(vol[base+i]); o[p]=o[p+1]=o[p+2]=g; o[p+3]=255; } return im; }
+function coronalImg(y){ const im=new ImageData(NX,NZ),o=im.data;
+  for(let zz=0;zz<NZ;zz++){ const zsrc=NZ-1-zz; for(let x=0;x<NX;x++){ const g=win(vol[(zsrc*NY+y)*NX+x]); const p=((zz*NX)+x)*4; o[p]=o[p+1]=o[p+2]=g; o[p+3]=255; } } return im; }
+function sagittalImg(x){ const im=new ImageData(NY,NZ),o=im.data;
+  for(let zz=0;zz<NZ;zz++){ const zsrc=NZ-1-zz; for(let y=0;y<NY;y++){ const g=win(vol[(zsrc*NY+y)*NX+x]); const p=((zz*NY)+y)*4; o[p]=o[p+1]=o[p+2]=g; o[p+3]=255; } } return im; }
 
-  app.addEventListener("load", function () {
-    console.log("DICOM data loaded successfully.");
-    document.getElementById("status").textContent = "DICOM images loaded.";
-  });
+function blit(can, im){ can.width=im.width; can.height=im.height; can.getContext('2d').putImageData(im,0,0); }
 
-  app.addEventListener("error", function (event) {
-    console.error("DWV Error: ", event.error);
-    document.getElementById("status").textContent = "Error loading DICOM files.";
-    alert("Error loading DICOM files: " + event.error);
-  });
+function orient(cross, labels){
+  const ctx=cross.getContext('2d'); ctx.fillStyle='rgba(180,210,240,.9)'; ctx.font='bold 11px Segoe UI';
+  const W=cross.width,H=cross.height;
+  ctx.textAlign='center'; ctx.fillText(labels.t, W/2, 12); ctx.fillText(labels.b, W/2, H-4);
+  ctx.textAlign='left'; ctx.fillText(labels.l, 3, H/2);
+  ctx.textAlign='right'; ctx.fillText(labels.r, W-3, H/2);
+}
+
+function drawCross(cross, px, py){
+  const ctx=cross.getContext('2d'); ctx.clearRect(0,0,cross.width,cross.height);
+  ctx.strokeStyle='rgba(0,229,255,.7)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(px,0); ctx.lineTo(px,cross.height); ctx.moveTo(0,py); ctx.lineTo(cross.width,py); ctx.stroke();
+}
+
+function redraw(){
+  if(!vol) return;
+  const axc=panes.ax.cross; axc.width=NX; axc.height=NY;
+  blit(panes.ax.can, axialImg(cz)); drawCross(axc, cx+0.5, cy+0.5); orient(axc,{t:'A',b:'P',l:'R',r:'L'});
+  panes.ax.idx.textContent=`slice ${cz+1}/${NZ}`;
+  const coc=panes.co.cross; coc.width=NX; coc.height=NZ;
+  blit(panes.co.can, coronalImg(cy)); drawCross(coc, cx+0.5, (NZ-1-cz)+0.5); orient(coc,{t:'S',b:'I',l:'R',r:'L'});
+  panes.co.idx.textContent=`slice ${cy+1}/${NY}`;
+  const sac=panes.sa.cross; sac.width=NY; sac.height=NZ;
+  blit(panes.sa.can, sagittalImg(cx)); drawCross(sac, cy+0.5, (NZ-1-cz)+0.5); orient(sac,{t:'S',b:'I',l:'A',r:'P'});
+  panes.sa.idx.textContent=`slice ${cx+1}/${NX}`;
+}
+
+function relPos(e,cross){ const r=cross.getBoundingClientRect();
+  const clientX=e.touches?e.touches[0].clientX:e.clientX, clientY=e.touches?e.touches[0].clientY:e.clientY;
+  return { u:Math.floor((clientX-r.left)/r.width*cross.width), v:Math.floor((clientY-r.top)/r.height*cross.height) }; }
+
+function clamp(v,hi){ return v<0?0:v>hi?hi:v; }
+
+function setFromAxial(e){ const {u,v}=relPos(e,panes.ax.cross); cx=clamp(u,NX-1); cy=clamp(v,NY-1); redraw(); }
+function setFromCoronal(e){ const {u,v}=relPos(e,panes.co.cross); cx=clamp(u,NX-1); cz=clamp(NZ-1-v,NZ-1); redraw(); }
+function setFromSagittal(e){ const {u,v}=relPos(e,panes.sa.cross); cy=clamp(u,NY-1); cz=clamp(NZ-1-v,NZ-1); redraw(); }
+
+function bindPane(cross, setter, huFromUV){
+  let down=false;
+  const move=e=>{ setter(e); showHU(e,cross,huFromUV); };
+  cross.addEventListener('mousedown',e=>{down=true; move(e);});
+  cross.addEventListener('mousemove',e=>{ if(down) setter(e); showHU(e,cross,huFromUV); });
+  window.addEventListener('mouseup',()=>down=false);
+  cross.addEventListener('touchstart',e=>{e.preventDefault(); move(e);},{passive:false});
+  cross.addEventListener('touchmove',e=>{e.preventDefault(); setter(e);},{passive:false});
+  cross.addEventListener('wheel',e=>{ e.preventDefault(); wheel(cross,e.deltaY<0?1:-1); },{passive:false});
+}
+
+function showHU(e,cross,huFromUV){
+  const {u,v}=relPos(e,cross); const hu=huFromUV(u,v);
+  if(hu===null||hu===undefined) return;
+  $('huVal').textContent=hu; $('tissue').textContent=huToTissue(hu);
+}
+function wheel(cross, dir){
+  if(cross===panes.ax.cross) cz=clamp(cz+dir,NZ-1);
+  else if(cross===panes.co.cross) cy=clamp(cy+dir,NY-1);
+  else cx=clamp(cx+dir,NX-1);
+  redraw();
+}
+const huAx=(u,v)=> (u<0||u>=NX||v<0||v>=NY)?null: vol[(cz*NY+clamp(v,NY-1))*NX+clamp(u,NX-1)];
+const huCo=(u,v)=>{ const z=NZ-1-v; return (u<0||u>=NX||z<0||z>=NZ)?null: vol[(clamp(z,NZ-1)*NY+cy)*NX+clamp(u,NX-1)]; };
+const huSa=(u,v)=>{ const z=NZ-1-v; return (u<0||u>=NY||z<0||z>=NZ)?null: vol[(clamp(z,NZ-1)*NY+clamp(u,NY-1))*NX+cx]; };
+
+function renderMeta(){
+  const m=ds.meta; const ul=$('metaList'); ul.innerHTML='';
+  const extra={"In-plane pixel":ds.mm_px+" mm","Slice spacing (web)":ds.mm_slice+" mm","Volume":`${NX}\u00d7${NY}\u00d7${NZ}`};
+  METAORDER.forEach(k=>{ if(m[k]===undefined) return; const li=document.createElement('li');
+    li.innerHTML=`<span class="k">${k.replace(/_/g,' ')}:</span> <span class="v">${m[k]}</span>`+(EDU[k]?`<div class="edu">${EDU[k]}</div>`:'');
+    ul.appendChild(li); });
+  Object.entries(extra).forEach(([k,v])=>{ const li=document.createElement('li'); li.innerHTML=`<span class="k">${k}:</span> <span class="v">${v}</span>`; ul.appendChild(li); });
+}
+
+function setPresetActive(){ document.querySelectorAll('#presets button').forEach(b=>{ b.classList.toggle('active', +b.dataset.wl===wl && +b.dataset.ww===ww); }); }
+
+async function selectDataset(id){
+  ds=manifest.find(m=>m.id===id); await loadVolume(ds);
+  const w=ds.default_window==='brain'?[40,80]:ds.default_window==='bone'?[500,2000]:ds.default_window==='lung'?[-600,1500]:[40,400];
+  wl=w[0]; ww=w[1]; $('wl').value=wl; $('ww').value=ww; $('wlVal').textContent=wl; $('wwVal').textContent=ww;
+  $('dsRegion').textContent=ds.region; renderMeta(); setPresetActive(); redraw();
+}
+
+document.querySelectorAll('#presets button').forEach(b=>b.addEventListener('click',()=>{
+  wl=+b.dataset.wl; ww=+b.dataset.ww; $('wl').value=wl; $('ww').value=ww; $('wlVal').textContent=wl; $('wwVal').textContent=ww; setPresetActive(); redraw();
+}));
+$('wl').addEventListener('input',e=>{ wl=+e.target.value; $('wlVal').textContent=wl; setPresetActive(); redraw(); });
+$('ww').addEventListener('input',e=>{ ww=+e.target.value; $('wwVal').textContent=ww; setPresetActive(); redraw(); });
+$('dsSel').addEventListener('change',e=>selectDataset(e.target.value));
+
+bindPane(panes.ax.cross, setFromAxial, huAx);
+bindPane(panes.co.cross, setFromCoronal, huCo);
+bindPane(panes.sa.cross, setFromSagittal, huSa);
+
+async function init(){
+  manifest=await fetch('data/manifest.json').then(r=>r.json());
+  const sel=$('dsSel'); manifest.forEach(m=>{ const o=document.createElement('option'); o.value=m.id; o.textContent=m.region; sel.appendChild(o); });
+  $('wlVal').textContent=wl; $('wwVal').textContent=ww;
+  await selectDataset(manifest[0].id);
+}
+init();
 </script>
 </body>
 </html>
