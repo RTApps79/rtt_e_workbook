@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Treatment Technique Simulator</title>
+<style>
+  :root{ --blue:#0056b3; --violet:#7c3aed; --panel:#0f1622; --ink:#e8eef7; }
+  *{box-sizing:border-box;}
+  body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;margin:0;background:#f4f4f4;color:#222;}
+  header.nav{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.1);position:sticky;top:0;z-index:50;}
+  header.nav .inner{max-width:1200px;margin:0 auto;padding:12px 20px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;}
+  header.nav strong{color:var(--blue);}
+  header.nav a{font-size:.8rem;color:#fff;font-weight:500;padding:8px 12px;border-radius:6px;text-decoration:none;}
+  .wrap{max-width:1200px;margin:0 auto;padding:18px;}
+  h1{color:var(--blue);text-align:center;margin:.2em 0;}
+  .lead{max-width:860px;margin:0 auto 16px;text-align:center;color:#333;}
+  .app{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:18px;align-items:start;}
+  @media(max-width:920px){.app{grid-template-columns:1fr;}}
+  .stage{background:var(--panel);border-radius:10px;padding:14px;}
+  canvas{width:100%;height:auto;display:block;border-radius:8px;background:#0b1119;}
+  .panel{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:16px;margin-bottom:14px;}
+  .panel h3{color:var(--blue);margin:0 0 10px;font-size:1.05rem;}
+  .tech-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .tech-grid button{padding:9px 6px;border:1px solid #cbd5e1;border-radius:8px;background:#f8fafc;cursor:pointer;font-size:.82rem;font-weight:600;color:#334;}
+  .tech-grid button.active{background:var(--violet);color:#fff;border-color:var(--violet);}
+  label.cl{display:block;font-size:.82rem;font-weight:600;color:#334;margin:12px 0 4px;}
+  label.cl .val{float:right;font-weight:400;color:var(--blue);}
+  input[type=range]{width:100%;} select{width:100%;padding:8px;border:1px solid #cbd5e1;border-radius:6px;}
+  .toggles label{display:inline-flex;align-items:center;gap:6px;font-size:.85rem;margin-right:14px;cursor:pointer;}
+  .btn{width:100%;padding:10px;border:none;border-radius:8px;background:var(--blue);color:#fff;font-weight:600;cursor:pointer;margin-top:6px;}
+  .legend{display:flex;flex-direction:column;gap:3px;font-size:.75rem;color:#334;margin-top:6px;}
+  .legend .row{display:flex;align-items:center;gap:6px;}
+  .legend .sw{width:22px;height:11px;border-radius:2px;display:inline-block;}
+  .desc{background:#f0f6ff;border:1px solid #cfe0ff;border-radius:8px;padding:10px;font-size:.88rem;color:#123;}
+  details{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:12px 18px;margin-top:14px;}
+  summary{font-weight:600;color:var(--blue);cursor:pointer;} .note{font-size:.8rem;color:#667;}
+  .footer{text-align:center;margin:22px 0 8px;font-size:.85rem;color:#667;}
+</style>
+</head>
+<body>
+<header class="nav">
+  <div class="inner">
+    <strong>Treatment Technique Simulator</strong>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;">
+      <a href="../index.html" style="background:#0056b3;">&larr; Medical Dosimetry Menu</a>
+      <a href="../Beam_Dose_Simulator/index.html" style="background:#7c3aed;">Beam &amp; Dose Simulator</a>
+      <a href="../PDD_Explorer/index.html" style="background:#7c3aed;">PDD Explorer</a>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <h1>Treatment Technique Simulator</h1>
+  <p class="lead">Watch beams fire from the gantry angles of each technique and build a composite dose distribution, shown as classic isodose color bands over a water-equivalent phantom. Compare how a parallel-opposed pair, a 4-field box, an arc, and IMRT/VMAT shape dose around the target (cyan) while sparing the organ-at-risk (magenta) &mdash; and see how a dynamic wedge tilts the isodose lines.</p>
+
+  <div class="app">
+    <div>
+      <div class="stage">
+        <canvas id="cv" width="560" height="440"></canvas>
+      </div>
+    </div>
+    <div>
+      <div class="panel">
+        <h3>Technique</h3>
+        <div class="tech-grid" id="techGrid"></div>
+        <div class="desc" id="techDesc" style="margin-top:10px;"></div>
+      </div>
+      <div class="panel">
+        <h3>Options</h3>
+        <label class="cl">Energy</label><select id="energy"></select>
+        <div class="toggles" style="margin-top:10px;">
+          <label><input type="checkbox" id="wedgeOn"> Dynamic wedge</label>
+          <label><input type="checkbox" id="oarOn" checked> Show OAR</label>
+        </div>
+        <label class="cl" id="wedgeLabel" style="display:none;">Wedge angle <span class="val" id="wedgeVal">30&deg;</span></label>
+        <input type="range" id="wedge" min="0" max="60" value="30" style="display:none;">
+        <button class="btn" id="playBtn">&#9654; Play animation</button>
+        <button class="btn" id="showBtn" style="background:#64748b;">Show final dose (no animation)</button>
+      </div>
+      <div class="panel">
+        <h3>Isodose Legend</h3>
+        <div class="legend" id="legend"></div>
+      </div>
+    </div>
+  </div>
+
+  <details open>
+    <summary>How each technique shapes the dose</summary>
+    <p><strong>POP (parallel-opposed pair)</strong> &mdash; two beams 180&deg; apart give a simple, uniform dose corridor but expose everything along that axis. <strong>3-Field</strong> and <strong>4-Field box</strong> concentrate high dose where the beams overlap at the target, keeping entrance dose spread out. <strong>Arc (non-VMAT)</strong> rotates an unmodulated beam, smearing entrance dose into a ring and tightening the high-dose region around isocenter. <strong>IMRT</strong> uses several fixed, <em>modulated</em> fields whose fluence is carved to avoid the OAR &mdash; producing a concave high-dose region that wraps around it. <strong>VMAT</strong> combines modulation with continuous rotation for conformal dose delivered in one or two arcs. A <strong>dynamic wedge</strong> attenuates one side of a field, tilting the isodose lines &mdash; used to compensate for sloping surfaces or to shape a wedged-pair dose. This is an illustrative teaching model, not a clinical dose calculation.</p>
+  </details>
+
+  <div class="footer">Radiation Therapy E-Workbook &mdash; Medical Dosimetry</div>
+</div>
+
+<script>
+const cv=document.getElementById('cv'), ctx=cv.getContext('2d');
+const W=cv.width, H=cv.height;
+// phantom + structures (px)
+const iso={x:280,y:210}, ell={cx:280,cy:220,rx:212,ry:150};
+const target={x:280,y:210,r:34}, OAR={x:280,y:300,r:26};
+const cmPerPx=0.10, halfW=46, pen=9;
+
+const ENERGIES=[{id:"co60",label:"Cobalt-60",dmax:0.5,mu:0.063,skin:35},{id:"6mv",label:"6 MV",dmax:1.5,mu:0.047,skin:16},
+ {id:"10mv",label:"10 MV",dmax:2.5,mu:0.040,skin:12},{id:"15mv",label:"15 MV",dmax:3.0,mu:0.035,skin:10},{id:"18mv",label:"18 MV",dmax:3.3,mu:0.033,skin:9}];
+let energy=ENERGIES[1], wedgeOn=false, wedgeK=0.5, showOAR=true;
+
+const TECHNIQUES={
+  pop:{name:"POP (opposed pair)", angles:[0,180], modulate:false, arc:false,
+       desc:"Two beams 180&deg; apart. Uniform dose along the beam axis, but full entrance/exit dose through everything in the path."},
+  f3:{name:"3-Field", angles:[0,120,240], modulate:false, arc:false,
+      desc:"Three beams share the entrance dose across more tissue and build high dose at the overlap. A classic wedged arrangement for many sites."},
+  f4:{name:"4-Field box", angles:[0,90,180,270], modulate:false, arc:false,
+      desc:"The pelvic-box workhorse. High dose is confined to the central overlap; each beam's entrance dose is spread to a different surface."},
+  arc:{name:"Arc (non-VMAT)", angles:arcAngles(181,539,7), modulate:false, arc:true,
+       desc:"An unmodulated beam rotates around the patient. Entrance dose smears into a ring; high dose tightens around isocenter."},
+  imrt:{name:"IMRT (no arc)", angles:[0,51,103,154,206,257,309], modulate:true, arc:false,
+        desc:"Several fixed, modulated fields. Fluence is carved to avoid the OAR, producing a concave high-dose region that wraps around it."},
+  vmat:{name:"VMAT (arc + IMRT)", angles:arcAngles(181,539,7), modulate:true, arc:true,
+        desc:"Modulation plus continuous rotation. Highly conformal dose that hugs the target and spares the OAR, delivered in an arc."}
+};
+function arcAngles(a,b,step){ const out=[]; for(let g=a;g<=b;g+=step) out.push(g%360); return out; }
+let techKey="f4";
+
+// ---- dose model ----
+function pdd(depthCm){ const e=energy; if(depthCm<=0) return 0;
+  if(depthCm<=e.dmax) return e.skin+(100-e.skin)*(1-Math.cos(Math.PI/2*depthCm/e.dmax));
+  return 100*Math.exp(-e.mu*(depthCm-e.dmax)); }
+function inEll(x,y){ const dx=(x-ell.cx)/ell.rx, dy=(y-ell.cy)/ell.ry; return dx*dx+dy*dy<=1; }
+function dirOf(g){ const r=g*Math.PI/180; return {x:-Math.sin(r), y:Math.cos(r)}; }
+function perpOf(g){ const r=g*Math.PI/180; return {x:Math.cos(r), y:Math.sin(r)}; }
+
+function fluence(s, g, d, p){
+  const a=Math.abs(s);
+  let f = a<=halfW ? 1 : a<=halfW+pen ? (1-(a-halfW)/pen) : 0;
+  if(f<=0) return 0;
+  if(wedgeOn) f *= Math.max(0.05, 1 - wedgeK*((s+halfW+pen)/(2*(halfW+pen))));
+  if(TECHNIQUES[techKey].modulate){
+    // carve rays that pass through the OAR (spare it)
+    const ox=OAR.x-(iso.x+p.x*s), oy=OAR.y-(iso.y+p.y*s);
+    const proj=ox*d.x+oy*d.y; const perpDist=Math.hypot(ox-proj*d.x, oy-proj*d.y);
+    if(perpDist < OAR.r+3) f *= 0.18;
+  }
+  return f;
+}
+function addBeam(grid, g, weight){
+  const d=dirOf(g), p=perpOf(g), BIG=Math.max(W,H)*0.75;
+  for(let s=-(halfW+pen); s<=halfW+pen; s+=0.7){
+    const f0=fluence(s,g,d,p); if(f0<=0) continue;
+    let x=iso.x+p.x*s-d.x*BIG, y=iso.y+p.y*s-d.y*BIG, inside=false, depthPx=0;
+    for(let t=0;t<2*BIG;t+=0.8){
+      x+=d.x*0.8; y+=d.y*0.8;
+      if(inEll(x,y)){ inside=true; depthPx+=0.8;
+        const dd=pdd(depthPx*cmPerPx)*f0*weight;
+        const xi=x|0, yi=y|0; if(xi>=0&&xi<W&&yi>=0&&yi<H) grid[yi*W+xi]+=dd;
+      } else if(inside) break;
+    }
+  }
+}
+function buildFull(){ const g=new Float32Array(W*H); const T=TECHNIQUES[techKey];
+  const wt=T.arc?1.6/T.angles.length*10:1; T.angles.forEach(a=>addBeam(g,a,wt)); return g; }
+function normValue(grid){ // average over target region
+  let sum=0,n=0; for(let yy=target.y-8;yy<target.y+8;yy++)for(let xx=target.x-8;xx<target.x+8;xx++){ sum+=grid[yy*W+xx]; n++; } return sum/n; }
+
+// ---- isodose bands ----
+const BANDS=[[100,'255,45,45'],[95,'255,120,40'],[90,'250,205,50'],[80,'120,220,70'],
+  [70,'60,205,180'],[50,'55,140,240'],[30,'60,80,205'],[15,'45,45,110']];
+function bandColor(pct){ for(const [lvl,c] of BANDS){ if(pct>=lvl) return c; } return null; }
+
+function drawBase(){
+  ctx.clearRect(0,0,W,H); ctx.fillStyle='#0b1119'; ctx.fillRect(0,0,W,H);
+  // phantom body
+  ctx.save(); ctx.beginPath(); ctx.ellipse(ell.cx,ell.cy,ell.rx,ell.ry,0,0,7); ctx.fillStyle='#2b2f36'; ctx.fill();
+  ctx.strokeStyle='#586274'; ctx.lineWidth=2; ctx.stroke(); ctx.restore();
+}
+function drawStructures(){
+  ctx.save();
+  ctx.beginPath(); ctx.arc(target.x,target.y,target.r,0,7); ctx.strokeStyle='#22e5ff'; ctx.lineWidth=2.5; ctx.stroke();
+  ctx.fillStyle='#22e5ff'; ctx.font='11px Segoe UI'; ctx.fillText('PTV', target.x-11, target.y-target.r-5);
+  if(showOAR){ ctx.beginPath(); ctx.arc(OAR.x,OAR.y,OAR.r,0,7); ctx.strokeStyle='#ff5bd0'; ctx.lineWidth=2.5; ctx.stroke();
+    ctx.fillStyle='#ff5bd0'; ctx.fillText('OAR', OAR.x-12, OAR.y+OAR.r+13); }
+  // isocenter
+  ctx.strokeStyle='#fff'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(iso.x-7,iso.y); ctx.lineTo(iso.x+7,iso.y); ctx.moveTo(iso.x,iso.y-7); ctx.lineTo(iso.x,iso.y+7); ctx.stroke();
+  ctx.restore();
+}
+let doseCanvas=document.createElement('canvas'); doseCanvas.width=W; doseCanvas.height=H;
+let dctx=doseCanvas.getContext('2d');
+function drawDose(grid, norm){
+  const im=dctx.createImageData(W,H), o=im.data;
+  for(let i=0,p=0;i<grid.length;i++,p+=4){ const pct=grid[i]/norm*100; const c=bandColor(pct);
+    if(c){ const [r,g,b]=c.split(',').map(Number); o[p]=r;o[p+1]=g;o[p+2]=b;o[p+3]=150; } else o[p+3]=0; }
+  dctx.putImageData(im,0,0);
+  ctx.drawImage(doseCanvas,0,0);
+}
+function drawBeamFan(g, alpha){
+  const d=dirOf(g), p=perpOf(g), BIG=Math.max(W,H);
+  const srcx=iso.x-d.x*BIG*0.9, srcy=iso.y-d.y*BIG*0.9;
+  ctx.save(); ctx.globalAlpha=alpha||0.9;
+  // field edges
+  ctx.strokeStyle='rgba(251,191,36,.8)'; ctx.lineWidth=1.2;
+  [-halfW,halfW].forEach(s=>{ ctx.beginPath(); ctx.moveTo(srcx+p.x*s,srcy+p.y*s); ctx.lineTo(iso.x+p.x*s+d.x*BIG,iso.y+p.y*s+d.y*BIG); ctx.stroke(); });
+  ctx.fillStyle='rgba(251,191,36,.10)';
+  ctx.beginPath(); ctx.moveTo(srcx-p.x*halfW,srcy-p.y*halfW); ctx.lineTo(iso.x-p.x*halfW+d.x*BIG,iso.y-p.y*halfW+d.y*BIG);
+  ctx.lineTo(iso.x+p.x*halfW+d.x*BIG,iso.y+p.y*halfW+d.y*BIG); ctx.lineTo(srcx+p.x*halfW,srcy+p.y*halfW); ctx.closePath(); ctx.fill();
+  // source
+  ctx.fillStyle='#fbbf24'; ctx.beginPath(); ctx.arc(srcx,srcy,6,0,7); ctx.fill();
+  ctx.restore();
+}
+
+// ---- animation ----
+let anim=null;
+function stopAnim(){ if(anim){ cancelAnimationFrame(anim); anim=null; } }
+function renderStatic(){
+  stopAnim(); const grid=buildFull(); const norm=normValue(grid)||1;
+  drawBase(); drawDose(grid,norm); drawStructures();
+}
+function play(){
+  stopAnim();
+  const T=TECHNIQUES[techKey]; const full=buildFull(); const norm=normValue(full)||1;
+  const grid=new Float32Array(W*H);
+  const shots=T.angles.slice(); const wt=T.arc?1.6/T.angles.length*10:1;
+  let i=0; const perFrame=T.arc?3:1; let sweep=0;
+  function frame(){
+    // static techniques: brief per-beam sweep before committing
+    if(!T.arc && i<shots.length && sweep<1){
+      drawBase(); drawDose(grid,norm);
+      const g=shots[i]; drawBeamFan(g,0.9);
+      // leading edge sweep
+      const d=dirOf(g), BIG=Math.max(W,H); const sx=iso.x-d.x*BIG*0.9, sy=iso.y-d.y*BIG*0.9;
+      const fx=sx+(iso.x+d.x*BIG-sx)*sweep, fy=sy+(iso.y+d.y*BIG-sy)*sweep;
+      const p=perpOf(g); ctx.strokeStyle='rgba(255,240,150,.9)'; ctx.lineWidth=3;
+      ctx.beginPath(); ctx.moveTo(fx-p.x*halfW,fy-p.y*halfW); ctx.lineTo(fx+p.x*halfW,fy+p.y*halfW); ctx.stroke();
+      drawStructures();
+      sweep+=0.04; anim=requestAnimationFrame(frame); return;
+    }
+    // commit beam(s)
+    for(let k=0;k<perFrame && i<shots.length;k++,i++) addBeam(grid,shots[i],wt);
+    sweep=0;
+    drawBase(); drawDose(grid,norm);
+    if(i<shots.length) drawBeamFan(shots[Math.min(i,shots.length-1)], T.arc?0.9:0.0);
+    else if(T.arc){} 
+    drawStructures();
+    if(i<shots.length) anim=requestAnimationFrame(frame);
+    else { drawBase(); drawDose(grid,norm); drawStructures(); anim=null; }
+  }
+  frame();
+}
+
+// ---- UI ----
+function buildTechButtons(){
+  const grid=document.getElementById('techGrid'); grid.innerHTML='';
+  Object.entries(TECHNIQUES).forEach(([k,t])=>{ const b=document.createElement('button'); b.textContent=t.name; b.dataset.k=k;
+    if(k===techKey)b.classList.add('active');
+    b.addEventListener('click',()=>{ techKey=k; document.querySelectorAll('#techGrid button').forEach(x=>x.classList.toggle('active',x.dataset.k===k)); document.getElementById('techDesc').innerHTML=t.desc; renderStatic(); });
+    grid.appendChild(b); });
+  document.getElementById('techDesc').innerHTML=TECHNIQUES[techKey].desc;
+}
+function buildLegend(){ const L=document.getElementById('legend'); L.innerHTML='';
+  BANDS.forEach(([lvl,c])=>{ const row=document.createElement('div'); row.className='row';
+    row.innerHTML=`<span class="sw" style="background:rgba(${c},.75)"></span> &ge; ${lvl}%`; L.appendChild(row); }); }
+
+const es=document.getElementById('energy'); ENERGIES.forEach(e=>{const o=document.createElement('option');o.value=e.id;o.textContent=e.label;es.appendChild(o);}); es.value='6mv';
+es.addEventListener('change',e=>{energy=ENERGIES.find(x=>x.id===e.target.value); renderStatic();});
+document.getElementById('wedgeOn').addEventListener('change',e=>{ wedgeOn=e.target.checked;
+  document.getElementById('wedge').style.display=wedgeOn?'block':'none'; document.getElementById('wedgeLabel').style.display=wedgeOn?'block':'none'; renderStatic(); });
+document.getElementById('wedge').addEventListener('input',e=>{ wedgeK=(+e.target.value)/60*0.85; document.getElementById('wedgeVal').innerHTML=e.target.value+'&deg;'; renderStatic(); });
+document.getElementById('oarOn').addEventListener('change',e=>{ showOAR=e.target.checked; renderStatic(); });
+document.getElementById('playBtn').addEventListener('click',play);
+document.getElementById('showBtn').addEventListener('click',renderStatic);
+
+buildTechButtons(); buildLegend(); renderStatic();
+</script>
+</body>
+</html>
